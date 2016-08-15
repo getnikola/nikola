@@ -36,6 +36,13 @@ from nikola import utils
 LOGGER = utils.get_logger('bootswatch_theme', utils.STDERR_HANDLER)
 
 
+def _check_for_theme(theme, themes):
+    for t in themes:
+        if t.endswith(os.sep + theme):
+            return True
+    return False
+
+
 class CommandBootswatchTheme(Command):
     """Given a swatch name from bootswatch.com and a parent theme, creates a custom theme."""
 
@@ -79,12 +86,12 @@ class CommandBootswatchTheme(Command):
         version = ''
 
         # See if we need bootswatch for bootstrap v2 or v3
-        themes = utils.get_theme_chain(parent)
-        if 'bootstrap3' not in themes and 'bootstrap3-jinja' not in themes:
+        themes = utils.get_theme_chain(parent, self.site.themes_dirs)
+        if not _check_for_theme('bootstrap3', themes) and not _check_for_theme('bootstrap3-jinja', themes):
             version = '2'
-        elif 'bootstrap' not in themes and 'bootstrap-jinja' not in themes:
+        elif not _check_for_theme('bootstrap', themes) and not _check_for_theme('bootstrap-jinja', themes):
             LOGGER.warn('"bootswatch_theme" only makes sense for themes that use bootstrap')
-        elif 'bootstrap3-gradients' in themes or 'bootstrap3-gradients-jinja' in themes:
+        elif _check_for_theme('bootstrap3-gradients', themes) or _check_for_theme('bootstrap3-gradients-jinja', themes):
             LOGGER.warn('"bootswatch_theme" doesn\'t work well with the bootstrap3-gradients family')
 
         LOGGER.info("Creating '{0}' theme from '{1}' and '{2}'".format(name, swatch, parent))

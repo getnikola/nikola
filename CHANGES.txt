@@ -23,6 +23,8 @@ Features
 * Add ``sections`` filtering in the post list directive
   (Issue #2409)
 * Update Bootstrap to v3.3.7
+* Add ``EXTRA_THEMES_DIRS`` search path, similar to ``EXTRA_PLUGINS_DIRS``,
+  to locate themes at other places (Issue #2427)
 
 Bugfixes
 --------
