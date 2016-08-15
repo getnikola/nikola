@@ -56,7 +56,7 @@ class MakoTemplates(TemplateSystem):
     cache_dir = None
 
     def get_deps(self, filename):
-        """Get dependencies for a template (internal function)."""
+        """Get dependencies for a template."""
         text = util.read_file(filename)
         lex = lexer.Lexer(text=text, filename=filename)
         lex.parse()

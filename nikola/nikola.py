@@ -1445,9 +1445,10 @@ class Nikola(object):
                 context[k] = context[k](context['lang'])
             output = self.template_system.render_template_to_string(t_data, context)
             if fname is not None:
-                return output, [fname]
+                dependencies = [fname] + self.template_system.get_deps(fname)
             else:
-                return output, []
+                dependencies = []
+            return output, dependencies
         return render_shortcode
 
     def _register_templated_shortcodes(self):

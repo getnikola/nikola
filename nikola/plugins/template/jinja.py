@@ -105,6 +105,10 @@ class JinjaTemplates(TemplateSystem):
 
     def template_deps(self, template_name):
         """Generate list of dependencies for a template."""
+        # XXX FIXME: if we could split this into a get_deps that
+        # takes a filename, it would be more compatible with
+        # shortcode template dependencies
+
         # Cache the lists of dependencies for each template name.
         if self.dependency_cache.get(template_name) is None:
             # Use a breadth-first search to find all templates this one
