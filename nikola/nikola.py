@@ -1426,7 +1426,7 @@ class Nikola(object):
 
         return result
 
-    def _make_renderfunc(self, t_data, fname):
+    def _make_renderfunc(self, t_data, fname=None):
         """Return a function that can be registered as a template shortcode.
 
         The returned function has access to the passed template data and
@@ -1443,7 +1443,11 @@ class Nikola(object):
             context['lang'] = utils.LocaleBorg().current_lang
             for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
                 context[k] = context[k](context['lang'])
-            return self.template_system.render_template_to_string(t_data, context), fname
+            output = self.template_system.render_template_to_string(t_data, context)
+            if fname is not None:
+                return output, [fname]
+            else:
+                return output, []
         return render_shortcode
 
     def _register_templated_shortcodes(self):

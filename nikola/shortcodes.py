@@ -323,7 +323,7 @@ def apply_shortcodes(data, registry, site=None, filename=None, raise_exceptions=
                     LOGGER.error('Unknown shortcode {0} (started at {1})', name, _format_position(data, current[2]))
                     res = ('', [])
                 result.append(res[0])
-                dependencies.append(res[1])
+                dependencies += res[1]
         if with_dependencies:
             return empty_string.join(result), dependencies
         return empty_string.join(result)
