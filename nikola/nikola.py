@@ -1426,7 +1426,7 @@ class Nikola(object):
 
         return result
 
-    def _make_renderfunc(self, t_data):
+    def _make_renderfunc(self, t_data, fname):
         """Return a function that can be registered as a template shortcode.
 
         The returned function has access to the passed template data and
@@ -1443,7 +1443,7 @@ class Nikola(object):
             context['lang'] = utils.LocaleBorg().current_lang
             for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
                 context[k] = context[k](context['lang'])
-            return self.template_system.render_template_to_string(t_data, context)
+            return self.template_system.render_template_to_string(t_data, context), fname
         return render_shortcode
 
     def _register_templated_shortcodes(self):
@@ -1463,7 +1463,8 @@ class Nikola(object):
                     continue
 
                 with open(os.path.join(sc_dir, fname)) as fd:
-                    self.register_shortcode(name, self._make_renderfunc(fd.read()))
+                    self.register_shortcode(name, self._make_renderfunc(
+                        fd.read(), os.path.join(sc_dir, fname)))
 
     def register_shortcode(self, name, f):
         """Register function f to handle shortcode "name"."""
@@ -1472,11 +1473,12 @@ class Nikola(object):
             return
         self.shortcode_registry[name] = f
 
-    def apply_shortcodes(self, data, filename=None, lang=None):
+    # XXX in v8, get rid of with_dependencies
+    def apply_shortcodes(self, data, filename=None, lang=None, with_dependencies=False):
         """Apply shortcodes from the registry on data."""
         if lang is None:
             lang = utils.LocaleBorg().current_lang
-        return shortcodes.apply_shortcodes(data, self.shortcode_registry, self, filename, lang=lang)
+        return shortcodes.apply_shortcodes(data, self.shortcode_registry, self, filename, lang=lang, with_dependencies=with_dependencies)
 
     def generic_rss_renderer(self, lang, title, link, description, timeline, output_path,
                              rss_teasers, rss_plain, feed_length=10, feed_url=None,
