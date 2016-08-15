@@ -86,6 +86,7 @@ class BasePlugin(IPlugin):
         """Find the dependencies for a file."""
         return []
 
+
 class PostScanner(BasePlugin):
     """The scan method of these plugins is called by Nikola.scan_posts."""
 
