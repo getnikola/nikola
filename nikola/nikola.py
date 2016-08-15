@@ -1445,6 +1445,7 @@ class Nikola(object):
                 context[k] = context[k](context['lang'])
             output = self.template_system.render_template_to_string(t_data, context)
             if fname is not None:
+                # FIXME get_deps returns filenames, it needs to be full paths
                 dependencies = [fname] + self.template_system.get_deps(fname)
             else:
                 dependencies = []
