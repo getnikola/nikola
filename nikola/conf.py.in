@@ -1100,6 +1100,11 @@ UNSLUGIFY_TITLES = True
 # repository.
 # EXTRA_PLUGINS_DIRS = []
 
+# Add the absolute paths to directories containing themes to use them.
+# For example, the `v7` directory of your clone of the Nikola themes
+# repository.
+# EXTRA_THEMES_DIRS = []
+
 # List of regular expressions, links matching them will always be considered
 # valid by "nikola check -l"
 # LINK_CHECK_WHITELIST = []

@@ -6,6 +6,13 @@ Features
 
 * New NO_DOCUTILS_TITLE_TRANSFORM (Issue #2382)
 * Update options of chart directive to Pygal 2.2.3
+* Pass global context to template shortcodes (Issue #2424)
+
+Bugfixes
+--------
+
+* Default to English for docutils messages if no translations exist
+  (Issues #2422, #2437)
 
 New in v7.7.12
 ==============
@@ -17,6 +24,8 @@ Features
 * Add ``sections`` filtering in the post list directive
   (Issue #2409)
 * Update Bootstrap to v3.3.7
+* Add ``EXTRA_THEMES_DIRS`` search path, similar to ``EXTRA_PLUGINS_DIRS``,
+  to locate themes at other places (Issue #2427)
 
 Bugfixes
 --------
