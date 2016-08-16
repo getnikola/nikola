@@ -104,6 +104,7 @@ class JinjaTemplates(TemplateSystem):
         return self.lookup.from_string(template).render(**context)
 
     def get_deps(self, filename):
+        """Return paths to dependencies for the template loaded from filename."""
         deps = set([])
         with open(filename) as fd:
             source = fd.read()
