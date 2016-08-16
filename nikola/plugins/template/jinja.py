@@ -122,7 +122,7 @@ class JinjaTemplates(TemplateSystem):
         """Generate list of dependencies for a template."""
         if self.dependency_cache.get(template_name) is None:
             filename = self.lookup.loader.get_source(self.lookup, template_name)[1]
-            self.dependency_cache[template_name] = self.get_deps(filename)
+            self.dependency_cache[template_name] = [filename] + self.get_deps(filename)
         return self.dependency_cache[template_name]
 
     def get_template_path(self, template_name):
