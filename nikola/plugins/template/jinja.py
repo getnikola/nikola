@@ -31,7 +31,6 @@ from __future__ import unicode_literals
 import os
 import io
 import json
-from collections import deque
 try:
     import jinja2
     from jinja2 import meta
@@ -48,6 +47,7 @@ class JinjaTemplates(TemplateSystem):
     name = "jinja"
     lookup = None
     dependency_cache = {}
+    per_file_cache = {}
 
     def __init__(self):
         """Initialize Jinja2 environment with extended set of filters."""
@@ -103,27 +103,26 @@ class JinjaTemplates(TemplateSystem):
         """Render template to a string using context."""
         return self.lookup.from_string(template).render(**context)
 
+    def get_deps(self, filename):
+        """Return paths to dependencies for the template loaded from filename."""
+        deps = set([])
+        with open(filename) as fd:
+            source = fd.read()
+            ast = self.lookup.parse(source)
+            dep_names = meta.find_referenced_templates(ast)
+            for dep_name in dep_names:
+                filename = self.lookup.loader.get_source(self.lookup, dep_name)[1]
+                deps.add(filename)
+                sub_deps = self.get_deps(filename)
+                self.dependency_cache[dep_name] = sub_deps
+                deps |= set(sub_deps)
+        return list(deps)
+
     def template_deps(self, template_name):
         """Generate list of dependencies for a template."""
-        # Cache the lists of dependencies for each template name.
         if self.dependency_cache.get(template_name) is None:
-            # Use a breadth-first search to find all templates this one
-            # depends on.
-            queue = deque([template_name])
-            visited_templates = set([template_name])
-            deps = []
-            while len(queue) > 0:
-                curr = queue.popleft()
-                source, filename = self.lookup.loader.get_source(self.lookup,
-                                                                 curr)[:2]
-                deps.append(filename)
-                ast = self.lookup.parse(source)
-                dep_names = meta.find_referenced_templates(ast)
-                for dep_name in dep_names:
-                    if (dep_name not in visited_templates and dep_name is not None):
-                        visited_templates.add(dep_name)
-                        queue.append(dep_name)
-            self.dependency_cache[template_name] = deps
+            filename = self.lookup.loader.get_source(self.lookup, template_name)[1]
+            self.dependency_cache[template_name] = [filename] + self.get_deps(filename)
         return self.dependency_cache[template_name]
 
     def get_template_path(self, template_name):

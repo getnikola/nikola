@@ -577,13 +577,25 @@ So, if you are creating a plugin that generates markup, it may be a good idea
 to register it as a shortcode in addition of to restructured text directive or
 markdown extension, thus making it available to all markup formats.
 
-To implement your own shortcodes from a plugin, you can create a plugin inheriting ``ShortcodePlugin`` and call
+To implement your own shortcodes from a plugin, you can create a plugin inheriting ``ShortcodePlugin`` and 
+from its ``set_site`` method,  call
+
 ``Nikola.register_shortcode(name, func)`` with the following arguments:
 
 ``name``:
     Name of the shortcode ("foo" in the examples above)
 ``func``:
     A function that will handle the shortcode
+
+The shortcode handler **must** return a two-element tuple, ``(output, dependencies)``
+
+``output``:
+    The text that will replace the shortcode in the document.
+
+``dependencies``:
+    A list of all the files on disk which will make the output be considered
+    out of date. For example, if the shortcode uses a template, it should be
+    the path to the template file.
 
 The shortcode handler **must** accept the following named arguments (or
 variable keyword arguments):

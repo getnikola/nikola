@@ -82,6 +82,10 @@ class BasePlugin(IPlugin):
         """Add 'dependency' to the target task's task_deps."""
         self.site.injected_deps[target].append(dependency)
 
+    def get_deps(self, filename):
+        """Find the dependencies for a file."""
+        return []
+
 
 class PostScanner(BasePlugin):
     """The scan method of these plugins is called by Nikola.scan_posts."""

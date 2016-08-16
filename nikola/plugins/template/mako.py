@@ -56,7 +56,7 @@ class MakoTemplates(TemplateSystem):
     cache_dir = None
 
     def get_deps(self, filename):
-        """Get dependencies for a template (internal function)."""
+        """Get paths to dependencies for a template."""
         text = util.read_file(filename)
         lex = lexer.Lexer(text=text, filename=filename)
         lex.parse()
@@ -66,6 +66,11 @@ class MakoTemplates(TemplateSystem):
             keyword = getattr(n, 'keyword', None)
             if keyword in ["inherit", "namespace"] or isinstance(n, parsetree.IncludeTag):
                 deps.append(n.attributes['file'])
+        # Some templates will include "foo.tmpl" and we need paths, so normalize them
+        # using the template lookup
+        for i, d in enumerate(deps):
+            if os.sep not in d:
+                deps[i] = self.get_template_path(d)
         return deps
 
     def set_directories(self, directories, cache_folder):
@@ -116,7 +121,7 @@ class MakoTemplates(TemplateSystem):
     def render_template_to_string(self, template, context):
         """Render template to a string using context."""
         context.update(self.filters)
-        return Template(template).render(**context)
+        return Template(template, lookup=self.lookup).render(**context)
 
     def template_deps(self, template_name):
         """Generate list of dependencies for a template."""
@@ -127,8 +132,8 @@ class MakoTemplates(TemplateSystem):
             dep_filenames = self.get_deps(template.filename)
             deps = [template.filename]
             for fname in dep_filenames:
-                deps += self.template_deps(fname)
-            self.cache[template_name] = tuple(deps)
+                deps += self.get_deps(fname)
+            self.cache[template_name] = deps
         return list(self.cache[template_name])
 
     def get_template_path(self, template_name):

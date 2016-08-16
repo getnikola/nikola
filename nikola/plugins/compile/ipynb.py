@@ -93,8 +93,17 @@ class CompileIPynb(PageCompiler):
         makedirs(os.path.dirname(dest))
         with io.open(dest, "w+", encoding="utf8") as out_file:
             output = self.compile_html_string(source, is_two_file)
-            output = self.site.apply_shortcodes(output, filename=source)
+            output, shortcode_deps = self.site.apply_shortcodes(output, filename=source, with_dependencies=True)
             out_file.write(output)
+        try:
+            post = self.site.post_per_input_file[source]
+        except KeyError:
+            if shortcode_deps:
+                self.logger.error(
+                    "Cannot save dependencies for post {0} due to unregistered source file name",
+                    source)
+        else:
+            post._depfile[dest] += shortcode_deps
 
     def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
         """Read metadata directly from ipynb file.

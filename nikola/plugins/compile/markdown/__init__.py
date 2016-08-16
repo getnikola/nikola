@@ -75,8 +75,17 @@ class CompileMarkdown(PageCompiler):
             if not is_two_file:
                 _, data = self.split_metadata(data)
             output = markdown(data, self.extensions)
-            output = self.site.apply_shortcodes(output, filename=source)
+            output, shortcode_deps = self.site.apply_shortcodes(output, filename=source, with_dependencies=True)
             out_file.write(output)
+        try:
+            post = self.site.post_per_input_file[source]
+        except KeyError:
+            if shortcode_deps:
+                self.logger.error(
+                    "Cannot save dependencies for post {0} due to unregistered source file name",
+                    source)
+        else:
+            post._depfile[dest] += shortcode_deps
 
     def create_post(self, path, **kw):
         """Create a new post."""

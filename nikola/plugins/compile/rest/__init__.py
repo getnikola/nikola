@@ -98,7 +98,7 @@ class CompileRest(PageCompiler):
             with io.open(source, "r", encoding="utf8") as in_file:
                 data = in_file.read()
                 output, error_level, deps = self.compile_html_string(data, source, is_two_file)
-                output = self.site.apply_shortcodes(output, filename=source)
+                output, shortcode_deps = self.site.apply_shortcodes(output, filename=source, with_dependencies=True)
                 out_file.write(output)
             try:
                 post = self.site.post_per_input_file[source]
@@ -109,6 +109,7 @@ class CompileRest(PageCompiler):
                         source)
             else:
                 post._depfile[dest] += deps.list
+                post._depfile[dest] += shortcode_deps
         if error_level < 3:
             return True
         else:

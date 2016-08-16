@@ -4,7 +4,7 @@
 
 
 """ Test cases for Nikola ReST extensions.
-A base class ReSTExtensionTestCase provides the tests basic behaivor.
+A base class ReSTExtensionTestCase provides the tests basic behaviour.
 Subclasses must override the "sample" class attribute with the ReST markup.
 The sample will be rendered as HTML using publish_parts() by setUp().
 One method is provided for checking the resulting HTML:
