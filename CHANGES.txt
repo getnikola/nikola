@@ -4,8 +4,9 @@ New in master
 Features
 --------
 
-* Pass global context to template shortcodes (Issue #2424)
+* New NO_DOCUTILS_TITLE_TRANSFORM (Issue #2382)
 * Update options of chart directive to Pygal 2.2.3
+* Pass global context to template shortcodes (Issue #2424)
 
 Bugfixes
 --------
