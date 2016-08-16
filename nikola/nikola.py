@@ -1445,7 +1445,6 @@ class Nikola(object):
                 context[k] = context[k](context['lang'])
             output = self.template_system.render_template_to_string(t_data, context)
             if fname is not None:
-                # FIXME get_deps returns filenames, it needs to be full paths
                 dependencies = [fname] + self.template_system.get_deps(fname)
             else:
                 dependencies = []
@@ -1467,7 +1466,6 @@ class Nikola(object):
 
                 if ext != '.tmpl':
                     continue
-
                 with open(os.path.join(sc_dir, fname)) as fd:
                     self.register_shortcode(name, self._make_renderfunc(
                         fd.read(), os.path.join(sc_dir, fname)))
