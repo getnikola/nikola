@@ -27,6 +27,13 @@
         %for image in photo_array:
             <li><a href="${image['url']}" class="thumbnail image-reference" title="${image['title']}">
                 <img src="${image['url_thumb']}" alt="${image['title']|h}" /></a>
+                %if 'description' in image:
+                <p>${image['description']}</p>
+                %endif
+                %if 'author' in image:
+                <p>Author: ${image['author']}</p>
+                %endif
+            </li>
         %endfor
     </ul>
     %endif

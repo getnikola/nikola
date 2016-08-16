@@ -1432,6 +1432,11 @@ If ``USE_FILENAME_AS_TITLE`` is True the filename (parsed as a readable string)
 is used as the photo caption. If the filename starts with a number, it will
 be stripped. For example ``03_an_amazing_sunrise.jpg`` will be render as *An amazing sunrise*.
 
+If you add a ``.meta`` to an image, the metadata (title, description, author,
+copyright...) will be used.
+For example, ``03_an_amazing_sunrise.meta`` will be used for extended metadata to
+``03_an_amazing_sunrise.jpg``.
+
 Here is a `demo gallery </galleries/demo>`_ of historic, public domain Nikola
 Tesla pictures taken from `this site <http://kerryr.net/pioneers/gallery/tesla.htm>`_.
 

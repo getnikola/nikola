@@ -44,6 +44,7 @@
 * `follower <https://github.com/follower>`_
 * `Grzegorz Śliwiński <https://github.com/fizyk>`_
 * `Guillermo O. Freschi <https://github.com/Tordek>`_
+* `Guilhem Bonnefille <https://github.com/guyou>`_
 * `Hardening <https://github.com/hardening>`_
 * `Ivan Teoh <https://github.com/ivanteoh>`_
 * `John Kristensen <https://github.com/jerrykan>`_
