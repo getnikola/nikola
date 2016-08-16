@@ -180,7 +180,7 @@ class NikolaReader(docutils.readers.standalone.Reader):
         """Initialize the reader."""
         self.transforms = kwargs.pop('transforms', [])
         self.no_title_transform = kwargs.pop('no_title_transform', False)
-        super(NikolaReader, self).__init__(*args, **kwargs)
+        docutils.readers.standalone.Reader.__init__(self, *args, **kwargs)
 
     def get_transforms(self):
         """Get docutils transforms."""
