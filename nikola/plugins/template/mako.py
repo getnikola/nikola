@@ -132,7 +132,7 @@ class MakoTemplates(TemplateSystem):
             dep_filenames = self.get_deps(template.filename)
             deps = [template.filename]
             for fname in dep_filenames:
-                deps += self.get_deps(fname)
+                deps += [fname] + self.get_deps(fname)
             self.cache[template_name] = deps
         return list(self.cache[template_name])
 
