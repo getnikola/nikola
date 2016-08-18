@@ -182,6 +182,13 @@ class CommandImportWordpress(Command, ImportMixin):
             'help': "Uses html2text (needs to be installed with pip) to transform WordPress posts to MarkDown during import",
         },
         {
+            'name': 'transform_to_markdown',
+            'long': 'transform-to-markdown',
+            'default': False,
+            'type': bool,
+            'help': "Uses WordPress page compiler to transform WordPress posts to HTML and then use html2text to transform them to MarkDown during import",
+        },
+        {
             'name': 'transform_to_html',
             'long': 'transform-to-html',
             'default': False,
@@ -275,6 +282,7 @@ class CommandImportWordpress(Command, ImportMixin):
         self.export_comments = options.get('export_comments', False)
 
         self.html2text = options.get('html2text', False)
+        self.transform_to_markdown = options.get('transform_to_markdown', False)
 
         self.transform_to_html = options.get('transform_to_html', False)
         self.use_wordpress_compiler = options.get('use_wordpress_compiler', False)
@@ -294,19 +302,18 @@ class CommandImportWordpress(Command, ImportMixin):
         self.separate_qtranslate_content = options.get('separate_qtranslate_content')
         self.translations_pattern = options.get('translations_pattern')
 
-        if self.html2text and self.transform_to_html:
-            LOGGER.error("You cannot combine --html2text with --transform-to-html.")
+        count = (1 if self.html2text else 0) + (1 if self.transform_to_html else 0) + (1 if self.transform_to_markdown else 0)
+        if count > 1:
+            LOGGER.error("You can use at most one of the options --html2text, --transform-to-html and --transform-to-markdown.")
             return False
-        if self.transform_to_html and self.use_wordpress_compiler:
-            LOGGER.warn("It does not make sense to combine --transform-to-html with --use-wordpress-compiler, as the first converts all posts to HTML and the latter option affects zero posts.")
-        if self.html2text and self.use_wordpress_compiler:
-            LOGGER.warn("It does not make sense to combine --html2text with --use-wordpress-compiler, as the first converts all posts to MarkDown and the latter option affects zero posts.")
+        if (self.html2text or self.transform_to_html or self.transform_to_markdown) and self.use_wordpress_compiler:
+            LOGGER.warn("It does not make sense to combine --use-wordpress-compiler with any of --html2text, --transform-to-html and --transform-to-markdown, as the latter convert all posts to HTML and the first option then affects zero posts.")
 
-        if self.html2text and not html2text:
-            LOGGER.error("You need to install html2text via 'pip install html2text' before you can use the --html2text option.")
+        if (self.html2text or self.transform_to_markdown) and not html2text:
+            LOGGER.error("You need to install html2text via 'pip install html2text' before you can use the --html2text and --transform-to-markdown options.")
             return False
 
-        if self.transform_to_html:
+        if self.transform_to_html or self.transform_to_markdown:
             self._find_wordpress_compiler()
             if not self.wordpress_page_compiler and self.install_wordpress_compiler:
                 if not install_plugin(self.site, 'wordpress_compiler', output_dir='plugins'):  # local install
@@ -716,6 +723,19 @@ class CommandImportWordpress(Command, ImportMixin):
                 except TypeError:  # old versions of the plugin don't support the additional argument
                     content = self.wordpress_page_compiler.compile_to_string(content)
                 return content, 'html', True
+            elif self.transform_to_markdown:
+                # First convert to HTML with WordPress plugin
+                additional_data = {}
+                if attachments is not None:
+                    additional_data['attachments'] = attachments
+                try:
+                    content = self.wordpress_page_compiler.compile_to_string(content, additional_data=additional_data)
+                except TypeError:  # old versions of the plugin don't support the additional argument
+                    content = self.wordpress_page_compiler.compile_to_string(content)
+                # Now convert to MarkDown with html2text
+                h = html2text.HTML2Text()
+                content = h.handle(content)
+                return content, 'md', False
             elif self.html2text:
                 # TODO: what to do with [code] blocks?
                 # content = self.transform_code(content)
