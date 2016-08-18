@@ -69,8 +69,7 @@ class MakoTemplates(TemplateSystem):
         # Some templates will include "foo.tmpl" and we need paths, so normalize them
         # using the template lookup
         for i, d in enumerate(deps):
-            if os.sep not in d:
-                deps[i] = self.get_template_path(d)
+            deps[i] = self.get_template_path(d)
         return deps
 
     def set_directories(self, directories, cache_folder):
