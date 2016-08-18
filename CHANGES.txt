@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Added link to raw file in listings (Issue #1995)
 * New NO_DOCUTILS_TITLE_TRANSFORM (Issue #2382)
 * Update options of chart directive to Pygal 2.2.3
 * Pass global context to template shortcodes (Issue #2424)
