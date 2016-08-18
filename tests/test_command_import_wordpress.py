@@ -171,6 +171,8 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
     def test_populate_context(self):
         channel = self.import_command.get_channel_from_file(
             self.import_filename)
+        self.import_command.html2text = False
+        self.import_command.transform_to_markdown = False
         self.import_command.transform_to_html = False
         self.import_command.use_wordpress_compiler = False
         context = self.import_command.populate_context(channel)
@@ -195,6 +197,8 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
         self.import_command.no_downloads = False
         self.import_command.export_categories_as_categories = False
         self.import_command.export_comments = False
+        self.import_command.html2text = False
+        self.import_command.transform_to_markdown = False
         self.import_command.transform_to_html = False
         self.import_command.use_wordpress_compiler = False
         self.import_command.tag_saniziting_strategy = 'first'
@@ -315,6 +319,8 @@ Diese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammen
         transform_caption = mock.MagicMock()
         transform_newlines = mock.MagicMock()
 
+        self.import_command.html2text = False
+        self.import_command.transform_to_markdown = False
         self.import_command.transform_to_html = False
         self.import_command.use_wordpress_compiler = False
 
