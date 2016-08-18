@@ -173,7 +173,7 @@ class PostList(Directive):
         date = self.options.get('date')
 
         output, deps = _do_post_list(start, stop, reverse, tags, categories, sections, slugs, post_type, type,
-                               all, lang, template, sort, state=self.state, site=self.site, date=date)
+                                     all, lang, template, sort, state=self.state, site=self.site, date=date)
         self.state.document.settings.record_dependencies.add("####MAGIC####TIMELINE")
         for d in deps:
             self.state.document.settings.record_dependencies.add(d)
