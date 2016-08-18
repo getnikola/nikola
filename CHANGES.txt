@@ -7,6 +7,8 @@ Features
 * New NO_DOCUTILS_TITLE_TRANSFORM (Issue #2382)
 * Update options of chart directive to Pygal 2.2.3
 * Pass global context to template shortcodes (Issue #2424)
+* Added new options --html2text and --transform-to-markdown
+  to WordPress importer (Issue #2261)
 
 Bugfixes
 --------
