@@ -172,9 +172,11 @@ class PostList(Directive):
         sort = self.options.get('sort')
         date = self.options.get('date')
 
-        output = _do_post_list(start, stop, reverse, tags, categories, sections, slugs, post_type, type,
+        output, deps = _do_post_list(start, stop, reverse, tags, categories, sections, slugs, post_type, type,
                                all, lang, template, sort, state=self.state, site=self.site, date=date)
         self.state.document.settings.record_dependencies.add("####MAGIC####TIMELINE")
+        for d in deps:
+            self.state.document.settings.record_dependencies.add(d)
         if output:
             return [nodes.raw('', output, format='html')]
         else:
@@ -284,13 +286,14 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
     if not posts:
         return ''
 
+    template_deps = site.template_system.template_deps(template)
     if state:
         # Register template as a dependency (Issue #2391)
-        state.document.settings.record_dependencies.add(
-            site.template_system.get_template_path(template))
+        for d in template_deps:
+            state.document.settings.record_dependencies.add(d)
     elif self_post:
-        self_post.register_depfile(
-            site.template_system.get_template_path(template), lang=lang)
+        for d in template_deps:
+            self_post.register_depfile(d, lang=lang)
 
     template_data = {
         'lang': lang,
@@ -302,7 +305,7 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
     }
     output = site.template_system.render_template(
         template, None, template_data)
-    return output
+    return output, template_deps
 
 # Request file name from shortcode (Issue #2412)
 _do_post_list.nikola_shortcode_pass_filename = True

@@ -14,6 +14,7 @@ Features
 Bugfixes
 --------
 
+* Record template dependencies for post-list shortcut (Issue #2451)
 * Default to English for docutils messages if no translations exist
   (Issues #2422, #2437)
 
