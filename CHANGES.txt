@@ -11,6 +11,7 @@ Features
 * Pass global context to template shortcodes (Issue #2424)
 * Added new options --html2text and --transform-to-markdown
   to WordPress importer (Issue #2261)
+* Listing: guess the lexer if cannot be determined from the file name.
 
 Bugfixes
 --------

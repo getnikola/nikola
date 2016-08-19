@@ -33,7 +33,7 @@ import os
 import lxml.html
 
 from pygments import highlight
-from pygments.lexers import get_lexer_for_filename, TextLexer
+from pygments.lexers import get_lexer_for_filename, guess_lexer, TextLexer
 import natsort
 
 from nikola.plugin_categories import Task
@@ -126,7 +126,11 @@ class Listings(Task):
                     try:
                         lexer = get_lexer_for_filename(in_name)
                     except:
-                        lexer = TextLexer()
+                        try:
+                            lexer = guess_lexer(fd.read())
+                        except:
+                            lexer = TextLexer()
+                        fd.seek(0)
                     code = highlight(fd.read(), lexer, utils.NikolaPygmentsHTML(in_name))
                 title = os.path.basename(in_name)
             else:
