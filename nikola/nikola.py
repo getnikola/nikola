@@ -1454,9 +1454,9 @@ class Nikola(object):
     def _register_templated_shortcodes(self):
         """Register shortcodes based on templates.
 
-        This will register a shortcode for any template found in shortcode/
-        and a generic "template" shortcode which will consider the content
-        in the shortcode as a template in itself.
+        This will register a shortcode for any template found in shortcodes/
+        folders and a generic "template" shortcode which will consider the
+        content in the shortcode as a template in itself.
         """
         self.register_shortcode('template', self._template_shortcode_handler)
 
