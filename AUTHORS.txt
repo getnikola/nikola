@@ -45,6 +45,7 @@
 * `Grzegorz Śliwiński <https://github.com/fizyk>`_
 * `Guillermo O. Freschi <https://github.com/Tordek>`_
 * `Hardening <https://github.com/hardening>`_
+* `Hong Xu <https://www.topbug.net>`_
 * `Ivan Teoh <https://github.com/ivanteoh>`_
 * `John Kristensen <https://github.com/jerrykan>`_
 * `Joshua Barratt <https://github.com/jbarratt>`_
