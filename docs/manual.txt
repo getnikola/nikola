@@ -928,6 +928,19 @@ Then the output file will contain::
 
     This uses the bar variable: bla
 
+Finally, you can use a template shortcode without a file, by inserting the template in the shortcode itself::
+
+    {{% raw %}}
+    {{% template %}}
+    % for foo in bar:
+        <li> ${foo}
+    % endfor
+    {{% /template %}}
+    {{% /raw %}}
+
+In that case, the template engine used will be your theme's and the arguments you pass, as well as the global
+context from your ``conf.py``, are available to the template you are creating.
+
 Redirections
 ------------
 

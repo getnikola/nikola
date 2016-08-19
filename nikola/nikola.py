@@ -1452,7 +1452,14 @@ class Nikola(object):
         return render_shortcode
 
     def _register_templated_shortcodes(self):
-        """Register shortcodes provided by templates in shortcodes/ folders."""
+        """Register shortcodes based on templates.
+
+        This will register a shortcode for any template found in shortcode/
+        and a generic "template" shortcode which will consider the content
+        in the shortcode as a template in itself."""
+
+        self.register_shortcode('template', self._template_shortcode_handler)
+
         builtin_sc_dir = resource_filename(
             'nikola',
             os.path.join('data', 'shortcodes', utils.get_template_engine(self.THEMES)))
@@ -1469,6 +1476,20 @@ class Nikola(object):
                 with open(os.path.join(sc_dir, fname)) as fd:
                     self.register_shortcode(name, self._make_renderfunc(
                         fd.read(), os.path.join(sc_dir, fname)))
+
+    def _template_shortcode_handler(self, *args, **kw):
+        t_data = kw.pop('data', '')
+        context = self.GLOBAL_CONTEXT.copy()
+        context.update(kw)
+        context['_args'] = args
+        context['lang'] = utils.LocaleBorg().current_lang
+        for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
+            context[k] = context[k](context['lang'])
+        output = self.template_system.render_template_to_string(t_data, context)
+        # XXX FIXME: we have no standard way to get dependency information from
+        # a template that's not a file
+        dependencies = []
+        return output, dependencies
 
     def register_shortcode(self, name, f):
         """Register function f to handle shortcode "name"."""
