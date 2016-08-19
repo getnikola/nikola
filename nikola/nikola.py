@@ -1456,8 +1456,8 @@ class Nikola(object):
 
         This will register a shortcode for any template found in shortcode/
         and a generic "template" shortcode which will consider the content
-        in the shortcode as a template in itself."""
-
+        in the shortcode as a template in itself.
+        """
         self.register_shortcode('template', self._template_shortcode_handler)
 
         builtin_sc_dir = resource_filename(
