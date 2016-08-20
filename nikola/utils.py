@@ -56,6 +56,10 @@ except ImportError:
     from urllib.parse import urlparse, urlunparse  # NOQA
 import warnings
 import PyRSS2Gen as rss
+try:
+    import yaml
+except ImportError:
+    yaml = None
 from collections import defaultdict, Callable, OrderedDict
 from logbook.compat import redirect_logging
 from logbook.more import ExceptionHandler, ColorizedStderrHandler
@@ -81,7 +85,8 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real', 'get_theme_
            'adjust_name_for_index_path', 'adjust_name_for_index_link',
            'NikolaPygmentsHTML', 'create_redirect', 'TreeNode',
            'flatten_tree_structure', 'parse_escaped_hierarchical_category_name',
-           'join_hierarchical_category_path', 'clean_before_deployment', 'indent')
+           'join_hierarchical_category_path', 'clean_before_deployment', 'indent',
+           'load_data')
 
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
@@ -1909,3 +1914,16 @@ def indent(text, prefix, predicate=None):
         for line in text.splitlines(True):
             yield (prefix + line if predicate(line) else line)
     return ''.join(prefixed_lines())
+
+def load_data(path):
+    """Given path to a file, load data from it."""
+    ext = os.path.splitext(path)[-1]
+    if ext in {'.yml', '.yaml'}:
+        if yaml is None:
+            req_missing(['yaml'], 'use YAML data files')
+            return {}
+        with io.open(path, 'r', encoding='utf8') as inf:
+            return yaml.load(inf)
+    elif ext in {'.json', '.js'}:
+        with io.open(path, 'r', encoding='utf8') as inf:
+            return json.load(inf)

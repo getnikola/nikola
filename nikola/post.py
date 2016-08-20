@@ -161,6 +161,13 @@ class Post(object):
             for lang in sorted(self.translated_to):
                 default_metadata.update(self.meta[lang])
 
+
+        # Load data field from metadata
+        self.data = Functionary(lambda: None, self.default_lang)
+        for lang in self.translations:
+            if self.meta[lang].get('data') is not None:
+                self.data[lang] = utils.load_data(self.meta[lang]['data'])
+
         if 'date' not in default_metadata and not use_in_feeds:
             # For stories we don't *really* need a date
             if self.config['__invariant__']:
@@ -223,6 +230,8 @@ class Post(object):
         self.is_post = use_in_feeds
         self.use_in_feeds = use_in_feeds and not is_draft and not is_private \
             and not self.publish_later
+
+
 
         # Register potential extra dependencies
         self.compiler.register_extra_dependencies(self)
@@ -475,6 +484,8 @@ class Post(object):
             cand_3 = get_translation_candidate(self.config, self.metadata_path, lang)
             if os.path.exists(cand_3):
                 deps.append(cand_3)
+        if self.meta('data', lang):
+            deps.append(self.meta('data', lang))
         deps += self._get_dependencies(self._dependency_file_page[lang])
         deps += self._get_dependencies(self._dependency_file_page[None])
         return sorted(deps)

@@ -363,6 +363,14 @@ to your configuration:
    enclosure
        Add an enclosure to this post when it's used in RSS. See `more information about enclosures <http://en.wikipedia.org/wiki/RSS_enclosure>`__
 
+   data
+       Path to an external data file, relative to ``conf.py``. Based on it's extension it will
+       be interpreted as JSON or YAML and be available as ``post.data``. The data **must**
+       decode into a python dictionary, and it's keys are available for templates as ``post.data('key')``.
+
+       Translated posts can have different values for this field, and the correct one will be
+       used.
+
 .. note:: The Two-File Format
 
    Nikola originally used a separate ``.meta`` file. That will still work!

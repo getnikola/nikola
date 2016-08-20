@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New ``data`` metadata that loads data from external files (Issue #2450)
 * Shortcode to escape to the template language (Issue #1227)
 * Added link to raw file in listings (Issue #1995)
 * New NO_DOCUTILS_TITLE_TRANSFORM (Issue #2382)
