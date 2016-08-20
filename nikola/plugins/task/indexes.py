@@ -36,6 +36,7 @@ except ImportError:
 
 from nikola.plugin_categories import Task
 from nikola import utils
+from nikola.nikola import _enclosure
 
 
 class Indexes(Task):
@@ -51,6 +52,7 @@ class Indexes(Task):
         site.register_path_handler('index_atom', self.index_atom_path)
         site.register_path_handler('section_index', self.index_section_path)
         site.register_path_handler('section_index_atom', self.index_section_atom_path)
+        site.register_path_handler('section_index_rss', self.index_section_rss_path)
         return super(Indexes, self).set_site(site)
 
     def _get_filtered_posts(self, lang, show_untranslated_posts):
@@ -77,6 +79,10 @@ class Indexes(Task):
             "translations": self.site.config['TRANSLATIONS'],
             "messages": self.site.MESSAGES,
             "output_folder": self.site.config['OUTPUT_FOLDER'],
+            "feed_length": self.site.config['FEED_LENGTH'],
+            "feed_links_append_query": self.site.config["FEED_LINKS_APPEND_QUERY"],
+            "feed_teasers": self.site.config["FEED_TEASERS"],
+            "feed_plain": self.site.config["FEED_PLAIN"],
             "filters": self.site.config['FILTERS'],
             "index_file": self.site.config['INDEX_FILE'],
             "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
@@ -85,6 +91,7 @@ class Indexes(Task):
             "strip_indexes": self.site.config['STRIP_INDEXES'],
             "blog_title": self.site.config["BLOG_TITLE"],
             "generate_atom": self.site.config["GENERATE_ATOM"],
+            "site_url": self.site.config["SITE_URL"],
         }
 
         template_name = "index.tmpl"
@@ -165,6 +172,37 @@ class Indexes(Task):
                         task['uptodate'] = [utils.config_changed(kw, 'nikola.plugins.task.indexes')]
                         task['basename'] = self.name
                     yield task
+
+                    # RSS feed for section
+                    deps = []
+                    deps_uptodate = []
+                    if kw["show_untranslated_posts"]:
+                        posts = post_list[:kw['feed_length']]
+                    else:
+                        posts = [x for x in post_list if x.is_translation_available(lang)][:kw['feed_length']]
+                    for post in posts:
+                        deps += post.deps(lang)
+                        deps_uptodate += post.deps_uptodate(lang)
+
+                    feed_url = urljoin(self.site.config['BASE_URL'], self.site.link('section_index_rss', None, lang).lstrip('/'))
+                    output_name = os.path.join(kw['output_folder'], section_slug, 'rss.xml')
+                    task = {
+                        'basename': self.name,
+                        'name': os.path.normpath(output_name),
+                        'file_dep': deps,
+                        'targets': [output_name],
+                        'actions': [(utils.generic_rss_renderer,
+                            (lang, kw["blog_title"](lang), kw["site_url"],
+                             context["description"], posts, output_name,
+                             kw["feed_teasers"], kw["feed_plain"], kw['feed_length'], feed_url,
+                             _enclosure, kw["feed_links_append_query"]))],
+
+                        'task_dep': ['render_posts'],
+                        'clean': True,
+                        'uptodate': [utils.config_changed(kw, 'nikola.plugins.indexes')] + deps_uptodate,
+                    }
+                    yield task
+
 
         if not self.site.config["STORY_INDEX"]:
             return
@@ -250,7 +288,7 @@ class Indexes(Task):
                                                      self.site,
                                                      extension=extension)
 
-    def index_section_path(self, name, lang, is_feed=False):
+    def index_section_path(self, name, lang, is_feed=False, is_rss=False):
         """Link to the index for a section.
 
         Example:
@@ -262,6 +300,8 @@ class Indexes(Task):
         if is_feed:
             extension = ".atom"
             index_file = os.path.splitext(self.site.config['INDEX_FILE'])[0] + extension
+        elif is_rss:
+            index_file = 'rss.xml'
         else:
             index_file = self.site.config['INDEX_FILE']
         if name in self.number_of_pages_section[lang]:
@@ -296,3 +336,12 @@ class Indexes(Task):
         link://section_index_atom/cars => /cars/index.atom
         """
         return self.index_section_path(name, lang, is_feed=True)
+
+    def index_section_rss_path(self, name, lang):
+        """Link to the RSS feed for a section.
+
+        Example:
+
+        link://section_index_atom/cars => /cars/rss.xml
+        """
+        return self.index_section_path(name, lang, is_rss=True)
