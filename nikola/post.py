@@ -161,7 +161,6 @@ class Post(object):
             for lang in sorted(self.translated_to):
                 default_metadata.update(self.meta[lang])
 
-
         # Load data field from metadata
         self.data = Functionary(lambda: None, self.default_lang)
         for lang in self.translations:
@@ -230,8 +229,6 @@ class Post(object):
         self.is_post = use_in_feeds
         self.use_in_feeds = use_in_feeds and not is_draft and not is_private \
             and not self.publish_later
-
-
 
         # Register potential extra dependencies
         self.compiler.register_extra_dependencies(self)

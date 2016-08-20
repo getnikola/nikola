@@ -1915,6 +1915,7 @@ def indent(text, prefix, predicate=None):
             yield (prefix + line if predicate(line) else line)
     return ''.join(prefixed_lines())
 
+
 def load_data(path):
     """Given path to a file, load data from it."""
     ext = os.path.splitext(path)[-1]
