@@ -185,7 +185,7 @@ class Indexes(Task):
                         deps_uptodate += post.deps_uptodate(lang)
 
                     feed_url = urljoin(self.site.config['BASE_URL'], self.site.link('section_index_rss', section_slug, lang).lstrip('/'))
-                    output_name = os.path.join(kw['output_folder'], self.site.link('section_index_rss', section_slug, lang).lstrip(os.sep))
+                    output_name = os.path.join(kw['output_folder'], self.site.path('section_index_rss', section_slug, lang).lstrip(os.sep))
                     task = {
                         'basename': self.name,
                         'name': os.path.normpath(output_name),
