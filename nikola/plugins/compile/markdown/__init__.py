@@ -69,17 +69,19 @@ class CompileMarkdown(PageCompiler):
             req_missing(['markdown'], 'build this site (compile Markdown)')
         makedirs(os.path.dirname(dest))
         self.extensions += self.site.config.get("MARKDOWN_EXTENSIONS")
+        try:
+            post = self.site.post_per_input_file[source]
+        except KeyError:
+            post = None
         with io.open(dest, "w+", encoding="utf8") as out_file:
             with io.open(source, "r", encoding="utf8") as in_file:
                 data = in_file.read()
             if not is_two_file:
                 _, data = self.split_metadata(data)
             output = markdown(data, self.extensions)
-            output, shortcode_deps = self.site.apply_shortcodes(output, filename=source, with_dependencies=True)
+            output, shortcode_deps = self.site.apply_shortcodes(output, filename=source, with_dependencies=True, extra_context=dict(post=post))
             out_file.write(output)
-        try:
-            post = self.site.post_per_input_file[source]
-        except KeyError:
+        if post is None:
             if shortcode_deps:
                 self.logger.error(
                     "Cannot save dependencies for post {0} due to unregistered source file name",
