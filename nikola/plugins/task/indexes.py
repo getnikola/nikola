@@ -192,17 +192,16 @@ class Indexes(Task):
                         'file_dep': deps,
                         'targets': [output_name],
                         'actions': [(utils.generic_rss_renderer,
-                            (lang, kw["blog_title"](lang), kw["site_url"],
-                             context["description"], posts, output_name,
-                             kw["feed_teasers"], kw["feed_plain"], kw['feed_length'], feed_url,
-                             _enclosure, kw["feed_links_append_query"]))],
+                                     (lang, kw["blog_title"](lang), kw["site_url"],
+                                      context["description"], posts, output_name,
+                                      kw["feed_teasers"], kw["feed_plain"], kw['feed_length'], feed_url,
+                                      _enclosure, kw["feed_links_append_query"]))],
 
                         'task_dep': ['render_posts'],
                         'clean': True,
                         'uptodate': [utils.config_changed(kw, 'nikola.plugins.indexes')] + deps_uptodate,
                     }
                     yield task
-
 
         if not self.site.config["STORY_INDEX"]:
             return
