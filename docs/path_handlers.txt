@@ -199,6 +199,14 @@ section_index_atom
     link://section_index_atom/cars => /cars/index.atom
     
 
+section_index_rss
+    Link to the RSS feed for a section.
+    
+    Example:
+    
+    link://section_index_atom/cars => /cars/rss.xml
+    
+
 slug
     A link to a post with given slug, if not ambiguous.
     
