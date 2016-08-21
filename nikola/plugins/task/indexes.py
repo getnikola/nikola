@@ -341,6 +341,6 @@ class Indexes(Task):
 
         Example:
 
-        link://section_index_atom/cars => /cars/rss.xml
+        link://section_index_rss/cars => /cars/rss.xml
         """
         return self.index_section_path(name, lang, is_rss=True)
