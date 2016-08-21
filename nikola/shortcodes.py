@@ -257,7 +257,7 @@ def _split_shortcodes(data):
 
 
 # FIXME: in v8, get rid of with_dependencies
-def apply_shortcodes(data, registry, site=None, filename=None, raise_exceptions=False, lang=None, with_dependencies=False):
+def apply_shortcodes(data, registry, site=None, filename=None, raise_exceptions=False, lang=None, with_dependencies=False, extra_context={}):
     """Apply Hugo-style shortcodes on data.
 
     {{% name parameters %}} will end up calling the registered "name" function with the given parameters.
@@ -312,6 +312,7 @@ def apply_shortcodes(data, registry, site=None, filename=None, raise_exceptions=
                 kw['site'] = site
                 kw['data'] = data_arg
                 kw['lang'] = lang
+                kw.update(extra_context)
                 if name in registry:
                     f = registry[name]
                     if getattr(f, 'nikola_shortcode_pass_filename', None):

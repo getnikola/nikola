@@ -54,14 +54,16 @@ class CompilePandoc(PageCompiler):
         """Compile source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
         try:
+            try:
+                post = self.site.post_per_input_file[source]
+            except KeyError:
+                post = None
             subprocess.check_call(['pandoc', '-o', dest, source] + self.site.config['PANDOC_OPTIONS'])
             with open(dest, 'r', encoding='utf-8') as inf:
                 output, shortcode_deps = self.site.apply_shortcodes(inf.read(), with_dependencies=True)
             with open(dest, 'w', encoding='utf-8') as outf:
                 outf.write(output)
-            try:
-                post = self.site.post_per_input_file[source]
-            except KeyError:
+            if post is None:
                 if shortcode_deps:
                     self.logger.error(
                         "Cannot save dependencies for post {0} due to unregistered source file name",

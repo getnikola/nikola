@@ -44,16 +44,18 @@ class CompileHtml(PageCompiler):
     def compile_html(self, source, dest, is_two_file=True):
         """Compile source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
+        try:
+            post = self.site.post_per_input_file[source]
+        except KeyError:
+            post = None
         with io.open(dest, "w+", encoding="utf8") as out_file:
             with io.open(source, "r", encoding="utf8") as in_file:
                 data = in_file.read()
             if not is_two_file:
                 _, data = self.split_metadata(data)
-            data, shortcode_deps = self.site.apply_shortcodes(source, with_dependencies=True)
+            data, shortcode_deps = self.site.apply_shortcodes(source, with_dependencies=True, extra_context=dict(post=post))
             out_file.write(data)
-        try:
-            post = self.site.post_per_input_file[source]
-        except KeyError:
+        if post is None:
             if shortcode_deps:
                 self.logger.error(
                     "Cannot save dependencies for post {0} due to unregistered source file name",

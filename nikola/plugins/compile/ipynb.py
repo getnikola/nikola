@@ -91,13 +91,15 @@ class CompileIPynb(PageCompiler):
     def compile_html(self, source, dest, is_two_file=True):
         """Compile source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
-        with io.open(dest, "w+", encoding="utf8") as out_file:
-            output = self.compile_html_string(source, is_two_file)
-            output, shortcode_deps = self.site.apply_shortcodes(output, filename=source, with_dependencies=True)
-            out_file.write(output)
         try:
             post = self.site.post_per_input_file[source]
         except KeyError:
+            post = None
+        with io.open(dest, "w+", encoding="utf8") as out_file:
+            output = self.compile_html_string(source, is_two_file)
+            output, shortcode_deps = self.site.apply_shortcodes(output, filename=source, with_dependencies=True, extra_context=dict(post=post))
+            out_file.write(output)
+        if post is None:
             if shortcode_deps:
                 self.logger.error(
                     "Cannot save dependencies for post {0} due to unregistered source file name",

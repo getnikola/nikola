@@ -1499,11 +1499,11 @@ class Nikola(object):
         self.shortcode_registry[name] = f
 
     # XXX in v8, get rid of with_dependencies
-    def apply_shortcodes(self, data, filename=None, lang=None, with_dependencies=False):
+    def apply_shortcodes(self, data, filename=None, lang=None, with_dependencies=False, extra_context={}):
         """Apply shortcodes from the registry on data."""
         if lang is None:
             lang = utils.LocaleBorg().current_lang
-        return shortcodes.apply_shortcodes(data, self.shortcode_registry, self, filename, lang=lang, with_dependencies=with_dependencies)
+        return shortcodes.apply_shortcodes(data, self.shortcode_registry, self, filename, lang=lang, with_dependencies=with_dependencies, extra_context=extra_context)
 
     def generic_rss_renderer(self, lang, title, link, description, timeline, output_path,
                              rss_teasers, rss_plain, feed_length=10, feed_url=None,
