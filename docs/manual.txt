@@ -371,6 +371,8 @@ to your configuration:
        Translated posts can have different values for this field, and the correct one will be
        used.
 
+       This is specially useful used in combination with `shortcodes.`__
+
 .. note:: The Two-File Format
 
    Nikola originally used a separate ``.meta`` file. That will still work!
