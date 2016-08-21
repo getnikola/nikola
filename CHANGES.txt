@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* RSS feeds for sections (Issue #2068)
 * New ``data`` metadata that loads data from external files (Issue #2450)
 * Shortcode to escape to the template language (Issue #1227)
 * Added link to raw file in listings (Issue #1995)
