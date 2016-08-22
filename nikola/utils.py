@@ -1932,7 +1932,7 @@ def load_data(path):
         loader = json
     elif ext in {'.toml', '.tml'}:
         if toml is None:
-            req_missing(['yaml'], 'use YAML data files')
+            req_missing(['toml'], 'use TOML data files')
             return {}
         loader = toml
     with io.open(path, 'r', encoding='utf8') as inf:
