@@ -186,7 +186,7 @@ class PostList(Directive):
 def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=None,
                   sections=None, slugs=None, post_type='post', type=False, all=False,
                   lang=None, template='post_list_directive.tmpl', sort=None,
-                  id=None, data=None, state=None, site=None, date=None, filename=None):
+                  id=None, data=None, state=None, site=None, date=None, filename=None, post=None):
     if lang is None:
         lang = utils.LocaleBorg().current_lang
     if site.invariant:  # for testing purposes
