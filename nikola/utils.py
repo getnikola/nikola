@@ -57,6 +57,10 @@ except ImportError:
 import warnings
 import PyRSS2Gen as rss
 try:
+    import pytoml as toml
+except ImportError:
+    toml = None
+try:
     import yaml
 except ImportError:
     yaml = None
@@ -1920,11 +1924,16 @@ def load_data(path):
     """Given path to a file, load data from it."""
     ext = os.path.splitext(path)[-1]
     if ext in {'.yml', '.yaml'}:
+        loader = yaml
         if yaml is None:
             req_missing(['yaml'], 'use YAML data files')
             return {}
-        with io.open(path, 'r', encoding='utf8') as inf:
-            return yaml.load(inf)
     elif ext in {'.json', '.js'}:
-        with io.open(path, 'r', encoding='utf8') as inf:
-            return json.load(inf)
+        loader = json
+    elif ext in {'.toml', '.tml'}:
+        if toml is None:
+            req_missing(['yaml'], 'use YAML data files')
+            return {}
+        loader = toml
+    with io.open(path, 'r', encoding='utf8') as inf:
+        return loader.load(inf)
