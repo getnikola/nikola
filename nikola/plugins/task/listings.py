@@ -148,7 +148,7 @@ class Listings(Task):
                         os.path.join(
                             self.kw['output_folder'],
                             output_folder))))
-            if self.site.config['COPY_SOURCES'] and in_name:
+            if in_name:
                 source_link = permalink[:-5]  # remove '.html'
             else:
                 source_link = None
@@ -241,19 +241,19 @@ class Listings(Task):
                         'uptodate': [utils.config_changed(uptodate, 'nikola.plugins.task.listings:source')],
                         'clean': True,
                     }, self.kw["filters"])
-                    if self.site.config['COPY_SOURCES']:
-                        rel_name = os.path.join(rel_path, f)
-                        rel_output_name = os.path.join(output_folder, rel_path, f)
-                        self.register_output_name(input_folder, rel_name, rel_output_name)
-                        out_name = os.path.join(self.kw['output_folder'], rel_output_name)
-                        yield utils.apply_filters({
-                            'basename': self.name,
-                            'name': out_name,
-                            'file_dep': [in_name],
-                            'targets': [out_name],
-                            'actions': [(utils.copy_file, [in_name, out_name])],
-                            'clean': True,
-                        }, self.kw["filters"])
+
+                    rel_name = os.path.join(rel_path, f)
+                    rel_output_name = os.path.join(output_folder, rel_path, f)
+                    self.register_output_name(input_folder, rel_name, rel_output_name)
+                    out_name = os.path.join(self.kw['output_folder'], rel_output_name)
+                    yield utils.apply_filters({
+                        'basename': self.name,
+                        'name': out_name,
+                        'file_dep': [in_name],
+                        'targets': [out_name],
+                        'actions': [(utils.copy_file, [in_name, out_name])],
+                        'clean': True,
+                    }, self.kw["filters"])
 
     def listing_path(self, namep, lang):
         """A link to a listing.

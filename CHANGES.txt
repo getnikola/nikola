@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Always copy source files for listings (Issue #2473)
 * Detect dependencies in template strings (Issue #2455)
 * RSS feeds for sections (Issue #2068)
 * New ``data`` metadata that loads data from external files (Issue #2450)
