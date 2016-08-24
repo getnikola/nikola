@@ -27,7 +27,6 @@
 """Deploy site to GitHub Pages."""
 
 from __future__ import print_function
-from datetime import datetime
 import os
 import subprocess
 from textwrap import dedent
@@ -166,7 +165,3 @@ class CommandGitHubDeploy(Command):
             return e.args[0]
 
         self.logger.info("Successful deployment")
-
-        # Store timestamp of successful deployment
-        new_deploy = datetime.utcnow()
-        self.site.state.set('last_deploy', new_deploy.isoformat())
