@@ -1300,8 +1300,9 @@ sure you have ``nikola`` and ``git`` installed on your PATH.  Also, install
 5. If you set ``GITHUB_COMMIT_SOURCE`` to False, you must switch to your source
    branch and commit to it.  Otherwise, this is done for you.
 6. Run ``nikola github_deploy``.  This will build the site, commit the output
-   folder to your deploy branch, and push to GitHub.  Your website should be up
-   and running within a few minutes.
+   folder to your deploy branch, and push to GitHub.
+7. Enable GitHub Pages for this repository from GitHub’s web interface (on the
+   Settings page).
 
 If you want to use a custom domain, create your ``CNAME`` file in
 ``files/CNAME`` on the source branch. Nikola will copy it to the
