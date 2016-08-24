@@ -18,6 +18,8 @@ Features
 Bugfixes
 --------
 
+* Remove the (useless) ``<base>`` tag by default; change conf.py to
+  opt in (Issue #2471)
 * Show tag descriptions when TAG_PAGES_ARE_INDEXES is True (Issue #2444)
 * Record template dependencies for post-list shortcut (Issue #2451)
 * Default to English for docutils messages if no translations exist

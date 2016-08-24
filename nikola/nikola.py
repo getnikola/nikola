@@ -561,7 +561,7 @@ class Nikola(object):
             'THUMBNAIL_SIZE': 180,
             'UNSLUGIFY_TITLES': False,  # WARNING: conf.py.in overrides this with True for backwards compatibility
             'URL_TYPE': 'rel_path',
-            'USE_BASE_TAG': True,
+            'USE_BASE_TAG': False,
             'USE_BUNDLES': True,
             'USE_CDN': False,
             'USE_CDN_WARNING': True,

@@ -434,9 +434,12 @@ FRONT_INDEX_HEADER = {
 # If USE_BASE_TAG is True, then all HTML files will include
 # something like <base href=http://foo.var.com/baz/bat> to help
 # the browser resolve relative links.
-# In some rare cases, this will be a problem, and you can
-# disable it by setting USE_BASE_TAG to False.
-# USE_BASE_TAG = True
+# Most people don’t need this tag; major websites don’t use it. Use
+# only if you know what you’re doing. If this is True, your website
+# will not be fully usable by manually opening .html files in your web
+# browser (`nikola serve` or `nikola auto` is mandatory). Also, if you
+# have mirrors of your site, they will point to SITE_URL everywhere.
+USE_BASE_TAG = False
 
 # Final location for the blog main RSS feed is:
 # output / TRANSLATION[lang] / RSS_PATH / rss.xml
