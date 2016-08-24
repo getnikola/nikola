@@ -1261,11 +1261,10 @@ Deploying to GitHub
 Nikola provides a separate command ``github_deploy`` to deploy your site to
 GitHub Pages.  The command builds the site, commits the output to a gh-pages
 branch and pushes the output to GitHub.  Nikola uses the `ghp-import command
-<https://pypi.python.org/pypi/ghp-import2>`_ for this.
+<https://github.com/davisp/ghp-import>`_ for this.
 
 In order to use this feature, you need to configure a few things first.  Make
-sure you have ``nikola`` and ``git`` installed on your PATH.  Also, install
-``ghp-import2`` from PyPI (it provides a newer version of ``ghp-import``)
+sure you have ``nikola`` and ``git`` installed on your PATH.
 
 1. Initialize a Nikola site, if you haven’t already.
 2. Initialize a git repository in your Nikola source directory by running:
@@ -1278,12 +1277,12 @@ sure you have ``nikola`` and ``git`` installed on your PATH.  Also, install
 3. Setup branches and remotes in ``conf.py``:
 
    * ``GITHUB_DEPLOY_BRANCH`` is the branch where Nikola-generated HTML files
-     will be deployed. For new sites, ``master`` should be used; older sites
-     may use ``github-pages``.
+     will be deployed. It should be ``gh-pages`` for project pages and
+     ``master`` for user pages (user.github.io).
    * ``GITHUB_SOURCE_BRANCH`` is the branch where your Nikola site source will be
-     deployed. We recommend ``src``.
-   * ``GITHUB_REMOTE_NAME`` is the remote to which changes are pushed. Usually,
-     it’s ``origin``.
+     deployed. We default to ``master``, but user pages should use ``src`` or
+     something else.
+   * ``GITHUB_REMOTE_NAME`` is the remote to which changes are pushed.
    * ``GITHUB_COMMIT_SOURCE`` controls whether or not the source branch is
      automatically committed to and pushed. We recommend setting it to
      ``True``.
@@ -1300,12 +1299,28 @@ sure you have ``nikola`` and ``git`` installed on your PATH.  Also, install
 5. If you set ``GITHUB_COMMIT_SOURCE`` to False, you must switch to your source
    branch and commit to it.  Otherwise, this is done for you.
 6. Run ``nikola github_deploy``.  This will build the site, commit the output
-   folder to your deploy branch, and push to GitHub.
-7. Enable GitHub Pages for this repository from GitHub’s web interface (on the
-   Settings page). You can also configure a custom domain there.
+   folder to your deploy branch, and push to GitHub.  Your website should be up
+   and running within a few minutes.
 
-To add a custom commit message, use the ``-m`` option,
+If you want to use a custom domain, create your ``CNAME`` file in
+``files/CNAME`` on the source branch. Nikola will copy it to the
+output directory. To add a custom commit message, use the ``-m`` option,
 followed by your message.
+
+Automated rebuilds with Travis CI
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you want automated rebuilds and GitHub Pages deployment, allowing you to
+blog from anywhere in the world, follow this guide:
+`Automating Nikola rebuilds with Travis CI
+</blog/automating-nikola-rebuilds-with-travis-ci.html>`_.
+
+Automated rebuilds with GitLab
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+GitLab also offers rebuild automation if you want to use Nikola with GitLab
+Pages. Check out the example `Nikola site on GitLab
+<https://gitlab.com/pages/nikola>`_.
 
 Comments and Annotations
 ------------------------
