@@ -1302,11 +1302,9 @@ sure you have ``nikola`` and ``git`` installed on your PATH.  Also, install
 6. Run ``nikola github_deploy``.  This will build the site, commit the output
    folder to your deploy branch, and push to GitHub.
 7. Enable GitHub Pages for this repository from GitHub’s web interface (on the
-   Settings page).
+   Settings page). You can also configure a custom domain there.
 
-If you want to use a custom domain, create your ``CNAME`` file in
-``files/CNAME`` on the source branch. Nikola will copy it to the
-output directory. To add a custom commit message, use the ``-m`` option,
+To add a custom commit message, use the ``-m`` option,
 followed by your message.
 
 Comments and Annotations
