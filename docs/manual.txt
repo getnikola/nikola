@@ -1261,10 +1261,11 @@ Deploying to GitHub
 Nikola provides a separate command ``github_deploy`` to deploy your site to
 GitHub Pages.  The command builds the site, commits the output to a gh-pages
 branch and pushes the output to GitHub.  Nikola uses the `ghp-import command
-<https://github.com/davisp/ghp-import>`_ for this.
+<https://pypi.python.org/pypi/ghp-import2>`_ for this.
 
 In order to use this feature, you need to configure a few things first.  Make
-sure you have ``nikola`` and ``git`` installed on your PATH.
+sure you have ``nikola`` and ``git`` installed on your PATH.  Also, install
+``ghp-import2`` from PyPI (it provides a newer version of ``ghp-import``)
 
 1. Initialize a Nikola site, if you haven’t already.
 2. Initialize a git repository in your Nikola source directory by running:
@@ -1277,12 +1278,12 @@ sure you have ``nikola`` and ``git`` installed on your PATH.
 3. Setup branches and remotes in ``conf.py``:
 
    * ``GITHUB_DEPLOY_BRANCH`` is the branch where Nikola-generated HTML files
-     will be deployed. It should be ``gh-pages`` for project pages and
-     ``master`` for user pages (user.github.io).
+     will be deployed. For new sites, ``master`` should be used; older sites
+     may use ``github-pages``.
    * ``GITHUB_SOURCE_BRANCH`` is the branch where your Nikola site source will be
-     deployed. We default to ``master``, but user pages should use ``src`` or
-     something else.
-   * ``GITHUB_REMOTE_NAME`` is the remote to which changes are pushed.
+     deployed. We recommend ``src``.
+   * ``GITHUB_REMOTE_NAME`` is the remote to which changes are pushed. Usually,
+     it’s ``origin``.
    * ``GITHUB_COMMIT_SOURCE`` controls whether or not the source branch is
      automatically committed to and pushed. We recommend setting it to
      ``True``.
