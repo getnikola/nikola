@@ -1313,7 +1313,7 @@ Automated rebuilds with Travis CI
 If you want automated rebuilds and GitHub Pages deployment, allowing you to
 blog from anywhere in the world, follow this guide:
 `Automating Nikola rebuilds with Travis CI
-</blog/automating-nikola-rebuilds-with-travis-ci.html>`_.
+<https://getnikola.com/blog/automating-nikola-rebuilds-with-travis-ci.html>`_.
 
 Automated rebuilds with GitLab
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
