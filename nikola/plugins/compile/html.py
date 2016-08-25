@@ -53,7 +53,7 @@ class CompileHtml(PageCompiler):
                 data = in_file.read()
             if not is_two_file:
                 _, data = self.split_metadata(data)
-            data, shortcode_deps = self.site.apply_shortcodes(source, with_dependencies=True, extra_context=dict(post=post))
+            data, shortcode_deps = self.site.apply_shortcodes(data, with_dependencies=True, extra_context=dict(post=post))
             out_file.write(data)
         if post is None:
             if shortcode_deps:
