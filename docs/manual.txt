@@ -426,7 +426,7 @@ default set to:
 You can edit these files with your favourite text editor, and once you are happy
 with the contents, generate the pages using ``nikola build``.
 
-Nikola supports multiple languages for a post (we have almost 40 translations!). If you wish to
+Nikola supports multiple languages for a post (we have almost 50 translations!). If you wish to
 add support for more languages, check out `the Transifex page for Nikola <https://www.transifex.com/projects/p/nikola/>`_
 
 The post page is generated using the ``post.tmpl`` template, which you can use
@@ -2070,6 +2070,13 @@ with the tag ``nikola``:
 
    .. post-list::
       :tags: nikola
+
+Using shortcode syntax (for other compilers):
+
+.. code:: markdown
+
+   {{% post-list stop=5 %}}{{% /post-list %}}
+
 
 The following options are recognized:
 
