@@ -1080,7 +1080,6 @@ class LocaleBorg(object):
     NOTE: never use locale.getlocale() , it can return values that
     locale.setlocale will not accept in Windows XP, 7 and pythons 2.6, 2.7, 3.3
     Examples: "Spanish", "French" can't do the full circle set / get / set
-    That used to break calendar, but now seems is not the case, with month at least
     """
 
     initialized = False
@@ -1199,20 +1198,16 @@ class LocaleBorg(object):
                 res = handler(month_no, lang)
                 if res is not None:
                     return res
-            if sys.version_info[0] == 3:  # Python 3
-                with calendar.different_locale(self.locales[lang]):
-                    s = calendar.month_name[month_no]
-                # for py3 s is unicode
-            else:  # Python 2
-                with calendar.TimeEncoding(self.locales[lang]):
-                    s = calendar.month_name[month_no]
+            old_lang = self.current_lang
+            self.__set_locale(lang)
+            s = calendar.month_name[month_no]
+            self.__set_locale(old_lang)
+            if sys.version_info[0] == 2:
                 enc = self.encodings[lang]
                 if not enc:
                     enc = 'UTF-8'
 
                 s = s.decode(enc)
-            # paranoid about calendar ending in the wrong locale (windows)
-            self.__set_locale(self.current_lang)
             return s
 
     def formatted_date(self, date_format, date):
