@@ -55,9 +55,8 @@ class MakoTemplates(TemplateSystem):
     directories = []
     cache_dir = None
 
-    def get_deps(self, filename):
-        """Get paths to dependencies for a template."""
-        text = util.read_file(filename)
+    def get_string_deps(self, text, filename=None):
+        """Find dependencies for a template string."""
         lex = lexer.Lexer(text=text, filename=filename)
         lex.parse()
 
@@ -71,6 +70,11 @@ class MakoTemplates(TemplateSystem):
         for i, d in enumerate(deps):
             deps[i] = self.get_template_path(d)
         return deps
+
+    def get_deps(self, filename):
+        """Get paths to dependencies for a template."""
+        text = util.read_file(filename)
+        return self.get_string_deps(text, filename)
 
     def set_directories(self, directories, cache_folder):
         """Create a new template lookup with set directories."""

@@ -1486,9 +1486,7 @@ class Nikola(object):
         for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
             context[k] = context[k](context['lang'])
         output = self.template_system.render_template_to_string(t_data, context)
-        # XXX FIXME: we have no standard way to get dependency information from
-        # a template that's not a file
-        dependencies = []
+        dependencies = self.template_system.get_string_deps(t_data)
         return output, dependencies
 
     def register_shortcode(self, name, f):

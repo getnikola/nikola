@@ -103,20 +103,24 @@ class JinjaTemplates(TemplateSystem):
         """Render template to a string using context."""
         return self.lookup.from_string(template).render(**context)
 
+    def get_string_deps(self, text):
+        """Find dependencies for a template string."""
+        deps = set([])
+        ast = self.lookup.parse(text)
+        dep_names = meta.find_referenced_templates(ast)
+        for dep_name in dep_names:
+            filename = self.lookup.loader.get_source(self.lookup, dep_name)[1]
+            deps.add(filename)
+            sub_deps = self.get_deps(filename)
+            self.dependency_cache[dep_name] = sub_deps
+            deps |= set(sub_deps)
+        return list(deps)
+
     def get_deps(self, filename):
         """Return paths to dependencies for the template loaded from filename."""
-        deps = set([])
         with open(filename) as fd:
-            source = fd.read()
-            ast = self.lookup.parse(source)
-            dep_names = meta.find_referenced_templates(ast)
-            for dep_name in dep_names:
-                filename = self.lookup.loader.get_source(self.lookup, dep_name)[1]
-                deps.add(filename)
-                sub_deps = self.get_deps(filename)
-                self.dependency_cache[dep_name] = sub_deps
-                deps |= set(sub_deps)
-        return list(deps)
+            text = fd.read()
+        return self.get_string_deps(text)
 
     def template_deps(self, template_name):
         """Generate list of dependencies for a template."""
