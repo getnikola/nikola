@@ -1143,7 +1143,6 @@ class Nikola(object):
             key = os.path.splitext(key)[0]
             self._GLOBAL_CONTEXT['data'][key] = data
 
-
     def _activate_plugins_of_category(self, category):
         """Activate all the plugins of a given category and return them."""
         # this code duplicated in tests/base.py
