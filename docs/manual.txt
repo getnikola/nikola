@@ -364,14 +364,14 @@ to your configuration:
        Add an enclosure to this post when it's used in RSS. See `more information about enclosures <http://en.wikipedia.org/wiki/RSS_enclosure>`__
 
    data
-       Path to an external data file, relative to ``conf.py``. Based on it's extension it will
-       be interpreted as JSON or YAML and be available as ``post.data``. The data **must**
-       decode into a python dictionary, and it's keys are available for templates as ``post.data('key')``.
+       Path to an external data file (JSON/YAML/TOML dictionary), relative to ``conf.py``.
+       Its keys are available for templates as ``post.data('key')``.
 
        Translated posts can have different values for this field, and the correct one will be
        used.
 
-       This is specially useful used in combination with `shortcodes`_.
+       See `The Global Context and Data files`_ for more details.  This is
+       especially useful used in combination with `shortcodes`_.
 
 .. note:: The Two-File Format
 
@@ -956,19 +956,34 @@ In that case, the template engine used will be your theme's and the arguments yo
 as well as the global context from your ``conf.py``, are available to the template you
 are creating.
 
-.. sidebar:: The Global Context
+The Global Context and Data files
+---------------------------------
 
-   There is a ``GLOBAL_CONTEXT`` field in your ``conf.py`` where you can
-   put things you want to make available to your templates.
+There is a ``GLOBAL_CONTEXT`` field in your ``conf.py`` where you can
+put things you want to make available to your templates.
 
-   It will also contain things you put in a ``data/`` directory within your
-   site. For example, if you create ``data/foo.json`` containing this::
+It will also contain things you put in a ``data/`` directory within your
+site. You can use JSON, YAML or TOML files (with the appropriate file
+extensions: json, yaml/yml, toml) that decode to Python dictionaries.
+For example, if you create ``data/foo.json`` containing this:
 
-      {"bar": "bat"}
+.. code:: json
 
-   Then your templates can use things like ``${data['foo']['bar']}`` and
-   it will be replaced by "bat".
+   {"bar": "baz"}
 
+Then your templates can use things like ``${data['foo']['bar']}`` and
+it will be replaced by "baz".
+
+Individual posts can also have a data file. Those are specified using the
+``data`` meta field (path relative to ``conf.py``, can be different in
+different languages). Those are accessible as eg.
+``${post.meta('data')['bar']`` in templates. `Template-based shortcodes`_ are a
+good idea in this case.
+
+Data files can be useful for eg. auto-generated sites, where users provide
+JSON/YAML/TOML files and Nikola generates a large page with data from all data
+files. (This is especially useful with some automatic rebuild feature, like
+those documented in `Deployment`_)
 
 Redirections
 ------------
@@ -1244,9 +1259,8 @@ Play with it, there's cool stuff there. This feature was suggested by
 Deployment
 ----------
 
-Nikola doesn't really have a concept of deployment. However, if you can specify your
-deployment procedure as a series of commands, you can put them in the ``DEPLOY_COMMANDS``
-option, and run them with ``nikola deploy``.
+If you can specify your deployment procedure as a series of commands, you can
+put them in the ``DEPLOY_COMMANDS`` option, and run them with ``nikola deploy``.
 
 You can have multiple deployment presets.  If you run ``nikola deploy``, the
 ``default`` preset is executed.  You can also specify the names of presets
