@@ -1,0 +1,13 @@
+[Core]
+name = gist
+module = gist
+
+[Nikola]
+plugincategory = Shortcode
+
+[Documentation]
+author = Roberto Alsina
+version = 0.1
+website = https://getnikola.com/
+description = Gist shortcode
+

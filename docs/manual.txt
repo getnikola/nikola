@@ -936,6 +936,12 @@ chart
         'Others',  [14.2, 15.4, 15.3, 8.9, 9, 10.4]
         {{% /chart %}}{{% /raw %}}
 
+gist
+    Show GitHub gists. If you know the gist's ID, this will show it in your site:
+
+    {{% raw %}}{{% gist 2395294 %}} {{% /raw %}}
+
+
 raw
     Passes the content along, mostly used so I can write this damn section and you can see the shortcodes instead
     of them being munged into shortcode **output**. I can't show an example because Inception.
