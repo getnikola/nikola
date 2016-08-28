@@ -112,7 +112,7 @@ THEME_COLOR = '#5670d4'
 # output/TRANSLATIONS[lang]/destination/pagename.html
 #
 # where "pagename" is the "slug" specified in the metadata file.
-# The page might also be placed in /destinstion/pagename/index.html
+# The page might also be placed in /destination/pagename/index.html
 # if PRETTY_URLS are enabled.
 #
 # The difference between POSTS and PAGES is that POSTS are added
