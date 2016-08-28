@@ -204,6 +204,14 @@ class TemplateSystem(BasePlugin):
         """Return filenames which are dependencies for a template."""
         raise NotImplementedError()
 
+    def get_deps(self, filename):
+        """Return paths to dependencies for the template loaded from filename."""
+        raise NotImplementedError()
+
+    def get_string_deps(self, text):
+        """Find dependencies for a template string."""
+        raise NotImplementedError()
+
     def render_template(self, template_name, output_name, context):
         """Render template to a file using context.
 
