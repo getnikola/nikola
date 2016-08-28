@@ -32,6 +32,7 @@ from collections import defaultdict
 from copy import copy
 from pkg_resources import resource_filename
 import datetime
+import glob
 import locale
 import os
 import json
@@ -896,7 +897,8 @@ class Nikola(object):
             else:
                 self.bad_compilers.add(k)
 
-        self._set_global_context()
+        self._set_global_context_from_config()
+        self._set_global_context_from_data()
 
         # Set persistent state facility
         self.state = Persistor('state_data.json')
@@ -1036,8 +1038,12 @@ class Nikola(object):
         self._register_templated_shortcodes()
         signal('configured').send(self)
 
-    def _set_global_context(self):
-        """Create global context from configuration."""
+    def _set_global_context_from_config(self):
+        """Create global context from configuration.
+
+        These are options that are used by templates, so they always need to be
+        available.
+        """
         self._GLOBAL_CONTEXT['url_type'] = self.config['URL_TYPE']
         self._GLOBAL_CONTEXT['timezone'] = self.tzinfo
         self._GLOBAL_CONTEXT['_link'] = self.link
@@ -1127,6 +1133,15 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['needs_ipython_css'] = 'ipynb' in self.config['COMPILERS']
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
+
+    def _set_global_context_from_data(self):
+        """Load files from data/ and put them in the global context."""
+        self._GLOBAL_CONTEXT['data'] = {}
+        for fname in glob.glob('data/*'):
+            data = utils.load_data(fname)
+            key = os.path.basename(fname)
+            key = os.path.splitext(key)[0]
+            self._GLOBAL_CONTEXT['data'][key] = data
 
     def _activate_plugins_of_category(self, category):
         """Activate all the plugins of a given category and return them."""

@@ -956,6 +956,20 @@ In that case, the template engine used will be your theme's and the arguments yo
 as well as the global context from your ``conf.py``, are available to the template you
 are creating.
 
+.. sidebar:: The Global Context
+
+   There is a ``GLOBAL_CONTEXT`` field in your ``conf.py`` where you can
+   put things you want to make available to your templates.
+
+   It will also contain things you put in a ``data/`` directory within your
+   site. For example, if you create ``data/foo.json`` containing this::
+
+      {"bar": "bat"}
+
+   Then your templates can use things like ``${data['foo']['bar']}`` and
+   it will be replaced by "bat".
+
+
 Redirections
 ------------
 

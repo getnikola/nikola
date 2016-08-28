@@ -15,6 +15,7 @@ Features
 * Added new options --html2text and --transform-to-markdown
   to WordPress importer (Issue #2261)
 * Listing: guess the lexer if cannot be determined from the file name.
+* Read files from data/ and insert data in global context (Issue #2477)
 
 Bugfixes
 --------
