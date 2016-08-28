@@ -21,6 +21,7 @@ Features
 Bugfixes
 --------
 
+* Added link to sources in the output of listing directive (Issue #2472)
 * Fix Windows crash with calendar locales (Issue #2332)
 * Remove the (useless) ``<base>`` tag by default; change conf.py to
   opt in (Issue #2471)

@@ -54,6 +54,7 @@ class Listings(Task):
     def set_site(self, site):
         """Set Nikola site."""
         site.register_path_handler('listing', self.listing_path)
+        site.register_path_handler('listing_source', self.listing_source_path)
 
         # We need to prepare some things for the listings path handler to work.
 
@@ -254,6 +255,22 @@ class Listings(Task):
                         'actions': [(utils.copy_file, [in_name, out_name])],
                         'clean': True,
                     }, self.kw["filters"])
+
+    def listing_source_path(self, name, lang):
+        """A link to the source code for a listing.
+
+        It will try to use the file name if it's not ambiguous, or the file path.
+
+        Example:
+
+        link://listing_source/hello.py => /listings/tutorial/hello.py
+
+        link://listing_source/tutorial/hello.py => /listings/tutorial/hello.py
+        """
+        result = self.listing_path(name, lang)
+        if result[-1].endswith('.html'):
+            result[-1] = result[-1][:-5]
+        return result
 
     def listing_path(self, namep, lang):
         """A link to a listing.
