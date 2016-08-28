@@ -190,7 +190,7 @@ class Listing(Include):
             self.content = fileobject.read().splitlines()
         self.state.document.settings.record_dependencies.add(fpath)
         target = urlunsplit(("link", 'listing', fpath.replace('\\', '/'), '', ''))
-        src_target = urlunsplit(("link", 'listing-source', fpath.replace('\\', '/'), '', ''))
+        src_target = urlunsplit(("link", 'listing_source', fpath.replace('\\', '/'), '', ''))
         src_label = self.site.MESSAGES('Source')
         generated_nodes = (
             [core.publish_doctree('`{0} <{1}>`_  `({2}) <{3}>`_' .format(

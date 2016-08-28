@@ -54,7 +54,7 @@ class Listings(Task):
     def set_site(self, site):
         """Set Nikola site."""
         site.register_path_handler('listing', self.listing_path)
-        site.register_path_handler('listing-source', self.listing_source_path)
+        site.register_path_handler('listing_source', self.listing_source_path)
 
         # We need to prepare some things for the listings path handler to work.
 
@@ -263,9 +263,9 @@ class Listings(Task):
 
         Example:
 
-        link://listing-source/hello.py => /listings/tutorial/hello.py
+        link://listing_source/hello.py => /listings/tutorial/hello.py
 
-        link://listing-source/tutorial/hello.py => /listings/tutorial/hello.py
+        link://listing_source/tutorial/hello.py => /listings/tutorial/hello.py
         """
         result = self.listing_path(name, lang)
         if result[-1].endswith('.html'):
