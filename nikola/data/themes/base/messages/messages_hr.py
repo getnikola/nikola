@@ -22,7 +22,7 @@ MESSAGES = {
     "Posts about %s": "Postovi o %s",
     "Posts by %s": "Objave od %s",
     "Posts for year %s": "Postovi za godinu %s",
-    "Posts for {month} {day}, {year}": "Objave za {mjesec}{dan}, {godina}",
+    "Posts for {month} {day}, {year}": "Objave za {month} {day}, {year}",
     "Posts for {month} {year}": "Postovi za {month} {year}",
     "Previous post": "Prethodni post",
     "Publication date": "Nadnevak objave",
