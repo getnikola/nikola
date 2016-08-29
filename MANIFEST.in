@@ -2,7 +2,6 @@ graft bower_components
 graft docs
 graft logo
 graft nikola
-graft snapcraft
 graft scripts
 graft tests
 graft translations
