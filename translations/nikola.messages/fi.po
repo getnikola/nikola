@@ -9,14 +9,15 @@
 # Translators:
 # ekari <eero.kari@gmail.com>, 2013
 # ekari <eero.kari@gmail.com>, 2013-2014
+# Timo Kankare <timo.kankare@iki.fi>, 2016
 # Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2015-08-31 07:51+0000\n"
-"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"PO-Revision-Date: 2016-08-11 14:50+0000\n"
+"Last-Translator: Timo Kankare <timo.kankare@iki.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/ralsina/nikola/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -101,7 +102,7 @@ msgid "Posts for {month} {year}"
 msgstr "Postauksia ajalle {month} {year}"
 
 msgid "Posts for {month} {day}, {year}"
-msgstr ""
+msgstr "Kirjoituksia ajalta {day}. {month}ta {year}"
 
 msgid "Nothing found."
 msgstr "Ei hakutuloksia."
@@ -127,21 +128,21 @@ msgstr "(aktiivinen)"
 
 #. Default content for a new post
 msgid "Write your post here."
-msgstr ""
+msgstr "Kirjoita sisältö tähän."
 
 #. Default content for a new page
 msgid "Write your page here."
-msgstr ""
+msgstr "Kirjoita sisältö tähän."
 
 msgid "Uncategorized"
-msgstr ""
+msgstr "Luokittelematon"
 
 #. Used for feeds of any format
 msgid "Updates"
-msgstr ""
+msgstr "Päivitykset"
 
 msgid "Authors"
-msgstr ""
+msgstr "Kirjoittajat"
 
 msgid "Posts by %s"
-msgstr ""
+msgstr "Postaukset kirjoittajalta %s"

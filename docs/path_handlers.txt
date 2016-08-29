@@ -157,6 +157,18 @@ listing
     link://listing/tutorial/hello.py => /listings/tutorial/hello.py.html
     
 
+listing_source
+    A link to the source code for a listing.
+    
+    It will try to use the file name if it's not ambiguous, or the file path.
+    
+    Example:
+    
+    link://listing_source/hello.py => /listings/tutorial/hello.py
+    
+    link://listing_source/tutorial/hello.py => /listings/tutorial/hello.py
+    
+
 post_path
     Link to the destination of an element in the POSTS/PAGES settings.
     
@@ -204,7 +216,7 @@ section_index_rss
     
     Example:
     
-    link://section_index_atom/cars => /cars/rss.xml
+    link://section_index_rss/cars => /cars/rss.xml
     
 
 slug
