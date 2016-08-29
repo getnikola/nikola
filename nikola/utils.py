@@ -1827,20 +1827,17 @@ def colorize_str_from_base_color(string, base_color):
     def degreediff(dega, degb):
         return min(abs(dega - degb), abs((degb - dega) + 360))
 
-    def husl_similar_from_base(string, base_color):
-        if husl is None:
-            req_missing(['husl'], 'Use color mixing (section colors)',
-                        optional=True)
-            return base_color
-        h, s, l = husl.hex_to_husl(base_color)
-        old_h = h
-        idx = 0
-        while degreediff(old_h, h) < 27 and idx < 16:
-            h = 360.0 * (float(hash_str(string, idx)) / 255)
-            idx += 1
-        return husl.husl_to_hex(h, s, l)
-
-    return husl_similar_from_base(string, base_color)
+    if husl is None:
+        req_missing(['husl'], 'Use color mixing (section colors)',
+                    optional=True)
+        return base_color
+    h, s, l = husl.hex_to_husl(base_color)
+    old_h = h
+    idx = 0
+    while degreediff(old_h, h) < 27 and idx < 16:
+        h = 360.0 * (float(hash_str(string, idx)) / 255)
+        idx += 1
+    return husl.husl_to_hex(h, s, l)
 
 
 def color_hsl_adjust_hex(hexstr, adjust_h=None, adjust_s=None, adjust_l=None):
