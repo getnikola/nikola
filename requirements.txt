@@ -13,5 +13,4 @@ blinker>=1.3
 setuptools>=5.4.1
 natsort>=3.5.2
 requests>=2.2.0
-husl>=4.0.2
 piexif>=1.0.3

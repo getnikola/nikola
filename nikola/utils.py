@@ -31,7 +31,6 @@ import calendar
 import datetime
 import dateutil.tz
 import hashlib
-import husl
 import io
 import locale
 import logging
@@ -64,6 +63,11 @@ try:
     import yaml
 except ImportError:
     yaml = None
+try:
+    import husl
+except ImportError:
+    husl = None
+
 from collections import defaultdict, Callable, OrderedDict
 from logbook.compat import redirect_logging
 from logbook.more import ExceptionHandler, ColorizedStderrHandler
@@ -1824,6 +1828,10 @@ def colorize_str_from_base_color(string, base_color):
         return min(abs(dega - degb), abs((degb - dega) + 360))
 
     def husl_similar_from_base(string, base_color):
+        if husl is None:
+            req_missing(['husl'], 'Use color mixing (section colors)',
+                        optional=True)
+            return base_color
         h, s, l = husl.hex_to_husl(base_color)
         old_h = h
         idx = 0
