@@ -46,6 +46,10 @@ function cleanup {
 status '*** Nikola Release Scripts'
 dates=$(date '+%s')
 
+# Make sure we're up-to-date
+git checkout master
+git pull origin master
+
 echo -n "Version (in format X.Y.Z): "
 read version
 
