@@ -4,8 +4,6 @@
 """Gist directive for reStructuredText."""
 
 import requests
-from docutils.parsers.rst import Directive, directives
-from docutils import nodes
 
 from nikola.plugin_categories import ShortcodePlugin
 
