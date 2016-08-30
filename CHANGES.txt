@@ -1,3 +1,11 @@
+New in master
+=============
+
+Features
+--------
+
+* Better support for a tree of files in ``data/``
+
 New in v7.8.0
 =============
 

@@ -32,7 +32,6 @@ from collections import defaultdict
 from copy import copy
 from pkg_resources import resource_filename
 import datetime
-import glob
 import locale
 import os
 import json
@@ -1136,12 +1135,13 @@ class Nikola(object):
 
     def _set_global_context_from_data(self):
         """Load files from data/ and put them in the global context."""
-        self._GLOBAL_CONTEXT['data'] = {}
-        for fname in glob.glob('data/*'):
-            data = utils.load_data(fname)
-            key = os.path.basename(fname)
-            key = os.path.splitext(key)[0]
-            self._GLOBAL_CONTEXT['data'][key] = data
+        self._GLOBAL_CONTEXT['data'] = defaultdict(defaultdict)
+        for root, dirs, files in os.walk('data', followlinks=True):
+            for fname in files:
+                fname = os.path.join(root, fname)
+                data = utils.load_data(fname)
+                key = os.path.splitext(fname.split(os.sep, 1)[1])[0]
+                self._GLOBAL_CONTEXT['data'][key] = data
 
     def _activate_plugins_of_category(self, category):
         """Activate all the plugins of a given category and return them."""

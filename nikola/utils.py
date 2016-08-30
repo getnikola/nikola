@@ -1923,6 +1923,7 @@ def indent(text, prefix, predicate=None):
 def load_data(path):
     """Given path to a file, load data from it."""
     ext = os.path.splitext(path)[-1]
+    loader = None
     if ext in {'.yml', '.yaml'}:
         loader = yaml
         if yaml is None:
@@ -1935,5 +1936,7 @@ def load_data(path):
             req_missing(['toml'], 'use TOML data files')
             return {}
         loader = toml
+    if loader is None:
+        return
     with io.open(path, 'r', encoding='utf8') as inf:
         return loader.load(inf)
