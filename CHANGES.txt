@@ -1,6 +1,11 @@
 New in master
 =============
 
+Bugfixes
+--------
+
+* Don’t crash if a post list has no posts (Issue #2489)
+
 Features
 --------
 

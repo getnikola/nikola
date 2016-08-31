@@ -284,7 +284,7 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
         posts += [post]
 
     if not posts:
-        return ''
+        return '', []
 
     template_deps = site.template_system.template_deps(template)
     if state:
