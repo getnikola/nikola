@@ -2208,9 +2208,9 @@ with the tag ``nikola``:
 
 Using shortcode syntax (for other compilers):
 
-.. code:: markdown
+.. code:: text
 
-   {{% post-list stop=5 %}}{{% /post-list %}}
+   {{% raw %}}{{% post-list stop=5 %}}{{% /post-list %}}{{% /raw %}}
 
 
 The following options are recognized:
