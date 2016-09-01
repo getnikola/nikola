@@ -795,7 +795,7 @@ Sections are the newest feature for taxonomy, and are not supported in themes by
 
 Sections are meant to be used to organize different parts of your blog, parts that are about different topics. Unlike tags, which you should have tens (hundreds?) of, you should ideally have less than 10 sections (though it depends on what your blog needs; there is no hard limit).
 
-With sections, you can also use come custom styling — if you install ``husl``, you can use ``post.section_color()`` from within templates to get a distinct color for the section of a post, which you can then use in some inline CSS for the section name.
+With sections, you can also use some custom styling — if you install ``husl``, you can use ``post.section_color()`` from within templates to get a distinct color for the section of a post, which you can then use in some inline CSS for the section name.
 
 You can find some examples and more information in the `original announcement
 <https://getnikola.com/blog/new-feature-in-nikola-sections.html>`_
