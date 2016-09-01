@@ -1139,7 +1139,7 @@ You surely want to edit these options:
     BLOG_EMAIL = "joe@demo.site"
     BLOG_DESCRIPTION = "This is a demo site for Nikola."  # (translatable)
 
-Some options are demarked with a (translatable) comment above or right next to
+Some options are marked with a (translatable) comment above or right next to
 them.  For those options, two types of values can be provided:
 
 * a string, which will be used for all languages
