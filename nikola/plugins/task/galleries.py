@@ -236,9 +236,7 @@ class Galleries(Task, ImageProcessor):
                 if post:
                     context["title"] = post.title(lang)
                 else:
-                    # TODO: make this translatable
                     context["title"] = self.kw['gallery_index_title'](lang)
-
                 context["description"] = None
 
                 image_name_list = [os.path.basename(p) for p in image_list]
