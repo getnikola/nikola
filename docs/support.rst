@@ -42,7 +42,7 @@ Report a Bug, Request a Feature
 
 Bug reports should be sent to the `Issue tracker`_ at GitHub.
 
-Feature requests should be sent to the or to the `Issue tracker`_ or to
+Feature requests should be sent to the `Issue tracker`_ or to
 the `mailing list`_, especially if they require further discussion.
 
 Administrativia
