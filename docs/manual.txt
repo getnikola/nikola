@@ -1623,17 +1623,12 @@ Embedding images
 Assuming that you have your pictures stored in a folder called images (as configured above),
 you can embed the same in your posts with the following ReST directive,
 
-.. code:: python
+.. code:: rest
 
     ..image:: /images/example.png
-      :height: 300px
-      :width: 50px
-      :alt: My example image.
-      :align: center
 
-The above code will over-ride existing image attributes - you can ignore them if it's
-not needed (NOTE: There is also a corresponding ReST directive for
-thumbnails ``.. thumbnail::`` ).
+Please take note of the leading forward-slash ``/`` which is used to refer to a location
+in IMAGE_FOLDERS.
 
 Handling EXIF Data
 ------------------
