@@ -623,10 +623,7 @@ GITHUB_COMMIT_SOURCE = True
 # For example, if IMAGE_FOLDERS = {'images': 'images'}, write
 #
 #   ..image:: /images/example.png
-#     :height: 300px
-#     :width: 50px
-#     :alt: My example image.
-#     :align: center
+#
 
 # Images will be scaled down according to IMAGE_THUMBNAIL_SIZE and MAX_IMAGE_SIZE
 # options, but will have to be referenced manually to be visible on the site

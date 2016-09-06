@@ -1617,6 +1617,24 @@ be stripped. For example ``03_an_amazing_sunrise.jpg`` will be render as *An ama
 Here is a `demo gallery </galleries/demo>`_ of historic, public domain Nikola
 Tesla pictures taken from `this site <http://kerryr.net/pioneers/gallery/tesla.htm>`_.
 
+Embedding images
+~~~~~~~~~~~~~~~~
+
+Assuming that you have your pictures stored in a folder called images (as configured above),
+you can embed the same in your posts with the following ReST directive,
+
+.. code:: python
+
+    ..image:: /images/example.png
+      :height: 300px
+      :width: 50px
+      :alt: My example image.
+      :align: center
+
+The above code will over-ride existing image attributes - you can ignore them if it's
+not needed (NOTE: There is also a corresponding ReST directive for
+thumbnails ``.. thumbnail::`` ).
+
 Handling EXIF Data
 ------------------
 

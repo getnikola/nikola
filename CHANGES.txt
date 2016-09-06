@@ -5,7 +5,6 @@ Bugfixes
 --------
 
 * Don’t crash if a post list has no posts (Issue #2489)
-* Clarify conf.py documentation on using images
 
 Features
 --------
