@@ -1563,7 +1563,9 @@ and put images there. Nikola will take care of creating thumbnails, index page, 
 If you click on images on a gallery, or on images with links in post, you will
 see a bigger image, thanks to the excellent `colorbox
 <http://www.jacklmoore.com/colorbox>`_.  If don’t want this behavior, add an
-``.islink`` class to your image or link.
+``.islink`` class to your image or link. (The behavior is caused by
+``<a class="image-reference">`` if you need to use it outside of galleries and reST
+thumbnails.)
 
 The gallery pages are generated using the ``gallery.tmpl`` template, and you can
 customize it there (you could switch to another lightbox instead of colorbox, change
@@ -1594,16 +1596,19 @@ The ``conf.py`` options affecting images and gallery pages are these:
     # If set to False, it will sort by filename instead. Defaults to True
     GALLERY_SORT_BY_DATE = True
 
-    # Folders containing images to be used in normal posts or pages. Images will be
-    # scaled down according to IMAGE_THUMBNAIL_SIZE and MAX_IMAGE_SIZE options, but
-    # will have to be referenced manually to be visible on the site
-    # (the thumbnail has ``.thumbnail`` added before the file extension).
-    # The format is a dictionary of {source: relative destination}.
-
+    # Folders containing images to be used in normal posts or pages.
+    # IMAGE_FOLDERS is a dictionary of the form {"source": "destination"},
+    # where "source" is the folder containing the images to be published, and
+    # "destination" is the folder under OUTPUT_PATH containing the images copied
+    # to the site. Thumbnail images will be created there as well.
     IMAGE_FOLDERS = {'images': 'images'}
+
+    # Images will be scaled down according to IMAGE_THUMBNAIL_SIZE and MAX_IMAGE_SIZE
+    # options, but will have to be referenced manually to be visible on the site
+    # (the thumbnail has ``.thumbnail`` added before the file extension).
     IMAGE_THUMBNAIL_SIZE = 400
 
-If you add a file in ``galleries/gallery_name/index.txt`` its contents will be
+If you add a reST file in ``galleries/gallery_name/index.txt`` its contents will be
 converted to HTML and inserted above the images in the gallery page. The
 format is the same as for posts.
 
@@ -1617,18 +1622,28 @@ be stripped. For example ``03_an_amazing_sunrise.jpg`` will be render as *An ama
 Here is a `demo gallery </galleries/demo>`_ of historic, public domain Nikola
 Tesla pictures taken from `this site <http://kerryr.net/pioneers/gallery/tesla.htm>`_.
 
-Embedding images
+Embedding Images
 ~~~~~~~~~~~~~~~~
 
-Assuming that you have your pictures stored in a folder called images (as configured above),
-you can embed the same in your posts with the following ReST directive,
+Assuming that you have your pictures stored in a folder called ``images`` (as configured above),
+you can embed the same in your posts with the following reST directive:
 
 .. code:: rest
 
-    ..image:: /images/example.png
+    ..image:: /images/tesla.jpg
 
-Please take note of the leading forward-slash ``/`` which is used to refer to a location
-in IMAGE_FOLDERS.
+Which is equivalent to the following HTML code:
+
+.. code:: html
+
+   <img src="/images/tesla.jpg">
+
+Please take note of the leading forward-slash ``/`` which refers to the root
+output directory. (Make sure to use this even if you’re not deploying to
+web server root.)
+
+You can also use thumbnails with the ``.. thumbnail::`` reST directive. For
+more details, and equivalent HTML code, see `Thumbnails`_.
 
 Handling EXIF Data
 ------------------
@@ -2120,6 +2135,13 @@ directive instead:
     .. thumbnail:: /images/tesla.jpg
 
        Nikola Tesla, the man that invented the 20th century.
+
+If you want to include a thumbnail in a non-reST post, you need to produce at
+least this basic HTML:
+
+.. code:: html
+
+   <a class="image-reference" href="images/tesla.jpg"><img src="images/tesla.thumbnail.jpg"></a>
 
 Slideshows
 ~~~~~~~~~~
