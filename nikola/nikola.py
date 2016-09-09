@@ -1135,7 +1135,7 @@ class Nikola(object):
 
     def _set_global_context_from_data(self):
         """Load files from data/ and put them in the global context."""
-        self._GLOBAL_CONTEXT['data'] = defaultdict(defaultdict)
+        self._GLOBAL_CONTEXT['data'] = {}
         for root, dirs, files in os.walk('data', followlinks=True):
             for fname in files:
                 fname = os.path.join(root, fname)

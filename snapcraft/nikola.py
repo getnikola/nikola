@@ -6,5 +6,5 @@ from pkg_resources import load_entry_point
 
 if __name__ == '__main__':
     sys.exit(
-        load_entry_point('Nikola==7.8.0')()
+        load_entry_point('Nikola', 'console_scripts', 'nikola')()
     )
