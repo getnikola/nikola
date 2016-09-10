@@ -225,7 +225,7 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
     # TODO: remove in v8
     if all is not False:
         timeline = [p for p in site.timeline]
-    elif post_type == 'page':
+    elif post_type == 'page' or post_type == 'pages':
         timeline = [p for p in site.timeline if not p.use_in_feeds]
     elif post_type == 'all':
         timeline = [p for p in site.timeline]
@@ -233,7 +233,7 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
         timeline = [p for p in site.timeline if p.use_in_feeds]
 
     # TODO: replaces all, uncomment in v8
-    # if post_type == 'page':
+    # if post_type == 'page' or post_type == 'pages':
     #    timeline = [p for p in site.timeline if not p.use_in_feeds]
     # elif post_type == 'all':
     #    timeline = [p for p in site.timeline]
