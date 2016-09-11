@@ -10,6 +10,8 @@ Bugfixes
 Features
 --------
 
+* Introduce the new KATEX_AUTO_RENDER label
+* Update KaTeX version to 0.6.0: support aligned math display
 * Better support for a tree of files in ``data/``
 
 New in v7.8.0

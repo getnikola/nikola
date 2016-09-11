@@ -31,6 +31,7 @@
 * `Dhruv Baldawa <https://github.com/dhruvbaldawa>`_
 * `Dirk Engling <https://github.com/erdgeist>`_
 * `Dmitry Verkhoturov <https://github.com/paskal>`_
+* `Du Phan <https://github.com/fehiepsi>`_
 * `Duncan Lock <https://github.com/dflock>`_
 * `Edinei Cavalcanti <https://github.com/neiesc>`_
 * `Eduardo Schettino <https://github.com/schettino72>`_

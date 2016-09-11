@@ -497,6 +497,7 @@ class Nikola(object):
             'INDEXES_STATIC': True,
             'INDEX_PATH': '',
             'IPYNB_CONFIG': {},
+            'KATEX_AUTO_RENDER': '',
             'LESS_COMPILER': 'lessc',
             'LESS_OPTIONS': [],
             'LICENSE': '',
@@ -1090,6 +1091,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['mathjax_config'] = self.config.get(
             'MATHJAX_CONFIG')
         self._GLOBAL_CONTEXT['use_katex'] = self.config.get('USE_KATEX')
+        self._GLOBAL_CONTEXT['katex_auto_render'] = self.config.get('KATEX_AUTO_RENDER')
         self._GLOBAL_CONTEXT['subtheme'] = self.config.get('THEME_REVEAL_CONFIG_SUBTHEME')
         self._GLOBAL_CONTEXT['transition'] = self.config.get('THEME_REVEAL_CONFIG_TRANSITION')
         self._GLOBAL_CONTEXT['content_footer'] = self.config.get(
