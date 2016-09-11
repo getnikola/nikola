@@ -908,9 +908,7 @@ PRETTY_URLS = ${PRETTY_URLS}
 # USE_KATEX = False
 
 # If you want to use the old (buggy) inline math $.$ with KaTeX, then
-# you might want to use this feature. In particular, if you build your
-# posts from Jupyter notebook and there are a lot of inline math in
-# your notebook, then it is recommended to activate it.
+# you might want to use this feature.
 # KATEX_AUTO_RENDER = """
 # delimiters: [
 #     {left: "$$", right: "$$", display: true},
