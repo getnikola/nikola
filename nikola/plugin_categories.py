@@ -136,6 +136,10 @@ class Command(BasePlugin, DoitCommand):
         """
         raise NotImplementedError()
 
+    def get_appearing_post_extensions(self):
+        """Returns a list of post extensions which appear, or None if such a list cannot be computed efficiently."""
+        return None
+
 
 def help(self):
     """Return help text for a command."""

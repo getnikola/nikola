@@ -885,14 +885,21 @@ class Nikola(object):
         self.themes_dirs = ['themes'] + self.config['EXTRA_THEMES_DIRS']
 
         # Avoid redundant compilers
-        # Remove compilers that match nothing in POSTS/PAGES
+        # Remove compilers that match nothing in POSTS/PAGES or what other post scanning plugins consider
         # And put them in "bad compilers"
-        pp_exts = set([os.path.splitext(x[0])[1] for x in self.config['post_pages']])
+        pp_exts = set()
+        for p in self.plugin_manager.getPluginsOfCategory('PostScanner'):
+            exts = p.plugin_object.get_appearing_post_extensions()
+            if exts is None:
+                pp_exts = None
+                break
+            for ext in exts:
+                pp_exts.add(ext)
         self.config['COMPILERS'] = {}
         self.disabled_compilers = {}
         self.bad_compilers = set([])
         for k, v in compilers.items():
-            if pp_exts.intersection(v):
+            if pp_exts is None or pp_exts.intersection(v):
                 self.config['COMPILERS'][k] = sorted(list(v))
             else:
                 self.bad_compilers.add(k)
