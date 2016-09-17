@@ -1492,7 +1492,7 @@ to one of "disqus", "intensedebate", "livefyre", "moot", "googleplus",
    * In Moot it's your **username**
    * For Google Plus, ``COMMENT_SYSTEM_ID`` need not be set. WARNING: this will not work correctly in the test server, needs to be deployed to a real server/URL.
    * For Facebook, you need to `create an app
-     <https://developers.facebook.com/apps>` (turn off sandbox mode!)
+     <https://developers.facebook.com/apps>`_ (turn off sandbox mode!)
      and get an **App ID**
    * For isso, it is the URL of isso (must be world-accessible, encoded with
      Punycode (if using Internationalized Domain Names) and **have a trailing slash**,
