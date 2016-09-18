@@ -815,8 +815,8 @@ There are multiple configuration variables dedicated to each of the three taxono
 * ``HIDDEN_TAGS``. ``HIDDEN_CATEGORIES`` to make some tags/categories invisible in lists
 * ``POSTS_SECTION_FROM_META`` to use ``.. section:`` in posts instead of inferring paths from paths
 
-Creating a Page
----------------
+Creating a Page (Story)
+-----------------------
 
 Pages are the same as posts, except that:
 
@@ -830,6 +830,10 @@ The default configuration expects the page's metadata and text files to be on th
 You can create the page's files manually or use the ``new_post`` command
 with the ``-p`` option, which will place the files in the folder that
 has ``use_in_feed`` set to False.
+
+In some places (including default directories and templates), pages are called
+*stories* for historic reasons. Both are synonyms for the same thing: pages
+that are not blog posts.
 
 Supported input formats
 -----------------------
@@ -1175,7 +1179,7 @@ CSS tweaking
 .. _LESS: http://lesscss.org/
 .. _Sass: http://sass-lang.com/
 
-Template tweaking
+Template tweaking and creating themes
     If you really want to change the pages radically, you will want to do a
     `custom theme <theming.html>`__.
 
@@ -1315,8 +1319,18 @@ change the FILES_FOLDERS option:
     # FILES_FOLDERS = {'files': '' }
     # Which means copy 'files' into 'output'
 
-Getting More Themes
--------------------
+Custom Themes
+-------------
+
+If you prefer to have a custom appearance for your site, and modifying CSS
+files and settings (see `Customizing Your Site`_ for details) is not enough,
+you can create your own theme. See the :doc:`theming` and
+:doc:`creating-a-theme` for more details. You can put them in a ``themes/``
+folder and set ``THEME`` to the directory name.  You can also put them in
+directories listed in the ``EXTRA_THEMES_DIRS`` configuration variable.
+
+Getting Extra Themes
+--------------------
 
 There are a few themes for Nikola. They are available at
 the `Themes Index <https://themes.getnikola.com/>`_.
