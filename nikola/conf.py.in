@@ -119,6 +119,9 @@ THEME_COLOR = '#5670d4'
 # to feeds, indexes, tag lists and archives and are considered part
 # of a blog, while PAGES are just independent HTML pages.
 #
+# Finally, note that destination can be translated, i.e. you can
+# specify a different translation folder per language.
+#
 
 POSTS = ${POSTS}
 PAGES = ${PAGES}

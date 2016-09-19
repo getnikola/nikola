@@ -20,6 +20,8 @@ Features
 * Add ``KATEX_AUTO_RENDER`` setting to configure math delimiters
 * Update KaTeX version to 0.6.0: support aligned math display
 * Better support for a tree of files in ``data/``
+* The destination folder in ``POSTS`` and ``PAGES`` can now be
+  translated (Issue #2116)
 
 New in v7.8.0
 =============
