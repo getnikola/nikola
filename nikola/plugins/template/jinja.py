@@ -110,8 +110,7 @@ class JinjaTemplates(TemplateSystem):
         dep_names = meta.find_referenced_templates(ast)
         for dep_name in dep_names:
             filename = self.lookup.loader.get_source(self.lookup, dep_name)[1]
-            deps.add(filename)
-            sub_deps = self.get_deps(filename)
+            sub_deps = [filename] + self.get_deps(filename)
             self.dependency_cache[dep_name] = sub_deps
             deps |= set(sub_deps)
         return list(deps)
