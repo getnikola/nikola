@@ -10,6 +10,7 @@ Bugfixes
 Features
 --------
 
+* Add Chinese (Traditional) ``zh_TW`` locale by Po-Wen Chi
 * Add ``KATEX_AUTO_RENDER`` setting to configure math delimiters
 * Update KaTeX version to 0.6.0: support aligned math display
 * Better support for a tree of files in ``data/``

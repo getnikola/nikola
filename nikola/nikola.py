@@ -148,6 +148,7 @@ LEGAL_VALUES = {
         'ur': 'Urdu',
         'uk': 'Ukrainian',
         'zh_cn': 'Chinese (Simplified)',
+        'zh_tw': 'Chinese (Traditional)'
     },
     '_WINDOWS_LOCALE_GUESSES': {
         # TODO incomplete
@@ -195,13 +196,15 @@ LEGAL_VALUES = {
         "uk": "Ukrainian",
         "ur": "Urdu",
         "zh_cn": "Chinese_China",  # Chinese (Simplified)
+        "zh_tw": "Chinese_Taiwan",  # Chinese (Traditional)
     },
     '_TRANSLATIONS_WITH_COUNTRY_SPECIFIERS': {
         # This dict is used in `init` in case of locales that exist with a
         # country specifier.  If there is no other locale that has the same
         # language with a different country, ``nikola init`` (but nobody else!)
         # will accept it, warning the user about it.
-        'zh': 'zh_cn',
+
+        # This dict is currently empty.
     },
     'RTL_LANGUAGES': ('ar', 'fa', 'ur'),
     'COLORBOX_LOCALES': defaultdict(
@@ -240,6 +243,7 @@ LEGAL_VALUES = {
         tr='tr',
         uk='uk',
         zh_cn='zh-CN'
+        zh_tw='zh-TW'
     ),
     'MOMENTJS_LOCALES': defaultdict(
         str,
@@ -285,7 +289,8 @@ LEGAL_VALUES = {
         sv='sv',
         tr='tr',
         uk='uk',
-        zh_cn='zh-cn'
+        zh_cn='zh-cn',
+        zh_tw='zh-tw'
     ),
     'PYPHEN_LOCALES': {
         'bg': 'bg',
@@ -336,6 +341,7 @@ LEGAL_VALUES = {
         'sk': 'sk',
         'sv': 'sv',
         'zh_cn': 'zh_cn'
+        'zh_cn': 'zh_tw'
     }
 }
 

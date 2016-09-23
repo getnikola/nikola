@@ -7,13 +7,14 @@
 # Translators:
 # Translators:
 # Translators:
+# Po-Wen Chi <pwchi@pwchi.info>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2015-08-31 07:50+0000\n"
-"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"PO-Revision-Date: 2016-09-10 04:09+0000\n"
+"Last-Translator: Po-Wen Chi <pwchi@pwchi.info>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/ralsina/nikola/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,123 +23,123 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "More posts about %s"
-msgstr ""
+msgstr "更多 %s 的文章"
 
 #. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "LANGUAGE"
-msgstr ""
+msgstr "繁體中文"
 
 msgid "Tags"
-msgstr ""
+msgstr "標籤"
 
 msgid "Categories"
-msgstr ""
+msgstr "分類"
 
 msgid "Tags and Categories"
-msgstr ""
+msgstr "標籤和分類"
 
 msgid "Comments"
-msgstr ""
+msgstr "迴響"
 
 msgid "Read more"
-msgstr ""
+msgstr "閱讀更多"
 
 msgid "Posts about %s"
-msgstr ""
+msgstr "文章分類：%s"
 
 msgid "Next post"
-msgstr ""
+msgstr "下一篇"
 
 msgid "old posts, page %d"
-msgstr ""
+msgstr "old posts, page %d"
 
 msgid "page %d"
-msgstr ""
+msgstr "第 %d 頁"
 
 msgid "Source"
-msgstr ""
+msgstr "原始碼"
 
 #. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "Read in English"
-msgstr ""
+msgstr "繁體中文版"
 
 msgid "Posts for year %s"
-msgstr ""
+msgstr "%s 年的文章"
 
 msgid "Newer posts"
-msgstr ""
+msgstr "較新的文章"
 
 msgid "Previous post"
-msgstr ""
+msgstr "上一篇"
 
 msgid "Also available in:"
-msgstr ""
+msgstr "其他語言版本："
 
 msgid "Languages:"
-msgstr ""
+msgstr "語言："
 
 msgid "Original site"
-msgstr ""
+msgstr "原始網站"
 
 msgid "Older posts"
-msgstr ""
+msgstr "較舊的文章"
 
 msgid "Archive"
-msgstr ""
+msgstr "彙整"
 
 msgid "Publication date"
-msgstr ""
+msgstr "發佈日期"
 
 msgid "Posted:"
-msgstr ""
+msgstr "發佈於："
 
 msgid "Posts for {month} {year}"
-msgstr ""
+msgstr "{year}年{month}月的文章"
 
 msgid "Posts for {month} {day}, {year}"
-msgstr ""
+msgstr "{year}年{month}月{day}日的文章"
 
 msgid "Nothing found."
-msgstr ""
+msgstr "沒有找到。"
 
 msgid "No posts found."
-msgstr ""
+msgstr "沒有找到文章。"
 
 msgid "RSS feed"
-msgstr ""
+msgstr "RSS 訂閱"
 
 msgid "%d min remaining to read"
-msgstr ""
+msgstr "%d min remaining to read"
 
 msgid "Skip to main content"
-msgstr ""
+msgstr "略過主內容"
 
 msgid "Subcategories:"
-msgstr ""
+msgstr "子分類"
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
-msgstr ""
+msgstr "(啟用)"
 
 #. Default content for a new post
 msgid "Write your post here."
-msgstr ""
+msgstr "從這裡開始編輯文章"
 
 #. Default content for a new page
 msgid "Write your page here."
-msgstr ""
+msgstr "從這裡開始編輯頁面"
 
 msgid "Uncategorized"
-msgstr ""
+msgstr "未分類"
 
 #. Used for feeds of any format
 msgid "Updates"
-msgstr ""
+msgstr "更新"
 
 msgid "Authors"
-msgstr ""
+msgstr "作者"
 
 msgid "Posts by %s"
-msgstr ""
+msgstr "%s 發佈"
