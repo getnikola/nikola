@@ -242,7 +242,7 @@ LEGAL_VALUES = {
         sv='sv',
         tr='tr',
         uk='uk',
-        zh_cn='zh-CN'
+        zh_cn='zh-CN',
         zh_tw='zh-TW'
     ),
     'MOMENTJS_LOCALES': defaultdict(
@@ -340,8 +340,8 @@ LEGAL_VALUES = {
         'ru': 'ru',
         'sk': 'sk',
         'sv': 'sv',
-        'zh_cn': 'zh_cn'
-        'zh_cn': 'zh_tw'
+        'zh_cn': 'zh_cn',
+        'zh_tw': 'zh_tw'
     }
 }
 
