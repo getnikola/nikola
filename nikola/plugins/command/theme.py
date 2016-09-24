@@ -231,6 +231,11 @@ class CommandTheme(Command):
         except Exception:
             LOGGER.error('Unknown theme: {0}'.format(name))
             return 1
+        # Don't uninstall builtin themes (Issue #2510)
+        blocked = os.path.dirname(utils.__file__)
+        if path.startswith(blocked):
+            LOGGER.error("Can't delete builtin theme: {0}".format(name))
+            return 1
         LOGGER.warning('About to uninstall theme: {0}'.format(name))
         LOGGER.warning('This will delete {0}'.format(path))
         sure = utils.ask_yesno('Are you sure?')
