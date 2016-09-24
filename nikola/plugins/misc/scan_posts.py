@@ -37,6 +37,7 @@ from nikola.post import Post
 
 LOGGER = utils.get_logger('scan_posts', utils.STDERR_HANDLER)
 
+
 class ScanPosts(PostScanner):
     """Scan posts in the site."""
 
