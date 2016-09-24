@@ -34,6 +34,7 @@ MESSAGES = {
     "Subcategories:": "Alakategoriat:",
     "Tags and Categories": "Tagit ja kategoriat",
     "Tags": "Tagit",
+    "Toggle navigation": "",
     "Uncategorized": "Luokittelematon",
     "Updates": "Päivitykset",
     "Write your page here.": "Kirjoita sisältö tähän.",

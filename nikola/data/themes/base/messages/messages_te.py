@@ -34,6 +34,7 @@ MESSAGES = {
     "Subcategories:": "ఉపవర్గాలు:",
     "Tags and Categories": "ట్యాగ్లు మరియు వర్గాలు",
     "Tags": "ట్యాగ్లు",
+    "Toggle navigation": "",
     "Uncategorized": "వర్గీకరించని",
     "Updates": "నవీకరణలు",
     "Write your page here.": "మీ పేజీ ఇక్కడ రాయండి.",

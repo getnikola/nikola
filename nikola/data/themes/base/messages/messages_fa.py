@@ -34,6 +34,7 @@ MESSAGES = {
     "Subcategories:": "زیر بخش‌ها:",
     "Tags and Categories": "برچسب‌ها و دسته‌ها",
     "Tags": "برچسب‌ها",
+    "Toggle navigation": "",
     "Uncategorized": "دسته‌بندی نشده",
     "Updates": "بروزرسانی‌ها",
     "Write your page here.": "من صفحه را این‌جا بنویسید. ",

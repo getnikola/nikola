@@ -34,6 +34,7 @@ MESSAGES = {
     "Subcategories:": "Underkategorier:",
     "Tags and Categories": "Merker og kategorier",
     "Tags": "Merker",
+    "Toggle navigation": "",
     "Uncategorized": "",
     "Updates": "",
     "Write your page here.": "Skriv siden din her.",

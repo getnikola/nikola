@@ -1,5 +1,5 @@
 # Messages in Nikola
-# Copyright (C) 2012-2013
+# Copyright (C) 2012-2016
 # This file is distributed under the same license as the Nikola package.
 # 
 # Translators:
@@ -12,13 +12,13 @@
 # Joaquín Tita <carpincho@gmail.com>, 2014
 # Juan José Conti <jjconti@gmail.com>, 2015
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
-# Roberto Alsina <ralsina@netmanagers.com.ar>, 2013-2015
+# Roberto Alsina <ralsina@netmanagers.com.ar>, 2013-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2015-09-04 14:11+0000\n"
+"PO-Revision-Date: 2016-09-24 22:41+0000\n"
 "Last-Translator: Roberto Alsina <ralsina@netmanagers.com.ar>\n"
 "Language-Team: Spanish (http://www.transifex.com/ralsina/nikola/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -148,3 +148,6 @@ msgstr "Autores"
 
 msgid "Posts by %s"
 msgstr "Publicaciones de %s"
+
+msgid "Toggle navigation"
+msgstr "Mostrar navegación"

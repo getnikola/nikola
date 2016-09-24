@@ -34,6 +34,7 @@ MESSAGES = {
     "Subcategories:": "उपश्रेणी",
     "Tags and Categories": "टैग्स और श्रेणियाँ",
     "Tags": "टैग्स",
+    "Toggle navigation": "",
     "Uncategorized": "बिना श्रेणी",
     "Updates": "अपडेट्स",
     "Write your page here.": "अपना पेज यहाँ लिखिए",

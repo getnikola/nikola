@@ -34,6 +34,7 @@ MESSAGES = {
     "Subcategories:": "ਉਪਸ਼੍ਰੇਣੀਆਂ:",
     "Tags and Categories": "ਟੈਗ ਅਤੇ ਸ਼੍ਰੇਣੀਆਂ",
     "Tags": "ਟੈਗ",
+    "Toggle navigation": "",
     "Uncategorized": "ਇਤਾਹਾਸ",
     "Updates": "ਅੱਪਡੇਟਸ",
     "Write your page here.": "ਆਪਣਾ ਸਫ਼ਾ ਏਥੇ ਲਿਖੋ |",

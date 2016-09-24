@@ -34,6 +34,7 @@ MESSAGES = {
     "Subcategories:": "Alt kategoriler:",
     "Tags and Categories": "Etiketler ve Kategoriler",
     "Tags": "Etiketler",
+    "Toggle navigation": "",
     "Uncategorized": "Kategorisiz",
     "Updates": "Güncellemeler",
     "Write your page here.": "Sayfanızı buraya yazın.",

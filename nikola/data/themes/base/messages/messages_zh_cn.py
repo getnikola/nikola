@@ -34,6 +34,7 @@ MESSAGES = {
     "Subcategories:": "子类别：",
     "Tags and Categories": "标签和分类",
     "Tags": "标签",
+    "Toggle navigation": "",
     "Uncategorized": "未分类",
     "Updates": "更新",
     "Write your page here.": "在这里书写你的页面。",

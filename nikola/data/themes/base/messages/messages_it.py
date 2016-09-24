@@ -34,6 +34,7 @@ MESSAGES = {
     "Subcategories:": "Sottocategorie:",
     "Tags and Categories": "Tag e categorie",
     "Tags": "Tag",
+    "Toggle navigation": "",
     "Uncategorized": "Senza categorie",
     "Updates": "Aggiornamenti",
     "Write your page here.": "Scrivi qui la tua pagina.",

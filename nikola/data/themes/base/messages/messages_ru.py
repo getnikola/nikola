@@ -34,6 +34,7 @@ MESSAGES = {
     "Subcategories:": "Подкатегории:",
     "Tags and Categories": "Тэги и категории",
     "Tags": "Тэги",
+    "Toggle navigation": "",
     "Uncategorized": "Несортированное",
     "Updates": "Обновления",
     "Write your page here.": "Создайте Вашу страницу здесь.",

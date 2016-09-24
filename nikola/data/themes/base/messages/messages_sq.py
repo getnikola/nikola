@@ -34,6 +34,7 @@ MESSAGES = {
     "Subcategories:": "Nënkategori:",
     "Tags and Categories": "Etiketa dhe Kategori",
     "Tags": "Etiketa",
+    "Toggle navigation": "",
     "Uncategorized": "E pa kategorizuar",
     "Updates": "Përditësime",
     "Write your page here.": "Shkruaj faqen tënde këtu.",

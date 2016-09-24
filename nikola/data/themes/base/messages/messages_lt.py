@@ -34,6 +34,7 @@ MESSAGES = {
     "Subcategories:": "Subkategorijos:",
     "Tags and Categories": "Žymės ir Kategorijos",
     "Tags": "Žymės",
+    "Toggle navigation": "",
     "Uncategorized": "Nekategorizuota",
     "Updates": "Atnaujinimai",
     "Write your page here.": "Čia rašykite puslapio tekstą.",

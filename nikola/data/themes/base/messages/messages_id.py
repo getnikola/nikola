@@ -34,6 +34,7 @@ MESSAGES = {
     "Subcategories:": "Sub kategori:",
     "Tags and Categories": "Tag dan Kategori",
     "Tags": "Tag",
+    "Toggle navigation": "",
     "Uncategorized": "Tanpa kategori",
     "Updates": "Update",
     "Write your page here.": "Tulis halaman Anda disini.",

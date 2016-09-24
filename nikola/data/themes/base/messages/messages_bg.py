@@ -34,6 +34,7 @@ MESSAGES = {
     "Subcategories:": "Подкатегории:",
     "Tags and Categories": "Тагове и Категории",
     "Tags": "Тагове",
+    "Toggle navigation": "",
     "Uncategorized": "Без категория",
     "Updates": "Обновления",
     "Write your page here.": "Напиши тук текста на твоята страница.",

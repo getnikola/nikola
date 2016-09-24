@@ -34,6 +34,7 @@ MESSAGES = {
     "Subcategories:": "",
     "Tags and Categories": "Značke in kategorije",
     "Tags": "Značke",
+    "Toggle navigation": "",
     "Uncategorized": "",
     "Updates": "",
     "Write your page here.": "",

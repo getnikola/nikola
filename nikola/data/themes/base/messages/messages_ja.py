@@ -34,6 +34,7 @@ MESSAGES = {
     "Subcategories:": "サブカテゴリ",
     "Tags and Categories": "カテゴリおよびタグ一覧",
     "Tags": "タグ",
+    "Toggle navigation": "",
     "Uncategorized": "uncategorized",
     "Updates": "フィード",
     "Write your page here.": "ここに文書を記述してください。",

@@ -34,6 +34,7 @@ MESSAGES = {
     "Subcategories:": "서브 카테고리",
     "Tags and Categories": "태그와 분류",
     "Tags": "태그",
+    "Toggle navigation": "",
     "Uncategorized": "카테고리 없음",
     "Updates": "업데이트",
     "Write your page here.": "여기에 페이지를 작성하세요.",

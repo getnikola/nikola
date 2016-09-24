@@ -34,6 +34,7 @@ MESSAGES = {
     "Subcategories:": "Podkategorije:",
     "Tags and Categories": "Tagovi i kategorije",
     "Tags": "Tagovi",
+    "Toggle navigation": "",
     "Uncategorized": "Nekategorizirano",
     "Updates": "Nadopune",
     "Write your page here.": "Napiši svoju stranicu ovdje",

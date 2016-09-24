@@ -34,6 +34,7 @@ MESSAGES = {
     "Subcategories:": "Subkateqoriyalar",
     "Tags and Categories": "Teqlər və Kateqoriyalar",
     "Tags": "Teqlər",
+    "Toggle navigation": "",
     "Uncategorized": "Kateqoriyasız",
     "Updates": "Yenilənmələr",
     "Write your page here.": "Öz səhifəni bura yaz",

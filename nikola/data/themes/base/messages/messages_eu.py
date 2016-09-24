@@ -34,6 +34,7 @@ MESSAGES = {
     "Subcategories:": "Azpikategoriak:",
     "Tags and Categories": "Etiketak eta Kategoriak",
     "Tags": "Etiketak",
+    "Toggle navigation": "",
     "Uncategorized": "Kategorizatu-gabeak",
     "Updates": "Eguneraketak",
     "Write your page here.": "Idatzi zure orria hemen",

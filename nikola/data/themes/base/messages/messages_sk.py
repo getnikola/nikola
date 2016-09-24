@@ -34,6 +34,7 @@ MESSAGES = {
     "Subcategories:": "Podkategórie:",
     "Tags and Categories": "Štítky a kategórie",
     "Tags": "Štítky",
+    "Toggle navigation": "",
     "Uncategorized": "",
     "Updates": "",
     "Write your page here.": "Tu napíšte svoju stránku.",

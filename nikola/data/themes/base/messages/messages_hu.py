@@ -34,6 +34,7 @@ MESSAGES = {
     "Subcategories:": "Alkategóriák:",
     "Tags and Categories": "Címkék és kategóriák",
     "Tags": "Címkék",
+    "Toggle navigation": "",
     "Uncategorized": "Nincs kategorizálva",
     "Updates": "Frissítések",
     "Write your page here.": "Ide írd az oldalad.",
