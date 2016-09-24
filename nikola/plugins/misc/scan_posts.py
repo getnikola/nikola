@@ -35,6 +35,7 @@ from nikola.plugin_categories import PostScanner
 from nikola import utils
 from nikola.post import Post
 
+LOGGER = utils.get_logger('scan_posts', utils.STDERR_HANDLER)
 
 class ScanPosts(PostScanner):
     """Scan posts in the site."""
@@ -87,15 +88,19 @@ class ScanPosts(PostScanner):
                         continue
                     else:
                         seen.add(base_path)
-                    post = Post(
-                        base_path,
-                        self.site.config,
-                        dest_dir,
-                        use_in_feeds,
-                        self.site.MESSAGES,
-                        template_name,
-                        self.site.get_compiler(base_path)
-                    )
-                    timeline.append(post)
+                    try:
+                        post = Post(
+                            base_path,
+                            self.site.config,
+                            dest_dir,
+                            use_in_feeds,
+                            self.site.MESSAGES,
+                            template_name,
+                            self.site.get_compiler(base_path)
+                        )
+                        timeline.append(post)
+                    except Exception as err:
+                        LOGGER.error('Error reading post {}'.format(base_path))
+                        raise err
 
         return timeline
