@@ -36,6 +36,7 @@ import requests
 import pygments
 from pygments.lexers import PythonLexer
 from pygments.formatters import TerminalFormatter
+from pkg_resources import resource_filename
 
 from nikola.plugin_categories import Command
 from nikola import utils
@@ -48,7 +49,7 @@ class CommandTheme(Command):
 
     json = None
     name = "theme"
-    doc_usage = "[-i theme_name] [-r theme_name] [-l] [-u url] [-g] [-n theme_name] [-c template_name]"
+    doc_usage = "[-u url] [-i theme_name] [-r theme_name] [-l] [--list-installed] [-g] [-n theme_name] [-c template_name]"
     doc_purpose = "manage themes"
     output_dir = 'themes'
     cmd_options = [
@@ -75,6 +76,13 @@ class CommandTheme(Command):
             'type': bool,
             'default': False,
             'help': 'Show list of available themes.'
+        },
+        {
+            'name': 'list_installed',
+            'long': 'list-installed',
+            'type': bool,
+            'help': "List the installed themes with their location.",
+            'default': False
         },
         {
             'name': 'url',
@@ -133,6 +141,7 @@ class CommandTheme(Command):
         install = options.get('install')
         uninstall = options.get('uninstall')
         list_available = options.get('list')
+        list_installed = options.get('list_installed')
         get_path = options.get('getpath')
         copy_template = options.get('copy-template')
         new = options.get('new')
@@ -142,6 +151,7 @@ class CommandTheme(Command):
             install,
             uninstall,
             list_available,
+            list_installed,
             get_path,
             copy_template,
             new)].count(True)
@@ -151,6 +161,8 @@ class CommandTheme(Command):
 
         if list_available:
             return self.list_available(url)
+        elif list_installed:
+            return self.list_installed()
         elif install:
             return self.do_install_deps(url, install)
         elif uninstall:
@@ -262,6 +274,17 @@ class CommandTheme(Command):
         for theme in sorted(data.keys()):
             print(theme)
         return 0
+
+    def list_installed(self):
+        """List all installed themes."""
+        print("Installed Themes:")
+        print("-----------------")
+        themes = []
+        themes_dirs = self.site.themes_dirs + [resource_filename('nikola', os.path.join('data', 'themes'))]
+        for tdir in themes_dirs:
+            themes += [(i, os.path.join(tdir, i)) for i in os.listdir(tdir)]
+        for theme in sorted(set(themes)):
+            print("{0} at {1}".format(*theme))
 
     def copy_template(self, template):
         """Copy the named template file from the parent to a local theme or to templates/."""
