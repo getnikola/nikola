@@ -283,8 +283,9 @@ class CommandTheme(Command):
         themes_dirs = self.site.themes_dirs + [resource_filename('nikola', os.path.join('data', 'themes'))]
         for tdir in themes_dirs:
             themes += [(i, os.path.join(tdir, i)) for i in os.listdir(tdir)]
-        for theme in sorted(set(themes)):
-            print("{0} at {1}".format(*theme))
+        for tname, tpath in sorted(set(themes)):
+            if os.path.isdir(tpath):
+                print("{0} at {1}".format(tname, tpath))
 
     def copy_template(self, template):
         """Copy the named template file from the parent to a local theme or to templates/."""
