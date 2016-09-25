@@ -179,7 +179,7 @@ class Post(object):
         try:
             self.date = to_datetime(self.meta[self.default_lang]['date'], tzinfo)
         except ValueError:
-            raise OSError("Invalid date '{0}' in file {1}".format(self.meta[self.default_lang]['date'], source_path))
+            raise ValueError("Invalid date '{0}' in file {1}".format(self.meta[self.default_lang]['date'], source_path))
 
         if 'updated' not in default_metadata:
             default_metadata['updated'] = default_metadata.get('date', None)
@@ -188,12 +188,11 @@ class Post(object):
 
         if 'title' not in default_metadata or 'slug' not in default_metadata \
                 or 'date' not in default_metadata:
-            raise OSError("You must set a title (found '{0}'), a slug (found "
-                          "'{1}') and a date (found '{2}')! [in file "
-                          "{3}]".format(default_metadata.get('title', None),
-                                        default_metadata.get('slug', None),
-                                        default_metadata.get('date', None),
-                                        source_path))
+            raise Value("You must set a title (found '{0}'), a slug (found '{1}') and a date (found '{2}')! "
+                        "[in file {3}]".format(default_metadata.get('title', None),
+                                               default_metadata.get('slug', None),
+                                               default_metadata.get('date', None),
+                                               source_path))
 
         if 'type' not in default_metadata:
             # default value is 'text'
