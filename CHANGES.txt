@@ -4,6 +4,10 @@ New in master
 Bugfixes
 --------
 
+* Report missing/unknown dates in posts with filenames
+  (Issues #2505, #2506)
+* Report filename of post that raised exception when scanning
+  (Issue #2505)
 * Accept ``page`` and ``pages`` for the ``type`` field in post lists
 * Don’t crash if a post list has no posts (Issue #2489)
 

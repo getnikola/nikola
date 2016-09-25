@@ -176,7 +176,10 @@ class Post(object):
                     os.stat(self.source_path).st_ctime).replace(tzinfo=dateutil.tz.tzutc()).astimezone(tzinfo)
 
         # If time zone is set, build localized datetime.
-        self.date = to_datetime(self.meta[self.default_lang]['date'], tzinfo)
+        try:
+            self.date = to_datetime(self.meta[self.default_lang]['date'], tzinfo)
+        except ValueError:
+            raise OSError("Invalid date '{0}' in file {1}".format(self.meta[self.default_lang]['date'], source_path))
 
         if 'updated' not in default_metadata:
             default_metadata['updated'] = default_metadata.get('date', None)
