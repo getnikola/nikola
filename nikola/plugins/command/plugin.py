@@ -50,7 +50,7 @@ class CommandPlugin(Command):
 
     json = None
     name = "plugin"
-    doc_usage = "[[-u][--user] --install name] | [[-u] [-l |--upgrade|--list-installed] | [--uninstall name]]"
+    doc_usage = "[-u url] [--user] [-i name] [-r name] [--upgrade] [-l] [--list-installed]"
     doc_purpose = "manage plugins"
     output_dir = None
     needs_config = False
@@ -177,8 +177,8 @@ class CommandPlugin(Command):
             plugins.append([plugin.name, p])
 
         plugins.sort()
-        print('Installed Plugins')
-        print('-----------------')
+        print('Installed Plugins:')
+        print('------------------')
         for name, path in plugins:
             print('{0} at {1}'.format(name, path))
         print('\n\nAlso, you have disabled these plugins: {}'.format(self.site.config['DISABLED_PLUGINS']))
