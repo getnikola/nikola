@@ -208,7 +208,7 @@ LEGAL_VALUES = {
 
         # This dict is currently empty.
     },
-    'RTL_LANGUAGES': ('ar', 'fa', 'ur'),
+    'RTL_LANGUAGES': ('ar', 'fa', 'he', 'ur'),
     'COLORBOX_LOCALES': defaultdict(
         str,
         ar='ar',
