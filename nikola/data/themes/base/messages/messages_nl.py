@@ -34,7 +34,7 @@ MESSAGES = {
     "Subcategories:": "Subcategorieën",
     "Tags and Categories": "Tags en Categorieën",
     "Tags": "Tags",
-    "Toggle navigation": "",
+    "Toggle navigation": "Toggle navigatie",
     "Uncategorized": "Ongeordend",
     "Updates": "Bijgewerkte versies",
     "Write your page here.": "Schrijf hier je pagina.",
