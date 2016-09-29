@@ -1,1 +1,0 @@
-../../../../docs/theming.txt

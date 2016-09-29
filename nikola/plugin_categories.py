@@ -378,7 +378,7 @@ class Importer(Command):
 
     process_data can branch into:
 
-    import_story (may use import_file and save_post)
+    import_page (may use import_file and save_post)
     import_post (may use import_file and save_post)
     import_attachment (may use import_file)
 
@@ -424,8 +424,8 @@ class Importer(Command):
     def process_data(self):
         """Go through self.items and save them."""
 
-    def import_story(self):
-        """Create a story."""
+    def import_page(self):
+        """Create a page."""
         raise NotImplementedError()
 
     def import_post(self):

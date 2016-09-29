@@ -448,7 +448,7 @@ class Nikola(object):
             'CODE_COLOR_SCHEME': 'default',
             'COMMENT_SYSTEM': 'disqus',
             'COMMENTS_IN_GALLERIES': False,
-            'COMMENTS_IN_STORIES': False,
+            'COMMENTS_IN_PAGES': False,
             'COMPILERS': {
                 "rest": ('.txt', '.rst'),
                 "markdown": ('.md', '.mdown', '.markdown'),
@@ -530,7 +530,7 @@ class Nikola(object):
             'POSTS_SECTION_NAME': "",
             'POSTS_SECTION_TITLE': "{name}",
             'PRESERVE_EXIF_DATA': False,
-            'PAGES': (("stories/*.txt", "stories", "story.tmpl"),),
+            'PAGES': (("pages/*.txt", "pages", "page.tmpl"),),
             'PANDOC_OPTIONS': [],
             'PRETTY_URLS': False,
             'FUTURE_IS_NOW': False,
@@ -556,7 +556,7 @@ class Nikola(object):
             'SLUG_TAG_PATH': True,
             'SOCIAL_BUTTONS_CODE': '',
             'SITE_URL': 'https://example.com/',
-            'STORY_INDEX': False,
+            'PAGE_INDEX': False,
             'STRIP_INDEXES': False,
             'SITEMAP_INCLUDE_FILELESS_DIRS': True,
             'TAG_PATH': 'categories',
@@ -1637,8 +1637,8 @@ class Nikola(object):
         * gallery (name is the gallery name)
         * listing (name is the source code file name)
         * post_path (name is 1st element in a POSTS/PAGES tuple)
-        * slug (name is the slug of a post or story)
-        * filename (name is the source filename of a post/story, in DEFAULT_LANG, relative to conf.py)
+        * slug (name is the slug of a post or page)
+        * filename (name is the source filename of a post/page, in DEFAULT_LANG, relative to conf.py)
 
         The returned value is always a path relative to output, like
         "categories/whatever.html"
@@ -1711,7 +1711,7 @@ class Nikola(object):
             return [_f for _f in results[0].permalink(lang).split('/') if _f]
 
     def filename_path(self, name, lang):
-        """Link to post or story by source filename.
+        """Link to post or page by source filename.
 
         Example:
 
@@ -2001,7 +2001,7 @@ class Nikola(object):
         if post.use_in_feeds:
             context['enable_comments'] = True
         else:
-            context['enable_comments'] = self.config['COMMENTS_IN_STORIES']
+            context['enable_comments'] = self.config['COMMENTS_IN_PAGES']
         extension = self.get_compiler(post.source_path).extension()
         output_name = os.path.join(self.config['OUTPUT_FOLDER'],
                                    post.destination_path(lang, extension))
