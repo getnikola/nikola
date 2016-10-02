@@ -1277,7 +1277,7 @@ class Nikola(object):
 
         return compile_html
 
-    def render_template(self, template_name, output_name, context):
+    def render_template(self, template_name, output_name, context, url_type=None):
         """Render a template with the global context.
 
         If ``output_name`` is None, will return a string and all URL
@@ -1285,6 +1285,9 @@ class Nikola(object):
         If ``output_name`` is a string, URLs will be normalized and
         the resultant HTML will be saved to the named file (path must
         start with OUTPUT_FOLDER).
+
+        The argument ``url_type`` allows to override the ``URL_TYPE``
+        configuration.
         """
         local_context = {}
         local_context["template_name"] = template_name
@@ -1321,22 +1324,22 @@ class Nikola(object):
         utils.makedirs(os.path.dirname(output_name))
         parser = lxml.html.HTMLParser(remove_blank_text=True)
         doc = lxml.html.document_fromstring(data, parser)
-        self.rewrite_links(doc, src, context['lang'])
+        self.rewrite_links(doc, src, context['lang'], url_type)
         data = b'<!DOCTYPE html>\n' + lxml.html.tostring(doc, encoding='utf8', method='html', pretty_print=True)
         with open(output_name, "wb+") as post_file:
             post_file.write(data)
 
-    def rewrite_links(self, doc, src, lang):
+    def rewrite_links(self, doc, src, lang, url_type=None):
         """Replace links in document to point to the right places."""
         # First let lxml replace most of them
-        doc.rewrite_links(lambda dst: self.url_replacer(src, dst, lang), resolve_base_href=False)
+        doc.rewrite_links(lambda dst: self.url_replacer(src, dst, lang, url_type), resolve_base_href=False)
 
         # lxml ignores srcset in img and source elements, so do that by hand
         objs = list(doc.xpath('(*//img|*//source)'))
         for obj in objs:
             if 'srcset' in obj.attrib:
                 urls = [u.strip() for u in obj.attrib['srcset'].split(',')]
-                urls = [self.url_replacer(src, dst, lang) for dst in urls]
+                urls = [self.url_replacer(src, dst, lang, url_type) for dst in urls]
                 obj.set('srcset', ', '.join(urls))
 
     def url_replacer(self, src, dst, lang=None, url_type=None):
