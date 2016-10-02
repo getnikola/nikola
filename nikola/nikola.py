@@ -1986,38 +1986,27 @@ class Nikola(object):
             sys.exit(1)
         signal('scanned').send(self)
 
-    def generic_page_renderer(self, lang, post, filters, context=None):
-        """Render post fragments to final HTML pages."""
+    def generic_renderer(self, lang, output_name, template_name, filters, deps=[], uptodate_deps=[], pre_context=None, post_context=None, context_deps_remove=None, post_deps_dict=None):
+        """Helper function for rendering pages and post lists and other related pages."""
         utils.LocaleBorg().set_locale(lang)
-        context = context.copy() if context else {}
-        deps = post.deps(lang) + \
-            self.template_system.template_deps(post.template_name)
-        deps.extend(utils.get_asset_path(x, self.THEMES) for x in ('bundles', 'parent', 'engine'))
+
+        deps += self.template_system.template_deps(template_name)
         deps = list(filter(None, deps))
-        context['post'] = post
-        context['lang'] = lang
-        context['title'] = post.title(lang)
-        context['description'] = post.description(lang)
-        context['permalink'] = post.permalink(lang)
-        if 'pagekind' not in context:
-            context['pagekind'] = ['generic_page']
-        if post.use_in_feeds:
-            context['enable_comments'] = True
-        else:
-            context['enable_comments'] = self.config['COMMENTS_IN_STORIES']
-        extension = self.get_compiler(post.source_path).extension()
-        output_name = os.path.join(self.config['OUTPUT_FOLDER'],
-                                   post.destination_path(lang, extension))
+
+        context = copy(pre_context) if pre_context else {}
+        context["lang"] = lang
+        if post_context:
+            context.update(post_context)
+
         deps_dict = copy(context)
-        deps_dict.pop('post')
-        if post.prev_post:
-            deps_dict['PREV_LINK'] = [post.prev_post.permalink(lang)]
-        if post.next_post:
-            deps_dict['NEXT_LINK'] = [post.next_post.permalink(lang)]
+        if context_deps_remove:
+            for key in context_deps_remove:
+                deps_dict.pop(key)
         deps_dict['OUTPUT_FOLDER'] = self.config['OUTPUT_FOLDER']
         deps_dict['TRANSLATIONS'] = self.config['TRANSLATIONS']
         deps_dict['global'] = self.GLOBAL_CONTEXT
-        deps_dict['comments'] = context['enable_comments']
+        if post_deps_dict:
+            deps_dict.update(post_deps_dict)
 
         for k, v in self.GLOBAL_CONTEXT['template_hooks'].items():
             deps_dict['||template_hooks|{0}||'.format(k)] = v._items
@@ -2027,51 +2016,6 @@ class Nikola(object):
 
         deps_dict['navigation_links'] = deps_dict['global']['navigation_links'](lang)
 
-        if post:
-            deps_dict['post_translations'] = post.translated_to
-
-        task = {
-            'name': os.path.normpath(output_name),
-            'file_dep': sorted(deps),
-            'targets': [output_name],
-            'actions': [(self.render_template, [post.template_name,
-                                                output_name, context])],
-            'clean': True,
-            'uptodate': [config_changed(deps_dict, 'nikola.nikola.Nikola.generic_page_renderer')] + post.deps_uptodate(lang),
-        }
-
-        yield utils.apply_filters(task, filters)
-
-    def generic_post_list_renderer(self, lang, posts, output_name,
-                                   template_name, filters, extra_context):
-        """Render pages with lists of posts."""
-        deps = []
-        deps += self.template_system.template_deps(template_name)
-        uptodate_deps = []
-        for post in posts:
-            deps += post.deps(lang)
-            uptodate_deps += post.deps_uptodate(lang)
-        context = {}
-        context["posts"] = posts
-        context["title"] = self.config['BLOG_TITLE'](lang)
-        context["description"] = self.config['BLOG_DESCRIPTION'](lang)
-        context["lang"] = lang
-        context["prevlink"] = None
-        context["nextlink"] = None
-        context.update(extra_context)
-        deps_context = copy(context)
-        deps_context["posts"] = [(p.meta[lang]['title'], p.permalink(lang)) for p in
-                                 posts]
-        deps_context["global"] = self.GLOBAL_CONTEXT
-
-        for k, v in self.GLOBAL_CONTEXT['template_hooks'].items():
-            deps_context['||template_hooks|{0}||'.format(k)] = v._items
-
-        for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
-            deps_context[k] = deps_context['global'][k](lang)
-
-        deps_context['navigation_links'] = deps_context['global']['navigation_links'](lang)
-
         task = {
             'name': os.path.normpath(output_name),
             'targets': [output_name],
@@ -2079,10 +2023,76 @@ class Nikola(object):
             'actions': [(self.render_template, [template_name, output_name,
                                                 context])],
             'clean': True,
-            'uptodate': [config_changed(deps_context, 'nikola.nikola.Nikola.generic_post_list_renderer')] + uptodate_deps
+            'uptodate': [config_changed(deps_dict, 'nikola.nikola.Nikola.generic_renderer')] + uptodate_deps
         }
 
         return utils.apply_filters(task, filters)
+
+    def generic_page_renderer(self, lang, post, filters, context=None):
+        """Render post fragments to final HTML pages."""
+        extension = self.get_compiler(post.source_path).extension()
+        output_name = os.path.join(self.config['OUTPUT_FOLDER'],
+                                   post.destination_path(lang, extension))
+
+        deps = post.deps(lang)
+        uptodate_deps = post.deps_uptodate(lang)
+        deps.extend(utils.get_asset_path(x, self.THEMES) for x in ('bundles', 'parent', 'engine'))
+
+        post_context = {}
+        post_context['post'] = post
+        post_context['title'] = post.title(lang)
+        post_context['description'] = post.description(lang)
+        post_context['permalink'] = post.permalink(lang)
+        if 'pagekind' not in context:
+            post_context['pagekind'] = ['generic_page']
+        if post.use_in_feeds:
+            post_context['enable_comments'] = True
+        else:
+            post_context['enable_comments'] = self.config['COMMENTS_IN_STORIES']
+
+        deps_dict = {}
+        if post.prev_post:
+            deps_dict['PREV_LINK'] = [post.prev_post.permalink(lang)]
+        if post.next_post:
+            deps_dict['NEXT_LINK'] = [post.next_post.permalink(lang)]
+        deps_dict['comments'] = post_context['enable_comments']
+        if post:
+            deps_dict['post_translations'] = post.translated_to
+
+        yield self.generic_renderer(lang, output_name, post.template_name, filters,
+                                    deps=deps,
+                                    uptodate_deps=uptodate_deps,
+                                    pre_context=context,
+                                    post_context=post_context,
+                                    context_deps_remove=['post'],
+                                    post_deps_dict=deps_dict)
+
+    def generic_post_list_renderer(self, lang, posts, output_name, template_name, filters, extra_context):
+        """Render pages with lists of posts."""
+        deps = []
+        uptodate_deps = []
+        for post in posts:
+            deps += post.deps(lang)
+            uptodate_deps += post.deps_uptodate(lang)
+
+        post_context = {}
+        post_context["posts"] = posts
+        post_context["title"] = self.config['BLOG_TITLE'](lang)
+        post_context["description"] = self.config['BLOG_DESCRIPTION'](lang)
+        post_context["prevlink"] = None
+        post_context["nextlink"] = None
+        if extra_context:
+            post_context.update(extra_context)
+
+        post_deps_dict = {}
+        post_deps_dict["posts"] = [(p.meta[lang]['title'], p.permalink(lang)) for p in
+                                    posts]
+
+        return self.generic_renderer(lang, output_name, template_name, filters,
+                                     deps=deps,
+                                     uptodate_deps=uptodate_deps,
+                                     post_context=post_context,
+                                     post_deps_dict=post_deps_dict)
 
     def atom_feed_renderer(self, lang, posts, output_path, filters,
                            extra_context):
