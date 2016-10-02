@@ -2085,8 +2085,7 @@ class Nikola(object):
             post_context.update(extra_context)
 
         post_deps_dict = {}
-        post_deps_dict["posts"] = [(p.meta[lang]['title'], p.permalink(lang)) for p in
-                                    posts]
+        post_deps_dict["posts"] = [(p.meta[lang]['title'], p.permalink(lang)) for p in posts]
 
         return self.generic_renderer(lang, output_name, template_name, filters,
                                      deps=deps,
