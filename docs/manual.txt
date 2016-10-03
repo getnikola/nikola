@@ -831,6 +831,10 @@ You can create the page's files manually or use the ``new_post`` command
 with the ``-p`` option, which will place the files in the folder that
 has ``use_in_feed`` set to False.
 
+In some places (including default directories and templates), pages are called
+*stories* for historic reasons. Both are synonyms for the same thing: pages
+that are not blog posts.
+
 Supported input formats
 -----------------------
 
