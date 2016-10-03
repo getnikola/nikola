@@ -89,7 +89,7 @@ one of the existing ones.
     for all of them.
 
 Posts and Pages
------------------
+---------------
 
 Nikola has a concept of posts and pages. Both are more or less the same thing, except
 posts are added into RSS feeds and pages are not. All of them are in a list called
