@@ -1986,7 +1986,7 @@ class Nikola(object):
             sys.exit(1)
         signal('scanned').send(self)
 
-    def generic_renderer(self, lang, output_name, template_name, filters, deps=[], uptodate_deps=[], pre_context=None, post_context=None, context_deps_remove=None, post_deps_dict=None):
+    def generic_renderer(self, lang, output_name, template_name, filters, deps=[], uptodate_deps=[], pre_context=None, post_context=None, context_deps_remove=None, post_deps_dict=None, url_type=None):
         """Helper function for rendering pages and post lists and other related pages."""
         utils.LocaleBorg().set_locale(lang)
 
@@ -2021,7 +2021,7 @@ class Nikola(object):
             'targets': [output_name],
             'file_dep': sorted(deps),
             'actions': [(self.render_template, [template_name, output_name,
-                                                context])],
+                                                context, url_type])],
             'clean': True,
             'uptodate': [config_changed(deps_dict, 'nikola.nikola.Nikola.generic_renderer')] + uptodate_deps
         }
