@@ -78,7 +78,7 @@ class CompileMarkdown(PageCompiler):
                 data = in_file.read()
             if not is_two_file:
                 _, data = self.split_metadata(data)
-            output = markdown(data, self.extensions)
+            output = markdown(data, self.extensions, output_format="html5")
             output, shortcode_deps = self.site.apply_shortcodes(output, filename=source, with_dependencies=True, extra_context=dict(post=post))
             out_file.write(output)
         if post is None:
