@@ -288,6 +288,7 @@ List of page kinds provided by default plugins:
 * list, tags_page
 * post_page
 * page_page
+* story_page
 * listing
 * generic_page
 * gallery_front
