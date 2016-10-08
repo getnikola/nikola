@@ -74,7 +74,7 @@ First, we create a site with some content in it. We’ll use the ``nikola init``
     Creating Nikola Site
     ====================
 
-    This is Nikola v7.4.1.  We will now ask you a few easy questions about your new site.
+    This is Nikola v7.8.0.  We will now ask you a few easy questions about your new site.
     If you do not want to answer and want to go with the defaults instead, simply restart with the `-q` parameter.
     --- Questions about the site ---
     Site title [My Nikola Site]:
@@ -107,12 +107,10 @@ First, we create a site with some content in it. We’ll use the ``nikola init``
 
 
 Then, we create an empty theme inheriting from base. This theme will use Mako templates. If you prefer Jinja2,
-then you should use ``base-jinja`` instead::
+then you should use ``base-jinja`` as a parent and ``jinja`` as engine instead::
 
     $ cd lanyon-port/
-    $ mkdir themes
-    $ mkdir themes/lanyon
-    $ echo base > themes/lanyon/parent
+    $ nikola theme -n lanyon --parent base --engine mako
 
 Edit ``conf.py`` and set ``THEME = 'lanyon'``. Also set ``USE_BUNDLES = False`` (just do it for now, we’ll get to bundles later).
 
@@ -207,11 +205,11 @@ But how do I tell **our** lanyon theme to use those CSS files instead of whateve
 By giving our theme its own base_helper.tmpl.
 
 That file is a **template** used to generate parts of the pages. It’s large and
-complicated but we don’t need to change a lot of it. First, get it from
-`Nikola’s source code <https://github.com/getnikola/nikola/blob/master/nikola/data/themes/base/templates/base_helper.tmpl>`__ and put a copy in ``themes/lanyon/templates/base_helper.tmpl``::
+complicated but we don’t need to change a lot of it. First, make a copy in your
+theme (note this command requires setting your ``THEME`` in ``conf.py`` to
+``lanyon``)::
 
-    $ mkdir themes/lanyon/templates
-    $ curl https://raw.githubusercontent.com/getnikola/nikola/master/nikola/data/themes/base/templates/base_helper.tmpl > themes/lanyon/templates/base_helper.tmpl
+    $ nikola theme -c base_helper.tmpl
 
 The part we want to change is this:
 
