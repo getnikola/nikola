@@ -734,7 +734,7 @@ class Nikola(object):
         # TODO: remove on v8
         if 'RSS_LINKS_APPEND_QUERY' in config:
             utils.LOGGER.warn('The RSS_LINKS_APPEND_QUERY option is deprecated, use FEED_LINKS_APPEND_QUERY instead.')
-            if 'FEED_TEASERS' in config:
+            if 'FEED_LINKS_APPEND_QUERY' in config:
                 utils.LOGGER.warn('FEED_LINKS_APPEND_QUERY conflicts with RSS_LINKS_APPEND_QUERY, ignoring RSS_LINKS_APPEND_QUERY.')
             self.config['FEED_LINKS_APPEND_QUERY'] = config['RSS_LINKS_APPEND_QUERY']
 
@@ -870,6 +870,15 @@ class Nikola(object):
             # when conf.py does not exist
             utils.LOGGER.warn("WRITE_TAG_CLOUD is not set in your config.  Defaulting to True (== writing tag_cloud_data.json).")
             utils.LOGGER.warn("Please explicitly add the setting to your conf.py with the desired value, as the setting will default to False in the future.")
+
+        # Rename stories to pages (#1891, #2518)
+        # TODO: remove in v8
+        if 'COMMENTS_IN_STORIES' in config:
+            utils.LOGGER.warn('The COMMENTS_IN_STORIES option is deprecated, use COMMENTS_IN_PAGES instead.')
+            self.config['COMMENTS_IN_PAGES'] = config['COMMENTS_IN_STORIES']
+        if 'STORY_INDEX' in config:
+            utils.LOGGER.warn('The STORY_INDEX option is deprecated, use PAGE_INDEX instead.')
+            self.config['PAGE_INDEX'] = config['STORY_INDEX']
 
         # We use one global tzinfo object all over Nikola.
         try:
