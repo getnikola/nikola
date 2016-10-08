@@ -51,9 +51,9 @@ configuration file:
     POSTS = ()
     # you can also keep the current content of POSTS if you want a blog with your site
     PAGES = (
-        ("pages/*.rst", "", "page.tmpl"),
-        ("pages/*.txt", "", "page.tmpl"),
-        ("pages/*.html", "", "page.tmpl"),
+        ("pages/*.rst", "", "story.tmpl"),
+        ("pages/*.txt", "", "story.tmpl"),
+        ("pages/*.html", "", "story.tmpl"),
     )
 
     # And to avoid a conflict because blogs try to generate /index.html

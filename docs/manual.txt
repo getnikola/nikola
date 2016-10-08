@@ -394,7 +394,7 @@ template
 
     .. code:: restructuredtext
 
-       .. template: page.tmpl
+       .. template: story.tmpl
 
 To add these metadata fields to all new posts by default, you can set the
 variable ``ADDITIONAL_METADATA`` in your configuration.  For example, you can
@@ -508,9 +508,9 @@ options. The exact mechanism is explained above the config options in the
         ("posts/*.html", "posts", "post.tmpl"),
     )
     PAGES = (
-        ("pages/*.rst", "pages", "page.tmpl"),
-        ("pages/*.txt", "pages", "page.tmpl"),
-        ("pages/*.html", "pages", "page.tmpl"),
+        ("pages/*.rst", "pages", "story.tmpl"),
+        ("pages/*.txt", "pages", "story.tmpl"),
+        ("pages/*.html", "pages", "story.tmpl"),
     )
 
 .. note:: POSTS and PAGES are not flat!
@@ -816,13 +816,13 @@ There are multiple configuration variables dedicated to each of the three taxono
 * ``POSTS_SECTION_FROM_META`` to use ``.. section:`` in posts instead of inferring paths from paths
 
 Creating a Page
------------------------
+---------------
 
 Pages are the same as posts, except that:
 
 * They are not added to the front page
 * They don't appear on the RSS feed
-* They use the ``page.tmpl`` template instead of ``post.tmpl`` by default
+* They use the ``story.tmpl`` template instead of ``post.tmpl`` by default
 
 The default configuration expects the page's metadata and text files to be on the
 ``pages`` folder, but that can be changed (see ``PAGES`` option above).

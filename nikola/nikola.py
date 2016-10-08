@@ -530,7 +530,8 @@ class Nikola(object):
             'POSTS_SECTION_NAME': "",
             'POSTS_SECTION_TITLE': "{name}",
             'PRESERVE_EXIF_DATA': False,
-            'PAGES': (("pages/*.txt", "pages", "page.tmpl"),),
+            # TODO: change in v8
+            'PAGES': (("stories/*.txt", "stories", "story.tmpl"),),
             'PANDOC_OPTIONS': [],
             'PRETTY_URLS': False,
             'FUTURE_IS_NOW': False,

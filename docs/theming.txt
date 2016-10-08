@@ -178,7 +178,7 @@ These are the templates that come with the included themes:
 ``post_list_directive.tmpl``
     Template used by the ``post_list`` reStructuredText directive.
 
-``page.tmpl``
+``story.tmpl``
     Used for pages that are not part of a blog, usually a cleaner, less
     intrusive layout than ``post.tmpl``, but same parameters.
 

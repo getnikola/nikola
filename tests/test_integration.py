@@ -392,10 +392,10 @@ class RelativeLinkTest2(DemoBuildTest):
         conf_path = os.path.join(self.target_dir, "conf.py")
         with io.open(conf_path, "r", encoding="utf-8") as inf:
             data = inf.read()
-            data = data.replace('("pages/*.txt", "pages", "page.tmpl"),',
-                                '("pages/*.txt", "", "page.tmpl"),')
-            data = data.replace('("pages/*.rst", "pages", "page.tmpl"),',
-                                '("pages/*.rst", "", "page.tmpl"),')
+            data = data.replace('("pages/*.txt", "pages", "story.tmpl"),',
+                                '("pages/*.txt", "", "story.tmpl"),')
+            data = data.replace('("pages/*.rst", "pages", "story.tmpl"),',
+                                '("pages/*.rst", "", "story.tmpl"),')
             data = data.replace('# INDEX_PATH = ""',
                                 'INDEX_PATH = "blog"')
         with io.open(conf_path, "w+", encoding="utf8") as outf:

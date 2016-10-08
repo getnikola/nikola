@@ -408,7 +408,7 @@ class Galleries(Task, ImageProcessor):
                 destination,
                 False,
                 self.site.MESSAGES,
-                'page.tmpl',
+                'story.tmpl',
                 self.site.get_compiler(index_path)
             )
             # If this did not exist, galleries without a title in the
