@@ -1986,12 +1986,12 @@ class Nikola(object):
             sys.exit(1)
         signal('scanned').send(self)
 
-    def generic_renderer(self, lang, output_name, template_name, filters, deps=[], uptodate_deps=[], pre_context=None, post_context=None, context_deps_remove=None, post_deps_dict=None, url_type=None):
+    def generic_renderer(self, lang, output_name, template_name, filters, file_deps=[], uptodate_deps=[], pre_context=None, post_context=None, context_deps_remove=None, post_deps_dict=None, url_type=None):
         """Helper function for rendering pages and post lists and other related pages."""
         utils.LocaleBorg().set_locale(lang)
 
-        deps += self.template_system.template_deps(template_name)
-        deps = list(filter(None, deps))
+        file_deps += self.template_system.template_deps(template_name)
+        file_deps = sorted(list(filter(None, file_deps)))
 
         context = copy(pre_context) if pre_context else {}
         context["lang"] = lang
@@ -2019,7 +2019,7 @@ class Nikola(object):
         task = {
             'name': os.path.normpath(output_name),
             'targets': [output_name],
-            'file_dep': sorted(deps),
+            'file_dep': file_deps,
             'actions': [(self.render_template, [template_name, output_name,
                                                 context, url_type])],
             'clean': True,
@@ -2060,7 +2060,7 @@ class Nikola(object):
             deps_dict['post_translations'] = post.translated_to
 
         yield self.generic_renderer(lang, output_name, post.template_name, filters,
-                                    deps=deps,
+                                    file_deps=deps,
                                     uptodate_deps=uptodate_deps,
                                     pre_context=context,
                                     post_context=post_context,
@@ -2088,7 +2088,7 @@ class Nikola(object):
         post_deps_dict["posts"] = [(p.meta[lang]['title'], p.permalink(lang)) for p in posts]
 
         return self.generic_renderer(lang, output_name, template_name, filters,
-                                     deps=deps,
+                                     file_deps=deps,
                                      uptodate_deps=uptodate_deps,
                                      post_context=post_context,
                                      post_deps_dict=post_deps_dict)
