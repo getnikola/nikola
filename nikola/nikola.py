@@ -1986,7 +1986,7 @@ class Nikola(object):
             sys.exit(1)
         signal('scanned').send(self)
 
-    def generic_renderer(self, lang, output_name, template_name, filters, file_deps=[], uptodate_deps=[], pre_context=None, post_context=None, context_deps_remove=None, post_deps_dict=None, url_type=None):
+    def generic_renderer(self, lang, output_name, template_name, filters, file_deps=None, uptodate_deps=None, pre_context=None, post_context=None, context_deps_remove=None, post_deps_dict=None, url_type=None):
         """Helper function for rendering pages and post lists and other related pages.
 
         lang is the current language.
@@ -2003,6 +2003,7 @@ class Nikola(object):
         """
         utils.LocaleBorg().set_locale(lang)
 
+        file_deps = [] if file_deps is None else file_deps
         file_deps += self.template_system.template_deps(template_name)
         file_deps = sorted(list(filter(None, file_deps)))
 
@@ -2036,7 +2037,7 @@ class Nikola(object):
             'actions': [(self.render_template, [template_name, output_name,
                                                 context, url_type])],
             'clean': True,
-            'uptodate': [config_changed(deps_dict, 'nikola.nikola.Nikola.generic_renderer')] + uptodate_deps
+            'uptodate': [config_changed(deps_dict, 'nikola.nikola.Nikola.generic_renderer')] + ([] if uptodate_deps is None else uptodate_deps)
         }
 
         return utils.apply_filters(task, filters)
