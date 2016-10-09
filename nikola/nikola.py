@@ -1986,7 +1986,7 @@ class Nikola(object):
             sys.exit(1)
         signal('scanned').send(self)
 
-    def generic_renderer(self, lang, output_name, template_name, filters, file_deps=None, uptodate_deps=None, pre_context=None, post_context=None, context_deps_remove=None, post_deps_dict=None, url_type=None):
+    def generic_renderer(self, lang, output_name, template_name, filters, file_deps=None, uptodate_deps=None, context=None, context_deps_remove=None, post_deps_dict=None, url_type=None):
         """Helper function for rendering pages and post lists and other related pages.
 
         lang is the current language.
@@ -1995,22 +1995,19 @@ class Nikola(object):
         filters is the list of filters (usually site.config['FILTERS']) which will be used to post-process the result.
         file_deps (optional) is a list of additional file dependencies (next to template and its dependencies).
         uptodate_deps (optional) is a list of additional entries added to the task's uptodate list.
-        pre_context (optional) is a dict used as a basis for the template context. Its contents might be overwritten.
-        post_context (optional) is a dict merged into the context before passing it to the renderer.
+        context (optional) a dict used as a basis for the template context. The lang parameter will always be added.
         context_deps_remove (optional) is a list of keys to remove from the context after using it as an uptodate dependency. This should name all keys containing non-trivial Python objects; they can be replaced by adding JSON-style dicts in post_deps_dict.
         post_deps_dict (optional) is a dict merged into the copy of context which is used as an uptodate dependency.
         url_type (optional) allows to override the ``URL_TYPE`` configuration
         """
         utils.LocaleBorg().set_locale(lang)
 
-        file_deps = [] if file_deps is None else file_deps
+        file_deps = copy(file_deps) if file_deps else []
         file_deps += self.template_system.template_deps(template_name)
         file_deps = sorted(list(filter(None, file_deps)))
 
-        context = copy(pre_context) if pre_context else {}
+        context = copy(context) if context else {}
         context["lang"] = lang
-        if post_context:
-            context.update(post_context)
 
         deps_dict = copy(context)
         if context_deps_remove:
@@ -2052,32 +2049,31 @@ class Nikola(object):
         uptodate_deps = post.deps_uptodate(lang)
         deps.extend(utils.get_asset_path(x, self.THEMES) for x in ('bundles', 'parent', 'engine'))
 
-        post_context = {}
-        post_context['post'] = post
-        post_context['title'] = post.title(lang)
-        post_context['description'] = post.description(lang)
-        post_context['permalink'] = post.permalink(lang)
+        context = copy(context) if context else {}
+        context['post'] = post
+        context['title'] = post.title(lang)
+        context['description'] = post.description(lang)
+        context['permalink'] = post.permalink(lang)
         if 'pagekind' not in context:
-            post_context['pagekind'] = ['generic_page']
+            context['pagekind'] = ['generic_page']
         if post.use_in_feeds:
-            post_context['enable_comments'] = True
+            context['enable_comments'] = True
         else:
-            post_context['enable_comments'] = self.config['COMMENTS_IN_STORIES']
+            context['enable_comments'] = self.config['COMMENTS_IN_STORIES']
 
         deps_dict = {}
         if post.prev_post:
             deps_dict['PREV_LINK'] = [post.prev_post.permalink(lang)]
         if post.next_post:
             deps_dict['NEXT_LINK'] = [post.next_post.permalink(lang)]
-        deps_dict['comments'] = post_context['enable_comments']
+        deps_dict['comments'] = context['enable_comments']
         if post:
             deps_dict['post_translations'] = post.translated_to
 
         yield self.generic_renderer(lang, output_name, post.template_name, filters,
                                     file_deps=deps,
                                     uptodate_deps=uptodate_deps,
-                                    pre_context=context,
-                                    post_context=post_context,
+                                    context=context,
                                     context_deps_remove=['post'],
                                     post_deps_dict=deps_dict)
 
@@ -2089,14 +2085,14 @@ class Nikola(object):
             deps += post.deps(lang)
             uptodate_deps += post.deps_uptodate(lang)
 
-        post_context = {}
-        post_context["posts"] = posts
-        post_context["title"] = self.config['BLOG_TITLE'](lang)
-        post_context["description"] = self.config['BLOG_DESCRIPTION'](lang)
-        post_context["prevlink"] = None
-        post_context["nextlink"] = None
+        context = {}
+        context["posts"] = posts
+        context["title"] = self.config['BLOG_TITLE'](lang)
+        context["description"] = self.config['BLOG_DESCRIPTION'](lang)
+        context["prevlink"] = None
+        context["nextlink"] = None
         if extra_context:
-            post_context.update(extra_context)
+            context.update(extra_context)
 
         post_deps_dict = {}
         post_deps_dict["posts"] = [(p.meta[lang]['title'], p.permalink(lang)) for p in posts]
@@ -2104,7 +2100,7 @@ class Nikola(object):
         return self.generic_renderer(lang, output_name, template_name, filters,
                                      file_deps=deps,
                                      uptodate_deps=uptodate_deps,
-                                     post_context=post_context,
+                                     context=context,
                                      post_deps_dict=post_deps_dict)
 
     def atom_feed_renderer(self, lang, posts, output_path, filters,
