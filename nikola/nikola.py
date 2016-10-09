@@ -1987,7 +1987,20 @@ class Nikola(object):
         signal('scanned').send(self)
 
     def generic_renderer(self, lang, output_name, template_name, filters, file_deps=[], uptodate_deps=[], pre_context=None, post_context=None, context_deps_remove=None, post_deps_dict=None, url_type=None):
-        """Helper function for rendering pages and post lists and other related pages."""
+        """Helper function for rendering pages and post lists and other related pages.
+
+        lang is the current language.
+        output_name is the destination file name.
+        template_name is the template to be used.
+        filters is the list of filters (usually site.config['FILTERS']) which will be used to post-process the result.
+        file_deps (optional) is a list of additional file dependencies (next to template and its dependencies).
+        uptodate_deps (optional) is a list of additional entries added to the task's uptodate list.
+        pre_context (optional) is a dict used as a basis for the template context. Its contents might be overwritten.
+        post_context (optional) is a dict merged into the context before passing it to the renderer.
+        context_deps_remove (optional) is a list of keys to remove from the context after using it as an uptodate dependency. This should name all keys containing non-trivial Python objects; they can be replaced by adding JSON-style dicts in post_deps_dict.
+        post_deps_dict (optional) is a dict merged into the copy of context which is used as an uptodate dependency.
+        url_type (optional) allows to override the ``URL_TYPE`` configuration
+        """
         utils.LocaleBorg().set_locale(lang)
 
         file_deps += self.template_system.template_deps(template_name)
