@@ -59,6 +59,9 @@ class CompileRest(PageCompiler):
     demote_headers = True
     logger = None
 
+    def _rst2html(self, *p, **k):
+        return rst2html(*p, **k)
+
     def compile_html_string(self, data, source_path=None, is_two_file=True):
         """Compile reST into HTML strings."""
         # If errors occur, this will be added to the line number reported by
@@ -81,7 +84,7 @@ class CompileRest(PageCompiler):
             'language_code': LEGAL_VALUES['DOCUTILS_LOCALES'].get(LocaleBorg().current_lang, 'en')
         }
 
-        output, error_level, deps = rst2html(
+        output, error_level, deps = self._rst2html(
             data, settings_overrides=settings_overrides, logger=self.logger, source_path=source_path, l_add_ln=add_ln, transforms=self.site.rst_transforms,
             no_title_transform=self.site.config.get('NO_DOCUTILS_TITLE_TRANSFORM', False))
         if not isinstance(output, unicode_str):
