@@ -470,7 +470,7 @@ from ``super()``. Example  plugin: `navstories <https://github.com/getnikola/plu
 PostScanner Plugins
 -------------------
 
-Get posts and stories from "somewhere" to be added to the timeline.
+Get posts and pages from "somewhere" to be added to the timeline.
 The only currently existing plugin of this kind reads them from disk.
 
 

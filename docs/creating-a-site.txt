@@ -51,9 +51,9 @@ configuration file:
     POSTS = ()
     # you can also keep the current content of POSTS if you want a blog with your site
     PAGES = (
-        ("stories/*.rst", "", "story.tmpl"),
-        ("stories/*.txt", "", "story.tmpl"),
-        ("stories/*.html", "", "story.tmpl"),
+        ("pages/*.rst", "", "story.tmpl"),
+        ("pages/*.txt", "", "story.tmpl"),
+        ("pages/*.html", "", "story.tmpl"),
     )
 
     # And to avoid a conflict because blogs try to generate /index.html
@@ -70,7 +70,7 @@ And now we are ready to create our first page:
 
     Title: index
     Scanning posts....done!
-    [1970-01-01T00:00:00Z] INFO: new_page: Your page's text is at: stories/index.rst
+    [1970-01-01T00:00:00Z] INFO: new_page: Your page's text is at: pages/index.rst
 
 We can now build and preview our site:
 
@@ -104,7 +104,7 @@ So, what’s in that ``pages/index.txt`` file?
 
 ``title`` is the page title, ``slug`` is the name of the generated HTML file
 (in this case it would be ``index.html``). ``date``, ``tags`` and ``link``
-doesn’t matter at all in stories. ``description`` is useful for SEO purposes
+doesn’t matter at all in pages. ``description`` is useful for SEO purposes
 if you care for that.
 
 And below, the content. By default Nikola uses

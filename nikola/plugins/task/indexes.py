@@ -203,7 +203,7 @@ class Indexes(Task):
                     }
                     yield task
 
-        if not self.site.config["STORY_INDEX"]:
+        if not self.site.config["PAGE_INDEX"]:
             return
         kw = {
             "translations": self.site.config['TRANSLATIONS'],
@@ -242,7 +242,7 @@ class Indexes(Task):
 
                     for post in post_list:
                         # If there is an index.html pending to be created from
-                        # a story, do not generate the STORY_INDEX
+                        # a page, do not generate the PAGE_INDEX
                         if post.destination_path(lang) == short_destination:
                             should_render = False
                         else:

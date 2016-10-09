@@ -88,14 +88,14 @@ one of the existing ones.
     You can do doctests, you can do unit tests, you can do integration tests. There is support
     for all of them.
 
-Posts and Stories
------------------
+Posts and Pages
+---------------
 
-Nikola has a concept of posts and stories. Both are more or less the same thing, except
-posts are added into RSS feeds and stories are not. All of them are in a list called
+Nikola has a concept of posts and pages. Both are more or less the same thing, except
+posts are added into RSS feeds and pages are not. All of them are in a list called
 "the timeline" formed by objects of class ``Post``.
 
-When you are creating a task that needs the list of posts and/or stories (for example,
+When you are creating a task that needs the list of posts and/or pages (for example,
 the RSS creation plugin) on task execution time, your plugin should call ``self.site.scan_posts()``
 in ``gen_tasks`` to ensure the timeline is created and available in 
 ``self.site.timeline``. You should not modify the timeline, because it will cause consistency issues.

@@ -78,9 +78,9 @@ SAMPLE_CONF = {
     ("posts/*.html", "posts", "post.tmpl"),
 )""",
     'PAGES': """(
-    ("stories/*.rst", "stories", "story.tmpl"),
-    ("stories/*.txt", "stories", "story.tmpl"),
-    ("stories/*.html", "stories", "story.tmpl"),
+    ("pages/*.rst", "pages", "story.tmpl"),
+    ("pages/*.txt", "pages", "story.tmpl"),
+    ("pages/*.html", "pages", "story.tmpl"),
 )""",
     'COMPILERS': """{
     "rest": ('.rst', '.txt'),
@@ -285,7 +285,7 @@ class CommandInit(Command):
     @classmethod
     def create_empty_site(cls, target):
         """Create an empty site with directories only."""
-        for folder in ('files', 'galleries', 'listings', 'posts', 'stories'):
+        for folder in ('files', 'galleries', 'listings', 'posts', 'pages'):
             makedirs(os.path.join(target, folder))
 
     @staticmethod

@@ -425,7 +425,7 @@ class Importer(Command):
         """Go through self.items and save them."""
 
     def import_story(self):
-        """Create a story."""
+        """Create a page."""
         raise NotImplementedError()
 
     def import_post(self):

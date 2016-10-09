@@ -1362,10 +1362,10 @@ def get_translation_candidate(config, path, lang):
     cache/posts/fancy.post.html
     >>> print(get_translation_candidate(config, 'cache/posts/fancy.post.html', 'es'))
     cache/posts/fancy.post.es.html
-    >>> print(get_translation_candidate(config, 'cache/stories/charts.html', 'es'))
-    cache/stories/charts.es.html
-    >>> print(get_translation_candidate(config, 'cache/stories/charts.html', 'en'))
-    cache/stories/charts.html
+    >>> print(get_translation_candidate(config, 'cache/pages/charts.html', 'es'))
+    cache/pages/charts.es.html
+    >>> print(get_translation_candidate(config, 'cache/pages/charts.html', 'en'))
+    cache/pages/charts.html
 
     >>> config = {'TRANSLATIONS_PATTERN': '{path}.{ext}.{lang}', 'DEFAULT_LANG': 'en', 'TRANSLATIONS': {'es':'1', 'en': 1}}
     >>> print(get_translation_candidate(config, '*.rst', 'es'))

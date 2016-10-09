@@ -508,15 +508,15 @@ options. The exact mechanism is explained above the config options in the
         ("posts/*.html", "posts", "post.tmpl"),
     )
     PAGES = (
-        ("stories/*.rst", "stories", "story.tmpl"),
-        ("stories/*.txt", "stories", "story.tmpl"),
-        ("stories/*.html", "stories", "story.tmpl"),
+        ("pages/*.rst", "pages", "story.tmpl"),
+        ("pages/*.txt", "pages", "story.tmpl"),
+        ("pages/*.html", "pages", "story.tmpl"),
     )
 
 .. note:: POSTS and PAGES are not flat!
 
    Even if the syntax may suggest you can't, you can create any directory structure you want
-   inside ``posts/`` or ``stories/`` and it will be reflected in the output. For example,
+   inside ``posts/`` or ``pages/`` and it will be reflected in the output. For example,
    ``posts/foo/bar.txt`` would produce  ``output/posts/foo/bar.html``, assuming the slug is also ``bar``.
 
    If you have ``PRETTY_URLS`` enabled, that would be ``output/posts/foo/bar/index.html``.
@@ -815,8 +815,8 @@ There are multiple configuration variables dedicated to each of the three taxono
 * ``HIDDEN_TAGS``. ``HIDDEN_CATEGORIES`` to make some tags/categories invisible in lists
 * ``POSTS_SECTION_FROM_META`` to use ``.. section:`` in posts instead of inferring paths from paths
 
-Creating a Page (Story)
------------------------
+Creating a Page
+---------------
 
 Pages are the same as posts, except that:
 
@@ -825,7 +825,7 @@ Pages are the same as posts, except that:
 * They use the ``story.tmpl`` template instead of ``post.tmpl`` by default
 
 The default configuration expects the page's metadata and text files to be on the
-``stories`` folder, but that can be changed (see ``PAGES`` option above).
+``pages`` folder, but that can be changed (see ``PAGES`` option above).
 
 You can create the page's files manually or use the ``new_post`` command
 with the ``-p`` option, which will place the files in the folder that
@@ -2342,7 +2342,7 @@ the template file in Nikola's base theme for an example of how this works.
 The list may fail to update in some cases, please run ``nikola build -a`` with
 the appropriate path if this happens.
 
-We recommend using stories with dates in the past (1970-01-01) to avoid
+We recommend using pages with dates in the past (1970-01-01) to avoid
 dependency issues.
 
 If you are using this as a shortcode, flags (``reverse``, ``all``) are meant to be used
