@@ -117,7 +117,7 @@ class JinjaTemplates(TemplateSystem):
 
     def get_deps(self, filename):
         """Return paths to dependencies for the template loaded from filename."""
-        with open(filename) as fd:
+        with io.open(filename, 'r', encoding='utf-8') as fd:
             text = fd.read()
         return self.get_string_deps(text)
 
