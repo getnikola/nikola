@@ -4,5 +4,5 @@ coverage==4.2
 pytest==3.0.3
 pytest-cov==2.3.1
 freezegun==0.3.7
-python-coveralls==2.8.0
+python-coveralls==2.9.0
 colorama>=0.3.4
