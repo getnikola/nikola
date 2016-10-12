@@ -642,16 +642,22 @@ handler function, ``site`` and ``data`` will be added to the keyword arguments.
 
 Example:
 
-The following shortcode::
+The following shortcode:
+
+.. code:: text
 
     {{% raw %}}{{% foo bar="baz" spam %}}{{% /raw %}}
 
 With a template in ``shortcodes/foo.tmpl`` with this content (using Jinja2
-syntax in this example)::
+syntax in this example)
+
+.. code:: jinja
 
     <div class="{{ _args[0] if _args else 'ham' }}">{{ bar }}</div>
 
-Will result in this output::
+Will result in this output
+
+.. code:: html
 
     <div class="spam">baz</div>
 
@@ -661,8 +667,8 @@ State and Cache
 
 Sometimes your plugins will need to cache things to speed up further actions. Here are the conventions for that:
 
-* If it's a file, put it somewhere in ```self.site.config['CACHE_FOLDER']``` (defaults to ```cache/```.
-* If it's a value, use ```self.site.cache.set(key, value)``` to set it and ```self.site.cache.get(key)``` to get it.
+* If it's a file, put it somewhere in ``self.site.config['CACHE_FOLDER']`` (defaults to ``cache/``.
+* If it's a value, use ``self.site.cache.set(key, value)`` to set it and ``self.site.cache.get(key)`` to get it.
   The key should be a string, the value should be json-encodable (so, be careful with datetime objects)
 
 The values and files you store there can **and will** be deleted sometimes by the user. They should always be
@@ -672,11 +678,11 @@ On the other hand, sometimes you want to save something that is **not** a throwa
 change the output, so the user should not delete them. We call that **state**. To save state:
 
 * If it's a file, put it somewhere in the working directory. Try not to do that please.
-* If it's a value, use ```self.site.state.set(key, value)``` to set it and ```self.state.cache.get(key)``` to get it.
+* If it's a value, use ``self.site.state.set(key, value)`` to set it and ``self.state.cache.get(key)`` to get it.
   The key should be a string, the value should be json-encodable (so, be careful with datetime objects)
 
-The ```cache``` and ```state``` objects are rather simplistic, and that's intentional. They have no default values: if
-the key is not there, you will get ```None``` and like it. They are meant to be both threadsafe, but hey, who can
+The ``cache`` and ``state`` objects are rather simplistic, and that's intentional. They have no default values: if
+the key is not there, you will get ``None`` and like it. They are meant to be both threadsafe, but hey, who can
 guarantee that sort of thing?
 
 There are no sections, and no access protection, so let's not use it to store passwords and such. Use responsibly.
