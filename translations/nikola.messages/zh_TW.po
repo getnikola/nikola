@@ -7,14 +7,15 @@
 # Translators:
 # Translators:
 # Translators:
+# Gafung Fong <kffongterry@gmail.com>, 2016
 # Po-Wen Chi <pwchi@pwchi.info>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2016-09-24 22:40+0000\n"
-"Last-Translator: Roberto Alsina <ralsina@netmanagers.com.ar>\n"
+"PO-Revision-Date: 2016-10-07 05:52+0000\n"
+"Last-Translator: Gafung Fong <kffongterry@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/ralsina/nikola/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,7 +53,7 @@ msgid "Next post"
 msgstr "下一篇"
 
 msgid "old posts, page %d"
-msgstr "old posts, page %d"
+msgstr "舊文章，第 %d 頁"
 
 msgid "page %d"
 msgstr "第 %d 頁"
@@ -111,7 +112,7 @@ msgid "RSS feed"
 msgstr "RSS 訂閱"
 
 msgid "%d min remaining to read"
-msgstr "%d min remaining to read"
+msgstr "尚餘 %d 分鐘"
 
 msgid "Skip to main content"
 msgstr "略過主內容"
@@ -145,4 +146,4 @@ msgid "Posts by %s"
 msgstr "%s 發佈"
 
 msgid "Toggle navigation"
-msgstr ""
+msgstr "切換導航"
