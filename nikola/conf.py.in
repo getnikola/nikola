@@ -94,6 +94,7 @@ THEME = ${THEME}
 THEME_COLOR = '#5670d4'
 
 # POSTS and PAGES contains (wildcard, destination, template) tuples.
+# (translatable)
 #
 # The wildcard is used to generate a list of source files
 # (whatever/thing.rst, for example).
@@ -119,6 +120,12 @@ THEME_COLOR = '#5670d4'
 # to feeds, indexes, tag lists and archives and are considered part
 # of a blog, while PAGES are just independent HTML pages.
 #
+# Finally, note that destination can be translated, i.e. you can
+# specify a different translation folder per language. Example:
+#     PAGES = (
+#         ("pages/*.rst", {"en": "pages", "de": "seiten"}, "story.tmpl"),
+#         ("pages/*.md", {"en": "pages", "de": "seiten"}, "story.tmpl"),
+#     )
 
 POSTS = ${POSTS}
 PAGES = ${PAGES}

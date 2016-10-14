@@ -1,3 +1,14 @@
+New in master
+============
+
+Bugfixes
+--------
+
+Features
+--------
+* The destination folder in ``POSTS`` and ``PAGES`` can now be
+  translated (Issue #2116)
+
 New in v7.8.1
 =============
 
