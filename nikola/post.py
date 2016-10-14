@@ -519,7 +519,9 @@ class Post(object):
         self.compile_html(
             self.translated_source_path(lang),
             dest,
-            self.is_two_file)
+            self.is_two_file,
+            self,
+            lang)
         Post.write_depfile(dest, self._depfile[dest])
 
         signal('compiled').send({
