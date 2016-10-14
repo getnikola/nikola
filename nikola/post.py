@@ -167,11 +167,15 @@ class Post(object):
                 default_metadata.update(self.meta[lang])
 
         # Compose paths
-        self.folders = {lang: self.folder_relative for lang in self.config['TRANSLATIONS'].keys()}
         if self.folder_base is not None:
-            # self.folder_base must be a TranslatableSetting whose value
-            # will be prepended to the folder's path for each language
-            self.folders = {lang: os.path.normpath(os.path.join(self.folder_base(lang), folder)) for lang, folder in self.folders.items()}
+            # Use translatable destination folders
+            self.folders = {}
+            for lang in self.config['TRANSLATIONS'].keys():
+                self.folders[lang] = os.path.normpath(os.path.join(
+                    self.folder_base(lang), self.folder_relative))
+        else:
+            # Old behavior (non-translatable destination path, normalized by scanner)
+            self.folders = {lang: self.folder_relative for lang in self.config['TRANSLATIONS'].keys()}
         self.folder = self.folders[self.default_lang]
 
         # Load data field from metadata
@@ -859,8 +863,7 @@ class Post(object):
             extension = self.compiler.extension()
 
         pieces = self.translations[lang].split(os.sep)
-        folder = self.folders[lang]
-        pieces += folder.split(os.sep)
+        pieces += self.folders[lang].split(os.sep)
         if self._has_pretty_url(lang):
             pieces += [self.meta[lang]['slug'], 'index' + extension]
         else:
