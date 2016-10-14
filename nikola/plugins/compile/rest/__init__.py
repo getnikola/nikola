@@ -93,7 +93,7 @@ class CompileRest(PageCompiler):
     # TODO remove in v8
     def compile_html_string(self, data, source_path=None, is_two_file=True):
         """Compile reST into HTML strings."""
-        self.compile_string(data, source_path, is_two_file)
+        return self.compile_string(data, source_path, is_two_file)
 
     def compile(self, source, dest, is_two_file=False, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""
@@ -102,7 +102,7 @@ class CompileRest(PageCompiler):
         with io.open(dest, "w+", encoding="utf8") as out_file:
             with io.open(source, "r", encoding="utf8") as in_file:
                 data = in_file.read()
-                output, error_level, deps = self.compile_html_string(data, source, is_two_file)
+                output, error_level, deps = self.compile_string(data, source, is_two_file)
                 output, shortcode_deps = self.site.apply_shortcodes(output, filename=source, with_dependencies=True, extra_context=dict(post=post))
                 out_file.write(output)
             if post is None:
@@ -280,7 +280,7 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
         # specify here.
         # logger    a logger from Nikola
         # source   source filename (docutils gets a string)
-        # add_ln   amount of metadata lines (see comment in compile_html above)
+        # add_ln   amount of metadata lines (see comment in CompileRest.compile above)
         reader.l_settings = {'logger': logger, 'source': source_path,
                              'add_ln': l_add_ln}
 

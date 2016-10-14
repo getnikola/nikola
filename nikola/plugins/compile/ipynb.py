@@ -24,7 +24,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Implementation of compile_html based on nbconvert."""
+"""Page compiler plugin for nbconvert."""
 
 from __future__ import unicode_literals, print_function
 import io
@@ -77,7 +77,7 @@ class CompileIPynb(PageCompiler):
         self.logger = get_logger('compile_ipynb', STDERR_HANDLER)
         super(CompileIPynb, self).set_site(site)
 
-    def compile_html_string(self, source, is_two_file=True):
+    def compile_string(self, source, is_two_file=True):
         """Export notebooks as HTML strings."""
         if flag is None:
             req_missing(['ipython[notebook]>=2.0.0'], 'build this site (compile ipynb)')
@@ -88,11 +88,16 @@ class CompileIPynb(PageCompiler):
         (body, resources) = exportHtml.from_notebook_node(nb_json)
         return body
 
+    # TODO remove in v8
+    def compile_html_string(self, source, is_two_file=True):
+        """Export notebooks as HTML strings."""
+        return self.compile_string(source, is_two_file)
+
     def compile(self, source, dest, is_two_file=False, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
         with io.open(dest, "w+", encoding="utf8") as out_file:
-            output = self.compile_html_string(source, is_two_file)
+            output = self.compile_string(source, is_two_file)
             output, shortcode_deps = self.site.apply_shortcodes(output, filename=source, with_dependencies=True, extra_context=dict(post=post))
             out_file.write(output)
         if post is None:

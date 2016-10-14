@@ -116,7 +116,7 @@ class Listings(Task):
             if in_name and in_name.endswith('.ipynb'):
                 # Special handling: render ipynbs in listings (Issue #1900)
                 ipynb_compiler = self.site.plugin_manager.getPluginByName("ipynb", "PageCompiler").plugin_object
-                ipynb_raw = ipynb_compiler.compile_html_string(in_name, True)
+                ipynb_raw = ipynb_compiler.compile_string(in_name, True)
                 ipynb_html = lxml.html.fromstring(ipynb_raw)
                 # The raw HTML contains garbage (scripts and styles), we can’t leave it in
                 code = lxml.html.tostring(ipynb_html.xpath('//*[@id="notebook"]')[0], encoding='unicode')
