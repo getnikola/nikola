@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "%d min remaining to read": "d% דקות נותרים לסיום קריאה",
+    "%d min remaining to read": "%d דקות נותרים לסיום קריאה",
     "(active)": "(פעיל)",
     "Also available in:": "זמין גם ב:",
     "Archive": "ארכיב",
@@ -11,7 +11,7 @@ MESSAGES = {
     "Comments": "הערות",
     "LANGUAGE": "אנגלית",
     "Languages:": "שפות:",
-    "More posts about %s": "עוד פוסטים אודות s%",
+    "More posts about %s": "עוד פוסטים אודות %s",
     "Newer posts": "פוסטים חדשים",
     "Next post": "לפוסט הבא",
     "No posts found.": "לא נמצאו פוסטים",
@@ -19,9 +19,9 @@ MESSAGES = {
     "Older posts": "פוסטים ישנים",
     "Original site": "אתר המקורי",
     "Posted:": "פורסם:",
-    "Posts about %s": "פוסטים אודות s%",
-    "Posts by %s": "פוסטים ע״י s%",
-    "Posts for year %s": "פוסטים לשנת s%",
+    "Posts about %s": "פוסטים אודות %s",
+    "Posts by %s": "פוסטים ע״י %s",
+    "Posts for year %s": "פוסטים לשנת %s",
     "Posts for {month} {day}, {year}": "פוסטים עבוד {year},{day}{month}",
     "Posts for {month} {year}": "פוסטים עבוד {year}{month}",
     "Previous post": "פוסט הקודם",
@@ -39,6 +39,6 @@ MESSAGES = {
     "Updates": "עדכונים",
     "Write your page here.": "תכתוב את העמוד שלך פה.",
     "Write your post here.": "תכתוב את הפוסט שלך פה.",
-    "old posts, page %d": "פוסטים קודמים, דף d%",
-    "page %d": "עמוד d%",
+    "old posts, page %d": "פוסטים קודמים, דף %d",
+    "page %d": "עמוד %d",
 }
