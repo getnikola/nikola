@@ -42,8 +42,8 @@ class CompilePhp(PageCompiler):
     name = "php"
     friendly_name = "PHP"
 
-    def compile_html(self, source, dest, is_two_file=True):
-        """Compile source file into HTML and save as dest."""
+    def compile(self, source, dest, is_two_file=False, post=None, lang=None):
+        """Compile the source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
         with io.open(dest, "w+", encoding="utf8") as out_file:
             with open(source, "rb") as in_file:

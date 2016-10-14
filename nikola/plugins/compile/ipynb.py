@@ -88,13 +88,9 @@ class CompileIPynb(PageCompiler):
         (body, resources) = exportHtml.from_notebook_node(nb_json)
         return body
 
-    def compile_html(self, source, dest, is_two_file=True):
-        """Compile source file into HTML and save as dest."""
+    def compile(self, source, dest, is_two_file=False, post=None, lang=None):
+        """Compile the source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
-        try:
-            post = self.site.post_per_input_file[source]
-        except KeyError:
-            post = None
         with io.open(dest, "w+", encoding="utf8") as out_file:
             output = self.compile_html_string(source, is_two_file)
             output, shortcode_deps = self.site.apply_shortcodes(output, filename=source, with_dependencies=True, extra_context=dict(post=post))
@@ -102,7 +98,7 @@ class CompileIPynb(PageCompiler):
         if post is None:
             if shortcode_deps:
                 self.logger.error(
-                    "Cannot save dependencies for post {0} due to unregistered source file name",
+                    "Cannot save dependencies for post {0} (post unknown)",
                     source)
         else:
             post._depfile[dest] += shortcode_deps
