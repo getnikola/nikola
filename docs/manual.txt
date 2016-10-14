@@ -504,8 +504,8 @@ options. The exact mechanism is explained above the config options in the
     # Finally, note that destination can be translated, i.e. you can
     # specify a different translation folder per language. Example:
     #     PAGES = (
-    #         ("pages/*.rst", {"en": "pages", "de": "artikel"}, "story.tmpl"),
-    #         ("pages/*.md", {"en": "pages", "de": "artikel"}, "story.tmpl"),
+    #         ("pages/*.rst", {"en": "pages", "de": "seiten"}, "story.tmpl"),
+    #         ("pages/*.md", {"en": "pages", "de": "seiten"}, "story.tmpl"),
     #     )
 
     POSTS = (
