@@ -1,9 +1,11 @@
-New in master
+New in v7.8.1
 =============
 
 Bugfixes
 --------
 
+* Rename ``stories`` to ``pages`` in most of the codebase (Issue
+  #1891)
 * Report missing/unknown dates in posts with filenames
   (Issues #2505, #2506)
 * Report filename of post that raised exception when scanning

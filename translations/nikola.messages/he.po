@@ -23,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "More posts about %s"
-msgstr "עוד פוסטים אודות s%"
+msgstr "עוד פוסטים אודות %s"
 
 #. Here your translation should NOT say English but the name of your language
 #. instead
@@ -46,16 +46,16 @@ msgid "Read more"
 msgstr "קרא עוד"
 
 msgid "Posts about %s"
-msgstr "פוסטים אודות s%"
+msgstr "פוסטים אודות %s"
 
 msgid "Next post"
 msgstr "לפוסט הבא"
 
 msgid "old posts, page %d"
-msgstr "פוסטים קודמים, דף d%"
+msgstr "פוסטים קודמים, דף %d"
 
 msgid "page %d"
-msgstr "עמוד d%"
+msgstr "עמוד %d"
 
 msgid "Source"
 msgstr "מקור"
@@ -66,7 +66,7 @@ msgid "Read in English"
 msgstr "קרא באנגלית"
 
 msgid "Posts for year %s"
-msgstr "פוסטים לשנת s%"
+msgstr "פוסטים לשנת %s"
 
 msgid "Newer posts"
 msgstr "פוסטים חדשים"
@@ -111,7 +111,7 @@ msgid "RSS feed"
 msgstr "פיד RSS"
 
 msgid "%d min remaining to read"
-msgstr "d% דקות נותרים לסיום קריאה"
+msgstr "%d דקות נותרים לסיום קריאה"
 
 msgid "Skip to main content"
 msgstr "דלג לתוכן ראשי"
@@ -142,7 +142,7 @@ msgid "Authors"
 msgstr "מחברים"
 
 msgid "Posts by %s"
-msgstr "פוסטים ע״י s%"
+msgstr "פוסטים ע״י %s"
 
 msgid "Toggle navigation"
 msgstr "החלף מצב ניווט"

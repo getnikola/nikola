@@ -482,7 +482,7 @@ class CommandImportWordpress(Command, ImportMixin):
         PAGES = '(\n'
         for extension in extensions:
             POSTS += '    ("posts/*.{0}", "posts", "post.tmpl"),\n'.format(extension)
-            PAGES += '    ("stories/*.{0}", "stories", "story.tmpl"),\n'.format(extension)
+            PAGES += '    ("pages/*.{0}", "pages", "story.tmpl"),\n'.format(extension)
         POSTS += ')\n'
         PAGES += ')\n'
         context['POSTS'] = POSTS
@@ -1098,7 +1098,7 @@ class CommandImportWordpress(Command, ImportMixin):
             if post_type == 'post':
                 out_folder_slug = self.import_postpage_item(item, wordpress_namespace, 'posts', attachments)
             else:
-                out_folder_slug = self.import_postpage_item(item, wordpress_namespace, 'stories', attachments)
+                out_folder_slug = self.import_postpage_item(item, wordpress_namespace, 'pages', attachments)
             # Process attachment data
             if attachments is not None:
                 # If post was exported, store data

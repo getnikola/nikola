@@ -17,6 +17,7 @@
 * `Casey M. Bessette <https://github.com/caseybessette>`_
 * `Chris Lee <https://github.com/clee>`_
 * `Chris Warrick <https://github.com/Kwpolska>`_
+* `Christian Lawson-Perfect <https://github.com/christianp>`_
 * `Christopher Arndt <https:/github.com/SpotlightKid>`_
 * `Claudio Canepa <https://github.com/ccanepa>`_
 * `Damien Tournoud <https://github.com/damz>`_

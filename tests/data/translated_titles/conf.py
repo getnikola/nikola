@@ -141,8 +141,8 @@ POSTS = (
     ("posts/*.txt", "posts", "post.tmpl"),
 )
 PAGES = (
-    ("stories/*.rst", "stories", "story.tmpl"),
-    ("stories/*.txt", "stories", "story.tmpl"),
+    ("pages/*.rst", "pages", "story.tmpl"),
+    ("pages/*.txt", "pages", "story.tmpl"),
 )
 
 # One or more folders containing files to be copied as-is into the output.
@@ -436,10 +436,10 @@ COMMENT_SYSTEM_ID = "nikolademo"
 # the "noannotations" metadata.
 # ANNOTATIONS = False
 
-# Create index.html for story folders?
-# STORY_INDEX = False
-# Enable comments on story pages?
-# COMMENTS_IN_STORIES = False
+# Create index.html for page folders?
+# PAGE_INDEX = False
+# Enable comments on page pages?
+# COMMENTS_IN_PAGES = False
 # Enable comments on picture gallery pages?
 # COMMENTS_IN_GALLERIES = False
 

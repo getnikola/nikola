@@ -203,8 +203,8 @@ class TranslatedBuildTest(EmptyBuildTest):
 
     def test_translated_titles(self):
         """Check that translated title is picked up."""
-        en_file = os.path.join(self.target_dir, "output", "stories", "1.html")
-        pl_file = os.path.join(self.target_dir, "output", self.ol, "stories", "1.html")
+        en_file = os.path.join(self.target_dir, "output", "pages", "1.html")
+        pl_file = os.path.join(self.target_dir, "output", self.ol, "pages", "1.html")
         # Files should be created
         self.assertTrue(os.path.isfile(en_file))
         self.assertTrue(os.path.isfile(pl_file))
@@ -223,8 +223,8 @@ class TranslationsPatternTest1(TranslatedBuildTest):
     @classmethod
     def patch_site(self):
         """Set the TRANSLATIONS_PATTERN to the old v6 default"""
-        os.rename(os.path.join(self.target_dir, "stories", "1.%s.txt" % self.ol),
-                  os.path.join(self.target_dir, "stories", "1.txt.%s" % self.ol)
+        os.rename(os.path.join(self.target_dir, "pages", "1.%s.txt" % self.ol),
+                  os.path.join(self.target_dir, "pages", "1.txt.%s" % self.ol)
                   )
         conf_path = os.path.join(self.target_dir, "conf.py")
         with io.open(conf_path, "r", encoding="utf-8") as inf:
@@ -241,7 +241,7 @@ class MissingDefaultLanguageTest(TranslatedBuildTest):
     @classmethod
     def fill_site(self):
         super(MissingDefaultLanguageTest, self).fill_site()
-        os.unlink(os.path.join(self.target_dir, "stories", "1.txt"))
+        os.unlink(os.path.join(self.target_dir, "pages", "1.txt"))
 
     def test_translated_titles(self):
         """Do not test titles as we just removed the translation"""
@@ -255,8 +255,8 @@ class TranslationsPatternTest2(TranslatedBuildTest):
     def patch_site(self):
         """Set the TRANSLATIONS_PATTERN to the old v6 default"""
         conf_path = os.path.join(self.target_dir, "conf.py")
-        os.rename(os.path.join(self.target_dir, "stories", "1.%s.txt" % self.ol),
-                  os.path.join(self.target_dir, "stories", "1.txt.%s" % self.ol)
+        os.rename(os.path.join(self.target_dir, "pages", "1.%s.txt" % self.ol),
+                  os.path.join(self.target_dir, "pages", "1.txt.%s" % self.ol)
                   )
         with io.open(conf_path, "r", encoding="utf-8") as inf:
             data = inf.read()
@@ -384,7 +384,7 @@ class TestCheckFailure(DemoBuildTest):
 
 
 class RelativeLinkTest2(DemoBuildTest):
-    """Check that dropping stories to the root doesn't break links."""
+    """Check that dropping pages to the root doesn't break links."""
 
     @classmethod
     def patch_site(self):
@@ -392,10 +392,10 @@ class RelativeLinkTest2(DemoBuildTest):
         conf_path = os.path.join(self.target_dir, "conf.py")
         with io.open(conf_path, "r", encoding="utf-8") as inf:
             data = inf.read()
-            data = data.replace('("stories/*.txt", "stories", "story.tmpl"),',
-                                '("stories/*.txt", "", "story.tmpl"),')
-            data = data.replace('("stories/*.rst", "stories", "story.tmpl"),',
-                                '("stories/*.rst", "", "story.tmpl"),')
+            data = data.replace('("pages/*.txt", "pages", "story.tmpl"),',
+                                '("pages/*.txt", "", "story.tmpl"),')
+            data = data.replace('("pages/*.rst", "pages", "story.tmpl"),',
+                                '("pages/*.rst", "", "story.tmpl"),')
             data = data.replace('# INDEX_PATH = ""',
                                 'INDEX_PATH = "blog"')
         with io.open(conf_path, "w+", encoding="utf8") as outf:
@@ -403,7 +403,7 @@ class RelativeLinkTest2(DemoBuildTest):
             outf.flush()
 
     def test_relative_links(self):
-        """Check that the links in a story are correct"""
+        """Check that the links in a page are correct"""
         test_path = os.path.join(self.target_dir, "output", "about-nikola.html")
         flag = False
         with open(test_path, "rb") as inf:

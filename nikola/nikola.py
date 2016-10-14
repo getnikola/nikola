@@ -448,7 +448,7 @@ class Nikola(object):
             'CODE_COLOR_SCHEME': 'default',
             'COMMENT_SYSTEM': 'disqus',
             'COMMENTS_IN_GALLERIES': False,
-            'COMMENTS_IN_STORIES': False,
+            'COMMENTS_IN_PAGES': False,
             'COMPILERS': {
                 "rest": ('.txt', '.rst'),
                 "markdown": ('.md', '.mdown', '.markdown'),
@@ -530,6 +530,7 @@ class Nikola(object):
             'POSTS_SECTION_NAME': "",
             'POSTS_SECTION_TITLE': "{name}",
             'PRESERVE_EXIF_DATA': False,
+            # TODO: change in v8
             'PAGES': (("stories/*.txt", "stories", "story.tmpl"),),
             'PANDOC_OPTIONS': [],
             'PRETTY_URLS': False,
@@ -556,7 +557,7 @@ class Nikola(object):
             'SLUG_TAG_PATH': True,
             'SOCIAL_BUTTONS_CODE': '',
             'SITE_URL': 'https://example.com/',
-            'STORY_INDEX': False,
+            'PAGE_INDEX': False,
             'STRIP_INDEXES': False,
             'SITEMAP_INCLUDE_FILELESS_DIRS': True,
             'TAG_PATH': 'categories',
@@ -733,7 +734,7 @@ class Nikola(object):
         # TODO: remove on v8
         if 'RSS_LINKS_APPEND_QUERY' in config:
             utils.LOGGER.warn('The RSS_LINKS_APPEND_QUERY option is deprecated, use FEED_LINKS_APPEND_QUERY instead.')
-            if 'FEED_TEASERS' in config:
+            if 'FEED_LINKS_APPEND_QUERY' in config:
                 utils.LOGGER.warn('FEED_LINKS_APPEND_QUERY conflicts with RSS_LINKS_APPEND_QUERY, ignoring RSS_LINKS_APPEND_QUERY.')
             self.config['FEED_LINKS_APPEND_QUERY'] = config['RSS_LINKS_APPEND_QUERY']
 
@@ -869,6 +870,15 @@ class Nikola(object):
             # when conf.py does not exist
             utils.LOGGER.warn("WRITE_TAG_CLOUD is not set in your config.  Defaulting to True (== writing tag_cloud_data.json).")
             utils.LOGGER.warn("Please explicitly add the setting to your conf.py with the desired value, as the setting will default to False in the future.")
+
+        # Rename stories to pages (#1891, #2518)
+        # TODO: remove in v8
+        if 'COMMENTS_IN_STORIES' in config:
+            utils.LOGGER.warn('The COMMENTS_IN_STORIES option is deprecated, use COMMENTS_IN_PAGES instead.')
+            self.config['COMMENTS_IN_PAGES'] = config['COMMENTS_IN_STORIES']
+        if 'STORY_INDEX' in config:
+            utils.LOGGER.warn('The STORY_INDEX option is deprecated, use PAGE_INDEX instead.')
+            self.config['PAGE_INDEX'] = config['STORY_INDEX']
 
         # We use one global tzinfo object all over Nikola.
         try:
@@ -1640,8 +1650,8 @@ class Nikola(object):
         * gallery (name is the gallery name)
         * listing (name is the source code file name)
         * post_path (name is 1st element in a POSTS/PAGES tuple)
-        * slug (name is the slug of a post or story)
-        * filename (name is the source filename of a post/story, in DEFAULT_LANG, relative to conf.py)
+        * slug (name is the slug of a post or page)
+        * filename (name is the source filename of a post/page, in DEFAULT_LANG, relative to conf.py)
 
         The returned value is always a path relative to output, like
         "categories/whatever.html"
@@ -1714,7 +1724,7 @@ class Nikola(object):
             return [_f for _f in results[0].permalink(lang).split('/') if _f]
 
     def filename_path(self, name, lang):
-        """Link to post or story by source filename.
+        """Link to post or page by source filename.
 
         Example:
 
@@ -2059,7 +2069,7 @@ class Nikola(object):
         if post.use_in_feeds:
             context['enable_comments'] = True
         else:
-            context['enable_comments'] = self.config['COMMENTS_IN_STORIES']
+            context['enable_comments'] = self.config['COMMENTS_IN_PAGES']
 
         deps_dict = {}
         if post.prev_post:

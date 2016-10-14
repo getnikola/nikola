@@ -181,7 +181,7 @@ class Post(object):
                 self.data[lang] = utils.load_data(self.meta[lang]['data'])
 
         if 'date' not in default_metadata and not use_in_feeds:
-            # For stories we don't *really* need a date
+            # For pages we don't *really* need a date
             if self.config['__invariant__']:
                 default_metadata['date'] = datetime.datetime(2013, 12, 31, 23, 59, 59, tzinfo=tzinfo)
             else:

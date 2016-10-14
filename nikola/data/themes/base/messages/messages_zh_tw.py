@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 MESSAGES = {
-    "%d min remaining to read": "%d min remaining to read",
+    "%d min remaining to read": "尚餘 %d 分鐘",
     "(active)": "(啟用)",
     "Also available in:": "其他語言版本：",
     "Archive": "彙整",
@@ -34,11 +34,11 @@ MESSAGES = {
     "Subcategories:": "子分類",
     "Tags and Categories": "標籤和分類",
     "Tags": "標籤",
-    "Toggle navigation": "",
+    "Toggle navigation": "切換導航",
     "Uncategorized": "未分類",
     "Updates": "更新",
     "Write your page here.": "從這裡開始編輯頁面",
     "Write your post here.": "從這裡開始編輯文章",
-    "old posts, page %d": "old posts, page %d",
+    "old posts, page %d": "舊文章，第 %d 頁",
     "page %d": "第 %d 頁",
 }

@@ -823,13 +823,13 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # the "noannotations" metadata.
 # ANNOTATIONS = False
 
-# Create index.html for page (story) folders?
+# Create index.html for page folders?
 # WARNING: if a page would conflict with the index file (usually
-#          caused by setting slug to `index`), the STORY_INDEX
+#          caused by setting slug to `index`), the PAGE_INDEX
 #          will not be generated for that directory.
-# STORY_INDEX = False
-# Enable comments on story pages?
-# COMMENTS_IN_STORIES = False
+# PAGE_INDEX = False
+# Enable comments on pages (i.e. not posts)?
+# COMMENTS_IN_PAGES = False
 # Enable comments on picture gallery pages?
 # COMMENTS_IN_GALLERIES = False
 

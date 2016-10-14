@@ -88,7 +88,7 @@ category_rss
     
 
 filename
-    Link to post or story by source filename.
+    Link to post or page by source filename.
     
     Example:
     
