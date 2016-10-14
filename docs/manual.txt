@@ -463,7 +463,11 @@ default set to:
 
 In case you translate your posts, you might also want to adjust various
 other settings so that the generated URLs match the translation. You can
-find most places in `conf.py` by searching for `(translatable)`.
+find most places in `conf.py` by searching for `(translatable)`. For example,
+you might want to localize `/categories/` (search for `TAG_PATH`), `/pages/`
+and `/posts/` (search for `POSTS` and `PAGES`, or see the next section), or
+how to adjust the URLs for subsequent pages for indexes (search for
+`INDEXES_PRETTY_PAGE_URL`).
 
 Nikola supports multiple languages for a post (we have almost 50 translations!). If you wish to
 add support for more languages, check out `the Transifex page for Nikola <https://www.transifex.com/projects/p/nikola/>`_
