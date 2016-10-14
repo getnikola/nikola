@@ -87,13 +87,17 @@ class Post(object):
         use_in_feeds,
         messages,
         template_name,
-        compiler
+        compiler,
+        destination_base=None
     ):
         """Initialize post.
 
         The source path is the user created post file. From it we calculate
         the meta file, as well as any translations available, and
         the .html fragment file path.
+
+        destination_base must be None or a TranslatableSetting instance. If
+        specified, it will be prepended to the destination path.
         """
         self.config = config
         self.compiler = compiler
@@ -120,9 +124,10 @@ class Post(object):
         # cache/posts/blah.html
         self._base_path = self.base_path.replace('\\', '/')
         self.metadata_path = self.post_name + ".meta"  # posts/blah.meta
-        self.folder = destination
-        self.translations = self.config['TRANSLATIONS']
+        self.folder_relative = destination
+        self.folder_base = destination_base
         self.default_lang = self.config['DEFAULT_LANG']
+        self.translations = self.config['TRANSLATIONS']
         self.messages = messages
         self.skip_untranslated = not self.config['SHOW_UNTRANSLATED_POSTS']
         self._template_name = template_name
@@ -160,6 +165,18 @@ class Post(object):
             # Fill default_metadata with stuff from the other languages
             for lang in sorted(self.translated_to):
                 default_metadata.update(self.meta[lang])
+
+        # Compose paths
+        if self.folder_base is not None:
+            # Use translatable destination folders
+            self.folders = {}
+            for lang in self.config['TRANSLATIONS'].keys():
+                self.folders[lang] = os.path.normpath(os.path.join(
+                    self.folder_base(lang), self.folder_relative))
+        else:
+            # Old behavior (non-translatable destination path, normalized by scanner)
+            self.folders = {lang: self.folder_relative for lang in self.config['TRANSLATIONS'].keys()}
+        self.folder = self.folders[self.default_lang]
 
         # Load data field from metadata
         self.data = Functionary(lambda: None, self.default_lang)
@@ -770,12 +787,13 @@ class Post(object):
         """
         if lang is None:
             lang = nikola.utils.LocaleBorg().current_lang
+        folder = self.folders[lang]
         if self._has_pretty_url(lang):
             path = os.path.join(self.translations[lang],
-                                self.folder, self.meta[lang]['slug'], 'index' + extension)
+                                folder, self.meta[lang]['slug'], 'index' + extension)
         else:
             path = os.path.join(self.translations[lang],
-                                self.folder, self.meta[lang]['slug'] + extension)
+                                folder, self.meta[lang]['slug'] + extension)
         if sep != os.sep:
             path = path.replace(os.sep, sep)
         if path.startswith('./'):
@@ -847,7 +865,7 @@ class Post(object):
             extension = self.compiler.extension()
 
         pieces = self.translations[lang].split(os.sep)
-        pieces += self.folder.split(os.sep)
+        pieces += self.folders[lang].split(os.sep)
         if self._has_pretty_url(lang):
             pieces += [self.meta[lang]['slug'], 'index' + extension]
         else:

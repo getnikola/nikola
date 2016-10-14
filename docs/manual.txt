@@ -461,6 +461,14 @@ default set to:
     Nikola will only look for translation of input files for languages
     specified in the TRANSLATIONS variable.
 
+In case you translate your posts, you might also want to adjust various
+other settings so that the generated URLs match the translation. You can
+find most places in `conf.py` by searching for `(translatable)`. For example,
+you might want to localize `/categories/` (search for `TAG_PATH`), `/pages/`
+and `/posts/` (search for `POSTS` and `PAGES`, or see the next section), or
+how to adjust the URLs for subsequent pages for indexes (search for
+`INDEXES_PRETTY_PAGE_URL`).
+
 Nikola supports multiple languages for a post (we have almost 50 translations!). If you wish to
 add support for more languages, check out `the Transifex page for Nikola <https://www.transifex.com/projects/p/nikola/>`_
 
@@ -501,6 +509,12 @@ options. The exact mechanism is explained above the config options in the
     # to feeds, indexes, tag lists and archives and are considered part
     # of a blog, while PAGES are just independent HTML pages.
     #
+    # Finally, note that destination can be translated, i.e. you can
+    # specify a different translation folder per language. Example:
+    #     PAGES = (
+    #         ("pages/*.rst", {"en": "pages", "de": "seiten"}, "story.tmpl"),
+    #         ("pages/*.md", {"en": "pages", "de": "seiten"}, "story.tmpl"),
+    #     )
 
     POSTS = (
         ("posts/*.rst", "posts", "post.tmpl"),
