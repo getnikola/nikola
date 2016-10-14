@@ -97,7 +97,9 @@ class Post(object):
         """
         self.config = config
         self.compiler = compiler
-        self.compile_html = self.compiler.compile_html
+        self.compile = self.compiler.compile
+        # TODO remove in v8
+        self.compile_html = self.compile
         self.demote_headers = self.compiler.demote_headers and self.config['DEMOTE_HEADERS']
         tzinfo = self.config['__tzinfo__']
         if self.config['FUTURE_IS_NOW']:
@@ -516,7 +518,7 @@ class Post(object):
             return
         # Set the language to the right thing
         LocaleBorg().set_locale(lang)
-        self.compile_html(
+        self.compile(
             self.translated_source_path(lang),
             dest,
             self.is_two_file)

@@ -275,8 +275,16 @@ class PageCompiler(BasePlugin):
         """Add dependency to post object to check .dep file."""
         post.add_dependency(lambda: self._read_extra_deps(post), 'fragment')
 
+    def compile(self, source, dest, is_two_file=False, post=None, lang=None):
+        """Compile the source file into HTML and save as dest."""
+        # For backwards compatibility, call `compile_html`
+        # If you are implementing a compiler, please implement `compile` and
+        # ignore `compile_html`
+        self.compile_html(source, dest, is_two_file)
+
+    # TODO remove in v8
     def compile_html(self, source, dest, is_two_file=False):
-        """Compile the source, save it on dest."""
+        """Compile the source, save it on dest. (DEPRECATED)"""
         raise NotImplementedError()
 
     def create_post(self, path, content=None, onefile=False, is_page=False, **kw):

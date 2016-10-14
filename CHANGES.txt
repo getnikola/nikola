@@ -1,3 +1,14 @@
+New in master
+=============
+
+Bugfixes
+--------
+
+Features
+--------
+
+* Pass ``post`` object and ``lang`` to post compilers (Issue #2531)
+
 New in v7.8.1
 =============
 
