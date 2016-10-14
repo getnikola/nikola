@@ -50,7 +50,7 @@ class CompilePandoc(PageCompiler):
         self.config_dependencies = [str(site.config['PANDOC_OPTIONS'])]
         super(CompilePandoc, self).set_site(site)
 
-    def compile(self, source, dest, is_two_file=False, post=None, lang=None):
+    def compile(self, source, dest, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
         try:

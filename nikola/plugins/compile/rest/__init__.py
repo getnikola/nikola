@@ -95,7 +95,7 @@ class CompileRest(PageCompiler):
         """Compile reST into HTML strings."""
         return self.compile_string(data, source_path, is_two_file)
 
-    def compile(self, source, dest, is_two_file=False, post=None, lang=None):
+    def compile(self, source, dest, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
         error_level = 100

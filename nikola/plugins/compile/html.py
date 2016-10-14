@@ -41,7 +41,7 @@ class CompileHtml(PageCompiler):
     name = "html"
     friendly_name = "HTML"
 
-    def compile(self, source, dest, is_two_file=False, post=None, lang=None):
+    def compile(self, source, dest, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
         with io.open(dest, "w+", encoding="utf8") as out_file:
