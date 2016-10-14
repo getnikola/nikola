@@ -120,8 +120,11 @@ THEME_COLOR = '#5670d4'
 # of a blog, while PAGES are just independent HTML pages.
 #
 # Finally, note that destination can be translated, i.e. you can
-# specify a different translation folder per language.
-#
+# specify a different translation folder per language. Example:
+#     PAGES = (
+#         ("pages/*.rst", {"en": "pages", "de": "artikel"}, "story.tmpl"),
+#         ("pages/*.md", {"en": "pages", "de": "artikel"}, "story.tmpl"),
+#     )
 
 POSTS = ${POSTS}
 PAGES = ${PAGES}
