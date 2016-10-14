@@ -284,7 +284,7 @@ class PageCompiler(BasePlugin):
 
     # TODO remove in v8
     def compile_html(self, source, dest, is_two_file=False):
-        """Compile the source, save it on dest. (DEPRECATED)"""
+        """Compile the source, save it on dest (DEPRECATED)."""
         raise NotImplementedError()
 
     def create_post(self, path, content=None, onefile=False, is_page=False, **kw):
