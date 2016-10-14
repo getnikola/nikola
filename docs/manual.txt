@@ -461,6 +461,10 @@ default set to:
     Nikola will only look for translation of input files for languages
     specified in the TRANSLATIONS variable.
 
+In case you translate your posts, you might also want to adjust various
+other settings so that the generated URLs match the translation. You can
+find most places in `conf.py` by searching for `(translatable)`.
+
 Nikola supports multiple languages for a post (we have almost 50 translations!). If you wish to
 add support for more languages, check out `the Transifex page for Nikola <https://www.transifex.com/projects/p/nikola/>`_
 

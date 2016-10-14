@@ -94,6 +94,7 @@ THEME = ${THEME}
 THEME_COLOR = '#5670d4'
 
 # POSTS and PAGES contains (wildcard, destination, template) tuples.
+# (translatable)
 #
 # The wildcard is used to generate a list of source files
 # (whatever/thing.rst, for example).
