@@ -59,7 +59,7 @@ class CompileRest(PageCompiler):
     demote_headers = True
     logger = None
 
-    def compile_html_string(self, data, source_path=None, is_two_file=True):
+    def compile_string(self, data, source_path=None, is_two_file=True):
         """Compile reST into HTML strings."""
         # If errors occur, this will be added to the line number reported by
         # docutils so the line number matches the actual line number (off by
@@ -90,24 +90,25 @@ class CompileRest(PageCompiler):
             output = output.decode('utf-8')
         return output, error_level, deps
 
-    def compile_html(self, source, dest, is_two_file=True):
-        """Compile source file into HTML and save as dest."""
+    # TODO remove in v8
+    def compile_html_string(self, data, source_path=None, is_two_file=True):
+        """Compile reST into HTML strings."""
+        return self.compile_string(data, source_path, is_two_file)
+
+    def compile(self, source, dest, is_two_file=True, post=None, lang=None):
+        """Compile the source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
         error_level = 100
         with io.open(dest, "w+", encoding="utf8") as out_file:
-            try:
-                post = self.site.post_per_input_file[source]
-            except KeyError:
-                post = None
             with io.open(source, "r", encoding="utf8") as in_file:
                 data = in_file.read()
-                output, error_level, deps = self.compile_html_string(data, source, is_two_file)
+                output, error_level, deps = self.compile_string(data, source, is_two_file)
                 output, shortcode_deps = self.site.apply_shortcodes(output, filename=source, with_dependencies=True, extra_context=dict(post=post))
                 out_file.write(output)
             if post is None:
                 if deps.list:
                     self.logger.error(
-                        "Cannot save dependencies for post {0} due to unregistered source file name",
+                        "Cannot save dependencies for post {0} (post unknown)",
                         source)
             else:
                 post._depfile[dest] += deps.list
@@ -279,7 +280,7 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
         # specify here.
         # logger    a logger from Nikola
         # source   source filename (docutils gets a string)
-        # add_ln   amount of metadata lines (see comment in compile_html above)
+        # add_ln   amount of metadata lines (see comment in CompileRest.compile above)
         reader.l_settings = {'logger': logger, 'source': source_path,
                              'add_ln': l_add_ln}
 

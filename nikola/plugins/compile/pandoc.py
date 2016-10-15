@@ -24,7 +24,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Implementation of compile_html based on pandoc.
+"""Page compiler plugin for pandoc.
 
 You will need, of course, to install pandoc
 """
@@ -50,14 +50,10 @@ class CompilePandoc(PageCompiler):
         self.config_dependencies = [str(site.config['PANDOC_OPTIONS'])]
         super(CompilePandoc, self).set_site(site)
 
-    def compile_html(self, source, dest, is_two_file=True):
-        """Compile source file into HTML and save as dest."""
+    def compile(self, source, dest, is_two_file=True, post=None, lang=None):
+        """Compile the source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
         try:
-            try:
-                post = self.site.post_per_input_file[source]
-            except KeyError:
-                post = None
             subprocess.check_call(['pandoc', '-o', dest, source] + self.site.config['PANDOC_OPTIONS'])
             with open(dest, 'r', encoding='utf-8') as inf:
                 output, shortcode_deps = self.site.apply_shortcodes(inf.read(), with_dependencies=True)
@@ -66,7 +62,7 @@ class CompilePandoc(PageCompiler):
             if post is None:
                 if shortcode_deps:
                     self.logger.error(
-                        "Cannot save dependencies for post {0} due to unregistered source file name",
+                        "Cannot save dependencies for post {0} (post unknown)",
                         source)
             else:
                 post._depfile[dest] += shortcode_deps

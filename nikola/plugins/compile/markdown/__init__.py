@@ -24,7 +24,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Implementation of compile_html based on markdown."""
+"""Page compiler plugin for Markdown."""
 
 from __future__ import unicode_literals
 
@@ -63,16 +63,12 @@ class CompileMarkdown(PageCompiler):
 
         self.config_dependencies.append(str(sorted(site.config.get("MARKDOWN_EXTENSIONS"))))
 
-    def compile_html(self, source, dest, is_two_file=True):
-        """Compile source file into HTML and save as dest."""
+    def compile(self, source, dest, is_two_file=True, post=None, lang=None):
+        """Compile the source file into HTML and save as dest."""
         if markdown is None:
             req_missing(['markdown'], 'build this site (compile Markdown)')
         makedirs(os.path.dirname(dest))
         self.extensions += self.site.config.get("MARKDOWN_EXTENSIONS")
-        try:
-            post = self.site.post_per_input_file[source]
-        except KeyError:
-            post = None
         with io.open(dest, "w+", encoding="utf8") as out_file:
             with io.open(source, "r", encoding="utf8") as in_file:
                 data = in_file.read()
@@ -84,7 +80,7 @@ class CompileMarkdown(PageCompiler):
         if post is None:
             if shortcode_deps:
                 self.logger.error(
-                    "Cannot save dependencies for post {0} due to unregistered source file name",
+                    "Cannot save dependencies for post {0} (post unknown)",
                     source)
         else:
             post._depfile[dest] += shortcode_deps

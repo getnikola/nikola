@@ -1,13 +1,15 @@
 New in master
-============
+=============
 
 Bugfixes
 --------
 
 Features
 --------
+
 * The destination folder in ``POSTS`` and ``PAGES`` can now be
   translated (Issue #2116)
+* Pass ``post`` object and ``lang`` to post compilers (Issue #2531)
 
 New in v7.8.1
 =============

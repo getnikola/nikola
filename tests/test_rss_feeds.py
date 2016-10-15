@@ -32,6 +32,7 @@ fake_conf['TRANSLATIONS_PATTERN'] = '{path}.{lang}.{ext}'
 class FakeCompiler(object):
     demote_headers = False
     compile_html = None
+    compile = None
     extension = lambda self: '.html'
     name = "fake"
 

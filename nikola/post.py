@@ -101,7 +101,7 @@ class Post(object):
         """
         self.config = config
         self.compiler = compiler
-        self.compile_html = self.compiler.compile_html
+        self.compile_html = self.compiler.compile
         self.demote_headers = self.compiler.demote_headers and self.config['DEMOTE_HEADERS']
         tzinfo = self.config['__tzinfo__']
         if self.config['FUTURE_IS_NOW']:
@@ -536,7 +536,9 @@ class Post(object):
         self.compile_html(
             self.translated_source_path(lang),
             dest,
-            self.is_two_file)
+            self.is_two_file,
+            self,
+            lang)
         Post.write_depfile(dest, self._depfile[dest])
 
         signal('compiled').send({

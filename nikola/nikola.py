@@ -1260,7 +1260,7 @@ class Nikola(object):
         """
         ext = os.path.splitext(source_name)[1]
         try:
-            compile_html = self.inverse_compilers[ext]
+            compiler = self.inverse_compilers[ext]
         except KeyError:
             # Find the correct compiler for this files extension
             lang_exts_tab = list(self.config['COMPILERS'].items())
@@ -1280,12 +1280,12 @@ class Nikola(object):
 
             lang = langs[0]
             try:
-                compile_html = self.compilers[lang]
+                compiler = self.compilers[lang]
             except KeyError:
                 exit("Cannot find '{0}' compiler; it might require an extra plugin -- do you have it installed?".format(lang))
-            self.inverse_compilers[ext] = compile_html
+            self.inverse_compilers[ext] = compiler
 
-        return compile_html
+        return compiler
 
     def render_template(self, template_name, output_name, context, url_type=None):
         """Render a template with the global context.

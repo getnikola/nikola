@@ -76,7 +76,7 @@ class ReSTExtensionTestCase(BaseTestCase):
         p = FakePost('', '')
         p._depfile[outf] = []
         self.compiler.site.post_per_input_file[inf] = p
-        self.html = self.compiler.compile_html(inf, outf)
+        self.html = self.compiler.compile(inf, outf)
         with io.open(outf, 'r', encoding='utf8') as f:
             self.html = f.read()
         os.unlink(inf)

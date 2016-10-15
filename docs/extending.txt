@@ -367,11 +367,13 @@ PageCompiler Plugins
 --------------------
 
 These plugins implement markup languages, they take sources for posts or pages and
-create HTML or other output files. A good example is `the misaka plugin. <https://github.com/getnikola/plugins/tree/master/v7/misaka>`__
+create HTML or other output files. A good example is `the misaka plugin
+<https://github.com/getnikola/plugins/tree/master/v7/misaka>`__ or the built-in
+compiler plugins.
 
 They must provide:
 
-``compile_html``
+``compile``
     Function that builds a file.
 
 ``create_post``

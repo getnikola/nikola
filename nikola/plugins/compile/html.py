@@ -24,7 +24,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Implementation of compile_html for HTML source files."""
+"""Page compiler plugin for HTML source files."""
 
 from __future__ import unicode_literals
 
@@ -41,13 +41,9 @@ class CompileHtml(PageCompiler):
     name = "html"
     friendly_name = "HTML"
 
-    def compile_html(self, source, dest, is_two_file=True):
-        """Compile source file into HTML and save as dest."""
+    def compile(self, source, dest, is_two_file=True, post=None, lang=None):
+        """Compile the source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
-        try:
-            post = self.site.post_per_input_file[source]
-        except KeyError:
-            post = None
         with io.open(dest, "w+", encoding="utf8") as out_file:
             with io.open(source, "r", encoding="utf8") as in_file:
                 data = in_file.read()
@@ -58,7 +54,7 @@ class CompileHtml(PageCompiler):
         if post is None:
             if shortcode_deps:
                 self.logger.error(
-                    "Cannot save dependencies for post {0} due to unregistered source file name",
+                    "Cannot save dependencies for post {0} (post unknown)",
                     source)
         else:
             post._depfile[dest] += shortcode_deps
