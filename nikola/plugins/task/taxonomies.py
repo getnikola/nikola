@@ -211,7 +211,7 @@ class RenderTaxonomies(Task):
         if len(filtered_posts) == 0 and taxonomy.omit_empty_classifications:
             return
         # Get data
-        context, kw = taxonomy.provide_context_and_uptodate(classification)
+        context, kw = taxonomy.provide_context_and_uptodate(classification, lang)
         kw = copy(kw)
         kw['filters'] = self.site.config['FILTERS']
         kw['site_url'] = self.site.config['SITE_URL']

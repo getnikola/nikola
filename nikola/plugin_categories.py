@@ -571,7 +571,7 @@ class Taxonomy(BasePlugin):
         """
         return hierarchy[0]
 
-    def provide_list_context_and_uptodate(self):
+    def provide_list_context_and_uptodate(self, lang):
         """Provide data for the context and the uptodate list for the list of all classifiations.
 
         Must return a tuple of two dicts. The first is merged into the page's context,
@@ -581,7 +581,7 @@ class Taxonomy(BasePlugin):
         """
         raise NotImplementedError()
 
-    def provide_context_and_uptodate(self, classification):
+    def provide_context_and_uptodate(self, classification, lang):
         """Provide data for the context and the uptodate list for the list of the given classifiation.
 
         Must return a tuple of two dicts. The first is merged into the page's context,
