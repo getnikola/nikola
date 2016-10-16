@@ -504,13 +504,14 @@ class Taxonomy(BasePlugin):
     also_create_classifications_from_other_languages = True
 
     def classify(self, post, lang):
-        """Classifies the given post for the given language.
+        """Classify the given post for the given language.
 
-        Must return a list or tuple of strings."""
+        Must return a list or tuple of strings.
+        """
         raise NotImplementedError()
 
-    def sort_posts(self, posts):
-        """Sorts the given list of posts."""
+    def sort_posts(self, posts, lang):
+        """Sort the given list of posts."""
         pass
 
     def get_list_path(self, lang):
@@ -518,7 +519,8 @@ class Taxonomy(BasePlugin):
 
         The last element in the returned path must have no extension, and the
         PRETTY_URLS config must be ignored. The return value will be modified
-        based on the PRETTY_URLS and INDEX_FILE settings."""
+        based on the PRETTY_URLS and INDEX_FILE settings.
+        """
         raise NotImplementedError()
 
     def get_path(self, classification, lang):
@@ -529,48 +531,54 @@ class Taxonomy(BasePlugin):
         based on the PRETTY_URLS and INDEX_FILE settings.
 
         For hierarchical taxonomies, the result of extract_hierarchy is provided.
-        For non-hierarchical taxonomies, the classification string itself is provided."""
+        For non-hierarchical taxonomies, the classification string itself is provided.
+        """
         raise NotImplementedError()
 
     def extract_hierarchy(self, classification):
         """Given a classification, return a list of parts in the hierarchy.
 
         For non-hierarchical taxonomies, it usually suffices to return
-        `[classification]`."""
+        `[classification]`.
+        """
         return [classification]
 
     def recombine_classification_from_hierarchy(self, hierarchy):
         """Given a list of parts in the hierarchy, return the classification string.
 
-        For non-hierarchical taxonomies, it usually suffices to return hierarchy[0]."""
+        For non-hierarchical taxonomies, it usually suffices to return hierarchy[0].
+        """
         return hierarchy[0]
 
     def provide_list_context_and_uptodate(self):
-        """Provides data for the context and the uptodate list for the list of all classifiations.
+        """Provide data for the context and the uptodate list for the list of all classifiations.
 
         Must return a tuple of two dicts. The first is merged into the page's context,
         the second will be put into the uptodate list of all generated tasks.
 
-        Context must contain `title`."""
+        Context must contain `title`.
+        """
         raise NotImplementedError()
 
     def provide_context_and_uptodate(self, classification):
-        """Provides data for the context and the uptodate list for the list of the given classifiation.
+        """Provide data for the context and the uptodate list for the list of the given classifiation.
 
         Must return a tuple of two dicts. The first is merged into the page's context,
         the second will be put into the uptodate list of all generated tasks.
 
         Context must contain `title`, which should be something like 'Posts about <classification>',
-        and `classification_title`, which should be related to the classification string."""
+        and `classification_title`, which should be related to the classification string.
+        """
         raise NotImplementedError()
 
     def postprocess_posts_per_classification(self, posts_per_classification_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
-        """This function can rearrange, modify or otherwise use the list of posts per classification and per language.
+        """Rearrange, modify or otherwise use the list of posts per classification and per language.
 
         For compatibility reasons, the list could be stored somewhere else as well.
 
         In case `has_hierarchy` is `True`, `flat_hierarchy_per_lang` is the flat
         hierarchy consisting of `TreeNode` elements, and `hierarchy_lookup_per_lang`
         is the corresponding hierarchy lookup mapping classification strings to
-        `TreeNode` objects."""
+        `TreeNode` objects.
+        """
         pass

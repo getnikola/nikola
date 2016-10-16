@@ -203,7 +203,6 @@ class RenderTaxonomies(Task):
 
     def gen_tasks(self):
         """Render the tag pages and feeds."""
-
         self.site.scan_posts()
         yield self.group_task()
 
