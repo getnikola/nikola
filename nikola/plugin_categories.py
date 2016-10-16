@@ -538,7 +538,7 @@ class Taxonomy(BasePlugin):
         """
         pass
 
-    def get_list_path(self, lang):
+    def get_list_path(self, lang, type='page'):
         """A path handler for the list of all classifications.
 
         Must return a list or tuple, together with a boolean indicating
@@ -548,10 +548,12 @@ class Taxonomy(BasePlugin):
         path must have no extension, and the PRETTY_URLS config must be ignored
         by this handler. The return value will be modified based on the
         PRETTY_URLS and INDEX_FILE settings.
+
+        Type can be either 'page', 'feed' (for Atom feed) or 'rss'.
         """
         raise NotImplementedError()
 
-    def get_path(self, classification, lang):
+    def get_path(self, classification, lang, type='page'):
         """A path handler for the given classification.
 
         Must return a list or tuple, together with a boolean indicating
@@ -561,6 +563,8 @@ class Taxonomy(BasePlugin):
         path must have no extension, and the PRETTY_URLS config must be ignored
         by this handler. The return value will be modified based on the
         PRETTY_URLS and INDEX_FILE settings.
+
+        Type can be either 'page', 'feed' (for Atom feed) or 'rss'.
 
         For hierarchical taxonomies, the result of extract_hierarchy is provided
         as `classification`. For non-hierarchical taxonomies, the classification

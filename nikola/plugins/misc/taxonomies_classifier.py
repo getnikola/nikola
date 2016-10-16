@@ -177,9 +177,15 @@ class TaxonomiesClassifier(SignalHandler):
                 )
 
     def _postprocess_path(self, path, lang, always_append_index=False, force_extension=None):
+        if type == 'feed':
+            force_extension = '.atom'
+        elif type == 'rss':
+            force_extension = '.xml'
         if force_extension is not None:
             if len(path) == 0 or always_append_index:
                 path = [os.path.splitext(self.site.config['INDEX_FILE'])[0]]
+                if type == 'rss':
+                    path = ['rss']
             path[-1] += force_extension
         elif self.site.config['PRETTY_URLS'] or len(path) == 0 or always_append_index:
             path = path + [self.site.config['INDEX_FILE']]
@@ -192,21 +198,21 @@ class TaxonomiesClassifier(SignalHandler):
         path, append_index = taxonomy.get_list_path(lang)
         return self._postprocess_path(path, lang, always_append_index=append_index)
 
-    def _taxonomy_path(self, name, lang, taxonomy, force_extension=None):
+    def _taxonomy_path(self, name, lang, taxonomy, force_extension=None, type='page'):
         """Return path to a classification."""
         if taxonomy.has_hirearchy:
-            path, append_index = taxonomy.get_path(taxonomy.extract_hierarchy(name), lang)
+            path, append_index = taxonomy.get_path(taxonomy.extract_hierarchy(name), lang, type=type)
         else:
-            path, append_index = taxonomy.get_path(name, lang)
-        return self._postprocess_path(path, lang, always_append_index=append_index, force_extension=force_extension)
+            path, append_index = taxonomy.get_path(name, lang, type=type)
+        return self._postprocess_path(path, lang, always_append_index=append_index, force_extension=force_extension, type=type)
 
     def _taxonomy_atom_path(self, name, lang, taxonomy):
         """Return path to a classification Atom feed."""
-        return self._taxonomy_path(name, lang, taxonomy, force_extension='.atom')
+        return self._taxonomy_path(name, lang, taxonomy, type='feed')
 
     def _taxonomy_rss_path(self, name, lang, taxonomy):
         """Return path to a classification RSS feed."""
-        return self._taxonomy_path(name, lang, taxonomy, force_extension='.xml')
+        return self._taxonomy_path(name, lang, taxonomy, type='rss')
 
     def _register_path_handlers(self, taxonomy):
         self.site.register_path_handler('{0}_index'.format(taxonomy.classification_name), lambda name, lang: self._tag_index_path(lang, taxonomy))
