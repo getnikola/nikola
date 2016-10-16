@@ -169,6 +169,15 @@ class TaxonomiesClassifier(SignalHandler):
             else:
                 taxonomy.postprocess_posts_per_classification(self.site.posts_per_classification[taxonomy.classification_name], flat_hierarchy, hierarchy_lookup)
 
+        # Postprocessing
+        for taxonomy in taxonomies:
+            for lang, posts_per_classification in self.site.posts_per_classification[taxonomy.classification_name].items():
+                taxonomy.postprocess_posts_per_classification(
+                    posts_per_classification,
+                    self.site.flat_hierarchy_per_classification.get(taxonomy.classification_name, {}).get(lang, None),
+                    self.site.hierarchy_lookup_per_classification.get(taxonomy.classification_name, {}).get(lang, None),
+                )
+
     def _postprocess_path(self, path, lang, force_extension=None):
         if force_extension is not None:
             if len(path) == 0:
