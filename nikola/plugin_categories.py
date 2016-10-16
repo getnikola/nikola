@@ -511,7 +511,10 @@ class Taxonomy(BasePlugin):
         raise NotImplementedError()
 
     def sort_posts(self, posts, classification, lang):
-        """Sort the given list of posts."""
+        """Sort the given list of posts.
+
+        The sort must happen in-place.
+        """
         pass
 
     def sort_classifications(self, classifications, lang):
@@ -519,6 +522,8 @@ class Taxonomy(BasePlugin):
 
         For hierarchical taxonomies, the elements of the list are a single
         path element of the path returned by extract_hierarchy().
+
+        The sort must happen in-place.
         """
         pass
 
@@ -585,8 +590,8 @@ class Taxonomy(BasePlugin):
         For compatibility reasons, the list could be stored somewhere else as well.
 
         In case `has_hierarchy` is `True`, `flat_hierarchy_per_lang` is the flat
-        hierarchy consisting of `TreeNode` elements, and `hierarchy_lookup_per_lang`
+        hierarchy consisting of `utils.TreeNode` elements, and `hierarchy_lookup_per_lang`
         is the corresponding hierarchy lookup mapping classification strings to
-        `TreeNode` objects.
+        `utils.TreeNode` objects.
         """
         pass
