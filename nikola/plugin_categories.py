@@ -49,6 +49,7 @@ __all__ = (
     'SignalHandler',
     'ConfigPlugin',
     'PostScanner',
+    'Taxonomy',
 )
 
 
@@ -451,3 +452,125 @@ class Importer(Command):
     def save_post(self):
         """Save a post to disk."""
         raise NotImplementedError()
+
+
+class Taxonomy(BasePlugin):
+    """Taxonomy for posts.
+
+    A taxonomy plugin allows to classify posts (see #2107) by
+    classification strings.
+    """
+
+    name = "dummy_taxonomy"
+
+    # Adjust the following values in your plugin!
+
+    # The classification name to be used for path handlers.
+    classification_name = "taxonomy"
+    # The classification name to be used when storing the classification
+    # in the metadata.
+    metadata_name = "taxonomy"
+    # If True, there can be more than one classification per post; in that case,
+    # the classification data in the metadata is stored as a list. If False,
+    # the classification data in the metadata is stored as a string, or None
+    # when no classification is given.
+    more_than_one_classifications_per_post = False
+    # Whether the classification has a hierarchy.
+    has_hierarchy = False
+    # If True, the list for a classification includes all posts with a
+    # sub-classification (in case has_hierarchy is True).
+    include_posts_from_subhierarchies = False
+    # Whether to show the posts for one classification as an index or
+    # as a post list.
+    show_list_as_index = False
+    # The template to use for the post list for one classification.
+    # Set to none to avoid generating overviews.
+    template_for_list_of_one_classification = "tagindex.tmpl"
+    # The template to use for the classification overview page.
+    template_for_classification_overview = "list.tmpl"
+    # Whether this classification applies to posts.
+    apply_to_posts = True
+    # Whether this classification applies to pages.
+    apply_to_pages = False
+    # The minimum number of posts a classification must have to be listed in
+    # the overview.
+    minimum_post_count_per_classification_in_overview = 1
+    # Whether post lists resp. indexes should be created for empty
+    # classifications.
+    omit_empty_classifications = False
+    # Whether to include all classifications for all languages in every
+    # language, or only the classifications for one language in its language's
+    # pages.
+    also_create_classifications_from_other_languages = True
+
+    def classify(self, post, lang):
+        """Classifies the given post for the given language.
+
+        Must return a list or tuple of strings."""
+        raise NotImplementedError()
+
+    def sort_posts(self, posts):
+        """Sorts the given list of posts."""
+        pass
+
+    def get_list_path(self, lang):
+        """A path handler for the list of all classifications.
+
+        The last element in the returned path must have no extension, and the
+        PRETTY_URLS config must be ignored. The return value will be modified
+        based on the PRETTY_URLS and INDEX_FILE settings."""
+        raise NotImplementedError()
+
+    def get_path(self, classification, lang):
+        """A path handler for the given classification.
+
+        The last element in the returned path must have no extension, and the
+        PRETTY_URLS config must be ignored. The return value will be modified
+        based on the PRETTY_URLS and INDEX_FILE settings.
+
+        For hierarchical taxonomies, the result of extract_hierarchy is provided.
+        For non-hierarchical taxonomies, the classification string itself is provided."""
+        raise NotImplementedError()
+
+    def extract_hierarchy(self, classification):
+        """Given a classification, return a list of parts in the hierarchy.
+
+        For non-hierarchical taxonomies, it usually suffices to return
+        `[classification]`."""
+        return [classification]
+
+    def recombine_classification_from_hierarchy(self, hierarchy):
+        """Given a list of parts in the hierarchy, return the classification string.
+
+        For non-hierarchical taxonomies, it usually suffices to return hierarchy[0]."""
+        return hierarchy[0]
+
+    def provide_list_context_and_uptodate(self):
+        """Provides data for the context and the uptodate list for the list of all classifiations.
+
+        Must return a tuple of two dicts. The first is merged into the page's context,
+        the second will be put into the uptodate list of all generated tasks.
+
+        Context must contain `title`."""
+        raise NotImplementedError()
+
+    def provide_context_and_uptodate(self, classification):
+        """Provides data for the context and the uptodate list for the list of the given classifiation.
+
+        Must return a tuple of two dicts. The first is merged into the page's context,
+        the second will be put into the uptodate list of all generated tasks.
+
+        Context must contain `title`, which should be something like 'Posts about <classification>',
+        and `classification_title`, which should be related to the classification string."""
+        raise NotImplementedError()
+
+    def postprocess_posts_per_classification(self, posts_per_classification_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
+        """This function can rearrange, modify or otherwise use the list of posts per classification and per language.
+
+        For compatibility reasons, the list could be stored somewhere else as well.
+
+        In case `has_hierarchy` is `True`, `flat_hierarchy_per_lang` is the flat
+        hierarchy consisting of `TreeNode` elements, and `hierarchy_lookup_per_lang`
+        is the corresponding hierarchy lookup mapping classification strings to
+        `TreeNode` objects."""
+        pass

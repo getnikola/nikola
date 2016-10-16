@@ -73,6 +73,7 @@ from .plugin_categories import (
     SignalHandler,
     ConfigPlugin,
     PostScanner,
+    Taxonomy,
 )
 
 if DEBUG:
@@ -948,6 +949,7 @@ class Nikola(object):
             "SignalHandler": SignalHandler,
             "ConfigPlugin": ConfigPlugin,
             "PostScanner": PostScanner,
+            "Taxonomy": Taxonomy,
         })
         self.plugin_manager.getPluginLocator().setPluginInfoExtension('plugin')
         extra_plugins_dirs = self.config['EXTRA_PLUGINS_DIRS']
@@ -1019,6 +1021,7 @@ class Nikola(object):
 
         self.plugin_manager.loadPlugins()
 
+        self._activate_plugins_of_category("Taxonomy")
         self._activate_plugins_of_category("SignalHandler")
 
         # Emit signal for SignalHandlers which need to start running immediately.
