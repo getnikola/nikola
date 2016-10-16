@@ -33,7 +33,7 @@ from nikola import utils
 
 
 class ClassifyAuthors(Taxonomy):
-    """Render the author pages and feeds."""
+    """Classify the posts by authors."""
 
     name = "classify_authors"
 
