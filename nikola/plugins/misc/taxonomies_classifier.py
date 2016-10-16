@@ -152,7 +152,7 @@ class TaxonomiesClassifier(SignalHandler):
                             node.classification_name = taxonomy.recombine_classification_from_hierarchy(node.classification_path)
                             hierarchy_lookup[node.classification_name] = node
                         classifications = natsort.natsorted(result, key=lambda e: e.name, alg=natsort.ns.F | natsort.ns.IC)
-                        taxonomy.sort_classifications(classifications)
+                        taxonomy.sort_classifications(classifications, lang)
                         return classifications
 
                     root_list = create_hierarchy(hierarchy)
