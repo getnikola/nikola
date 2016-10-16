@@ -41,7 +41,7 @@ class ClassifySections(Taxonomy):
     overview_page_variable_name = "sections"
     more_than_one_classifications_per_post = False
     has_hierarchy = False
-    template_for_list_of_one_classification = None
+    template_for_classification_overview = None
     apply_to_posts = True
     apply_to_pages = False
     omit_empty_classifications = True
@@ -50,7 +50,7 @@ class ClassifySections(Taxonomy):
     def set_site(self, site):
         """Set Nikola site."""
         self.show_list_as_index = site.config["POSTS_SECTION_ARE_INDEXES"]
-        self.template_for_classification_overview = "sectionindex.tmpl" if self.show_list_as_index else "list.tmpl"
+        self.template_for_list_of_one_classification = "sectionindex.tmpl" if self.show_list_as_index else "list.tmpl"
         return super(ClassifySections, self).set_site(site)
 
     def is_enabled(self):
@@ -61,7 +61,7 @@ class ClassifySections(Taxonomy):
         """Classify the given post for the given language."""
         return [post.section_slug(lang)]
 
-    def get_path(self, section, lang):
+    def get_path(self, section, lang, type='page'):
         """A path handler for the given classification."""
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang], section] if _f], True
 
@@ -78,8 +78,8 @@ class ClassifySections(Taxonomy):
             "messages": self.site.MESSAGES,
         }
         # Check whether we have a name for this section
-        if section in self.config['POSTS_SECTION_NAME'](lang):
-            section_name = self.config['POSTS_SECTION_NAME'](lang)[section]
+        if section in self.site.config['POSTS_SECTION_NAME'](lang):
+            section_name = self.site.config['POSTS_SECTION_NAME'](lang)[section]
         else:
             section_name = section.replace('-', ' ').title()
         # Compose section title

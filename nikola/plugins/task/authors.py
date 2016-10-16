@@ -63,11 +63,11 @@ class ClassifyAuthors(Taxonomy):
         """Classify the given post for the given language."""
         return [post.author()]
 
-    def get_list_path(self, lang):
+    def get_list_path(self, lang, type='page'):
         """A path handler for the list of all classifications."""
         return [self.site.config['AUTHOR_PATH']], True
 
-    def get_path(self, author, lang):
+    def get_path(self, author, lang, type='page'):
         """A path handler for the given classification."""
         if self.site.config['SLUG_AUTHOR_PATH']:
             slug = utils.slugify(author, lang)
@@ -107,7 +107,7 @@ class ClassifyAuthors(Taxonomy):
     def postprocess_posts_per_classification(self, posts_per_author_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
         """Rearrange, modify or otherwise use the list of posts per classification and per language."""
         more_than_one = False
-        for lang, posts_per_author in posts_per_author_per_language.item():
+        for lang, posts_per_author in posts_per_author_per_language.items():
             if len(posts_per_author.keys()) > 1:
                 more_than_one = True
         self.generate_author_pages = self.site.config["ENABLE_AUTHOR_PAGES"] and more_than_one

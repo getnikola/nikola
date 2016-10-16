@@ -93,7 +93,7 @@ class TaxonomiesClassifier(SignalHandler):
                                 utils.LOGGER.error("{0} {1} yields invalid path '{2}'!".format(taxonomy.classification_name.title(), classification, '/'.join(path)))
                                 quit = True
                         # Combine path
-                        path = os.path.join([os.path.normpath(p) for p in path if p != '.'])
+                        path = os.path.join(*[os.path.normpath(p) for p in path if p != '.'])
                         # Determine collisions
                         if path in taxonomy_outputs[lang]:
                             other_classification_name, other_classification, other_posts = taxonomy_outputs[lang][path]
@@ -165,18 +165,9 @@ class TaxonomiesClassifier(SignalHandler):
                                                               site.flat_hierarchy_per_classification[taxonomy.classification_name],
                                                               site.hierarchy_lookup_per_classification[taxonomy.classification_name])
             else:
-                taxonomy.postprocess_posts_per_classification(site.posts_per_classification[taxonomy.classification_name], flat_hierarchy, hierarchy_lookup)
+                taxonomy.postprocess_posts_per_classification(site.posts_per_classification[taxonomy.classification_name])
 
-        # Postprocessing
-        for taxonomy in taxonomies:
-            for lang, posts_per_classification in site.posts_per_classification[taxonomy.classification_name].items():
-                taxonomy.postprocess_posts_per_classification(
-                    posts_per_classification,
-                    site.flat_hierarchy_per_classification.get(taxonomy.classification_name, {}).get(lang, None),
-                    site.hierarchy_lookup_per_classification.get(taxonomy.classification_name, {}).get(lang, None),
-                )
-
-    def _postprocess_path(self, path, lang, always_append_index=False, force_extension=None):
+    def _postprocess_path(self, path, lang, always_append_index=False, force_extension=None, type='page'):
         if type == 'feed':
             force_extension = '.atom'
         elif type == 'rss':
@@ -200,7 +191,7 @@ class TaxonomiesClassifier(SignalHandler):
 
     def _taxonomy_path(self, name, lang, taxonomy, force_extension=None, type='page'):
         """Return path to a classification."""
-        if taxonomy.has_hirearchy:
+        if taxonomy.has_hierarchy:
             path, append_index = taxonomy.get_path(taxonomy.extract_hierarchy(name), lang, type=type)
         else:
             path, append_index = taxonomy.get_path(name, lang, type=type)
@@ -215,10 +206,10 @@ class TaxonomiesClassifier(SignalHandler):
         return self._taxonomy_path(name, lang, taxonomy, type='rss')
 
     def _register_path_handlers(self, taxonomy):
-        self.site.register_path_handler('{0}_index'.format(taxonomy.classification_name), lambda name, lang: self._tag_index_path(lang, taxonomy))
-        self.site.register_path_handler('{0}'.format(taxonomy.classification_name), lambda name, lang: self._tag_path(name, lang, taxonomy))
-        self.site.register_path_handler('{0}_atom'.format(taxonomy.classification_name), lambda name, lang: self._tag_atom_path(name, lang, taxonomy))
-        self.site.register_path_handler('{0}_rss'.format(taxonomy.classification_name), lambda name, lang: self._tag_rss_path(name, lang, taxonomy))
+        self.site.register_path_handler('{0}_index'.format(taxonomy.classification_name), lambda name, lang: self._taxonomy_index_path(lang, taxonomy))
+        self.site.register_path_handler('{0}'.format(taxonomy.classification_name), lambda name, lang: self._taxonomy_path(name, lang, taxonomy))
+        self.site.register_path_handler('{0}_atom'.format(taxonomy.classification_name), lambda name, lang: self._taxonomy_atom_path(name, lang, taxonomy))
+        self.site.register_path_handler('{0}_rss'.format(taxonomy.classification_name), lambda name, lang: self._taxonomy_rss_path(name, lang, taxonomy))
 
     def set_site(self, site):
         """Set site, which is a Nikola instance."""

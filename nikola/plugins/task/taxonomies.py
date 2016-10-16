@@ -70,6 +70,7 @@ class RenderTaxonomies(Task):
         kw = copy(kw)
         kw['filters'] = self.site.config['FILTERS']
         kw["minimum_post_count"] = taxonomy.minimum_post_count_per_classification_in_overview
+        kw["output_folder"] = self.site.config['OUTPUT_FOLDER']
 
         # Collect all relevant classifications
         if taxonomy.has_hierarchy:
@@ -224,6 +225,7 @@ class RenderTaxonomies(Task):
         kw["feed_plain"] = self.site.config["FEED_PLAIN"]
         kw["feed_link_append_query"] = self.site.config["FEED_LINKS_APPEND_QUERY"]
         kw["feed_length"] = self.site.config['FEED_LENGTH']
+        kw["output_folder"] = self.site.config['OUTPUT_FOLDER']
         # Generate RSS feed
         if kw["generate_rss"]:
             yield self._generate_classification_page_as_rss(taxonomy, classification, filtered_posts, context['title'], kw, lang)
@@ -244,7 +246,7 @@ class RenderTaxonomies(Task):
                 continue
             for lang in self.site.config["TRANSLATIONS"]:
                 # Generate list of classifications (i.e. classification overview)
-                if taxonomy.template_for_list_of_one_classification is not None:
+                if taxonomy.template_for_classification_overview is not None:
                     for task in self._generate_classification_overview(taxonomy, lang):
                         yield task
 
