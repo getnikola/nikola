@@ -50,7 +50,7 @@ class TaxonomiesClassifier(SignalHandler):
             if taxonomy.classification_name in site.posts_per_classification:
                 raise Exception("Found more than one taxonomy with classification name '{}'!".format(taxonomy.classification_name))
             site.posts_per_classification[taxonomy.classification_name] = {
-                lang: defaultdict(set) for lang in self.config['TRANSLATIONS'].keys()
+                lang: defaultdict(set) for lang in site.config['TRANSLATIONS'].keys()
             }
 
         # Classify posts

@@ -59,7 +59,7 @@ class ClassifySections(Taxonomy):
 
     def classify(self, post, lang):
         """Classify the given post for the given language."""
-        raise [post.section_slug(lang)]
+        return [post.section_slug(lang)]
 
     def get_path(self, section, lang):
         """A path handler for the given classification."""
