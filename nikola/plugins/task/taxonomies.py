@@ -238,7 +238,7 @@ class RenderTaxonomies(Task):
         self.site.scan_posts()
         yield self.group_task()
 
-        for taxonomy in self.site.plugin_manager.getPluginsOfCategory('Taxonomy'):
+        for taxonomy in [p.plugin_object for p in self.site.plugin_manager.getPluginsOfCategory('Taxonomy')]:
             # Should this taxonomy be considered after all?
             if not taxonomy.is_enabled():
                 continue

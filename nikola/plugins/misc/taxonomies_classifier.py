@@ -44,7 +44,7 @@ class TaxonomiesClassifier(SignalHandler):
     name = "render_taxonomies"
 
     def _do_classification(self, site):
-        taxonomies = site.plugin_manager.getPluginsOfCategory('Taxonomy')
+        taxonomies = [p.plugin_object for p in site.plugin_manager.getPluginsOfCategory('Taxonomy')]
         site.posts_per_classification = {}
         for taxonomy in taxonomies:
             if taxonomy.classification_name in site.posts_per_classification:
@@ -226,5 +226,5 @@ class TaxonomiesClassifier(SignalHandler):
         # Add hook for after post scanning
         blinker.signal("scanned").connect(self._do_classification)
         # Register path handlers
-        for taxonomy in self.site.plugin_manager.getPluginsOfCategory('Taxonomy'):
+        for taxonomy in [p.plugin_object for p in site.plugin_manager.getPluginsOfCategory('Taxonomy')]:
             self._register_path_handlers(taxonomy)
