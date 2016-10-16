@@ -68,6 +68,7 @@ class RenderTaxonomies(Task):
 
         context = copy(context)
         kw = copy(kw)
+        kw['filters'] = self.site.config['FILTERS']
         kw["minimum_post_count"] = taxonomy.minimum_post_count_per_classification_in_overview
 
         # Collect all relevant classifications
@@ -212,7 +213,10 @@ class RenderTaxonomies(Task):
         # Get data
         context, kw = taxonomy.provide_context_and_uptodate(classification)
         kw = copy(kw)
-        kw["blog_title"] = self.site.config["BLOG_TITLE"]
+        kw['filters'] = self.site.config['FILTERS']
+        kw['site_url'] = self.site.config['SITE_URL']
+        kw['blog_title'] = self.site.config['BLOG_TITLE']
+        kw['generate_rss'] = self.site.config['GENERATE_RSS']
         kw["feed_teasers"] = self.site.config["FEED_TEASERS"]
         kw["feed_plain"] = self.site.config["FEED_PLAIN"]
         kw["feed_link_append_query"] = self.site.config["FEED_LINKS_APPEND_QUERY"]
