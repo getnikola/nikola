@@ -100,7 +100,7 @@ class RenderTaxonomies(Task):
         # Prepare rendering
         context["permalink"] = self.site.link("{}_index".format(taxonomy.classification_name), None, lang)
         context["pagekind"] = ["list", "tags_page"]
-        output_name = os.path.join(kw['output_folder'], self.site.path('{}_index'.format(taxonomy.classification_name), None, lang))
+        output_name = os.path.join(self.site.config['OUTPUT_FOLDER'], self.site.path('{}_index'.format(taxonomy.classification_name), None, lang))
         task = self.site.generic_post_list_renderer(
             lang,
             [],
@@ -117,7 +117,7 @@ class RenderTaxonomies(Task):
         """Create a RSS feed for a single classification in a given language."""
         kind = taxonomy.classification_name
         # Render RSS
-        output_name = os.path.normpath(os.path.join(kw['output_folder'], self.site.path(kind + "_rss", classification, lang)))
+        output_name = os.path.normpath(os.path.join(self.site.config['OUTPUT_FOLDER'], self.site.path(kind + "_rss", classification, lang)))
         feed_url = urljoin(self.site.config['BASE_URL'], self.site.link(kind + "_rss", classification, lang).lstrip('/'))
         deps = []
         deps_uptodate = []
@@ -168,7 +168,7 @@ class RenderTaxonomies(Task):
         kind = taxonomy.classification_name
         context = copy(context)
         context['feedlink'] = self.site.abs_link(self.site.path('{}_atom'.format(kind), classification, lang))
-        feed_path = os.path.join(kw['output_folder'], self.site.path('{}_atom'.format(kind), classification, lang))
+        feed_path = os.path.join(self.site.config['OUTPUT_FOLDER'], self.site.path('{}_atom'.format(kind), classification, lang))
 
         task = {
             'basename': str(self.name),
@@ -185,7 +185,7 @@ class RenderTaxonomies(Task):
         """Render a single flat link list with this classification's posts."""
         kind = taxonomy.classification_name
         template_name = "tag.tmpl"
-        output_name = os.path.join(kw['output_folder'], self.site.path(kind, classification, lang))
+        output_name = os.path.join(self.site.config['OUTPUT_FOLDER'], self.site.path(kind, classification, lang))
         context = copy(context)
         context["lang"] = lang
         context["posts"] = filtered_posts
