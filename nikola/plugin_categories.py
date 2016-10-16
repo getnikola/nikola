@@ -510,8 +510,16 @@ class Taxonomy(BasePlugin):
         """
         raise NotImplementedError()
 
-    def sort_posts(self, posts, lang):
+    def sort_posts(self, posts, classification, lang):
         """Sort the given list of posts."""
+        pass
+
+    def sort_classifications(self, classifications, lang):
+        """Sort the given list of classification strings.
+
+        For hierarchical taxonomies, the elements of the list are a single
+        path element of the path returned by extract_hierarchy().
+        """
         pass
 
     def get_list_path(self, lang):

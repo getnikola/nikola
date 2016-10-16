@@ -60,6 +60,7 @@ class RenderTaxonomies(Task):
             classifications = natsort.natsorted([tag for tag, posts in self.site.posts_per_classification[taxonomy.classification_name][lang].items()
                                                  if len(posts) >= kw["minimum_post_count"]],
                                                 alg=natsort.ns.F | natsort.ns.IC)
+            taxonomy.sort_classifications(classifications)
 
         # Set up classifications in context
         context[taxonomy.metadata_name] = classifications

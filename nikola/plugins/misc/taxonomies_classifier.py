@@ -124,6 +124,7 @@ class TaxonomiesClassifier(SignalHandler):
                                (int(p.meta('priority')) if p.meta('priority') else 0,
                                 p.date, p.source_path))
                     posts.reverse()
+                    taxonomy.sort_posts(posts, classification, lang)
                     posts_per_classification[classification] = posts
             # Create hierarchy information
             if taxonomy.has_hierarchy:
@@ -150,7 +151,9 @@ class TaxonomiesClassifier(SignalHandler):
                             node.classification_path = [pn.name for pn in node.get_path()]
                             node.classification_name = taxonomy.recombine_classification_from_hierarchy(node.classification_path)
                             hierarchy_lookup[node.classification_name] = node
-                        return natsort.natsorted(result, key=lambda e: e.name, alg=natsort.ns.F | natsort.ns.IC)
+                        classifications = natsort.natsorted(result, key=lambda e: e.name, alg=natsort.ns.F | natsort.ns.IC)
+                        taxonomy.sort_classifications(classifications)
+                        return classifications
 
                     root_list = create_hierarchy(hierarchy)
                     flat_hierarchy = utils.flatten_tree_structure(root_list)
