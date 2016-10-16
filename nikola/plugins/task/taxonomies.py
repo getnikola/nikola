@@ -88,7 +88,7 @@ class RenderTaxonomies(Task):
             taxonomy.sort_classifications(classifications, lang)
 
         # Set up classifications in context
-        context[taxonomy.metadata_name] = classifications
+        context[taxonomy.overview_page_variable_name] = classifications
         context["items"] = [(classification, self.site.link(taxonomy.classification_name, classification, lang)) for classification in classifications]
         context["has_hierarchy"] = taxonomy.has_hierarchy
         if taxonomy.has_hierarchy:

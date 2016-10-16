@@ -470,6 +470,9 @@ class Taxonomy(BasePlugin):
     # The classification name to be used when storing the classification
     # in the metadata.
     metadata_name = "taxonomy"
+    # Variable for the overview page template which contains the list of
+    # classifications.
+    overview_page_variable_name = "taxonomy"
     # If True, there can be more than one classification per post; in that case,
     # the classification data in the metadata is stored as a list. If False,
     # the classification data in the metadata is stored as a string, or None
