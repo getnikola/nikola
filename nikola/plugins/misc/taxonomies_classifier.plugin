@@ -1,6 +1,6 @@
 [Core]
 name = classify_taxonomies
-module = classify_taxonomies
+module = taxonomies_classifier
 
 [Documentation]
 author = Roberto Alsina

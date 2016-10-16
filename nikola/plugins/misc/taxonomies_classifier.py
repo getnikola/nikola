@@ -43,22 +43,22 @@ class TaxonomiesClassifier(SignalHandler):
 
     name = "render_taxonomies"
 
-    def _do_classification(self):
-        taxonomies = self.site.plugin_manager.getPluginsOfCategory('Taxonomy')
-        self.site.posts_per_classification = {}
+    def _do_classification(self, site):
+        taxonomies = site.plugin_manager.getPluginsOfCategory('Taxonomy')
+        site.posts_per_classification = {}
         for taxonomy in taxonomies:
-            if taxonomy.classification_name in self.site.posts_per_classification:
+            if taxonomy.classification_name in site.posts_per_classification:
                 raise Exception("Found more than one taxonomy with classification name '{}'!".format(taxonomy.classification_name))
-            self.site.posts_per_classification[taxonomy.classification_name] = {
+            site.posts_per_classification[taxonomy.classification_name] = {
                 lang: defaultdict(set) for lang in self.config['TRANSLATIONS'].keys()
             }
 
         # Classify posts
-        for post in self.timeline:
+        for post in site.timeline:
             for taxonomy in taxonomies:
                 if taxonomy.apply_to_posts if post.is_post else taxonomy.apply_to_pages:
                     classifications = {}
-                    for lang in self.config['TRANSLATIONS'].keys():
+                    for lang in site.config['TRANSLATIONS'].keys():
                         # Extract classifications for this language
                         classifications[lang] = taxonomy.classify(post, lang)
                         assert taxonomy.more_than_one_classifications_per_post or len(classifications[lang]) <= 1
@@ -70,21 +70,21 @@ class TaxonomiesClassifier(SignalHandler):
                         # Add post to sets
                         for classification in classifications[lang]:
                             while classification:
-                                self.site.posts_per_classification[taxonomy.classification_name][lang][classification].add(post)
+                                site.posts_per_classification[taxonomy.classification_name][lang][classification].add(post)
                                 if not taxonomy.include_posts_from_subhierarchies or not taxonomy.has_hierarchy:
                                     break
                                 classification = taxonomy.recombine_classification_from_hierarchy(taxonomy.extract_hierarchy(classification)[:-1])
 
         # Check for valid paths and for collisions
-        taxonomy_outputs = {lang: dict() for lang in self.config['TRANSLATIONS'].keys()}
+        taxonomy_outputs = {lang: dict() for lang in site.config['TRANSLATIONS'].keys()}
         quit = False
         for taxonomy in taxonomies:
             # Check for collisions (per language)
-            for lang in self.config['TRANSLATIONS'].keys():
-                for tlang in self.config['TRANSLATIONS'].keys():
+            for lang in site.config['TRANSLATIONS'].keys():
+                for tlang in site.config['TRANSLATIONS'].keys():
                     if lang != tlang and not taxonomy.also_create_classifications_from_other_languages:
                         continue
-                    for classification, posts in self.site.posts_per_classification[taxonomy.classification_name][tlang].items():
+                    for classification, posts in site.posts_per_classification[taxonomy.classification_name][tlang].items():
                         # Obtain path as tuple
                         if taxonomy.has_hierarchy:
                             path = taxonomy.get_path(taxonomy.extract_hierarchy(classification), lang)
@@ -112,12 +112,12 @@ class TaxonomiesClassifier(SignalHandler):
             sys.exit(1)
 
         # Sort everything.
-        self.site.hierarchy_per_classification = {}
-        self.site.flat_hierarchy_per_classification = {}
-        self.site.hierarchy_lookup_per_classification = {}
+        site.hierarchy_per_classification = {}
+        site.flat_hierarchy_per_classification = {}
+        site.hierarchy_lookup_per_classification = {}
         for taxonomy in taxonomies:
             # Sort post lists
-            for lang, posts_per_classification in self.site.posts_per_classification[taxonomy.classification_name].items():
+            for lang, posts_per_classification in site.posts_per_classification[taxonomy.classification_name].items():
                 # Convert sets to lists and sort them
                 for classification in list(posts_per_classification.keys()):
                     posts = list(posts_per_classification[classification])
@@ -129,10 +129,10 @@ class TaxonomiesClassifier(SignalHandler):
                     posts_per_classification[classification] = posts
             # Create hierarchy information
             if taxonomy.has_hierarchy:
-                self.site.hierarchy_per_classification[taxonomy.classification_name] = {}
-                self.site.flat_hierarchy_per_classification[taxonomy.classification_name] = {}
-                self.site.hierarchy_lookup_per_classification[taxonomy.classification_name] = {}
-                for lang, posts_per_classification in self.site.posts_per_classification[taxonomy.classification_name].items():
+                site.hierarchy_per_classification[taxonomy.classification_name] = {}
+                site.flat_hierarchy_per_classification[taxonomy.classification_name] = {}
+                site.hierarchy_lookup_per_classification[taxonomy.classification_name] = {}
+                for lang, posts_per_classification in site.posts_per_classification[taxonomy.classification_name].items():
                     # Compose hierarchy
                     hierarchy = {}
                     for classification in posts_per_classification.keys():
@@ -160,22 +160,22 @@ class TaxonomiesClassifier(SignalHandler):
                     root_list = create_hierarchy(hierarchy)
                     flat_hierarchy = utils.flatten_tree_structure(root_list)
                     # Store result
-                    self.site.hierarchy_per_classification[taxonomy.classification_name][lang] = root_list
-                    self.site.flat_hierarchy_per_classification[taxonomy.classification_name][lang] = flat_hierarchy
-                    self.site.hierarchy_lookup_per_classification[taxonomy.classification_name][lang] = hierarchy_lookup
-                taxonomy.postprocess_posts_per_classification(self.site.posts_per_classification[taxonomy.classification_name],
-                                                              self.site.flat_hierarchy_per_classification[taxonomy.classification_name],
-                                                              self.site.hierarchy_lookup_per_classification[taxonomy.classification_name])
+                    site.hierarchy_per_classification[taxonomy.classification_name][lang] = root_list
+                    site.flat_hierarchy_per_classification[taxonomy.classification_name][lang] = flat_hierarchy
+                    site.hierarchy_lookup_per_classification[taxonomy.classification_name][lang] = hierarchy_lookup
+                taxonomy.postprocess_posts_per_classification(site.posts_per_classification[taxonomy.classification_name],
+                                                              site.flat_hierarchy_per_classification[taxonomy.classification_name],
+                                                              site.hierarchy_lookup_per_classification[taxonomy.classification_name])
             else:
-                taxonomy.postprocess_posts_per_classification(self.site.posts_per_classification[taxonomy.classification_name], flat_hierarchy, hierarchy_lookup)
+                taxonomy.postprocess_posts_per_classification(site.posts_per_classification[taxonomy.classification_name], flat_hierarchy, hierarchy_lookup)
 
         # Postprocessing
         for taxonomy in taxonomies:
-            for lang, posts_per_classification in self.site.posts_per_classification[taxonomy.classification_name].items():
+            for lang, posts_per_classification in site.posts_per_classification[taxonomy.classification_name].items():
                 taxonomy.postprocess_posts_per_classification(
                     posts_per_classification,
-                    self.site.flat_hierarchy_per_classification.get(taxonomy.classification_name, {}).get(lang, None),
-                    self.site.hierarchy_lookup_per_classification.get(taxonomy.classification_name, {}).get(lang, None),
+                    site.flat_hierarchy_per_classification.get(taxonomy.classification_name, {}).get(lang, None),
+                    site.hierarchy_lookup_per_classification.get(taxonomy.classification_name, {}).get(lang, None),
                 )
 
     def _postprocess_path(self, path, lang, force_extension=None):
@@ -221,5 +221,5 @@ class TaxonomiesClassifier(SignalHandler):
         # Add hook for after post scanning
         blinker.signal("scanned").connect(self._do_classification)
         # Register path handlers
-        for taxonomy in self.plugin_manager.getPluginsOfCategory('Taxonomy'):
+        for taxonomy in self.site.plugin_manager.getPluginsOfCategory('Taxonomy'):
             self._register_path_handlers(taxonomy)
