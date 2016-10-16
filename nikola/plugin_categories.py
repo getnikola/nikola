@@ -541,21 +541,30 @@ class Taxonomy(BasePlugin):
     def get_list_path(self, lang):
         """A path handler for the list of all classifications.
 
-        The last element in the returned path must have no extension, and the
-        PRETTY_URLS config must be ignored. The return value will be modified
-        based on the PRETTY_URLS and INDEX_FILE settings.
+        Must return a list or tuple, together with a boolean indicating
+        whether INDEX_FILE should always be added (True) or not (False).
+
+        In case INDEX_FILE should not be added, the last element in the returned
+        path must have no extension, and the PRETTY_URLS config must be ignored
+        by this handler. The return value will be modified based on the
+        PRETTY_URLS and INDEX_FILE settings.
         """
         raise NotImplementedError()
 
     def get_path(self, classification, lang):
         """A path handler for the given classification.
 
-        The last element in the returned path must have no extension, and the
-        PRETTY_URLS config must be ignored. The return value will be modified
-        based on the PRETTY_URLS and INDEX_FILE settings.
+        Must return a list or tuple, together with a boolean indicating
+        whether INDEX_FILE should always be added (True) or not (False).
 
-        For hierarchical taxonomies, the result of extract_hierarchy is provided.
-        For non-hierarchical taxonomies, the classification string itself is provided.
+        In case INDEX_FILE should not be added, the last element in the returned
+        path must have no extension, and the PRETTY_URLS config must be ignored
+        by this handler. The return value will be modified based on the
+        PRETTY_URLS and INDEX_FILE settings.
+
+        For hierarchical taxonomies, the result of extract_hierarchy is provided
+        as `classification`. For non-hierarchical taxonomies, the classification
+        string itself is provided as `classification`.
         """
         raise NotImplementedError()
 

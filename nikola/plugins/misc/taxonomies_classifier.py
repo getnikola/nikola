@@ -86,21 +86,19 @@ class TaxonomiesClassifier(SignalHandler):
                         continue
                     for classification, posts in site.posts_per_classification[taxonomy.classification_name][tlang].items():
                         # Obtain path as tuple
-                        if taxonomy.has_hierarchy:
-                            path = taxonomy.get_path(taxonomy.extract_hierarchy(classification), lang)
-                        else:
-                            path = taxonomy.get_path(classification, lang)
-                        path = tuple(path)
+                        path = self.site.path_handlers[taxonomy.classification_name](classification, lang)
                         # Check that path is OK
                         for path_element in path:
                             if len(path_element) == 0:
                                 utils.LOGGER.error("{0} {1} yields invalid path '{2}'!".format(taxonomy.classification_name.title(), classification, '/'.join(path)))
                                 quit = True
+                        # Combine path
+                        path = os.path.join([os.path.normpath(p) for p in path if p != '.'])
                         # Determine collisions
                         if path in taxonomy_outputs[lang]:
                             other_classification_name, other_classification, other_posts = taxonomy_outputs[lang][path]
-                            utils.LOGGER.error('You have classifications that are too similar: {0} "{1}" and {1} "{2}"'.format(
-                                taxonomy.classification_name, classification, other_classification_name, other_classification))
+                            utils.LOGGER.error('You have classifications that are too similar: {0} "{1}" and {2} "{3}" both result in output path {4} for langauge {5}.'.format(
+                                taxonomy.classification_name, classification, other_classification_name, other_classification, path, lang))
                             utils.LOGGER.error('{0} {1} is used in: {1}'.format(
                                 taxonomy.classification_name.title(), classification, ', '.join(sorted([p.source_path for p in posts]))))
                             utils.LOGGER.error('{0} {1} is used in: {1}'.format(
@@ -178,12 +176,12 @@ class TaxonomiesClassifier(SignalHandler):
                     site.hierarchy_lookup_per_classification.get(taxonomy.classification_name, {}).get(lang, None),
                 )
 
-    def _postprocess_path(self, path, lang, force_extension=None):
+    def _postprocess_path(self, path, lang, always_append_index=False, force_extension=None):
         if force_extension is not None:
-            if len(path) == 0:
+            if len(path) == 0 or always_append_index:
                 path = [os.path.splitext(self.site.config['INDEX_FILE'])[0]]
             path[-1] += force_extension
-        elif self.site.config['PRETTY_URLS'] or len(path) == 0:
+        elif self.site.config['PRETTY_URLS'] or len(path) == 0 or always_append_index:
             path = path + [self.site.config['INDEX_FILE']]
         else:
             path[-1] += '.html'
@@ -191,15 +189,16 @@ class TaxonomiesClassifier(SignalHandler):
 
     def _taxonomy_index_path(self, lang, taxonomy):
         """Return path to the classification overview."""
-        return self._postprocess_path(taxonomy.get_list_path(lang), lang)
+        path, append_index = taxonomy.get_list_path(lang)
+        return self._postprocess_path(path, lang, always_append_index=append_index)
 
     def _taxonomy_path(self, name, lang, taxonomy, force_extension=None):
         """Return path to a classification."""
         if taxonomy.has_hirearchy:
-            path = taxonomy.get_path(taxonomy.extract_hierarchy(name), lang)
+            path, append_index = taxonomy.get_path(taxonomy.extract_hierarchy(name), lang)
         else:
-            path = taxonomy.get_path(name, lang)
-        return self._postprocess_path(path, lang, force_extension=force_extension)
+            path, append_index = taxonomy.get_path(name, lang)
+        return self._postprocess_path(path, lang, always_append_index=append_index, force_extension=force_extension)
 
     def _taxonomy_atom_path(self, name, lang, taxonomy):
         """Return path to a classification Atom feed."""
