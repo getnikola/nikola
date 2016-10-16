@@ -31,7 +31,7 @@ from __future__ import unicode_literals
 from nikola.plugin_categories import Taxonomy
 
 
-class Indexes(Taxonomy):
+class ClassifySections(Taxonomy):
     """Classify the posts by sections."""
 
     name = "classify_sections"
@@ -49,9 +49,9 @@ class Indexes(Taxonomy):
 
     def set_site(self, site):
         """Set Nikola site."""
-        self.show_list_as_index = self.site.config["POSTS_SECTION_ARE_INDEXES"]
+        self.show_list_as_index = site.config["POSTS_SECTION_ARE_INDEXES"]
         self.template_for_classification_overview = "sectionindex.tmpl" if self.show_list_as_index else "list.tmpl"
-        return super(Indexes, self).set_site(site)
+        return super(ClassifySections, self).set_site(site)
 
     def is_enabled(self):
         """Return True if this taxonomy is enabled, or False otherwise."""
