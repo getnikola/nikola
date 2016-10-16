@@ -112,6 +112,7 @@ class TaxonomiesClassifier(SignalHandler):
             sys.exit(1)
 
         # Sort everything.
+        self.site.hierarchy_per_classification = {}
         self.site.flat_hierarchy_per_classification = {}
         self.site.hierarchy_lookup_per_classification = {}
         for taxonomy in taxonomies:
@@ -128,6 +129,7 @@ class TaxonomiesClassifier(SignalHandler):
                     posts_per_classification[classification] = posts
             # Create hierarchy information
             if taxonomy.has_hierarchy:
+                self.site.hierarchy_per_classification[taxonomy.classification_name] = {}
                 self.site.flat_hierarchy_per_classification[taxonomy.classification_name] = {}
                 self.site.hierarchy_lookup_per_classification[taxonomy.classification_name] = {}
                 for lang, posts_per_classification in self.site.posts_per_classification[taxonomy.classification_name].items():
@@ -158,6 +160,7 @@ class TaxonomiesClassifier(SignalHandler):
                     root_list = create_hierarchy(hierarchy)
                     flat_hierarchy = utils.flatten_tree_structure(root_list)
                     # Store result
+                    self.site.hierarchy_per_classification[taxonomy.classification_name][lang] = root_list
                     self.site.flat_hierarchy_per_classification[taxonomy.classification_name][lang] = flat_hierarchy
                     self.site.hierarchy_lookup_per_classification[taxonomy.classification_name][lang] = hierarchy_lookup
                 taxonomy.postprocess_posts_per_classification(self.site.posts_per_classification[taxonomy.classification_name],

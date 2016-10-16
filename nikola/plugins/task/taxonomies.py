@@ -40,6 +40,23 @@ from nikola import utils
 from nikola.nikola import _enclosure
 
 
+def _clone_treenode(treenode, parent=None, acceptor=lambda x: True):
+    # Standard TreeNode stuff
+    node_clone = utils.TreeNode(treenode.name, parent)
+    node_clone.children = [_clone_treenode(node, parent=node_clone, acceptor=acceptor) for node in treenode.children]
+    node_clone.children = [node for node in node_clone.children if node]
+    node_clone.indent_levels = treenode.indent_levels
+    node_clone.indent_change_before = treenode.indent_change_before
+    node_clone.indent_change_after = treenode.indent_change_after
+    # Stuff added by extended_tags_preproces plugin
+    node_clone.tag_path = treenode.tag_path
+    node_clone.tag_name = treenode.tag_name
+    # Accept this node if there are no children (left) and acceptor fails
+    if not node_clone.children and not acceptor(treenode):
+        return None
+    return node_clone
+
+
 class RenderTaxonomies(Task):
     """Render the tag/category pages and feeds."""
 
@@ -55,7 +72,14 @@ class RenderTaxonomies(Task):
 
         # Collect all relevant classifications
         if taxonomy.has_hierarchy:
-            classifications = [cat.classification_name for cat in self.site.flat_hierarchy_per_classification[taxonomy.classification_name][lang]]
+            def acceptor(node):
+                return len(self.site.posts_per_classification[taxonomy.classification_name][lang][node.classification_name]) >= kw["minimum_post_count"]
+
+            clipped_root_list = [_clone_treenode(node, parent=None, acceptor=acceptor) for node in self.site.hierarchy_per_classification[taxonomy.classification_name][lang]]
+            clipped_root_list = [node for node in clipped_root_list if node]
+            clipped_flat_hierarchy = utils.flatten_tree_structure(clipped_root_list)
+
+            classifications = [cat.classification_name for cat in clipped_flat_hierarchy]
         else:
             classifications = natsort.natsorted([tag for tag, posts in self.site.posts_per_classification[taxonomy.classification_name][lang].items()
                                                  if len(posts) >= kw["minimum_post_count"]],
@@ -71,7 +95,7 @@ class RenderTaxonomies(Task):
                                      self.site.link(taxonomy.classification_name, node.classification_name, lang),
                                      node.indent_levels, node.indent_change_before,
                                      node.indent_change_after)
-                                    for node in self.site.flat_hierarchy_per_classification[taxonomy.classification_name][lang]]
+                                    for node in clipped_flat_hierarchy]
 
         # Prepare rendering
         context["permalink"] = self.site.link("{}_index".format(taxonomy.classification_name), None, lang)
