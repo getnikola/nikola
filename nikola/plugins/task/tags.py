@@ -217,7 +217,7 @@ class RenderTags(Task):
             context["cat_items"] = [(tag, self.site.link("category", tag, lang)) for tag
                                     in categories]
             context['cat_hierarchy'] = [(node.name, node.category_name, node.category_path,
-                                         self.site.link("category", node.category_name),
+                                         self.site.link("category", node.category_name, lang),
                                          node.indent_levels, node.indent_change_before,
                                          node.indent_change_after)
                                         for node in self.site.category_hierarchy]
