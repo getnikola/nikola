@@ -100,7 +100,8 @@ class RenderTaxonomies(Task):
 
         # Prepare rendering
         context["permalink"] = self.site.link("{}_index".format(taxonomy.classification_name), None, lang)
-        context["pagekind"] = ["list", "tags_page"]
+        if "pagekind" not in context:
+            context["pagekind"] = ["list", "tags_page"]
         output_name = os.path.join(self.site.config['OUTPUT_FOLDER'], self.site.path('{}_index'.format(taxonomy.classification_name), None, lang))
         task = self.site.generic_post_list_renderer(
             lang,
@@ -159,7 +160,8 @@ class RenderTaxonomies(Task):
             rss_link = ("""<link rel="alternate" type="application/rss+xml" title="RSS for {0} {1} ({2})" href="{3}">""".format(
                 taxonomy.classification_name, context['classification_title'], lang, self.site.link('{}_rss'.format(kind), classification, lang)))
             context['rss_link'] = rss_link
-        context["pagekind"] = ["index", "tag_page"]
+        if "pagekind" not in context:
+            context["pagekind"] = ["index", "tag_page"]
         template_name = taxonomy.template_for_list_of_one_classification
 
         yield self.site.generic_index_renderer(lang, filtered_posts, context['title'], template_name, context, kw, str(self.name), page_link, page_path)
@@ -192,7 +194,8 @@ class RenderTaxonomies(Task):
         context["posts"] = filtered_posts
         context["permalink"] = self.site.link(kind, classification, lang)
         context["kind"] = kind
-        context["pagekind"] = ["list", "tag_page"]
+        if "pagekind" not in context:
+            context["pagekind"] = ["list", "tag_page"]
         task = self.site.generic_post_list_renderer(lang, filtered_posts, output_name, template_name, kw['filters'], context)
         task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.plugins.task.taxonomies:list')]
         task['basename'] = str(self.name)
