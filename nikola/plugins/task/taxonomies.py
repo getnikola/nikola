@@ -236,6 +236,9 @@ class RenderTaxonomies(Task):
         yield self.group_task()
 
         for taxonomy in self.site.plugin_manager.getPluginsOfCategory('Taxonomy'):
+            # Should this taxonomy be considered after all?
+            if not taxonomy.is_enabled():
+                continue
             for lang in self.site.config["TRANSLATIONS"]:
                 # Generate list of classifications (i.e. classification overview)
                 if taxonomy.template_for_list_of_one_classification is not None:

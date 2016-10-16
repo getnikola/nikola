@@ -503,6 +503,14 @@ class Taxonomy(BasePlugin):
     # pages.
     also_create_classifications_from_other_languages = True
 
+    def is_enabled(self):
+        """Return True if this taxonomy is enabled, or False otherwise.
+
+        Enabled means that the overview page and the classification lists
+        are created.
+        """
+        return True
+
     def classify(self, post, lang):
         """Classify the given post for the given language.
 
