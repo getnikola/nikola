@@ -190,10 +190,8 @@ class RenderTaxonomies(Task):
         kind = taxonomy.classification_name
         template_name = taxonomy.template_for_list_of_one_classification
         output_name = os.path.join(self.site.config['OUTPUT_FOLDER'], self.site.path(kind, classification, lang))
-        context = copy(context)
         context["lang"] = lang
         context["posts"] = filtered_posts
-        context["permalink"] = self.site.link(kind, classification, lang)
         context["kind"] = kind
         if "pagekind" not in context:
             context["pagekind"] = ["list", "tag_page"]
@@ -214,6 +212,9 @@ class RenderTaxonomies(Task):
             filtered_posts = [x for x in post_list if x.is_translation_available(lang)]
         if len(filtered_posts) == 0 and taxonomy.omit_empty_classifications:
             return
+        # Should we create this list?
+        if not taxonomy.generate_classification_list(classification, filtered_posts, lang):
+            return
         # Get data
         context, kw = taxonomy.provide_context_and_uptodate(classification, lang)
         kw = copy(kw)
@@ -226,6 +227,8 @@ class RenderTaxonomies(Task):
         kw["feed_link_append_query"] = self.site.config["FEED_LINKS_APPEND_QUERY"]
         kw["feed_length"] = self.site.config['FEED_LENGTH']
         kw["output_folder"] = self.site.config['OUTPUT_FOLDER']
+        context = copy(context)
+        context["permalink"] = self.site.link(taxonomy.classification_name, classification, lang)
         # Generate RSS feed
         if kw["generate_rss"]:
             yield self._generate_classification_page_as_rss(taxonomy, classification, filtered_posts, context['title'], kw, lang)
