@@ -81,6 +81,7 @@ class Indexes(Taxonomy):
             "title": self.site.config["BLOG_TITLE"](lang),
             "classification_title": "",
             "description": self.site.config["BLOG_DESCRIPTION"](lang),
+            "pagekind": ["main_index", "index"],
         }
         kw.update(context)
         return context, kw
