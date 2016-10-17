@@ -57,7 +57,7 @@ class Indexes(Taxonomy):
 
     def classify(self, post, lang):
         """Classify the given post for the given language."""
-        return ""
+        return [""]
 
     def get_path(self, classification, lang, type='page'):
         """A path handler for the given classification."""
