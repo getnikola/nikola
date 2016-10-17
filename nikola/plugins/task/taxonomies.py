@@ -213,7 +213,7 @@ class RenderTaxonomies(Task):
         if len(filtered_posts) == 0 and taxonomy.omit_empty_classifications:
             return
         # Should we create this list?
-        if not taxonomy.generate_classification_list(classification, filtered_posts, lang):
+        if not taxonomy.should_generate_classification_list(classification, filtered_posts, lang):
             return
         # Get data
         context, kw = taxonomy.provide_context_and_uptodate(classification, lang)
