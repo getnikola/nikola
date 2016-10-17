@@ -38,7 +38,7 @@ class ClassifyAuthors(Taxonomy):
     name = "classify_authors"
 
     classification_name = "author"
-    metadata_name = "author"
+    metadata_name = None
     overview_page_variable_name = "authors"
     more_than_one_classifications_per_post = False
     has_hierarchy = False

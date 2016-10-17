@@ -468,6 +468,7 @@ class Taxonomy(BasePlugin):
     # The classification name to be used for path handlers.
     classification_name = "taxonomy"
     # The classification name to be used when storing the classification
+    # in the metadata. If set to None, the classification won't be stored
     # in the metadata.
     metadata_name = "taxonomy"
     # Variable for the overview page template which contains the list of

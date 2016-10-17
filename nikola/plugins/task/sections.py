@@ -37,7 +37,7 @@ class ClassifySections(Taxonomy):
     name = "classify_sections"
 
     classification_name = "section_index"
-    metadata_name = "section"
+    metadata_name = None
     overview_page_variable_name = "sections"
     more_than_one_classifications_per_post = False
     has_hierarchy = False

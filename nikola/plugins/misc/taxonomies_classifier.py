@@ -63,10 +63,11 @@ class TaxonomiesClassifier(SignalHandler):
                         classifications[lang] = taxonomy.classify(post, lang)
                         assert taxonomy.more_than_one_classifications_per_post or len(classifications[lang]) <= 1
                         # Store in metadata
-                        if taxonomy.more_than_one_classifications_per_post:
-                            post.meta[lang][taxonomy.metadata_name] = classifications[lang]
-                        else:
-                            post.meta[lang][taxonomy.metadata_name] = classifications[lang][0] if len(classifications[lang]) > 0 else None
+                        if taxonomy.metadata_name is not None:
+                            if taxonomy.more_than_one_classifications_per_post:
+                                post.meta[lang][taxonomy.metadata_name] = classifications[lang]
+                            else:
+                                post.meta[lang][taxonomy.metadata_name] = classifications[lang][0] if len(classifications[lang]) > 0 else None
                         # Add post to sets
                         for classification in classifications[lang]:
                             while classification:
