@@ -27,16 +27,10 @@
 """Render the blog indexes."""
 
 from __future__ import unicode_literals
-from collections import defaultdict
 import os
-try:
-    from urlparse import urljoin
-except ImportError:
-    from urllib.parse import urljoin  # NOQA
 
 from nikola.plugin_categories import Task
 from nikola import utils
-from nikola.nikola import _enclosure
 
 
 class Indexes(Task):
@@ -111,63 +105,6 @@ class Indexes(Task):
             context["pagekind"] = ["main_index", "index"]
 
             yield self.site.generic_index_renderer(lang, filtered_posts, indexes_title, template_name, context, kw, 'render_indexes', page_link, page_path)
-
-        if not self.site.config["PAGE_INDEX"]:
-            return
-        kw = {
-            "translations": self.site.config['TRANSLATIONS'],
-            "post_pages": self.site.config["post_pages"],
-            "output_folder": self.site.config['OUTPUT_FOLDER'],
-            "filters": self.site.config['FILTERS'],
-            "index_file": self.site.config['INDEX_FILE'],
-            "strip_indexes": self.site.config['STRIP_INDEXES'],
-        }
-        template_name = "list.tmpl"
-        index_len = len(kw['index_file'])
-        for lang in kw["translations"]:
-            # Need to group by folder to avoid duplicated tasks (Issue #758)
-                # Group all pages by path prefix
-                groups = defaultdict(list)
-                for p in self.site.timeline:
-                    if not p.is_post:
-                        destpath = p.destination_path(lang)
-                        if destpath[-(1 + index_len):] == '/' + kw['index_file']:
-                            destpath = destpath[:-(1 + index_len)]
-                        dirname = os.path.dirname(destpath)
-                        groups[dirname].append(p)
-                for dirname, post_list in groups.items():
-                    context = {}
-                    context["items"] = []
-                    should_render = True
-                    output_name = os.path.join(kw['output_folder'], dirname, kw['index_file'])
-                    short_destination = os.path.join(dirname, kw['index_file'])
-                    link = short_destination.replace('\\', '/')
-                    if kw['strip_indexes'] and link[-(1 + index_len):] == '/' + kw['index_file']:
-                        link = link[:-index_len]
-                    context["permalink"] = link
-                    context["pagekind"] = ["list"]
-                    if dirname == "/":
-                        context["pagekind"].append("front_page")
-
-                    for post in post_list:
-                        # If there is an index.html pending to be created from
-                        # a page, do not generate the PAGE_INDEX
-                        if post.destination_path(lang) == short_destination:
-                            should_render = False
-                        else:
-                            context["items"].append((post.title(lang),
-                                                     post.permalink(lang),
-                                                     None))
-
-                    if should_render:
-                        task = self.site.generic_post_list_renderer(lang, post_list,
-                                                                    output_name,
-                                                                    template_name,
-                                                                    kw['filters'],
-                                                                    context)
-                        task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.plugins.task.indexes')]
-                        task['basename'] = self.name
-                        yield task
 
     def index_path(self, name, lang, is_feed=False):
         """Link to a numbered index.
