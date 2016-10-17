@@ -9,5 +9,4 @@ website = https://getnikola.com/
 description = Generates the blog's index pages.
 
 [Nikola]
-plugincategory = Task
-
+plugincategory = Taxonomy
