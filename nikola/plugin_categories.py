@@ -488,9 +488,9 @@ class Taxonomy(BasePlugin):
     # as a post list.
     show_list_as_index = False
     # The template to use for the post list for one classification.
-    # Set to none to avoid generating overviews.
     template_for_list_of_one_classification = "tagindex.tmpl"
     # The template to use for the classification overview page.
+    # Set to None to avoid generating overviews.
     template_for_classification_overview = "list.tmpl"
     # Whether this classification applies to posts.
     apply_to_posts = True
