@@ -1,5 +1,5 @@
 [Core]
-name = render_indexes
+name = classify_indexes
 module = indexes
 
 [Documentation]
@@ -9,5 +9,4 @@ website = https://getnikola.com/
 description = Generates the blog's index pages.
 
 [Nikola]
-plugincategory = Task
-
+plugincategory = Taxonomy
