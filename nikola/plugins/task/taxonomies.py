@@ -127,14 +127,15 @@ class RenderTaxonomies(Task):
         for post in filtered_posts:
             deps += post.deps(lang)
             deps_uptodate += post.deps_uptodate(lang)
+        blog_title = kw["blog_title"](lang)
         task = {
             'basename': str(self.name),
             'name': output_name,
             'file_dep': deps,
             'targets': [output_name],
             'actions': [(utils.generic_rss_renderer,
-                        (lang, "{0} ({1})".format(kw["blog_title"](lang), title),
-                         kw["site_url"], None, filtered_posts,
+                        (lang, "{0} ({1})".format(blog_title, title) if blog_title != title else blog_title,
+                         kw["site_url"], context.get("description"), filtered_posts,
                          output_name, kw["feed_teasers"], kw["feed_plain"], kw['feed_length'],
                          feed_url, _enclosure, kw["feed_link_append_query"]))],
             'clean': True,
