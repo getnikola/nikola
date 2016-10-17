@@ -613,7 +613,7 @@ class Taxonomy(BasePlugin):
 
     def should_generate_classification_list(self, classification, post_list, lang):
         """Only generates list of posts for classification if this function returns True."""
-        raise True
+        return True
 
     def postprocess_posts_per_classification(self, posts_per_classification_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
         """Rearrange, modify or otherwise use the list of posts per classification and per language.
