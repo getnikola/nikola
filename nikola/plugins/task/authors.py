@@ -96,6 +96,7 @@ class ClassifyAuthors(Taxonomy):
             "messages": self.site.MESSAGES,
         }
         context = {
+            "author": author,
             "title": kw["messages"][lang]["Posts by %s"] % author,
             "classification_title": author,
             "description": descriptions[lang][author] if lang in descriptions and author in descriptions[lang] else None,
