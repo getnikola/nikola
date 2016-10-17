@@ -70,11 +70,14 @@ class TaxonomiesClassifier(SignalHandler):
                                 post.meta[lang][taxonomy.metadata_name] = classifications[lang][0] if len(classifications[lang]) > 0 else None
                         # Add post to sets
                         for classification in classifications[lang]:
-                            while classification:
+                            while True:
                                 site.posts_per_classification[taxonomy.classification_name][lang][classification].add(post)
                                 if not taxonomy.include_posts_from_subhierarchies or not taxonomy.has_hierarchy:
                                     break
-                                classification = taxonomy.recombine_classification_from_hierarchy(taxonomy.extract_hierarchy(classification)[:-1])
+                                classification_path = taxonomy.extract_hierarchy(classification)[:-1]
+                                if len(classification_path) == 0:
+                                    break
+                                classification = taxonomy.recombine_classification_from_hierarchy(classification_path)
 
         # Check for valid paths and for collisions
         taxonomy_outputs = {lang: dict() for lang in site.config['TRANSLATIONS'].keys()}
