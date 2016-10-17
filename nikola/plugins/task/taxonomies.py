@@ -203,13 +203,17 @@ class RenderTaxonomies(Task):
         if self.site.config['GENERATE_ATOM']:
             yield self._generate_classification_page_as_list_atom(kind, taxonomy, classification, filtered_posts, context, kw, lang)
 
+    def _filter_list(self, post_list, lang):
+        """Return only the posts which should be shown for this language."""
+        if self.site.config["SHOW_UNTRANSLATED_POSTS"]:
+            return post_list
+        else:
+            return [x for x in post_list if x.is_translation_available(lang)]
+
     def _generate_classification_page(self, taxonomy, classification, post_list, lang):
         """Render index or post list and associated feeds per classification."""
         # Filter list
-        if self.site.config["SHOW_UNTRANSLATED_POSTS"]:
-            filtered_posts = post_list
-        else:
-            filtered_posts = [x for x in post_list if x.is_translation_available(lang)]
+        filtered_posts = self._filter_list(post_list, lang)
         if len(filtered_posts) == 0 and taxonomy.omit_empty_classifications:
             return
         # Should we create this list?
