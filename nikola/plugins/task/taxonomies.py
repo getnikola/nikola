@@ -116,7 +116,7 @@ class RenderTaxonomies(Task):
         task['basename'] = str(self.name)
         yield task
 
-    def _generate_classification_page_as_rss(self, taxonomy, classification, filtered_posts, title, kw, lang):
+    def _generate_classification_page_as_rss(self, taxonomy, classification, filtered_posts, title, description, kw, lang):
         """Create a RSS feed for a single classification in a given language."""
         kind = taxonomy.classification_name
         # Render RSS
@@ -135,7 +135,7 @@ class RenderTaxonomies(Task):
             'targets': [output_name],
             'actions': [(utils.generic_rss_renderer,
                         (lang, "{0} ({1})".format(blog_title, title) if blog_title != title else blog_title,
-                         kw["site_url"], context.get("description"), filtered_posts,
+                         kw["site_url"], description, filtered_posts,
                          output_name, kw["feed_teasers"], kw["feed_plain"], kw['feed_length'],
                          feed_url, _enclosure, kw["feed_link_append_query"]))],
             'clean': True,
@@ -236,7 +236,7 @@ class RenderTaxonomies(Task):
         context["permalink"] = self.site.link(taxonomy.classification_name, classification, lang)
         # Generate RSS feed
         if kw["generate_rss"]:
-            yield self._generate_classification_page_as_rss(taxonomy, classification, filtered_posts, context['title'], kw, lang)
+            yield self._generate_classification_page_as_rss(taxonomy, classification, filtered_posts, context['title'], context.get("description"), kw, lang)
         # Render HTML
         if taxonomy.show_list_as_index:
             yield self._generate_classification_page_as_index(taxonomy, classification, filtered_posts, context, kw, lang)

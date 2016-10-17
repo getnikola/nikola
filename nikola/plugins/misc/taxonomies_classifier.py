@@ -217,7 +217,7 @@ class TaxonomiesClassifier(SignalHandler):
         if not isinstance(result[0], (list, tuple)):
             # The result must be a list or tuple of strings. Wrap into a tuple
             result = (result, )
-        return result[0], result[1] if len(result) >= 1 else False, result[2] if len(result) >= 2 else None
+        return result[0], result[1] if len(result) > 1 else False, result[2] if len(result) > 2 else None
 
     def _taxonomy_index_path(self, lang, taxonomy):
         """Return path to the classification overview."""
@@ -232,15 +232,14 @@ class TaxonomiesClassifier(SignalHandler):
         else:
             result = taxonomy.get_path(name, lang, type=type)
         path, append_index, page = self._parse_path_result(result)
-        if not taxonomy.show_list_as_index:
-            # Page numbers are only supported for indexes
-            page = None
-        elif page is not None:
+        page_info = None
+        if not taxonomy.show_list_as_index and page is not None:
             number_of_pages = self.site.page_count_per_classification[taxonomy.classification_name][lang].get(name)
             if number_of_pages is None:
                 number_of_pages = self._compute_number_of_pages(self._get_filtered_list(name, lang), self.site.config['INDEX_DISPLAY_POST_COUNT'])
                 self.site.page_count_per_classification[taxonomy.classification_name][lang][name] = number_of_pages
-        return self._postprocess_path(path, lang, always_append_index=append_index, force_extension=force_extension, type=type, page_info=(page, number_of_pages))
+            page_info = (page, number_of_pages)
+        return self._postprocess_path(path, lang, always_append_index=append_index, force_extension=force_extension, type=type, page_info=page_info)
 
     def _taxonomy_atom_path(self, name, lang, taxonomy):
         """Return path to a classification Atom feed."""
