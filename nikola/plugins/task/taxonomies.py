@@ -223,6 +223,7 @@ class RenderTaxonomies(Task):
         # Get data
         context, kw = taxonomy.provide_context_and_uptodate(classification, lang)
         kw = copy(kw)
+        kw['messages'] = self.site.MESSAGES
         kw['filters'] = self.site.config['FILTERS']
         kw['site_url'] = self.site.config['SITE_URL']
         kw['blog_title'] = self.site.config['BLOG_TITLE']
