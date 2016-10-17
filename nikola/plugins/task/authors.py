@@ -57,7 +57,11 @@ class ClassifyAuthors(Taxonomy):
 
     def is_enabled(self, lang=None):
         """Return True if this taxonomy is enabled, or False otherwise."""
-        return self.site.config["ENABLE_AUTHOR_PAGES"]
+        if not self.site.config["ENABLE_AUTHOR_PAGES"]:
+            return False
+        if lang is not None:
+            return self.generate_author_pages
+        return True
 
     def classify(self, post, lang):
         """Classify the given post for the given language."""
