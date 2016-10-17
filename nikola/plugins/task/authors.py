@@ -55,7 +55,7 @@ class ClassifyAuthors(Taxonomy):
         self.template_for_list_of_one_classification = "authorindex.tmpl" if self.show_list_as_index else "author.tmpl"
         return super(ClassifyAuthors, self).set_site(site)
 
-    def is_enabled(self):
+    def is_enabled(self, lang=None):
         """Return True if this taxonomy is enabled, or False otherwise."""
         return self.site.config["ENABLE_AUTHOR_PAGES"]
 

@@ -51,11 +51,16 @@ class ClassifySections(Taxonomy):
         """Set Nikola site."""
         self.show_list_as_index = site.config["POSTS_SECTION_ARE_INDEXES"]
         self.template_for_list_of_one_classification = "sectionindex.tmpl" if self.show_list_as_index else "list.tmpl"
+        self.enable_for_lang = {}
         return super(ClassifySections, self).set_site(site)
 
-    def is_enabled(self):
+    def is_enabled(self, lang=None):
         """Return True if this taxonomy is enabled, or False otherwise."""
-        return self.site.config['POSTS_SECTIONS']
+        if not self.site.config['POSTS_SECTIONS']:
+            return False
+        if lang is not None:
+            return self.enable_for_lang.get(lang, False)
+        return True
 
     def classify(self, post, lang):
         """Classify the given post for the given language."""
@@ -100,3 +105,9 @@ class ClassifySections(Taxonomy):
         }
         kw.update(context)
         return context, kw
+
+    def postprocess_posts_per_classification(self, posts_per_section_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
+        """Rearrange, modify or otherwise use the list of posts per classification and per language."""
+        for lang, posts_per_section in posts_per_section_per_language.items():
+            # don't build sections when there is only one, aka. default setups
+            self.enable_for_lang[lang] = (len(posts_per_section.keys()) > 1)

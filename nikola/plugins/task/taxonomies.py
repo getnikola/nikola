@@ -245,6 +245,8 @@ class RenderTaxonomies(Task):
             if not taxonomy.is_enabled():
                 continue
             for lang in self.site.config["TRANSLATIONS"]:
+                if not taxonomy.is_enabled(lang):
+                    continue
                 # Generate list of classifications (i.e. classification overview)
                 if taxonomy.template_for_classification_overview is not None:
                     for task in self._generate_classification_overview(taxonomy, lang):
