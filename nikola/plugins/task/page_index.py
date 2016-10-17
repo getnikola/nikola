@@ -27,80 +27,73 @@
 """Render the blog indexes."""
 
 from __future__ import unicode_literals
-from collections import defaultdict
-import os
 
-from nikola.plugin_categories import Task
-from nikola import utils
+from nikola.plugin_categories import Taxonomy
 
 
-class PageIndex(Task):
+class PageIndex(Taxonomy):
     """Render the page index."""
 
-    name = "render_page_index"
+    name = "classify_page_index"
 
-    def set_site(self, site):
-        """Set Nikola site."""
-        return super(PageIndex, self).set_site(site)
+    classification_name = "page_index_folder"
+    metadata_name = None
+    overview_page_variable_name = "page_folder"
+    more_than_one_classifications_per_post = False
+    has_hierarchy = True
+    include_posts_from_subhierarchies = False
+    show_list_as_index = False
+    template_for_list_of_one_classification = "list.tmpl"
+    template_for_classification_overview = None
+    apply_to_posts = False
+    apply_to_pages = True
+    omit_empty_classifications = True
+    also_create_classifications_from_other_languages = False
 
-    def gen_tasks(self):
-        """Render the blog indexes."""
-        self.site.scan_posts()
-        yield self.group_task()
+    def is_enabled(self, lang=None):
+        """Return True if this taxonomy is enabled, or False otherwise."""
+        return self.site.config["PAGE_INDEX"]
 
-        if not self.site.config["PAGE_INDEX"]:
-            return
+    def classify(self, post, lang):
+        """Classify the given post for the given language."""
+        destpath = post.destination_path(lang, sep='/')
+        index_len = len(self.site.config["INDEX_FILE"])
+        if destpath[-(1 + index_len):] == '/' + self.site.config["INDEX_FILE"]:
+            destpath = destpath[:-(1 + index_len)]
+        i = destpath.rfind('/')
+        return destpath[:i] if i >= 0 else ''
+
+    def get_path(self, hierarchy, lang, type='page'):
+        """A path handler for the given classification."""
+        return hierarchy, True
+
+    def extract_hierarchy(self, dirname):
+        """Given a classification, return a list of parts in the hierarchy."""
+        return dirname.split('/') if dirname else []
+
+    def recombine_classification_from_hierarchy(self, hierarchy):
+        """Given a list of parts in the hierarchy, return the classification string."""
+        return '/'.join(hierarchy)
+
+    def provide_context_and_uptodate(self, dirname, lang):
+        """Provide data for the context and the uptodate list for the list of the given classifiation."""
         kw = {
             "translations": self.site.config['TRANSLATIONS'],
-            "post_pages": self.site.config["post_pages"],
-            "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
-            "index_file": self.site.config['INDEX_FILE'],
-            "strip_indexes": self.site.config['STRIP_INDEXES'],
         }
-        template_name = "list.tmpl"
-        index_len = len(kw['index_file'])
-        for lang in kw["translations"]:
-            # Need to group by folder to avoid duplicated tasks (Issue #758)
-                # Group all pages by path prefix
-                groups = defaultdict(list)
-                for p in self.site.timeline:
-                    if not p.is_post:
-                        destpath = p.destination_path(lang)
-                        if destpath[-(1 + index_len):] == '/' + kw['index_file']:
-                            destpath = destpath[:-(1 + index_len)]
-                        dirname = os.path.dirname(destpath)
-                        groups[dirname].append(p)
-                for dirname, post_list in groups.items():
-                    context = {}
-                    context["items"] = []
-                    should_render = True
-                    output_name = os.path.join(kw['output_folder'], dirname, kw['index_file'])
-                    short_destination = os.path.join(dirname, kw['index_file'])
-                    link = short_destination.replace('\\', '/')
-                    if kw['strip_indexes'] and link[-(1 + index_len):] == '/' + kw['index_file']:
-                        link = link[:-index_len]
-                    context["permalink"] = link
-                    context["pagekind"] = ["list"]
-                    if dirname == "/":
-                        context["pagekind"].append("front_page")
+        context = {
+            "title": self.site.config['BLOG_TITLE'](lang),
+            "classification_title": self.site.config['BLOG_TITLE'](lang),
+            "pagekind": ["list", "front_page"] if dirname == '' else ["list"],
+        }
+        kw.update(context)
+        return context, kw
 
-                    for post in post_list:
-                        # If there is an index.html pending to be created from
-                        # a page, do not generate the PAGE_INDEX
-                        if post.destination_path(lang) == short_destination:
-                            should_render = False
-                        else:
-                            context["items"].append((post.title(lang),
-                                                     post.permalink(lang),
-                                                     None))
-
-                    if should_render:
-                        task = self.site.generic_post_list_renderer(lang, post_list,
-                                                                    output_name,
-                                                                    template_name,
-                                                                    kw['filters'],
-                                                                    context)
-                        task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.plugins.task.indexes')]
-                        task['basename'] = self.name
-                        yield task
+    def should_generate_classification_list(self, dirname, post_list, lang):
+        """Only generates list of posts for classification if this function returns True."""
+        short_destination = dirname + '/' + self.site.config['INDEX_FILE']
+        for post in post_list:
+            # If there is an index.html pending to be created from a page, do not generate the page index.
+            if post.destination_path(lang, sep='/') == short_destination:
+                return False
+        return True
