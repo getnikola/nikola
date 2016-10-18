@@ -11,11 +11,10 @@ apps:
 
 parts:
     nikola:
-        plugin: copy
-        files:
-            nikola.sh: nikola.sh
+        plugin: dump
+        source: script/
     nikola-source:
-        plugin: python3
+        plugin: python
         source: git://github.com/getnikola/nikola.git
         requirements: requirements.txt
         stage-packages:
