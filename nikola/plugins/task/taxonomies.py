@@ -211,6 +211,35 @@ class RenderTaxonomies(Task):
         else:
             return [x for x in post_list if x.is_translation_available(lang)]
 
+    def _generate_subclassification_page(self, taxonomy, node, context, kw, lang):
+        """Render a list of subclassifications."""
+        def get_subnode_data(subnode):
+            return [
+                taxonomy.get_classification_printable_name(subnode.classification_path, lang, only_last_component=True),
+                self.site.link(taxonomy.classification_name, subnode.classification_name, lang),
+                len(self._filter_list(self.site.posts_per_classification[taxonomy.classification_name][lang][subnode.classification_name]))
+            ]
+
+        items = [get_subnode_data(subnode) for subnode in node.children]
+        context = copy(context)
+        context["lang"] = lang
+        context["permalink"] = self.site.link(taxonomy.classification_name, node.classification_name, lang)
+        if "pagekind" not in context:
+            context["pagekind"] = ["list", "archive_page"]
+        context["items"] = items
+        task = self.site.generic_post_list_renderer(
+            lang,
+            [],
+            os.path.join(kw['output_folder'], self.site.path(taxonomy.classification_name, node.classification_name, lang)),
+            taxonomy.show_list_as_subcategories_list,
+            kw['filters'],
+            context,
+        )
+        task_cfg = {1: kw, 2: items}
+        task['uptodate'] = task['uptodate'] + [utils.config_changed(task_cfg, 'nikola.plugins.task.taxonomy')]
+        task['basename'] = self.name
+        return task
+
     def _generate_classification_page(self, taxonomy, classification, post_list, lang):
         """Render index or post list and associated feeds per classification."""
         # Filter list
@@ -235,6 +264,14 @@ class RenderTaxonomies(Task):
         kw["output_folder"] = self.site.config['OUTPUT_FOLDER']
         context = copy(context)
         context["permalink"] = self.site.link(taxonomy.classification_name, classification, lang)
+        # Decide what to do
+        if taxonomy.has_hierarchy and taxonomy.show_list_as_subcategories_list:
+            # Determine whether there are subcategories
+            node = self.site.hierarchy_lookup_per_classification[taxonomy.classification_name][lang][classification]
+            # Are there subclassifications?
+            if len(node.children) > 0:
+                # Yes: create list with subclassifications instead of list of posts
+                return self._generate_subclassification_page(taxonomy, node, context, kw, lang)
         # Generate RSS feed
         if kw["generate_rss"]:
             yield self._generate_classification_page_as_rss(taxonomy, classification, filtered_posts, context['title'], context.get("description"), kw, lang)

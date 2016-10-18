@@ -484,6 +484,13 @@ class Taxonomy(BasePlugin):
     # If True, the list for a classification includes all posts with a
     # sub-classification (in case has_hierarchy is True).
     include_posts_from_subhierarchies = False
+    # If not False, for every classification which has at least one
+    # subclassification, create a list of subcategories instead of a list/index
+    # of posts. This is only used when has_hierarchy = True. If not False, this
+    # must be the template name for the list; usually "list.tmpl".
+    # If this is set to a string, it is recommended to set
+    # include_posts_from_subhierarchies to True to get correct post counts.
+    show_list_as_subcategories_list = False
     # Whether to show the posts for one classification as an index or
     # as a post list.
     show_list_as_index = False
@@ -540,6 +547,19 @@ class Taxonomy(BasePlugin):
         The sort must happen in-place.
         """
         pass
+
+    def get_classification_printable_name(self, classification, lang, only_last_component=False):
+        """Extract a printable name from the classification.
+
+        For hierarchical taxonomies, the result of extract_hierarchy is provided
+        as `classification`. For non-hierarchical taxonomies, the classification
+        string itself is provided as `classification`.
+
+        The argument `only_last_component` is only relevant to hierarchical
+        taxonomies. If it is set, the printable name should only describe the
+        last component of `classification` if possible.
+        """
+        raise NotImplementedError()
 
     def get_list_path(self, lang, type='page'):
         """A path handler for the list of all classifications.

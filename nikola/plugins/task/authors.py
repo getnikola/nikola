@@ -67,6 +67,10 @@ class ClassifyAuthors(Taxonomy):
         """Classify the given post for the given language."""
         return [post.author()]
 
+    def get_classification_printable_name(self, author, lang, only_last_component=False):
+        """Extract a printable name from the classification."""
+        return author
+
     def get_list_path(self, lang, type='page'):
         """A path handler for the list of all classifications."""
         return [self.site.config['AUTHOR_PATH']], True

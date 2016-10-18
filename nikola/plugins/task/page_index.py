@@ -63,6 +63,10 @@ class PageIndex(Taxonomy):
         i = destpath.rfind('/')
         return destpath[:i] if i >= 0 else ''
 
+    def get_classification_printable_name(self, hierarchy, lang, only_last_component=False):
+        """Extract a printable name from the classification."""
+        return '/'.join(hierarchy)
+
     def get_path(self, hierarchy, lang, type='page'):
         """A path handler for the given classification."""
         return hierarchy, True

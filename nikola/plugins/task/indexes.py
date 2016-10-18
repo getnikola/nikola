@@ -59,6 +59,10 @@ class Indexes(Taxonomy):
         """Classify the given post for the given language."""
         return [""]
 
+    def get_classification_printable_name(self, classification, lang, only_last_component=False):
+        """Extract a printable name from the classification."""
+        return self.site.config["BLOG_TITLE"](lang)
+
     def get_path(self, classification, lang, type='page'):
         """A path handler for the given classification."""
         if type == 'rss':

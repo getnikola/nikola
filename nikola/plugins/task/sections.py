@@ -66,6 +66,17 @@ class ClassifySections(Taxonomy):
         """Classify the given post for the given language."""
         return [post.section_slug(lang)]
 
+    def _get_section_name(self, section, lang):
+        # Check whether we have a name for this section
+        if section in self.site.config['POSTS_SECTION_NAME'](lang):
+            return self.site.config['POSTS_SECTION_NAME'](lang)[section]
+        else:
+            return section.replace('-', ' ').title()
+
+    def get_classification_printable_name(self, section, lang, only_last_component=False):
+        """Extract a printable name from the classification."""
+        return self._get_section_name(section, lang)
+
     def get_path(self, section, lang, type='page'):
         """A path handler for the given classification."""
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang], section] if _f], True
@@ -82,11 +93,7 @@ class ClassifySections(Taxonomy):
         kw = {
             "messages": self.site.MESSAGES,
         }
-        # Check whether we have a name for this section
-        if section in self.site.config['POSTS_SECTION_NAME'](lang):
-            section_name = self.site.config['POSTS_SECTION_NAME'](lang)[section]
-        else:
-            section_name = section.replace('-', ' ').title()
+        section_name = self._get_Section_name(section, lang)
         # Compose section title
         section_title = section_name
         posts_section_title = self.site.config['POSTS_SECTION_TITLE'](lang)
