@@ -4,6 +4,8 @@ New in master
 Bugfixes
 --------
 
+* Don't crash if plugins is a file (Issue #2539)
+
 Features
 --------
 
