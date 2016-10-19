@@ -201,7 +201,7 @@ class RenderTaxonomies(Task):
         task['basename'] = str(self.name)
         yield task
 
-        if self.site.config['GENERATE_ATOM']:
+        if taxonomy.generate_atom_feeds_for_post_lists and self.site.config['GENERATE_ATOM']:
             yield self._generate_classification_page_as_list_atom(kind, taxonomy, classification, filtered_posts, context, kw, lang)
 
     def _filter_list(self, post_list, lang):

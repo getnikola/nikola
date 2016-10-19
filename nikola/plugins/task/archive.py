@@ -44,6 +44,7 @@ class Archive(Taxonomy):
     has_hierarchy = True
     include_posts_from_subhierarchies = True
     include_posts_into_hierarchy_root = True
+    generate_atom_feeds_for_post_lists = False
     template_for_classification_overview = None
     apply_to_posts = True
     apply_to_pages = False

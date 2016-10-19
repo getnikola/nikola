@@ -497,6 +497,8 @@ class Taxonomy(BasePlugin):
     # Whether to show the posts for one classification as an index or
     # as a post list.
     show_list_as_index = False
+    # Whether to generate Atom feeds for post lists in case GENERATE_ATOM is set.
+    generate_atom_feeds_for_post_lists = False
     # The template to use for the post list for one classification.
     template_for_list_of_one_classification = "tagindex.tmpl"
     # The template to use for the classification overview page.

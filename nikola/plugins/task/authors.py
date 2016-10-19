@@ -42,6 +42,7 @@ class ClassifyAuthors(Taxonomy):
     overview_page_variable_name = "authors"
     more_than_one_classifications_per_post = False
     has_hierarchy = False
+    generate_atom_feeds_for_post_lists = False
     template_for_classification_overview = "authors.tmpl"
     apply_to_posts = True
     apply_to_pages = False
