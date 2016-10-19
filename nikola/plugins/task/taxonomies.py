@@ -274,7 +274,7 @@ class RenderTaxonomies(Task):
                 yield self._generate_subclassification_page(taxonomy, node, context, kw, lang)
                 return
         # Generate RSS feed
-        if kw["generate_rss"]:
+        if kw["generate_rss"] and not taxonomy.always_disable_rss:
             yield self._generate_classification_page_as_rss(taxonomy, classification, filtered_posts, context['title'], context.get("description"), kw, lang)
         # Render HTML
         if taxonomy.show_list_as_index:

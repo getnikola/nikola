@@ -46,6 +46,7 @@ class Archive(Taxonomy):
     include_posts_into_hierarchy_root = True
     generate_atom_feeds_for_post_lists = False
     template_for_classification_overview = None
+    always_disable_rss = True
     apply_to_posts = True
     apply_to_pages = False
     minimum_post_count_per_classification_in_overview = 1

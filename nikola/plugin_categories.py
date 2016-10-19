@@ -504,6 +504,8 @@ class Taxonomy(BasePlugin):
     # The template to use for the classification overview page.
     # Set to None to avoid generating overviews.
     template_for_classification_overview = "list.tmpl"
+    # Whether to always disable RSS feed generation
+    always_disable_rss = False
     # Whether this classification applies to posts.
     apply_to_posts = True
     # Whether this classification applies to pages.
