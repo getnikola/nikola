@@ -294,7 +294,7 @@ class CommandPlugin(Command):
             except subprocess.CalledProcessError:
                 LOGGER.error('Could not install a plugin.')
                 print('Contents of the requirements-plugins.txt file:\n')
-                with io.open(reqpath, 'r', encoding='utf-8') as fh:
+                with io.open(req_plug_path, 'r', encoding='utf-8') as fh:
                     print(utils.indent(fh.read(), 4 * ' '))
                 print('You have to install those yourself manually.')
             else:
