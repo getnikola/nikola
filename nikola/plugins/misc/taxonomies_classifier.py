@@ -151,18 +151,19 @@ class TaxonomiesClassifier(SignalHandler):
                             node = node[he]
                     hierarchy_lookup = {}
 
-                    def create_hierarchy(cat_hierarchy, parent=None):
+                    def create_hierarchy(cat_hierarchy, parent=None, level=0):
                         """Create category hierarchy."""
-                        result = []
+                        result = {}
                         for name, children in cat_hierarchy.items():
                             node = utils.TreeNode(name, parent)
-                            node.children = create_hierarchy(children, node)
+                            node.children = create_hierarchy(children, node, level + 1)
                             node.classification_path = [pn.name for pn in node.get_path()]
                             node.classification_name = taxonomy.recombine_classification_from_hierarchy(node.classification_path)
                             hierarchy_lookup[node.classification_name] = node
-                        classifications = natsort.natsorted(result, key=lambda e: e.name, alg=natsort.ns.F | natsort.ns.IC)
-                        taxonomy.sort_classifications(classifications, lang)
-                        return classifications
+                            result[node.name] = node
+                        classifications = natsort.natsorted(result.keys(), key=lambda e: e.name, alg=natsort.ns.F | natsort.ns.IC)
+                        taxonomy.sort_classifications(classifications, lang, level=level)
+                        return [result[classification] for classification in classifications]
 
                     root_list = create_hierarchy(hierarchy)
                     flat_hierarchy = utils.flatten_tree_structure(root_list)

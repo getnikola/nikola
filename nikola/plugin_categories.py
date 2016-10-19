@@ -538,11 +538,12 @@ class Taxonomy(BasePlugin):
         """
         pass
 
-    def sort_classifications(self, classifications, lang):
+    def sort_classifications(self, classifications, lang, level=None):
         """Sort the given list of classification strings.
 
         For hierarchical taxonomies, the elements of the list are a single
-        path element of the path returned by extract_hierarchy().
+        path element of the path returned by `extract_hierarchy()`. The index
+        of the path element in the path will be provided in `level`.
 
         The sort must happen in-place.
         """
