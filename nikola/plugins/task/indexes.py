@@ -55,6 +55,10 @@ class Indexes(Taxonomy):
         site.register_path_handler('rss', lambda name, lang: site.path_handlers['index_rss'](name, lang))
         return super(Indexes, self).set_site(site)
 
+    def get_implicit_classifications(self, lang):
+        """Returns a list of classification strings which should always appear in posts_per_classification."""
+        return [""]
+
     def classify(self, post, lang):
         """Classify the given post for the given language."""
         return [""]

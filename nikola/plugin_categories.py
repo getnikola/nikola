@@ -527,6 +527,10 @@ class Taxonomy(BasePlugin):
         """
         return True
 
+    def get_implicit_classifications(self, lang):
+        """Returns a list of classification strings which should always appear in posts_per_classification."""
+        return []
+
     def classify(self, post, lang):
         """Classify the given post for the given language.
 

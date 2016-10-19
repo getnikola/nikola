@@ -125,6 +125,10 @@ class TaxonomiesClassifier(SignalHandler):
             site.page_count_per_classification[taxonomy.classification_name] = {}
             # Sort post lists
             for lang, posts_per_classification in site.posts_per_classification[taxonomy.classification_name].items():
+                # Ensure implicit classifications are inserted
+                for classification in taxonomy.get_implicit_classifications(lang):
+                    if classification not in posts_per_classification:
+                        posts_per_classification[classification] = []
                 site.page_count_per_classification[taxonomy.classification_name][lang] = {}
                 # Convert sets to lists and sort them
                 for classification in list(posts_per_classification.keys()):

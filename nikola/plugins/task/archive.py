@@ -75,6 +75,10 @@ class Archive(Taxonomy):
         """Return True if this taxonomy is enabled, or False otherwise."""
         return True
 
+    def get_implicit_classifications(self, lang):
+        """Returns a list of classification strings which should always appear in posts_per_classification."""
+        return ['']
+
     def classify(self, post, lang):
         """Classify the given post for the given language."""
         levels = ['{year:04d}', '{month:02d}', '{day:02d}'][:self.max_levels]
