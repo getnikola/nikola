@@ -56,7 +56,7 @@ class Indexes(Taxonomy):
         return super(Indexes, self).set_site(site)
 
     def get_implicit_classifications(self, lang):
-        """Returns a list of classification strings which should always appear in posts_per_classification."""
+        """Return a list of classification strings which should always appear in posts_per_classification."""
         return [""]
 
     def classify(self, post, lang):
