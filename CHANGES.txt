@@ -9,6 +9,7 @@ Bugfixes
 Features
 --------
 
+* Plugins can depend on other plugins being installed (Issue #2533)
 * The destination folder in ``POSTS`` and ``PAGES`` can now be
   translated (Issue #2116)
 * Pass ``post`` object and ``lang`` to post compilers (Issue #2531)
