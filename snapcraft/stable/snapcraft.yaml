@@ -3,30 +3,18 @@ version: 7.8.1
 summary: A static website generator
 description: A static website generator
 confinement: strict
+grade: stable
 
 apps:
     nikola:
-         command: nikola.sh
+         command: nikola
          plugs: [network, network-bind, home]
 
 parts:
     nikola:
-        plugin: dump
-        source: script/
-    nikola-source:
         plugin: python
-        source: git://github.com/getnikola/nikola.git
-        source-tag: v7.8.1
-        requirements: requirements.txt
-        stage-packages:
-            - locales
-            - libc-bin
-            - python3-lxml
-            - python3-pil
-        build-packages:
-            - zlib1g-dev
-            - libjpeg-turbo8-dev
-            - libpng12-dev
-            - libxslt1-dev
-            - libxml2-dev
-            - gcc
+        python-packages:
+            - nikola
+            - pillow
+        python-version: python3
+        build-packages: [libjpeg-dev]
