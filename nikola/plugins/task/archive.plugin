@@ -1,5 +1,5 @@
 [Core]
-name = render_archive
+name = classify_archive
 module = archive
 
 [Documentation]
@@ -9,5 +9,5 @@ website = https://getnikola.com/
 description = Generates the blog's archive pages.
 
 [Nikola]
-plugincategory = Task
+plugincategory = Taxonomy
 

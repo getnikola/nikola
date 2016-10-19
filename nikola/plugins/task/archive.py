@@ -24,231 +24,137 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Render the post archives."""
+"""Classify the posts in archives."""
 
-import copy
 import os
-
-# for tearDown with _reload we cannot use 'import from' to access LocaleBorg
 import nikola.utils
 import datetime
-from nikola.plugin_categories import Task
-from nikola.utils import config_changed, adjust_name_for_index_path, adjust_name_for_index_link
+from nikola.plugin_categories import Taxonomy
 
 
-class Archive(Task):
-    """Render the post archives."""
+class Archive(Taxonomy):
+    """Classify the post archives."""
 
-    name = "render_archive"
+    name = "classify_archive"
+
+    classification_name = "archive"
+    metadata_name = None
+    overview_page_variable_name = "archive"
+    more_than_one_classifications_per_post = False
+    has_hierarchy = True
+    include_posts_from_subhierarchies = True
+    include_posts_into_hierarchy_root = True
+    template_for_classification_overview = None
+    apply_to_posts = True
+    apply_to_pages = False
+    minimum_post_count_per_classification_in_overview = 1
+    omit_empty_classifications = False
+    also_create_classifications_from_other_languages = False
 
     def set_site(self, site):
         """Set Nikola site."""
-        site.register_path_handler('archive', self.archive_path)
-        site.register_path_handler('archive_atom', self.archive_atom_path)
+        # Sanity checks
+        if (site.config['CREATE_MONTHLY_ARCHIVE'] and site.config['CREATE_SINGLE_ARCHIVE']) and not site.config['CREATE_FULL_ARCHIVES']:
+            raise Exception('Cannot create monthly and single archives at the same time.')
+        # Finish setup
+        self.show_list_as_subcategories_list = False if site.config['CREATE_FULL_ARCHIVES'] else "list.tmpl"
+        self.show_list_as_index = site.config['ARCHIVES_ARE_INDEXES']
+        self.template_for_list_of_one_classification = "archiveindex.tmpl" if site.config['ARCHIVES_ARE_INDEXES'] else "list_post.tmpl"
+        # Determine maximal hierarchy height
+        if site.config['CREATE_DAILY_ARCHIVE'] or site.config['CREATE_FULL_ARCHIVES']:
+            self.max_levels = 3
+        elif site.config['CREATE_MONTHLY_ARCHIVE']:
+            self.max_levels = 2
+        elif site.config['CREATE_SINGLE_ARCHIVE']:
+            self.max_levels = 0
+        else:
+            self.max_levels = 1
         return super(Archive, self).set_site(site)
 
-    def _prepare_task(self, kw, name, lang, posts, items, template_name,
-                      title, deps_translatable=None):
-        """Prepare an archive task."""
-        # name: used to build permalink and destination
-        # posts, items: posts or items; only one of them should be used,
-        #               the other should be None
-        # template_name: name of the template to use
-        # title: the (translated) title for the generated page
-        # deps_translatable: dependencies (None if not added)
-        assert posts is not None or items is not None
-        task_cfg = [copy.copy(kw)]
-        context = {}
-        context["lang"] = lang
-        context["title"] = title
-        context["permalink"] = self.site.link("archive", name, lang)
-        context["pagekind"] = ["list", "archive_page"]
-        if posts is not None:
-            context["posts"] = posts
-            # Depend on all post metadata because it can be used in templates (Issue #1931)
-            task_cfg.append([repr(p) for p in posts])
+    def is_enabled(self, lang=None):
+        """Return True if this taxonomy is enabled, or False otherwise."""
+        return True
+
+    def classify(self, post, lang):
+        """Classify the given post for the given language."""
+        levels = ['{year:04d}', '{month:02d}', '{day:02d}'][:self.max_levels]
+        levels = [level.format(year=post.date.year, month=post.date.month, day=post.date.day) for level in levels]
+        return ['/'.join(levels)]
+
+    def sort_classifications(self, classifications, lang, level=None):
+        """Sort the given list of classification strings."""
+        if level in (0, 1):
+            # Years or months: sort descending
+            classifications.sort()
+            classifications.reverse()
+
+    def get_classification_printable_name(self, classification, lang, only_last_component=False):
+        """Extract a printable name from the classification."""
+        if len(classification) == 0:
+            return ""
+        elif len(classification) == 1:
+            return classification[0]
+        elif len(classification) == 2:
+            nikola.utils.LocaleBorg().get_month_name(int(classification[1]), lang)
         else:
-            # Depend on the content of items, to rebuild if links change (Issue #1931)
-            context["items"] = items
-            task_cfg.append(items)
-        task = self.site.generic_post_list_renderer(
-            lang,
-            [],
-            os.path.join(kw['output_folder'], self.site.path("archive", name, lang)),
-            template_name,
-            kw['filters'],
-            context,
-        )
+            # Fallback
+            return '/'.join(classification)
 
-        task_cfg = {i: x for i, x in enumerate(task_cfg)}
-        if deps_translatable is not None:
-            task_cfg[3] = deps_translatable
-        task['uptodate'] = task['uptodate'] + [config_changed(task_cfg, 'nikola.plugins.task.archive')]
-        task['basename'] = self.name
-        return task
-
-    def _generate_posts_task(self, kw, name, lang, posts, title, deps_translatable=None):
-        """Genereate a task for an archive with posts."""
-        posts = sorted(posts, key=lambda a: a.date)
-        posts.reverse()
-        if kw['archives_are_indexes']:
-            def page_link(i, displayed_i, num_pages, force_addition, extension=None):
-                feed = "_atom" if extension == ".atom" else ""
-                return adjust_name_for_index_link(self.site.link("archive" + feed, name, lang), i, displayed_i,
-                                                  lang, self.site, force_addition, extension)
-
-            def page_path(i, displayed_i, num_pages, force_addition, extension=None):
-                feed = "_atom" if extension == ".atom" else ""
-                return adjust_name_for_index_path(self.site.path("archive" + feed, name, lang), i, displayed_i,
-                                                  lang, self.site, force_addition, extension)
-
-            uptodate = []
-            if deps_translatable is not None:
-                uptodate += [config_changed(deps_translatable, 'nikola.plugins.task.archive')]
-            context = {"archive_name": name,
-                       "is_feed_stale": kw["is_feed_stale"],
-                       "pagekind": ["index", "archive_page"]}
-            yield self.site.generic_index_renderer(
-                lang,
-                posts,
-                title,
-                "archiveindex.tmpl",
-                context,
-                kw,
-                str(self.name),
-                page_link,
-                page_path,
-                uptodate)
+    def get_path(self, classification, lang, type='page'):
+        """A path handler for the given classification."""
+        components = [self.site.config['ARCHIVE_PATH']]
+        if classification:
+            components.extend(classification)
+            file = self.site.config['INDEX_FILE']
         else:
-            yield self._prepare_task(kw, name, lang, posts, None, "list_post.tmpl", title, deps_translatable)
+            file = self.site.config['ARCHIVE_FILENAME']
+        components.append(os.path.splitext(file)[0])
+        return [_f for _f in components if _f], False
 
-    def gen_tasks(self):
-        """Generate archive tasks."""
+    def extract_hierarchy(self, classification):
+        """Given a classification, return a list of parts in the hierarchy."""
+        return classification.split('/') if classification else []
+
+    def recombine_classification_from_hierarchy(self, hierarchy):
+        """Given a list of parts in the hierarchy, return the classification string."""
+        return '/'.join(hierarchy)
+
+    def provide_context_and_uptodate(self, classification, lang):
+        """Provide data for the context and the uptodate list for the list of the given classifiation."""
+        hierarchy = self.extract_hierarchy(classification)
         kw = {
             "messages": self.site.MESSAGES,
-            "translations": self.site.config['TRANSLATIONS'],
-            "output_folder": self.site.config['OUTPUT_FOLDER'],
-            "filters": self.site.config['FILTERS'],
-            "archives_are_indexes": self.site.config['ARCHIVES_ARE_INDEXES'],
-            "create_monthly_archive": self.site.config['CREATE_MONTHLY_ARCHIVE'],
-            "create_single_archive": self.site.config['CREATE_SINGLE_ARCHIVE'],
-            "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
-            "create_full_archives": self.site.config['CREATE_FULL_ARCHIVES'],
-            "create_daily_archive": self.site.config['CREATE_DAILY_ARCHIVE'],
-            "pretty_urls": self.site.config['PRETTY_URLS'],
-            "strip_indexes": self.site.config['STRIP_INDEXES'],
-            "index_file": self.site.config['INDEX_FILE'],
-            "generate_atom": self.site.config["GENERATE_ATOM"],
         }
-        self.site.scan_posts()
-        yield self.group_task()
-        # TODO add next/prev links for years
-        if (kw['create_monthly_archive'] and kw['create_single_archive']) and not kw['create_full_archives']:
-            raise Exception('Cannot create monthly and single archives at the same time.')
-        for lang in kw["translations"]:
-            if kw['create_single_archive'] and not kw['create_full_archives']:
-                # if we are creating one single archive
-                archdata = {}
-            else:
-                # if we are not creating one single archive, start with all years
-                archdata = self.site.posts_per_year.copy()
-            if kw['create_single_archive'] or kw['create_full_archives']:
-                # if we are creating one single archive, or full archives
-                archdata[None] = self.site.posts  # for create_single_archive
-
-            for year, posts in archdata.items():
-                # Filter untranslated posts (Issue #1360)
-                if not kw["show_untranslated_posts"]:
-                    posts = [p for p in posts if lang in p.translated_to]
-
-                # Add archive per year or total archive
-                if year:
-                    title = kw["messages"][lang]["Posts for year %s"] % year
-                    kw["is_feed_stale"] = (datetime.datetime.utcnow().strftime("%Y") != year)
-                else:
-                    title = kw["messages"][lang]["Archive"]
-                    kw["is_feed_stale"] = False
-                deps_translatable = {}
-                for k in self.site._GLOBAL_CONTEXT_TRANSLATABLE:
-                    deps_translatable[k] = self.site.GLOBAL_CONTEXT[k](lang)
-                if not kw["create_monthly_archive"] or kw["create_full_archives"]:
-                    yield self._generate_posts_task(kw, year, lang, posts, title, deps_translatable)
-                else:
-                    months = set([(m.split('/')[1], self.site.link("archive", m, lang), len(self.site.posts_per_month[m])) for m in self.site.posts_per_month.keys() if m.startswith(str(year))])
-                    months = sorted(list(months))
-                    months.reverse()
-                    items = [[nikola.utils.LocaleBorg().get_month_name(int(month), lang), link, count] for month, link, count in months]
-                    yield self._prepare_task(kw, year, lang, None, items, "list.tmpl", title, deps_translatable)
-
-            if not kw["create_monthly_archive"] and not kw["create_full_archives"] and not kw["create_daily_archive"]:
-                continue  # Just to avoid nesting the other loop in this if
-            for yearmonth, posts in self.site.posts_per_month.items():
-                # Add archive per month
-                year, month = yearmonth.split('/')
-
-                kw["is_feed_stale"] = (datetime.datetime.utcnow().strftime("%Y/%m") != yearmonth)
-
-                # Filter untranslated posts (via Issue #1360)
-                if not kw["show_untranslated_posts"]:
-                    posts = [p for p in posts if lang in p.translated_to]
-
-                if kw["create_monthly_archive"] or kw["create_full_archives"]:
-                    title = kw["messages"][lang]["Posts for {month} {year}"].format(
-                        year=year, month=nikola.utils.LocaleBorg().get_month_name(int(month), lang))
-                    yield self._generate_posts_task(kw, yearmonth, lang, posts, title)
-
-                if not kw["create_full_archives"] and not kw["create_daily_archive"]:
-                    continue  # Just to avoid nesting the other loop in this if
-                # Add archive per day
-                days = dict()
-                for p in posts:
-                    if p.date.day not in days:
-                        days[p.date.day] = list()
-                    days[p.date.day].append(p)
-                for day, posts in days.items():
-                    title = kw["messages"][lang]["Posts for {month} {day}, {year}"].format(
-                        year=year, month=nikola.utils.LocaleBorg().get_month_name(int(month), lang), day=day)
-                    yield self._generate_posts_task(kw, yearmonth + '/{0:02d}'.format(day), lang, posts, title)
-
-        if not kw['create_single_archive'] and not kw['create_full_archives']:
-            # And an "all your years" page for yearly and monthly archives
-            if "is_feed_stale" in kw:
-                del kw["is_feed_stale"]
-            years = list(self.site.posts_per_year.keys())
-            years.sort(reverse=True)
-            kw['years'] = years
-            for lang in kw["translations"]:
-                items = [(y, self.site.link("archive", y, lang), len(self.site.posts_per_year[y])) for y in years]
-                yield self._prepare_task(kw, None, lang, None, items, "list.tmpl", kw["messages"][lang]["Archive"])
-
-    def archive_path(self, name, lang, is_feed=False):
-        """Link to archive path, name is the year.
-
-        Example:
-
-        link://archive/2013 => /archives/2013/index.html
-        """
-        if is_feed:
-            extension = ".atom"
-            archive_file = os.path.splitext(self.site.config['ARCHIVE_FILENAME'])[0] + extension
-            index_file = os.path.splitext(self.site.config['INDEX_FILE'])[0] + extension
+        page_kind = "list"
+        if self.show_list_as_index:
+            if not self.show_list_as_subcategories_list or len(hierarchy) == self.max_levels:
+                page_kind = "index"
+        if len(hierarchy) == 0:
+            title = kw["messages"][lang]["Archive"]
+            kw["is_feed_stale"] = False
+        elif len(hierarchy) == 1:
+            title = kw["messages"][lang]["Posts for year %s"] % hierarchy[0]
+            kw["is_feed_stale"] = (datetime.datetime.utcnow().strftime("%Y") != hierarchy[0])
+        elif len(hierarchy) == 2:
+            title = kw["messages"][lang]["Posts for {month} {year}"].format(
+                year=hierarchy[0],
+                month=nikola.utils.LocaleBorg().get_month_name(int(hierarchy[1]), lang))
+            kw["is_feed_stale"] = (datetime.datetime.utcnow().strftime("%Y/%m") != classification)
+        elif len(hierarchy) == 3:
+            title = kw["messages"][lang]["Posts for {month} {day}, {year}"].format(
+                year=hierarchy[0],
+                month=nikola.utils.LocaleBorg().get_month_name(int(hierarchy[1]), lang),
+                day=hierarchy[2])
+            kw["is_feed_stale"] = (datetime.datetime.utcnow().strftime("%Y/%m/%d") != classification)
         else:
-            archive_file = self.site.config['ARCHIVE_FILENAME']
-            index_file = self.site.config['INDEX_FILE']
-        if name:
-            return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                                  self.site.config['ARCHIVE_PATH'], name,
-                                  index_file] if _f]
-        else:
-            return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
-                                  self.site.config['ARCHIVE_PATH'],
-                                  archive_file] if _f]
-
-    def archive_atom_path(self, name, lang):
-        """Link to atom archive path, name is the year.
-
-        Example:
-
-        link://archive_atom/2013 => /archives/2013/index.atom
-        """
-        return self.archive_path(name, lang, is_feed=True)
+            raise Exception("Cannot interpret classification {}!".format(repr(classification)))
+        context = {
+            "title": title,
+            "classification_title": '/'.join(classification),
+            "pagekind": [page_kind, "archive_page"],
+        }
+        if page_kind == 'index':
+            context["archive_name"] = title
+            context["is_feed_stale"] = kw["is_feed_stale"]
+        kw.update(context)
+        return context, kw
