@@ -484,6 +484,9 @@ class Taxonomy(BasePlugin):
     # If True, the list for a classification includes all posts with a
     # sub-classification (in case has_hierarchy is True).
     include_posts_from_subhierarchies = False
+    # If True, include_posts_from_subhierarchies == True will also insert
+    # posts into the list for the empty hierarchy [].
+    include_posts_into_hierarchy_root = False
     # If not False, for every classification which has at least one
     # subclassification, create a list of subcategories instead of a list/index
     # of posts. This is only used when has_hierarchy = True. If not False, this

@@ -58,7 +58,7 @@ def _clone_treenode(treenode, parent=None, acceptor=lambda x: True):
 
 
 class RenderTaxonomies(Task):
-    """Render the tag/category pages and feeds."""
+    """Render taxonomy pages and feeds."""
 
     name = "render_taxonomies"
 
@@ -217,7 +217,7 @@ class RenderTaxonomies(Task):
             return [
                 taxonomy.get_classification_printable_name(subnode.classification_path, lang, only_last_component=True),
                 self.site.link(taxonomy.classification_name, subnode.classification_name, lang),
-                len(self._filter_list(self.site.posts_per_classification[taxonomy.classification_name][lang][subnode.classification_name]))
+                len(self._filter_list(self.site.posts_per_classification[taxonomy.classification_name][lang][subnode.classification_name], lang))
             ]
 
         items = [get_subnode_data(subnode) for subnode in node.children]
@@ -271,7 +271,8 @@ class RenderTaxonomies(Task):
             # Are there subclassifications?
             if len(node.children) > 0:
                 # Yes: create list with subclassifications instead of list of posts
-                return self._generate_subclassification_page(taxonomy, node, context, kw, lang)
+                yield self._generate_subclassification_page(taxonomy, node, context, kw, lang)
+                return
         # Generate RSS feed
         if kw["generate_rss"]:
             yield self._generate_classification_page_as_rss(taxonomy, classification, filtered_posts, context['title'], context.get("description"), kw, lang)

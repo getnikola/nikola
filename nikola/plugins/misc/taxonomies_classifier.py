@@ -76,10 +76,11 @@ class TaxonomiesClassifier(SignalHandler):
                                 site.posts_per_classification[taxonomy.classification_name][lang][classification].add(post)
                                 if not taxonomy.include_posts_from_subhierarchies or not taxonomy.has_hierarchy:
                                     break
-                                classification_path = taxonomy.extract_hierarchy(classification)[:-1]
-                                if len(classification_path) == 0:
-                                    break
-                                classification = taxonomy.recombine_classification_from_hierarchy(classification_path)
+                                classification_path = taxonomy.extract_hierarchy(classification)
+                                if len(classification_path) <= 1:
+                                    if len(classification_path) == 0 or not taxonomy.include_posts_into_hierarchy_root:
+                                        break
+                                classification = taxonomy.recombine_classification_from_hierarchy(classification_path[:-1])
 
         # Check for valid paths and for collisions
         taxonomy_outputs = {lang: dict() for lang in site.config['TRANSLATIONS'].keys()}
@@ -151,21 +152,28 @@ class TaxonomiesClassifier(SignalHandler):
                             node = node[he]
                     hierarchy_lookup = {}
 
-                    def create_hierarchy(cat_hierarchy, parent=None, level=0):
-                        """Create category hierarchy."""
+                    def create_hierarchy(hierarchy, parent=None, level=0):
+                        """Create hierarchy."""
                         result = {}
-                        for name, children in cat_hierarchy.items():
+                        for name, children in hierarchy.items():
                             node = utils.TreeNode(name, parent)
                             node.children = create_hierarchy(children, node, level + 1)
                             node.classification_path = [pn.name for pn in node.get_path()]
                             node.classification_name = taxonomy.recombine_classification_from_hierarchy(node.classification_path)
                             hierarchy_lookup[node.classification_name] = node
                             result[node.name] = node
-                        classifications = natsort.natsorted(result.keys(), key=lambda e: e.name, alg=natsort.ns.F | natsort.ns.IC)
+                        classifications = natsort.natsorted(result.keys(), alg=natsort.ns.F | natsort.ns.IC)
                         taxonomy.sort_classifications(classifications, lang, level=level)
                         return [result[classification] for classification in classifications]
 
                     root_list = create_hierarchy(hierarchy)
+                    if '' in posts_per_classification:
+                        node = utils.TreeNode('', parent=None)
+                        node.children = root_list
+                        node.classification_path = []
+                        node.classification_name = ''
+                        hierarchy_lookup[node.name] = node
+                        root_list = [node]
                     flat_hierarchy = utils.flatten_tree_structure(root_list)
                     # Store result
                     site.hierarchy_per_classification[taxonomy.classification_name][lang] = root_list
