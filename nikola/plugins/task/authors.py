@@ -112,7 +112,7 @@ class ClassifyAuthors(Taxonomy):
         }
         if self.site.config["GENERATE_RSS"]:
             rss_link = ("""<link rel="alternate" type="application/rss+xml" title="RSS for author {0} ({1})" href="{2}">""".format(
-                author, lang, self.site.link('author_rss', classification, lang)))
+                author, lang, self.site.link('author_rss', author, lang)))
             context['rss_link'] = rss_link
         kw.update(context)
         return context, kw
