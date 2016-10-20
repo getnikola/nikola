@@ -212,7 +212,7 @@ class TaxonomiesClassifier(SignalHandler):
             force_extension = '.xml'
         if force_extension is not None:
             if len(path) == 0 or always_append_index:
-                path = [os.path.splitext(self.site.config['INDEX_FILE'])[0]]
+                path = path + [os.path.splitext(self.site.config['INDEX_FILE'])[0]]
                 if type == 'rss':
                     path = ['rss']
             path[-1] += force_extension
