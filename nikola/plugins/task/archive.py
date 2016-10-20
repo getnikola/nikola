@@ -166,4 +166,4 @@ class Archive(Taxonomy):
 
     def should_generate_classification_list(self, classification, post_list, lang):
         """Only generates list of posts for classification if this function returns True."""
-        return classification == "" or len(post_list) > 0
+        return len(classification.split('/')) < 3 or len(post_list) > 0
