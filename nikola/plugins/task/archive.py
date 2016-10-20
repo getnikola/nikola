@@ -150,7 +150,7 @@ class Archive(Taxonomy):
             title = kw["messages"][lang]["Posts for {month} {day}, {year}"].format(
                 year=hierarchy[0],
                 month=nikola.utils.LocaleBorg().get_month_name(int(hierarchy[1]), lang),
-                day=hierarchy[2])
+                day=int(hierarchy[2]))
             kw["is_feed_stale"] = (datetime.datetime.utcnow().strftime("%Y/%m/%d") != classification)
         else:
             raise Exception("Cannot interpret classification {}!".format(repr(classification)))
