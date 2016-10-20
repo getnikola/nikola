@@ -18,4 +18,4 @@ export LC_ALL=$APPLOC
 export LANG=$APPLOC
 export LANGUAGE=${APPLANG%_*}
 
-$SNAP/usr/bin/nikola "$@"
+$SNAP/bin/nikola "$@"

@@ -7,14 +7,18 @@ grade: stable
 
 apps:
     nikola:
-         command: nikola
+         command: nikola.sh
          plugs: [network, network-bind, home]
 
 parts:
+    nikola-script:
+        plugin: dump
+        source: script
     nikola:
+        source: git://github.com/getnikola/nikola.git
+        source-tag: v7.8.1
+        stage-packages:
+            - locales
+            - libc-bin
         plugin: python
-        python-packages:
-            - nikola
-            - pillow
-        python-version: python3
         build-packages: [libjpeg-dev]
