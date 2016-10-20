@@ -205,21 +205,25 @@ class TaxonomiesClassifier(SignalHandler):
         """Given a list of posts and the maximal number of posts per page, computes the number of pages needed."""
         return min(1, (len(filtered_posts) + posts_count - 1) // posts_count)
 
-    def _postprocess_path(self, path, lang, always_append_index=False, force_extension=None, type='page', page_info=None):
+    def _postprocess_path(self, path, lang, always_append_index=False, type='page', page_info=None):
+        # Forcing extension for Atom feeds and RSS feeds
+        force_extension = None
         if type == 'feed':
             force_extension = '.atom'
         elif type == 'rss':
             force_extension = '.xml'
+        # Determine how to extend path
         if force_extension is not None:
-            if len(path) == 0 or always_append_index:
+            if len(path) == 0 and type == 'rss':
+                path = ['rss']
+            elif len(path) == 0 or always_append_index:
                 path = path + [os.path.splitext(self.site.config['INDEX_FILE'])[0]]
-                if type == 'rss':
-                    path = ['rss']
             path[-1] += force_extension
         elif self.site.config['PRETTY_URLS'] or len(path) == 0 or always_append_index:
             path = path + [self.site.config['INDEX_FILE']]
         else:
             path[-1] += '.html'
+        # Create path
         result = [_f for _f in [self.site.config['TRANSLATIONS'][lang]] + path if _f]
         if page_info is not None and type == 'page':
             result = utils.adjust_name_for_index_path_list(result,
@@ -243,7 +247,7 @@ class TaxonomiesClassifier(SignalHandler):
         path, append_index, _ = self._parse_path_result(result)
         return self._postprocess_path(path, lang, always_append_index=append_index, type='list')
 
-    def _taxonomy_path(self, name, lang, taxonomy, force_extension=None, type='page'):
+    def _taxonomy_path(self, name, lang, taxonomy, type='page'):
         """Return path to a classification."""
         if taxonomy.has_hierarchy:
             result = taxonomy.get_path(taxonomy.extract_hierarchy(name), lang, type=type)
@@ -257,7 +261,7 @@ class TaxonomiesClassifier(SignalHandler):
                 number_of_pages = self._compute_number_of_pages(self._get_filtered_list(name, lang), self.site.config['INDEX_DISPLAY_POST_COUNT'])
                 self.site.page_count_per_classification[taxonomy.classification_name][lang][name] = number_of_pages
             page_info = (page, number_of_pages)
-        return self._postprocess_path(path, lang, always_append_index=append_index, force_extension=force_extension, type=type, page_info=page_info)
+        return self._postprocess_path(path, lang, always_append_index=append_index, type=type, page_info=page_info)
 
     def _taxonomy_atom_path(self, name, lang, taxonomy):
         """Return path to a classification Atom feed."""
