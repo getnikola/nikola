@@ -156,7 +156,6 @@ class Archive(Taxonomy):
             raise Exception("Cannot interpret classification {}!".format(repr(classification)))
         context = {
             "title": title,
-            "classification_title": classification,
             "pagekind": [page_kind, "archive_page"],
         }
         if page_kind == 'index':

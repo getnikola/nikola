@@ -651,8 +651,7 @@ class Taxonomy(BasePlugin):
         Must return a tuple of two dicts. The first is merged into the page's context,
         the second will be put into the uptodate list of all generated tasks.
 
-        Context must contain `title`, which should be something like 'Posts about <classification>',
-        and `classification_title`, which should be related to the classification string.
+        Context must contain `title`, which should be something like 'Posts about <classification>'.
         """
         raise NotImplementedError()
 

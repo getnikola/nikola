@@ -157,10 +157,6 @@ class RenderTaxonomies(Task):
             return utils.adjust_name_for_index_path(self.site.path(feed.format(kind), classification, lang), i, displayed_i, lang, self.site, force_addition, extension)
 
         context = copy(context)
-        if kw["generate_rss"] and not taxonomy.always_disable_rss:
-            rss_link = ("""<link rel="alternate" type="application/rss+xml" title="RSS for {0} {1} ({2})" href="{3}">""".format(
-                taxonomy.classification_name, context['classification_title'], lang, self.site.link('{}_rss'.format(kind), classification, lang)))
-            context['rss_link'] = rss_link
         if "pagekind" not in context:
             context["pagekind"] = ["index", "tag_page"]
         template_name = taxonomy.template_for_list_of_one_classification

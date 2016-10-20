@@ -107,10 +107,13 @@ class ClassifyAuthors(Taxonomy):
         context = {
             "author": author,
             "title": kw["messages"][lang]["Posts by %s"] % author,
-            "classification_title": author,
             "description": descriptions[lang][author] if lang in descriptions and author in descriptions[lang] else None,
             "pagekind": ["index" if self.show_list_as_index else "list", "author_page"],
         }
+        if self.site.config["GENERATE_RSS"]:
+            rss_link = ("""<link rel="alternate" type="application/rss+xml" title="RSS for author {0} ({1})" href="{2}">""".format(
+                author, lang, self.site.link('author_rss', classification, lang)))
+            context['rss_link'] = rss_link
         kw.update(context)
         return context, kw
 

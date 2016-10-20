@@ -83,14 +83,7 @@ class ClassifySections(Taxonomy):
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang], section] if _f], 'always'
 
     def provide_context_and_uptodate(self, section, lang):
-        """Provide data for the context and the uptodate list for the list of the given classifiation.
-
-        Must return a tuple of two dicts. The first is merged into the page's context,
-        the second will be put into the uptodate list of all generated tasks.
-
-        Context must contain `title`, which should be something like 'Posts about <classification>',
-        and `classification_title`, which should be related to the classification string.
-        """
+        """Provide data for the context and the uptodate list for the list of the given classifiation."""
         kw = {
             "messages": self.site.MESSAGES,
         }
@@ -107,7 +100,6 @@ class ClassifySections(Taxonomy):
         # Compose context
         context = {
             "title": section_title,
-            "classification_title": section_name,
             "description": self.site.config['POSTS_SECTION_DESCRIPTIONS'](lang)[section] if section in self.site.config['POSTS_SECTION_DESCRIPTIONS'](lang) else "",
             "pagekind": ["section_page", "index" if self.show_list_as_index else "list"]
         }

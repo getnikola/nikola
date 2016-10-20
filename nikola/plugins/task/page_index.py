@@ -89,7 +89,6 @@ class PageIndex(Taxonomy):
         }
         context = {
             "title": self.site.config['BLOG_TITLE'](lang),
-            "classification_title": self.site.config['BLOG_TITLE'](lang),
             "pagekind": ["list", "front_page"] if dirname == '' else ["list"],
         }
         kw.update(context)
