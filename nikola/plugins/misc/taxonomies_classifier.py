@@ -241,7 +241,7 @@ class TaxonomiesClassifier(SignalHandler):
         """Return path to the classification overview."""
         result = taxonomy.get_list_path(lang)
         path, append_index, _ = self._parse_path_result(result)
-        return self._postprocess_path(path, lang, always_append_index=append_index)
+        return self._postprocess_path(path, lang, always_append_index=append_index, type='list')
 
     def _taxonomy_path(self, name, lang, taxonomy, force_extension=None, type='page'):
         """Return path to a classification."""

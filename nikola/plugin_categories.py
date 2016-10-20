@@ -576,15 +576,12 @@ class Taxonomy(BasePlugin):
     def get_list_path(self, lang, type='page'):
         """A path handler for the list of all classifications.
 
-        Must return one to three values (in this order):
+        Must return one or two values (in this order):
          * a list or tuple of strings: the path relative to OUTPUT_DIRECTORY;
          * a boolean indicating whether INDEX_FILE should always be added or not;
-         * an integer if a specific page of the index is to be targeted (will be
-           ignored for post lists), or `None` if the most current page is targeted.
 
         Note that this function must always return a list or tuple of strings;
-        the other two return values are optional with default values `False` and
-        `None`.
+        the other return value is optional with default value `False`.
 
         In case INDEX_FILE should not be added, the last element in the returned
         path must have no extension, and the PRETTY_URLS config must be ignored
