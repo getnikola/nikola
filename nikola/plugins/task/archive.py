@@ -111,11 +111,11 @@ class Archive(Taxonomy):
         components = [self.site.config['ARCHIVE_PATH']]
         if classification:
             components.extend(classification)
-            file = self.site.config['INDEX_FILE']
+            always_add_index = True
         else:
-            file = self.site.config['ARCHIVE_FILENAME']
-        components.append(os.path.splitext(file)[0])
-        return [_f for _f in components if _f], False
+            components.append(os.path.splitext(self.site.config['ARCHIVE_FILENAME'])[0])
+            always_add_index = False
+        return [_f for _f in components if _f], always_add_index
 
     def extract_hierarchy(self, classification):
         """Given a classification, return a list of parts in the hierarchy."""
