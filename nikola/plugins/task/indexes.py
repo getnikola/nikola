@@ -86,7 +86,7 @@ class Indexes(Taxonomy):
         kw = {
         }
         context = {
-            "title": self.site.config["BLOG_TITLE"](lang),
+            "title": self.site.config["INDEXES_TITLE"](lang) or self.site.config["BLOG_TITLE"](lang),
             "classification_title": "",
             "description": self.site.config["BLOG_DESCRIPTION"](lang),
             "pagekind": ["main_index", "index"],
