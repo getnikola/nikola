@@ -286,7 +286,6 @@ class CommandPlugin(Command):
         if os.path.exists(req_plug_path):
             LOGGER.notice('This plugin requires other Nikola plugins.')
             LOGGER.info('Installing plugins...')
-            print('Contents of the requirements-nonpy.txt file:\n')
             try:
                 with io.open(req_plug_path, 'r', encoding='utf-8') as inf:
                     for plugname in inf.readlines():
