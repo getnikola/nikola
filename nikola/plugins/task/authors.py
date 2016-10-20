@@ -74,7 +74,7 @@ class ClassifyAuthors(Taxonomy):
 
     def get_list_path(self, lang, type='page'):
         """A path handler for the list of all classifications."""
-        return [self.site.config['AUTHOR_PATH']], True
+        return [self.site.config['AUTHOR_PATH']], 'always'
 
     def get_path(self, author, lang, type='page'):
         """A path handler for the given classification."""
@@ -82,7 +82,7 @@ class ClassifyAuthors(Taxonomy):
             slug = utils.slugify(author, lang)
         else:
             slug = author
-        return [self.site.config['AUTHOR_PATH'], slug], False
+        return [self.site.config['AUTHOR_PATH'], slug], 'auto'
 
     def provide_list_context_and_uptodate(self, lang):
         """Provide data for the context and the uptodate list for the list of all classifiations."""

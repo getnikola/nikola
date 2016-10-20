@@ -578,15 +578,16 @@ class Taxonomy(BasePlugin):
 
         Must return one or two values (in this order):
          * a list or tuple of strings: the path relative to OUTPUT_DIRECTORY;
-         * a boolean indicating whether INDEX_FILE should always be added or not;
+         * a string with values 'auto', 'always' or 'never', indicating whether
+           INDEX_FILE should be added or not.
 
         Note that this function must always return a list or tuple of strings;
-        the other return value is optional with default value `False`.
+        the other return value is optional with default value `'auto'`.
 
-        In case INDEX_FILE should not be added, the last element in the returned
-        path must have no extension, and the PRETTY_URLS config must be ignored
-        by this handler. The return value will be modified based on the
-        PRETTY_URLS and INDEX_FILE settings.
+        In case INDEX_FILE should potentially be added, the last element in the
+        returned path must have no extension, and the PRETTY_URLS config must
+        be ignored by this handler. The return value will be modified based on
+        the PRETTY_URLS and INDEX_FILE settings.
 
         Type can be either 'page', 'feed' (for Atom feed) or 'rss'.
         """
@@ -597,18 +598,19 @@ class Taxonomy(BasePlugin):
 
         Must return one to three values (in this order):
          * a list or tuple of strings: the path relative to OUTPUT_DIRECTORY;
-         * a boolean indicating whether INDEX_FILE should always be added or not;
+         * a string with values 'auto', 'always' or 'never', indicating whether
+           INDEX_FILE should be added or not;
          * an integer if a specific page of the index is to be targeted (will be
            ignored for post lists), or `None` if the most current page is targeted.
 
         Note that this function must always return a list or tuple of strings;
-        the other two return values are optional with default values `False` and
+        the other two return values are optional with default values `'auto'` and
         `None`.
 
-        In case INDEX_FILE should not be added, the last element in the returned
-        path must have no extension, and the PRETTY_URLS config must be ignored
-        by this handler. The return value will be modified based on the
-        PRETTY_URLS and INDEX_FILE settings.
+        In case INDEX_FILE should potentially be added, the last element in the
+        returned path must have no extension, and the PRETTY_URLS config must
+        be ignored by this handler. The return value will be modified based on
+        the PRETTY_URLS and INDEX_FILE settings.
 
         Type can be either 'page', 'feed' (for Atom feed) or 'rss'.
 

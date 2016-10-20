@@ -80,7 +80,7 @@ class ClassifySections(Taxonomy):
 
     def get_path(self, section, lang, type='page'):
         """A path handler for the given classification."""
-        return [_f for _f in [self.site.config['TRANSLATIONS'][lang], section] if _f], True
+        return [_f for _f in [self.site.config['TRANSLATIONS'][lang], section] if _f], 'always'
 
     def provide_context_and_uptodate(self, section, lang):
         """Provide data for the context and the uptodate list for the list of the given classifiation.

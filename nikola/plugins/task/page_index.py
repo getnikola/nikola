@@ -71,7 +71,7 @@ class PageIndex(Taxonomy):
 
     def get_path(self, hierarchy, lang, type='page'):
         """A path handler for the given classification."""
-        return hierarchy, True
+        return hierarchy, 'always'
 
     def extract_hierarchy(self, dirname):
         """Given a classification, return a list of parts in the hierarchy."""

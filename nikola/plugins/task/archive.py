@@ -111,11 +111,11 @@ class Archive(Taxonomy):
         components = [self.site.config['ARCHIVE_PATH']]
         if classification:
             components.extend(classification)
-            always_add_index = True
+            add_index = 'always'
         else:
             components.append(os.path.splitext(self.site.config['ARCHIVE_FILENAME'])[0])
-            always_add_index = False
-        return [_f for _f in components if _f], always_add_index
+            add_index = 'never'
+        return [_f for _f in components if _f], add_index
 
     def extract_hierarchy(self, classification):
         """Given a classification, return a list of parts in the hierarchy."""
@@ -160,7 +160,7 @@ class Archive(Taxonomy):
             "pagekind": [page_kind, "archive_page"],
         }
         if page_kind == 'index':
-            context["archive_name"] = classification
+            context["archive_name"] = classification if classification else None
             context["is_feed_stale"] = kw["is_feed_stale"]
         kw.update(context)
         return context, kw
