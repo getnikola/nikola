@@ -160,7 +160,7 @@ class Archive(Taxonomy):
             "pagekind": [page_kind, "archive_page"],
         }
         if page_kind == 'index':
-            context["archive_name"] = title
+            context["archive_name"] = classification
             context["is_feed_stale"] = kw["is_feed_stale"]
         kw.update(context)
         return context, kw
