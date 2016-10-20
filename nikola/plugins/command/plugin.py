@@ -284,13 +284,13 @@ class CommandPlugin(Command):
 
         req_plug_path = os.path.join(dest_path, 'requirements-plugins.txt')
         if os.path.exists(req_plug_path):
-            LOGGER.notice('This plugin requires other nikola plugins.')
+            LOGGER.notice('This plugin requires other Nikola plugins.')
             LOGGER.info('Installing plugins using Nikola...')
             print('Contents of the requirements-nonpy.txt file:\n')
             try:
                 with io.open(req_plug_path, 'r', encoding='utf-8') as inf:
                     for plugname in inf.readlines():
-                        subprocess.check_call((sys.executable, '-m', 'nikola', 'plugin', '-i', reqpath))
+                        do_install(url, plugname, show_install_notes)
             except subprocess.CalledProcessError:
                 LOGGER.error('Could not install a plugin.')
                 print('Contents of the requirements-plugins.txt file:\n')
