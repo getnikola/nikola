@@ -164,3 +164,7 @@ class Archive(Taxonomy):
             context["is_feed_stale"] = kw["is_feed_stale"]
         kw.update(context)
         return context, kw
+
+    def should_generate_classification_list(self, classification, post_list, lang):
+        """Only generates list of posts for classification if this function returns True."""
+        return classification == "" or len(post_list) > 0
