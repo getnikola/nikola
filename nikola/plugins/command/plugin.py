@@ -290,7 +290,7 @@ class CommandPlugin(Command):
             try:
                 with io.open(req_plug_path, 'r', encoding='utf-8') as inf:
                     for plugname in inf.readlines():
-                        do_install(url, plugname, show_install_notes)
+                        self.do_install(url, plugname, show_install_notes)
             except subprocess.CalledProcessError:
                 LOGGER.error('Could not install a plugin.')
                 print('Contents of the requirements-plugins.txt file:\n')
