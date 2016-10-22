@@ -9,6 +9,8 @@ Bugfixes
 Features
 --------
 
+* Allow posts to set custom ``URL_TYPE`` by using the ``url_type``
+  meta tag (useful for HTML fragments inserted using JavaScript)
 * Plugins can depend on other plugins being installed (Issue #2533)
 * The destination folder in ``POSTS`` and ``PAGES`` can now be
   translated (Issue #2116)
