@@ -16,6 +16,8 @@ Features
   translated (Issue #2116)
 * Pass ``post`` object and ``lang`` to post compilers (Issue #2531)
 * Pass ``url_type`` into template's context.
+* ``render_template`` and ``generic_renderer`` can now create HTML
+  fragments.
 
 New in v7.8.1
 =============

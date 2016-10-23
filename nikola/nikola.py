@@ -1287,7 +1287,7 @@ class Nikola(object):
 
         return compiler
 
-    def render_template(self, template_name, output_name, context, url_type=None):
+    def render_template(self, template_name, output_name, context, url_type=None, is_fragment=False):
         """Render a template with the global context.
 
         If ``output_name`` is None, will return a string and all URL
@@ -1298,6 +1298,9 @@ class Nikola(object):
 
         The argument ``url_type`` allows to override the ``URL_TYPE``
         configuration.
+
+        If ``is_fragment`` is set to ``True``, a HTML fragment will
+        be rendered and not a whole HTML document.
         """
         local_context = {}
         local_context["template_name"] = template_name
@@ -1334,19 +1337,25 @@ class Nikola(object):
 
         utils.makedirs(os.path.dirname(output_name))
         parser = lxml.html.HTMLParser(remove_blank_text=True)
-        doc = lxml.html.document_fromstring(data, parser)
-        self.rewrite_links(doc, src, context['lang'], url_type)
-        data = b'<!DOCTYPE html>\n' + lxml.html.tostring(doc, encoding='utf8', method='html', pretty_print=True)
+        if is_fragment:
+            doc = lxml.html.fragment_fromstring(data, parser)
+        else:
+            doc = lxml.html.document_fromstring(data, parser)
+        self.rewrite_links(doc, src, context['lang'], url_type, is_fragment=is_fragment)
+        if is_fragment:
+            data = (doc.text or '').encode('utf-8') + ''.encode('utf-8').join([lxml.html.tostring(child, encoding='utf-8', method='html') for child in doc.iterchildren()])
+        else:
+            data = b'<!DOCTYPE html>\n' + lxml.html.tostring(doc, encoding='utf8', method='html', pretty_print=True)
         with open(output_name, "wb+") as post_file:
             post_file.write(data)
 
-    def rewrite_links(self, doc, src, lang, url_type=None):
+    def rewrite_links(self, doc, src, lang, url_type=None, is_fragment=False):
         """Replace links in document to point to the right places."""
         # First let lxml replace most of them
         doc.rewrite_links(lambda dst: self.url_replacer(src, dst, lang, url_type), resolve_base_href=False)
 
         # lxml ignores srcset in img and source elements, so do that by hand
-        objs = list(doc.xpath('(*//img|*//source)'))
+        objs = list(doc.xpath('({}//img|{}//source)'.format('' if is_fragment else '*')))
         for obj in objs:
             if 'srcset' in obj.attrib:
                 urls = [u.strip() for u in obj.attrib['srcset'].split(',')]
@@ -1997,7 +2006,7 @@ class Nikola(object):
             sys.exit(1)
         signal('scanned').send(self)
 
-    def generic_renderer(self, lang, output_name, template_name, filters, file_deps=None, uptodate_deps=None, context=None, context_deps_remove=None, post_deps_dict=None, url_type=None):
+    def generic_renderer(self, lang, output_name, template_name, filters, file_deps=None, uptodate_deps=None, context=None, context_deps_remove=None, post_deps_dict=None, url_type=None, is_fragment=False):
         """Helper function for rendering pages and post lists and other related pages.
 
         lang is the current language.
@@ -2009,7 +2018,8 @@ class Nikola(object):
         context (optional) a dict used as a basis for the template context. The lang parameter will always be added.
         context_deps_remove (optional) is a list of keys to remove from the context after using it as an uptodate dependency. This should name all keys containing non-trivial Python objects; they can be replaced by adding JSON-style dicts in post_deps_dict.
         post_deps_dict (optional) is a dict merged into the copy of context which is used as an uptodate dependency.
-        url_type (optional) allows to override the ``URL_TYPE`` configuration
+        url_type (optional) allows to override the ``URL_TYPE`` configuration.
+        is_fragment (optional) allows to write a HTML fragment instead of a HTML document.
         """
         utils.LocaleBorg().set_locale(lang)
 
@@ -2043,7 +2053,7 @@ class Nikola(object):
             'targets': [output_name],
             'file_dep': file_deps,
             'actions': [(self.render_template, [template_name, output_name,
-                                                context, url_type])],
+                                                context, url_type, is_fragment])],
             'clean': True,
             'uptodate': [config_changed(deps_dict, 'nikola.nikola.Nikola.generic_renderer')] + ([] if uptodate_deps is None else uptodate_deps)
         }
