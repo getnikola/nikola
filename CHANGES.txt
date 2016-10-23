@@ -9,6 +9,8 @@ Bugfixes
 Features
 --------
 
+* ``render_template`` and ``generic_renderer`` can now create HTML
+  fragments.
 * Allow posts to set custom ``URL_TYPE`` by using the ``url_type``
   meta tag (useful for HTML fragments inserted using JavaScript)
 * Plugins can depend on other plugins being installed (Issue #2533)
@@ -16,8 +18,6 @@ Features
   translated (Issue #2116)
 * Pass ``post`` object and ``lang`` to post compilers (Issue #2531)
 * Pass ``url_type`` into template's context.
-* ``render_template`` and ``generic_renderer`` can now create HTML
-  fragments.
 
 New in v7.8.1
 =============
