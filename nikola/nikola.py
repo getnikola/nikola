@@ -1306,6 +1306,7 @@ class Nikola(object):
         for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
             local_context[k] = local_context[k](local_context['lang'])
         local_context['is_rtl'] = local_context['lang'] in LEGAL_VALUES['RTL_LANGUAGES']
+        local_context['url_type'] = self.config['URL_TYPE'] if url_type is None else url_type
         # string, arguments
         local_context["formatmsg"] = lambda s, *a: s % a
         for h in local_context['template_hooks'].values():

@@ -65,7 +65,7 @@ lang="${lang}">
     %if use_cdn:
         <!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
     %else:
-        <!--[if lt IE 9]><script src="${url_replacer(permalink, '/assets/js/html5.js', lang)}"></script><![endif]-->
+        <!--[if lt IE 9]><script src="${url_replacer(permalink, '/assets/js/html5.js', lang, url_type)}"></script><![endif]-->
     %endif
 
     ${extra_head_data}
