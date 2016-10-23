@@ -249,6 +249,10 @@ class Post(object):
         self.use_in_feeds = use_in_feeds and not is_draft and not is_private \
             and not self.publish_later
 
+        # Allow overriding URL_TYPE via meta
+        # The check is done here so meta dicts won’t change inside of
+        # generic_post_rendere
+        self.url_type = self.meta('url_type') or None
         # Register potential extra dependencies
         self.compiler.register_extra_dependencies(self)
 

@@ -3,12 +3,9 @@
 from __future__ import unicode_literals, absolute_import
 
 import os
-import sys
-
 
 from collections import defaultdict
 from io import StringIO
-import os
 import re
 import unittest
 
@@ -50,15 +47,15 @@ class RSSFeedTest(unittest.TestCase):
 
         with mock.patch('nikola.post.get_meta',
                         mock.Mock(return_value=(
-                            ({'title': 'post title',
-                              'slug': 'awesome_article',
-                              'date': '2012-10-01 22:41',
-                              'author': None,
-                              'tags': 'tags',
-                              'link': 'link',
-                              'description': 'description',
-                              'enclosure': 'http://www.example.org/foo.mp3',
-                              'enclosure_length': '5'},
+                            (defaultdict(str, {'title': 'post title',
+                                               'slug': 'awesome_article',
+                                               'date': '2012-10-01 22:41',
+                                               'author': None,
+                                               'tags': 'tags',
+                                               'link': 'link',
+                                               'description': 'description',
+                                               'enclosure': 'http://www.example.org/foo.mp3',
+                                               'enclosure_length': '5'}),
                              True)
                         ))):
             with mock.patch('nikola.nikola.utils.os.path.isdir',

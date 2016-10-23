@@ -2086,7 +2086,8 @@ class Nikola(object):
                                     uptodate_deps=uptodate_deps,
                                     context=context,
                                     context_deps_remove=['post'],
-                                    post_deps_dict=deps_dict)
+                                    post_deps_dict=deps_dict,
+                                    url_type=post.url_type)
 
     def generic_post_list_renderer(self, lang, posts, output_name, template_name, filters, extra_context):
         """Render pages with lists of posts."""
