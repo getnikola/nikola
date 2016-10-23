@@ -1341,7 +1341,7 @@ class Nikola(object):
             doc = lxml.html.fragment_fromstring(data, parser)
         else:
             doc = lxml.html.document_fromstring(data, parser)
-        self.rewrite_links(doc, src, context['lang'], url_type, is_fragment=is_fragment)
+        self.rewrite_links(doc, src, context['lang'], url_type)
         if is_fragment:
             data = (doc.text or '').encode('utf-8') + ''.encode('utf-8').join([lxml.html.tostring(child, encoding='utf-8', method='html') for child in doc.iterchildren()])
         else:
@@ -1349,17 +1349,13 @@ class Nikola(object):
         with open(output_name, "wb+") as post_file:
             post_file.write(data)
 
-    def rewrite_links(self, doc, src, lang, url_type=None, is_fragment=False):
+    def rewrite_links(self, doc, src, lang, url_type=None):
         """Replace links in document to point to the right places."""
         # First let lxml replace most of them
         doc.rewrite_links(lambda dst: self.url_replacer(src, dst, lang, url_type), resolve_base_href=False)
 
         # lxml ignores srcset in img and source elements, so do that by hand
-        if is_fragment:
-            # With the asterisk, top-level <img> and <source> tags are not found
-            objs = list(doc.xpath('(//img|//source)'))
-        else:
-            objs = list(doc.xpath('(*//img|*//source)'))
+        objs = list(doc.xpath('(//img|//source)'))
         for obj in objs:
             if 'srcset' in obj.attrib:
                 urls = [u.strip() for u in obj.attrib['srcset'].split(',')]
