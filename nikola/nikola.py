@@ -1477,9 +1477,16 @@ class Nikola(object):
         keyword argument dict and then the latter provides the template
         context.
 
+        Global context keys are made available as part of the context,
+        respecting locale.
+
+        As a special quirk, the "data" key from global_context is made
+        available as "global_data" because of name clobbering.
+
         """
         def render_shortcode(*args, **kw):
             context = self.GLOBAL_CONTEXT.copy()
+            context['global_data'] = context['data']
             context.update(kw)
             context['_args'] = args
             context['lang'] = utils.LocaleBorg().current_lang
