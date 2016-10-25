@@ -464,13 +464,9 @@ class Post(object):
     def write_depfile(dest, deps_list):
         """Write a depfile for a given language."""
         deps_path = dest + '.dep'
-        if deps_list:
-            deps_list = [p for p in deps_list if p != dest]  # Don't depend on yourself (#1671)
-            with io.open(deps_path, "w+", encoding="utf8") as deps_file:
-                deps_file.write('\n'.join(deps_list))
-        else:
-            if os.path.isfile(deps_path):
-                os.unlink(deps_path)
+        deps_list = [p for p in deps_list if p != dest]  # Don't depend on yourself (#1671)
+        with io.open(deps_path, "w+", encoding="utf8") as deps_file:
+            deps_file.write('\n'.join(deps_list))
 
     def _get_dependencies(self, deps_list):
         deps = []
