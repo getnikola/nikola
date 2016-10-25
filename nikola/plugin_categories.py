@@ -276,7 +276,7 @@ class PageCompiler(BasePlugin):
         post.add_dependency(lambda: self._read_extra_deps(post), 'fragment')
 
     def get_extra_targets(self, post, lang, dest):
-        """Returns a list of extra targets for the render_posts task when compiling the post for the specified language."""
+        """Return a list of extra targets for the render_posts task when compiling the post for the specified language."""
         return []
 
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):
