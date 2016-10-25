@@ -1343,7 +1343,10 @@ class Nikola(object):
             doc = lxml.html.document_fromstring(data, parser)
         self.rewrite_links(doc, src, context['lang'], url_type)
         if is_fragment:
-            data = (doc.text or '').encode('utf-8') + ''.encode('utf-8').join([lxml.html.tostring(child, encoding='utf-8', method='html') for child in doc.iterchildren()])
+            # doc.text contains text before the first HTML, or None if there was no text
+            # The text after HTML elements is added by tostring() (because its implicit
+            # argument with_tail has default value True).
+            data = (doc.text or '').encode('utf-8') + b''.join([lxml.html.tostring(child, encoding='utf-8', method='html') for child in doc.iterchildren()])
         else:
             data = b'<!DOCTYPE html>\n' + lxml.html.tostring(doc, encoding='utf8', method='html', pretty_print=True)
         with open(output_name, "wb+") as post_file:
