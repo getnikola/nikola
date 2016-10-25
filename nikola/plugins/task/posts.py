@@ -86,11 +86,12 @@ class RenderPosts(Task):
                 dest = post.translated_base_path(lang)
                 dep_file = dest + '.dep'
                 file_dep = [p for p in post.fragment_deps(lang) if not p.startswith("####MAGIC####")]
+                extra_targets = post.compiler.get_extra_targets(post, lang, dest)
                 task = {
                     'basename': self.name,
                     'name': dest,
                     'file_dep': file_dep,
-                    'targets': [dest, dep_file],
+                    'targets': [dest, dep_file] + extra_targets,
                     'actions': [(post.compile, (lang, )),
                                 (update_deps, (post, lang, )),
                                 ],
