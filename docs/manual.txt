@@ -1086,6 +1086,10 @@ In that case, the template engine used will be your theme's and the arguments yo
 as well as the global context from your ``conf.py``, are available to the template you
 are creating.
 
+You can use anything defined in your confguration's ``GLOBAL_CONTEXT`` as variables in your
+shortcode template, with a caveat: Because of an unfortunate implementation detail, data is called
+"global_data" when used in a shortcode.
+
 The Global Context and Data files
 ---------------------------------
 
@@ -1114,6 +1118,7 @@ Data files can be useful for eg. auto-generated sites, where users provide
 JSON/YAML/TOML files and Nikola generates a large page with data from all data
 files. (This is especially useful with some automatic rebuild feature, like
 those documented in `Deployment`_)
+
 
 Redirections
 ------------

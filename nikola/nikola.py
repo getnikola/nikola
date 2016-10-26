@@ -985,7 +985,7 @@ class Nikola(object):
                         self.disabled_compilers[p[-1].name] = p
                         utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
                     if p[-1].name not in self.config['COMPILERS'] and \
-                            p[-1].details.has_option('Nikola', 'plugincategory') and p[-1].details.get('Nikola', 'PluginCategory') == 'Compiler':
+                            p[-1].details.has_option('Nikola', 'plugincategory') and p[-1].details.get('Nikola', 'PluginCategory') in ('Compiler', 'PageCompiler'):
                         bad_candidates.add(p)
                         self.disabled_compilers[p[-1].name] = p
                         utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
@@ -1290,7 +1290,7 @@ class Nikola(object):
 
         return compiler
 
-    def render_template(self, template_name, output_name, context, url_type=None):
+    def render_template(self, template_name, output_name, context, url_type=None, is_fragment=False):
         """Render a template with the global context.
 
         If ``output_name`` is None, will return a string and all URL
@@ -1301,6 +1301,9 @@ class Nikola(object):
 
         The argument ``url_type`` allows to override the ``URL_TYPE``
         configuration.
+
+        If ``is_fragment`` is set to ``True``, a HTML fragment will
+        be rendered and not a whole HTML document.
         """
         local_context = {}
         local_context["template_name"] = template_name
@@ -1309,6 +1312,7 @@ class Nikola(object):
         for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
             local_context[k] = local_context[k](local_context['lang'])
         local_context['is_rtl'] = local_context['lang'] in LEGAL_VALUES['RTL_LANGUAGES']
+        local_context['url_type'] = self.config['URL_TYPE'] if url_type is None else url_type
         # string, arguments
         local_context["formatmsg"] = lambda s, *a: s % a
         for h in local_context['template_hooks'].values():
@@ -1336,9 +1340,18 @@ class Nikola(object):
 
         utils.makedirs(os.path.dirname(output_name))
         parser = lxml.html.HTMLParser(remove_blank_text=True)
-        doc = lxml.html.document_fromstring(data, parser)
+        if is_fragment:
+            doc = lxml.html.fragment_fromstring(data, parser)
+        else:
+            doc = lxml.html.document_fromstring(data, parser)
         self.rewrite_links(doc, src, context['lang'], url_type)
-        data = b'<!DOCTYPE html>\n' + lxml.html.tostring(doc, encoding='utf8', method='html', pretty_print=True)
+        if is_fragment:
+            # doc.text contains text before the first HTML, or None if there was no text
+            # The text after HTML elements is added by tostring() (because its implicit
+            # argument with_tail has default value True).
+            data = (doc.text or '').encode('utf-8') + b''.join([lxml.html.tostring(child, encoding='utf-8', method='html') for child in doc.iterchildren()])
+        else:
+            data = lxml.html.tostring(doc, encoding='utf8', method='html', pretty_print=True, doctype='<!DOCTYPE html>')
         with open(output_name, "wb+") as post_file:
             post_file.write(data)
 
@@ -1348,7 +1361,7 @@ class Nikola(object):
         doc.rewrite_links(lambda dst: self.url_replacer(src, dst, lang, url_type), resolve_base_href=False)
 
         # lxml ignores srcset in img and source elements, so do that by hand
-        objs = list(doc.xpath('(*//img|*//source)'))
+        objs = list(doc.xpath('(//img|//source)'))
         for obj in objs:
             if 'srcset' in obj.attrib:
                 urls = [u.strip() for u in obj.attrib['srcset'].split(',')]
@@ -1479,9 +1492,16 @@ class Nikola(object):
         keyword argument dict and then the latter provides the template
         context.
 
+        Global context keys are made available as part of the context,
+        respecting locale.
+
+        As a special quirk, the "data" key from global_context is made
+        available as "global_data" because of name clobbering.
+
         """
         def render_shortcode(*args, **kw):
             context = self.GLOBAL_CONTEXT.copy()
+            context['global_data'] = context['data']
             context.update(kw)
             context['_args'] = args
             context['lang'] = utils.LocaleBorg().current_lang
@@ -1999,7 +2019,7 @@ class Nikola(object):
             sys.exit(1)
         signal('scanned').send(self)
 
-    def generic_renderer(self, lang, output_name, template_name, filters, file_deps=None, uptodate_deps=None, context=None, context_deps_remove=None, post_deps_dict=None, url_type=None):
+    def generic_renderer(self, lang, output_name, template_name, filters, file_deps=None, uptodate_deps=None, context=None, context_deps_remove=None, post_deps_dict=None, url_type=None, is_fragment=False):
         """Helper function for rendering pages and post lists and other related pages.
 
         lang is the current language.
@@ -2011,7 +2031,8 @@ class Nikola(object):
         context (optional) a dict used as a basis for the template context. The lang parameter will always be added.
         context_deps_remove (optional) is a list of keys to remove from the context after using it as an uptodate dependency. This should name all keys containing non-trivial Python objects; they can be replaced by adding JSON-style dicts in post_deps_dict.
         post_deps_dict (optional) is a dict merged into the copy of context which is used as an uptodate dependency.
-        url_type (optional) allows to override the ``URL_TYPE`` configuration
+        url_type (optional) allows to override the ``URL_TYPE`` configuration.
+        is_fragment (optional) allows to write a HTML fragment instead of a HTML document.
         """
         utils.LocaleBorg().set_locale(lang)
 
@@ -2045,7 +2066,7 @@ class Nikola(object):
             'targets': [output_name],
             'file_dep': file_deps,
             'actions': [(self.render_template, [template_name, output_name,
-                                                context, url_type])],
+                                                context, url_type, is_fragment])],
             'clean': True,
             'uptodate': [config_changed(deps_dict, 'nikola.nikola.Nikola.generic_renderer')] + ([] if uptodate_deps is None else uptodate_deps)
         }
@@ -2088,7 +2109,8 @@ class Nikola(object):
                                     uptodate_deps=uptodate_deps,
                                     context=context,
                                     context_deps_remove=['post'],
-                                    post_deps_dict=deps_dict)
+                                    post_deps_dict=deps_dict,
+                                    url_type=post.url_type)
 
     def generic_post_list_renderer(self, lang, posts, output_name, template_name, filters, extra_context):
         """Render pages with lists of posts."""

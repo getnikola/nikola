@@ -25,3 +25,6 @@ natsort>=3.5.2
 requests>=2.2.0
 husl>=4.0.2
 piexif>=1.0.3
+phpserialize==1.3
+webassets==0.12.0
+

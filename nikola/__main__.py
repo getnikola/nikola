@@ -155,7 +155,7 @@ def main(args=None):
             req_missing(['freezegun'], 'perform invariant builds')
 
     if config:
-        if os.path.exists('plugins') and not os.path.exists('plugins/__init__.py'):
+        if os.path.isdir('plugins') and not os.path.exists('plugins/__init__.py'):
             with open('plugins/__init__.py', 'w') as fh:
                 fh.write('# Plugin modules go here.')
 

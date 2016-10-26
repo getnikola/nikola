@@ -265,6 +265,7 @@ class CommandPlugin(Command):
                       'package manager.')
             else:
                 LOGGER.info('Dependency installation succeeded.')
+
         reqnpypath = os.path.join(dest_path, 'requirements-nonpy.txt')
         if os.path.exists(reqnpypath):
             LOGGER.notice('This plugin has third-party '
@@ -280,6 +281,24 @@ class CommandPlugin(Command):
 
             print('You have to install those yourself or through a package '
                   'manager.')
+
+        req_plug_path = os.path.join(dest_path, 'requirements-plugins.txt')
+        if os.path.exists(req_plug_path):
+            LOGGER.notice('This plugin requires other Nikola plugins.')
+            LOGGER.info('Installing plugins...')
+            try:
+                with io.open(req_plug_path, 'r', encoding='utf-8') as inf:
+                    for plugname in inf.readlines():
+                        self.do_install(url, plugname, show_install_notes)
+            except subprocess.CalledProcessError:
+                LOGGER.error('Could not install a plugin.')
+                print('Contents of the requirements-plugins.txt file:\n')
+                with io.open(req_plug_path, 'r', encoding='utf-8') as fh:
+                    print(utils.indent(fh.read(), 4 * ' '))
+                print('You have to install those yourself manually.')
+            else:
+                LOGGER.info('Dependency installation succeeded.')
+
         confpypath = os.path.join(dest_path, 'conf.py.sample')
         if os.path.exists(confpypath) and show_install_notes:
             LOGGER.notice('This plugin has a sample config file.  Integrate it with yours in order to make this plugin work!')
