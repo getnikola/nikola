@@ -461,9 +461,12 @@ class Post(object):
         self._depfile[dest].append(dep)
 
     @staticmethod
-    def write_depfile(dest, deps_list, post=None):
+    def write_depfile(dest, deps_list, post=None, lang=None):
         """Write a depfile for a given language."""
-        deps_path = dest + '.dep'
+        if post is None or lang is None:
+            deps_path = dest + '.dep'
+        else:
+            deps_path = post.compiler.get_dep_filename(post, lang)
         if deps_list or (post.compiler.use_dep_file if post else False):
             deps_list = [p for p in deps_list if p != dest]  # Don't depend on yourself (#1671)
             with io.open(deps_path, "w+", encoding="utf8") as deps_file:
@@ -543,7 +546,7 @@ class Post(object):
             self.is_two_file,
             self,
             lang)
-        Post.write_depfile(dest, self._depfile[dest], post=self)
+        Post.write_depfile(dest, self._depfile[dest], post=self, lang=lang)
 
         signal('compiled').send({
             'source': self.translated_source_path(lang),

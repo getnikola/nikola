@@ -263,9 +263,13 @@ class PageCompiler(BasePlugin):
     }
     config_dependencies = []
 
-    def _read_extra_deps(self, post):
+    def get_dep_filename(self, post, lang):
+        """Return the .dep file's name for the given post and language."""
+        return post.translated_base_path(lang) + '.dep'
+
+    def _read_extra_deps(self, post, lang):
         """Read contents of .dep file and return them as a list."""
-        dep_path = post.base_path + '.dep'
+        dep_path = self.get_dep_filename(post, lang)
         if os.path.isfile(dep_path):
             with io.open(dep_path, 'r+', encoding='utf8') as depf:
                 deps = [l.strip() for l in depf.readlines()]
@@ -274,12 +278,16 @@ class PageCompiler(BasePlugin):
 
     def register_extra_dependencies(self, post):
         """Add dependency to post object to check .dep file."""
-        post.add_dependency(lambda: self._read_extra_deps(post), 'fragment')
+        def create_lambda(lang):
+            return lambda: self._read_extra_deps(post, lang)
+
+        for lang in self.site.config['TRANSLATIONS']:
+            post.add_dependency(create_lambda(lang), 'fragment')
 
     def get_extra_targets(self, post, lang, dest):
         """Return a list of extra targets for the render_posts task when compiling the post for the specified language."""
         if self.use_dep_file:
-            return [post.base_path + '.dep']
+            return [self.get_dep_filename(post, lang)]
         else:
             return []
 
