@@ -40,6 +40,7 @@ class CompileHtml(PageCompiler):
 
     name = "html"
     friendly_name = "HTML"
+    use_dep_file = True
 
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""

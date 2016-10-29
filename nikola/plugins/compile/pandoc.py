@@ -44,6 +44,7 @@ class CompilePandoc(PageCompiler):
 
     name = "pandoc"
     friendly_name = "pandoc"
+    use_dep_file = True
 
     def set_site(self, site):
         """Set Nikola site."""

@@ -250,6 +250,7 @@ class PageCompiler(BasePlugin):
     friendly_name = ''
     demote_headers = False
     supports_onefile = True
+    use_dep_file = False  # If set to true, the .dep file is always written and added as a target
     default_metadata = {
         'title': '',
         'slug': '',
@@ -277,7 +278,10 @@ class PageCompiler(BasePlugin):
 
     def get_extra_targets(self, post, lang, dest):
         """Return a list of extra targets for the render_posts task when compiling the post for the specified language."""
-        return []
+        if self.use_dep_file:
+            return [post.base_path + '.dep']
+        else:
+            return []
 
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""
