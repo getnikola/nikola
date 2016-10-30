@@ -867,6 +867,25 @@ class Nikola(object):
             self.tzinfo = dateutil.tz.gettz()
         self.config['__tzinfo__'] = self.tzinfo
 
+        # Get search path for themes
+        self.themes_dirs = ['themes'] + self.config['EXTRA_THEMES_DIRS']
+
+        # Determine which compilers are needed and sets global context
+        self._init_compilers_and_global_context()
+
+        # Set persistent state facility
+        self.state = Persistor('state_data.json')
+
+        # Set cache facility
+        self.cache = Persistor(os.path.join(self.config['CACHE_FOLDER'], 'cache_data.json'))
+
+        # Create directories for persistors only if a site exists (Issue #2334)
+        if self.configured:
+            self.state._set_site(self)
+            self.cache._set_site(self)
+
+    def _init_compilers_and_global_context(self):
+        """"Determine which compilers to use and set global context."""
         # Store raw compilers for internal use (need a copy for that)
         self.config['_COMPILERS_RAW'] = {}
         for k, v in self.config['COMPILERS'].items():
@@ -880,9 +899,6 @@ class Nikola(object):
                 for lang in self.config['TRANSLATIONS'].keys():
                     candidate = utils.get_translation_candidate(self.config, "f" + ext, lang)
                     compilers[compiler].add(candidate)
-
-        # Get search path for themes
-        self.themes_dirs = ['themes'] + self.config['EXTRA_THEMES_DIRS']
 
         # Avoid redundant compilers
         # Remove compilers that match nothing in POSTS/PAGES or what other post scanning plugins consider
@@ -904,19 +920,9 @@ class Nikola(object):
             else:
                 self.bad_compilers.add(k)
 
+        # Init global context. Partially depends on self.site.config['COMPILERS']
         self._set_global_context_from_config()
         self._set_global_context_from_data()
-
-        # Set persistent state facility
-        self.state = Persistor('state_data.json')
-
-        # Set cache facility
-        self.cache = Persistor(os.path.join(self.config['CACHE_FOLDER'], 'cache_data.json'))
-
-        # Create directories for persistors only if a site exists (Issue #2334)
-        if self.configured:
-            self.state._set_site(self)
-            self.cache._set_site(self)
 
     def init_plugins(self, commands_only=False, load_all=False):
         """Load plugins as needed."""
