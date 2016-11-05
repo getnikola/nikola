@@ -1384,7 +1384,7 @@ class Nikola(object):
         # Avoid mangling links within the page
         if dst.startswith('#'):
             return dst
-        
+
         parsed_src = urlsplit(src)
         src_elems = parsed_src.path.split('/')[1:]
         dst_url = urlparse(dst)
