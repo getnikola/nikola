@@ -206,6 +206,7 @@ def shortcode_role(name, rawtext, text, lineno, inliner,
     """A shortcode role that passes through raw inline HTML."""
     return [docutils.nodes.raw('', text, format='html')], []
 
+
 roles.register_canonical_role('raw-html', shortcode_role)
 roles.register_canonical_role('html', shortcode_role)
 roles.register_canonical_role('sc', shortcode_role)
@@ -296,6 +297,7 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
     pub.publish(enable_exit_status=enable_exit_status)
 
     return pub.writer.parts['docinfo'] + pub.writer.parts['fragment'], pub.document.reporter.max_level, pub.settings.record_dependencies
+
 
 # Alignment helpers for extensions
 _align_options_base = ('left', 'center', 'right')

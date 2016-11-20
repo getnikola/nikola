@@ -165,6 +165,7 @@ def showwarning(message, category, filename, lineno, file=None, line=None):
         n = str(category)
     get_logger(n, STDERR_HANDLER).warn('{0}:{1}: {2}'.format(filename, lineno, message))
 
+
 warnings.showwarning = showwarning
 
 
@@ -760,6 +761,7 @@ def remove_file(source):
         shutil.rmtree(source)
     elif os.path.isfile(source) or os.path.islink(source):
         os.remove(source)
+
 
 # slugify is adopted from
 # http://code.activestate.com/recipes/

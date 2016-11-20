@@ -307,5 +307,6 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
         template, None, template_data)
     return output, template_deps
 
+
 # Request file name from shortcode (Issue #2412)
 _do_post_list.nikola_shortcode_pass_filename = True
