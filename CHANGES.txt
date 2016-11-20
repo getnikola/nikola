@@ -4,8 +4,10 @@ New in master
 Bugfixes
 --------
 
-* Make "data" from global context available to templated shortcodes (Issue #2488)
+* Make ``data`` from global context available to templated shortcodes
+  as ``global_data`` (Issue #2488)
 * Don't crash if plugins is a file (Issue #2539)
+* Don't mangle bare ``#`` links (Issue #2553)
 
 Features
 --------
