@@ -1168,6 +1168,8 @@ class Nikola(object):
                 data = utils.load_data(fname)
                 key = os.path.splitext(fname.split(os.sep, 1)[1])[0]
                 self._GLOBAL_CONTEXT['data'][key] = data
+        # Offer global_data as an alias for data (Issue #2488)
+        self._GLOBAL_CONTEXT['global_data'] = self._GLOBAL_CONTEXT['data']
 
     def _activate_plugins_of_category(self, category):
         """Activate all the plugins of a given category and return them."""
@@ -1382,6 +1384,10 @@ class Nikola(object):
         lang is used for language-sensitive URLs in link://
         url_type is used to determine final link appearance, defaulting to URL_TYPE from config
         """
+        # Avoid mangling links within the page
+        if dst.startswith('#'):
+            return dst
+
         parsed_src = urlsplit(src)
         src_elems = parsed_src.path.split('/')[1:]
         dst_url = urlparse(dst)
@@ -1495,13 +1501,12 @@ class Nikola(object):
         Global context keys are made available as part of the context,
         respecting locale.
 
-        As a special quirk, the "data" key from global_context is made
-        available as "global_data" because of name clobbering.
+        As a special quirk, the "data" key from global_context is
+        available only as "global_data" because of name clobbering.
 
         """
         def render_shortcode(*args, **kw):
             context = self.GLOBAL_CONTEXT.copy()
-            context['global_data'] = context['data']
             context.update(kw)
             context['_args'] = args
             context['lang'] = utils.LocaleBorg().current_lang

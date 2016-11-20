@@ -48,8 +48,9 @@ configuration file:
     # Some things in the middle you don't really need to change...
     #
 
-    POSTS = ()
     # you can also keep the current content of POSTS if you want a blog with your site
+    POSTS = ()
+    # remove destination directory to generate pages in the root directory
     PAGES = (
         ("pages/*.rst", "", "story.tmpl"),
         ("pages/*.txt", "", "story.tmpl"),

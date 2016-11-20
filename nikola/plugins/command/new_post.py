@@ -262,7 +262,7 @@ class CommandNewPost(Command):
                 self.site.config['post_pages'])
 
         if content_format not in compiler_names:
-            LOGGER.error("Unknown {0} format {1}, maybe you need to install a plugin?".format(content_type, content_format))
+            LOGGER.error("Unknown {0} format {1}, maybe you need to install a plugin or enable an existing one?".format(content_type, content_format))
             self.print_compilers()
             return
         compiler_plugin = self.site.plugin_manager.getPluginByName(

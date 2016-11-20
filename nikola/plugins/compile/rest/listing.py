@@ -119,6 +119,7 @@ class CodeBlock(Directive):
 
         return [node]
 
+
 # Monkey-patch: replace insane docutils CodeBlock with our implementation.
 docutils.parsers.rst.directives.body.CodeBlock = CodeBlock
 docutils.parsers.rst.directives.misc.CodeBlock = CodeBlock

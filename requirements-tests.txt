@@ -1,8 +1,8 @@
 -r requirements-extras.txt
 mock==2.0.0
 coverage==4.2
-pytest==3.0.3
+pytest==3.0.4
 pytest-cov==2.4.0
-freezegun==0.3.7
+freezegun==0.3.8
 python-coveralls==2.9.0
 colorama>=0.3.4
