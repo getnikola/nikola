@@ -280,6 +280,9 @@ class PageCompiler(BasePlugin):
     def register_extra_dependencies(self, post):
         """Add dependency to post object to check .dep file."""
         def create_lambda(lang):
+            # We create a lambda like this so we can pass `lang` to it, because if we didn’t
+            # add that function, `lang` would always be the last language in TRANSLATIONS.
+            # (See http://docs.python-guide.org/en/latest/writing/gotchas/#late-binding-closures)
             return lambda: self._read_extra_deps(post, lang)
 
         for lang in self.site.config['TRANSLATIONS']:
