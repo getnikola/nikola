@@ -203,6 +203,7 @@ def makeExtension(configs=None):  # pragma: no cover
     """Make Markdown extension."""
     return GistExtension(configs)
 
+
 if __name__ == '__main__':
     import doctest
 

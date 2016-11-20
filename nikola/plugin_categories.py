@@ -154,6 +154,7 @@ def help(self):
         text.append(self.doc_description)
     return "\n".join(text)
 
+
 DoitCommand.help = help
 
 
