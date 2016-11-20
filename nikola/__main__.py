@@ -247,6 +247,7 @@ class Clean(DoitClean):
                 shutil.rmtree(cache_folder)
         return super(Clean, self).clean_tasks(tasks, dryrun)
 
+
 # Nikola has its own "auto" commands that uses livereload.
 # Expose original doit "auto" command as "doit_auto".
 DoitAuto.name = 'doit_auto'

@@ -322,6 +322,7 @@ class Sitemap(LateTask):
             lastmod = datetime.datetime.utcfromtimestamp(os.stat(p).st_mtime).replace(tzinfo=dateutil.tz.gettz('UTC'), second=0, microsecond=0).isoformat().replace('+00:00', 'Z')
             return lastmod
 
+
 if __name__ == '__main__':
     import doctest
     doctest.testmod()

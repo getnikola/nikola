@@ -92,6 +92,7 @@ def makeExtension(configs=None):  # pragma: no cover
     """Make Markdown extension."""
     return PodcastExtension(configs)
 
+
 if __name__ == '__main__':
     import doctest
     doctest.testmod(optionflags=(doctest.NORMALIZE_WHITESPACE +
