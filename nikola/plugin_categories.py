@@ -282,7 +282,7 @@ class PageCompiler(BasePlugin):
             return lambda: self._read_extra_deps(post, lang)
 
         for lang in self.site.config['TRANSLATIONS']:
-            post.add_dependency(create_lambda(lang), 'fragment')
+            post.add_dependency(create_lambda(lang), 'fragment', lang=lang)
 
     def get_extra_targets(self, post, lang, dest):
         """Return a list of extra targets for the render_posts task when compiling the post for the specified language."""
