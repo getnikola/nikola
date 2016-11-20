@@ -49,7 +49,6 @@ class CompileMarkdown(PageCompiler):
     name = "markdown"
     friendly_name = "Markdown"
     demote_headers = True
-    use_dep_file = True
     extensions = []
     site = None
 

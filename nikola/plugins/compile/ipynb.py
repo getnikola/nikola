@@ -70,7 +70,6 @@ class CompileIPynb(PageCompiler):
     name = "ipynb"
     friendly_name = "Jupyter/IPython Notebook"
     demote_headers = True
-    use_dep_file = True
     default_kernel = 'python2' if sys.version_info[0] == 2 else 'python3'
 
     def set_site(self, site):

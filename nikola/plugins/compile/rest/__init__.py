@@ -57,7 +57,6 @@ class CompileRest(PageCompiler):
     name = "rest"
     friendly_name = "reStructuredText"
     demote_headers = True
-    use_dep_file = True
     logger = None
 
     def compile_string(self, data, source_path=None, is_two_file=True):
