@@ -251,7 +251,7 @@ class PageCompiler(BasePlugin):
     friendly_name = ''
     demote_headers = False
     supports_onefile = True
-    use_dep_file = False  # If set to true, the .dep file is always written and added as a target
+    use_dep_file = True  # If set to false, the .dep file is never written and not automatically added as a target
     default_metadata = {
         'title': '',
         'slug': '',
