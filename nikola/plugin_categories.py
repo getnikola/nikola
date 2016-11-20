@@ -251,6 +251,7 @@ class PageCompiler(BasePlugin):
     friendly_name = ''
     demote_headers = False
     supports_onefile = True
+    use_dep_file = True  # If set to false, the .dep file is never written and not automatically added as a target
     default_metadata = {
         'title': '',
         'slug': '',
@@ -263,9 +264,13 @@ class PageCompiler(BasePlugin):
     }
     config_dependencies = []
 
-    def _read_extra_deps(self, post):
+    def get_dep_filename(self, post, lang):
+        """Return the .dep file's name for the given post and language."""
+        return post.translated_base_path(lang) + '.dep'
+
+    def _read_extra_deps(self, post, lang):
         """Read contents of .dep file and return them as a list."""
-        dep_path = post.base_path + '.dep'
+        dep_path = self.get_dep_filename(post, lang)
         if os.path.isfile(dep_path):
             with io.open(dep_path, 'r+', encoding='utf8') as depf:
                 deps = [l.strip() for l in depf.readlines()]
@@ -274,7 +279,21 @@ class PageCompiler(BasePlugin):
 
     def register_extra_dependencies(self, post):
         """Add dependency to post object to check .dep file."""
-        post.add_dependency(lambda: self._read_extra_deps(post), 'fragment')
+        def create_lambda(lang):
+            # We create a lambda like this so we can pass `lang` to it, because if we didn’t
+            # add that function, `lang` would always be the last language in TRANSLATIONS.
+            # (See http://docs.python-guide.org/en/latest/writing/gotchas/#late-binding-closures)
+            return lambda: self._read_extra_deps(post, lang)
+
+        for lang in self.site.config['TRANSLATIONS']:
+            post.add_dependency(create_lambda(lang), 'fragment', lang=lang)
+
+    def get_extra_targets(self, post, lang, dest):
+        """Return a list of extra targets for the render_posts task when compiling the post for the specified language."""
+        if self.use_dep_file:
+            return [self.get_dep_filename(post, lang)]
+        else:
+            return []
 
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""
