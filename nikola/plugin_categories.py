@@ -478,67 +478,106 @@ class Taxonomy(BasePlugin):
     """Taxonomy for posts.
 
     A taxonomy plugin allows to classify posts (see #2107) by
-    classification strings.
+    classification strings. Classification plugins must adjust
+    a set of options to determine certain aspects.
+
+    The following options are class attributes with their default
+    values:
+
+    classification_name = "taxonomy":
+        The classification name to be used for path handlers.
+
+    metadata_name = "taxonomy":
+        The classification name to be used when storing the classification
+        in the metadata. If set to None, the classification won't be stored
+        in the metadata.
+
+    overview_page_variable_name = "taxonomy":
+        Variable for the overview page template which contains the list of
+        classifications.
+
+    more_than_one_classifications_per_post = False:
+        If True, there can be more than one classification per post; in that case,
+        the classification data in the metadata is stored as a list. If False,
+        the classification data in the metadata is stored as a string, or None
+        when no classification is given.
+
+    has_hierarchy = False:
+        Whether the classification has a hierarchy.
+
+    include_posts_from_subhierarchies = False:
+        If True, the list for a classification includes all posts with a
+        sub-classification (in case has_hierarchy is True).
+
+    include_posts_into_hierarchy_root = False:
+        If True, include_posts_from_subhierarchies == True will also insert
+        posts into the list for the empty hierarchy [].
+
+    show_list_as_subcategories_list = False:
+        If not False, for every classification which has at least one
+        subclassification, create a list of subcategories instead of a list/index
+        of posts. This is only used when has_hierarchy = True. If not False, this
+        must be the template name for the list; usually "list.tmpl".
+        If this is set to a string, it is recommended to set
+        include_posts_from_subhierarchies to True to get correct post counts.
+
+    show_list_as_index = False:
+        Whether to show the posts for one classification as an index or
+        as a post list.
+
+    generate_atom_feeds_for_post_lists = False:
+        Whether to generate Atom feeds for post lists in case GENERATE_ATOM is set.
+
+    template_for_list_of_one_classification = "tagindex.tmpl":
+        The template to use for the post list for one classification.
+
+    template_for_classification_overview = "list.tmpl":
+        The template to use for the classification overview page.
+        Set to None to avoid generating overviews.
+
+    always_disable_rss = False:
+        Whether to always disable RSS feed generation
+
+    apply_to_posts = True:
+        Whether this classification applies to posts.
+
+    apply_to_pages = False:
+        Whether this classification applies to pages.
+
+    minimum_post_count_per_classification_in_overview = 1:
+        The minimum number of posts a classification must have to be listed in
+        the overview.
+
+    omit_empty_classifications = False:
+        Whether post lists resp. indexes should be created for empty
+        classifications.
+
+    also_create_classifications_from_other_languages = True:
+        Whether to include all classifications for all languages in every
+        language, or only the classifications for one language in its language's
+        pages.
     """
 
     name = "dummy_taxonomy"
 
     # Adjust the following values in your plugin!
-
-    # The classification name to be used for path handlers.
     classification_name = "taxonomy"
-    # The classification name to be used when storing the classification
-    # in the metadata. If set to None, the classification won't be stored
-    # in the metadata.
     metadata_name = "taxonomy"
-    # Variable for the overview page template which contains the list of
-    # classifications.
     overview_page_variable_name = "taxonomy"
-    # If True, there can be more than one classification per post; in that case,
-    # the classification data in the metadata is stored as a list. If False,
-    # the classification data in the metadata is stored as a string, or None
-    # when no classification is given.
     more_than_one_classifications_per_post = False
-    # Whether the classification has a hierarchy.
     has_hierarchy = False
-    # If True, the list for a classification includes all posts with a
-    # sub-classification (in case has_hierarchy is True).
     include_posts_from_subhierarchies = False
-    # If True, include_posts_from_subhierarchies == True will also insert
-    # posts into the list for the empty hierarchy [].
     include_posts_into_hierarchy_root = False
-    # If not False, for every classification which has at least one
-    # subclassification, create a list of subcategories instead of a list/index
-    # of posts. This is only used when has_hierarchy = True. If not False, this
-    # must be the template name for the list; usually "list.tmpl".
-    # If this is set to a string, it is recommended to set
-    # include_posts_from_subhierarchies to True to get correct post counts.
     show_list_as_subcategories_list = False
-    # Whether to show the posts for one classification as an index or
-    # as a post list.
     show_list_as_index = False
-    # Whether to generate Atom feeds for post lists in case GENERATE_ATOM is set.
     generate_atom_feeds_for_post_lists = False
-    # The template to use for the post list for one classification.
     template_for_list_of_one_classification = "tagindex.tmpl"
-    # The template to use for the classification overview page.
-    # Set to None to avoid generating overviews.
     template_for_classification_overview = "list.tmpl"
-    # Whether to always disable RSS feed generation
     always_disable_rss = False
-    # Whether this classification applies to posts.
     apply_to_posts = True
-    # Whether this classification applies to pages.
     apply_to_pages = False
-    # The minimum number of posts a classification must have to be listed in
-    # the overview.
     minimum_post_count_per_classification_in_overview = 1
-    # Whether post lists resp. indexes should be created for empty
-    # classifications.
     omit_empty_classifications = False
-    # Whether to include all classifications for all languages in every
-    # language, or only the classifications for one language in its language's
-    # pages.
     also_create_classifications_from_other_languages = True
 
     def is_enabled(self, lang=None):
