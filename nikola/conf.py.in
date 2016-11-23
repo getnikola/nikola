@@ -636,10 +636,12 @@ GITHUB_COMMIT_SOURCE = True
 
 # Images will be scaled down according to IMAGE_THUMBNAIL_SIZE and MAX_IMAGE_SIZE
 # options, but will have to be referenced manually to be visible on the site
-# (the thumbnail has ``.thumbnail`` added before the file extension).
+# (the thumbnail has ``.thumbnail`` added before the file extension by default,
+# but a different naming template can be configured with IMAGE_THUMBNAIL_FORMAT).
 
 IMAGE_FOLDERS = {'images': 'images'}
 # IMAGE_THUMBNAIL_SIZE = 400
+# IMAGE_THUMBNAIL_FORMAT = '{stem}.thumbnail{ext}'
 
 # #############################################################################
 # HTML fragments and diverse things that are used by the templates

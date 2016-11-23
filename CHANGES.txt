@@ -23,6 +23,7 @@ Features
   translated (Issue #2116)
 * Pass ``post`` object and ``lang`` to post compilers (Issue #2531)
 * Pass ``url_type`` into template's context.
+* Make thumbnail naming configurable with ``IMAGE_THUMBNAIL_FORMAT``.
 
 New in v7.8.1
 =============
