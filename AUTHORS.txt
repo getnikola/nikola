@@ -74,6 +74,7 @@
 * `Miguel Ángel García <https://github.com/magmax>`_
 * `mrabbitt <https://github.com/mrabbitt>`_
 * `Neil MartinsenBurrell <https://github.com/neilmb>`_
+* `Niels Böhm <https://github.com/blubberdiblub>`_
 * `Niko Wenselowski <https://github.com/okin>`_
 * `Nikola Kotur <https://github.com/kotnik>`_
 * `nlaurens <https://github.com/nlaurens>`_
