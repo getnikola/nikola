@@ -501,7 +501,7 @@ class Nikola(object):
             'INDEX_FILE': 'index.html',
             'INDEX_TEASERS': False,
             'IMAGE_THUMBNAIL_SIZE': 400,
-            'IMAGE_THUMBNAIL_FORMAT': '{stem}.thumbnail{ext}',
+            'IMAGE_THUMBNAIL_FORMAT': '{name}.thumbnail{ext}',
             'INDEXES_TITLE': "",
             'INDEXES_PAGES': "",
             'INDEXES_PAGES_MAIN': False,

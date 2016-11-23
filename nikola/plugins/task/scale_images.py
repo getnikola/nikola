@@ -61,9 +61,9 @@ class ScaleImage(Task, ImageProcessor):
                     continue
                 dst_file = os.path.join(dst_dir, src_name)
                 src_file = os.path.join(root, src_name)
-                thumb_stem, thumb_ext = os.path.splitext(src_name)
+                thumb_name, thumb_ext = os.path.splitext(src_name)
                 thumb_file = os.path.join(dst_dir, thumb_fmt.format(
-                    stem=thumb_stem,
+                    name=thumb_name,
                     ext=thumb_ext,
                 ))
                 yield {
