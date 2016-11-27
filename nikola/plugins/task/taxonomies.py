@@ -78,6 +78,7 @@ class RenderTaxonomies(Task):
         context = copy(context)
         kw = copy(kw)
         kw["messages"] = self.site.MESSAGES
+        kw["translations"] = self.site.config['TRANSLATIONS']
         kw["filters"] = self.site.config['FILTERS']
         kw["minimum_post_count"] = taxonomy.minimum_post_count_per_classification_in_overview
         kw["output_folder"] = self.site.config['OUTPUT_FOLDER']
@@ -261,6 +262,7 @@ class RenderTaxonomies(Task):
         context, kw = taxonomy.provide_context_and_uptodate(classification, lang)
         kw = copy(kw)
         kw["messages"] = self.site.MESSAGES
+        kw["translations"] = self.site.config['TRANSLATIONS']
         kw["filters"] = self.site.config['FILTERS']
         kw["site_url"] = self.site.config['SITE_URL']
         kw["blog_title"] = self.site.config['BLOG_TITLE']
