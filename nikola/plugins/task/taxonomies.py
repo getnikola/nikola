@@ -41,16 +41,25 @@ from nikola.nikola import _enclosure
 
 
 def _clone_treenode(treenode, parent=None, acceptor=lambda x: True):
-    # Standard TreeNode stuff
+    """Clone a TreeNode instance.
+
+    Children are only cloned if `acceptor` returns `True` when
+    applied on them.
+
+    Returns the cloned node if it has children or if `acceptor`
+    applied to it returns `True`. In case neither applies, `None`
+    is returned.
+    """
+    # Copy standard TreeNode stuff
     node_clone = utils.TreeNode(treenode.name, parent)
     node_clone.children = [_clone_treenode(node, parent=node_clone, acceptor=acceptor) for node in treenode.children]
     node_clone.children = [node for node in node_clone.children if node]
     node_clone.indent_levels = treenode.indent_levels
     node_clone.indent_change_before = treenode.indent_change_before
     node_clone.indent_change_after = treenode.indent_change_after
-    # Stuff added by extended_tags_preproces plugin
-    node_clone.tag_path = treenode.tag_path
-    node_clone.tag_name = treenode.tag_name
+    # Copy stuff added by taxonomies_classifier plugin
+    node_clone.classification_path = treenode.classification_path
+    node_clone.classification_name = treenode.classification_name
     # Accept this node if there are no children (left) and acceptor fails
     if not node_clone.children and not acceptor(treenode):
         return None
