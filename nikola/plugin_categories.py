@@ -482,7 +482,8 @@ class Taxonomy(BasePlugin):
     a set of options to determine certain aspects.
 
     The following options are class attributes with their default
-    values:
+    values. These variables should be set in the class definition,
+    in the constructor or latest in the `set_site` function.
 
     classification_name = "taxonomy":
         The classification name to be used for path handlers.
@@ -493,8 +494,8 @@ class Taxonomy(BasePlugin):
         in the metadata.
 
     overview_page_variable_name = "taxonomy":
-        Variable for the overview page template which contains the list of
-        classifications.
+        When rendering the overview page, its template will have a list
+        of classifications available in a variable by this name.
 
     more_than_one_classifications_per_post = False:
         If True, there can be more than one classification per post; in that case,
@@ -528,7 +529,7 @@ class Taxonomy(BasePlugin):
     generate_atom_feeds_for_post_lists = False:
         Whether to generate Atom feeds for post lists in case GENERATE_ATOM is set.
 
-    template_for_list_of_one_classification = "tagindex.tmpl":
+    template_for_single_list = "tagindex.tmpl":
         The template to use for the post list for one classification.
 
     template_for_classification_overview = "list.tmpl":
@@ -571,7 +572,7 @@ class Taxonomy(BasePlugin):
     show_list_as_subcategories_list = False
     show_list_as_index = False
     generate_atom_feeds_for_post_lists = False
-    template_for_list_of_one_classification = "tagindex.tmpl"
+    template_for_single_list = "tagindex.tmpl"
     template_for_classification_overview = "list.tmpl"
     always_disable_rss = False
     apply_to_posts = True
@@ -604,23 +605,30 @@ class Taxonomy(BasePlugin):
     def sort_posts(self, posts, classification, lang):
         """Sort the given list of posts.
 
-        The sort must happen in-place.
+        Allows the plugin to order the posts per classification as it wants.
+        The posts will be ordered by date (latest first) before calling
+        this function. This function must sort in-place.
         """
         pass
 
     def sort_classifications(self, classifications, lang, level=None):
         """Sort the given list of classification strings.
 
+        Allows the plugin to order the classifications as it wants. The
+        classifications will be ordered by `natsort` before calling this
+        function. This function must sort in-place.
+
         For hierarchical taxonomies, the elements of the list are a single
         path element of the path returned by `extract_hierarchy()`. The index
         of the path element in the path will be provided in `level`.
-
-        The sort must happen in-place.
         """
         pass
 
-    def get_classification_printable_name(self, classification, lang, only_last_component=False):
-        """Extract a printable name from the classification.
+    def get_classification_friendly_name(self, classification, lang, only_last_component=False):
+        """Extract a friendly name from the classification.
+
+        The result of this function is usually displayed to the user, instead
+        of using the classification string.
 
         For hierarchical taxonomies, the result of extract_hierarchy is provided
         as `classification`. For non-hierarchical taxonomies, the classification

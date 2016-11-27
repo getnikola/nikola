@@ -44,7 +44,7 @@ class PageIndex(Taxonomy):
     include_posts_from_subhierarchies = False
     show_list_as_index = False
     generate_atom_feeds_for_post_lists = False
-    template_for_list_of_one_classification = "list.tmpl"
+    template_for_single_list = "list.tmpl"
     template_for_classification_overview = None
     always_disable_rss = True
     apply_to_posts = False
@@ -65,8 +65,8 @@ class PageIndex(Taxonomy):
         i = destpath.rfind('/')
         return destpath[:i] if i >= 0 else ''
 
-    def get_classification_printable_name(self, hierarchy, lang, only_last_component=False):
-        """Extract a printable name from the classification."""
+    def get_classification_friendly_name(self, hierarchy, lang, only_last_component=False):
+        """Extract a friendly name from the classification."""
         return '/'.join(hierarchy)
 
     def get_path(self, hierarchy, lang, type='page'):

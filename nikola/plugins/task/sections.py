@@ -51,7 +51,7 @@ class ClassifySections(Taxonomy):
     def set_site(self, site):
         """Set Nikola site."""
         self.show_list_as_index = site.config["POSTS_SECTION_ARE_INDEXES"]
-        self.template_for_list_of_one_classification = "sectionindex.tmpl" if self.show_list_as_index else "list.tmpl"
+        self.template_for_single_list = "sectionindex.tmpl" if self.show_list_as_index else "list.tmpl"
         self.enable_for_lang = {}
         return super(ClassifySections, self).set_site(site)
 
@@ -74,8 +74,8 @@ class ClassifySections(Taxonomy):
         else:
             return section.replace('-', ' ').title()
 
-    def get_classification_printable_name(self, section, lang, only_last_component=False):
-        """Extract a printable name from the classification."""
+    def get_classification_friendly_name(self, section, lang, only_last_component=False):
+        """Extract a friendly name from the classification."""
         return self._get_section_name(section, lang)
 
     def get_path(self, section, lang, type='page'):

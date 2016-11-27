@@ -53,7 +53,7 @@ class ClassifyAuthors(Taxonomy):
     def set_site(self, site):
         """Set Nikola site."""
         self.show_list_as_index = site.config['AUTHOR_PAGES_ARE_INDEXES']
-        self.template_for_list_of_one_classification = "authorindex.tmpl" if self.show_list_as_index else "author.tmpl"
+        self.template_for_single_list = "authorindex.tmpl" if self.show_list_as_index else "author.tmpl"
         return super(ClassifyAuthors, self).set_site(site)
 
     def is_enabled(self, lang=None):
@@ -68,8 +68,8 @@ class ClassifyAuthors(Taxonomy):
         """Classify the given post for the given language."""
         return [post.author()]
 
-    def get_classification_printable_name(self, author, lang, only_last_component=False):
-        """Extract a printable name from the classification."""
+    def get_classification_friendly_name(self, author, lang, only_last_component=False):
+        """Extract a friendly name from the classification."""
         return author
 
     def get_list_path(self, lang, type='page'):

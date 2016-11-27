@@ -42,7 +42,7 @@ class Indexes(Taxonomy):
     more_than_one_classifications_per_post = False
     has_hierarchy = False
     show_list_as_index = True
-    template_for_list_of_one_classification = "index.tmpl"
+    template_for_single_list = "index.tmpl"
     template_for_classification_overview = None
     apply_to_posts = True
     apply_to_pages = False
@@ -63,8 +63,8 @@ class Indexes(Taxonomy):
         """Classify the given post for the given language."""
         return [""]
 
-    def get_classification_printable_name(self, classification, lang, only_last_component=False):
-        """Extract a printable name from the classification."""
+    def get_classification_friendly_name(self, classification, lang, only_last_component=False):
+        """Extract a friendly name from the classification."""
         return self.site.config["BLOG_TITLE"](lang)
 
     def get_path(self, classification, lang, type='page'):

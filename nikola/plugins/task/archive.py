@@ -61,7 +61,7 @@ class Archive(Taxonomy):
         # Finish setup
         self.show_list_as_subcategories_list = False if site.config['CREATE_FULL_ARCHIVES'] else "list.tmpl"
         self.show_list_as_index = site.config['ARCHIVES_ARE_INDEXES']
-        self.template_for_list_of_one_classification = "archiveindex.tmpl" if site.config['ARCHIVES_ARE_INDEXES'] else "list_post.tmpl"
+        self.template_for_single_list = "archiveindex.tmpl" if site.config['ARCHIVES_ARE_INDEXES'] else "list_post.tmpl"
         # Determine maximal hierarchy height
         if site.config['CREATE_DAILY_ARCHIVE'] or site.config['CREATE_FULL_ARCHIVES']:
             self.max_levels = 3
@@ -94,8 +94,8 @@ class Archive(Taxonomy):
             classifications.sort()
             classifications.reverse()
 
-    def get_classification_printable_name(self, classification, lang, only_last_component=False):
-        """Extract a printable name from the classification."""
+    def get_classification_friendly_name(self, classification, lang, only_last_component=False):
+        """Extract a friendly name from the classification."""
         if len(classification) == 0:
             return ""
         elif len(classification) == 1:

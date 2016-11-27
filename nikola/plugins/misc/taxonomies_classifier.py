@@ -44,7 +44,10 @@ class TaxonomiesClassifier(SignalHandler):
     name = "render_taxonomies"
 
     def _do_classification(self, site):
-        taxonomies = [p.plugin_object for p in site.plugin_manager.getPluginsOfCategory('Taxonomy') if p.plugin_object.is_enabled()]
+        # Get list of enabled taxonomy plugins
+        taxonomies = [p.plugin_object for p in site.plugin_manager.getPluginsOfCategory('Taxonomy')]
+        taxonomies = [taxonomy for taxonomy in taxonomies if taxonomy.is_enabled()]
+        # Prepare classification and check for collisions
         site.posts_per_classification = {}
         for taxonomy in taxonomies:
             if taxonomy.classification_name in site.posts_per_classification:
@@ -189,23 +192,38 @@ class TaxonomiesClassifier(SignalHandler):
             else:
                 taxonomy.postprocess_posts_per_classification(site.posts_per_classification[taxonomy.classification_name])
 
-    def _filter_list(self, post_list, lang):
-        """Return only the posts which should be shown for this language."""
+    def _get_filtered_list(self, taxonomy, classification, lang):
+        """Return the filtered list of posts for this classification and language."""
+        post_list = self.site.posts_per_classification[taxonomy.classification_name][lang].get(classification, [])
         if self.site.config["SHOW_UNTRANSLATED_POSTS"]:
             return post_list
         else:
             return [x for x in post_list if x.is_translation_available(lang)]
 
-    def _get_filtered_list(self, taxonomy, classification, lang):
-        """Return the filtered list of posts for this classification and language."""
-        return self._filter_list(self.site.posts_per_classification[taxonomy.classification_name][lang].get(classification, []), lang)
-
     @staticmethod
-    def _compute_number_of_pages(self, filtered_posts, posts_count):
+    def _compute_number_of_pages(filtered_posts, posts_count):
         """Given a list of posts and the maximal number of posts per page, computes the number of pages needed."""
         return min(1, (len(filtered_posts) + posts_count - 1) // posts_count)
 
     def _postprocess_path(self, path, lang, append_index='auto', type='page', page_info=None):
+        """Postprocess a generated path.
+
+        Takes the path `path` for language `lang`, and postprocesses it.
+
+        It appends `site.config['INDEX_FILE']` depending on `append_index`
+        (which can have the values `'always'`, `'never'` and `'auto'`) and
+        `site.config['PRETTY_URLS']`.
+
+        It also modifies/adds the extension of the last path element resp.
+        `site.config['INDEX_FILE']` depending on `type`, which can be
+        `'feed'`, `'rss'` or `'page'`.
+
+        Finally, if `type` is `'page'`, `page_info` can be `None` or a tuple
+        of two integers: the page number and the number of pages. This will
+        be used to append the correct page number by calling
+        `utils.adjust_name_for_index_path_list` and
+        `utils.get_displayed_page_number`.
+        """
         # Forcing extension for Atom feeds and RSS feeds
         force_extension = None
         if type == 'feed':
@@ -240,7 +258,10 @@ class TaxonomiesClassifier(SignalHandler):
         if not isinstance(result[0], (list, tuple)):
             # The result must be a list or tuple of strings. Wrap into a tuple
             result = (result, )
-        return result[0], result[1] if len(result) > 1 else 'auto', result[2] if len(result) > 2 else None
+        path = result[0]
+        append_index = result[1] if len(result) > 1 else 'auto'
+        page_info = result[2] if len(result) > 2 else None
+        return path, append_index, page_info
 
     def _taxonomy_index_path(self, lang, taxonomy):
         """Return path to the classification overview."""
@@ -284,5 +305,7 @@ class TaxonomiesClassifier(SignalHandler):
         # Add hook for after post scanning
         blinker.signal("scanned").connect(self._do_classification)
         # Register path handlers
-        for taxonomy in [p.plugin_object for p in site.plugin_manager.getPluginsOfCategory('Taxonomy') if p.plugin_object.is_enabled()]:
+        for taxonomy in [p.plugin_object for p in site.plugin_manager.getPluginsOfCategory('Taxonomy')]:
+            if not taxonomy.is_enabled():
+                continue
             self._register_path_handlers(taxonomy)

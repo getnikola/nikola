@@ -210,7 +210,7 @@ class RenderTaxonomies(Task):
         """Render a list of subclassifications."""
         def get_subnode_data(subnode):
             return [
-                taxonomy.get_classification_printable_name(subnode.classification_path, lang, only_last_component=True),
+                taxonomy.get_classification_friendly_name(subnode.classification_path, lang, only_last_component=True),
                 self.site.link(taxonomy.classification_name, subnode.classification_name, lang),
                 len(self._filter_list(self.site.posts_per_classification[taxonomy.classification_name][lang][subnode.classification_name], lang))
             ]
