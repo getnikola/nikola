@@ -77,9 +77,13 @@ class RenderTaxonomies(Task):
 
         context = copy(context)
         kw = copy(kw)
-        kw['filters'] = self.site.config['FILTERS']
+        kw["messages"] = self.site.MESSAGES
+        kw["filters"] = self.site.config['FILTERS']
         kw["minimum_post_count"] = taxonomy.minimum_post_count_per_classification_in_overview
         kw["output_folder"] = self.site.config['OUTPUT_FOLDER']
+        kw["pretty_urls"] = self.site.config['PRETTY_URLS']
+        kw["strip_indexes"] = self.site.config['STRIP_INDEXES']
+        kw["index_file"] = self.site.config['INDEX_FILE']
 
         # Collect all relevant classifications
         if taxonomy.has_hierarchy:
@@ -256,11 +260,11 @@ class RenderTaxonomies(Task):
         # Get data
         context, kw = taxonomy.provide_context_and_uptodate(classification, lang)
         kw = copy(kw)
-        kw['messages'] = self.site.MESSAGES
-        kw['filters'] = self.site.config['FILTERS']
-        kw['site_url'] = self.site.config['SITE_URL']
-        kw['blog_title'] = self.site.config['BLOG_TITLE']
-        kw['generate_rss'] = self.site.config['GENERATE_RSS']
+        kw["messages"] = self.site.MESSAGES
+        kw["filters"] = self.site.config['FILTERS']
+        kw["site_url"] = self.site.config['SITE_URL']
+        kw["blog_title"] = self.site.config['BLOG_TITLE']
+        kw["generate_rss"] = self.site.config['GENERATE_RSS']
         kw["feed_teasers"] = self.site.config["FEED_TEASERS"]
         kw["feed_plain"] = self.site.config["FEED_PLAIN"]
         kw["feed_links_append_query"] = self.site.config["FEED_LINKS_APPEND_QUERY"]
