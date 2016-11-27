@@ -62,7 +62,7 @@ class Archive(Taxonomy):
         self.show_list_as_subcategories_list = False if site.config['CREATE_FULL_ARCHIVES'] else "list.tmpl"
         self.show_list_as_index = site.config['ARCHIVES_ARE_INDEXES']
         self.template_for_single_list = "archiveindex.tmpl" if site.config['ARCHIVES_ARE_INDEXES'] else "list_post.tmpl"
-        # Determine maximal hierarchy height
+        # Determine maximum hierarchy height
         if site.config['CREATE_DAILY_ARCHIVE'] or site.config['CREATE_FULL_ARCHIVES']:
             self.max_levels = 3
         elif site.config['CREATE_MONTHLY_ARCHIVE']:
@@ -73,19 +73,14 @@ class Archive(Taxonomy):
             self.max_levels = 1
         return super(Archive, self).set_site(site)
 
-    def is_enabled(self, lang=None):
-        """Return True if this taxonomy is enabled, or False otherwise."""
-        return True
-
     def get_implicit_classifications(self, lang):
         """Return a list of classification strings which should always appear in posts_per_classification."""
         return ['']
 
     def classify(self, post, lang):
         """Classify the given post for the given language."""
-        levels = ['{year:04d}', '{month:02d}', '{day:02d}'][:self.max_levels]
-        levels = [level.format(year=post.date.year, month=post.date.month, day=post.date.day) for level in levels]
-        return ['/'.join(levels)]
+        levels = [str(post.date.year).zfill(4), str(post.date.month).zfill(2), str(post.date.day).zfill(2)]
+        return ['/'.join(levels[:self.max_levels])]
 
     def sort_classifications(self, classifications, lang, level=None):
         """Sort the given list of classification strings."""
