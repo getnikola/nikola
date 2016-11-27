@@ -137,7 +137,7 @@ class RenderTaxonomies(Task):
                         (lang, "{0} ({1})".format(blog_title, title) if blog_title != title else blog_title,
                          kw["site_url"], description, filtered_posts,
                          output_name, kw["feed_teasers"], kw["feed_plain"], kw['feed_length'],
-                         feed_url, _enclosure, kw["feed_link_append_query"]))],
+                         feed_url, _enclosure, kw["feed_links_append_query"]))],
             'clean': True,
             'uptodate': [utils.config_changed(kw, 'nikola.plugins.task.taxonomies:rss')] + deps_uptodate,
             'task_dep': ['render_posts'],
@@ -254,7 +254,7 @@ class RenderTaxonomies(Task):
         kw['generate_rss'] = self.site.config['GENERATE_RSS']
         kw["feed_teasers"] = self.site.config["FEED_TEASERS"]
         kw["feed_plain"] = self.site.config["FEED_PLAIN"]
-        kw["feed_link_append_query"] = self.site.config["FEED_LINKS_APPEND_QUERY"]
+        kw["feed_links_append_query"] = self.site.config["FEED_LINKS_APPEND_QUERY"]
         kw["feed_length"] = self.site.config['FEED_LENGTH']
         kw["output_folder"] = self.site.config['OUTPUT_FOLDER']
         context = copy(context)

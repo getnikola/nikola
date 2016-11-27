@@ -2346,7 +2346,7 @@ class Nikola(object):
         kw['indexes_prety_page_url'] = self.config["INDEXES_PRETTY_PAGE_URL"]
         kw['demote_headers'] = self.config['DEMOTE_HEADERS']
         kw['generate_atom'] = self.config["GENERATE_ATOM"]
-        kw['feed_link_append_query'] = self.config["FEED_LINKS_APPEND_QUERY"]
+        kw['feed_links_append_query'] = self.config["FEED_LINKS_APPEND_QUERY"]
         kw['currentfeed'] = None
 
         # Split in smaller lists
