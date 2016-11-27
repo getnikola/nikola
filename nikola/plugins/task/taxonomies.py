@@ -266,6 +266,9 @@ class RenderTaxonomies(Task):
         kw["feed_links_append_query"] = self.site.config["FEED_LINKS_APPEND_QUERY"]
         kw["feed_length"] = self.site.config['FEED_LENGTH']
         kw["output_folder"] = self.site.config['OUTPUT_FOLDER']
+        kw["pretty_urls"] = self.site.config['PRETTY_URLS']
+        kw["strip_indexes"] = self.site.config['STRIP_INDEXES']
+        kw["index_file"] = self.site.config['INDEX_FILE']
         context = copy(context)
         context["permalink"] = self.site.link(taxonomy.classification_name, classification, lang)
         # Decide what to do
