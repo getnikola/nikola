@@ -159,7 +159,7 @@ class RenderTaxonomies(Task):
         context = copy(context)
         if "pagekind" not in context:
             context["pagekind"] = ["index", "tag_page"]
-        template_name = taxonomy.template_for_list_of_one_classification
+        template_name = taxonomy.template_for_single_list
 
         yield self.site.generic_index_renderer(lang, filtered_posts, context['title'], template_name, context, kw, str(self.name), page_link, page_path)
 
@@ -184,7 +184,7 @@ class RenderTaxonomies(Task):
     def _generate_classification_page_as_list(self, taxonomy, classification, filtered_posts, context, kw, lang):
         """Render a single flat link list with this classification's posts."""
         kind = taxonomy.classification_name
-        template_name = taxonomy.template_for_list_of_one_classification
+        template_name = taxonomy.template_for_single_list
         output_name = os.path.join(self.site.config['OUTPUT_FOLDER'], self.site.path(kind, classification, lang))
         context["lang"] = lang
         context["posts"] = filtered_posts
