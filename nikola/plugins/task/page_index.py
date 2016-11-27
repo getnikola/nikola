@@ -24,7 +24,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Render the blog indexes."""
+"""Render the page index."""
 
 from __future__ import unicode_literals
 
@@ -32,7 +32,7 @@ from nikola.plugin_categories import Taxonomy
 
 
 class PageIndex(Taxonomy):
-    """Render the page index."""
+    """Classify for the page index."""
 
     name = "classify_page_index"
 

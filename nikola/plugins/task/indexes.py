@@ -24,7 +24,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Render the blog indexes."""
+"""Render the blog's main index."""
 
 from __future__ import unicode_literals
 
@@ -92,9 +92,3 @@ class Indexes(Taxonomy):
         }
         kw.update(context)
         return context, kw
-
-    def postprocess_posts_per_classification(self, posts_per_classification_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
-        """Rearrange, modify or otherwise use the list of posts per classification and per language."""
-        for lang, posts_per_classification in posts_per_classification_per_language.items():
-            if len(posts_per_classification) == 0:
-                posts_per_classification[""] = []

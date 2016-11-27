@@ -87,14 +87,14 @@ class ClassifySections(Taxonomy):
         kw = {
             "messages": self.site.MESSAGES,
         }
-        section_name = self._get_Section_name(section, lang)
+        section_name = self._get_section_name(section, lang)
         # Compose section title
         section_title = section_name
         posts_section_title = self.site.config['POSTS_SECTION_TITLE'](lang)
-        if type(posts_section_title) is dict:
+        if isinstance(posts_section_title, dict):
             if section in posts_section_title:
                 section_title = posts_section_title[section]
-        elif type(posts_section_title) is str:
+        elif isinstance(posts_section_title, utils.bytes_str, utils.unicode_str):
             section_title = posts_section_title
         section_title = section_title.format(name=section_name)
         # Compose context
