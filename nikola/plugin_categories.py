@@ -515,16 +515,20 @@ class Taxonomy(BasePlugin):
         posts into the list for the empty hierarchy [].
 
     show_list_as_subcategories_list = False:
-        If not False, for every classification which has at least one
+        If True, for every classification which has at least one
         subclassification, create a list of subcategories instead of a list/index
-        of posts. This is only used when has_hierarchy = True. If not False, this
-        must be the template name for the list; usually "list.tmpl".
-        If this is set to a string, it is recommended to set
-        include_posts_from_subhierarchies to True to get correct post counts.
+        of posts. This is only used when has_hierarchy = True. The template
+        specified in subcategories_list_template will be used. If this is set
+        to True, it is recommended to set include_posts_from_subhierarchies to
+        True to get correct post counts.
 
     show_list_as_index = False:
         Whether to show the posts for one classification as an index or
         as a post list.
+
+    subcategories_list_template = "taxonomy_list":
+        The template to use for the subcategories list when
+        show_list_as_subcategories_list is True.
 
     generate_atom_feeds_for_post_lists = False:
         Whether to generate Atom feeds for post lists in case GENERATE_ATOM is set.
@@ -571,6 +575,7 @@ class Taxonomy(BasePlugin):
     include_posts_into_hierarchy_root = False
     show_list_as_subcategories_list = False
     show_list_as_index = False
+    subcategories_list_template = "taxonomy_list"
     generate_atom_feeds_for_post_lists = False
     template_for_single_list = "tagindex.tmpl"
     template_for_classification_overview = "list.tmpl"

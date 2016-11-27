@@ -235,7 +235,7 @@ class RenderTaxonomies(Task):
             lang,
             [],
             os.path.join(kw['output_folder'], self.site.path(taxonomy.classification_name, node.classification_name, lang)),
-            taxonomy.show_list_as_subcategories_list,
+            taxonomy.subcategories_list_template,
             kw['filters'],
             context,
         )

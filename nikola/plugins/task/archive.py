@@ -44,6 +44,7 @@ class Archive(Taxonomy):
     has_hierarchy = True
     include_posts_from_subhierarchies = True
     include_posts_into_hierarchy_root = True
+    subcategories_list_template = "list.tmpl"
     generate_atom_feeds_for_post_lists = False
     template_for_classification_overview = None
     always_disable_rss = True
@@ -59,7 +60,7 @@ class Archive(Taxonomy):
         if (site.config['CREATE_MONTHLY_ARCHIVE'] and site.config['CREATE_SINGLE_ARCHIVE']) and not site.config['CREATE_FULL_ARCHIVES']:
             raise Exception('Cannot create monthly and single archives at the same time.')
         # Finish setup
-        self.show_list_as_subcategories_list = False if site.config['CREATE_FULL_ARCHIVES'] else "list.tmpl"
+        self.show_list_as_subcategories_list = not site.config['CREATE_FULL_ARCHIVES']
         self.show_list_as_index = site.config['ARCHIVES_ARE_INDEXES']
         self.template_for_single_list = "archiveindex.tmpl" if site.config['ARCHIVES_ARE_INDEXES'] else "list_post.tmpl"
         # Determine maximum hierarchy height
