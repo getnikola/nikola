@@ -493,6 +493,11 @@ class Taxonomy(BasePlugin):
         in the metadata. If set to None, the classification won't be stored
         in the metadata.
 
+    metadata_friendly_name = None:
+        The name to be used when storing the friendly names of the classification
+        in the metadata. If set to None, the friendly names won't be stored
+        in the metadata.
+
     overview_page_variable_name = "taxonomy":
         When rendering the overview page, its template will have a list
         of classifications available in a variable by this name.
@@ -576,6 +581,7 @@ class Taxonomy(BasePlugin):
     # Adjust the following values in your plugin!
     classification_name = "taxonomy"
     metadata_name = "taxonomy"
+    metadata_friendly_name = None
     overview_page_variable_name = "taxonomy"
     overview_page_hierarchy_variable_name = "taxonomy_hierarchy"
     more_than_one_classifications_per_post = False
