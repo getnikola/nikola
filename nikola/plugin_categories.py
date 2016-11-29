@@ -497,6 +497,14 @@ class Taxonomy(BasePlugin):
         When rendering the overview page, its template will have a list
         of classifications available in a variable by this name.
 
+    overview_page_hierarchy_variable_name = "taxonomy_hierarchy":
+        When rendering the overview page, its template will have a list
+        of tuples
+            (friendly_name, classification, classification_path, link,
+             indent_levels, indent_change_before, indent_change_after)
+        available in a variable by this name. These tuples can be used
+        to render the hierarchy as a tree.
+
     more_than_one_classifications_per_post = False:
         If True, there can be more than one classification per post; in that case,
         the classification data in the metadata is stored as a list. If False,
@@ -569,6 +577,7 @@ class Taxonomy(BasePlugin):
     classification_name = "taxonomy"
     metadata_name = "taxonomy"
     overview_page_variable_name = "taxonomy"
+    overview_page_hierarchy_variable_name = "taxonomy_hierarchy"
     more_than_one_classifications_per_post = False
     has_hierarchy = False
     include_posts_from_subhierarchies = False

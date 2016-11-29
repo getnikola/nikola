@@ -106,12 +106,14 @@ class RenderTaxonomies(Task):
         context[taxonomy.overview_page_variable_name] = classifications
         context["items"] = [(classification, self.site.link(taxonomy.classification_name, classification, lang)) for classification in classifications]
         context["has_hierarchy"] = taxonomy.has_hierarchy
-        if taxonomy.has_hierarchy:
-            context["hierarchy"] = [(node.name, node.classification_name, node.classification_path,
-                                     self.site.link(taxonomy.classification_name, node.classification_name, lang),
-                                     node.indent_levels, node.indent_change_before,
-                                     node.indent_change_after)
-                                    for node in clipped_flat_hierarchy]
+        if taxonomy.has_hierarchy and taxonomy.overview_page_hierarchy_variable_name:
+            context[taxonomy.overview_page_hierarchy_variable_name] = [
+                (node.name, node.classification_name, node.classification_path,
+                 self.site.link(taxonomy.classification_name, node.classification_name, lang),
+                 node.indent_levels, node.indent_change_before,
+                 node.indent_change_after)
+                for node in clipped_flat_hierarchy
+            ]
 
         # Prepare rendering
         context["permalink"] = self.site.link("{}_index".format(taxonomy.classification_name), None, lang)
