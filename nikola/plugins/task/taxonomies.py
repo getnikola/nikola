@@ -261,7 +261,10 @@ class RenderTaxonomies(Task):
         if not taxonomy.should_generate_classification_list(classification, filtered_posts, lang):
             return
         # Get data
-        context, kw = taxonomy.provide_context_and_uptodate(classification, lang)
+        node = None
+        if taxonomy.has_hierarchy:
+            node = self.site.hierarchy_lookup_per_classification[classification]
+        context, kw = taxonomy.provide_context_and_uptodate(classification, lang, node)
         kw = copy(kw)
         kw["messages"] = self.site.MESSAGES
         kw["translations"] = self.site.config['TRANSLATIONS']
