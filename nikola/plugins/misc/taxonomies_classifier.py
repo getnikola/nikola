@@ -44,13 +44,19 @@ class TaxonomiesClassifier(SignalHandler):
     name = "render_taxonomies"
 
     def _do_classification(self, site):
-        # Get list of enabled taxonomy plugins
-        taxonomies = self.site.taxonomy_plugins.values()
+        # Get list of enabled taxonomy plugins and initialize data structures
         site.posts_per_classification = {}
-        for taxonomy in taxonomies:
+        site.taxonomy_plugins = {}
+        for taxonomy in [p.plugin_object for p in site.plugin_manager.getPluginsOfCategory('Taxonomy')]:
+            if not taxonomy.is_enabled():
+                continue
+            if taxonomy.classification_name in site.taxonomy_plugins:
+                raise Exception("Found more than one taxonomy with classification name '{}'!".format(taxonomy.classification_name))
+            site.taxonomy_plugins[taxonomy.classification_name] = taxonomy
             site.posts_per_classification[taxonomy.classification_name] = {
                 lang: defaultdict(set) for lang in site.config['TRANSLATIONS'].keys()
             }
+        taxonomies = self.site.taxonomy_plugins.values()
 
         # Classify posts
         for post in site.timeline:
@@ -306,12 +312,8 @@ class TaxonomiesClassifier(SignalHandler):
         super(TaxonomiesClassifier, self).set_site(site)
         # Add hook for after post scanning
         blinker.signal("scanned").connect(self._do_classification)
-        # Register path handlers and collect plugins
-        site.taxonomy_plugins = {}
+        # Register path handlers
         for taxonomy in [p.plugin_object for p in site.plugin_manager.getPluginsOfCategory('Taxonomy')]:
             if not taxonomy.is_enabled():
                 continue
-            if taxonomy.classification_name in site.taxonomy_plugins:
-                raise Exception("Found more than one taxonomy with classification name '{}'!".format(taxonomy.classification_name))
-            site.taxonomy_plugins[taxonomy.classification_name] = taxonomy
             self._register_path_handlers(taxonomy)
