@@ -44,19 +44,17 @@ class TaxonomiesClassifier(SignalHandler):
     name = "render_taxonomies"
 
     def _do_classification(self, site):
+        # Needed to avoid strange errors during tests
+        if site is not self.site:
+            return
+
         # Get list of enabled taxonomy plugins and initialize data structures
+        taxonomies = site.taxonomy_plugins.values()
         site.posts_per_classification = {}
-        site.taxonomy_plugins = {}
-        for taxonomy in [p.plugin_object for p in site.plugin_manager.getPluginsOfCategory('Taxonomy')]:
-            if not taxonomy.is_enabled():
-                continue
-            if taxonomy.classification_name in site.taxonomy_plugins:
-                raise Exception("Found more than one taxonomy with classification name '{}'!".format(taxonomy.classification_name))
-            site.taxonomy_plugins[taxonomy.classification_name] = taxonomy
+        for taxonomy in taxonomies:
             site.posts_per_classification[taxonomy.classification_name] = {
                 lang: defaultdict(set) for lang in site.config['TRANSLATIONS'].keys()
             }
-        taxonomies = self.site.taxonomy_plugins.values()
 
         # Classify posts
         for post in site.timeline:
@@ -107,7 +105,7 @@ class TaxonomiesClassifier(SignalHandler):
                         continue
                     for classification, posts in site.posts_per_classification[taxonomy.classification_name][tlang].items():
                         # Obtain path as tuple
-                        path = self.site.path_handlers[taxonomy.classification_name](classification, lang)
+                        path = site.path_handlers[taxonomy.classification_name](classification, lang)
                         # Check that path is OK
                         for path_element in path:
                             if len(path_element) == 0:
@@ -315,8 +313,12 @@ class TaxonomiesClassifier(SignalHandler):
         super(TaxonomiesClassifier, self).set_site(site)
         # Add hook for after post scanning
         blinker.signal("scanned").connect(self._do_classification)
-        # Register path handlers
+        # Register path handlers and check for uniqueness of classification name
+        site.taxonomy_plugins = {}
         for taxonomy in [p.plugin_object for p in site.plugin_manager.getPluginsOfCategory('Taxonomy')]:
             if not taxonomy.is_enabled():
                 continue
+            if taxonomy.classification_name in site.taxonomy_plugins:
+                raise Exception("Found more than one taxonomy with classification name '{}'!".format(taxonomy.classification_name))
+            site.taxonomy_plugins[taxonomy.classification_name] = taxonomy
             self._register_path_handlers(taxonomy)
