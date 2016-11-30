@@ -45,8 +45,7 @@ class TaxonomiesClassifier(SignalHandler):
 
     def _do_classification(self, site):
         # Get list of enabled taxonomy plugins
-        taxonomies = [p.plugin_object for p in site.plugin_manager.getPluginsOfCategory('Taxonomy')]
-        taxonomies = [taxonomy for taxonomy in taxonomies if taxonomy.is_enabled()]
+        taxonomies = self.site.taxonomy_plugins.values()
         # Prepare classification and check for collisions
         site.posts_per_classification = {}
         for taxonomy in taxonomies:
@@ -310,8 +309,10 @@ class TaxonomiesClassifier(SignalHandler):
         super(TaxonomiesClassifier, self).set_site(site)
         # Add hook for after post scanning
         blinker.signal("scanned").connect(self._do_classification)
-        # Register path handlers
+        # Register path handlers and collect plugins
+        site.taxonomy_plugins = {}
         for taxonomy in [p.plugin_object for p in site.plugin_manager.getPluginsOfCategory('Taxonomy')]:
             if not taxonomy.is_enabled():
                 continue
+            site.taxonomy_plugins[taxonomy.classification_name] = taxonomy
             self._register_path_handlers(taxonomy)
