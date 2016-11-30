@@ -46,11 +46,8 @@ class TaxonomiesClassifier(SignalHandler):
     def _do_classification(self, site):
         # Get list of enabled taxonomy plugins
         taxonomies = self.site.taxonomy_plugins.values()
-        # Prepare classification and check for collisions
         site.posts_per_classification = {}
         for taxonomy in taxonomies:
-            if taxonomy.classification_name in site.posts_per_classification:
-                raise Exception("Found more than one taxonomy with classification name '{}'!".format(taxonomy.classification_name))
             site.posts_per_classification[taxonomy.classification_name] = {
                 lang: defaultdict(set) for lang in site.config['TRANSLATIONS'].keys()
             }
@@ -314,5 +311,7 @@ class TaxonomiesClassifier(SignalHandler):
         for taxonomy in [p.plugin_object for p in site.plugin_manager.getPluginsOfCategory('Taxonomy')]:
             if not taxonomy.is_enabled():
                 continue
+            if taxonomy.classification_name in site.taxonomy_plugins:
+                raise Exception("Found more than one taxonomy with classification name '{}'!".format(taxonomy.classification_name))
             site.taxonomy_plugins[taxonomy.classification_name] = taxonomy
             self._register_path_handlers(taxonomy)
