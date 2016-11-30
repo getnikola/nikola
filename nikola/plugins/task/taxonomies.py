@@ -104,16 +104,36 @@ class RenderTaxonomies(Task):
 
         # Set up classifications in context
         context[taxonomy.overview_page_variable_name] = classifications
-        context["items"] = [(classification, self.site.link(taxonomy.classification_name, classification, lang)) for classification in classifications]
+        if taxonomy.add_postcount_in_overview:
+            items = [(classification,
+                      self.site.link(taxonomy.classification_name, classification, lang),
+                      len(self._filter_list(self.site.posts_per_classification[taxonomy.classification_name][lang][classification])))
+                     for classification in classifications]
+        else:
+            items = [(classification,
+                      self.site.link(taxonomy.classification_name, classification, lang))
+                     for classification in classifications]
+        context["items"] = items
         context["has_hierarchy"] = taxonomy.has_hierarchy
         if taxonomy.has_hierarchy and taxonomy.overview_page_hierarchy_variable_name:
-            context[taxonomy.overview_page_hierarchy_variable_name] = [
-                (node.name, node.classification_name, node.classification_path,
-                 self.site.link(taxonomy.classification_name, node.classification_name, lang),
-                 node.indent_levels, node.indent_change_before,
-                 node.indent_change_after)
-                for node in clipped_flat_hierarchy
-            ]
+            if taxonomy.add_postcount_in_overview:
+                hier_items = [
+                    (node.name, node.classification_name, node.classification_path,
+                     self.site.link(taxonomy.classification_name, node.classification_name, lang),
+                     node.indent_levels, node.indent_change_before,
+                     node.indent_change_after,
+                     len(self._filter_list(self.site.posts_per_classification[taxonomy.classification_name][lang][node.classification_name])))
+                    for node in clipped_flat_hierarchy
+                ]
+            else:
+                hier_items = [
+                    (node.name, node.classification_name, node.classification_path,
+                     self.site.link(taxonomy.classification_name, node.classification_name, lang),
+                     node.indent_levels, node.indent_change_before,
+                     node.indent_change_after)
+                    for node in clipped_flat_hierarchy
+                ]
+            context[taxonomy.overview_page_hierarchy_variable_name] = hier_items
 
         # Prepare rendering
         context["permalink"] = self.site.link("{}_index".format(taxonomy.classification_name), None, lang)

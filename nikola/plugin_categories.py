@@ -553,6 +553,10 @@ class Taxonomy(BasePlugin):
         The template to use for the classification overview page.
         Set to None to avoid generating overviews.
 
+    add_postcount_in_overview = False:
+        If set to True, the lists provided to the template when rendering the
+        overview also contain the post count as a last element per item.
+
     always_disable_rss = False:
         Whether to always disable RSS feed generation
 
@@ -594,6 +598,7 @@ class Taxonomy(BasePlugin):
     generate_atom_feeds_for_post_lists = False
     template_for_single_list = "tagindex.tmpl"
     template_for_classification_overview = "list.tmpl"
+    add_postcount_in_overview = False
     always_disable_rss = False
     apply_to_posts = True
     apply_to_pages = False
