@@ -98,7 +98,7 @@ class ClassifyAuthors(Taxonomy):
         kw.update(context)
         return context, kw
 
-    def provide_context_and_uptodate(self, author, lang):
+    def provide_context_and_uptodate(self, author, lang, node=None):
         """Provide data for the context and the uptodate list for the list of the given classifiation."""
         descriptions = self.site.config['AUTHOR_PAGES_DESCRIPTIONS']
         kw = {

@@ -121,7 +121,7 @@ class Archive(Taxonomy):
         """Given a list of parts in the hierarchy, return the classification string."""
         return '/'.join(hierarchy)
 
-    def provide_context_and_uptodate(self, classification, lang):
+    def provide_context_and_uptodate(self, classification, lang, node=None):
         """Provide data for the context and the uptodate list for the list of the given classifiation."""
         hierarchy = self.extract_hierarchy(classification)
         kw = {

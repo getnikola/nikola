@@ -83,7 +83,7 @@ class ClassifySections(Taxonomy):
         """A path handler for the given classification."""
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang], section] if _f], 'always'
 
-    def provide_context_and_uptodate(self, section, lang):
+    def provide_context_and_uptodate(self, section, lang, node=None):
         """Provide data for the context and the uptodate list for the list of the given classifiation."""
         kw = {
             "messages": self.site.MESSAGES,
