@@ -326,7 +326,10 @@ class RenderTaxonomies(Task):
         self.site.scan_posts()
         yield self.group_task()
 
-        for taxonomy in self.site.taxonomy_plugins.values():
+        # for taxonomy in self.site.taxonomy_plugins.values():
+        for taxonomy in [p.plugin_object for p in site.plugin_manager.getPluginsOfCategory('Taxonomy')]:
+            if not taxonomy.is_enabled():
+                continue
             for lang in self.site.config["TRANSLATIONS"]:
                 if not taxonomy.is_enabled(lang):
                     continue
