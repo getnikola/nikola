@@ -89,7 +89,7 @@ class RenderTaxonomies(Task):
         # Collect all relevant classifications
         if taxonomy.has_hierarchy:
             def acceptor(node):
-                return len(self._filter_list(self.site.posts_per_classification[taxonomy.classification_name][lang][node.classification_name])) >= kw["minimum_post_count"]
+                return len(self._filter_list(self.site.posts_per_classification[taxonomy.classification_name][lang][node.classification_name], lang)) >= kw["minimum_post_count"]
 
             clipped_root_list = [_clone_treenode(node, parent=None, acceptor=acceptor) for node in self.site.hierarchy_per_classification[taxonomy.classification_name][lang]]
             clipped_root_list = [node for node in clipped_root_list if node]
@@ -98,7 +98,7 @@ class RenderTaxonomies(Task):
             classifications = [cat.classification_name for cat in clipped_flat_hierarchy]
         else:
             classifications = natsort.natsorted([tag for tag, posts in self.site.posts_per_classification[taxonomy.classification_name][lang].items()
-                                                 if len(self._filter_list(posts)) >= kw["minimum_post_count"]],
+                                                 if len(self._filter_list(posts, lang)) >= kw["minimum_post_count"]],
                                                 alg=natsort.ns.F | natsort.ns.IC)
             taxonomy.sort_classifications(classifications, lang)
 
@@ -107,7 +107,7 @@ class RenderTaxonomies(Task):
         if taxonomy.add_postcount_in_overview:
             items = [(classification,
                       self.site.link(taxonomy.classification_name, classification, lang),
-                      len(self._filter_list(self.site.posts_per_classification[taxonomy.classification_name][lang][classification])))
+                      len(self._filter_list(self.site.posts_per_classification[taxonomy.classification_name][lang][classification], lang)))
                      for classification in classifications]
         else:
             items = [(classification,
@@ -122,7 +122,7 @@ class RenderTaxonomies(Task):
                      self.site.link(taxonomy.classification_name, node.classification_name, lang),
                      node.indent_levels, node.indent_change_before,
                      node.indent_change_after,
-                     len(self._filter_list(self.site.posts_per_classification[taxonomy.classification_name][lang][node.classification_name])))
+                     len(self._filter_list(self.site.posts_per_classification[taxonomy.classification_name][lang][node.classification_name], lang)))
                     for node in clipped_flat_hierarchy
                 ]
             else:
