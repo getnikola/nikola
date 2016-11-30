@@ -122,6 +122,7 @@ class RenderTaxonomies(Task):
                      self.site.link(taxonomy.classification_name, node.classification_name, lang),
                      node.indent_levels, node.indent_change_before,
                      node.indent_change_after,
+                     len(node.children),
                      len(self._filter_list(self.site.posts_per_classification[taxonomy.classification_name][lang][node.classification_name], lang)))
                     for node in clipped_flat_hierarchy
                 ]
