@@ -94,7 +94,7 @@ class CommandAuto(Command):
             'long': 'port',
             'default': 8000,
             'type': int,
-            'help': 'Port nummber (default: 8000)',
+            'help': 'Port number (default: 8000)',
         },
         {
             'name': 'address',
