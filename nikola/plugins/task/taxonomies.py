@@ -71,8 +71,8 @@ class RenderTaxonomies(Task):
 
     name = "render_taxonomies"
 
-    def _generate_classification_overview(self, taxonomy, lang):
-        """Create a global "all your tags/categories" page for each language."""
+    def _generate_classification_overview_kw_context(self, taxonomy, lang):
+        """Create context and kw for a classification overview page."""
         context, kw = taxonomy.provide_list_context_and_uptodate(lang)
 
         context = copy(context)
@@ -137,23 +137,53 @@ class RenderTaxonomies(Task):
                     for node in clipped_flat_hierarchy
                 ]
                 context[taxonomy.overview_page_hierarchy_variable_name + '_with_postcount'] = hier_items_with_postcount
+        return context, kw
 
+    def _render_classification_overview(self, classification_name, template, lang, context, kw):
         # Prepare rendering
-        context["permalink"] = self.site.link("{}_index".format(taxonomy.classification_name), None, lang)
+        context["permalink"] = self.site.link("{}_index".format(classification_name), None, lang)
         if "pagekind" not in context:
             context["pagekind"] = ["list", "tags_page"]
-        output_name = os.path.join(self.site.config['OUTPUT_FOLDER'], self.site.path('{}_index'.format(taxonomy.classification_name), None, lang))
+        output_name = os.path.join(self.site.config['OUTPUT_FOLDER'], self.site.path('{}_index'.format(classification_name), None, lang))
         task = self.site.generic_post_list_renderer(
             lang,
             [],
             output_name,
-            taxonomy.template_for_classification_overview,
+            template,
             kw['filters'],
             context,
         )
         task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.plugins.task.taxonomies:page')]
         task['basename'] = str(self.name)
         yield task
+
+    def _generate_classification_overview(self, taxonomy, lang):
+        """Create a global "all your tags/categories" page for a given language."""
+        context, kw = self._generate_classification_overview_kw_context(taxonomy, lang)
+        for task in self._render_classification_overview(taxonomy.classification_name, taxonomy.template_for_classification_overview, lang, context, kw):
+            yield task
+
+    def _generate_tag_and_category_overview(self, tag_taxonomy, category_taxonomy, lang):
+        """Create a global "all your tags/categories" page for a given language."""
+        # Create individual contexts and kw dicts
+        tag_context, tag_kw = self._generate_classification_overview_kw_context(tag_taxonomy, lang)
+        cat_context, cat_kw = self._generate_classification_overview_kw_context(category_taxonomy, lang)
+
+        # Combine contexts. We must merge the tag context into the category context
+        # so that tag_context['items'] makes it into the result.
+        context = cat_context
+        context.update(tag_context)
+        kw = cat_kw
+        kw.update(tag_kw)
+
+        # Update title
+        title = self.site.MESSAGES[lang]["Tags and Categories"]
+        context['title'] = title
+        kw['title'] = title
+
+        # Render result
+        for task in self._render_classification_overview('tag', tag_taxonomy.template_for_classification_overview, lang, context, kw):
+            yield task
 
     def _generate_classification_page_as_rss(self, taxonomy, classification, filtered_posts, title, description, kw, lang):
         """Create a RSS feed for a single classification in a given language."""
@@ -328,14 +358,22 @@ class RenderTaxonomies(Task):
         self.site.scan_posts()
         yield self.group_task()
 
-        for taxonomy in self.site.taxonomy_plugins.values():
-            for lang in self.site.config["TRANSLATIONS"]:
+        for lang in self.site.config["TRANSLATIONS"]:
+            # To support that tag and category classifications share the same overview,
+            # we explicitly detect this case:
+            ignore_plugins_for_overview = set()
+            if 'tag' in self.site.taxonomy_plugins and 'category' in self.site.taxonomy_plugins and self.site.link("tag_index", lang=lang) == self.site.link("category_index", lang=lang):
+                # Block both plugins from creating overviews
+                ignore_plugins_for_overview.add(self.site.taxonomy_plugins['tag'])
+                ignore_plugins_for_overview.add(self.site.taxonomy_plugins['category'])
+            for taxonomy in self.site.taxonomy_plugins.values():
                 if not taxonomy.is_enabled(lang):
                     continue
                 # Generate list of classifications (i.e. classification overview)
-                if taxonomy.template_for_classification_overview is not None:
-                    for task in self._generate_classification_overview(taxonomy, lang):
-                        yield task
+                if taxonomy not in ignore_plugins_for_overview:
+                    if taxonomy.template_for_classification_overview is not None:
+                        for task in self._generate_classification_overview(taxonomy, lang):
+                            yield task
 
                 # Generate classification lists
                 classifications = {}
@@ -348,3 +386,8 @@ class RenderTaxonomies(Task):
                 for classification, posts in classifications.items():
                     for task in self._generate_classification_page(taxonomy, classification, posts, lang):
                         yield task
+            # In case we are ignoring plugins for overview, we must have a collision for
+            # tags and categories. Resolve this manually.
+            if ignore_plugins_for_overview:
+                for task in self._generate_tag_and_category_overview(self.site.taxonomy_plugins['tag'], self.site.taxonomy_plugins['category'], lang):
+                    yield task
