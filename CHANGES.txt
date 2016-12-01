@@ -24,11 +24,11 @@ Features
 * Pass ``post`` object and ``lang`` to post compilers (Issue #2531)
 * Pass ``url_type`` into template's context.
 * Make thumbnail naming configurable with ``IMAGE_THUMBNAIL_FORMAT``.
-* There is a new plugin category ``TaxonomyPlugin`` which allows to
-  easily create new taxonomies. Some of the existing taxonomies
-  (authors, archives, indexes, page index, sections) have been
-  converted to the new system. Tags will be converted to the new system
-  as soon as categories are removed (i.e. in v8). (Issue #2107)
+* There is a new plugin category ``Taxonomy`` which allows to easily
+  create new taxonomies. Some of the existing taxonomies (authors,
+  archives, indexes, page index, sections) have been converted to
+  the new system. Tags will be converted to the new system as soon
+  as categories are removed (i.e. in v8). (Issue #2107)
 
 New in v7.8.1
 =============
