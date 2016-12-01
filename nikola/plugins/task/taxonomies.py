@@ -362,7 +362,7 @@ class RenderTaxonomies(Task):
             # To support that tag and category classifications share the same overview,
             # we explicitly detect this case:
             ignore_plugins_for_overview = set()
-            if 'tag' in self.site.taxonomy_plugins and 'category' in self.site.taxonomy_plugins and self.site.link("tag_index", lang=lang) == self.site.link("category_index", lang=lang):
+            if 'tag' in self.site.taxonomy_plugins and 'category' in self.site.taxonomy_plugins and self.site.link("tag_index", None, lang) == self.site.link("category_index", None, lang):
                 # Block both plugins from creating overviews
                 ignore_plugins_for_overview.add(self.site.taxonomy_plugins['tag'])
                 ignore_plugins_for_overview.add(self.site.taxonomy_plugins['category'])
