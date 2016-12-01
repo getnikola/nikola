@@ -110,6 +110,7 @@ class ClassifyTags(Taxonomy):
         }
         context = {
             "title": self.site.MESSAGES[lang]["Tags"],
+            "description": self.site.MESSAGES[lang]["Tags"],
             "pagekind": ["list", "tags_page"],
         }
         kw.update(context)
@@ -131,7 +132,8 @@ class ClassifyTags(Taxonomy):
             "kind": "tag",
             "pagekind": ["tag_page", "index" if self.show_list_as_index else "list"],
             "tag": tag,
-            "rss_link": """<link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for tag {0} ({1})" href="{2}">""".format(tag, lang, self.site.link("tag_rss", tag, lang))
         }
+        if self.show_list_as_index:
+            context["rss_link"] = """<link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for tag {0} ({1})" href="{2}">""".format(tag, lang, self.site.link("tag_rss", cat, lang))
         kw.update(context)
         return context, kw

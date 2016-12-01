@@ -180,7 +180,9 @@ class RenderTaxonomies(Task):
         # Update title
         title = self.site.MESSAGES[lang]["Tags and Categories"]
         context['title'] = title
+        context['description'] = title
         kw['title'] = title
+        kw['description'] = title
 
         # Render result
         for task in self._render_classification_overview('tag', tag_taxonomy.template_for_classification_overview, lang, context, kw):
