@@ -65,9 +65,9 @@ class PageIndex(Taxonomy):
         i = destpath.rfind('/')
         return destpath[:i] if i >= 0 else ''
 
-    def get_classification_friendly_name(self, hierarchy, lang, only_last_component=False):
+    def get_classification_friendly_name(self, dirname, lang, only_last_component=False):
         """Extract a friendly name from the classification."""
-        return '/'.join(hierarchy)
+        return dirname
 
     def get_path(self, hierarchy, lang, type='page'):
         """A path handler for the given classification."""

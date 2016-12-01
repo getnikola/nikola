@@ -655,10 +655,6 @@ class Taxonomy(BasePlugin):
         The result of this function is usually displayed to the user, instead
         of using the classification string.
 
-        For hierarchical taxonomies, the result of extract_hierarchy is provided
-        as `classification`. For non-hierarchical taxonomies, the classification
-        string itself is provided as `classification`.
-
         The argument `only_last_component` is only relevant to hierarchical
         taxonomies. If it is set, the printable name should only describe the
         last component of `classification` if possible.

@@ -74,10 +74,7 @@ class TaxonomiesClassifier(SignalHandler):
                             else:
                                 post.meta[lang][taxonomy.metadata_name] = classifications[lang][0] if len(classifications[lang]) > 0 else None
                         if taxonomy.metadata_friendly_name is not None:
-                            if taxonomy.has_hierarchy:
-                                friendly_names = [taxonomy.get_classification_friendly_name(taxonomy.extract_hierarchy(classification), lang) for classification in classifications[lang]]
-                            else:
-                                friendly_names = [taxonomy.get_classification_friendly_name(classification, lang) for classification in classifications[lang]]
+                            friendly_names = [taxonomy.get_classification_friendly_name(classification, lang) for classification in classifications[lang]]
                             if taxonomy.more_than_one_classifications_per_post:
                                 post.meta[lang][taxonomy.metadata_friendly_name] = friendly_names
                             else:
