@@ -23,6 +23,7 @@ Features
   translated (Issue #2116)
 * Pass ``post`` object and ``lang`` to post compilers (Issue #2531)
 * Pass ``url_type`` into template's context.
+* Make thumbnail naming configurable with ``IMAGE_THUMBNAIL_FORMAT``.
 * There is a new plugin category ``TaxonomyPlugin`` which allows to
   easily create new taxonomies. Some of the existing taxonomies
   (authors, archives, indexes, page index, sections) have been

@@ -45,22 +45,22 @@ class ScaleImage(Task, ImageProcessor):
 
     def process_tree(self, src, dst):
         """Process all images in a src tree and put the (possibly) rescaled images in the dst folder."""
-        ignore = set(['.svn'])
+        thumb_fmt = self.kw['image_thumbnail_format']
         base_len = len(src.split(os.sep))
         for root, dirs, files in os.walk(src, followlinks=True):
             root_parts = root.split(os.sep)
-            if set(root_parts) & ignore:
-                continue
             dst_dir = os.path.join(dst, *root_parts[base_len:])
             utils.makedirs(dst_dir)
             for src_name in files:
-                if src_name in ('.DS_Store', 'Thumbs.db'):
-                    continue
                 if (not src_name.lower().endswith(tuple(self.image_ext_list)) and not src_name.upper().endswith(tuple(self.image_ext_list))):
                     continue
                 dst_file = os.path.join(dst_dir, src_name)
                 src_file = os.path.join(root, src_name)
-                thumb_file = '.thumbnail'.join(os.path.splitext(dst_file))
+                thumb_name, thumb_ext = os.path.splitext(src_name)
+                thumb_file = os.path.join(dst_dir, thumb_fmt.format(
+                    name=thumb_name,
+                    ext=thumb_ext,
+                ))
                 yield {
                     'name': dst_file,
                     'file_dep': [src_file],
@@ -78,6 +78,7 @@ class ScaleImage(Task, ImageProcessor):
         """Copy static files into the output folder."""
         self.kw = {
             'image_thumbnail_size': self.site.config['IMAGE_THUMBNAIL_SIZE'],
+            'image_thumbnail_format': self.site.config['IMAGE_THUMBNAIL_FORMAT'],
             'max_image_size': self.site.config['MAX_IMAGE_SIZE'],
             'image_folders': self.site.config['IMAGE_FOLDERS'],
             'output_folder': self.site.config['OUTPUT_FOLDER'],
