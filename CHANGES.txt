@@ -26,9 +26,8 @@ Features
 * Make thumbnail naming configurable with ``IMAGE_THUMBNAIL_FORMAT``.
 * There is a new plugin category ``Taxonomy`` which allows to easily
   create new taxonomies. Some of the existing taxonomies (authors,
-  archives, indexes, page index, sections) have been converted to
-  the new system. Tags will be converted to the new system as soon
-  as categories are removed (i.e. in v8). (Issue #2107)
+  archives, indexes, page index, sections, tags, and categories)
+  have been converted to the new system. (Issue #2107)
 
 New in v7.8.1
 =============
