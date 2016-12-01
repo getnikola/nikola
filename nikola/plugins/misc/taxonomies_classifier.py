@@ -310,12 +310,6 @@ class TaxonomiesClassifier(SignalHandler):
         super(TaxonomiesClassifier, self).set_site(site)
         # Add hook for after post scanning
         blinker.signal("scanned").connect(self._do_classification)
-        # Register path handlers and check for uniqueness of classification name
-        site.taxonomy_plugins = {}
-        for taxonomy in [p.plugin_object for p in site.plugin_manager.getPluginsOfCategory('Taxonomy')]:
-            if not taxonomy.is_enabled():
-                continue
-            if taxonomy.classification_name in site.taxonomy_plugins:
-                raise Exception("Found more than one taxonomy with classification name '{}'!".format(taxonomy.classification_name))
-            site.taxonomy_plugins[taxonomy.classification_name] = taxonomy
+        # Register path handlers
+        for taxonomy in site.taxonomy_plugins.values():
             self._register_path_handlers(taxonomy)

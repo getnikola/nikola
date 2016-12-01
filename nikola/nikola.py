@@ -1023,6 +1023,15 @@ class Nikola(object):
         self.plugin_manager.loadPlugins()
 
         self._activate_plugins_of_category("Taxonomy")
+        self.taxonomy_plugins = {}
+        for taxonomy in [p.plugin_object for p in self.plugin_manager.getPluginsOfCategory('Taxonomy')]:
+            if not taxonomy.is_enabled():
+                continue
+            if taxonomy.classification_name in self.taxonomy_plugins:
+                utils.LOGGER.error("Found more than one taxonomy with classification name '{}'!".format(taxonomy.classification_name))
+                sys.exit(1)
+            self.taxonomy_plugins[taxonomy.classification_name] = taxonomy
+
         self._activate_plugins_of_category("SignalHandler")
 
         # Emit signal for SignalHandlers which need to start running immediately.
