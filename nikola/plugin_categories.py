@@ -498,6 +498,12 @@ class Taxonomy(BasePlugin):
         in the metadata. If set to None, the friendly names won't be stored
         in the metadata.
 
+    overview_page_items_variable_name = "items":
+        When rendering the overview page, its template will have a list
+        of pairs
+            (friendly_name, link)
+        for the classifications available in a variable by this name.
+
     overview_page_variable_name = "taxonomy":
         When rendering the overview page, its template will have a list
         of classifications available in a variable by this name.
@@ -592,6 +598,7 @@ class Taxonomy(BasePlugin):
     metadata_name = "taxonomy"
     metadata_friendly_name = None
     overview_page_variable_name = "taxonomy"
+    overview_page_items_variable_name = "items"
     overview_page_hierarchy_variable_name = "taxonomy_hierarchy"
     more_than_one_classifications_per_post = False
     has_hierarchy = False

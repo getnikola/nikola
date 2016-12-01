@@ -104,19 +104,20 @@ class RenderTaxonomies(Task):
 
         # Set up classifications in context
         context[taxonomy.overview_page_variable_name] = classifications
-        items = [(classification,
-                  self.site.link(taxonomy.classification_name, classification, lang))
-                 for classification in classifications]
-        context["items"] = items
-        if taxonomy.add_postcount_in_overview:
-            items_with_postcount = [
-                (classification,
-                 self.site.link(taxonomy.classification_name, classification, lang),
-                 len(self._filter_list(self.site.posts_per_classification[taxonomy.classification_name][lang][classification], lang)))
-                for classification in classifications
-            ]
-            context["items_with_postcount"] = items_with_postcount
         context["has_hierarchy"] = taxonomy.has_hierarchy
+        if taxonomy.overview_page_items_variable_name:
+            items = [(classification,
+                      self.site.link(taxonomy.classification_name, classification, lang))
+                     for classification in classifications]
+            context[taxonomy.overview_page_items_variable_name] = items
+            if taxonomy.add_postcount_in_overview:
+                items_with_postcount = [
+                    (classification,
+                     self.site.link(taxonomy.classification_name, classification, lang),
+                     len(self._filter_list(self.site.posts_per_classification[taxonomy.classification_name][lang][classification], lang)))
+                    for classification in classifications
+                ]
+                context[taxonomy.overview_page_items_variable_name + "_with_postcount"] = items_with_postcount
         if taxonomy.has_hierarchy and taxonomy.overview_page_hierarchy_variable_name:
             hier_items = [
                 (node.name, node.classification_name, node.classification_path,
