@@ -554,8 +554,13 @@ class Taxonomy(BasePlugin):
         Set to None to avoid generating overviews.
 
     add_postcount_in_overview = False:
-        If set to True, the lists provided to the template when rendering the
-        overview also contain the post count as a last element per item.
+        If set to True, two more variables `'items_with_postcount'` and
+        `overview_page_hierarchy_variable_name + '_with_postcount'` (for
+        hierarchical taxonomies) besides the `'items'` and
+        `overview_page_hierarchy_variable_name` will be available in the
+        overview page's template. These new variables will contain the post
+        count for every classification, and in case of the hierarchy, also
+        the number of children for every node.
 
     always_disable_rss = False:
         Whether to always disable RSS feed generation
