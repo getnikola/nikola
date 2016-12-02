@@ -95,7 +95,7 @@ class ClassifySections(Taxonomy):
         if isinstance(posts_section_title, dict):
             if section in posts_section_title:
                 section_title = posts_section_title[section]
-        elif isinstance(posts_section_title, utils.bytes_str, utils.unicode_str):
+        elif isinstance(posts_section_title, (utils.bytes_str, utils.unicode_str)):
             section_title = posts_section_title
         section_title = section_title.format(name=section_name)
         # Compose context
