@@ -70,7 +70,9 @@ class ClassifyTags(Taxonomy):
 
     def classify(self, post, lang):
         """Classify the given post for the given language."""
-        return post._tags[lang]
+        if lang not in post._tags and self.site.config["SHOW_UNTRANSLATED_POSTS"]:
+            lang = self.site.config['DEFAULT_LANG']
+        return post._tags.get(lang, [])
 
     def get_classification_friendly_name(self, classification, lang, only_last_component=False):
         """Extract a friendly name from the classification."""
