@@ -28,6 +28,8 @@ Features
   create new taxonomies. Some of the existing taxonomies (authors,
   archives, indexes, page index, sections, tags, and categories)
   have been converted to the new system. (Issue #2107)
+* Added ``CATEGORIES_INDEX_PATH``, similar to ``TAGS_INDEX_PATH``.
+  (Issue #2567)
 
 New in v7.8.1
 =============

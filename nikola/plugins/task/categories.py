@@ -83,7 +83,10 @@ class ClassifyCategories(Taxonomy):
 
     def get_list_path(self, lang, type='page'):
         """A path handler for the list of all classifications."""
-        return [_f for _f in [self.site.config['CATEGORY_PATH'][lang]] if _f], 'always'
+        if self.site.config['CATEGORIES_INDEX_PATH'][lang]:
+            return [_f for _f in [self.site.config['CATEGORIES_INDEX_PATH'][lang]] if _f], 'never'
+        else:
+            return [_f for _f in [self.site.config['CATEGORY_PATH'][lang]] if _f], 'always'
 
     def slugify_tag_name(self, name, lang):
         """Slugify a tag name."""

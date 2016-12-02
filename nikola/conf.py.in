@@ -333,6 +333,11 @@ HIDDEN_TAGS = ['mathjax']
 # CATEGORY_PATH = "categories"
 # CATEGORY_PREFIX = "cat_"
 
+# See CATEGORY_PATH's "list of categories" for the default setting value. Can be overwritten
+# here any path relative to the output directory.
+# (translatable)
+# CATEGORIES_INDEX_PATH = "tags.html"
+
 # If CATEGORY_ALLOW_HIERARCHIES is set to True, categories can be organized in
 # hierarchies. For a post, the whole path in the hierarchy must be specified,
 # using a forward slash ('/') to separate paths. Use a backslash ('\') to escape

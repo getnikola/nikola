@@ -439,6 +439,7 @@ class Nikola(object):
             'BLOG_DESCRIPTION': 'Default Description',
             'BODY_END': "",
             'CACHE_FOLDER': 'cache',
+            'CATEGORIES_INDEX_PATH': '',
             'CATEGORY_PATH': None,  # None means: same as TAG_PATH
             'CATEGORY_PAGES_ARE_INDEXES': None,  # None means: same as TAG_PAGES_ARE_INDEXES
             'CATEGORY_PAGES_DESCRIPTIONS': {},
@@ -647,6 +648,7 @@ class Nikola(object):
                                       'TAG_PATH',
                                       'TAGS_INDEX_PATH',
                                       'CATEGORY_PATH',
+                                      'CATEGORIES_INDEX_PATH',
                                       'DATE_FORMAT',
                                       'JS_DATE_FORMAT',
                                       )
