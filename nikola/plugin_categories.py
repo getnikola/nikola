@@ -526,12 +526,12 @@ class Taxonomy(BasePlugin):
         Whether the classification has a hierarchy.
 
     include_posts_from_subhierarchies = False:
-        If True, the list for a classification includes all posts with a
+        If True, the post list for a classification includes all posts with a
         sub-classification (in case has_hierarchy is True).
 
     include_posts_into_hierarchy_root = False:
         If True, include_posts_from_subhierarchies == True will also insert
-        posts into the list for the empty hierarchy [].
+        posts into the post list for the empty hierarchy [].
 
     show_list_as_subcategories_list = False:
         If True, for every classification which has at least one
@@ -673,8 +673,8 @@ class Taxonomy(BasePlugin):
         """
         raise NotImplementedError()
 
-    def get_list_path(self, lang, type='page'):
-        """A path handler for the list of all classifications.
+    def get_overview_path(self, lang, type='page'):
+        """A path handler for the classification overview.
 
         Must return one or two values (in this order):
          * a list or tuple of strings: the path relative to OUTPUT_DIRECTORY;
@@ -735,8 +735,8 @@ class Taxonomy(BasePlugin):
         """
         return hierarchy[0]
 
-    def provide_list_context_and_uptodate(self, lang):
-        """Provide data for the context and the uptodate list for the list of all classifiations.
+    def provide_overview_context_and_uptodate(self, lang):
+        """Provide data for the context and the uptodate list for the classifiation overview.
 
         Must return a tuple of two dicts. The first is merged into the page's context,
         the second will be put into the uptodate list of all generated tasks.
@@ -758,7 +758,7 @@ class Taxonomy(BasePlugin):
         """
         raise NotImplementedError()
 
-    def should_generate_classification_list(self, classification, post_list, lang):
+    def should_generate_classification_page(self, classification, post_list, lang):
         """Only generates list of posts for classification if this function returns True."""
         return True
 

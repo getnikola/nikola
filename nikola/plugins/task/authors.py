@@ -72,7 +72,7 @@ class ClassifyAuthors(Taxonomy):
         """Extract a friendly name from the classification."""
         return author
 
-    def get_list_path(self, lang, type='page'):
+    def get_overview_path(self, lang, type='page'):
         """A path handler for the list of all classifications."""
         return [self.site.config['AUTHOR_PATH']], 'always'
 
@@ -84,7 +84,7 @@ class ClassifyAuthors(Taxonomy):
             slug = author
         return [self.site.config['AUTHOR_PATH'], slug], 'auto'
 
-    def provide_list_context_and_uptodate(self, lang):
+    def provide_overview_context_and_uptodate(self, lang):
         """Provide data for the context and the uptodate list for the list of all classifiations."""
         kw = {
             "messages": self.site.MESSAGES,

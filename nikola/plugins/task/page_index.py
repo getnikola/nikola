@@ -94,7 +94,7 @@ class PageIndex(Taxonomy):
         kw.update(context)
         return context, kw
 
-    def should_generate_classification_list(self, dirname, post_list, lang):
+    def should_generate_classification_page(self, dirname, post_list, lang):
         """Only generates list of posts for classification if this function returns True."""
         short_destination = dirname + '/' + self.site.config['INDEX_FILE']
         for post in post_list:

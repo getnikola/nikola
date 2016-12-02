@@ -73,7 +73,7 @@ class RenderTaxonomies(Task):
 
     def _generate_classification_overview_kw_context(self, taxonomy, lang):
         """Create context and kw for a classification overview page."""
-        context, kw = taxonomy.provide_list_context_and_uptodate(lang)
+        context, kw = taxonomy.provide_overview_context_and_uptodate(lang)
 
         context = copy(context)
         kw = copy(kw)
@@ -324,7 +324,7 @@ class RenderTaxonomies(Task):
         if len(filtered_posts) == 0 and taxonomy.omit_empty_classifications:
             return
         # Should we create this list?
-        if not taxonomy.should_generate_classification_list(classification, filtered_posts, lang):
+        if not taxonomy.should_generate_classification_page(classification, filtered_posts, lang):
             return
         # Get data
         node = None

@@ -161,6 +161,6 @@ class Archive(Taxonomy):
         kw.update(context)
         return context, kw
 
-    def should_generate_classification_list(self, classification, post_list, lang):
+    def should_generate_classification_page(self, classification, post_list, lang):
         """Only generates list of posts for classification if this function returns True."""
         return len(classification.split('/')) < 3 or len(post_list) > 0

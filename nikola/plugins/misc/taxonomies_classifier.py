@@ -263,7 +263,7 @@ class TaxonomiesClassifier(SignalHandler):
 
     @staticmethod
     def _parse_path_result(result):
-        """Interpret the return values of taxonomy.get_path() and taxonomy.get_list_path() as if all three return values were given."""
+        """Interpret the return values of taxonomy.get_path() and taxonomy.get_overview_path() as if all three return values were given."""
         if not isinstance(result[0], (list, tuple)):
             # The result must be a list or tuple of strings. Wrap into a tuple
             result = (result, )
@@ -274,7 +274,7 @@ class TaxonomiesClassifier(SignalHandler):
 
     def _taxonomy_index_path(self, lang, taxonomy):
         """Return path to the classification overview."""
-        result = taxonomy.get_list_path(lang)
+        result = taxonomy.get_overview_path(lang)
         path, append_index, _ = self._parse_path_result(result)
         return self._postprocess_path(path, lang, append_index=append_index, type='list')
 

@@ -81,7 +81,7 @@ class ClassifyCategories(Taxonomy):
         classification = self.extract_hierarchy(classification)
         return classification[-1] if classification else ''
 
-    def get_list_path(self, lang, type='page'):
+    def get_overview_path(self, lang, type='page'):
         """A path handler for the list of all classifications."""
         if self.site.config['CATEGORIES_INDEX_PATH'][lang]:
             return [_f for _f in [self.site.config['CATEGORIES_INDEX_PATH'][lang]] if _f], 'never'
@@ -123,7 +123,7 @@ class ClassifyCategories(Taxonomy):
         """Given a list of parts in the hierarchy, return the classification string."""
         return utils.join_hierarchical_category_path(hierarchy)
 
-    def provide_list_context_and_uptodate(self, lang):
+    def provide_overview_context_and_uptodate(self, lang):
         """Provide data for the context and the uptodate list for the list of all classifiations."""
         kw = {
             'category_path': self.site.config['CATEGORY_PATH'],

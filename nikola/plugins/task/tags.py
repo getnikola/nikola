@@ -87,7 +87,7 @@ class ClassifyTags(Taxonomy):
             name = utils.slugify(name, lang)
         return name
 
-    def get_list_path(self, lang, type='page'):
+    def get_overview_path(self, lang, type='page'):
         """A path handler for the list of all classifications."""
         if self.site.config['TAGS_INDEX_PATH'][lang]:
             return [_f for _f in [self.site.config['TAGS_INDEX_PATH'][lang]] if _f], 'never'
@@ -100,7 +100,7 @@ class ClassifyTags(Taxonomy):
             self.site.config['TAG_PATH'][lang],
             self.slugify_tag_name(classification, lang)] if _f], 'auto'
 
-    def provide_list_context_and_uptodate(self, lang):
+    def provide_overview_context_and_uptodate(self, lang):
         """Provide data for the context and the uptodate list for the list of all classifiations."""
         kw = {
             "tag_path": self.site.config['TAG_PATH'],
