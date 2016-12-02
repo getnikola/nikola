@@ -90,9 +90,6 @@ class ClassifyCategories(Taxonomy):
 
     def slugify_tag_name(self, name, lang):
         """Slugify a tag name."""
-        if lang is None:  # TODO: remove in v8
-            utils.LOGGER.warn("ClassifyCategories.slugify_tag_name() called without language!")
-            lang = ''
         if self.site.config['SLUG_TAG_PATH']:
             name = utils.slugify(name, lang)
         return name
