@@ -4,8 +4,6 @@ New in master
 Bugfixes
 --------
 
-* Fixed typo in help message for command ``nikola auto``. Changed
-  ``Port nummber`` to ``Port number`` (Issue #2571)
 * Make ``data`` from global context available to templated shortcodes
   as ``global_data`` (Issue #2488)
 * Don't crash if plugins is a file (Issue #2539)
