@@ -170,19 +170,29 @@ class RenderTaxonomies(Task):
         tag_context, tag_kw = self._generate_classification_overview_kw_context(tag_taxonomy, lang)
         cat_context, cat_kw = self._generate_classification_overview_kw_context(category_taxonomy, lang)
 
-        # Combine contexts. We must merge the tag context into the category context
-        # so that tag_context['items'] makes it into the result.
-        context = cat_context
-        context.update(tag_context)
-        kw = cat_kw
-        kw.update(tag_kw)
+        # Combine resp. select dicts
+        if tag_context['items'] and cat_context['cat_items']:
+            # Combine contexts. We must merge the tag context into the category context
+            # so that tag_context['items'] makes it into the result.
+            context = cat_context
+            context.update(tag_context)
+            kw = cat_kw
+            kw.update(tag_kw)
 
-        # Update title
-        title = self.site.MESSAGES[lang]["Tags and Categories"]
-        context['title'] = title
-        context['description'] = title
-        kw['title'] = title
-        kw['description'] = title
+            # Update title
+            title = self.site.MESSAGES[lang]["Tags and Categories"]
+            context['title'] = title
+            context['description'] = title
+            kw['title'] = title
+            kw['description'] = title
+        elif cat_context['cat_items']:
+            # Use category overview page
+            context = cat_context
+            kw = cat_kw
+        else:
+            # Use tag overview page
+            context = tag_context
+            kw = tag_kw
 
         # Render result
         for task in self._render_classification_overview('tag', tag_taxonomy.template_for_classification_overview, lang, context, kw):
