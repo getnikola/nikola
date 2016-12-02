@@ -249,6 +249,34 @@ def typogrify(data):
     return data
 
 
+def _smarty_oldschool(text):
+    try:
+        import smartypants
+    except ImportError:
+        raise typo.TypogrifyError("Error in {% smartypants %} filter: The Python smartypants library isn't installed.")
+    else:
+        output = smartypants.convert_dashes_oldschool(text)
+        return output
+
+
+@apply_to_text_file
+def typogrify_oldschool(data):
+    """Prettify text with typogrify."""
+    if typo is None:
+        req_missing(['typogrify'], 'use the typogrify_oldschool filter', optional=True)
+        return data
+
+    data = _normalize_html(data)
+    data = typo.amp(data)
+    data = typo.widont(data)
+    data = _smarty_oldschool(data)
+    data = typo.smartypants(data)
+    # Disabled because of typogrify bug where it breaks <title>
+    # data = typo.caps(data)
+    data = typo.initial_quotes(data)
+    return data
+
+
 @apply_to_text_file
 def typogrify_sans_widont(data):
     """Prettify text with typogrify, skipping the widont filter."""
