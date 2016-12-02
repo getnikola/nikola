@@ -400,7 +400,7 @@ class RenderTaxonomies(Task):
                     for task in self._generate_classification_page(taxonomy, classification, posts, lang):
                         yield task
             # In case we are ignoring plugins for overview, we must have a collision for
-            # tags and categories. Resolve this manually.
+            # tags and categories. Handle this special case with extra code.
             if ignore_plugins_for_overview:
                 for task in self._generate_tag_and_category_overview(self.site.taxonomy_plugins['tag'], self.site.taxonomy_plugins['category'], lang):
                     yield task
