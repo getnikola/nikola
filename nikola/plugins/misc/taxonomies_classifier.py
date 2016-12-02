@@ -113,15 +113,18 @@ class TaxonomiesClassifier(SignalHandler):
                         # Determine collisions
                         if path in taxonomy_outputs[lang]:
                             other_classification_name, other_classification, other_posts = taxonomy_outputs[lang][path]
-                            utils.LOGGER.error('You have classifications that are too similar: {0} "{1}" and {2} "{3}" both result in output path {4} for langauge {5}.'.format(
-                                taxonomy.classification_name, classification, other_classification_name, other_classification, path, lang))
-                            utils.LOGGER.error('{0} {1} is used in: {1}'.format(
-                                taxonomy.classification_name.title(), classification, ', '.join(sorted([p.source_path for p in posts]))))
-                            utils.LOGGER.error('{0} {1} is used in: {1}'.format(
-                                other_classification_name.title(), other_classification, ', '.join(sorted([p.source_path for p in other_posts]))))
-                            quit = True
+                            if other_classification_name == taxonomy.classification_name and other_classification == classification:
+                                taxonomy_outputs[lang][path][2].extend(posts)
+                            else:
+                                utils.LOGGER.error('You have classifications that are too similar: {0} "{1}" and {2} "{3}" both result in output path {4} for language {5}.'.format(
+                                    taxonomy.classification_name, classification, other_classification_name, other_classification, path, lang))
+                                utils.LOGGER.error('{0} {1} is used in: {1}'.format(
+                                    taxonomy.classification_name.title(), classification, ', '.join(sorted([p.source_path for p in posts]))))
+                                utils.LOGGER.error('{0} {1} is used in: {1}'.format(
+                                    other_classification_name.title(), other_classification, ', '.join(sorted([p.source_path for p in other_posts]))))
+                                quit = True
                         else:
-                            taxonomy_outputs[lang][path] = (taxonomy.classification_name, classification, posts)
+                            taxonomy_outputs[lang][path] = (taxonomy.classification_name, classification, list(posts))
         if quit:
             sys.exit(1)
 
