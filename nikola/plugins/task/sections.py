@@ -81,7 +81,11 @@ class ClassifySections(Taxonomy):
 
     def get_path(self, section, lang, type='page'):
         """A path handler for the given classification."""
-        return [_f for _f in [section] if _f], 'always'
+        result = [_f for _f in [section] if _f]
+        if type == 'rss':
+            return result + ['rss'], 'never'
+        else:
+            return result, 'always'
 
     def provide_context_and_uptodate(self, section, lang, node=None):
         """Provide data for the context and the uptodate list for the list of the given classifiation."""
