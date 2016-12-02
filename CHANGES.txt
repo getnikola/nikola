@@ -12,6 +12,7 @@ Bugfixes
 Features
 --------
 
+* Added new ``typogrify_oldschool`` filter (Issue #2574)
 * Improving handling of .dep files, and allowing compilers to specify
   additional targets for the render_posts task (Issue #2536)
 * ``render_template`` and ``generic_renderer`` can now create HTML
