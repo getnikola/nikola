@@ -89,7 +89,6 @@ class RenderTags(Task):
             "tag_pages_titles": self.site.config['TAG_PAGES_TITLES'],
         }
 
-        self.site.scan_posts()
         yield self.group_task()
 
         yield self.list_tags_page(kw)

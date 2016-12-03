@@ -72,7 +72,6 @@ class Indexes(Task):
 
     def gen_tasks(self):
         """Render the blog indexes."""
-        self.site.scan_posts()
         yield self.group_task()
 
         kw = {

@@ -87,7 +87,6 @@ class RenderAuthors(Task):
             "index_file": self.site.config['INDEX_FILE'],
         }
 
-        self.site.scan_posts()
         yield self.group_task()
 
         if self.generate_author_pages:

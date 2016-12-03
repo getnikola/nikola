@@ -40,6 +40,10 @@ class GzipFiles(TaskMultiplier):
     name = "gzip"
     is_default = True
 
+    def extend_target_regex(self, target_regex):
+        """Extend target regex to match multiplied tasks."""
+        return target_regex + '\\.gz'
+
     def process(self, task, prefix):
         """Process tasks."""
         if not self.site.config['GZIP_FILES']:

@@ -67,7 +67,6 @@ class GenerateRSS(Task):
             "feed_read_more_link": self.site.config["FEED_READ_MORE_LINK"],
             "feed_links_append_query": self.site.config["FEED_LINKS_APPEND_QUERY"],
         }
-        self.site.scan_posts()
         # Check for any changes in the state of use_in_feeds for any post.
         # Issue #934
         kw['use_in_feeds_status'] = ''.join(

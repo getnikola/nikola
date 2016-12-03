@@ -298,7 +298,6 @@ class Sitemap(LateTask):
             "actions": [(write_sitemap,)],
             "uptodate": [config_changed(kw, 'nikola.plugins.task.sitemap:write')],
             "clean": True,
-            "task_dep": ["render_site"],
             "calc_dep": ["_scan_locs:sitemap"],
         }, kw['filters'])
         yield apply_filters({
