@@ -42,8 +42,8 @@ class ClassifyTags(Taxonomy):
     name = "classify_tags"
 
     classification_name = "tag"
-    metadata_name = "tags"
-    overview_page_variable_name = "tags"
+    metadata_name = None
+    overview_page_variable_name = None
     overview_page_items_variable_name = "items"
     more_than_one_classifications_per_post = True
     has_hierarchy = False
@@ -69,9 +69,7 @@ class ClassifyTags(Taxonomy):
 
     def classify(self, post, lang):
         """Classify the given post for the given language."""
-        if lang not in post._tags and self.site.config["SHOW_UNTRANSLATED_POSTS"]:
-            lang = self.site.config['DEFAULT_LANG']
-        return post._tags.get(lang, [])
+        return post.tags_for_language(lang)
 
     def get_classification_friendly_name(self, classification, lang, only_last_component=False):
         """Extract a friendly name from the classification."""
