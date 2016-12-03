@@ -488,16 +488,6 @@ class Taxonomy(BasePlugin):
     classification_name = "taxonomy":
         The classification name to be used for path handlers.
 
-    metadata_name = "taxonomy":
-        The classification name to be used when storing the classification
-        in the metadata. If set to None, the classification won't be stored
-        in the metadata.
-
-    metadata_friendly_name = None:
-        The name to be used when storing the friendly names of the classification
-        in the metadata. If set to None, the friendly names won't be stored
-        in the metadata.
-
     overview_page_items_variable_name = "items":
         When rendering the overview page, its template will have a list
         of pairs

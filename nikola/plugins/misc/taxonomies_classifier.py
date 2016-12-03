@@ -67,18 +67,6 @@ class TaxonomiesClassifier(SignalHandler):
                         # Extract classifications for this language
                         classifications[lang] = taxonomy.classify(post, lang)
                         assert taxonomy.more_than_one_classifications_per_post or len(classifications[lang]) <= 1
-                        # Store in metadata
-                        if taxonomy.metadata_name is not None:
-                            if taxonomy.more_than_one_classifications_per_post:
-                                post.meta[lang][taxonomy.metadata_name] = classifications[lang]
-                            else:
-                                post.meta[lang][taxonomy.metadata_name] = classifications[lang][0] if len(classifications[lang]) > 0 else None
-                        if taxonomy.metadata_friendly_name is not None:
-                            friendly_names = [taxonomy.get_classification_friendly_name(classification, lang) for classification in classifications[lang]]
-                            if taxonomy.more_than_one_classifications_per_post:
-                                post.meta[lang][taxonomy.metadata_friendly_name] = friendly_names
-                            else:
-                                post.meta[lang][taxonomy.metadata_friendly_name] = friendly_names[0] if len(friendly_names) > 0 else None
                         # Add post to sets
                         for classification in classifications[lang]:
                             while True:
