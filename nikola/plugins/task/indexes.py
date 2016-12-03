@@ -37,7 +37,6 @@ class Indexes(Taxonomy):
     name = "classify_indexes"
 
     classification_name = "index"
-    metadata_name = None
     overview_page_variable_name = None
     more_than_one_classifications_per_post = False
     has_hierarchy = False

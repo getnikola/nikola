@@ -42,8 +42,7 @@ class ClassifyTags(Taxonomy):
     name = "classify_tags"
 
     classification_name = "tag"
-    metadata_name = None
-    overview_page_variable_name = None
+    overview_page_variable_name = "tags"
     overview_page_items_variable_name = "items"
     more_than_one_classifications_per_post = True
     has_hierarchy = False

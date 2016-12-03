@@ -38,7 +38,6 @@ class Archive(Taxonomy):
     name = "classify_archive"
 
     classification_name = "archive"
-    metadata_name = None
     overview_page_variable_name = "archive"
     more_than_one_classifications_per_post = False
     has_hierarchy = True

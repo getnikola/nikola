@@ -588,8 +588,6 @@ class Taxonomy(BasePlugin):
 
     # Adjust the following values in your plugin!
     classification_name = "taxonomy"
-    metadata_name = "taxonomy"
-    metadata_friendly_name = None
     overview_page_variable_name = "taxonomy"
     overview_page_items_variable_name = "items"
     overview_page_hierarchy_variable_name = "taxonomy_hierarchy"

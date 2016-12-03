@@ -42,7 +42,6 @@ class ClassifyCategories(Taxonomy):
     name = "classify_categories"
 
     classification_name = "category"
-    metadata_name = None
     overview_page_variable_name = "categories"
     overview_page_items_variable_name = "cat_items"
     overview_page_hierarchy_variable_name = "cat_hierarchy"

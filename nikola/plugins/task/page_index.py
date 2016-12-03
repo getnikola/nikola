@@ -37,7 +37,6 @@ class PageIndex(Taxonomy):
     name = "classify_page_index"
 
     classification_name = "page_index_folder"
-    metadata_name = None
     overview_page_variable_name = "page_folder"
     more_than_one_classifications_per_post = False
     has_hierarchy = True
