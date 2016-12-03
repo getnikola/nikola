@@ -50,7 +50,6 @@ class ClassifyTags(Taxonomy):
     show_list_as_subcategories_list = False
     generate_atom_feeds_for_post_lists = True
     template_for_classification_overview = "tags.tmpl"
-    add_postcount_in_overview = True
     always_disable_rss = False
     apply_to_posts = True
     apply_to_pages = False

@@ -504,6 +504,11 @@ class Taxonomy(BasePlugin):
             (friendly_name, link)
         for the classifications available in a variable by this name.
 
+        The template will also have a list
+            (friendly_name, link, post_count)
+        for the classifications available in a variable by the name
+        `overview_page_items_variable_name + '_with_postcount'`.
+
     overview_page_variable_name = "taxonomy":
         When rendering the overview page, its template will have a list
         of classifications available in a variable by this name.
@@ -515,6 +520,13 @@ class Taxonomy(BasePlugin):
              indent_levels, indent_change_before, indent_change_after)
         available in a variable by this name. These tuples can be used
         to render the hierarchy as a tree.
+
+        The template will also have a list
+            (friendly_name, classification, classification_path, link,
+             indent_levels, indent_change_before, indent_change_after,
+             number_of_children, post_count)
+        available in the variable by the name
+        `overview_page_hierarchy_variable_name + '_with_postcount'`.
 
     more_than_one_classifications_per_post = False:
         If True, there can be more than one classification per post; in that case,
@@ -559,15 +571,6 @@ class Taxonomy(BasePlugin):
         The template to use for the classification overview page.
         Set to None to avoid generating overviews.
 
-    add_postcount_in_overview = False:
-        If set to True, two more variables `'items_with_postcount'` and
-        `overview_page_hierarchy_variable_name + '_with_postcount'` (for
-        hierarchical taxonomies) besides the `'items'` and
-        `overview_page_hierarchy_variable_name` will be available in the
-        overview page's template. These new variables will contain the post
-        count for every classification, and in case of the hierarchy, also
-        the number of children for every node.
-
     always_disable_rss = False:
         Whether to always disable RSS feed generation
 
@@ -610,7 +613,6 @@ class Taxonomy(BasePlugin):
     generate_atom_feeds_for_post_lists = False
     template_for_single_list = "tagindex.tmpl"
     template_for_classification_overview = "list.tmpl"
-    add_postcount_in_overview = False
     always_disable_rss = False
     apply_to_posts = True
     apply_to_pages = False

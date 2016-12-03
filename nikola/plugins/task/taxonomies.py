@@ -109,15 +109,14 @@ class RenderTaxonomies(Task):
             items = [(classification,
                       self.site.link(taxonomy.classification_name, classification, lang))
                      for classification in classifications]
+            items_with_postcount = [
+                (classification,
+                 self.site.link(taxonomy.classification_name, classification, lang),
+                 len(self._filter_list(self.site.posts_per_classification[taxonomy.classification_name][lang][classification], lang)))
+                for classification in classifications
+            ]
             context[taxonomy.overview_page_items_variable_name] = items
-            if taxonomy.add_postcount_in_overview:
-                items_with_postcount = [
-                    (classification,
-                     self.site.link(taxonomy.classification_name, classification, lang),
-                     len(self._filter_list(self.site.posts_per_classification[taxonomy.classification_name][lang][classification], lang)))
-                    for classification in classifications
-                ]
-                context[taxonomy.overview_page_items_variable_name + "_with_postcount"] = items_with_postcount
+            context[taxonomy.overview_page_items_variable_name + "_with_postcount"] = items_with_postcount
         if taxonomy.has_hierarchy and taxonomy.overview_page_hierarchy_variable_name:
             hier_items = [
                 (node.name, node.classification_name, node.classification_path,
@@ -126,18 +125,17 @@ class RenderTaxonomies(Task):
                  node.indent_change_after)
                 for node in clipped_flat_hierarchy
             ]
+            hier_items_with_postcount = [
+                (node.name, node.classification_name, node.classification_path,
+                 self.site.link(taxonomy.classification_name, node.classification_name, lang),
+                 node.indent_levels, node.indent_change_before,
+                 node.indent_change_after,
+                 len(node.children),
+                 len(self._filter_list(self.site.posts_per_classification[taxonomy.classification_name][lang][node.classification_name], lang)))
+                for node in clipped_flat_hierarchy
+            ]
             context[taxonomy.overview_page_hierarchy_variable_name] = hier_items
-            if taxonomy.add_postcount_in_overview:
-                hier_items_with_postcount = [
-                    (node.name, node.classification_name, node.classification_path,
-                     self.site.link(taxonomy.classification_name, node.classification_name, lang),
-                     node.indent_levels, node.indent_change_before,
-                     node.indent_change_after,
-                     len(node.children),
-                     len(self._filter_list(self.site.posts_per_classification[taxonomy.classification_name][lang][node.classification_name], lang)))
-                    for node in clipped_flat_hierarchy
-                ]
-                context[taxonomy.overview_page_hierarchy_variable_name + '_with_postcount'] = hier_items_with_postcount
+            context[taxonomy.overview_page_hierarchy_variable_name + '_with_postcount'] = hier_items_with_postcount
         return context, kw
 
     def _render_classification_overview(self, classification_name, template, lang, context, kw):
