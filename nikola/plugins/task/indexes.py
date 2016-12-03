@@ -66,13 +66,13 @@ class Indexes(Taxonomy):
         """Extract a friendly name from the classification."""
         return self.site.config["BLOG_TITLE"](lang)
 
-    def get_path(self, classification, lang, type='page'):
+    def get_path(self, classification, lang, dest_type='page'):
         """A path handler for the given classification."""
-        if type == 'rss':
+        if dest_type == 'rss':
             return [self.site.config['RSS_PATH']], True
         # 'page' (index) or 'feed' (Atom)
         page_number = None
-        if type == 'page':
+        if dest_type == 'page':
             # Interpret argument as page number
             try:
                 page_number = int(classification)

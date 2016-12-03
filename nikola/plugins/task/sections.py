@@ -78,13 +78,12 @@ class ClassifySections(Taxonomy):
         """Extract a friendly name from the classification."""
         return self._get_section_name(section, lang)
 
-    def get_path(self, section, lang, type='page'):
+    def get_path(self, section, lang, dest_type='page'):
         """A path handler for the given classification."""
         result = [_f for _f in [section] if _f]
-        if type == 'rss':
+        if dest_type == 'rss':
             return result + ['rss'], 'never'
-        else:
-            return result, 'always'
+        return result, 'always'
 
     def provide_context_and_uptodate(self, section, lang, node=None):
         """Provide data for the context and the uptodate list for the list of the given classifiation."""

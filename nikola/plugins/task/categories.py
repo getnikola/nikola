@@ -27,10 +27,6 @@
 """Render the category pages and feeds."""
 
 from __future__ import unicode_literals
-try:
-    from urlparse import urljoin
-except ImportError:
-    from urllib.parse import urljoin  # NOQA
 
 from nikola.plugin_categories import Taxonomy
 from nikola import utils
@@ -79,7 +75,7 @@ class ClassifyCategories(Taxonomy):
         classification = self.extract_hierarchy(classification)
         return classification[-1] if classification else ''
 
-    def get_overview_path(self, lang, type='page'):
+    def get_overview_path(self, lang, dest_type='page'):
         """A path handler for the list of all classifications."""
         if self.site.config['CATEGORIES_INDEX_PATH'][lang]:
             return [_f for _f in [self.site.config['CATEGORIES_INDEX_PATH'][lang]] if _f], 'never'
@@ -105,7 +101,7 @@ class ClassifyCategories(Taxonomy):
             result = ['-'.join(result)]
         return result
 
-    def get_path(self, classification, lang, type='page'):
+    def get_path(self, classification, lang, dest_type='page'):
         """A path handler for the given classification."""
         return ([_f for _f in [self.site.config['CATEGORY_PATH'][lang]] if _f] + self.slugify_category_name(classification, lang), 'auto')
 
@@ -135,7 +131,7 @@ class ClassifyCategories(Taxonomy):
         kw.update(context)
         return context, kw
 
-    def provide_context_and_uptodate(self, cat, lang, node):
+    def provide_context_and_uptodate(self, cat, lang, node=None):
         """Provide data for the context and the uptodate list for the list of the given classifiation."""
         cat_path = self.extract_hierarchy(cat)
         kw = {

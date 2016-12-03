@@ -102,7 +102,7 @@ class Archive(Taxonomy):
             # Fallback
             return '/'.join(classification)
 
-    def get_path(self, classification, lang, type='page'):
+    def get_path(self, classification, lang, dest_type='page'):
         """A path handler for the given classification."""
         components = [self.site.config['ARCHIVE_PATH']]
         if classification:

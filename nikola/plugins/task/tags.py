@@ -27,10 +27,6 @@
 """Render the tag pages and feeds."""
 
 from __future__ import unicode_literals
-try:
-    from urlparse import urljoin
-except ImportError:
-    from urllib.parse import urljoin  # NOQA
 
 from nikola.plugin_categories import Taxonomy
 from nikola import utils
@@ -83,14 +79,14 @@ class ClassifyTags(Taxonomy):
             name = utils.slugify(name, lang)
         return name
 
-    def get_overview_path(self, lang, type='page'):
+    def get_overview_path(self, lang, dest_type='page'):
         """A path handler for the list of all classifications."""
         if self.site.config['TAGS_INDEX_PATH'][lang]:
             return [_f for _f in [self.site.config['TAGS_INDEX_PATH'][lang]] if _f], 'never'
         else:
             return [_f for _f in [self.site.config['TAG_PATH'][lang]] if _f], 'always'
 
-    def get_path(self, classification, lang, type='page'):
+    def get_path(self, classification, lang, dest_type='page'):
         """A path handler for the given classification."""
         return [_f for _f in [
             self.site.config['TAG_PATH'][lang],

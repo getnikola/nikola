@@ -663,7 +663,7 @@ class Taxonomy(BasePlugin):
         """
         raise NotImplementedError()
 
-    def get_overview_path(self, lang, type='page'):
+    def get_overview_path(self, lang, dest_type='page'):
         """A path handler for the classification overview.
 
         Must return one or two values (in this order):
@@ -679,11 +679,11 @@ class Taxonomy(BasePlugin):
         be ignored by this handler. The return value will be modified based on
         the PRETTY_URLS and INDEX_FILE settings.
 
-        Type can be either 'page', 'feed' (for Atom feed) or 'rss'.
+        `dest_type` can be either 'page', 'feed' (for Atom feed) or 'rss'.
         """
         raise NotImplementedError()
 
-    def get_path(self, classification, lang, type='page'):
+    def get_path(self, classification, lang, dest_type='page'):
         """A path handler for the given classification.
 
         Must return one to three values (in this order):
@@ -702,7 +702,7 @@ class Taxonomy(BasePlugin):
         be ignored by this handler. The return value will be modified based on
         the PRETTY_URLS and INDEX_FILE settings.
 
-        Type can be either 'page', 'feed' (for Atom feed) or 'rss'.
+        `dest_type` can be either 'page', 'feed' (for Atom feed) or 'rss'.
 
         For hierarchical taxonomies, the result of extract_hierarchy is provided
         as `classification`. For non-hierarchical taxonomies, the classification

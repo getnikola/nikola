@@ -71,11 +71,11 @@ class ClassifyAuthors(Taxonomy):
         """Extract a friendly name from the classification."""
         return author
 
-    def get_overview_path(self, lang, type='page'):
+    def get_overview_path(self, lang, dest_type='page'):
         """A path handler for the list of all classifications."""
         return [self.site.config['AUTHOR_PATH']], 'always'
 
-    def get_path(self, author, lang, type='page'):
+    def get_path(self, author, lang, dest_type='page'):
         """A path handler for the given classification."""
         if self.site.config['SLUG_AUTHOR_PATH']:
             slug = utils.slugify(author, lang)

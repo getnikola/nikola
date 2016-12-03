@@ -202,7 +202,7 @@ class TaxonomiesClassifier(SignalHandler):
         """Given a list of posts and the maximal number of posts per page, computes the number of pages needed."""
         return min(1, (len(filtered_posts) + posts_count - 1) // posts_count)
 
-    def _postprocess_path(self, path, lang, append_index='auto', type='page', page_info=None):
+    def _postprocess_path(self, path, lang, append_index='auto', dest_type='page', page_info=None):
         """Postprocess a generated path.
 
         Takes the path `path` for language `lang`, and postprocesses it.
@@ -212,10 +212,10 @@ class TaxonomiesClassifier(SignalHandler):
         `site.config['PRETTY_URLS']`.
 
         It also modifies/adds the extension of the last path element resp.
-        `site.config['INDEX_FILE']` depending on `type`, which can be
+        `site.config['INDEX_FILE']` depending on `dest_type`, which can be
         `'feed'`, `'rss'` or `'page'`.
 
-        Finally, if `type` is `'page'`, `page_info` can be `None` or a tuple
+        Finally, if `dest_type` is `'page'`, `page_info` can be `None` or a tuple
         of two integers: the page number and the number of pages. This will
         be used to append the correct page number by calling
         `utils.adjust_name_for_index_path_list` and
@@ -223,14 +223,14 @@ class TaxonomiesClassifier(SignalHandler):
         """
         # Forcing extension for Atom feeds and RSS feeds
         force_extension = None
-        if type == 'feed':
+        if dest_type == 'feed':
             force_extension = '.atom'
-        elif type == 'rss':
+        elif dest_type == 'rss':
             force_extension = '.xml'
         # Determine how to extend path
         path = [_f for _f in path if _f]
         if force_extension is not None:
-            if len(path) == 0 and type == 'rss':
+            if len(path) == 0 and dest_type == 'rss':
                 path = ['rss']
             elif len(path) == 0 or append_index == 'always':
                 path = path + [os.path.splitext(self.site.config['INDEX_FILE'])[0]]
@@ -241,7 +241,7 @@ class TaxonomiesClassifier(SignalHandler):
             path[-1] += '.html'
         # Create path
         result = [_f for _f in [self.site.config['TRANSLATIONS'][lang]] + path if _f]
-        if page_info is not None and type == 'page':
+        if page_info is not None and dest_type == 'page':
             result = utils.adjust_name_for_index_path_list(result,
                                                            page_info[0],
                                                            utils.get_displayed_page_number(page_info[0], page_info[1], self.site),
@@ -264,14 +264,14 @@ class TaxonomiesClassifier(SignalHandler):
         """Return path to the classification overview."""
         result = taxonomy.get_overview_path(lang)
         path, append_index, _ = self._parse_path_result(result)
-        return self._postprocess_path(path, lang, append_index=append_index, type='list')
+        return self._postprocess_path(path, lang, append_index=append_index, dest_type='list')
 
-    def _taxonomy_path(self, name, lang, taxonomy, type='page'):
+    def _taxonomy_path(self, name, lang, taxonomy, dest_type='page'):
         """Return path to a classification."""
         if taxonomy.has_hierarchy:
-            result = taxonomy.get_path(taxonomy.extract_hierarchy(name), lang, type=type)
+            result = taxonomy.get_path(taxonomy.extract_hierarchy(name), lang, dest_type=dest_type)
         else:
-            result = taxonomy.get_path(name, lang, type=type)
+            result = taxonomy.get_path(name, lang, dest_type=dest_type)
         path, append_index, page = self._parse_path_result(result)
         page_info = None
         if not taxonomy.show_list_as_index and page is not None:
@@ -280,15 +280,15 @@ class TaxonomiesClassifier(SignalHandler):
                 number_of_pages = self._compute_number_of_pages(self._get_filtered_list(name, lang), self.site.config['INDEX_DISPLAY_POST_COUNT'])
                 self.site.page_count_per_classification[taxonomy.classification_name][lang][name] = number_of_pages
             page_info = (page, number_of_pages)
-        return self._postprocess_path(path, lang, append_index=append_index, type=type, page_info=page_info)
+        return self._postprocess_path(path, lang, append_index=append_index, dest_type=dest_type, page_info=page_info)
 
     def _taxonomy_atom_path(self, name, lang, taxonomy):
         """Return path to a classification Atom feed."""
-        return self._taxonomy_path(name, lang, taxonomy, type='feed')
+        return self._taxonomy_path(name, lang, taxonomy, dest_type='feed')
 
     def _taxonomy_rss_path(self, name, lang, taxonomy):
         """Return path to a classification RSS feed."""
-        return self._taxonomy_path(name, lang, taxonomy, type='rss')
+        return self._taxonomy_path(name, lang, taxonomy, dest_type='rss')
 
     def _register_path_handlers(self, taxonomy):
         self.site.register_path_handler('{0}_index'.format(taxonomy.classification_name), lambda name, lang: self._taxonomy_index_path(lang, taxonomy))
