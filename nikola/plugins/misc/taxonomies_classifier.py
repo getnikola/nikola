@@ -106,9 +106,9 @@ class TaxonomiesClassifier(SignalHandler):
                             else:
                                 utils.LOGGER.error('You have classifications that are too similar: {0} "{1}" and {2} "{3}" both result in output path {4} for language {5}.'.format(
                                     taxonomy.classification_name, classification, other_classification_name, other_classification, path, lang))
-                                utils.LOGGER.error('{0} {1} is used in: {1}'.format(
+                                utils.LOGGER.error('{0} {1} is used in: {2}'.format(
                                     taxonomy.classification_name.title(), classification, ', '.join(sorted([p.source_path for p in posts]))))
-                                utils.LOGGER.error('{0} {1} is used in: {1}'.format(
+                                utils.LOGGER.error('{0} {1} is used in: {2}'.format(
                                     other_classification_name.title(), other_classification, ', '.join(sorted([p.source_path for p in other_posts]))))
                                 quit = True
                         else:
@@ -277,7 +277,7 @@ class TaxonomiesClassifier(SignalHandler):
         if not taxonomy.show_list_as_index and page is not None:
             number_of_pages = self.site.page_count_per_classification[taxonomy.classification_name][lang].get(name)
             if number_of_pages is None:
-                number_of_pages = self._compute_number_of_pages(self._get_filtered_list(name, lang), self.site.config['INDEX_DISPLAY_POST_COUNT'])
+                number_of_pages = self._compute_number_of_pages(self._get_filtered_list(taxonomy, name, lang), self.site.config['INDEX_DISPLAY_POST_COUNT'])
                 self.site.page_count_per_classification[taxonomy.classification_name][lang][name] = number_of_pages
             page_info = (page, number_of_pages)
         return self._postprocess_path(path, lang, append_index=append_index, dest_type=dest_type, page_info=page_info)

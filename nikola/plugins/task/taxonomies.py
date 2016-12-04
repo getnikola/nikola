@@ -277,7 +277,7 @@ class RenderTaxonomies(Task):
         yield task
 
         if taxonomy.generate_atom_feeds_for_post_lists and self.site.config['GENERATE_ATOM']:
-            yield self._generate_classification_page_as_list_atom(kind, taxonomy, classification, filtered_posts, context, kw, lang)
+            yield self._generate_classification_page_as_list_atom(taxonomy, classification, filtered_posts, context, kw, lang)
 
     def _filter_list(self, post_list, lang):
         """Return only the posts which should be shown for this language."""
