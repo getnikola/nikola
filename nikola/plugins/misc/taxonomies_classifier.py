@@ -79,43 +79,6 @@ class TaxonomiesClassifier(SignalHandler):
                                         break
                                 classification = taxonomy.recombine_classification_from_hierarchy(classification_path[:-1])
 
-        # Check for valid paths and for collisions
-        taxonomy_outputs = {lang: dict() for lang in site.config['TRANSLATIONS'].keys()}
-        quit = False
-        for taxonomy in taxonomies:
-            # Check for collisions (per language)
-            for lang in site.config['TRANSLATIONS'].keys():
-                for tlang in site.config['TRANSLATIONS'].keys():
-                    if lang != tlang and not taxonomy.also_create_classifications_from_other_languages:
-                        continue
-                    for classification, posts in site.posts_per_classification[taxonomy.classification_name][tlang].items():
-                        # Obtain path as tuple
-                        path = site.path_handlers[taxonomy.classification_name](classification, lang)
-                        # Check that path is OK
-                        for path_element in path:
-                            if len(path_element) == 0:
-                                utils.LOGGER.error("{0} {1} yields invalid path '{2}'!".format(taxonomy.classification_name.title(), classification, '/'.join(path)))
-                                quit = True
-                        # Combine path
-                        path = os.path.join(*[os.path.normpath(p) for p in path if p != '.'])
-                        # Determine collisions
-                        if path in taxonomy_outputs[lang]:
-                            other_classification_name, other_classification, other_posts = taxonomy_outputs[lang][path]
-                            if other_classification_name == taxonomy.classification_name and other_classification == classification:
-                                taxonomy_outputs[lang][path][2].extend(posts)
-                            else:
-                                utils.LOGGER.error('You have classifications that are too similar: {0} "{1}" and {2} "{3}" both result in output path {4} for language {5}.'.format(
-                                    taxonomy.classification_name, classification, other_classification_name, other_classification, path, lang))
-                                utils.LOGGER.error('{0} {1} is used in: {2}'.format(
-                                    taxonomy.classification_name.title(), classification, ', '.join(sorted([p.source_path for p in posts]))))
-                                utils.LOGGER.error('{0} {1} is used in: {2}'.format(
-                                    other_classification_name.title(), other_classification, ', '.join(sorted([p.source_path for p in other_posts]))))
-                                quit = True
-                        else:
-                            taxonomy_outputs[lang][path] = (taxonomy.classification_name, classification, list(posts))
-        if quit:
-            sys.exit(1)
-
         # Sort everything.
         site.page_count_per_classification = {}
         site.hierarchy_per_classification = {}
@@ -188,6 +151,45 @@ class TaxonomiesClassifier(SignalHandler):
                                                               site.hierarchy_lookup_per_classification[taxonomy.classification_name])
             else:
                 taxonomy.postprocess_posts_per_classification(site.posts_per_classification[taxonomy.classification_name])
+
+        # Check for valid paths and for collisions
+        taxonomy_outputs = {lang: dict() for lang in site.config['TRANSLATIONS'].keys()}
+        quit = False
+        for taxonomy in taxonomies:
+            # Check for collisions (per language)
+            for lang in site.config['TRANSLATIONS'].keys():
+                if not taxonomy.is_enabled(lang):
+                    continue
+                for tlang in site.config['TRANSLATIONS'].keys():
+                    if lang != tlang and not taxonomy.also_create_classifications_from_other_languages:
+                        continue
+                    for classification, posts in site.posts_per_classification[taxonomy.classification_name][tlang].items():
+                        # Obtain path as tuple
+                        path = site.path_handlers[taxonomy.classification_name](classification, lang)
+                        # Check that path is OK
+                        for path_element in path:
+                            if len(path_element) == 0:
+                                utils.LOGGER.error("{0} {1} yields invalid path '{2}'!".format(taxonomy.classification_name.title(), classification, '/'.join(path)))
+                                quit = True
+                        # Combine path
+                        path = os.path.join(*[os.path.normpath(p) for p in path if p != '.'])
+                        # Determine collisions
+                        if path in taxonomy_outputs[lang]:
+                            other_classification_name, other_classification, other_posts = taxonomy_outputs[lang][path]
+                            if other_classification_name == taxonomy.classification_name and other_classification == classification:
+                                taxonomy_outputs[lang][path][2].extend(posts)
+                            else:
+                                utils.LOGGER.error('You have classifications that are too similar: {0} "{1}" and {2} "{3}" both result in output path {4} for language {5}.'.format(
+                                    taxonomy.classification_name, classification, other_classification_name, other_classification, path, lang))
+                                utils.LOGGER.error('{0} {1} is used in: {2}'.format(
+                                    taxonomy.classification_name.title(), classification, ', '.join(sorted([p.source_path for p in posts]))))
+                                utils.LOGGER.error('{0} {1} is used in: {2}'.format(
+                                    other_classification_name.title(), other_classification, ', '.join(sorted([p.source_path for p in other_posts]))))
+                                quit = True
+                        else:
+                            taxonomy_outputs[lang][path] = (taxonomy.classification_name, classification, list(posts))
+        if quit:
+            sys.exit(1)
 
     def _get_filtered_list(self, taxonomy, classification, lang):
         """Return the filtered list of posts for this classification and language."""
