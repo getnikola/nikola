@@ -73,6 +73,7 @@ from .plugin_categories import (
     SignalHandler,
     ConfigPlugin,
     PostScanner,
+    Taxonomy,
 )
 
 if DEBUG:
@@ -438,6 +439,7 @@ class Nikola(object):
             'BLOG_DESCRIPTION': 'Default Description',
             'BODY_END': "",
             'CACHE_FOLDER': 'cache',
+            'CATEGORIES_INDEX_PATH': '',
             'CATEGORY_PATH': None,  # None means: same as TAG_PATH
             'CATEGORY_PAGES_ARE_INDEXES': None,  # None means: same as TAG_PAGES_ARE_INDEXES
             'CATEGORY_PAGES_DESCRIPTIONS': {},
@@ -646,6 +648,7 @@ class Nikola(object):
                                       'TAG_PATH',
                                       'TAGS_INDEX_PATH',
                                       'CATEGORY_PATH',
+                                      'CATEGORIES_INDEX_PATH',
                                       'DATE_FORMAT',
                                       'JS_DATE_FORMAT',
                                       )
@@ -949,6 +952,7 @@ class Nikola(object):
             "SignalHandler": SignalHandler,
             "ConfigPlugin": ConfigPlugin,
             "PostScanner": PostScanner,
+            "Taxonomy": Taxonomy,
         })
         self.plugin_manager.getPluginLocator().setPluginInfoExtension('plugin')
         extra_plugins_dirs = self.config['EXTRA_PLUGINS_DIRS']
@@ -1019,6 +1023,16 @@ class Nikola(object):
             self.plugin_manager._candidates.append(plugins[-1])
 
         self.plugin_manager.loadPlugins()
+
+        self._activate_plugins_of_category("Taxonomy")
+        self.taxonomy_plugins = {}
+        for taxonomy in [p.plugin_object for p in self.plugin_manager.getPluginsOfCategory('Taxonomy')]:
+            if not taxonomy.is_enabled():
+                continue
+            if taxonomy.classification_name in self.taxonomy_plugins:
+                utils.LOGGER.error("Found more than one taxonomy with classification name '{}'!".format(taxonomy.classification_name))
+                sys.exit(1)
+            self.taxonomy_plugins[taxonomy.classification_name] = taxonomy
 
         self._activate_plugins_of_category("SignalHandler")
 
@@ -2344,7 +2358,7 @@ class Nikola(object):
         kw['indexes_prety_page_url'] = self.config["INDEXES_PRETTY_PAGE_URL"]
         kw['demote_headers'] = self.config['DEMOTE_HEADERS']
         kw['generate_atom'] = self.config["GENERATE_ATOM"]
-        kw['feed_link_append_query'] = self.config["FEED_LINKS_APPEND_QUERY"]
+        kw['feed_links_append_query'] = self.config["FEED_LINKS_APPEND_QUERY"]
         kw['currentfeed'] = None
 
         # Split in smaller lists

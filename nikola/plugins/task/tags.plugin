@@ -1,5 +1,5 @@
 [Core]
-name = render_tags
+name = classify_tags
 module = tags
 
 [Documentation]
@@ -9,5 +9,4 @@ website = https://getnikola.com/
 description = Render the tag pages and feeds.
 
 [Nikola]
-plugincategory = Task
-
+plugincategory = Taxonomy

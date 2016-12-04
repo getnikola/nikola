@@ -1,5 +1,5 @@
 [Core]
-Name = render_authors
+Name = classify_authors
 Module = authors
 
 [Documentation]
@@ -8,3 +8,5 @@ Version = 0.1
 Website = http://getnikola.com
 Description = Render the author pages and feeds.
 
+[Nikola]
+plugincategory = Taxonomy

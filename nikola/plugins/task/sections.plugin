@@ -1,6 +1,6 @@
 [Core]
-name = classify_indexes
-module = indexes
+name = classify_sections
+module = sections
 
 [Documentation]
 author = Roberto Alsina

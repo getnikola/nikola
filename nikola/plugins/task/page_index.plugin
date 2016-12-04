@@ -1,6 +1,6 @@
 [Core]
-name = classify_indexes
-module = indexes
+name = classify_page_index
+module = page_index
 
 [Documentation]
 author = Roberto Alsina
