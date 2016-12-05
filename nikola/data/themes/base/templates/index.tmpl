@@ -10,10 +10,29 @@
     % endif
 </%block>
 
+<%block name="page_navigation">
+<div class="page-navigation">
+  % for i, link in enumerate(page_links):
+    % if abs(i - current_page) <= 3 or i == 0 or i == len(page_links) - 1:
+      % if i == current_page:
+        <span class="current-page">${i+1}</span>
+      % else:
+        <a href="${page_links[i]}">${i+1}</a>
+      % endif
+    % elif i == current_page - 4 or i == current_page + 4:
+      <span class="ellipsis">&#x22EF;</span>
+    % endif
+  % endfor
+</div>
+</%block>
+
 <%block name="content">
 <%block name="content_header"></%block>
 % if 'main_index' in pagekind:
     ${front_index_header}
+% endif
+% if page_links:
+    ${page_navigation()}
 % endif
 <div class="postindex">
 % for post in posts:
