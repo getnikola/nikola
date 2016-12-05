@@ -2379,8 +2379,8 @@ class Nikola(object):
         displayed_page_numbers = [utils.get_displayed_page_number(i, num_pages, self) for i in range(max(num_pages, 1))]
         page_links = [page_link(i, displayed_page_numbers[i], num_pages, False) for i in range(max(num_pages, 1))]
         if kw['show_index_page_navigation']:
-            map = {page_number - 1: link for page_number, link in zip(displayed_page_numbers, page_links)}
-            page_links_context = [map[i] for i in range(num_pages)]
+            temp_map = {page_number - 1: link for page_number, link in zip(displayed_page_numbers, page_links)}
+            page_links_context = [temp_map[i] for i in range(num_pages)]
         for i, post_list in enumerate(lists):
             context = context_source.copy()
             if 'pagekind' not in context:
