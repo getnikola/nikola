@@ -351,6 +351,14 @@ LEGAL_VALUES = {
     }
 }
 
+# Mapping old pre-taxonomy plugin names to new post-taxonomy plugin names
+TAXONOMY_COMPATIBILITY_PLUGIN_NAME_MAP = {
+    "render_archive": ["classify_archive"],
+    "render_authors": ["classify_authors"],
+    "render_indexes": ["classify_indexes", "classify_page_index", "classify_sections"],
+    "render_tags": ["classify_categories", "render_tag_cloud", "classify_tags"],
+}
+
 
 def _enclosure(post, lang):
     """Add an enclosure to RSS."""
@@ -798,13 +806,24 @@ class Nikola(object):
             utils.LOGGER.warn('The moot comment system has been renamed to muut by the upstream.  Setting COMMENT_SYSTEM to "muut".')
             self.config['COMMENT_SYSTEM'] = 'muut'
 
+        # Handle old plugin names (from before merging the taxonomy PR #2535)
+        for old_plugin_name, new_plugin_names in TAXONOMY_COMPATIBILITY_PLUGIN_NAME_MAP.items():
+            if old_plugin_name in self.config['DISABLED_PLUGINS']:
+                missing_plugins = []
+                for plugin_name in new_plugin_names:
+                    if plugin_name not in self.config['DISABLED_PLUGINS']:
+                        missing_plugins.append(plugin_name)
+                if missing_plugins:
+                    utils.LOGGER.warn('The "{}" plugin was replaced by several taxonomy plugins (see PR #2535): {}'.format(old_plugin_name, ', '.join(new_plugin_names)))
+                    utils.LOGGER.warn('You are currently disabling "{}", but not the following new taxonomy plugins: {}'.format(old_plugin_name, ', '.join(missing_plugins)))
+                    utils.LOGGER.warn('Please also disable these new plugins or remove "{}" from the DISABLED_PLUGINS list.'.format(old_plugin_name))
+                    self.config['DISABLED_PLUGINS'].extend(missing_plugins)
+
         # Disable RSS.  For a successful disable, we must have both the option
         # false and the plugin disabled through the official means.
         if 'generate_rss' in self.config['DISABLED_PLUGINS'] and self.config['GENERATE_RSS'] is True:
+            utils.LOGGER.warn('Please use GENERATE_RSS to disable RSS feed generation, instead of mentioning generate_rss in DISABLED_PLUGINS.')
             self.config['GENERATE_RSS'] = False
-
-        if not self.config['GENERATE_RSS'] and 'generate_rss' not in self.config['DISABLED_PLUGINS']:
-            self.config['DISABLED_PLUGINS'].append('generate_rss')
 
         # PRETTY_URLS defaults to enabling STRIP_INDEXES unless explicitly disabled
         if self.config.get('PRETTY_URLS') and 'STRIP_INDEXES' not in config:
