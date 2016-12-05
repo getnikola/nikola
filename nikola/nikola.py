@@ -657,9 +657,9 @@ class Nikola(object):
                                       'TAGS_INDEX_PATH',
                                       'CATEGORY_PATH',
                                       'CATEGORIES_INDEX_PATH',
-                                      'INDEX_INDEX_PATH',
-                                      'RSS_INDEX_PATH',
-                                      'AUTHOR_INDEX_PATH',
+                                      'INDEX_PATH',
+                                      'RSS_PATH',
+                                      'AUTHOR_PATH',
                                       'DATE_FORMAT',
                                       'JS_DATE_FORMAT',
                                       )
