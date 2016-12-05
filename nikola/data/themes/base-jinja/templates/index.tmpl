@@ -1,6 +1,7 @@
 {#  -*- coding: utf-8 -*- #}
 {% import 'index_helper.tmpl' as helper with context %}
 {% import 'comments_helper.tmpl' as comments with context %}
+{% import 'pagination_helper.tmpl' as pagination with context %}
 {% extends 'base.tmpl' %}
 
 {% block extra_head %}
@@ -10,29 +11,13 @@
     {% endif %}
 {% endblock %}
 
-{% block page_navigation %}
-<div class="page-navigation">
-  {% for i, link in enumerate(page_links) %}
-    {% if abs(i - current_page) <= 3 or i == 0 or i == page_links|length - 1 %}
-      {% if i == current_page %}
-        <span class="current-page">{{ i+1 }}</span>
-      {% else %}
-        <a href="{{ page_links[i] }}">{{ i+1 }}</a>
-      {% endif %}
-    {% elif i == current_page - 4 or i == current_page + 4 %}
-      <span class="ellipsis">&#x22EF;</span>
-    {% endif %}
-  {% endfor %}
-</div>
-{% endblock %}
-
 {% block content %}
 {% block content_header %}{% endblock %}
 {% if 'main_index' in pagekind %}
     {{ front_index_header }}
 {% endif %}
 {% if page_links %}
-    {{ page_navigation() }}
+    {{ pagination.page_navigation(current_page, page_links, prevlink, nextlink) }}
 {% endif %}
 <div class="postindex">
 {% for post in posts %}

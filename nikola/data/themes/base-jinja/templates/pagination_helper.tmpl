@@ -1,0 +1,16 @@
+{#  -*- coding: utf-8 -*- #}
+{% macro page_navigation(current_page, page_links, prevlink, nextlink) %}
+<div class="page-navigation">
+  {% for i, link in enumerate(page_links) %}
+    {% if abs(i - current_page) <= 3 or i == 0 or i == page_links|length - 1 %}
+      {% if i == current_page %}
+        <span class="current-page">{{ i+1 }}</span>
+      {% else %}
+        <a href="{{ page_links[i] }}">{{ i+1 }}</a>
+      {% endif %}
+    {% elif i == current_page - 4 or i == current_page + 4 %}
+      <span class="ellipsis">&#x22EF;</span>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endmacro %}
