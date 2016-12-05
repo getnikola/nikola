@@ -812,11 +812,11 @@ class Nikola(object):
                 missing_plugins = []
                 for plugin_name in new_plugin_names:
                     if plugin_name not in self.config['DISABLED_PLUGINS']:
-                        missing_plugins.apped(plugin_name)
-                utils.LOGGER.warn('The "{}" plugin was replaced by several taxonomy plugins (see PR #2535): {}'.format(old_plugin_name, ', '.join(new_plugin_names)))
-                utils.LOGGER.warn('You are currently disabling "{}", but not the following new taxonomy plugins: {}'.format(old_plugin_name, ', '.join(missing_plugins)))
-                utils.LOGGER.warn('Please also disable these new plugins or remove "{}" from the DISABLED_PLUGINS list.'.format(old_plugin_name))
+                        missing_plugins.append(plugin_name)
                 if missing_plugins:
+                    utils.LOGGER.warn('The "{}" plugin was replaced by several taxonomy plugins (see PR #2535): {}'.format(old_plugin_name, ', '.join(new_plugin_names)))
+                    utils.LOGGER.warn('You are currently disabling "{}", but not the following new taxonomy plugins: {}'.format(old_plugin_name, ', '.join(missing_plugins)))
+                    utils.LOGGER.warn('Please also disable these new plugins or remove "{}" from the DISABLED_PLUGINS list.'.format(old_plugin_name))
                     self.config['DISABLED_PLUGINS'].extend(missing_plugins)
 
         # Disable RSS.  For a successful disable, we must have both the option
