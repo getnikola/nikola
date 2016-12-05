@@ -352,7 +352,7 @@ LEGAL_VALUES = {
 }
 
 # Mapping old pre-taxonomy plugin names to new post-taxonomy plugin names
-PLUGIN_NAME_MAP = {
+TAXONOMY_COMPATIBILITY_PLUGIN_NAME_MAP = {
     "render_archive": ["classify_archive"],
     "render_authors": ["classify_authors"],
     "render_indexes": ["classify_indexes", "classify_page_index", "classify_sections"],
@@ -807,7 +807,7 @@ class Nikola(object):
             self.config['COMMENT_SYSTEM'] = 'muut'
 
         # Handle old plugin names (from before merging the taxonomy PR #2535)
-        for old_plugin_name, new_plugin_names in PLUGIN_NAME_MAP.items():
+        for old_plugin_name, new_plugin_names in TAXONOMY_COMPATIBILITY_PLUGIN_NAME_MAP.items():
             if old_plugin_name in self.config['DISABLED_PLUGINS']:
                 missing_plugins = []
                 for plugin_name in new_plugin_names:
