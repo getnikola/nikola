@@ -1,5 +1,5 @@
 ## -*- coding: utf-8 -*-
-<%def name="page_navigation(current_page, page_links, prevlink, nextlink)">
+<%def name="page_navigation(current_page, page_links, prevlink, nextlink, prev_next_links_reversed)">
 <div class="page-navigation">
   % for i, link in enumerate(page_links):
     % if abs(i - current_page) <= 3 or i == 0 or i == len(page_links) - 1:

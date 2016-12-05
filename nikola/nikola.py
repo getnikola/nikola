@@ -2432,6 +2432,7 @@ class Nikola(object):
             if kw['show_index_page_navigation']:
                 context['page_links'] = page_links_context
                 context['current_page'] = ipages_i - 1
+                context['prev_next_links_reversed'] = kw['indexes_static']
             context["permalink"] = page_links[i]
             output_name = os.path.join(kw['output_folder'], page_path(i, ipages_i, num_pages, False))
             task = self.generic_post_list_renderer(

@@ -17,7 +17,7 @@
     {{ front_index_header }}
 {% endif %}
 {% if page_links %}
-    {{ pagination.page_navigation(current_page, page_links, prevlink, nextlink) }}
+    {{ pagination.page_navigation(current_page, page_links, prevlink, nextlink, prev_next_links_reversed) }}
 {% endif %}
 <div class="postindex">
 {% for post in posts %}
