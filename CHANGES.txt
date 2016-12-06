@@ -12,6 +12,8 @@ Bugfixes
 Features
 --------
 
+* Query strings in magic links are passed as keyword arguments to path
+  handlers (via Issue #2580)
 * Accept arbitrary arguments to path handlers (via Issue #2580)
 * Added new ``typogrify_oldschool`` filter (Issue #2574)
 * Improving handling of .dep files, and allowing compilers to specify
