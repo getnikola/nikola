@@ -28,6 +28,7 @@
 
 from __future__ import unicode_literals
 import blinker
+import functools
 import natsort
 import os
 import sys
@@ -262,7 +263,7 @@ class TaxonomiesClassifier(SignalHandler):
         page_info = result[2] if len(result) > 2 else None
         return path, append_index, page_info
 
-    def _taxonomy_index_path(self, lang, taxonomy):
+    def _taxonomy_index_path(self, name, lang, taxonomy):
         """Return path to the classification overview."""
         result = taxonomy.get_overview_path(lang)
         path, append_index, _ = self._parse_path_result(result)
@@ -293,10 +294,10 @@ class TaxonomiesClassifier(SignalHandler):
         return self._taxonomy_path(name, lang, taxonomy, dest_type='rss')
 
     def _register_path_handlers(self, taxonomy):
-        self.site.register_path_handler('{0}_index'.format(taxonomy.classification_name), lambda name, lang: self._taxonomy_index_path(lang, taxonomy))
-        self.site.register_path_handler('{0}'.format(taxonomy.classification_name), lambda name, lang: self._taxonomy_path(name, lang, taxonomy))
-        self.site.register_path_handler('{0}_atom'.format(taxonomy.classification_name), lambda name, lang: self._taxonomy_atom_path(name, lang, taxonomy))
-        self.site.register_path_handler('{0}_rss'.format(taxonomy.classification_name), lambda name, lang: self._taxonomy_rss_path(name, lang, taxonomy))
+        self.site.register_path_handler('{0}_index'.format(taxonomy.classification_name), functools.partial(self._taxonomy_index_path, taxonomy=taxonomy))
+        self.site.register_path_handler('{0}'.format(taxonomy.classification_name), functools.partial(self._taxonomy_path, taxonomy=taxonomy))
+        self.site.register_path_handler('{0}_atom'.format(taxonomy.classification_name), functools.partial(self._taxonomy_atom_path, taxonomy=taxonomy))
+        self.site.register_path_handler('{0}_rss'.format(taxonomy.classification_name), functools.partial(self._taxonomy_rss_path, taxonomy=taxonomy))
 
     def set_site(self, site):
         """Set site, which is a Nikola instance."""
