@@ -1688,7 +1688,7 @@ class Nikola(object):
                 data = data.decode('utf-8')
             rss_file.write(data)
 
-    def path(self, kind, name, lang=None, is_link=False):
+    def path(self, kind, name, lang=None, is_link=False, **kwargs):
         r"""Build the path to a certain kind of page.
 
         These are mostly defined by plugins by registering via the
@@ -1725,7 +1725,7 @@ class Nikola(object):
             lang = utils.LocaleBorg().current_lang
 
         try:
-            path = self.path_handlers[kind](name, lang)
+            path = self.path_handlers[kind](name, lang, **kwargs)
             path = [os.path.normpath(p) for p in path if p != '.']  # Fix Issue #1028
             if is_link:
                 link = '/' + ('/'.join(path))
@@ -1804,9 +1804,9 @@ class Nikola(object):
         else:
             self.path_handlers[kind] = f
 
-    def link(self, *args):
+    def link(self, *args, **kwargs):
         """Create a link."""
-        url = self.path(*args, is_link=True)
+        url = self.path(*args, is_link=True, **kwargs)
         url = utils.encodelink(url)
         return url
 
