@@ -9,7 +9,7 @@
         <a href="{{ page_links[i] }}">{{ i+1 }}</a>
       {% endif %}
     {% elif i == current_page - surrounding - 1 or i == current_page + surrounding + 1 %}
-      <span class="ellipsis">&#x22EF;</span>
+      <span class="ellipsis">…</span>
     {% endif %}
   {% endfor %}
 </div>
