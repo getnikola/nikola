@@ -69,7 +69,7 @@ class Indexes(Taxonomy):
     def get_path(self, classification, lang, dest_type='page'):
         """A path handler for the given classification."""
         if dest_type == 'rss':
-            return [self.site.config['RSS_PATH']], True
+            return [self.site.config['RSS_PATH'](lang)], True
         # 'page' (index) or 'feed' (Atom)
         page_number = None
         if dest_type == 'page':
@@ -78,7 +78,7 @@ class Indexes(Taxonomy):
                 page_number = int(classification)
             except:
                 pass
-        return [self.site.config['INDEX_PATH']], 'always', page_number
+        return [self.site.config['INDEX_PATH'](lang)], 'always', page_number
 
     def provide_context_and_uptodate(self, classification, lang, node=None):
         """Provide data for the context and the uptodate list for the list of the given classifiation."""
