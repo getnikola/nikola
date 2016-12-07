@@ -703,6 +703,11 @@ IMAGE_FOLDERS = {'images': 'images'}
 # for the full URL with the page number of the main page to the normal (shorter) main
 # page URL.
 # INDEXES_PRETTY_PAGE_URL = False
+#
+# If the following is true, a page range navigation will be inserted to indices.
+# Please note that this will undo the effect of INDEXES_STATIC, as all index pages
+# must be recreated whenever the number of pages changes.
+# SHOW_INDEX_PAGE_NAVIGATION = False
 
 # Color scheme to be used for code blocks. If your theme provides
 # "assets/css/code.css" this is ignored.

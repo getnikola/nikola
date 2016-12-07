@@ -562,6 +562,7 @@ class Nikola(object):
             'SASS_OPTIONS': [],
             'SEARCH_FORM': '',
             'SHOW_BLOG_TITLE': True,
+            'SHOW_INDEX_PAGE_NAVIGATION': False,
             'SHOW_SOURCELINK': True,
             'SHOW_UNTRANSLATED_POSTS': True,
             'SLUG_AUTHOR_PATH': True,
@@ -2389,6 +2390,7 @@ class Nikola(object):
         kw['generate_atom'] = self.config["GENERATE_ATOM"]
         kw['feed_links_append_query'] = self.config["FEED_LINKS_APPEND_QUERY"]
         kw['currentfeed'] = None
+        kw['show_index_page_navigation'] = self.config['SHOW_INDEX_PAGE_NAVIGATION']
 
         # Split in smaller lists
         lists = []
@@ -2403,11 +2405,22 @@ class Nikola(object):
                 lists.append(posts[:kw["index_display_post_count"]])
                 posts = posts[kw["index_display_post_count"]:]
         num_pages = len(lists)
+        displayed_page_numbers = [utils.get_displayed_page_number(i, num_pages, self) for i in range(num_pages or 1)]
+        page_links = [page_link(i, page_number, num_pages, False) for i, page_number in enumerate(displayed_page_numbers)]
+        if kw['show_index_page_navigation']:
+            # Since the list displayed_page_numbers is not necessarily
+            # sorted -- in case INDEXES_STATIC is True, it is of the
+            # form [num_pages, 1, 2, ..., num_pages - 1] -- we order it
+            # via a map. This allows to not replicate the logic of
+            # utils.get_displayed_page_number() here.
+            temp_map = {page_number - 1: link for page_number, link in zip(displayed_page_numbers, page_links)}
+            # Note that len(temp_map) >= num_pages.
+            page_links_context = [temp_map[i] for i in range(num_pages)]
         for i, post_list in enumerate(lists):
             context = context_source.copy()
             if 'pagekind' not in context:
                 context['pagekind'] = ['index']
-            ipages_i = utils.get_displayed_page_number(i, num_pages, self)
+            ipages_i = displayed_page_numbers[i]
             if kw["indexes_pages"]:
                 indexes_pages = kw["indexes_pages"] % ipages_i
             else:
@@ -2443,20 +2456,19 @@ class Nikola(object):
                 if i < num_pages - 1:
                     nextlink = i + 1
             if prevlink is not None:
-                context["prevlink"] = page_link(prevlink,
-                                                utils.get_displayed_page_number(prevlink, num_pages, self),
-                                                num_pages, False)
-                context["prevfeedlink"] = page_link(prevlink,
-                                                    utils.get_displayed_page_number(prevlink, num_pages, self),
+                context["prevlink"] = page_links[prevlink]
+                context["prevfeedlink"] = page_link(prevlink, displayed_page_numbers[prevlink],
                                                     num_pages, False, extension=".atom")
             if nextlink is not None:
-                context["nextlink"] = page_link(nextlink,
-                                                utils.get_displayed_page_number(nextlink, num_pages, self),
-                                                num_pages, False)
-                context["nextfeedlink"] = page_link(nextlink,
-                                                    utils.get_displayed_page_number(nextlink, num_pages, self),
+                context["nextlink"] = page_links[nextlink]
+                context["nextfeedlink"] = page_link(nextlink, displayed_page_numbers[nextlink],
                                                     num_pages, False, extension=".atom")
-            context["permalink"] = page_link(i, ipages_i, num_pages, False)
+            context['show_index_page_navigation'] = kw['show_index_page_navigation']
+            if kw['show_index_page_navigation']:
+                context['page_links'] = page_links_context
+                context['current_page'] = ipages_i - 1
+                context['prev_next_links_reversed'] = kw['indexes_static']
+            context["permalink"] = page_links[i]
             output_name = os.path.join(kw['output_folder'], page_path(i, ipages_i, num_pages, False))
             task = self.generic_post_list_renderer(
                 lang,
@@ -2500,8 +2512,8 @@ class Nikola(object):
 
         if kw["indexes_pages_main"] and kw['indexes_prety_page_url'](lang):
             # create redirection
-            output_name = os.path.join(kw['output_folder'], page_path(0, utils.get_displayed_page_number(0, num_pages, self), num_pages, True))
-            link = page_link(0, utils.get_displayed_page_number(0, num_pages, self), num_pages, False)
+            output_name = os.path.join(kw['output_folder'], page_path(0, displayed_page_numbers[0], num_pages, True))
+            link = page_links[0]
             yield utils.apply_filters({
                 'basename': basename,
                 'name': output_name,

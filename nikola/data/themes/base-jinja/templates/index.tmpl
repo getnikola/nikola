@@ -1,6 +1,7 @@
 {#  -*- coding: utf-8 -*- #}
 {% import 'index_helper.tmpl' as helper with context %}
 {% import 'comments_helper.tmpl' as comments with context %}
+{% import 'pagination_helper.tmpl' as pagination with context %}
 {% extends 'base.tmpl' %}
 
 {% block extra_head %}
@@ -14,6 +15,9 @@
 {% block content_header %}{% endblock %}
 {% if 'main_index' in pagekind %}
     {{ front_index_header }}
+{% endif %}
+{% if page_links %}
+    {{ pagination.page_navigation(current_page, page_links, prevlink, nextlink, prev_next_links_reversed) }}
 {% endif %}
 <div class="postindex">
 {% for post in posts %}
