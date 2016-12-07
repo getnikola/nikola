@@ -2408,7 +2408,13 @@ class Nikola(object):
         displayed_page_numbers = [utils.get_displayed_page_number(i, num_pages, self) for i in range(num_pages or 1)]
         page_links = [page_link(i, page_number, num_pages, False) for i, page_number in enumerate(displayed_page_numbers)]
         if kw['show_index_page_navigation']:
+            # Since the list displayed_page_numbers is not necessarily
+            # sorted -- in case INDEXES_STATIC is True, it is of the
+            # form [num_pages, 1, 2, ..., num_pages - 1] -- we order it
+            # via a map. This allows to not replicate the logic of
+            # utils.get_displayed_page_number() here.
             temp_map = {page_number - 1: link for page_number, link in zip(displayed_page_numbers, page_links)}
+            # Note that len(temp_map) >= num_pages.
             page_links_context = [temp_map[i] for i in range(num_pages)]
         for i, post_list in enumerate(lists):
             context = context_source.copy()
