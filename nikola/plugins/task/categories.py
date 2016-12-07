@@ -77,10 +77,10 @@ class ClassifyCategories(Taxonomy):
 
     def get_overview_path(self, lang, dest_type='page'):
         """A path handler for the list of all classifications."""
-        if self.site.config['CATEGORIES_INDEX_PATH'][lang]:
-            return [_f for _f in [self.site.config['CATEGORIES_INDEX_PATH'][lang]] if _f], 'never'
+        if self.site.config['CATEGORIES_INDEX_PATH'](lang):
+            return [_f for _f in [self.site.config['CATEGORIES_INDEX_PATH'](lang)] if _f], 'never'
         else:
-            return [_f for _f in [self.site.config['CATEGORY_PATH'][lang]] if _f], 'always'
+            return [_f for _f in [self.site.config['CATEGORY_PATH'](lang)] if _f], 'always'
 
     def slugify_tag_name(self, name, lang):
         """Slugify a tag name."""
@@ -103,7 +103,7 @@ class ClassifyCategories(Taxonomy):
 
     def get_path(self, classification, lang, dest_type='page'):
         """A path handler for the given classification."""
-        return ([_f for _f in [self.site.config['CATEGORY_PATH'][lang]] if _f] + self.slugify_category_name(classification, lang), 'auto')
+        return ([_f for _f in [self.site.config['CATEGORY_PATH'](lang)] if _f] + self.slugify_category_name(classification, lang), 'auto')
 
     def extract_hierarchy(self, classification):
         """Given a classification, return a list of parts in the hierarchy."""

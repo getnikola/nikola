@@ -12,6 +12,9 @@ Bugfixes
 Features
 --------
 
+* Query strings in magic links are passed as keyword arguments to path
+  handlers (via Issue #2580)
+* Accept arbitrary arguments to path handlers (via Issue #2580)
 * Added new ``typogrify_oldschool`` filter (Issue #2574)
 * Improving handling of .dep files, and allowing compilers to specify
   additional targets for the render_posts task (Issue #2536)
@@ -31,6 +34,8 @@ Features
   have been converted to the new system. (Issue #2107)
 * Added ``CATEGORIES_INDEX_PATH``, similar to ``TAGS_INDEX_PATH``.
   (Issue #2567)
+* Made ``INDEX_PATH``, ``RSS_PATH`` and ``AUTHOR_PATH`` translatable.
+  (Issue #1914)
 
 New in v7.8.1
 =============

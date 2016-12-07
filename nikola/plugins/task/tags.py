@@ -81,15 +81,15 @@ class ClassifyTags(Taxonomy):
 
     def get_overview_path(self, lang, dest_type='page'):
         """A path handler for the list of all classifications."""
-        if self.site.config['TAGS_INDEX_PATH'][lang]:
-            return [_f for _f in [self.site.config['TAGS_INDEX_PATH'][lang]] if _f], 'never'
+        if self.site.config['TAGS_INDEX_PATH'](lang):
+            return [_f for _f in [self.site.config['TAGS_INDEX_PATH'](lang)] if _f], 'never'
         else:
-            return [_f for _f in [self.site.config['TAG_PATH'][lang]] if _f], 'always'
+            return [_f for _f in [self.site.config['TAG_PATH'](lang)] if _f], 'always'
 
     def get_path(self, classification, lang, dest_type='page'):
         """A path handler for the given classification."""
         return [_f for _f in [
-            self.site.config['TAG_PATH'][lang],
+            self.site.config['TAG_PATH'](lang),
             self.slugify_tag_name(classification, lang)] if _f], 'auto'
 
     def provide_overview_context_and_uptodate(self, lang):
