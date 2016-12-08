@@ -2404,8 +2404,11 @@ class Nikola(object):
             while posts:
                 lists.append(posts[:kw["index_display_post_count"]])
                 posts = posts[kw["index_display_post_count"]:]
+            if not lists:
+                lists.append([])
         num_pages = len(lists)
-        displayed_page_numbers = [utils.get_displayed_page_number(i, num_pages, self) for i in range(num_pages or 1)]
+        assert num_pages >= 1
+        displayed_page_numbers = [utils.get_displayed_page_number(i, num_pages, self) for i in range(num_pages)]
         page_links = [page_link(i, page_number, num_pages, False) for i, page_number in enumerate(displayed_page_numbers)]
         if kw['show_index_page_navigation']:
             # Since the list displayed_page_numbers is not necessarily
@@ -2414,7 +2417,6 @@ class Nikola(object):
             # via a map. This allows to not replicate the logic of
             # utils.get_displayed_page_number() here.
             temp_map = {page_number - 1: link for page_number, link in zip(displayed_page_numbers, page_links)}
-            # Note that len(temp_map) >= num_pages.
             page_links_context = [temp_map[i] for i in range(num_pages)]
         for i, post_list in enumerate(lists):
             context = context_source.copy()
