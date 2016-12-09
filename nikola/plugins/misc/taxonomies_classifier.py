@@ -291,9 +291,9 @@ class TaxonomiesClassifier(SignalHandler):
             page_info = (page, number_of_pages)
         return self._postprocess_path(path, lang, append_index=append_index, dest_type=dest_type, page_info=page_info)
 
-    def _taxonomy_atom_path(self, name, lang, taxonomy):
+    def _taxonomy_atom_path(self, name, lang, taxonomy, page=None):
         """Return path to a classification Atom feed."""
-        return self._taxonomy_path(name, lang, taxonomy, dest_type='feed')
+        return self._taxonomy_path(name, lang, taxonomy, dest_type='feed', page=page)
 
     def _taxonomy_rss_path(self, name, lang, taxonomy):
         """Return path to a classification RSS feed."""
