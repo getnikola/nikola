@@ -244,12 +244,12 @@ class TaxonomiesClassifier(SignalHandler):
             path[-1] += '.html'
         # Create path
         result = [_f for _f in [self.site.config['TRANSLATIONS'][lang]] + path if _f]
-        if page_info is not None and dest_type == 'page':
+        if page_info is not None and dest_type in ('page', 'feed'):
             result = utils.adjust_name_for_index_path_list(result,
                                                            page_info[0],
                                                            utils.get_displayed_page_number(page_info[0], page_info[1], self.site),
                                                            lang,
-                                                           self.site)
+                                                           self.site, extension=force_extension)
         return result
 
     @staticmethod
