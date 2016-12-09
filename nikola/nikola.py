@@ -2407,7 +2407,6 @@ class Nikola(object):
             if not lists:
                 lists.append([])
         num_pages = len(lists)
-        assert num_pages >= 1
         displayed_page_numbers = [utils.get_displayed_page_number(i, num_pages, self) for i in range(num_pages)]
         page_links = [page_link(i, page_number, num_pages, False) for i, page_number in enumerate(displayed_page_numbers)]
         if kw['show_index_page_navigation']:
