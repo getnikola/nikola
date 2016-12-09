@@ -269,15 +269,21 @@ class TaxonomiesClassifier(SignalHandler):
         path, append_index, _ = self._parse_path_result(result)
         return self._postprocess_path(path, lang, append_index=append_index, dest_type='list')
 
-    def _taxonomy_path(self, name, lang, taxonomy, dest_type='page'):
+    def _taxonomy_path(self, name, lang, taxonomy, dest_type='page', page=None):
         """Return path to a classification."""
         if taxonomy.has_hierarchy:
             result = taxonomy.get_path(taxonomy.extract_hierarchy(name), lang, dest_type=dest_type)
         else:
             result = taxonomy.get_path(name, lang, dest_type=dest_type)
-        path, append_index, page = self._parse_path_result(result)
+        path, append_index, page_ = self._parse_path_result(result)
+
+        if page is not None:
+            page = int(page)
+        else:
+            page = page_
+
         page_info = None
-        if not taxonomy.show_list_as_index and page is not None:
+        if taxonomy.show_list_as_index and page is not None:
             number_of_pages = self.site.page_count_per_classification[taxonomy.classification_name][lang].get(name)
             if number_of_pages is None:
                 number_of_pages = self._compute_number_of_pages(self._get_filtered_list(taxonomy, name, lang), self.site.config['INDEX_DISPLAY_POST_COUNT'])
