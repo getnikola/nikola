@@ -333,6 +333,7 @@ LEGAL_VALUES = {
         'en': 'en',
         'eo': 'eo',
         'es': 'es',
+        'fa': 'fa',
         'fi': 'fi',
         'fr': 'fr',
         'gl': 'gl',
