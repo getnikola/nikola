@@ -4,6 +4,8 @@ New in master
 Bugfixes
 --------
 
+* Don’t warn about ``nikolademo`` DISQUS account when comments are
+  disabled (Issue #2588)
 * Make ``data`` from global context available to templated shortcodes
   as ``global_data`` (Issue #2488)
 * Don't crash if plugins is a file (Issue #2539)

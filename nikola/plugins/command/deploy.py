@@ -79,7 +79,7 @@ class CommandDeploy(Command):
             last_deploy = dateutil.parser.parse(last_deploy)
             clean = False
 
-        if self.site.config['COMMENT_SYSTEM_ID'] == 'nikolademo':
+        if self.site.config['COMMENT_SYSTEM'] and self.site.config['COMMENT_SYSTEM_ID'] == 'nikolademo':
             self.logger.warn("\nWARNING WARNING WARNING WARNING\n"
                              "You are deploying using the nikolademo Disqus account.\n"
                              "That means you will not be able to moderate the comments in your own site.\n"
