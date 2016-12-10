@@ -922,7 +922,7 @@ def apply_filters(task, filters, skip_ext=None):
                 if ext == key:
                     return value
             else:
-                assert False, key
+                raise ValueError("Cannot find filter match for {0}".format(key))
 
     for target in task.get('targets', []):
         ext = os.path.splitext(target)[-1].lower()
@@ -1100,7 +1100,8 @@ class LocaleBorg(object):
                 locale.setlocale(locale.LC_ALL, locale_n) will succeed
                 locale_n expressed in the string form, like "en.utf8"
         """
-        assert initial_lang is not None and initial_lang in locales
+        if initial_lang is None or initial_lang not in locales:
+            raise ValueError("Unknown initial language {0}".format(initial_lang))
         cls.reset()
         cls.locales = locales
         cls.month_name_handlers = []

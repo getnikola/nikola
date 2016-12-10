@@ -1365,8 +1365,8 @@ class Nikola(object):
         if output_name is None:
             return data
 
-        assert output_name.startswith(
-            self.config["OUTPUT_FOLDER"])
+        if not output_name.startswith(self.config["OUTPUT_FOLDER"]):
+            raise ValueError("Output path for templates must start with OUTPUT_FOLDER")
         url_part = output_name[len(self.config["OUTPUT_FOLDER"]) + 1:]
 
         # Treat our site as if output/ is "/" and then make all URLs relative,
@@ -1528,7 +1528,8 @@ class Nikola(object):
         if parsed_dst.fragment:
             result += "#" + parsed_dst.fragment
 
-        assert result, (src, dst, i, src_elems, dst_elems)
+        if not result:
+            raise ValueError("Failed to parse link: {0}".format((src, dst, i, src_elems, dst_elems)))
 
         return result
 
@@ -1890,7 +1891,8 @@ class Nikola(object):
         task_dep = []
         for pluginInfo in self.plugin_manager.getPluginsOfCategory(plugin_category):
             for task in flatten(pluginInfo.plugin_object.gen_tasks()):
-                assert 'basename' in task
+                if 'basename' not in task:
+                    raise ValueError("Task {0} does not have a basename".format(task))
                 task = self.clean_task_paths(task)
                 if 'task_dep' not in task:
                     task['task_dep'] = []

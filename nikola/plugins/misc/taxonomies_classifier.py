@@ -66,7 +66,8 @@ class TaxonomiesClassifier(SignalHandler):
                     for lang in site.config['TRANSLATIONS'].keys():
                         # Extract classifications for this language
                         classifications[lang] = taxonomy.classify(post, lang)
-                        assert taxonomy.more_than_one_classifications_per_post or len(classifications[lang]) <= 1
+                        if not taxonomy.more_than_one_classifications_per_post and len(classifications[lang]) > 1:
+                            raise ValueError("Too many {0} classifications for post {1}".format(taxonomy.classification_name, post.source_path))
                         # Add post to sets
                         for classification in classifications[lang]:
                             while True:
