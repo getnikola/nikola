@@ -826,9 +826,13 @@ class Nikola(object):
         # Special-case logic for "render_indexes" to fix #2591
         if 'render_indexes' in self.config['DISABLED_PLUGINS']:
             if 'generate_rss' in self.config['DISABLED_PLUGINS'] or self.config['GENERATE_RSS'] is False:
-                self.config['DISABLED_PLUGINS'].append('classify_indexes')
+                if 'classify_indexes' not in self.config['DISABLED_PLUGINS']:
+                    utils.LOGGER.warn('You are disabling the "render_indexes" plugin, as well as disabling the "generate_rss" plugin or setting GENERATE_RSS to False. To achieve the same effect, please disable the "classify_indexes" plugin in the future.')
+                    self.config['DISABLED_PLUGINS'].append('classify_indexes')
             else:
-                self.config['DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED'] = True
+                if not self.config.get('DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED', False):
+                    utils.LOGGER.warn('You are disabling the "render_indexes" plugin, but not the generation of RSS feeds. Please put "DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED = True" into your configuration instead.')
+                    self.config['DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED'] = True
 
         # Disable RSS.  For a successful disable, we must have both the option
         # false and the plugin disabled through the official means.
