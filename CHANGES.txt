@@ -43,6 +43,9 @@ Features
   (Issue #1914)
 * Added setting ``SHOW_INDEX_PAGE_NAVIGATION`` which enables a basic
   page navigation for indexes. (Issue #2299)
+* Added settings ``DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED`` and
+  ``DISABLE_INDEXES_PLUGIN_RSS_FEED`` to disable specific parts of
+  the classify_indexes taxonomy plugin. (Issue #2591)
 
 New in v7.8.1
 =============

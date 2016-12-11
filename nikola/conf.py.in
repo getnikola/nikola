@@ -1030,6 +1030,14 @@ MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extra']
 # change it for a FeedBurner feed or something else.
 # RSS_LINK = None
 
+# The following settings allow to disable specific parts of the indexes plugin
+# generating the main index, its Atom feed and its RSS feed. This allows to
+# emulate disaling the specific plugins "render_indexes" and "generate_rss"
+# before PR #2535 (taxonomy plugins), and allows to disable generation of the
+# main RSS feed even though other RSS feeds are still generated.
+# DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED = False
+# DISABLE_INDEXES_PLUGIN_RSS_FEED = False
+
 # A search form to search this site, for the sidebar. You can use a Google
 # custom search (https://www.google.com/cse/)
 # Or a DuckDuckGo search: https://duckduckgo.com/search_box.html
