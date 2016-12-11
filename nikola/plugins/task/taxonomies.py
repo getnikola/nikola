@@ -230,11 +230,11 @@ class RenderTaxonomies(Task):
 
         def page_link(i, displayed_i, num_pages, force_addition, extension=None):
             feed = "{}_atom" if extension == ".atom" else "{}"
-            return utils.adjust_name_for_index_link(self.site.link(feed.format(kind), classification, lang), i, displayed_i, lang, self.site, force_addition, extension)
+            return self.site.link(feed.format(kind), classification, lang, alternative_path=force_addition, page=i)
 
         def page_path(i, displayed_i, num_pages, force_addition, extension=None):
             feed = "{}_atom" if extension == ".atom" else "{}"
-            return utils.adjust_name_for_index_path(self.site.path(feed.format(kind), classification, lang), i, displayed_i, lang, self.site, force_addition, extension)
+            return self.site.path(feed.format(kind), classification, lang, alternative_path=force_addition, page=i)
 
         context = copy(context)
         if "pagekind" not in context:

@@ -205,7 +205,7 @@ class TaxonomiesClassifier(SignalHandler):
         """Given a list of posts and the maximal number of posts per page, computes the number of pages needed."""
         return min(1, (len(filtered_posts) + posts_count - 1) // posts_count)
 
-    def _postprocess_path(self, path, lang, append_index='auto', dest_type='page', page_info=None):
+    def _postprocess_path(self, path, lang, append_index='auto', dest_type='page', page_info=None, alternative_path=False):
         """Postprocess a generated path.
 
         Takes the path `path` for language `lang`, and postprocesses it.
@@ -218,11 +218,15 @@ class TaxonomiesClassifier(SignalHandler):
         `site.config['INDEX_FILE']` depending on `dest_type`, which can be
         `'feed'`, `'rss'` or `'page'`.
 
-        Finally, if `dest_type` is `'page'`, `page_info` can be `None` or a tuple
+        If `dest_type` is `'page'`, `page_info` can be `None` or a tuple
         of two integers: the page number and the number of pages. This will
         be used to append the correct page number by calling
         `utils.adjust_name_for_index_path_list` and
         `utils.get_displayed_page_number`.
+
+        If `alternative_path` is set to `True`, `utils.adjust_name_for_index_path_list`
+        is called with `force_addition=True`, resulting in an alternative path for the
+        first page of an index or Atom feed.
         """
         # Forcing extension for Atom feeds and RSS feeds
         force_extension = None
@@ -249,7 +253,7 @@ class TaxonomiesClassifier(SignalHandler):
                                                            page_info[0],
                                                            utils.get_displayed_page_number(page_info[0], page_info[1], self.site),
                                                            lang,
-                                                           self.site, extension=force_extension)
+                                                           self.site, force_addition=alternative_path, extension=force_extension)
         return result
 
     @staticmethod
@@ -269,7 +273,7 @@ class TaxonomiesClassifier(SignalHandler):
         path, append_index, _ = self._parse_path_result(result)
         return self._postprocess_path(path, lang, append_index=append_index, dest_type='list')
 
-    def _taxonomy_path(self, name, lang, taxonomy, dest_type='page', page=None):
+    def _taxonomy_path(self, name, lang, taxonomy, dest_type='page', page=None, alternative_path=False):
         """Return path to a classification."""
         if taxonomy.has_hierarchy:
             result = taxonomy.get_path(taxonomy.extract_hierarchy(name), lang, dest_type=dest_type)
@@ -291,9 +295,9 @@ class TaxonomiesClassifier(SignalHandler):
             page_info = (page, number_of_pages)
         return self._postprocess_path(path, lang, append_index=append_index, dest_type=dest_type, page_info=page_info)
 
-    def _taxonomy_atom_path(self, name, lang, taxonomy, page=None):
+    def _taxonomy_atom_path(self, name, lang, taxonomy, page=None, alternative_path=False):
         """Return path to a classification Atom feed."""
-        return self._taxonomy_path(name, lang, taxonomy, dest_type='feed', page=page)
+        return self._taxonomy_path(name, lang, taxonomy, dest_type='feed', page=page, alternative_path=alternative_path)
 
     def _taxonomy_rss_path(self, name, lang, taxonomy):
         """Return path to a classification RSS feed."""
