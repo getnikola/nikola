@@ -322,7 +322,9 @@ class RenderTaxonomies(Task):
         if len(filtered_posts) == 0 and taxonomy.omit_empty_classifications:
             return
         # Should we create this list?
-        if not taxonomy.should_generate_classification_page(classification, filtered_posts, lang):
+        generate_list = taxonomy.should_generate_classification_page(classification, filtered_posts, lang)
+        generate_rss = taxonomy.should_generate_rss_for_classification_page(classification, filtered_posts, lang)
+        if not generate_list and not generate_rss:
             return
         # Get data
         node = None
@@ -353,15 +355,16 @@ class RenderTaxonomies(Task):
             # Are there subclassifications?
             if len(node.children) > 0:
                 # Yes: create list with subclassifications instead of list of posts
-                yield self._generate_subclassification_page(taxonomy, node, context, kw, lang)
+                if generate_list:
+                    yield self._generate_subclassification_page(taxonomy, node, context, kw, lang)
                 return
         # Generate RSS feed
-        if kw["generate_rss"] and not taxonomy.always_disable_rss:
+        if generate_rss and kw["generate_rss"] and not taxonomy.always_disable_rss:
             yield self._generate_classification_page_as_rss(taxonomy, classification, filtered_posts, context['title'], context.get("description"), kw, lang)
         # Render HTML
-        if taxonomy.show_list_as_index:
+        if generate_list and taxonomy.show_list_as_index:
             yield self._generate_classification_page_as_index(taxonomy, classification, filtered_posts, context, kw, lang)
-        else:
+        elif generate_list:
             yield self._generate_classification_page_as_list(taxonomy, classification, filtered_posts, context, kw, lang)
 
     def gen_tasks(self):

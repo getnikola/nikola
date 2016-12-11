@@ -1148,6 +1148,12 @@ UNSLUGIFY_TITLES = True
 # Plugins you don't want to use. Be careful :-)
 # DISABLED_PLUGINS = ["render_galleries"]
 
+# Special settings to disable only parts of the indexes plugin (to allow RSS
+# but no blog indexes, or to allow blog indexes and Atom but no site-wide RSS).
+# Use with care.
+# DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED = False
+# DISABLE_INDEXES_PLUGIN_RSS_FEED = False
+
 # Add the absolute paths to directories containing plugins to use them.
 # For example, the `plugins` directory of your clone of the Nikola plugins
 # repository.
