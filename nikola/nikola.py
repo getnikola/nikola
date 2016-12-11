@@ -2386,7 +2386,7 @@ class Nikola(object):
         kw["indexes_pages"] = self.config['INDEXES_PAGES'](lang)
         kw["indexes_pages_main"] = self.config['INDEXES_PAGES_MAIN']
         kw["indexes_static"] = self.config['INDEXES_STATIC']
-        kw['indexes_prety_page_url'] = self.config["INDEXES_PRETTY_PAGE_URL"]
+        kw['indexes_pretty_page_url'] = self.config["INDEXES_PRETTY_PAGE_URL"]
         kw['demote_headers'] = self.config['DEMOTE_HEADERS']
         kw['generate_atom'] = self.config["GENERATE_ATOM"]
         kw['feed_links_append_query'] = self.config["FEED_LINKS_APPEND_QUERY"]
@@ -2511,7 +2511,7 @@ class Nikola(object):
                 }
                 yield utils.apply_filters(atom_task, kw['filters'])
 
-        if kw["indexes_pages_main"] and kw['indexes_prety_page_url'](lang):
+        if kw["indexes_pages_main"] and kw['indexes_pretty_page_url'](lang):
             # create redirection
             output_name = os.path.join(kw['output_folder'], page_path(0, displayed_page_numbers[0], num_pages, True))
             link = page_links[0]
