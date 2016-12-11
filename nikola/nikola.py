@@ -478,6 +478,8 @@ class Nikola(object):
             'CREATE_FULL_ARCHIVES': False,
             'CREATE_DAILY_ARCHIVE': False,
             'DATE_FORMAT': '%Y-%m-%d %H:%M',
+            'DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED': False,
+            'DISABLE_INDEXES_PLUGIN_RSS_FEED': False,
             'JS_DATE_FORMAT': 'YYYY-MM-DD HH:mm',
             'DATE_FANCINESS': 0,
             'DEFAULT_LANG': "en",
@@ -830,7 +832,7 @@ class Nikola(object):
                     utils.LOGGER.warn('You are disabling the "render_indexes" plugin, as well as disabling the "generate_rss" plugin or setting GENERATE_RSS to False. To achieve the same effect, please disable the "classify_indexes" plugin in the future.')
                     self.config['DISABLED_PLUGINS'].append('classify_indexes')
             else:
-                if not self.config.get('DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED', False):
+                if not self.config['DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED']:
                     utils.LOGGER.warn('You are disabling the "render_indexes" plugin, but not the generation of RSS feeds. Please put "DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED = True" into your configuration instead.')
                     self.config['DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED'] = True
 

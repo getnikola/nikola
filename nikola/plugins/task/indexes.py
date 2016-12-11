@@ -94,8 +94,8 @@ class Indexes(Taxonomy):
 
     def should_generate_classification_page(self, classification, post_list, lang):
         """Only generates list of posts for classification if this function returns True."""
-        return not self.site.config.get("DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED", False)
+        return not self.site.config["DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED"]
 
     def should_generate_rss_for_classification_page(self, classification, post_list, lang):
         """Only generates RSS feed for list of posts for classification if this function returns True."""
-        return not self.site.config.get("DISABLE_INDEXES_PLUGIN_RSS_FEED", False)
+        return not self.site.config["DISABLE_INDEXES_PLUGIN_RSS_FEED"]
