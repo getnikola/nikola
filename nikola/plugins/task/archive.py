@@ -97,7 +97,7 @@ class Archive(Taxonomy):
         elif len(classification) == 1:
             return classification[0]
         elif len(classification) == 2:
-            nikola.utils.LocaleBorg().get_month_name(int(classification[1]), lang)
+            return nikola.utils.LocaleBorg().get_month_name(int(classification[1]), lang)
         else:
             # Fallback
             return '/'.join(classification)
