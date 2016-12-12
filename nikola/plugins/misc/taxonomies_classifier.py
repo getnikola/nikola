@@ -226,7 +226,7 @@ class TaxonomiesClassifier(SignalHandler):
 
         If `alternative_path` is set to `True`, `utils.adjust_name_for_index_path_list`
         is called with `force_addition=True`, resulting in an alternative path for the
-        first page of an index or Atom feed.
+        first page of an index or Atom feed by including the page number into the path.
         """
         # Forcing extension for Atom feeds and RSS feeds
         force_extension = None
