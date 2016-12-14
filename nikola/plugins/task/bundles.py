@@ -79,7 +79,7 @@ class BuildBundles(LateTask):
                 env.register(output, bundle)
                 # This generates the file
                 try:
-                    env[output].urls()
+                    env[output].build(force=True)
                 except Exception as e:
                     self.logger.error("Failed to build bundles.")
                     self.logger.exception(e)
