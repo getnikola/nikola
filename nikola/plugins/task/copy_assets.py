@@ -79,7 +79,7 @@ class CopyAssets(Task):
                 yield utils.apply_filters(task, kw['filters'])
 
         # Check whether or not there is a code.css file around.
-        if not code_css_input:
+        if not code_css_input and kw['code_color_scheme']:
             def create_code_css():
                 from pygments.formatters import get_formatter_by_name
                 formatter = get_formatter_by_name('html', style=kw["code_color_scheme"])

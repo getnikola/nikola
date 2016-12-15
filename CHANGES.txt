@@ -4,6 +4,8 @@ New in master
 Bugfixes
 --------
 
+* If ``CODE_COLOR_SCHEME`` is empty, don’t generate ``code.css``
+  (Issue #2597)
 * Don’t warn about ``nikolademo`` DISQUS account when comments are
   disabled (Issue #2588)
 * Make ``data`` from global context available to templated shortcodes

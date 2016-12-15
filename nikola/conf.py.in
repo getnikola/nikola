@@ -710,7 +710,7 @@ IMAGE_FOLDERS = {'images': 'images'}
 # SHOW_INDEX_PAGE_NAVIGATION = False
 
 # Color scheme to be used for code blocks. If your theme provides
-# "assets/css/code.css" this is ignored.
+# "assets/css/code.css" this is ignored. Leave empty to disable.
 # Can be any of:
 # algol
 # algol_nu
