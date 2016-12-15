@@ -17,6 +17,7 @@ Bugfixes
 Features
 --------
 
+* Accept a ``page`` argument for taxonomy paths (Issue #2585)
 * Query strings in magic links are passed as keyword arguments to path
   handlers (via Issue #2580)
 * Accept arbitrary arguments to path handlers (via Issue #2580)
