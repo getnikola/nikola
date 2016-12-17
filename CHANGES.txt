@@ -4,6 +4,8 @@ New in master
 Bugfixes
 --------
 
+* WordPress importer now correctly handles &amp; etc. in tags.
+  (Issue #2557)
 * If ``CODE_COLOR_SCHEME`` is empty, don’t generate ``code.css``
   (Issue #2597)
 * Don’t warn about ``nikolademo`` DISQUS account when comments are
