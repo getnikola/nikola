@@ -46,7 +46,7 @@ class RenderTaxonomies(Task):
     name = "render_taxonomies"
 
     def _generate_classification_data(self, taxonomy, lang):
-        """Create context and kw for a classification overview page."""
+        """Prepare lookup tables for cross-classification navigation links."""
         # Collect all relevant classifications
         if taxonomy.has_hierarchy:
             # Create clipped tree
@@ -328,6 +328,7 @@ class RenderTaxonomies(Task):
         return task
 
     def _add_cross_classification_navigation_links(self, taxonomy, classification, context, kw, lang, generate_list, generate_rss):
+        """Add various cross-classification navigation links to kw and context."""
         classifications, classifications_lookup, clipped_root_list, clipped_flat_hierarchy, clipped_flat_lookup, clipped_node_lookup = self.classification_data[taxonomy.classification_name][lang]
         # Get previous and next in (flattened) list of all classifications
         i = classifications_lookup.get(classification)
@@ -388,6 +389,7 @@ class RenderTaxonomies(Task):
         result = {}
 
         def add(name, classification):
+            """Helper for adding variables."""
             result[name] = classification
             if classification is not None:
                 result['{0}_name'.format(name)] = taxonomy.get_classification_friendly_name(classification, lang, only_last_component=False)
