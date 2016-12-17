@@ -45,6 +45,44 @@ class RenderTaxonomies(Task):
 
     name = "render_taxonomies"
 
+    def _generate_classification_data(self, taxonomy, lang):
+        """Create context and kw for a classification overview page."""
+        # Collect all relevant classifications
+        if taxonomy.has_hierarchy:
+            # Create clipped tree
+            def acceptor(node):
+                return len(self._filter_list(self.site.posts_per_classification[taxonomy.classification_name][lang][node.classification_name], lang)) >= 1
+
+            clipped_root_list = [_clone_treenode(node, parent=None, acceptor=acceptor) for node in self.site.hierarchy_per_classification[taxonomy.classification_name][lang]]
+            clipped_root_list = [node for node in clipped_root_list if node]
+            clipped_flat_hierarchy = utils.flatten_tree_structure(clipped_root_list)
+            clipped_flat_lookup = {}
+            clipped_node_lookup = {}
+            for i, node in enumerate(clipped_flat_hierarchy):
+                clipped_flat_lookup[node.classification_name] = i
+                clipped_node_lookup[node.classification_name] = node
+
+            classifications = [cat.classification_name for cat in clipped_flat_hierarchy]
+        else:
+            # Create and sort classifications
+            classifications = natsort.natsorted([tag for tag, posts in self.site.posts_per_classification[taxonomy.classification_name][lang].items()
+                                                 if len(self._filter_list(posts, lang)) >= 1],
+                                                alg=natsort.ns.F | natsort.ns.IC)
+            taxonomy.sort_classifications(classifications, lang)
+            # No hierarchy
+            clipped_root_list = None
+            clipped_flat_hierarchy = None
+            clipped_flat_lookup = None
+            clipped_node_lookup = None
+        # Create lookup for classifications
+        classifications_lookup = {}
+        for i, classification in enumerate(classifications):
+            classifications_lookup[classification] = i
+        # Store result
+        if taxonomy.classification_name not in self.classification_data:
+            self.classification_data[taxonomy.classification_name] = {lang: None for lang in self.site.config["TRANSLATIONS"]}
+        self.classification_data[taxonomy.classification_name][lang] = classifications, classifications_lookup, clipped_root_list, clipped_flat_hierarchy, clipped_flat_lookup, clipped_node_lookup
+
     def _generate_classification_overview_kw_context(self, taxonomy, lang):
         """Create context and kw for a classification overview page."""
         context, kw = taxonomy.provide_overview_context_and_uptodate(lang)
@@ -289,6 +327,88 @@ class RenderTaxonomies(Task):
         task['basename'] = self.name
         return task
 
+    def _add_cross_classification_navigation_links(self, taxonomy, classification, context, kw, lang, generate_list, generate_rss):
+        classifications, classifications_lookup, clipped_root_list, clipped_flat_hierarchy, clipped_flat_lookup, clipped_node_lookup = self.classification_data[taxonomy.classification_name][lang]
+        # Get previous and next in (flattened) list of all classifications
+        i = classifications_lookup.get(classification)
+        if i is not None:
+            previous_classification = classifications[i - 1] if i > 0 else None
+            next_classification = classifications[i + 1] if i + 1 < len(classifications) else None
+        else:
+            previous_classification = None
+            next_classification = None
+        # Get hirearchical info
+        parent = None
+        if taxonomy.has_hierarchy:
+            # Find siblings
+            previous_sibling = None
+            next_sibling = None
+            node = clipped_node_lookup.get(classification)
+            if node is not None:
+                parent = node.parent.classification_name if node.parent is not None else None
+                siblings = node.parent.children if node.parent is not None else clipped_root_list
+                index = None
+                for i, node in enumerate(siblings):
+                    if node.classification_name == classification:
+                        index = i
+                if index is not None:
+                    if index > 0:
+                        previous_sibling = siblings[index - 1].classification_name
+                    if index + 1 < len(siblings):
+                        next_sibling = siblings[index + 1].classification_name
+            # Find previous/next elements on same hierarchy level
+            previous_samelevel = None
+            next_samelevel = None
+            i = clipped_flat_lookup.get(classification)
+            if i is not None:
+                # Find previous
+                index = i - 1
+                while index >= 0:
+                    if len(clipped_flat_hierarchy[index].indent_levels) != len(clipped_flat_hierarchy[i].indent_levels):
+                        index -= 1
+                    else:
+                        break
+                if index >= 0:
+                    previous_samelevel = clipped_flat_hierarchy[index].classification_name
+                # Find next
+                index = i + 1
+                while index < len(clipped_flat_hierarchy):
+                    if len(clipped_flat_hierarchy[index].indent_levels) != len(clipped_flat_hierarchy[i].indent_levels):
+                        index += 1
+                    else:
+                        break
+                if index < len(clipped_flat_hierarchy):
+                    previous_samelevel = clipped_flat_hierarchy[index].classification_name
+        else:
+            previous_sibling = previous_classification
+            next_sibling = next_classification
+            previous_samelevel = previous_classification
+            next_samelevel = next_classification
+        # Get results
+        result = {}
+
+        def add(name, classification):
+            result[name] = classification
+            if classification is not None:
+                result['{0}_name'.format(name)] = taxonomy.get_classification_friendly_name(classification, lang, only_last_component=False)
+                if generate_list:
+                    result['{0}_link'.format(name)] = self.site.link(taxonomy.classification_name, classification, lang)
+                if generate_list and self.site.config['GENERATE_ATOM'] and taxonomy.show_list_as_index:
+                    result['{0}_atom'.format(name)] = self.site.link('{0}_atom'.format(taxonomy.classification_name), classification, lang)
+                if generate_rss and self.site.config['GENERATE_RSS'] and not taxonomy.always_disable_rss:
+                    result['{0}_rss'.format(name)] = self.site.link('{0}_rss'.format(taxonomy.classification_name), classification, lang)
+
+        add('previous_{0}'.format(taxonomy.classification_name), previous_classification)
+        add('next_{0}'.format(taxonomy.classification_name), next_classification)
+        add('previous_{0}_sibling'.format(taxonomy.classification_name), previous_sibling)
+        add('next_{0}_sibling'.format(taxonomy.classification_name), next_sibling)
+        add('previous_{0}_samelevel'.format(taxonomy.classification_name), previous_sibling)
+        add('next_{0}_samelevel'.format(taxonomy.classification_name), next_sibling)
+        add('parent_{0}'.format(taxonomy.classification_name), parent)
+        # Update context and kw
+        context.update(result)
+        kw.update(result)
+
     def _generate_classification_page(self, taxonomy, classification, post_list, lang):
         """Render index or post list and associated feeds per classification."""
         # Filter list
@@ -322,6 +442,8 @@ class RenderTaxonomies(Task):
         kw["index_file"] = self.site.config['INDEX_FILE']
         context = copy(context)
         context["permalink"] = self.site.link(taxonomy.classification_name, classification, lang)
+        # Links to previous/next classifications
+        self._add_cross_classification_navigation_links(taxonomy, classification, context, kw, lang, generate_list, generate_rss)
         # Decide what to do
         if taxonomy.has_hierarchy and taxonomy.show_list_as_subcategories_list:
             # Determine whether there are subcategories
@@ -346,6 +468,7 @@ class RenderTaxonomies(Task):
         self.site.scan_posts()
         yield self.group_task()
 
+        self.classification_data = {}
         for lang in self.site.config["TRANSLATIONS"]:
             # To support that tag and category classifications share the same overview,
             # we explicitly detect this case:
@@ -357,11 +480,12 @@ class RenderTaxonomies(Task):
             for taxonomy in self.site.taxonomy_plugins.values():
                 if not taxonomy.is_enabled(lang):
                     continue
+                # Generate some data on classifications
+                self._generate_classification_data(taxonomy, lang)
                 # Generate list of classifications (i.e. classification overview)
-                if taxonomy not in ignore_plugins_for_overview:
-                    if taxonomy.template_for_classification_overview is not None:
-                        for task in self._generate_classification_overview(taxonomy, lang):
-                            yield task
+                if taxonomy not in ignore_plugins_for_overview and taxonomy.template_for_classification_overview is not None:
+                    for task in self._generate_classification_overview(taxonomy, lang):
+                        yield task
 
                 # Generate classification lists
                 classifications = {}
