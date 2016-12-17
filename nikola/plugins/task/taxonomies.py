@@ -402,8 +402,8 @@ class RenderTaxonomies(Task):
         add('next_{0}'.format(taxonomy.classification_name), next_classification)
         add('previous_{0}_sibling'.format(taxonomy.classification_name), previous_sibling)
         add('next_{0}_sibling'.format(taxonomy.classification_name), next_sibling)
-        add('previous_{0}_samelevel'.format(taxonomy.classification_name), previous_sibling)
-        add('next_{0}_samelevel'.format(taxonomy.classification_name), next_sibling)
+        add('previous_{0}_samelevel'.format(taxonomy.classification_name), previous_samelevel)
+        add('next_{0}_samelevel'.format(taxonomy.classification_name), next_samelevel)
         add('parent_{0}'.format(taxonomy.classification_name), parent)
         # Update context and kw
         context.update(result)
