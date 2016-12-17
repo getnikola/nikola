@@ -444,6 +444,8 @@ class RenderTaxonomies(Task):
         kw["index_file"] = self.site.config['INDEX_FILE']
         context = copy(context)
         context["permalink"] = self.site.link(taxonomy.classification_name, classification, lang)
+        if taxonomy.has_hierarchy:
+            context["hierarchy_level"] = len(taxonomy.extract_hierarchy(classification))
         # Links to previous/next classifications
         if taxonomy.insert_classification_navigation_links:
             self._add_cross_classification_navigation_links(taxonomy, classification, context, kw, lang, generate_list, generate_rss)
