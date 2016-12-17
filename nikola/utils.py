@@ -1945,12 +1945,11 @@ def load_data(path):
         return loader.load(inf)
 
 
-# http://stackoverflow.com/a/2087433
-if sys.version_info[0] == 3 and sys.version_info[1] >= 4:
+# see http://stackoverflow.com/a/2087433
+try:
     import html  # Python 3.4 and newer
-
     html_unescape = html.unescape
-else:
+except (AttributeError, ImportError):
     try:
         from HTMLParser import HTMLParser  # Python 2.6 and 2.7
     except ImportError:
