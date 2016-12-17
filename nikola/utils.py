@@ -94,7 +94,7 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real', 'get_theme_
            'NikolaPygmentsHTML', 'create_redirect', 'TreeNode',
            'flatten_tree_structure', 'parse_escaped_hierarchical_category_name',
            'join_hierarchical_category_path', 'clean_before_deployment', 'indent',
-           'load_data')
+           'load_data', 'html_unescape')
 
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
@@ -1943,3 +1943,19 @@ def load_data(path):
         return
     with io.open(path, 'r', encoding='utf8') as inf:
         return loader.load(inf)
+
+
+# see http://stackoverflow.com/a/2087433
+try:
+    import html  # Python 3.4 and newer
+    html_unescape = html.unescape
+except (AttributeError, ImportError):
+    try:
+        from HTMLParser import HTMLParser  # Python 2.6 and 2.7
+    except ImportError:
+        from html.parser import HTMLParser  # Python 3 (up to 3.4)
+
+    def html_unescape(s):
+        """Convert all named and numeric character references  in the string s to the corresponding unicode characters."""
+        h = HTMLParser()
+        return h.unescape(s)

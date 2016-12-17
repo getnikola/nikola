@@ -339,7 +339,7 @@ class CommandImportWordpress(Command, ImportMixin):
                 # cat_id = get_text_tag(cat, '{{{0}}}term_id'.format(wordpress_namespace), None)
                 cat_slug = get_text_tag(cat, '{{{0}}}category_nicename'.format(wordpress_namespace), None)
                 cat_parent_slug = get_text_tag(cat, '{{{0}}}category_parent'.format(wordpress_namespace), None)
-                cat_name = get_text_tag(cat, '{{{0}}}cat_name'.format(wordpress_namespace), None)
+                cat_name = utils.html_unescape(get_text_tag(cat, '{{{0}}}cat_name'.format(wordpress_namespace), None))
                 cat_path = [cat_name]
                 if cat_parent_slug in cat_map:
                     cat_path = cat_map[cat_parent_slug] + cat_path
@@ -824,16 +824,16 @@ class CommandImportWordpress(Command, ImportMixin):
                 if text in self._category_paths:
                     cats.append(self._category_paths[text])
                 else:
-                    cats.append(utils.join_hierarchical_category_path([text]))
+                    cats.append(utils.join_hierarchical_category_path([utils.html_unescape(text)]))
             other_meta['categories'] = ','.join(cats)
             if len(cats) > 0:
                 other_meta['category'] = cats[0]
                 if len(cats) > 1:
                     LOGGER.warn(('Post "{0}" has more than one category! ' +
                                  'Will only use the first one.').format(post_name))
-            tags_cats = tags
+            tags_cats = [utils.html_unescape(tag) for tag in tags]
         else:
-            tags_cats = tags + categories
+            tags_cats = [utils.html_unescape(tag) for tag in tags + categories]
         return tags_cats, other_meta
 
     _tag_sanitize_map = {True: {}, False: {}}
