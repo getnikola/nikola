@@ -445,7 +445,8 @@ class RenderTaxonomies(Task):
         context = copy(context)
         context["permalink"] = self.site.link(taxonomy.classification_name, classification, lang)
         # Links to previous/next classifications
-        self._add_cross_classification_navigation_links(taxonomy, classification, context, kw, lang, generate_list, generate_rss)
+        if taxonomy.insert_classification_navigation_links:
+            self._add_cross_classification_navigation_links(taxonomy, classification, context, kw, lang, generate_list, generate_rss)
         # Decide what to do
         if taxonomy.has_hierarchy and taxonomy.show_list_as_subcategories_list:
             # Determine whether there are subcategories

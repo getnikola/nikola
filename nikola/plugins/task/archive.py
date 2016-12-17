@@ -52,6 +52,7 @@ class Archive(Taxonomy):
     minimum_post_count_per_classification_in_overview = 1
     omit_empty_classifications = False
     also_create_classifications_from_other_languages = False
+    insert_classification_navigation_links = True
 
     def set_site(self, site):
         """Set Nikola site."""
