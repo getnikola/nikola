@@ -1733,6 +1733,21 @@ class TreeNode(object):
         """Get children of a node."""
         return self.children
 
+    def __str__(self):
+        """Stringify node (return name)."""
+        return self.name
+
+    def _repr_partial(self):
+        """Return partial representation."""
+        if self.parent:
+            return "{0}/{1!r}".format(self.parent._repr_partial(), self.name)
+        else:
+            return repr(self.name)
+
+    def __repr__(self):
+        """Return programmer-friendly node representation."""
+        return "<TreeNode {0}>".format(self._repr_partial())
+
 
 def clone_treenode(treenode, parent=None, acceptor=lambda x: True):
     """Clone a TreeNode.
