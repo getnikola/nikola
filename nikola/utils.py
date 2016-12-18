@@ -1766,7 +1766,7 @@ def clone_treenode(treenode, parent=None, acceptor=lambda x: True):
     node_clone.indent_levels = treenode.indent_levels
     node_clone.indent_change_before = treenode.indent_change_before
     node_clone.indent_change_after = treenode.indent_change_after
-    if hasattr(node_clone, 'classification_path'):
+    if hasattr(treenode, 'classification_path'):
         # Copy stuff added by taxonomies_classifier plugin
         node_clone.classification_path = treenode.classification_path
         node_clone.classification_name = treenode.classification_name
