@@ -1760,7 +1760,7 @@ def clone_treenode(treenode, parent=None, acceptor=lambda x: True):
     is returned.
     """
     # Copy standard TreeNode stuff
-    node_clone = utils.TreeNode(treenode.name, parent)
+    node_clone = TreeNode(treenode.name, parent)
     node_clone.children = [clone_treenode(node, parent=node_clone, acceptor=acceptor) for node in treenode.children]
     node_clone.children = [node for node in node_clone.children if node]
     node_clone.indent_levels = treenode.indent_levels
