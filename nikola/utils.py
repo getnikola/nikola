@@ -91,7 +91,7 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real', 'get_theme_
            'ask', 'ask_yesno', 'options2docstring', 'os_path_split',
            'get_displayed_page_number', 'adjust_name_for_index_path_list',
            'adjust_name_for_index_path', 'adjust_name_for_index_link',
-           'NikolaPygmentsHTML', 'create_redirect', 'TreeNode',
+           'NikolaPygmentsHTML', 'create_redirect', 'TreeNode', 'clone_treenode',
            'flatten_tree_structure', 'parse_escaped_hierarchical_category_name',
            'join_hierarchical_category_path', 'clean_before_deployment', 'indent',
            'load_data', 'html_unescape')
@@ -1732,6 +1732,35 @@ class TreeNode(object):
     def get_children(self):
         """Get children of a node."""
         return self.children
+
+
+def clone_treenode(treenode, parent=None, acceptor=lambda x: True):
+    """Clone a TreeNode.
+
+    Children are only cloned if `acceptor` returns `True` when
+    applied on them.
+
+    Returns the cloned node if it has children or if `acceptor`
+    applied to it returns `True`. In case neither applies, `None`
+    is returned.
+    """
+    # Copy standard TreeNode stuff
+    node_clone = utils.TreeNode(treenode.name, parent)
+    node_clone.children = [clone_treenode(node, parent=node_clone, acceptor=acceptor) for node in treenode.children]
+    node_clone.children = [node for node in node_clone.children if node]
+    node_clone.indent_levels = treenode.indent_levels
+    node_clone.indent_change_before = treenode.indent_change_before
+    node_clone.indent_change_after = treenode.indent_change_after
+    try:
+        # Copy stuff added by taxonomies_classifier plugin
+        node_clone.classification_path = treenode.classification_path
+        node_clone.classification_name = treenode.classification_name
+    except AttributeError:
+        pass
+    # Accept this node if there are no children (left) and acceptor fails
+    if not node_clone.children and not acceptor(treenode):
+        return None
+    return node_clone
 
 
 def flatten_tree_structure(root_list):
