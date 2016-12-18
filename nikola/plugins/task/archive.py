@@ -27,6 +27,7 @@
 """Classify the posts in archives."""
 
 import os
+import natsort
 import nikola.utils
 import datetime
 from nikola.plugin_categories import Taxonomy
@@ -126,6 +127,7 @@ class Archive(Taxonomy):
         hierarchy = self.extract_hierarchy(classification)
         kw = {
             "messages": self.site.MESSAGES,
+            "create_archive_navigation": self.site.config["CREATE_ARCHIVE_NAVIGATION"]
         }
         page_kind = "list"
         if self.show_list_as_index:
@@ -150,10 +152,34 @@ class Archive(Taxonomy):
             kw["is_feed_stale"] = (datetime.datetime.utcnow().strftime("%Y/%m/%d") != classification)
         else:
             raise Exception("Cannot interpret classification {}!".format(repr(classification)))
+
         context = {
             "title": title,
             "pagekind": [page_kind, "archive_page"],
         }
+
+        # Generate links for hierarchies
+        if kw["create_archive_navigation"]:
+            if hierarchy:
+                # Up level link makes sense only if this is not the top-level
+                # page (hierarchy is empty)
+                context["up_level"] = self.site.link('/'.join(hierarchy[:-1]), lang)
+            else:
+                context["up_level"] = None
+
+            flat_hierarchy = self.site.flat_hierarchy_per_classification['archive'][lang]
+            nodelevel = len(hierarchy)
+            flat_samelevel = [node.classification_name for node in flat_hierarchy if len(node.classification_path) == nodelevel]
+            # We need to sort it. Natsort means it’s year 10000 compatible!
+            flat_samelevel = natsort.natsorted(flat_samelevel, alg=natsort.ns.F | natsort.ns.IC)
+            idx = flat_samelevel.find(classification)
+            if idx == -1:
+                raise Exception("Cannot find classification {0} in flat hierarchy!".format(classification))
+            previdx, nextidx = idx - 1, idx + 1
+            # If the previous index is -1, or the next index is 1, the previous/next archive does not exist.
+            context["previous_archive"] = self.site.link(flat_samelevel[previdx], lang) if previdx != -1 else None
+            context["next_archive"] = self.site.link(flat_samelevel[nextidx], lang) if nextidx != -1 else None
+
         if page_kind == 'index':
             context["archive_name"] = classification if classification else None
             context["is_feed_stale"] = kw["is_feed_stale"]
