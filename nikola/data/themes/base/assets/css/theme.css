@@ -131,19 +131,24 @@ body {
 .postindexpager .pager .next:before {
 	content: "↓ ";
 }
-.postindexpager .pager .previous:before {
+.postindexpager .pager .previous:before,
+.archivepager .pager .up:before {
 	content: "↑ ";
 }
-.postpromonav .pager .next:after {
+.postpromonav .pager .next:after,
+.archivepager .pager .next:after {
 	content: " →";
 }
-.postpromonav .pager .previous:dir(rtl):after {
+.postpromonav .pager .previous:dir(rtl):after,
+.archivepager .pager .previous:dir(rtl):after {
 	content: " →";
 }
-.postpromonav .pager .previous:before {
+.postpromonav .pager .previous:before,
+.archivepager .pager .previous:before {
 	content: "← ";
 }
-.postpromonav .pager .next:dir(rtl):before {
+.postpromonav .pager .next:dir(rtl):before,
+.archivepager .pager .next:dir(rtl):before {
 	content: "← ";
 }
 

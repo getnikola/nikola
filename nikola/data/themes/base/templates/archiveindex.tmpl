@@ -5,9 +5,27 @@
     ${parent.extra_head()}
     %if len(translations) > 1 and generate_atom:
         %for language in sorted(translations):
-            <link rel="alternate" type="application/atom+xml" title="Atom for the ${archive_name} section (${language})" href="${_link("archive_atom", archive_name, language)}">
+            <link rel="alternate" type="application/atom+xml" title="Atom for the ${archive_name} archive (${language})" href="${_link("archive_atom", archive_name, language)}">
         %endfor
     %elif generate_atom:
         <link rel="alternate" type="application/atom+xml" title="Atom for the ${archive_name} archive" href="${_link("archive_atom", archive_name)}">
     %endif
+</%block>
+
+<%block name="content_header">
+    %if has_archive_navigation:
+        <nav class="archivenav">
+        <ul class="pager">
+        %if previous_archive:
+            <li class="previous"><a href="${previous_archive}" rel="prev">${messages("Previous")}</a></li>
+        %endif
+        %if up_archive:
+            <li class="up"><a href="${up_archive}" rel="up">${messages("Up")}</a></li>
+        %endif
+        %if next_archive:
+            <li class="next"><a href="${next_archive}" rel="next">${messages("Next")}</a></li>
+        %endif
+        </ul>
+        </nav>
+    % endif
 </%block>

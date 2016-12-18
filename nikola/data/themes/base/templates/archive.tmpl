@@ -1,0 +1,37 @@
+## -*- coding: utf-8 -*-
+<%inherit file="base.tmpl"/>
+
+<%block name="content">
+<article class="listpage">
+    <header>
+        <h1>${title|h}</h1>
+    </header>
+    %if has_archive_navigation:
+        <nav class="archivenav">
+        <ul class="pager">
+        %if previous_archive:
+            <li class="previous"><a href="${previous_archive}" rel="prev">${messages("Previous")}</a></li>
+        %endif
+        %if up_archive:
+            <li class="up"><a href="${up_archive}" rel="up">${messages("Up")}</a></li>
+        %endif
+        %if next_archive:
+            <li class="next"><a href="${next_archive}" rel="next">${messages("Next")}</a></li>
+        %endif
+        </ul>
+        </nav>
+    %endif
+    %if items:
+    <ul class="postlist">
+    % for text, link, count in items:
+        <li><a href="${link}">${text|h}</a>
+        % if count:
+            (${count})
+        % endif
+    % endfor
+    </ul>
+    %else:
+    <p>${messages("Nothing found.")}</p>
+    %endif
+</article>
+</%block>
