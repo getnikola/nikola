@@ -1766,12 +1766,11 @@ def clone_treenode(treenode, parent=None, acceptor=lambda x: True):
     node_clone.indent_levels = treenode.indent_levels
     node_clone.indent_change_before = treenode.indent_change_before
     node_clone.indent_change_after = treenode.indent_change_after
-    try:
+    if hasattr(node_clone, 'classification_path'):
         # Copy stuff added by taxonomies_classifier plugin
         node_clone.classification_path = treenode.classification_path
         node_clone.classification_name = treenode.classification_name
-    except AttributeError:
-        pass
+
     # Accept this node if there are no children (left) and acceptor fails
     if not node_clone.children and not acceptor(treenode):
         return None
