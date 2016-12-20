@@ -189,10 +189,12 @@ class Archive(Taxonomy):
         kw.update(context)
         return context, kw
 
-    def postprocess_posts_per_classification(self, posts_per_section_per_language, flat_hierarchy_per_lang, hierarchy_lookup_per_lang):
+    def postprocess_posts_per_classification(self, posts_per_section_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
         """Rearrange, modify or otherwise use the list of posts per classification and per language."""
         # Build a lookup table for archive navigation, if we’ll need one.
         if self.site.config['CREATE_ARCHIVE_NAVIGATION']:
+            if flat_hierarchy_per_lang is None:
+                raise ValueError('Archives need flat_hierarchy_per_lang')
             self.archive_navigation = {}
             for lang, flat_hierarchy in flat_hierarchy_per_lang.items():
                 self.archive_navigation[lang] = defaultdict(list)
