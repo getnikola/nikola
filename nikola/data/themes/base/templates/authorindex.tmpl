@@ -3,7 +3,7 @@
 
 <%block name="extra_head">
     ${parent.extra_head()}
-    %if len(tranlations) > 1 and generate_atom:
+    %if len(translations) > 1 and generate_atom:
         %for language in sorted(translations):
             <link rel="alternate" type="application/atom+xml" title="Atom for the ${author|h} section (${language})" href="${_link(kind + "_atom", author, language)}">
         %endfor

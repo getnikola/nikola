@@ -3,7 +3,7 @@
 
 {% block extra_head %}
     {{ super() }}
-    {% if tranlations|length > 1 and generate_atom %}
+    {% if translations|length > 1 and generate_atom %}
         {% for language in translations|sort %}
             <link rel="alternate" type="application/atom+xml" title="Atom for the {{ author|e }} section ({{ language }})" href="{{ _link(kind + "_atom", author, language) }}">
         {% endfor %}
