@@ -102,7 +102,7 @@ class Archive(Taxonomy):
                 return month
             else:
                 year = classification[0]
-                return self.site.MESSAGES[lang].get('{month} {year}', '{month} {year}').format(year=year, month=month)
+                return self.site.MESSAGES[lang]['{month} {year}'].format(year=year, month=month)
         else:
             day = int(classification[2])
             if only_last_component:
@@ -110,7 +110,7 @@ class Archive(Taxonomy):
             else:
                 year = classification[0]
                 month = nikola.utils.LocaleBorg().get_month_name(int(classification[1]), lang)
-                return self.site.MESSAGES[lang].get('{month} {day}, {year}', '{month} {day}, {year}').format(year=year, month=month, day=day)
+                return self.site.MESSAGES[lang]['{month} {day}, {year}'].format(year=year, month=month, day=day)
 
     def get_path(self, classification, lang, dest_type='page'):
         """A path handler for the given classification."""
