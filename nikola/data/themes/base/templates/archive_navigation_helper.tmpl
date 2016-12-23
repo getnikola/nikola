@@ -1,11 +1,7 @@
 ## -*- coding: utf-8 -*-
-<%inherit file="base.tmpl"/>
 
-<%block name="content">
-<article class="listpage">
-    <header>
-        <h1>${title|h}</h1>
-    </header>
+<%def name="archive_navigation()">
+%if 'archive_page' in pagekind:
     %if has_archive_navigation:
         <nav class="archivenav">
         <ul class="pager">
@@ -21,17 +17,5 @@
         </ul>
         </nav>
     %endif
-    %if items:
-    <ul class="postlist">
-    % for text, link, count in items:
-        <li><a href="${link}">${text|h}</a>
-        % if count:
-            (${count})
-        % endif
-    % endfor
-    </ul>
-    %else:
-    <p>${messages("Nothing found.")}</p>
-    %endif
-</article>
-</%block>
+% endif
+</%def>

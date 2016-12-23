@@ -45,7 +45,7 @@ class Archive(Taxonomy):
     has_hierarchy = True
     include_posts_from_subhierarchies = True
     include_posts_into_hierarchy_root = True
-    subcategories_list_template = "archive.tmpl"
+    subcategories_list_template = "list.tmpl"
     generate_atom_feeds_for_post_lists = False
     template_for_classification_overview = None
     always_disable_rss = True

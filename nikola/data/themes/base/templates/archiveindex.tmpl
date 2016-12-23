@@ -1,5 +1,6 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="index.tmpl"/>
+<%namespace name="archive_nav" file="archive_navigation_helper.tmpl" import="*"/>
 
 <%block name="extra_head">
     ${parent.extra_head()}
@@ -13,19 +14,5 @@
 </%block>
 
 <%block name="content_header">
-    %if has_archive_navigation:
-        <nav class="archivenav">
-        <ul class="pager">
-        %if previous_archive:
-            <li class="previous"><a href="${previous_archive}" rel="prev">${messages("Previous")}</a></li>
-        %endif
-        %if up_archive:
-            <li class="up"><a href="${up_archive}" rel="up">${messages("Up")}</a></li>
-        %endif
-        %if next_archive:
-            <li class="next"><a href="${next_archive}" rel="next">${messages("Next")}</a></li>
-        %endif
-        </ul>
-        </nav>
-    % endif
+    ${archive_nav.archive_navigation()}
 </%block>
