@@ -26,7 +26,7 @@ MESSAGES = {
     "Posts for {month} {day}, {year}": "Posts for {month} {day}, {year}",
     "Posts for {month} {year}": "Posts for {month} {year}",
     "Previous post": "Previous post",
-    "Previous": "Previos",
+    "Previous": "Previous",
     "Publication date": "Publication date",
     "RSS feed": "RSS feed",
     "Read in English": "Read in English",

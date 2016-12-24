@@ -179,8 +179,6 @@ class Archive(Taxonomy):
             context["next_archive"] = self.site.link('archive', flat_samelevel[nextidx], lang) if nextidx != len(flat_samelevel) else None
             context["archive_nodelevel"] = nodelevel
             context["has_archive_navigation"] = bool(context["previous_archive"] or context["up_archive"] or context["next_archive"])
-            print(context)
-            context['title'] = context['title'] + repr(context)
         else:
             context["has_archive_navigation"] = False
         if page_kind == 'index':

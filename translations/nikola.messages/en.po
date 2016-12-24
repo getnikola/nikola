@@ -148,7 +148,7 @@ msgid "Toggle navigation"
 msgstr "Toggle navigation"
 
 msgid "Previous"
-msgstr "Previos"
+msgstr "Previous"
 
 msgid "Up"
 msgstr "Up"
