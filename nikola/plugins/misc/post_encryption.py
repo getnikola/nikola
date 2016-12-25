@@ -37,7 +37,7 @@ from nikola.rc4 import rc4
 
 
 class PostEncryption(SignalHandler):
-    """Render the tag/category pages and feeds."""
+    """Encrypt posts with passwords."""
 
     name = "post_encryption"
 
