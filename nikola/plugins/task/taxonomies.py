@@ -27,6 +27,7 @@
 """Render the taxonomy overviews, classification pages and feeds."""
 
 from __future__ import unicode_literals
+import blinker
 import os
 import natsort
 from copy import copy
@@ -118,6 +119,14 @@ class RenderTaxonomies(Task):
         if "pagekind" not in context:
             context["pagekind"] = ["list", "tags_page"]
         output_name = os.path.join(self.site.config['OUTPUT_FOLDER'], self.site.path('{}_index'.format(classification_name), None, lang))
+        blinker.signal('generate_classification_overview').send({
+            'site': self.site,
+            'classification_name': classification_name,
+            'lang': lang,
+            'context': context,
+            'kw': kw,
+            'output_name': output_name,
+        })
         task = self.site.generic_post_list_renderer(
             lang,
             [],
@@ -322,6 +331,15 @@ class RenderTaxonomies(Task):
         kw["index_file"] = self.site.config['INDEX_FILE']
         context = copy(context)
         context["permalink"] = self.site.link(taxonomy.classification_name, classification, lang)
+        blinker.signal('generate_classification_page').send({
+            'site': self.site,
+            'taxonomy': taxonomy,
+            'classification': classification,
+            'lang': lang,
+            'posts': filtered_posts,
+            'context': context,
+            'kw': kw,
+        })
         # Decide what to do
         if taxonomy.has_hierarchy and taxonomy.show_list_as_subcategories_list:
             # Determine whether there are subcategories

@@ -552,6 +552,7 @@ class Post(object):
             'source': self.translated_source_path(lang),
             'dest': dest,
             'post': self,
+            'lang': lang,
         })
 
         if self.meta('password'):
