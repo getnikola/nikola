@@ -40,9 +40,9 @@ from nikola import utils
 
 
 class TaxonomiesClassifier(SignalHandler):
-    """Render the tag/category pages and feeds."""
+    """Classify posts and pages by taxonomies."""
 
-    name = "render_taxonomies"
+    name = "classify_taxonomies"
 
     def _do_classification(self, site):
         # Needed to avoid strange errors during tests
