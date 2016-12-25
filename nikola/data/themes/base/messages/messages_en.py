@@ -44,4 +44,6 @@ MESSAGES = {
     "Write your post here.": "Write your post here.",
     "old posts, page %d": "old posts, page %d",
     "page %d": "page %d",
+    "{month} {day}, {year}": "{month} {day}, {year}",
+    "{month} {year}": "{month} {year}",
 }

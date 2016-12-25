@@ -4,6 +4,7 @@ New in master
 Bugfixes
 --------
 
+* Make ``AUTHOR_PAGES_ARE_INDEXES`` really work (Issue #2600)
 * WordPress importer now correctly handles &amp; etc. in tags.
   (Issue #2557)
 * If ``CODE_COLOR_SCHEME`` is empty, don’t generate ``code.css``
