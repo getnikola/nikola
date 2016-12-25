@@ -2167,6 +2167,14 @@ class Nikola(object):
         if post:
             deps_dict['post_translations'] = post.translated_to
 
+        signal('render_post').send({
+            'site': self,
+            'post': post,
+            'lang': lang,
+            'context': context,
+            'deps_dict': deps_dict,
+        })
+
         yield self.generic_renderer(lang, output_name, post.template_name, filters,
                                     file_deps=deps,
                                     uptodate_deps=uptodate_deps,
