@@ -81,8 +81,9 @@ from doit.cmdparse import CmdParse
 
 from nikola import DEBUG
 
-__all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real', 'get_theme_chain', 'load_messages', 'copy_tree',
-           'copy_file', 'slugify', 'unslugify', 'to_datetime', 'apply_filters',
+__all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real',
+           'get_theme_chain', 'load_messages', 'copy_tree', 'copy_file',
+           'slugify', 'unslugify', 'to_datetime', 'apply_filters',
            'config_changed', 'get_crumbs', 'get_tzname', 'get_asset_path',
            '_reload', 'unicode_str', 'bytes_str', 'unichr', 'Functionary',
            'TranslatableSetting', 'TemplateHookRegistry', 'LocaleBorg',
@@ -91,10 +92,11 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real', 'get_theme_
            'ask', 'ask_yesno', 'options2docstring', 'os_path_split',
            'get_displayed_page_number', 'adjust_name_for_index_path_list',
            'adjust_name_for_index_path', 'adjust_name_for_index_link',
-           'NikolaPygmentsHTML', 'create_redirect', 'TreeNode', 'clone_treenode',
-           'flatten_tree_structure', 'parse_escaped_hierarchical_category_name',
-           'join_hierarchical_category_path', 'clean_before_deployment', 'indent',
-           'load_data', 'html_unescape')
+           'NikolaPygmentsHTML', 'create_redirect', 'TreeNode',
+           'clone_treenode', 'flatten_tree_structure',
+           'parse_escaped_hierarchical_category_name',
+           'join_hierarchical_category_path', 'clean_before_deployment',
+           'sort_posts', 'indent', 'load_data', 'html_unescape',)
 
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
@@ -1945,6 +1947,24 @@ def clean_before_deployment(site):
                     remove_file(os.path.join(out_dir, source_path))
                 undeployed_posts.append(post)
     return undeployed_posts
+
+
+def sort_posts(posts, reverse=False, *keys):
+    """Sort posts by a given predicate. Helper function for templates."""
+    for key in keys:
+        try:
+            # (1) is an attribute of the Post object
+            a = getattr(posts[0], key)
+            if callable(a):
+                keyfunc = operator.methodcaller(key)
+            else:
+                keyfunc = operator.attrgetter(key)
+        except AttributeError:
+            # (2) is a metadata variable
+            keyfunc = lambda p: p.meta(key)
+
+        posts = sorted(posts, reverse=reverse, key=keyfunc)
+    return posts
 
 
 # Stolen from textwrap in Python 3.4.3.
