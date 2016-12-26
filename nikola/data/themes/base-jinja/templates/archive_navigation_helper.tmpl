@@ -1,0 +1,27 @@
+{#  -*- coding: utf-8 -*- #}
+
+{% macro archive_navigation() %}
+{% if 'archive_page' in pagekind %}
+    {% if has_archive_navigation %}
+        <nav class="archivenav">
+        <ul class="pager">
+        {% if previous_archive %}
+            <li class="previous"><a href="{{ previous_archive }}" rel="prev">{{ messages("Previous") }}</a></li>
+        {% else %}
+            <li class="previous disabled"><a href="#" rel="prev">{{ messages("Previous") }}</a></li>
+        {% endif %}
+        {% if up_archive %}
+            <li class="up"><a href="{{ up_archive }}" rel="up">{{ messages("Up") }}</a></li>
+        {% else %}
+            <li class="up disabled"><a href="#" rel="up">{{ messages("Up") }}</a></li>
+        {% endif %}
+        {% if next_archive %}
+            <li class="next"><a href="{{ next_archive }}" rel="next">{{ messages("Next") }}</a></li>
+        {% else %}
+            <li class="next disabled"><a href="#" rel="next">{{ messages("Next") }}</a></li>
+        {% endif %}
+        </ul>
+        </nav>
+    {% endif %}
+{% endif %}
+{% endmacro %}
