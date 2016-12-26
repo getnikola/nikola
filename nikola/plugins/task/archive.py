@@ -174,9 +174,12 @@ class Archive(Taxonomy):
             if hierarchy:
                 # Up level link makes sense only if this is not the top-level
                 # page (hierarchy is empty)
-                context["up_archive"] = self.site.link('archive', '/'.join(hierarchy[:-1]), lang)
+                parent = '/'.join(hierarchy[:-1])
+                context["up_archive"] = self.site.link('archive', parent, lang)
+                context["up_archive_name"] = self.get_classification_friendly_name(parent, lang)
             else:
                 context["up_archive"] = None
+                context["up_archive_name"] = None
 
             nodelevel = len(hierarchy)
             flat_samelevel = self.archive_navigation[lang][nodelevel]
@@ -186,7 +189,9 @@ class Archive(Taxonomy):
             previdx, nextidx = idx - 1, idx + 1
             # If the previous index is -1, or the next index is 1, the previous/next archive does not exist.
             context["previous_archive"] = self.site.link('archive', flat_samelevel[previdx], lang) if previdx != -1 else None
+            context["previous_archive_name"] = self.get_classification_friendly_name(flat_samelevel[previdx], lang) if previdx != -1 else None
             context["next_archive"] = self.site.link('archive', flat_samelevel[nextidx], lang) if nextidx != len(flat_samelevel) else None
+            context["next_archive_name"] = self.get_classification_friendly_name(flat_samelevel[nextidx], lang) if nextidx != len(flat_samelevel) else None
             context["archive_nodelevel"] = nodelevel
             context["has_archive_navigation"] = bool(context["previous_archive"] or context["up_archive"] or context["next_archive"])
         else:
