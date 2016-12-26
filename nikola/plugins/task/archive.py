@@ -95,7 +95,7 @@ class Archive(Taxonomy):
         """Extract a friendly name from the classification."""
         classification = self.extract_hierarchy(classification)
         if len(classification) == 0:
-            return ""
+            return self.site.MESSAGES[lang]['Archive']
         elif len(classification) == 1:
             return classification[0]
         elif len(classification) == 2:
