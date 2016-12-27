@@ -154,3 +154,12 @@ msgstr "{month} {year}"
 #. Used to format a date
 msgid "{month} {day}, {year}"
 msgstr "{month} {day}, {year}"
+
+msgid "Previous"
+msgstr "Previous"
+
+msgid "Up"
+msgstr "Up"
+
+msgid "Next"
+msgstr "Next"

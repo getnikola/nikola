@@ -1,11 +1,13 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="base.tmpl"/>
+<%namespace name="archive_nav" file="archive_navigation_helper.tmpl" import="*"/>
 
 <%block name="content">
 <article class="listpage">
     <header>
         <h1>${title|h}</h1>
     </header>
+    ${archive_nav.archive_navigation()}
     %if posts:
     <ul class="postlist">
     % for post in posts:

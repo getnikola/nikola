@@ -473,6 +473,7 @@ class Nikola(object):
             'CONTENT_FOOTER': '',
             'CONTENT_FOOTER_FORMATS': {},
             'COPY_SOURCES': True,
+            'CREATE_ARCHIVE_NAVIGATION': False,
             'CREATE_MONTHLY_ARCHIVE': False,
             'CREATE_SINGLE_ARCHIVE': False,
             'CREATE_FULL_ARCHIVES': False,
