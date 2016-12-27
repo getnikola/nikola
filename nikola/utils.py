@@ -1964,7 +1964,10 @@ def sort_posts(posts, *keys, **kwargs):
         reverse = kwargs['reverse']
     else:
         reverse = False
-    for key in keys:
+    # we reverse the keys to get the usual ordering method: the first key
+    # provided is the most important sorting predicate (first by 'title', then
+    # by 'date' in the first example)
+    for key in reversed(keys):
         try:
             # an attribute (or method) of the Post object
             a = getattr(posts[0], key)
