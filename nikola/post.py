@@ -68,7 +68,6 @@ from .utils import (
     get_translation_candidate,
     unslugify,
 )
-from .rc4 import rc4
 
 __all__ = ('Post',)
 
@@ -527,14 +526,6 @@ class Post(object):
 
     def compile(self, lang):
         """Generate the cache/ file with the compiled post."""
-        def wrap_encrypt(path, password):
-            """Wrap a post with encryption."""
-            with io.open(path, 'r+', encoding='utf8') as inf:
-                data = inf.read() + "<!--tail-->"
-            data = CRYPT.substitute(data=rc4(password, data))
-            with io.open(path, 'w+', encoding='utf8') as outf:
-                outf.write(data)
-
         dest = self.translated_base_path(lang)
         if not self.is_translation_available(lang) and not self.config['SHOW_UNTRANSLATED_POSTS']:
             return
@@ -552,14 +543,9 @@ class Post(object):
             'source': self.translated_source_path(lang),
             'dest': dest,
             'post': self,
+            'lang': lang,
         })
 
-        if self.meta('password'):
-            # TODO: get rid of this feature one day (v8?; warning added in v7.3.0.)
-            LOGGER.warn("The post {0} is using the `password` attribute, which may stop working in the future.")
-            LOGGER.warn("Please consider switching to a more secure method of encryption.")
-            LOGGER.warn("More details: https://github.com/getnikola/nikola/issues/1547")
-            wrap_encrypt(dest, self.meta('password'))
         if self.publish_later:
             LOGGER.notice('{0} is scheduled to be published in the future ({1})'.format(
                 self.source_path, self.date))
@@ -1200,53 +1186,3 @@ def insert_hyphens(node, hyphenator):
 
     for child in node.iterchildren():
         insert_hyphens(child, hyphenator)
-
-
-CRYPT = string.Template("""\
-<script>
-function rc4(key, str) {
-    var s = [], j = 0, x, res = '';
-    for (var i = 0; i < 256; i++) {
-        s[i] = i;
-    }
-    for (i = 0; i < 256; i++) {
-        j = (j + s[i] + key.charCodeAt(i % key.length)) % 256;
-        x = s[i];
-        s[i] = s[j];
-        s[j] = x;
-    }
-    i = 0;
-    j = 0;
-    for (var y = 0; y < str.length; y++) {
-        i = (i + 1) % 256;
-        j = (j + s[i]) % 256;
-        x = s[i];
-        s[i] = s[j];
-        s[j] = x;
-        res += String.fromCharCode(str.charCodeAt(y) ^ s[(s[i] + s[j]) % 256]);
-    }
-    return res;
-}
-function decrypt() {
-    key = $$("#key").val();
-    crypt_div = $$("#encr")
-    crypted = crypt_div.html();
-    decrypted = rc4(key, window.atob(crypted));
-    if (decrypted.substr(decrypted.length - 11) == "<!--tail-->"){
-        crypt_div.html(decrypted);
-        $$("#pwform").hide();
-        crypt_div.show();
-    } else { alert("Wrong password"); };
-}
-</script>
-
-<div id="encr" style="display: none;">${data}</div>
-<div id="pwform">
-<form onsubmit="javascript:decrypt(); return false;" class="form-inline">
-<fieldset>
-<legend>This post is password-protected.</legend>
-<input type="password" id="key" placeholder="Type password here">
-<button type="submit" class="btn">Show Content</button>
-</fieldset>
-</form>
-</div>""")

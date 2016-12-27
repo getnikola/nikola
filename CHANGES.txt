@@ -22,6 +22,7 @@ Bugfixes
 Features
 --------
 
+* Allow creating archive navigation (Issue #1639)
 * Accept a ``page`` argument for taxonomy paths (Issue #2585)
 * Query strings in magic links are passed as keyword arguments to path
   handlers (via Issue #2580)

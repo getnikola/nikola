@@ -9,8 +9,11 @@ import os
 import sys
 import polib
 
-if 'nopull' not in sys.argv:
+if 'nopull' not in sys.argv or '--nopull' in sys.argv:
     os.system("tx pull -a")
+elif '-h' in sys.argv or '--help' in sys.argv:
+    print("Internal use only. Takes optional 'nopull' argument to prevent pulling from Transifex.")
+    exit()
 
 trans_files = glob(os.path.join('translations', 'nikola.messages', '*.po'))
 for fname in trans_files:

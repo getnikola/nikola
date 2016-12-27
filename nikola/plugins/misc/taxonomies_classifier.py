@@ -40,9 +40,9 @@ from nikola import utils
 
 
 class TaxonomiesClassifier(SignalHandler):
-    """Render the tag/category pages and feeds."""
+    """Classify posts and pages by taxonomies."""
 
-    name = "render_taxonomies"
+    name = "classify_taxonomies"
 
     def _do_classification(self, site):
         # Needed to avoid strange errors during tests
@@ -192,6 +192,7 @@ class TaxonomiesClassifier(SignalHandler):
                             taxonomy_outputs[lang][path] = (taxonomy.classification_name, classification, list(posts))
         if quit:
             sys.exit(1)
+        blinker.signal('taxonomies_classified').send(site)
 
     def _get_filtered_list(self, taxonomy, classification, lang):
         """Return the filtered list of posts for this classification and language."""

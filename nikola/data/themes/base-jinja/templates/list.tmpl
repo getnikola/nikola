@@ -1,11 +1,13 @@
 {#  -*- coding: utf-8 -*- #}
 {% extends 'base.tmpl' %}
+{% import 'archive_navigation_helper.tmpl' as archive_nav with context %}
 
 {% block content %}
 <article class="listpage">
     <header>
         <h1>{{ title|e }}</h1>
     </header>
+    {{ archive_nav.archive_navigation() }}
     {% if items %}
     <ul class="postlist">
     {% for text, link, count in items %}

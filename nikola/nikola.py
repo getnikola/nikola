@@ -473,6 +473,7 @@ class Nikola(object):
             'CONTENT_FOOTER': '',
             'CONTENT_FOOTER_FORMATS': {},
             'COPY_SOURCES': True,
+            'CREATE_ARCHIVE_NAVIGATION': False,
             'CREATE_MONTHLY_ARCHIVE': False,
             'CREATE_SINGLE_ARCHIVE': False,
             'CREATE_FULL_ARCHIVES': False,
@@ -2167,6 +2168,14 @@ class Nikola(object):
         deps_dict['comments'] = context['enable_comments']
         if post:
             deps_dict['post_translations'] = post.translated_to
+
+        signal('render_post').send({
+            'site': self,
+            'post': post,
+            'lang': lang,
+            'context': context,
+            'deps_dict': deps_dict,
+        })
 
         yield self.generic_renderer(lang, output_name, post.template_name, filters,
                                     file_deps=deps,

@@ -27,8 +27,10 @@
 """Classify the posts in archives."""
 
 import os
+import natsort
 import nikola.utils
 import datetime
+from collections import defaultdict
 from nikola.plugin_categories import Taxonomy
 
 
@@ -93,14 +95,24 @@ class Archive(Taxonomy):
         """Extract a friendly name from the classification."""
         classification = self.extract_hierarchy(classification)
         if len(classification) == 0:
-            return ""
+            return self.site.MESSAGES[lang]['Archive']
         elif len(classification) == 1:
             return classification[0]
         elif len(classification) == 2:
-            return nikola.utils.LocaleBorg().get_month_name(int(classification[1]), lang)
+            month = nikola.utils.LocaleBorg().get_month_name(int(classification[1]), lang)
+            if only_last_component:
+                return month
+            else:
+                year = classification[0]
+                return self.site.MESSAGES[lang]['{month} {year}'].format(year=year, month=month)
         else:
-            # Fallback
-            return '/'.join(classification)
+            day = int(classification[2])
+            if only_last_component:
+                return str(day)
+            else:
+                year = classification[0]
+                month = nikola.utils.LocaleBorg().get_month_name(int(classification[1]), lang)
+                return self.site.MESSAGES[lang]['{month} {day}, {year}'].format(year=year, month=month, day=day)
 
     def get_path(self, classification, lang, dest_type='page'):
         """A path handler for the given classification."""
@@ -150,15 +162,63 @@ class Archive(Taxonomy):
             kw["is_feed_stale"] = (datetime.datetime.utcnow().strftime("%Y/%m/%d") != classification)
         else:
             raise Exception("Cannot interpret classification {}!".format(repr(classification)))
+
         context = {
             "title": title,
             "pagekind": [page_kind, "archive_page"],
+            "create_archive_navigation": self.site.config["CREATE_ARCHIVE_NAVIGATION"],
         }
+
+        # Generate links for hierarchies
+        if context["create_archive_navigation"]:
+            if hierarchy:
+                # Up level link makes sense only if this is not the top-level
+                # page (hierarchy is empty)
+                parent = '/'.join(hierarchy[:-1])
+                context["up_archive"] = self.site.link('archive', parent, lang)
+                context["up_archive_name"] = self.get_classification_friendly_name(parent, lang)
+            else:
+                context["up_archive"] = None
+                context["up_archive_name"] = None
+
+            nodelevel = len(hierarchy)
+            flat_samelevel = self.archive_navigation[lang][nodelevel]
+            idx = flat_samelevel.index(classification)
+            if idx == -1:
+                raise Exception("Cannot find classification {0} in flat hierarchy!".format(classification))
+            previdx, nextidx = idx - 1, idx + 1
+            # If the previous index is -1, or the next index is 1, the previous/next archive does not exist.
+            context["previous_archive"] = self.site.link('archive', flat_samelevel[previdx], lang) if previdx != -1 else None
+            context["previous_archive_name"] = self.get_classification_friendly_name(flat_samelevel[previdx], lang) if previdx != -1 else None
+            context["next_archive"] = self.site.link('archive', flat_samelevel[nextidx], lang) if nextidx != len(flat_samelevel) else None
+            context["next_archive_name"] = self.get_classification_friendly_name(flat_samelevel[nextidx], lang) if nextidx != len(flat_samelevel) else None
+            context["archive_nodelevel"] = nodelevel
+            context["has_archive_navigation"] = bool(context["previous_archive"] or context["up_archive"] or context["next_archive"])
+        else:
+            context["has_archive_navigation"] = False
         if page_kind == 'index':
             context["archive_name"] = classification if classification else None
             context["is_feed_stale"] = kw["is_feed_stale"]
         kw.update(context)
         return context, kw
+
+    def postprocess_posts_per_classification(self, posts_per_section_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
+        """Rearrange, modify or otherwise use the list of posts per classification and per language."""
+        # Build a lookup table for archive navigation, if we’ll need one.
+        if self.site.config['CREATE_ARCHIVE_NAVIGATION']:
+            if flat_hierarchy_per_lang is None:
+                raise ValueError('Archives need flat_hierarchy_per_lang')
+            self.archive_navigation = {}
+            for lang, flat_hierarchy in flat_hierarchy_per_lang.items():
+                self.archive_navigation[lang] = defaultdict(list)
+                for node in flat_hierarchy:
+                    self.archive_navigation[lang][len(node.classification_path)].append(node.classification_name)
+
+                # We need to sort it. Natsort means it’s year 10000 compatible!
+                for k, v in self.archive_navigation[lang].items():
+                    self.archive_navigation[lang][k] = natsort.natsorted(v, alg=natsort.ns.F | natsort.ns.IC)
+
+        return super(Archive, self).postprocess_posts_per_classification(posts_per_section_per_language, flat_hierarchy_per_lang, hierarchy_lookup_per_lang)
 
     def should_generate_classification_page(self, classification, post_list, lang):
         """Only generates list of posts for classification if this function returns True."""
