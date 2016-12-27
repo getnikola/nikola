@@ -1954,6 +1954,11 @@ def sort_posts(posts, *keys, **kwargs):
     """Sort posts by a given predicate. Helper function for templates.
 
     Optionally takes a ``reverse`` keyword argument.
+
+    Usage examples::
+
+        sort_posts(timeline, 'title', 'date')
+        sort_posts(timeline, 'author', reverse=True)
     """
     if 'reverse' in kwargs:
         reverse = kwargs['reverse']
