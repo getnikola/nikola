@@ -22,6 +22,9 @@ Bugfixes
 Features
 --------
 
+* Add a ``sort_posts`` function (available as Jinja filter in global
+  context), which allows general-purpose timeline sorting (Issue
+  #2602)
 * Allow creating archive navigation (Issue #1639)
 * Accept a ``page`` argument for taxonomy paths (Issue #2585)
 * Query strings in magic links are passed as keyword arguments to path
