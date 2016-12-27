@@ -35,6 +35,7 @@ import io
 import locale
 import logging
 import natsort
+import operator
 import os
 import re
 import json
@@ -1949,19 +1950,26 @@ def clean_before_deployment(site):
     return undeployed_posts
 
 
-def sort_posts(posts, reverse=False, *keys):
-    """Sort posts by a given predicate. Helper function for templates."""
+def sort_posts(posts, *keys, **kwargs):
+    """Sort posts by a given predicate. Helper function for templates.
+
+    Optionally takes a ``reverse`` keyword argument.
+    """
+    if 'reverse' in kwargs:
+        reverse = kwargs['reverse']
+    else:
+        reverse = False
     for key in keys:
         try:
-            # (1) is an attribute of the Post object
+            # an attribute (or method) of the Post object
             a = getattr(posts[0], key)
             if callable(a):
                 keyfunc = operator.methodcaller(key)
             else:
                 keyfunc = operator.attrgetter(key)
         except AttributeError:
-            # (2) is a metadata variable
-            keyfunc = lambda p: p.meta(key)
+            # post metadata
+            keyfunc = operator.methodcaller('meta', key)
 
         posts = sorted(posts, reverse=reverse, key=keyfunc)
     return posts
