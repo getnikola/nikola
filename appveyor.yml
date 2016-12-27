@@ -3,7 +3,7 @@ build: false
 environment:
   matrix:
     - PYTHON: "C:/Python27"
-    - PYTHON: "C:/Python36"
+    - PYTHON: "C:/Python35"
 init:
   - "ECHO %PYTHON%"
   - ps: "ls C:/Python*"
