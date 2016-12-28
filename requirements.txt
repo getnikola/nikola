@@ -1,5 +1,5 @@
-doit>=0.28.0,<=0.29.0 ; python_version == '2.7'
-doit>=0.28.0 ; python_version >= '3.3'
+doit>=0.28.0,<=0.29.0 ; python_version <= '3.3' # rq.filter: <=0.29.0
+doit>=0.28.0 ; python_version >= '3.4'
 Pygments>=1.6
 Pillow>=2.4.0
 python-dateutil>=2.4.0
