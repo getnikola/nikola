@@ -35,6 +35,7 @@ import io
 import locale
 import logging
 import natsort
+import operator
 import os
 import re
 import json
@@ -81,8 +82,9 @@ from doit.cmdparse import CmdParse
 
 from nikola import DEBUG
 
-__all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real', 'get_theme_chain', 'load_messages', 'copy_tree',
-           'copy_file', 'slugify', 'unslugify', 'to_datetime', 'apply_filters',
+__all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real',
+           'get_theme_chain', 'load_messages', 'copy_tree', 'copy_file',
+           'slugify', 'unslugify', 'to_datetime', 'apply_filters',
            'config_changed', 'get_crumbs', 'get_tzname', 'get_asset_path',
            '_reload', 'unicode_str', 'bytes_str', 'unichr', 'Functionary',
            'TranslatableSetting', 'TemplateHookRegistry', 'LocaleBorg',
@@ -91,10 +93,11 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real', 'get_theme_
            'ask', 'ask_yesno', 'options2docstring', 'os_path_split',
            'get_displayed_page_number', 'adjust_name_for_index_path_list',
            'adjust_name_for_index_path', 'adjust_name_for_index_link',
-           'NikolaPygmentsHTML', 'create_redirect', 'TreeNode', 'clone_treenode',
-           'flatten_tree_structure', 'parse_escaped_hierarchical_category_name',
-           'join_hierarchical_category_path', 'clean_before_deployment', 'indent',
-           'load_data', 'html_unescape')
+           'NikolaPygmentsHTML', 'create_redirect', 'TreeNode',
+           'clone_treenode', 'flatten_tree_structure',
+           'parse_escaped_hierarchical_category_name',
+           'join_hierarchical_category_path', 'clean_before_deployment',
+           'sort_posts', 'indent', 'load_data', 'html_unescape',)
 
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
@@ -1945,6 +1948,40 @@ def clean_before_deployment(site):
                     remove_file(os.path.join(out_dir, source_path))
                 undeployed_posts.append(post)
     return undeployed_posts
+
+
+def sort_posts(posts, *keys):
+    """Sort posts by a given predicate. Helper function for templates.
+
+    If a key starts with '-', it is sorted in descending order.
+
+    Usage examples::
+
+        sort_posts(timeline, 'title', 'date')
+        sort_posts(timeline, 'author', '-section_name')
+    """
+    # We reverse the keys to get the usual ordering method: the first key
+    # provided is the most important sorting predicate (first by 'title', then
+    # by 'date' in the first example)
+    for key in reversed(keys):
+        if key.startswith('-'):
+            key = key[1:]
+            reverse = True
+        else:
+            reverse = False
+        try:
+            # An attribute (or method) of the Post object
+            a = getattr(posts[0], key)
+            if callable(a):
+                keyfunc = operator.methodcaller(key)
+            else:
+                keyfunc = operator.attrgetter(key)
+        except AttributeError:
+            # Post metadata
+            keyfunc = operator.methodcaller('meta', key)
+
+        posts = sorted(posts, reverse=reverse, key=keyfunc)
+    return posts
 
 
 # Stolen from textwrap in Python 3.4.3.

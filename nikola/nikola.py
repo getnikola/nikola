@@ -1201,6 +1201,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['posts_section_from_meta'] = self.config.get('POSTS_SECTION_FROM_META')
         self._GLOBAL_CONTEXT['posts_section_name'] = self.config.get('POSTS_SECTION_NAME')
         self._GLOBAL_CONTEXT['posts_section_title'] = self.config.get('POSTS_SECTION_TITLE')
+        self._GLOBAL_CONTEXT['sort_posts'] = utils.sort_posts
 
         # IPython theme configuration.  If a website has ipynb enabled in post_pages
         # we should enable the IPython CSS (leaving that up to the theme itself).

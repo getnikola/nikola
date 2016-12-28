@@ -38,7 +38,7 @@ except ImportError:
     jinja2 = None  # NOQA
 
 from nikola.plugin_categories import TemplateSystem
-from nikola.utils import makedirs, req_missing
+from nikola.utils import makedirs, req_missing, sort_posts
 
 
 class JinjaTemplates(TemplateSystem):
@@ -65,6 +65,7 @@ class JinjaTemplates(TemplateSystem):
         self.lookup.trim_blocks = True
         self.lookup.lstrip_blocks = True
         self.lookup.filters['tojson'] = json.dumps
+        self.lookup.filters['sort_posts'] = sort_posts
         self.lookup.globals['enumerate'] = enumerate
         self.lookup.globals['isinstance'] = isinstance
         self.lookup.globals['tuple'] = tuple
