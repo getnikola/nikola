@@ -1950,36 +1950,32 @@ def clean_before_deployment(site):
     return undeployed_posts
 
 
-def sort_posts(posts, *keys, **kwargs):
+def sort_posts(posts, *keys):
     """Sort posts by a given predicate. Helper function for templates.
 
-    Optionally takes a ``reverse`` keyword argument.
+    If a key starts with '-', it is sorted in descending order.
 
     Usage examples::
 
         sort_posts(timeline, 'title', 'date')
-        sort_posts(timeline, 'author', reverse=True)
+        sort_posts(timeline, 'author', '-section_name')
     """
-    if 'reverse' in kwargs:
-        reverse = kwargs['reverse']
-    else:
-        reverse = False
-    # we reverse the keys to get the usual ordering method: the first key
+    # We reverse the keys to get the usual ordering method: the first key
     # provided is the most important sorting predicate (first by 'title', then
     # by 'date' in the first example)
     for key in reversed(keys):
         try:
-            # an attribute (or method) of the Post object
+            # An attribute (or method) of the Post object
             a = getattr(posts[0], key)
             if callable(a):
                 keyfunc = operator.methodcaller(key)
             else:
                 keyfunc = operator.attrgetter(key)
         except AttributeError:
-            # post metadata
+            # Post metadata
             keyfunc = operator.methodcaller('meta', key)
 
-        posts = sorted(posts, reverse=reverse, key=keyfunc)
+        posts = sorted(posts, reverse=(key[0] == '-'), key=keyfunc)
     return posts
 
 
