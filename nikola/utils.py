@@ -1964,6 +1964,11 @@ def sort_posts(posts, *keys):
     # provided is the most important sorting predicate (first by 'title', then
     # by 'date' in the first example)
     for key in reversed(keys):
+        if key.startswith('-'):
+            key = key[1:]
+            reverse = True
+        else:
+            reverse = False
         try:
             # An attribute (or method) of the Post object
             a = getattr(posts[0], key)
@@ -1975,7 +1980,7 @@ def sort_posts(posts, *keys):
             # Post metadata
             keyfunc = operator.methodcaller('meta', key)
 
-        posts = sorted(posts, reverse=(key[0] == '-'), key=keyfunc)
+        posts = sorted(posts, reverse=reverse, key=keyfunc)
     return posts
 
 
