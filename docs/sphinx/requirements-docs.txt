@@ -1,1 +1,2 @@
 -r ../../requirements-extras.txt
+setuptools==32.3.0
