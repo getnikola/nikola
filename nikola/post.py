@@ -687,7 +687,7 @@ class Post(object):
                 # Not all posts have a body. For example, you may have a page statically defined in the template that does not take content as input.
                 content = lxml.html.fromstring(data)
                 data = content.text_content().strip()  # No whitespace wanted.
-            except lxml.etree.ParserError:
+            except (lxml.etree.ParserError, ValueError):
                 data = ""
         elif data:
             if self.demote_headers:
