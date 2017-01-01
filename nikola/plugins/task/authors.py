@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2015-2016 Juanjo Conti and others.
+# Copyright © 2015-2017 Juanjo Conti and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated

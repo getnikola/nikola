@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -36,12 +36,12 @@ import doit.tools
 from nikola.utils import get_logger, STDERR_HANDLER
 from nikola.plugin_categories import LateTask
 
-PY2_AND_NO_PY3_WARNING = """Nikola is going to deprecate Python 2 support in 2016 (or 2017). Your current
+PY2_AND_NO_PY3_WARNING = """Nikola is going to deprecate Python 2 support in 2017. Your current
 version will continue to work, but please consider upgrading to Python 3.
 
 Please check http://bit.ly/1FKEsiX for details.
 """
-PY2_WARNING = """Nikola is going to deprecate Python 2 support in 2016 (or 2017). You already have Python 3
+PY2_WARNING = """Nikola is going to deprecate Python 2 support in 2017. You already have Python 3
 available in your system. Why not switch?
 
 Please check http://bit.ly/1FKEsiX for details.
