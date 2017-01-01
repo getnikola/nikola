@@ -22,6 +22,7 @@ Bugfixes
 Features
 --------
 
+* Allow enabling pretty URLs with per-post setting (Issue #2613)
 * Add a ``sort_posts`` function (available as Jinja filter in global
   context), which allows general-purpose timeline sorting (Issue
   #2602)
