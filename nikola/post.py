@@ -277,12 +277,13 @@ class Post(object):
         return '<Post: {0!r} {1}>'.format(self.source_path, m.hexdigest())
 
     def _has_pretty_url(self, lang):
-        if self.pretty_urls and \
-                self.meta[lang].get('pretty_url', '') != 'False' and \
-                self.meta[lang]['slug'] != 'index':
-            return True
+        m = self.meta[lang].get('pretty_url', '')
+        if m:
+            # match is a non-empty string, overides anything
+            return m == 'True'
         else:
-            return False
+            # use PRETTY_URLS, unless the slug is 'index'
+            return self.pretty_urls and self.meta[lang]['slug'] != 'index'
 
     @property
     def is_mathjax(self):
