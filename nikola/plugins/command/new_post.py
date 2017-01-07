@@ -204,7 +204,14 @@ class CommandNewPost(Command):
             'default': '',
             'help': 'Import an existing file instead of creating a placeholder'
         },
-
+        {
+            'name': 'date-path',
+            'short': 'd',
+            'long': 'date-path',
+            'type': bool,
+            'default': False,
+            'help': 'Create post with date path (eg. year/month/day, see NEW_POST_DATE_PATH_FORMAT in config)'
+        },
     ]
 
     def _execute(self, options, args):
@@ -234,6 +241,9 @@ class CommandNewPost(Command):
         twofile = options['twofile']
         import_file = options['import']
         wants_available = options['available-formats']
+        date_path_opt = options['date-path']
+        date_path_auto = self.site.config['NEW_POST_DATE_PATH']
+        date_path_format = self.site.config['NEW_POST_DATE_PATH_FORMAT'].strip('/')
 
         if wants_available:
             self.print_compilers()
@@ -330,10 +340,14 @@ class CommandNewPost(Command):
             pattern = os.path.basename(entry[0])
             suffix = pattern[1:]
             output_path = os.path.dirname(entry[0])
+            if date_path_auto or date_path_opt:
+                output_path += os.sep + datetime.datetime.now(self.site.tzinfo).strftime(date_path_format)
 
             txt_path = os.path.join(output_path, slug + suffix)
             meta_path = os.path.join(output_path, slug + ".meta")
         else:
+            if date_path_opt:
+                LOGGER.warn("A path has been specified, ignoring -d")
             txt_path = os.path.join(self.site.original_cwd, path)
             meta_path = os.path.splitext(txt_path)[0] + ".meta"
 

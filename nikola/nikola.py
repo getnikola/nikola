@@ -534,6 +534,8 @@ class Nikola(object):
             'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],  # FIXME: Add 'extras' in v8
             'MAX_IMAGE_SIZE': 1280,
             'MATHJAX_CONFIG': '',
+            'NEW_POST_DATE_PATH': False,
+            'NEW_POST_DATE_PATH_FORMAT': '%Y/%m/%d',
             'OLD_THEME_SUPPORT': True,
             'OUTPUT_FOLDER': 'output',
             'POSTS': (("posts/*.txt", "posts", "post.tmpl"),),
