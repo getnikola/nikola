@@ -24,6 +24,9 @@ Bugfixes
 Features
 --------
 
+* Add ``nikola new_post -d`` and ``NEW_POST_DATE_PATH`` to allow
+  automatic creation of year/month/day (date-based) directory
+  structures (Issue #2513)
 * Allow enabling pretty URLs with per-post setting (Issue #2613)
 * Add a ``sort_posts`` function (available as Jinja filter in global
   context), which allows general-purpose timeline sorting (Issue
