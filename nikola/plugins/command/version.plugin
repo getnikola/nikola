@@ -9,5 +9,5 @@ website = https://getnikola.com/
 description = Show nikola version
 
 [Nikola]
-plugincategory = Command
+PluginCategory = Command
 

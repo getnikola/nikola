@@ -9,5 +9,5 @@ website = https://getnikola.com/
 description = Beg the user to switch to Python 3
 
 [Nikola]
-plugincategory = Task
+PluginCategory = Task
 

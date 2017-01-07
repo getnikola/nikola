@@ -9,5 +9,5 @@ website = https://getnikola.com/
 description = Create pages in the output.
 
 [Nikola]
-plugincategory = Task
+PluginCategory = Task
 

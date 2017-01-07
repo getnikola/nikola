@@ -9,5 +9,5 @@ website = https://getnikola.com/
 description = Deploy the site
 
 [Nikola]
-plugincategory = Command
+PluginCategory = Command
 

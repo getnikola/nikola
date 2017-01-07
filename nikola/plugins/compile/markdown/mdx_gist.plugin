@@ -4,7 +4,7 @@ module = mdx_gist
 
 [Nikola]
 compiler = markdown
-plugincategory = CompilerExtension
+PluginCategory = CompilerExtension
 
 [Documentation]
 author = Roberto Alsina

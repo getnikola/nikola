@@ -9,4 +9,4 @@ Website = http://getnikola.com
 Description = Render the author pages and feeds.
 
 [Nikola]
-plugincategory = Taxonomy
+PluginCategory = Taxonomy

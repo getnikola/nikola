@@ -9,5 +9,5 @@ website = https://getnikola.com/
 description = Compile reSt into HTML
 
 [Nikola]
-plugincategory = Compiler
+PluginCategory = Compiler
 friendlyname = reStructuredText

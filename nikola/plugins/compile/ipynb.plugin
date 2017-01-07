@@ -9,5 +9,5 @@ website = http://www.damian.oquanta.info/
 description = Compile IPython notebooks into Nikola posts
 
 [Nikola]
-plugincategory = Compiler
+PluginCategory = Compiler
 friendlyname = Jupyter/IPython Notebook

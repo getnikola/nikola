@@ -9,5 +9,5 @@ website = https://getnikola.com/
 description = Create down-scaled images and thumbnails.
 
 [Nikola]
-plugincategory = Task
+PluginCategory = Task
 

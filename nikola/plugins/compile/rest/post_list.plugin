@@ -4,7 +4,7 @@ module = post_list
 
 [Nikola]
 compiler = rest
-plugincategory = CompilerExtension
+PluginCategory = CompilerExtension
 
 [Documentation]
 author = Udo Spallek

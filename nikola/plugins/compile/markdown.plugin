@@ -9,5 +9,5 @@ website = https://getnikola.com/
 description = Compile Markdown into HTML
 
 [Nikola]
-plugincategory = Compiler
+PluginCategory = Compiler
 friendlyname = Markdown

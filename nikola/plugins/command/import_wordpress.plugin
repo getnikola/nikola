@@ -9,5 +9,5 @@ website = https://getnikola.com/
 description = Import a wordpress site from a XML dump (requires markdown).
 
 [Nikola]
-plugincategory = Command
+PluginCategory = Command
 

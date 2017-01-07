@@ -9,4 +9,4 @@ website = https://getnikola.com/
 description = Copy page sources into the output.
 
 [Nikola]
-plugincategory = Task
+PluginCategory = Task

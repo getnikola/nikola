@@ -4,7 +4,7 @@ module = vimeo
 
 [Nikola]
 compiler = rest
-plugincategory = CompilerExtension
+PluginCategory = CompilerExtension
 
 [Documentation]
 description = Vimeo directive

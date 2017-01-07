@@ -9,5 +9,5 @@ website = https://getnikola.com/
 description = Create HTML fragments out of posts.
 
 [Nikola]
-plugincategory = Task
+PluginCategory = Task
 

@@ -9,4 +9,4 @@ Website = https://getnikola.com/
 Description = Encrypt posts with passwords
 
 [Nikola]
-plugincategory = SignalHandler
+PluginCategory = SignalHandler

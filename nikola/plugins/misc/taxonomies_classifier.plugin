@@ -9,4 +9,4 @@ website = https://getnikola.com/
 description = Classifies the timeline into taxonomies.
 
 [Nikola]
-plugincategory = SignalHandler
+PluginCategory = SignalHandler
