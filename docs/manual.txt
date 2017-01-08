@@ -227,7 +227,7 @@ easier to keep it in a single location.
 The contents of your post have to be written (by default) in `reStructuredText <http://docutils.sf.net>`__
 but you can use a lot of different markups using the ``-f`` option.
 
-Currently, Nikola supports reStructuredText, Markdown, IPython (Jupyter) Notebooks, HTML as input,
+Currently, Nikola supports reStructuredText, Markdown, Jupyter (IPython) Notebooks, HTML as input,
 can also use Pandoc for conversion, and has support for BBCode, CreoleWiki, txt2tags, Textile
 and more via plugins — for more details, read the `input format documentation
 <#multiple-input-formats>`__.
@@ -856,7 +856,7 @@ Nikola supports multiple input formats.  Out of the box, we have compilers avail
 
 * reStructuredText (default and pre-configured)
 * `Markdown`_
-* `IPython Notebook/Jupyter`_
+* `Jupyter/IPython Notebook`_
 * `HTML`_
 * `PHP`_
 * anything `Pandoc`_ supports (including Textile, DocBook, LaTeX, MediaWiki,
@@ -914,15 +914,18 @@ config option:
 Nikola comes with some Markdown Extensions built-in and enabled by default,
 namely a gist directive, a podcast directive, and ``~~strikethrough~~`` support.
 
-IPython Notebook/Jupyter
+Jupyter/IPython Notebook
 ````````````````````````
 
-To use Jupyter notebooks (previously known as IPython Notebooks) as posts/pages,
+To use Jupyter Notebooks (previously known as IPython Notebooks) as posts/pages,
 make sure ``ipynb`` is in your ``COMPILERS`` and that the ``.ipynb`` extension
 is defined in ``POSTS`` and ``PAGES``.
 
 The ``-f`` argument to ``new_post`` should be used in the ``ipynb@KERNEL`` format.
 It defaults to Python in the version used by Nikola if not specified.
+
+Jupyter Notebooks are also supported in stand-alone listings, if Jupyter
+support is enabled site-wide.
 
 HTML
 ````
@@ -2117,6 +2120,9 @@ inside one of these folders:
 Will include the source code from ``foo.py``, highlight its syntax in python mode,
 and also create a ``listings/foo.py.html`` page (or in another directory, depending on
 ``LISTINGS_FOLDER``) and the listing will have a title linking to it.
+
+The stand-alone ``listings/`` pages also support Jupyter notebooks, if they are
+supported site-wide.
 
 Listings support the same options `reST includes`__ support (including
 various options for controlling which parts of the file are included), and also
