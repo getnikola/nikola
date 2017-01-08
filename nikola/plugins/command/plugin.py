@@ -286,11 +286,14 @@ class CommandPlugin(Command):
         if os.path.exists(req_plug_path):
             LOGGER.notice('This plugin requires other Nikola plugins.')
             LOGGER.info('Installing plugins...')
+            plugin_failure = False
             try:
                 with io.open(req_plug_path, 'r', encoding='utf-8') as inf:
                     for plugname in inf.readlines():
-                        self.do_install(url, plugname, show_install_notes)
-            except subprocess.CalledProcessError:
+                        plugin_failure = self.do_install(url, plugname, show_install_notes) != 0
+            except Exception:
+                plugin_failure = True
+            if plugin_failure:
                 LOGGER.error('Could not install a plugin.')
                 print('Contents of the requirements-plugins.txt file:\n')
                 with io.open(req_plug_path, 'r', encoding='utf-8') as fh:
