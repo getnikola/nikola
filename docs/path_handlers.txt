@@ -2,8 +2,10 @@
 .. slug: path-handlers
 .. author: The Nikola Team
 
-Nikola supports special links with the syntax ``link://kind/name``. In the templates you can also
-use ``_link(kind, name)`` Here is the description for all the supported kinds.
+Nikola supports special links with the syntax ``link://kind/name``. In the templates you can also use ``_link(kind, name)``.
+You can also add query strings (``?key=value``) for extra arguments, or pass keyword arguments to ``_link`` in templates (support and behavior depends on path handlers themselves)
+
+Here are the descriptions for all the supported kinds.
 
 .. class:: dl-horizontal
 
@@ -13,15 +15,20 @@ archive
     Example:
     
     link://archive/2013 => /archives/2013/index.html
-    
 
 archive_atom
-    Link to atom archive path, name is the year.
+    Link to archive Atom path, name is the year.
     
     Example:
     
     link://archive_atom/2013 => /archives/2013/index.atom
+
+archive_rss
+    Link to archive RSS path, name is the year.
     
+    Example:
+    
+    link://archive_rss/2013 => /archives/2013/rss.xml
 
 author
     Link to an author's page.
@@ -29,7 +36,6 @@ author
     Example:
     
     link://author/joe => /authors/joe.html
-    
 
 author_atom
     Link to an author's Atom feed.
@@ -37,31 +43,27 @@ author_atom
     Example:
     
     link://author_atom/joe => /authors/joe.atom
-    
 
 author_index
-    Link to the author's index.
+    Link to the authors index.
     
     Example:
     
     link://authors/ => /authors/index.html
-    
 
 author_rss
     Link to an author's RSS feed.
     
     Example:
     
-    link://author_rss/joe => /authors/joe.rss
-    
+    link://author_rss/joe => /authors/joe.xml
 
 category
-    A link to a category.
+    A link to a category. Takes page number as optional keyword argument.
     
     Example:
     
     link://category/dogs => /categories/dogs.html
-    
 
 category_atom
     A link to a category's Atom feed.
@@ -69,7 +71,6 @@ category_atom
     Example:
     
     link://category_atom/dogs => /categories/dogs.atom
-    
 
 category_index
     A link to the category index.
@@ -77,7 +78,6 @@ category_index
     Example:
     
     link://category_index => /categories/index.html
-    
 
 category_rss
     A link to a category's RSS feed.
@@ -85,7 +85,6 @@ category_rss
     Example:
     
     link://category_rss/dogs => /categories/dogs.xml
-    
 
 filename
     Link to post or page by source filename.
@@ -135,7 +134,6 @@ index
     Example:
     
     link://index/3 => /index-3.html
-    
 
 index_atom
     Link to a numbered Atom index.
@@ -143,7 +141,13 @@ index_atom
     Example:
     
     link://index_atom/3 => /index-3.atom
+
+index_rss
+    A link to the RSS feed path.
     
+    Example:
+    
+    link://rss => /blog/rss.xml
 
 listing
     A link to a listing.
@@ -193,7 +197,6 @@ rss
     Example:
     
     link://rss => /blog/rss.xml
-    
 
 section_index
     Link to the index for a section.
@@ -201,7 +204,6 @@ section_index
     Example:
     
     link://section_index/cars => /cars/index.html
-    
 
 section_index_atom
     Link to the Atom index for a section.
@@ -209,7 +211,6 @@ section_index_atom
     Example:
     
     link://section_index_atom/cars => /cars/index.atom
-    
 
 section_index_rss
     Link to the RSS feed for a section.
@@ -217,7 +218,6 @@ section_index_rss
     Example:
     
     link://section_index_rss/cars => /cars/rss.xml
-    
 
 slug
     A link to a post with given slug, if not ambiguous.
@@ -228,12 +228,11 @@ slug
     
 
 tag
-    A link to a tag's page.
+    A link to a tag's page. Takes page number as optional keyword argument.
     
     Example:
     
     link://tag/cats => /tags/cats.html
-    
 
 tag_atom
     A link to a tag's Atom feed.
@@ -241,7 +240,6 @@ tag_atom
     Example:
     
     link://tag_atom/cats => /tags/cats.atom
-    
 
 tag_index
     A link to the tag index.
@@ -249,7 +247,6 @@ tag_index
     Example:
     
     link://tag_index => /tags/index.html
-    
 
 tag_rss
     A link to a tag's RSS feed.
@@ -257,5 +254,4 @@ tag_rss
     Example:
     
     link://tag_rss/cats => /tags/cats.xml
-    
 

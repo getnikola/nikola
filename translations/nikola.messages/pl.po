@@ -7,7 +7,7 @@
 # Translators:
 # Translators:
 # Translators:
-# Chris Warrick <kwpolska@gmail.com>, 2013-2016
+# Chris Warrick <kwpolska@gmail.com>, 2013-2017
 # Chris Warrick <kwpolska@gmail.com>, 2013
 # Chris Warrick <kwpolska@gmail.com>, 2013
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2016-09-25 07:43+0000\n"
+"PO-Revision-Date: 2017-01-07 11:38+0000\n"
 "Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/ralsina/nikola/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -150,3 +150,20 @@ msgstr "Posty autora %s"
 
 msgid "Toggle navigation"
 msgstr "Pokaż/ukryj menu"
+
+#. Used to format months per year
+msgid "{month} {year}"
+msgstr "{month} {year}"
+
+#. Used to format a date
+msgid "{month} {day}, {year}"
+msgstr "{day} {month} {year}"
+
+msgid "Previous"
+msgstr "Poprzednie"
+
+msgid "Up"
+msgstr "Do góry"
+
+msgid "Next"
+msgstr "Następne"
