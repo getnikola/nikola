@@ -59,7 +59,7 @@ class CompileRest(PageCompiler):
     demote_headers = True
     logger = None
 
-    def compile_string(self, data, source_path=None, is_two_file=True, post=None):
+    def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
         """Compile reST into HTML strings."""
         # If errors occur, this will be added to the line number reported by
         # docutils so the line number matches the actual line number (off by

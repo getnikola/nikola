@@ -63,7 +63,7 @@ class CompileMarkdown(PageCompiler):
 
         self.config_dependencies.append(str(sorted(site.config.get("MARKDOWN_EXTENSIONS"))))
 
-    def compile_string(self, content, source_path=None, is_two_file=True, post=None):
+    def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
         """Compile Markdown into HTML strings."""
         if markdown is None:
             req_missing(['markdown'], 'build this site (compile Markdown)')
