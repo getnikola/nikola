@@ -64,14 +64,14 @@ class CompileMarkdown(PageCompiler):
         self.config_dependencies.append(str(sorted(site.config.get("MARKDOWN_EXTENSIONS"))))
 
     def compile_string(self, content, source_path=None, is_two_file=True):
-        """Compile MarkDown into HTML strings."""
+        """Compile Markdown into HTML strings."""
         if markdown is None:
             req_missing(['markdown'], 'build this site (compile Markdown)')
         self.extensions += self.site.config.get("MARKDOWN_EXTENSIONS")
         if not is_two_file:
             _, content = self.split_metadata(content)
         output = markdown(content, self.extensions, output_format="html5")
-        output, shortcode_deps = self.site.apply_shortcodes(output, filename=source, with_dependencies=True, extra_context=dict(post=post))
+        output, shortcode_deps = self.site.apply_shortcodes(output, filename=source_path, with_dependencies=True, extra_context={'post': post})
         return output, shortcode_deps
 
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):
