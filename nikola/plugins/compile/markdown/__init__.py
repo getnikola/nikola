@@ -63,7 +63,7 @@ class CompileMarkdown(PageCompiler):
 
         self.config_dependencies.append(str(sorted(site.config.get("MARKDOWN_EXTENSIONS"))))
 
-    def compile_string(self, content, source_path=None, is_two_file=True):
+    def compile_string(self, content, source_path=None, is_two_file=True, post=None):
         """Compile Markdown into HTML strings."""
         if markdown is None:
             req_missing(['markdown'], 'build this site (compile Markdown)')
@@ -82,7 +82,7 @@ class CompileMarkdown(PageCompiler):
         with io.open(dest, "w+", encoding="utf8") as out_file:
             with io.open(source, "r", encoding="utf8") as in_file:
                 data = in_file.read()
-            output, shortcode_deps = self.compile_string(data, source, is_two_file)
+            output, shortcode_deps = self.compile_string(data, source, is_two_file, post)
             out_file.write(output)
         if post is None:
             if shortcode_deps:
