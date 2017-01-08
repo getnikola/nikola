@@ -2074,7 +2074,7 @@ WordPress code starts like this:
 
 .. code:: text
 
-    [soundcloud url="http://api.soundcloud.com/tracks/78131362"
+    [soundcloud url="http://api.soundcloud.com/tracks/78131362" …/]
 
 The ID is 78131362 and you can embed the audio with this:
 
