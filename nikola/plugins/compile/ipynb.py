@@ -83,10 +83,11 @@ class CompileIPynb(PageCompiler):
             req_missing(['ipython[notebook]>=2.0.0'], 'build this site (compile ipynb)')
         c = Config(self.site.config['IPYNB_CONFIG'])
         exportHtml = HTMLExporter(config=c)
-        (body, resources) = exportHtml.from_notebook_node(nb_json)
+        body, _ = exportHtml.from_notebook_node(nb_json)
         return body
 
-    def _nbformat_read(self, in_file):
+    @staticmethod
+    def _nbformat_read(in_file):
         return nbformat.read(in_file, current_nbformat)
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
