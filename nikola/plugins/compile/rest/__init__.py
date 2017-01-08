@@ -59,7 +59,7 @@ class CompileRest(PageCompiler):
     demote_headers = True
     logger = None
 
-    def compile_string(self, data, source_path=None, is_two_file=True):
+    def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
         """Compile reST into HTML strings."""
         # If errors occur, this will be added to the line number reported by
         # docutils so the line number matches the actual line number (off by
@@ -88,7 +88,8 @@ class CompileRest(PageCompiler):
             # To prevent some weird bugs here or there.
             # Original issue: empty files.  `output` became a bytestring.
             output = output.decode('utf-8')
-        return output, error_level, deps
+        output, shortcode_deps = self.site.apply_shortcodes(output, filename=source_path, with_dependencies=True, extra_context=dict(post=post))
+        return output, error_level, deps, shortcode_deps
 
     # TODO remove in v8
     def compile_html_string(self, data, source_path=None, is_two_file=True):
@@ -102,8 +103,7 @@ class CompileRest(PageCompiler):
         with io.open(dest, "w+", encoding="utf8") as out_file:
             with io.open(source, "r", encoding="utf8") as in_file:
                 data = in_file.read()
-                output, error_level, deps = self.compile_string(data, source, is_two_file)
-                output, shortcode_deps = self.site.apply_shortcodes(output, filename=source, with_dependencies=True, extra_context=dict(post=post))
+                output, error_level, deps, shortcode_deps = self.compile_string(data, source, is_two_file)
                 out_file.write(output)
             if post is None:
                 if deps.list:

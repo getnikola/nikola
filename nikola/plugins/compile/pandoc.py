@@ -70,6 +70,10 @@ class CompilePandoc(PageCompiler):
             if e.strreror == 'No such file or directory':
                 req_missing(['pandoc'], 'build this site (compile with pandoc)', python=False)
 
+    def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
+        """Compile into HTML strings."""
+        raise ValueError("Pandoc compiler does not support compile_string due to multiple output formats")
+
     def create_post(self, path, **kw):
         """Create a new post."""
         content = kw.pop('content', None)

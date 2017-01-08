@@ -41,15 +41,19 @@ class CompileHtml(PageCompiler):
     name = "html"
     friendly_name = "HTML"
 
+    def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
+        """Compile HTML into HTML strings, with shortcode support."""
+        if not is_two_file:
+            _, data = self.split_metadata(data)
+        return self.site.apply_shortcodes(data, with_dependencies=True, extra_context={'post': post})
+
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
         with io.open(dest, "w+", encoding="utf8") as out_file:
             with io.open(source, "r", encoding="utf8") as in_file:
                 data = in_file.read()
-            if not is_two_file:
-                _, data = self.split_metadata(data)
-            data, shortcode_deps = self.site.apply_shortcodes(data, with_dependencies=True, extra_context=dict(post=post))
+            data, shortcode_deps = self.compile_string(data, source, is_two_file, post, lang)
             out_file.write(data)
         if post is None:
             if shortcode_deps:

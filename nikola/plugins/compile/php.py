@@ -51,6 +51,10 @@ class CompilePhp(PageCompiler):
                 out_file.write('<!-- __NIKOLA_PHP_TEMPLATE_INJECTION source:{0} checksum:{1}__ -->'.format(source, hash))
         return True
 
+    def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
+        """Compile PHP into HTML strings."""
+        return data
+
     def create_post(self, path, **kw):
         """Create a new post."""
         content = kw.pop('content', None)

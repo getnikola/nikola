@@ -29,6 +29,7 @@
 from __future__ import unicode_literals, print_function
 
 from collections import defaultdict
+import io
 import os
 import lxml.html
 
@@ -116,7 +117,9 @@ class Listings(Task):
             if in_name and in_name.endswith('.ipynb'):
                 # Special handling: render ipynbs in listings (Issue #1900)
                 ipynb_compiler = self.site.plugin_manager.getPluginByName("ipynb", "PageCompiler").plugin_object
-                ipynb_raw = ipynb_compiler.compile_string(in_name, True)
+                with io.open(in_name, "r", encoding="utf8") as in_file:
+                    nb_json = ipynb_compiler._nbformat_read(in_file)
+                    ipynb_raw = ipynb_compiler._compile_string(nb_json)
                 ipynb_html = lxml.html.fromstring(ipynb_raw)
                 # The raw HTML contains garbage (scripts and styles), we can’t leave it in
                 code = lxml.html.tostring(ipynb_html.xpath('//*[@id="notebook"]')[0], encoding='unicode')
