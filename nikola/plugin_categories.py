@@ -304,7 +304,10 @@ class PageCompiler(BasePlugin):
         self.compile_html(source, dest, is_two_file)
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
-        """Compile the source file into HTML strings (with shortcode support)."""
+        """Compile the source file into HTML strings (with shortcode support).
+
+        Returns a tuple of at least two elements (html string, shortcode dependencies).
+        """
         # This function used to have some different APIs in different places.
         raise NotImplementedError()
 
