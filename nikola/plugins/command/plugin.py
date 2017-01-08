@@ -290,7 +290,7 @@ class CommandPlugin(Command):
             try:
                 with io.open(req_plug_path, 'r', encoding='utf-8') as inf:
                     for plugname in inf.readlines():
-                        plugin_failure = self.do_install(url, plugname, show_install_notes) != 0
+                        plugin_failure = self.do_install(url, plugname.strip(), show_install_notes) != 0
             except Exception:
                 plugin_failure = True
             if plugin_failure:
