@@ -1642,7 +1642,7 @@ class Nikola(object):
             link=utils.encodelink(link),
             description=description,
             lastBuildDate=datetime.datetime.utcnow(),
-            generator='https://getnikola.com/',
+            generator='Nikola (getnikola.com)',
             language=lang
         )
 

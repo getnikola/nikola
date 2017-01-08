@@ -24,6 +24,8 @@ Bugfixes
 Features
 --------
 
+* Add meta generator tag to default templates to promote Nikola
+  (Issue #2619)
 * Add ``nikola new_post -d`` and ``NEW_POST_DATE_PATH`` to allow
   automatic creation of year/month/day (date-based) directory
   structures (Issue #2513)
