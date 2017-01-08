@@ -54,6 +54,28 @@ class ClassifyCategories(Taxonomy):
     minimum_post_count_per_classification_in_overview = 1
     omit_empty_classifications = True
     also_create_classifications_from_other_languages = True
+    path_handler_docstrings = {
+        'category_index': """A link to the category index.
+
+Example:
+
+link://category_index => /categories/index.html""",
+        'category': """A link to a category. Takes page number as optional keyword argument.
+
+Example:
+
+link://category/dogs => /categories/dogs.html""",
+        'category_atom': """A link to a category's Atom feed.
+
+Example:
+
+link://category_atom/dogs => /categories/dogs.atom""",
+        'category_rss': """A link to a category's RSS feed.
+
+Example:
+
+link://category_rss/dogs => /categories/dogs.xml""",
+    }
 
     def set_site(self, site):
         """Set site, which is a Nikola instance."""

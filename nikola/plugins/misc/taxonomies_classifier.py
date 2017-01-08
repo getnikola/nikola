@@ -306,10 +306,20 @@ class TaxonomiesClassifier(SignalHandler):
         return self._taxonomy_path(name, lang, taxonomy, dest_type='rss')
 
     def _register_path_handlers(self, taxonomy):
-        self.site.register_path_handler('{0}_index'.format(taxonomy.classification_name), functools.partial(self._taxonomy_index_path, taxonomy=taxonomy))
-        self.site.register_path_handler('{0}'.format(taxonomy.classification_name), functools.partial(self._taxonomy_path, taxonomy=taxonomy))
-        self.site.register_path_handler('{0}_atom'.format(taxonomy.classification_name), functools.partial(self._taxonomy_atom_path, taxonomy=taxonomy))
-        self.site.register_path_handler('{0}_rss'.format(taxonomy.classification_name), functools.partial(self._taxonomy_rss_path, taxonomy=taxonomy))
+        functions = (
+            ('{0}_index', self._taxonomy_index_path),
+            ('{0}', self._taxonomy_path),
+            ('{0}_atom', self._taxonomy_atom_path),
+            ('{0}_rss', self._taxonomy_rss_path),
+        )
+
+        for name, function in functions:
+            name = name.format(taxonomy.classification_name)
+            p = functools.partial(function, taxonomy=taxonomy)
+            doc = taxonomy.path_handler_docstrings[name]
+            if doc is not False:
+                p.__doc__ = doc
+                self.site.register_path_handler(name, p)
 
     def set_site(self, site):
         """Set site, which is a Nikola instance."""

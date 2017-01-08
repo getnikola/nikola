@@ -50,6 +50,28 @@ class ClassifyTags(Taxonomy):
     apply_to_pages = False
     omit_empty_classifications = True
     also_create_classifications_from_other_languages = True
+    path_handler_docstrings = {
+        'tag_index': """A link to the tag index.
+
+Example:
+
+link://tag_index => /tags/index.html""",
+        'tag': """A link to a tag's page. Takes page number as optional keyword argument.
+
+Example:
+
+link://tag/cats => /tags/cats.html""",
+        'tag_atom': """A link to a tag's Atom feed.
+
+Example:
+
+link://tag_atom/cats => /tags/cats.atom""",
+        'tag_rss': """A link to a tag's RSS feed.
+
+Example:
+
+link://tag_rss/cats => /tags/cats.xml""",
+    }
 
     def set_site(self, site):
         """Set site, which is a Nikola instance."""

@@ -47,6 +47,24 @@ class ClassifySections(Taxonomy):
     apply_to_pages = False
     omit_empty_classifications = True
     also_create_classifications_from_other_languages = False
+    path_handler_docstrings = {
+        'section_index_index': False,
+        'section_index': """Link to the index for a section.
+
+Example:
+
+link://section_index/cars => /cars/index.html""",
+        'section_index_atom': """Link to the Atom index for a section.
+
+Example:
+
+link://section_index_atom/cars => /cars/index.atom""",
+        'section_index_rss': """Link to the RSS feed for a section.
+
+Example:
+
+link://section_index_rss/cars => /cars/rss.xml""",
+    }
 
     def set_site(self, site):
         """Set Nikola site."""

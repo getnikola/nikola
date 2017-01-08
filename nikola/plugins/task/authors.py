@@ -48,6 +48,28 @@ class ClassifyAuthors(Taxonomy):
     minimum_post_count_per_classification_in_overview = 1
     omit_empty_classifications = False
     also_create_classifications_from_other_languages = False
+    path_handler_docstrings = {
+        'author_index': """ Link to the authors index.
+
+        Example:
+
+        link://authors/ => /authors/index.html""",
+        'author': """Link to an author's page.
+
+        Example:
+
+        link://author/joe => /authors/joe.html""",
+        'author_atom': """Link to an author's Atom feed.
+
+Example:
+
+link://author_atom/joe => /authors/joe.atom""",
+        'author_rss': """Link to an author's RSS feed.
+
+Example:
+
+link://author_rss/joe => /authors/joe.xml""",
+    }
 
     def set_site(self, site):
         """Set Nikola site."""

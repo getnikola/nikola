@@ -47,11 +47,35 @@ class Indexes(Taxonomy):
     apply_to_pages = False
     omit_empty_classifications = False
     also_create_classifications_from_other_languages = False
+    path_handler_docstrings = {
+        'index_index': False,
+        'index': """Link to a numbered index.
+
+Example:
+
+link://index/3 => /index-3.html""",
+        'index_atom': """Link to a numbered Atom index.
+
+Example:
+
+link://index_atom/3 => /index-3.atom""",
+        'index_rss': """A link to the RSS feed path.
+
+Example:
+
+link://rss => /blog/rss.xml""",
+    }
 
     def set_site(self, site):
         """Set Nikola site."""
         # Redirect automatically generated 'index_rss' path handler to 'rss' for compatibility with old rss plugin
         site.register_path_handler('rss', lambda name, lang: site.path_handlers['index_rss'](name, lang))
+        site.path_handlers['rss'].__doc__ = """A link to the RSS feed path.
+
+Example:
+
+    link://rss => /blog/rss.xml
+        """.strip()
         return super(Indexes, self).set_site(site)
 
     def get_implicit_classifications(self, lang):

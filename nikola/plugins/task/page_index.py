@@ -50,6 +50,7 @@ class PageIndex(Taxonomy):
     apply_to_pages = True
     omit_empty_classifications = True
     also_create_classifications_from_other_languages = False
+    path_handler_docstrings = {}
 
     def is_enabled(self, lang=None):
         """Return True if this taxonomy is enabled, or False otherwise."""

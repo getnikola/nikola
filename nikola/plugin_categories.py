@@ -590,6 +590,9 @@ class Taxonomy(BasePlugin):
         Whether to include all classifications for all languages in every
         language, or only the classifications for one language in its language's
         pages.
+
+    path_handler_docstrings:
+        A dictionary of docstrings for path handlers. See eg. nikola.py for examples.
     """
 
     name = "dummy_taxonomy"
@@ -615,6 +618,12 @@ class Taxonomy(BasePlugin):
     minimum_post_count_per_classification_in_overview = 1
     omit_empty_classifications = False
     also_create_classifications_from_other_languages = True
+    path_handler_docstrings = {
+        'taxonomy_index': '',
+        'taxonomy': '',
+        'taxonomy_atom': '',
+        'taxonomy_rss': '',
+    }
 
     def is_enabled(self, lang=None):
         """Return True if this taxonomy is enabled, or False otherwise.
