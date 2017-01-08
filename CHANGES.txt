@@ -1,6 +1,10 @@
 New in master
 =============
 
+**Minor API change:** reST compiler’s ``compile_string`` (partially
+internal) now takes a post argument and returns four values, adding
+``shortcode_deps`` and shortcode support (Issue #2623)
+
 Bugfixes
 --------
 
