@@ -6,6 +6,50 @@ internal) now takes a post argument and returns between two and four
 values, adding ``shortcode_deps`` and shortcode support. See issues
 #2623 and #2624.
 
+Features
+--------
+
+* Add meta generator tag to default templates to promote Nikola
+  (Issue #2619)
+* Add ``nikola new_post -d`` and ``NEW_POST_DATE_PATH`` to allow
+  automatic creation of year/month/day (date-based) directory
+  structures (Issue #2513)
+* Allow enabling pretty URLs with per-post setting (Issue #2613)
+* Add a ``sort_posts`` function (available as Jinja filter in global
+  context), which allows general-purpose timeline sorting (Issue
+  #2602)
+* Allow creating archive navigation (Issue #1639)
+* Accept a ``page`` argument for taxonomy paths (Issue #2585)
+* Query strings in magic links are passed as keyword arguments to path
+  handlers (via Issue #2580)
+* Accept arbitrary arguments to path handlers (via Issue #2580)
+* Added new ``typogrify_oldschool`` filter (Issue #2574)
+* Improving handling of .dep files, and allowing compilers to specify
+  additional targets for the ``render_posts`` task (Issue #2536)
+* ``render_template`` and ``generic_renderer`` can now create HTML
+  fragments.
+* Allow posts to set custom ``URL_TYPE`` by using the ``url_type``
+  meta tag (useful for HTML fragments inserted using JavaScript)
+* Plugins can depend on other plugins being installed (Issue #2533)
+* The destination folder in ``POSTS`` and ``PAGES`` can now be
+  translated (Issue #2116)
+* Pass ``post`` object and ``lang`` to post compilers (Issue #2531)
+* Pass ``url_type`` into template's context.
+* Make thumbnail naming configurable with ``IMAGE_THUMBNAIL_FORMAT``.
+* There is a new plugin category ``Taxonomy`` which allows to easily
+  create new taxonomies. All of the existing taxonomies (authors,
+  archives, indexes, page index, sections, tags, and categories)
+  have been converted to the new system. (Issue #2107)
+* Added ``CATEGORIES_INDEX_PATH``, similar to ``TAGS_INDEX_PATH``.
+  (Issue #2567)
+* Made ``INDEX_PATH``, ``RSS_PATH`` and ``AUTHOR_PATH`` translatable.
+  (Issue #1914)
+* Added setting ``SHOW_INDEX_PAGE_NAVIGATION`` which enables a basic
+  page navigation for indexes. (Issue #2299)
+* Added settings ``DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED`` and
+  ``DISABLE_INDEXES_PLUGIN_RSS_FEED`` to disable specific parts of
+  the ``classify_indexes`` taxonomy plugin. (Issue #2591)
+
 Bugfixes
 --------
 
@@ -26,52 +70,20 @@ Bugfixes
   did not when the post list was empty and ``INDEXES_STATIC == False``.
   (via Issue #2579)
 
-Features
---------
-
-* Add meta generator tag to default templates to promote Nikola
-  (Issue #2619)
-* Add ``nikola new_post -d`` and ``NEW_POST_DATE_PATH`` to allow
-  automatic creation of year/month/day (date-based) directory
-  structures (Issue #2513)
-* Allow enabling pretty URLs with per-post setting (Issue #2613)
-* Add a ``sort_posts`` function (available as Jinja filter in global
-  context), which allows general-purpose timeline sorting (Issue
-  #2602)
-* Allow creating archive navigation (Issue #1639)
-* Accept a ``page`` argument for taxonomy paths (Issue #2585)
-* Query strings in magic links are passed as keyword arguments to path
-  handlers (via Issue #2580)
-* Accept arbitrary arguments to path handlers (via Issue #2580)
-* Added new ``typogrify_oldschool`` filter (Issue #2574)
-* Improving handling of .dep files, and allowing compilers to specify
-  additional targets for the render_posts task (Issue #2536)
-* ``render_template`` and ``generic_renderer`` can now create HTML
-  fragments.
-* Allow posts to set custom ``URL_TYPE`` by using the ``url_type``
-  meta tag (useful for HTML fragments inserted using JavaScript)
-* Plugins can depend on other plugins being installed (Issue #2533)
-* The destination folder in ``POSTS`` and ``PAGES`` can now be
-  translated (Issue #2116)
-* Pass ``post`` object and ``lang`` to post compilers (Issue #2531)
-* Pass ``url_type`` into template's context.
-* Make thumbnail naming configurable with ``IMAGE_THUMBNAIL_FORMAT``.
-* There is a new plugin category ``Taxonomy`` which allows to easily
-  create new taxonomies. Some of the existing taxonomies (authors,
-  archives, indexes, page index, sections, tags, and categories)
-  have been converted to the new system. (Issue #2107)
-* Added ``CATEGORIES_INDEX_PATH``, similar to ``TAGS_INDEX_PATH``.
-  (Issue #2567)
-* Made ``INDEX_PATH``, ``RSS_PATH`` and ``AUTHOR_PATH`` translatable.
-  (Issue #1914)
-* Added setting ``SHOW_INDEX_PAGE_NAVIGATION`` which enables a basic
-  page navigation for indexes. (Issue #2299)
-* Added settings ``DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED`` and
-  ``DISABLE_INDEXES_PLUGIN_RSS_FEED`` to disable specific parts of
-  the classify_indexes taxonomy plugin. (Issue #2591)
 
 New in v7.8.1
 =============
+
+Features
+--------
+
+* Add Hebrew translation by Yitzhak Bar Geva
+* Add Chinese (Traditional) ``zh_TW`` translation by Po-Wen Chi
+* Add ``nikola theme --list-installed`` (Issue #2504)
+* Add ``KATEX_AUTO_RENDER`` setting to configure math delimiters
+* Update KaTeX version to 0.6.0: support aligned math display
+* Better support for a tree of files in ``data/``
+
 
 Bugfixes
 --------
@@ -84,16 +96,6 @@ Bugfixes
   (Issue #2505)
 * Accept ``page`` and ``pages`` for the ``type`` field in post lists
 * Don’t crash if a post list has no posts (Issue #2489)
-
-Features
---------
-
-* Add Hebrew translation by Yitzhak Bar Geva
-* Add Chinese (Traditional) ``zh_TW`` translation by Po-Wen Chi
-* Add ``nikola theme --list-installed`` (Issue #2504)
-* Add ``KATEX_AUTO_RENDER`` setting to configure math delimiters
-* Update KaTeX version to 0.6.0: support aligned math display
-* Better support for a tree of files in ``data/``
 
 New in v7.8.0
 =============
