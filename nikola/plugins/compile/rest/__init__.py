@@ -88,7 +88,7 @@ class CompileRest(PageCompiler):
             # To prevent some weird bugs here or there.
             # Original issue: empty files.  `output` became a bytestring.
             output = output.decode('utf-8')
-        output, shortcode_deps = self.site.apply_shortcodes(output, filename=source, with_dependencies=True, extra_context=dict(post=post))
+        output, shortcode_deps = self.site.apply_shortcodes(output, filename=source_path, with_dependencies=True, extra_context=dict(post=post))
         return output, error_level, deps, shortcode_deps
 
     # TODO remove in v8
