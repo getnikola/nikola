@@ -495,6 +495,7 @@ class Taxonomy(BasePlugin):
 
     classification_name = "taxonomy":
         The classification name to be used for path handlers.
+        Must be overridden!
 
     overview_page_items_variable_name = "items":
         When rendering the overview page, its template will have a list
@@ -592,7 +593,11 @@ class Taxonomy(BasePlugin):
         pages.
 
     path_handler_docstrings:
-        A dictionary of docstrings for path handlers. See eg. nikola.py for examples.
+        A dictionary of docstrings for path handlers. See eg. nikola.py for
+        examples.  Must be overridden, keys are "taxonomy_index", "taxonomy",
+        "taxonomy_atom", "taxonomy_rss" (but using classification_name instead
+        of "taxonomy").  If one of the values is False, the corresponding path
+        handler will not be created.
     """
 
     name = "dummy_taxonomy"
