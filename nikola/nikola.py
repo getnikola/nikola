@@ -1984,7 +1984,7 @@ class Nikola(object):
         # Next, flatten the hierarchy
         self.category_hierarchy = utils.flatten_tree_structure(root_list)
 
-    def sort_posts(self, posts, lang=None):
+    def sort_posts_chronologically(self, posts, lang=None):
         """Return sorted list of posts."""
         # Last tie breaker: sort by source path
         posts = sorted(posts, key=lambda p: p.source_path)
@@ -2082,10 +2082,10 @@ class Nikola(object):
 
         # Sort everything.
 
-        self.timeline = self.sort_posts(self.timeline)
-        self.posts = self.sort_posts(self.posts)
-        self.all_posts = self.sort_posts(self.all_posts)
-        self.pages = self.sort_posts(self.pages)
+        self.timeline = self.sort_posts_chronologically(self.timeline)
+        self.posts = self.sort_posts_chronologically(self.posts)
+        self.all_posts = self.sort_posts_chronologically(self.all_posts)
+        self.pages = self.sort_posts_chronologically(self.pages)
         self._sort_category_hierarchy()
 
         for i, p in enumerate(self.posts[1:]):

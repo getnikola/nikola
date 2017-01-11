@@ -98,7 +98,7 @@ class TaxonomiesClassifier(SignalHandler):
                 # Convert sets to lists and sort them
                 for classification in list(posts_per_classification.keys()):
                     posts = list(posts_per_classification[classification])
-                    posts = self.site.sort_posts(posts, lang)
+                    posts = self.site.sort_posts_chronologically(posts, lang)
                     taxonomy.sort_posts(posts, classification, lang)
                     posts_per_classification[classification] = posts
             # Create hierarchy information
