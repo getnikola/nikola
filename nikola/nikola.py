@@ -1984,7 +1984,8 @@ class Nikola(object):
         # Next, flatten the hierarchy
         self.category_hierarchy = utils.flatten_tree_structure(root_list)
 
-    def sort_posts_chronologically(self, posts, lang=None):
+    @staticmethod
+    def sort_posts_chronologically(posts, lang=None):
         """Return sorted list of posts."""
         # Last tie breaker: sort by source path
         posts = sorted(posts, key=lambda p: p.source_path)
