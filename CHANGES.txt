@@ -1,12 +1,17 @@
+New in master
+=============
+
 Features
 --------
 
-* It is easier to globally modify chronological post sorting.
-  Also, when posts are sorted for taxonomies, the post's title
-  is taken into account before resorting to the post's source path,
-  and the sorting order for title and source path are not reversed
-  anymore. (Issue #2627 / PR #2630)
+* Sort posts chronologically with one unified function (easier to
+  change). (Issue #2627)
+* Sort posts in the following order (most important last): source path
+  (A-Z), title (A-Z), date (reverse chronological order), priority
+  meta number (descending). (Issue #2627)
 
+Bugfixes
+--------
 
 New in v7.8.2
 =============

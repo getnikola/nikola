@@ -1986,15 +1986,18 @@ class Nikola(object):
 
     @staticmethod
     def sort_posts_chronologically(posts, lang=None):
-        """Return sorted list of posts."""
-        # Last tie breaker: sort by source path
+        """Sort a list of posts chronologically.
+
+        This function also takes priority, title and source path into account.
+        """
+        # Last tie breaker: sort by source path (A-Z)
         posts = sorted(posts, key=lambda p: p.source_path)
-        # Next tie breaker: sort by title if language is given
+        # Next tie breaker: sort by title if language is given (A-Z)
         if lang is not None:
             posts = natsort.natsorted(posts, key=lambda p: p.title(lang), alg=natsort.ns.F | natsort.ns.IC)
-        # Next tie breaker: sort by date
+        # Next tie breaker: sort by date (reverse chronological order)
         posts = sorted(posts, key=lambda p: p.date, reverse=True)
-        # Finally, sort by priority
+        # Finally, sort by priority meta value (descending)
         posts = sorted(posts, key=lambda p: int(p.meta('priority')) if p.meta('priority') else 0, reverse=True)
         # Return result
         return posts
