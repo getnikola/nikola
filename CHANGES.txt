@@ -1,3 +1,18 @@
+New in master
+=============
+
+Features
+--------
+
+* Sort posts chronologically with one unified function (easier to
+  change). (Issue #2627)
+* Sort posts in the following order (most important last): source path
+  (A-Z), title (A-Z), date (reverse chronological order), priority
+  meta number (descending). (Issue #2627)
+
+Bugfixes
+--------
+
 New in v7.8.2
 =============
 

@@ -1984,6 +1984,24 @@ class Nikola(object):
         # Next, flatten the hierarchy
         self.category_hierarchy = utils.flatten_tree_structure(root_list)
 
+    @staticmethod
+    def sort_posts_chronologically(posts, lang=None):
+        """Sort a list of posts chronologically.
+
+        This function also takes priority, title and source path into account.
+        """
+        # Last tie breaker: sort by source path (A-Z)
+        posts = sorted(posts, key=lambda p: p.source_path)
+        # Next tie breaker: sort by title if language is given (A-Z)
+        if lang is not None:
+            posts = natsort.natsorted(posts, key=lambda p: p.title(lang), alg=natsort.ns.F | natsort.ns.IC)
+        # Next tie breaker: sort by date (reverse chronological order)
+        posts = sorted(posts, key=lambda p: p.date, reverse=True)
+        # Finally, sort by priority meta value (descending)
+        posts = sorted(posts, key=lambda p: int(p.meta('priority')) if p.meta('priority') else 0, reverse=True)
+        # Return result
+        return posts
+
     def scan_posts(self, really=False, ignore_quit=False, quiet=False):
         """Scan all the posts.
 
@@ -2068,11 +2086,10 @@ class Nikola(object):
 
         # Sort everything.
 
-        for thing in self.timeline, self.posts, self.all_posts, self.pages:
-            thing.sort(key=lambda p:
-                       (int(p.meta('priority')) if p.meta('priority') else 0,
-                        p.date, p.source_path))
-            thing.reverse()
+        self.timeline = self.sort_posts_chronologically(self.timeline)
+        self.posts = self.sort_posts_chronologically(self.posts)
+        self.all_posts = self.sort_posts_chronologically(self.all_posts)
+        self.pages = self.sort_posts_chronologically(self.pages)
         self._sort_category_hierarchy()
 
         for i, p in enumerate(self.posts[1:]):
