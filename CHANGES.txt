@@ -1,3 +1,13 @@
+Features
+--------
+
+* It is easier to globally modify chronological post sorting.
+  Also, when posts are sorted for taxonomies, the post's title
+  is taken into account before resorting to the post's source path,
+  and the sorting order for title and source path are not reversed
+  anymore. (Issue #2627 / PR #2630)
+
+
 New in v7.8.2
 =============
 
