@@ -107,6 +107,7 @@ class CommandNewPage(Command):
         options['tags'] = ''
         options['schedule'] = False
         options['is_page'] = True
+        options['date-path'] = False
         # Even though stuff was split into `new_page`, it’s easier to do it
         # there not to duplicate the code.
         p = self.site.plugin_manager.getPluginByName('new_post', 'Command').plugin_object
