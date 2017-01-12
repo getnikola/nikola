@@ -13,6 +13,8 @@ Features
 Bugfixes
 --------
 
+* Fix a bug that prevents ``nikola new_page`` from working (Issue #2631)
+
 New in v7.8.2
 =============
 
