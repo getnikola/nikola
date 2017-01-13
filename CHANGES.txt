@@ -1,5 +1,7 @@
-New in master
+New in v7.8.3
 =============
+
+Emergency bugfix release (``nikola new_page`` did not work in v7.8.2).
 
 Features
 --------
