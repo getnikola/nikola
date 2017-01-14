@@ -612,6 +612,7 @@ class Nikola(object):
             'GITHUB_DEPLOY_BRANCH': 'gh-pages',
             'GITHUB_REMOTE_NAME': 'origin',
             'GITHUB_COMMIT_SOURCE': False,  # WARNING: conf.py.in overrides this with True for backwards compatibility
+            'META_GENERATOR_TAG': True,
         }
 
         # set global_context for template rendering
@@ -1204,6 +1205,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['posts_section_name'] = self.config.get('POSTS_SECTION_NAME')
         self._GLOBAL_CONTEXT['posts_section_title'] = self.config.get('POSTS_SECTION_TITLE')
         self._GLOBAL_CONTEXT['sort_posts'] = utils.sort_posts
+        self._GLOBAL_CONTEXT['meta_generator_tag'] = self.config.get('META_GENERATOR_TAG')
 
         # IPython theme configuration.  If a website has ipynb enabled in post_pages
         # we should enable the IPython CSS (leaving that up to the theme itself).
