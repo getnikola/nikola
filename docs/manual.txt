@@ -563,10 +563,26 @@ The ``new_post`` command supports some options:
       -F, --available-formats   List all available input formats
       -s                        Schedule the post based on recurrence rule
       -i ARG, --import=ARG      Import an existing file instead of creating a placeholder
+      -d, --date-path           Create post with date path (eg. year/month/day, see NEW_POST_DATE_PATH_FORMAT in config)
+
 
 The optional ``path`` parameter tells Nikola exactly where to put it instead of guessing from your config.
 So, if you do ``nikola new_post posts/random/foo.txt`` you will have a post in that path, with
 "foo" as its slug.
+
+The ``-d, --date-path`` option automates creation of ``year/month/day`` or
+similar directory structures. It can be enabled on a per-post basis, or you can
+use it for every post if you set ``NEW_POST_DATE_PATH = True`` in conf.py.
+
+.. code:: python
+
+   # Use date-based path when creating posts?
+   # Can be enabled on a per-post basis with `nikola new_post -d`.
+   # NEW_POST_DATE_PATH = False
+
+   # What format to use when creating posts with date paths?
+   # Default is '%Y/%m/%d', other possibilities include '%Y' or '%Y/%m'.
+   # NEW_POST_DATE_PATH_FORMAT = '%Y/%m/%d'
 
 Teasers
 ~~~~~~~
