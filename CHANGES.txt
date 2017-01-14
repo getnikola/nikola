@@ -11,6 +11,8 @@ Features
 * Sort posts in the following order (most important last): source path
   (A-Z), title (A-Z), date (reverse chronological order), priority
   meta number (descending). (Issue #2627)
+* Add META_GENERATOR_TAG option in conf.py allowing the meta generator 
+  to be disabled if needed. (Issue #2628)
 
 Bugfixes
 --------

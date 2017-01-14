@@ -41,7 +41,9 @@ lang="${lang}">
 
     ${html_stylesheets()}
     <meta name="theme-color" content="${theme_color}">
+    % if meta_generator_tag:
     <meta name="generator" content="Nikola (getnikola.com)">
+    % endif
     ${html_feedlinks()}
     <link rel="canonical" href="${abs_link(permalink)}">
 
