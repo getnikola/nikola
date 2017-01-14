@@ -718,10 +718,10 @@ IMAGE_FOLDERS = {'images': 'images'}
 # Please note that this will undo the effect of INDEXES_STATIC, as all index pages
 # must be recreated whenever the number of pages changes.
 # SHOW_INDEX_PAGE_NAVIGATION = False
-#
-# If the following is true, a meta tag with content = "generator" is added to
-# pages. The generator tag is used to specify the software used to generate the 
-# page. 
+
+# If the following is True, a meta name="generator" tag is added to pages. The
+# generator tag is used to specify the software used to generate the page
+# (it promotes Nikola).
 # META_GENERATOR_TAG = True
 
 # Color scheme to be used for code blocks. If your theme provides
