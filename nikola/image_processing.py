@@ -97,7 +97,13 @@ class ImageProcessor(object):
         if not Image or os.path.splitext(src)[1] in ['.svg', '.svgz']:
             self.resize_svg(src, dst, max_size, bigger_panoramas)
             return
-        im = Image.open(src)
+        try:
+            im = Image.open(src)
+        except OSError as e:
+            self.logger.warn("Can't process {0}. Image cannot be opened and identified."
+                             "({1})".format(src, e))
+            # Returning here as further processing makes no sense
+            return
         size = w, h = im.size
         if w > max_size or h > max_size:
             size = max_size, max_size
