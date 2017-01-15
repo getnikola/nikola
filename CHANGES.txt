@@ -3,8 +3,11 @@ New in master
 
 Features
 --------
-* Add META_GENERATOR_TAG option in conf.py allowing the meta generator
+* Add ``META_GENERATOR_TAG`` option in conf.py allowing the meta generator
   to be disabled if needed. (Issue #2628)
+* Add ``YUI_COMPRESSOR``, ``CLOSURE_COMPILER``, ``OPTIPNG``, ``JPEG_OPTIM``
+  and ``HTML_TIDY`` to configure executables for built-in filters.
+  (Issue #2615)
 
 Bugfixes
 --------

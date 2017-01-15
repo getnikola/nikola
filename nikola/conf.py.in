@@ -562,6 +562,29 @@ GITHUB_COMMIT_SOURCE = True
 #    ".jpg": ["jpegoptim --strip-all -m75 -v %s"],
 # }
 
+# The executable for the filter "yui_compressor" from nikola.filters can
+# be configured here:
+# YUI_COMPRESSOR = 'yui-compressor'
+
+# The executable for the filter "closure_compiler" from nikola.filters can
+# be configured here:
+# CLOSURE_COMPILER = 'closure-compiler'
+
+# The executable for the filter "optipng" from nikola.filters can be
+# configured here:
+# OPTIPNG = 'optipng'
+
+# The executable for the filter "jpegoptim" from nikola.filters can be
+# configured here:
+# JPEG_OPTIM = 'jpegoptim'
+
+# The executable for the filters "html_tidy_withconfig", "html_tidy_nowrap",
+# "html_tidy_wrap", "html_tidy_wrap_attr" and "html_tidy_mini" from
+# nikola.filters can be configured here:
+# HTML_TIDY = 'tidy5'
+
+
+
 # Expert setting! Create a gzipped copy of each generated file. Cheap server-
 # side optimization for very high traffic sites or low memory servers.
 # GZIP_FILES = False
