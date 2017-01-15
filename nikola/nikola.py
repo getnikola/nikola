@@ -927,7 +927,7 @@ class Nikola(object):
             self.config['PAGE_INDEX'] = config['STORY_INDEX']
 
         # Configure filters
-        for filter, actions in self.config['FILTERS'].items():
+        for _, actions in self.config['FILTERS'].items():
             for i, f in enumerate(actions):
                 if hasattr(f, 'configuration_variables'):
                     args = {}
