@@ -32,6 +32,7 @@ from collections import defaultdict
 from copy import copy
 from pkg_resources import resource_filename
 import datetime
+import functools
 import locale
 import os
 import json
@@ -924,6 +925,17 @@ class Nikola(object):
         if 'STORY_INDEX' in config:
             utils.LOGGER.warn('The STORY_INDEX option is deprecated, use PAGE_INDEX instead.')
             self.config['PAGE_INDEX'] = config['STORY_INDEX']
+
+        # Configure filters
+        for actions in self.config['FILTERS'].values():
+            for i, f in enumerate(actions):
+                if hasattr(f, 'configuration_variables'):
+                    args = {}
+                    for arg, config in f.configuration_variables.items():
+                        if config in self.config:
+                            args[arg] = self.config[config]
+                    if args:
+                        actions[i] = functools.partial(f, **args)
 
         # We use one global tzinfo object all over Nikola.
         try:

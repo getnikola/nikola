@@ -45,6 +45,19 @@ import requests
 from .utils import req_missing, LOGGER
 
 
+class _ConfigurableFilter(object):
+    """Allow Nikola to configure filter with site's config."""
+
+    def __init__(self, **configuration_variables):
+        """Define which arguments to configure from which configuration variables."""
+        self.configuration_variables = configuration_variables
+
+    def __call__(self, f):
+        """Store configuration_variables as attribute of function."""
+        f.configuration_variables = self.configuration_variables
+        return f
+
+
 def apply_to_binary_file(f):
     """Apply a filter to a binary file.
 
@@ -126,14 +139,16 @@ def runinplace(command, infile):
             shutil.rmtree(tmpdir)
 
 
-def yui_compressor(infile):
+@_ConfigurableFilter(executable='YUI_COMPRESSOR_EXECUTABLE')
+def yui_compressor(infile, executable=None):
     """Run YUI Compressor on a file."""
-    yuicompressor = False
-    try:
-        subprocess.call('yui-compressor', stdout=open(os.devnull, 'w'), stderr=open(os.devnull, 'w'))
-        yuicompressor = 'yui-compressor'
-    except Exception:
-        pass
+    yuicompressor = executable
+    if not yuicompressor:
+        try:
+            subprocess.call('yui-compressor', stdout=open(os.devnull, 'w'), stderr=open(os.devnull, 'w'))
+            yuicompressor = 'yui-compressor'
+        except Exception:
+            pass
     if not yuicompressor:
         try:
             subprocess.call('yuicompressor', stdout=open(os.devnull, 'w'), stderr=open(os.devnull, 'w'))
@@ -145,41 +160,49 @@ def yui_compressor(infile):
     return runinplace('{} --nomunge %1 -o %2'.format(yuicompressor), infile)
 
 
-def closure_compiler(infile):
+@_ConfigurableFilter(executable='CLOSURE_COMPILER_EXECUTABLE')
+def closure_compiler(infile, executable='closure-compiler'):
     """Run closure-compiler on a file."""
-    return runinplace('closure-compiler --warning_level QUIET --js %1 --js_output_file %2', infile)
+    return runinplace('{} --warning_level QUIET --js %1 --js_output_file %2'.format(executable), infile)
 
 
-def optipng(infile):
+@_ConfigurableFilter(executable='OPTIPNG_EXECUTABLE')
+def optipng(infile, executable='optiong'):
     """Run optipng on a file."""
-    return runinplace("optipng -preserve -o2 -quiet %1", infile)
+    return runinplace("{} -preserve -o2 -quiet %1".format(executable), infile)
 
 
-def jpegoptim(infile):
+@_ConfigurableFilter(executable='JPEGOPTIM_EXECUTABLE')
+def jpegoptim(infile, executable='jpegoptim'):
     """Run jpegoptim on a file."""
-    return runinplace("jpegoptim -p --strip-all -q %1", infile)
+    return runinplace("{} -p --strip-all -q %1".format(executable), infile)
 
 
+@_ConfigurableFilter(executable='HTML_TIDY_EXECUTABLE')
 def html_tidy_withconfig(infile, executable='tidy5'):
     """Run HTML Tidy with tidy5.conf as config file."""
     return _html_tidy_runner(infile, "-quiet --show-info no --show-warnings no -utf8 -indent -config tidy5.conf -modify %1", executable=executable)
 
 
+@_ConfigurableFilter(executable='HTML_TIDY_EXECUTABLE')
 def html_tidy_nowrap(infile, executable='tidy5'):
     """Run HTML Tidy without line wrapping."""
     return _html_tidy_runner(infile, "-quiet --show-info no --show-warnings no -utf8 -indent --indent-attributes no --sort-attributes alpha --wrap 0 --wrap-sections no --drop-empty-elements no --tidy-mark no -modify %1", executable=executable)
 
 
+@_ConfigurableFilter(executable='HTML_TIDY_EXECUTABLE')
 def html_tidy_wrap(infile, executable='tidy5'):
     """Run HTML Tidy with line wrapping."""
     return _html_tidy_runner(infile, "-quiet --show-info no --show-warnings no -utf8 -indent --indent-attributes no --sort-attributes alpha --wrap 80 --wrap-sections no --drop-empty-elements no --tidy-mark no -modify %1", executable=executable)
 
 
+@_ConfigurableFilter(executable='HTML_TIDY_EXECUTABLE')
 def html_tidy_wrap_attr(infile, executable='tidy5'):
     """Run HTML tidy with line wrapping and attribute indentation."""
     return _html_tidy_runner(infile, "-quiet --show-info no --show-warnings no -utf8 -indent --indent-attributes yes --sort-attributes alpha --wrap 80 --wrap-sections no --drop-empty-elements no --tidy-mark no -modify %1", executable=executable)
 
 
+@_ConfigurableFilter(executable='HTML_TIDY_EXECUTABLE')
 def html_tidy_mini(infile, executable='tidy5'):
     """Run HTML tidy with minimal settings."""
     return _html_tidy_runner(infile, "-quiet --show-info no --show-warnings no -utf8 --indent-attributes no --sort-attributes alpha --wrap 0 --wrap-sections no --tidy-mark no --drop-empty-elements no -modify %1", executable=executable)
