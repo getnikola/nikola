@@ -932,8 +932,8 @@ class Nikola(object):
                 if hasattr(f, 'configuration_variables'):
                     args = {}
                     for arg, config in f.configuration_variables.items():
-                        if config in site.config:
-                            args[arg] = site.config[config]
+                        if config in self.config:
+                            args[arg] = self.config[config]
                     if args:
                         actions[i] = functools.partial(f, **args)
 
