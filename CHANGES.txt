@@ -13,6 +13,8 @@ Features
 Bugfixes
 --------
 
+* Catch OSError while opening a damaged image file. (Issue #2537)
+
 New in v7.8.3
 =============
 
