@@ -672,7 +672,7 @@ GITHUB_COMMIT_SOURCE = True
 # To reference the images in your posts, include a leading slash in the path.
 # For example, if IMAGE_FOLDERS = {'images': 'images'}, write
 #
-#   ..image:: /images/tesla.jpg
+#   .. image:: /images/tesla.jpg
 #
 # See the Nikola Handbook for details (in the “Embedding Images” and
 # “Thumbnails” sections)
