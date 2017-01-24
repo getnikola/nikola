@@ -50,7 +50,12 @@ class PageIndex(Taxonomy):
     apply_to_pages = True
     omit_empty_classifications = True
     also_create_classifications_from_other_languages = False
-    path_handler_docstrings = {}
+    path_handler_docstrings = {
+        'page_index_folder_index': None,
+        'page_index_folder': None,
+        'page_index_folder_atom': None,
+        'page_index_folder_rss': None,
+    }
 
     def is_enabled(self, lang=None):
         """Return True if this taxonomy is enabled, or False otherwise."""
