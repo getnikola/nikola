@@ -2039,3 +2039,29 @@ except (AttributeError, ImportError):
         """Convert all named and numeric character references  in the string s to the corresponding unicode characters."""
         h = HTMLParser()
         return h.unescape(s)
+
+def get_default_jupyter_config():
+    """
+    Search default jupyter configuration location paths
+    and return dictionary from configuration json files.
+    """
+    config = {}
+    try:
+        from jupyter_core.paths import jupyter_config_path
+    except ImportError:
+        # jupyter not installed, must be using IPython
+        return config
+    
+    for parent in jupyter_config_path():
+        try:
+            for file in os.listdir(parent):
+                if 'nbconvert' in file and file.endswith('.json'):
+                    abs_path = os.path.join(parent, file)
+                    with open(abs_path) as config_file:
+                        config.update(json.load(config_file))
+        except FileNotFoundError:
+            # some paths jupyter uses to find configurations
+            # may not exist
+            pass
+        
+    return config
