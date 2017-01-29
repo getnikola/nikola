@@ -26,7 +26,6 @@
 
 """Classify the posts in archives."""
 
-import os
 import natsort
 import nikola.utils
 import datetime
