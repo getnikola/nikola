@@ -240,10 +240,12 @@ class TaxonomiesClassifier(SignalHandler):
                 path = ['rss']
             elif len(path) == 0 or append_index == 'always':
                 path = path + [os.path.splitext(self.site.config['INDEX_FILE'])[0]]
+            elif len(path) > 0 and append_index == 'never':
+                path[-1] = os.path.splitext(path[-1])[0]
             path[-1] += force_extension
         elif (self.site.config['PRETTY_URLS'] and append_index != 'never') or len(path) == 0 or append_index == 'always':
             path = path + [self.site.config['INDEX_FILE']]
-        else:
+        elif append_index != 'never':
             path[-1] += '.html'
         # Create path
         result = [_f for _f in [self.site.config['TRANSLATIONS'][lang]] + path if _f]

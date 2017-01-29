@@ -100,7 +100,7 @@ link://section_index_rss/cars => /cars/rss.xml""",
         """A path handler for the given classification."""
         result = [_f for _f in [section] if _f]
         if dest_type == 'rss':
-            return result + ['rss'], 'never'
+            return result + ['rss.xml'], 'never'
         return result, 'always'
 
     def provide_context_and_uptodate(self, section, lang, node=None):
