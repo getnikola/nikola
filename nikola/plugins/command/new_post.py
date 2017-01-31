@@ -341,7 +341,8 @@ class CommandNewPost(Command):
             suffix = pattern[1:]
             output_path = os.path.dirname(entry[0])
             if date_path_auto or date_path_opt:
-                output_path += os.sep + datetime.datetime.now(self.site.tzinfo).strftime(date_path_format)
+                dateobj = datetime.datetime.strptime(data['date'].split('+')[0], '%Y-%m-%d %H:%M:%S')
+                output_path += os.sep + dateobj(self.site.tzinfo).strftime(date_path_format)
 
             txt_path = os.path.join(output_path, slug + suffix)
             meta_path = os.path.join(output_path, slug + ".meta")
