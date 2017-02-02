@@ -34,7 +34,7 @@ script:
 - if [[ $NMODE == 'nikola' ]]; then nikola; fi
 - if [[ $NMODE == 'nikola' ]]; then nikola help; fi
 - if [[ $NMODE == 'nikola' ]]; then scripts/baseline.sh check; fi
-- if [[ $NMODE == 'nikola' ]]; then scripts/codacity_coverage.sh; fi
+- if [[ $NMODE == 'nikola' ]]; then scripts/codacy_coverage.sh; fi
 - if [[ $NMODE == 'flake8' ]]; then flake8 nikola/; fi
 - if [[ $NMODE == 'flake8' ]]; then pydocstyle --count --match-dir='(?!^\\.)(?!data).*' nikola/; fi
 after_success:
