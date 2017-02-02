@@ -14,6 +14,8 @@ Features
 Bugfixes
 --------
 
+* Fix crash if ``SHOW_INDEX_PAGE_NAVIGATION`` is ``True`` while
+  ``INDEXES_STATIC`` is ``False``. (Issue #2654)
 * Fix crash if ``PAGE_INDEX`` is enabled (Issue #2646)
 
 New in v7.8.3
