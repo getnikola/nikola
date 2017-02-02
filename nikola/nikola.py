@@ -2474,7 +2474,10 @@ class Nikola(object):
             # form [num_pages, 1, 2, ..., num_pages - 1] -- we order it
             # via a map. This allows to not replicate the logic of
             # utils.get_displayed_page_number() here.
-            temp_map = {page_number - 1: link for page_number, link in zip(displayed_page_numbers, page_links)}
+            if not kw["indexes_pages_main"] and not kw["indexes_static"]:
+                temp_map = {page_number: link for page_number, link in zip(displayed_page_numbers, page_links)}
+            else:
+                temp_map = {page_number - 1: link for page_number, link in zip(displayed_page_numbers, page_links)}
             page_links_context = [temp_map[i] for i in range(num_pages)]
         for i, post_list in enumerate(lists):
             context = context_source.copy()
@@ -2526,7 +2529,10 @@ class Nikola(object):
             context['show_index_page_navigation'] = kw['show_index_page_navigation']
             if kw['show_index_page_navigation']:
                 context['page_links'] = page_links_context
-                context['current_page'] = ipages_i - 1
+                if not kw["indexes_pages_main"] and not kw["indexes_static"]:
+                    context['current_page'] = ipages_i
+                else:
+                    context['current_page'] = ipages_i - 1
                 context['prev_next_links_reversed'] = kw['indexes_static']
             context["permalink"] = page_links[i]
             output_name = os.path.join(kw['output_folder'], page_path(i, ipages_i, num_pages, False))
