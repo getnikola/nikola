@@ -100,7 +100,11 @@ link://category_rss/dogs => /categories/dogs.xml""",
     def get_overview_path(self, lang, dest_type='page'):
         """A path handler for the list of all classifications."""
         if self.site.config['CATEGORIES_INDEX_PATH'](lang):
-            return [_f for _f in [self.site.config['CATEGORIES_INDEX_PATH'](lang)] if _f], 'never'
+            path = self.site.config['CATEGORIES_INDEX_PATH'](lang)
+            if path.endswith('/index'):  # TODO: remove in v8
+                utils.LOGGER.warn("CATEGORIES_INDEX_PATH for language {0} is missing a .html extension. Please update your configuration!".format(lang))
+                path += '.html'
+            return [_f for _f in [path] if _f], 'never'
         else:
             return [_f for _f in [self.site.config['CATEGORY_PATH'](lang)] if _f], 'always'
 

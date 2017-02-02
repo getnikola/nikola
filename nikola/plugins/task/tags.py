@@ -104,7 +104,11 @@ link://tag_rss/cats => /tags/cats.xml""",
     def get_overview_path(self, lang, dest_type='page'):
         """A path handler for the list of all classifications."""
         if self.site.config['TAGS_INDEX_PATH'](lang):
-            return [_f for _f in [self.site.config['TAGS_INDEX_PATH'](lang)] if _f], 'never'
+            path = self.site.config['TAGS_INDEX_PATH'](lang)
+            if path.endswith('/index'):  # TODO: remove in v8
+                utils.LOGGER.warn("TAGS_INDEX_PATH for language {0} is missing a .html extension. Please update your configuration!".format(lang))
+                path += '.html'
+            return [_f for _f in [path] if _f], 'never'
         else:
             return [_f for _f in [self.site.config['TAG_PATH'](lang)] if _f], 'always'
 

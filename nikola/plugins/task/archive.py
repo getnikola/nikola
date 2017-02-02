@@ -26,7 +26,6 @@
 
 """Classify the posts in archives."""
 
-import os
 import natsort
 import nikola.utils
 import datetime
@@ -139,7 +138,7 @@ class Archive(Taxonomy):
             components.extend(classification)
             add_index = 'always'
         else:
-            components.append(os.path.splitext(self.site.config['ARCHIVE_FILENAME'])[0])
+            components.append(self.site.config['ARCHIVE_FILENAME'])
             add_index = 'never'
         return [_f for _f in components if _f], add_index
 
