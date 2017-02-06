@@ -16,6 +16,7 @@ Bugfixes
 
 * Fix crash if ``SHOW_INDEX_PAGE_NAVIGATION`` is ``True`` while
   ``INDEXES_STATIC`` is ``False``. (Issue #2654)
+* Make ``NEW_POST_DATE_PATH`` follow ``rrule`` if it exists (issue #2653)
 * Fix crash if ``PAGE_INDEX`` is enabled (Issue #2646)
 
 New in v7.8.3

@@ -111,7 +111,7 @@ def get_date(schedule=False, rule=None, last_date=None, tz=None, iso8601=False):
         else:
             tz_str = ' UTC'
 
-    return date.strftime('%Y-%m-%d %H:%M:%S') + tz_str
+    return (date.strftime('%Y-%m-%d %H:%M:%S') + tz_str, date)
 
 
 class CommandNewPost(Command):
@@ -325,7 +325,7 @@ class CommandNewPost(Command):
         self.site.scan_posts()
         timeline = self.site.timeline
         last_date = None if not timeline else timeline[0].date
-        date = get_date(schedule, rule, last_date, self.site.tzinfo, self.site.config['FORCE_ISO8601'])
+        date, dateobj = get_date(schedule, rule, last_date, self.site.tzinfo, self.site.config['FORCE_ISO8601'])
         data = {
             'title': title,
             'slug': slug,
@@ -341,7 +341,7 @@ class CommandNewPost(Command):
             suffix = pattern[1:]
             output_path = os.path.dirname(entry[0])
             if date_path_auto or date_path_opt:
-                output_path += os.sep + datetime.datetime.now(self.site.tzinfo).strftime(date_path_format)
+                output_path += os.sep + dateobj.strftime(date_path_format)
 
             txt_path = os.path.join(output_path, slug + suffix)
             meta_path = os.path.join(output_path, slug + ".meta")
