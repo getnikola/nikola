@@ -61,13 +61,14 @@ class CompileMarkdown(PageCompiler):
             self.extensions.append(plugin_info.plugin_object)
             plugin_info.plugin_object.short_help = plugin_info.description
 
-        self.config_dependencies.append(str(sorted(site.config.get("MARKDOWN_EXTENSIONS"))))
+        site_extensions = self.site.config.get("MARKDOWN_EXTENSIONS")
+        self.config_dependencies.append(str(sorted(site_extensions)))
+        self.extensions.extend(site_extensions)
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
         """Compile Markdown into HTML strings."""
         if markdown is None:
             req_missing(['markdown'], 'build this site (compile Markdown)')
-        self.extensions += self.site.config.get("MARKDOWN_EXTENSIONS")
         if not is_two_file:
             _, data = self.split_metadata(data)
         output = markdown(data, self.extensions, output_format="html5")
