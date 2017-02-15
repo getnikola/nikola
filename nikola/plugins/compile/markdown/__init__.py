@@ -47,7 +47,8 @@ from nikola.utils import makedirs, req_missing, write_metadata
 class ThreadLocalMarkdown(threading.local):
     """Convert Markdown to HTML using per-thread Markdown objects.
 
-    See discussion in #2661."""
+    See discussion in #2661.
+    """
 
     def __init__(self, extensions):
         """Create a Markdown instance."""
