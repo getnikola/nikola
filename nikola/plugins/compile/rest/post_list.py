@@ -104,6 +104,10 @@ class PostList(Directive):
         Filter posts to show only posts having at least one of the ``tags``.
         Defaults to None.
 
+    ``require_all_tags`` : flag
+        Change tag filter behaviour to show only posts that have all specified ``tags``.
+        Defaults to False.
+
     ``categories`` : string [, string...]
         Filter posts to show only posts having one of the ``categories``.
         Defaults to None.
@@ -143,6 +147,7 @@ class PostList(Directive):
         'reverse': directives.flag,
         'sort': directives.unchanged,
         'tags': directives.unchanged,
+        'require_all_tags': directives.flag,
         'categories': directives.unchanged,
         'sections': directives.unchanged,
         'slugs': directives.unchanged,
@@ -161,6 +166,7 @@ class PostList(Directive):
         stop = self.options.get('stop')
         reverse = self.options.get('reverse', False)
         tags = self.options.get('tags')
+        require_all_tags = not self.options.get('require_all_tags', True)  # a flag returns None if declared
         categories = self.options.get('categories')
         sections = self.options.get('sections')
         slugs = self.options.get('slugs')
@@ -172,7 +178,7 @@ class PostList(Directive):
         sort = self.options.get('sort')
         date = self.options.get('date')
 
-        output, deps = _do_post_list(start, stop, reverse, tags, categories, sections, slugs, post_type, type,
+        output, deps = _do_post_list(start, stop, reverse, tags, require_all_tags, categories, sections, slugs, post_type, type,
                                      all, lang, template, sort, state=self.state, site=self.site, date=date)
         self.state.document.settings.record_dependencies.add("####MAGIC####TIMELINE")
         for d in deps:
@@ -183,7 +189,7 @@ class PostList(Directive):
             return []
 
 
-def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=None,
+def _do_post_list(start=None, stop=None, reverse=False, tags=None, require_all_tags=False, categories=None,
                   sections=None, slugs=None, post_type='post', type=False, all=False,
                   lang=None, template='post_list_directive.tmpl', sort=None,
                   id=None, data=None, state=None, site=None, date=None, filename=None, post=None):
@@ -210,7 +216,6 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
         stop = int(stop)
 
     # Parse tags/categories/sections/slugs (input is strings)
-    tags = [t.strip().lower() for t in tags.split(',')] if tags else []
     categories = [c.strip().lower() for c in categories.split(',')] if categories else []
     sections = [s.strip().lower() for s in sections.split(',')] if sections else []
     slugs = [s.strip() for s in slugs.split(',')] if slugs else []
@@ -246,18 +251,16 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
     if sections:
         timeline = [p for p in timeline if p.section_name(lang).lower() in sections]
 
-    for post in timeline:
-        if tags:
-            cont = True
-            tags_lower = [t.lower() for t in post.tags]
-            for tag in tags:
-                if tag in tags_lower:
-                    cont = False
-
-            if cont:
-                continue
-
-        filtered_timeline.append(post)
+    if tags:
+        tags = {t.strip().lower() for t in tags.split(',')}
+        if require_all_tags:
+            compare = lambda x, y: x.issubset(y)
+        else:
+            compare = lambda x, y: x & y
+        for post in timeline:
+            post_tags = {t.lower() for t in post.tags}
+            if compare(tags, post_tags):
+                filtered_timeline.append(post)
 
     if sort:
         filtered_timeline = natsort.natsorted(filtered_timeline, key=lambda post: post.meta[lang][sort], alg=natsort.ns.F | natsort.ns.IC)
