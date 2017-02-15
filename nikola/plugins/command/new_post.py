@@ -311,7 +311,14 @@ class CommandNewPost(Command):
                     path = path.decode(sys.stdin.encoding)
                 except (AttributeError, TypeError):  # for tests
                     path = path.decode('utf-8')
-            slug = utils.slugify(os.path.splitext(os.path.basename(path))[0], lang=self.site.default_lang)
+            if os.path.isdir(path):
+                # If the user provides a directory, add the file name generated from title (Issue #2651)
+                slug = utils.slugify(title, lang=self.site.default_lang)
+                pattern = os.path.basename(entry[0])
+                suffix = pattern[1:]
+                path = os.path.join(path, slug + suffix)
+            else:
+                slug = utils.slugify(os.path.splitext(os.path.basename(path))[0], lang=self.site.default_lang)
 
         if isinstance(author, utils.bytes_str):
                 try:
