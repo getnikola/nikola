@@ -4,25 +4,25 @@ New in master
 Features
 --------
 
+* Add a ``require_all_tags`` parameter to the ``post-list`` directive to
+  show only posts that have all specified tags. (Issue #2665)
 * Add ``META_GENERATOR_TAG`` option in conf.py allowing the meta generator
   to be disabled if needed. (Issue #2628)
 * Add ``YUI_COMPRESSOR_EXECUTABLE``, ``CLOSURE_COMPILER_EXECUTABLE``,
   ``OPTIPNG_EXECUTABLE``, ``JPEGOPTIM_EXECUTABLE`` and
   ``HTML_TIDY_EXECUTABLE`` to configure executables for built-in filters.
   (Issue #2615)
-* Add a ``require_all_tags`` parameter to the ``post-list`` directive to
-  show only posts that have all specified tags.
-
 
 Bugfixes
 --------
 
+* Skip the current post in post lists (Issue #2666)
+* Fix poor performance when compiling multiple markdown documents with
+  the markdown compiler. (Issue #2660)
 * Fix crash if ``SHOW_INDEX_PAGE_NAVIGATION`` is ``True`` while
   ``INDEXES_STATIC`` is ``False``. (Issue #2654)
 * Make ``NEW_POST_DATE_PATH`` follow ``rrule`` if it exists (issue #2653)
 * Fix crash if ``PAGE_INDEX`` is enabled (Issue #2646)
-* Fix poor performance when compiling multiple markdown documents with
-  the markdown compiler. (Issue #2660)
 
 New in v7.8.3
 =============
