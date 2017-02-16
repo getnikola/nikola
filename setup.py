@@ -28,8 +28,7 @@ with open('requirements.txt', 'r') as fh:
 
 extras = {
     ':python_version >= "3.4"': ['doit>=0.28.0'],
-    ':python_version == "3.3"': ['doit>=0.30.1'],
-    ':python_version == "2.7"': ['doit>=0.28.0,<=0.29.0'],
+    ':python_version <= "3.3"': ['doit>=0.28.0,<=0.29.0'],
 }
 
 with open('requirements-extras.txt', 'r') as fh:
