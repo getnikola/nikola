@@ -2173,7 +2173,7 @@ class Nikola(object):
 
     def generic_page_renderer(self, lang, post, filters, context=None):
         """Render post fragments to final HTML pages."""
-        extension = self.get_compiler(post.source_path).extension()
+        extension = post.compiler.extension()
         output_name = os.path.join(self.config['OUTPUT_FOLDER'],
                                    post.destination_path(lang, extension))
 
