@@ -2355,6 +2355,10 @@ The following options are recognized:
       Filter posts to show only posts having at least one of the ``tags``.
       Defaults to None.
 
+* ``require_all_tags`` : flag
+    Change tag filter behaviour to show only posts that have all specified ``tags``.
+    Defaults to False.
+
 * ``categories`` : string [, string...]
       Filter posts to show only posts having one of the ``categories``.
       Defaults to None.

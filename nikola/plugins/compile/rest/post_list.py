@@ -261,6 +261,8 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, require_all_t
             post_tags = {t.lower() for t in post.tags}
             if compare(tags, post_tags):
                 filtered_timeline.append(post)
+    else:
+        filtered_timeline = timeline
 
     if sort:
         filtered_timeline = natsort.natsorted(filtered_timeline, key=lambda post: post.meta[lang][sort], alg=natsort.ns.F | natsort.ns.IC)

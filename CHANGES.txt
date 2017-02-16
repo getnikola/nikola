@@ -10,6 +10,9 @@ Features
   ``OPTIPNG_EXECUTABLE``, ``JPEGOPTIM_EXECUTABLE`` and
   ``HTML_TIDY_EXECUTABLE`` to configure executables for built-in filters.
   (Issue #2615)
+* Add a ``require_all_tags`` parameter to the ``post-list`` directive to
+  show only posts that have all specified tags.
+
 
 Bugfixes
 --------
