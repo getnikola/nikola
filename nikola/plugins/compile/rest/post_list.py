@@ -178,9 +178,10 @@ class PostList(Directive):
         template = self.options.get('template', 'post_list_directive.tmpl')
         sort = self.options.get('sort')
         date = self.options.get('date')
+        filename = self.state.document.settings._nikola_source_path
 
         output, deps = _do_post_list(start, stop, reverse, tags, require_all_tags, categories, sections, slugs, post_type, type,
-                                     all, lang, template, sort, state=self.state, site=self.site, date=date)
+                                     all, lang, template, sort, state=self.state, site=self.site, date=date, filename=filename)
         self.state.document.settings.record_dependencies.add("####MAGIC####TIMELINE")
         for d in deps:
             self.state.document.settings.record_dependencies.add(d)
@@ -245,6 +246,9 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, require_all_t
     #    timeline = [p for p in site.timeline]
     # else: # post
     #    timeline = [p for p in site.timeline if p.use_in_feeds]
+
+    # self_post should be removed from timeline because this is redundant
+    timeline = [p for p in timeline if p.source_path != filename]
 
     if categories:
         timeline = [p for p in timeline if p.meta('category', lang=lang).lower() in categories]
