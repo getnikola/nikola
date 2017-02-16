@@ -31,6 +31,7 @@ from __future__ import unicode_literals
 import os
 import uuid
 import natsort
+import operator
 
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
@@ -254,9 +255,9 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, require_all_t
     if tags:
         tags = {t.strip().lower() for t in tags.split(',')}
         if require_all_tags:
-            compare = lambda x, y: x.issubset(y)
+            compare = set.issubset
         else:
-            compare = lambda x, y: x & y
+            compare = operator.and_
         for post in timeline:
             post_tags = {t.lower() for t in post.tags}
             if compare(tags, post_tags):
