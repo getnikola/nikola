@@ -167,7 +167,7 @@ class PostList(Directive):
         stop = self.options.get('stop')
         reverse = self.options.get('reverse', False)
         tags = self.options.get('tags')
-        require_all_tags = not self.options.get('require_all_tags', True)  # a flag returns None if declared
+        require_all_tags = 'require_all_tags' in self.options
         categories = self.options.get('categories')
         sections = self.options.get('sections')
         slugs = self.options.get('slugs')
