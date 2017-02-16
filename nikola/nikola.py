@@ -2094,7 +2094,8 @@ class Nikola(object):
                     quit = True
                 self.post_per_file[dest] = post
                 self.post_per_file[src_dest] = post
-                self.post_per_input_file[src_file] = post
+                if src_file is not None:
+                    self.post_per_input_file[src_file] = post
                 # deduplicate tags_per_language
                 self.tags_per_language[lang] = list(set(self.tags_per_language[lang]))
 
