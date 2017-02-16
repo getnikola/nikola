@@ -75,8 +75,8 @@ TEASER_REGEXP = re.compile('<!--\s*TEASER_END(:(.+))?\s*-->', re.IGNORECASE)
 _UPGRADE_METADATA_ADVERTISED = False
 
 
-class Post(object):
-    """Represent a blog post or site page."""
+class BasePost(object):
+    """Abstract base class for representing a blog post or site page."""
 
     def __init__(
         self,
@@ -91,9 +91,8 @@ class Post(object):
     ):
         """Initialize post.
 
-        The source path is the user created post file. From it we calculate
-        the meta file, as well as any translations available, and
-        the .html fragment file path.
+        The source path is an identifier shown to the user to identify the post
+        in case of errors, or used as a last resort tie-breaking for sorting posts.
 
         destination_base must be None or a TranslatableSetting instance. If
         specified, it will be prepended to the destination path.
@@ -102,11 +101,11 @@ class Post(object):
         self.compiler = compiler
         self.compile_html = self.compiler.compile
         self.demote_headers = self.compiler.demote_headers and self.config['DEMOTE_HEADERS']
-        tzinfo = self.config['__tzinfo__']
+        self.tzinfo = self.config['__tzinfo__']
         if self.config['FUTURE_IS_NOW']:
             self.current_time = None
         else:
-            self.current_time = current_time(tzinfo)
+            self.current_time = current_time(self.tzinfo)
         self.translated_to = set([])
         self._prev_post = None
         self._next_post = None
@@ -117,15 +116,8 @@ class Post(object):
         self.index_file = self.config['INDEX_FILE']
         self.pretty_urls = self.config['PRETTY_URLS']
         self.source_path = source_path  # posts/blah.txt
-        self.post_name = os.path.splitext(source_path)[0]  # posts/blah
-        _relpath = os.path.relpath(self.post_name)
-        if _relpath != self.post_name:
-            self.post_name = _relpath.replace('..' + os.sep, '_..' + os.sep)
-        # cache[\/]posts[\/]blah.html
-        self.base_path = os.path.join(self.config['CACHE_FOLDER'], self.post_name + ".html")
-        # cache/posts/blah.html
-        self._base_path = self.base_path.replace('\\', '/')
-        self.metadata_path = self.post_name + ".meta"  # posts/blah.meta
+        self.base_path = None  # must be overriden!
+        self._base_path = None  # must be overriden!
         self.folder_relative = destination
         self.folder_base = destination_base
         self.default_lang = self.config['DEFAULT_LANG']
@@ -133,8 +125,6 @@ class Post(object):
         self.messages = messages
         self.skip_untranslated = not self.config['SHOW_UNTRANSLATED_POSTS']
         self._template_name = template_name
-        self.is_two_file = True
-        self.newstylemeta = True
         self._reading_time = None
         self._remaining_reading_time = None
         self._paragraph_count = None
@@ -145,28 +135,7 @@ class Post(object):
         self._dependency_uptodate_page = defaultdict(list)
         self._depfile = defaultdict(list)
 
-        default_metadata, self.newstylemeta = get_meta(self, self.config['FILE_METADATA_REGEXP'], self.config['UNSLUGIFY_TITLES'])
-
         self.meta = Functionary(lambda: None, self.default_lang)
-        self.meta[self.default_lang] = default_metadata
-
-        # Load internationalized metadata
-        for lang in self.translations:
-            if os.path.isfile(get_translation_candidate(self.config, self.source_path, lang)):
-                self.translated_to.add(lang)
-            if lang != self.default_lang:
-                meta = defaultdict(lambda: '')
-                meta.update(default_metadata)
-                _meta, _nsm = get_meta(self, self.config['FILE_METADATA_REGEXP'], self.config['UNSLUGIFY_TITLES'], lang)
-                self.newstylemeta = self.newstylemeta and _nsm
-                meta.update(_meta)
-                self.meta[lang] = meta
-
-        if not self.is_translation_available(self.default_lang):
-            # Special case! (Issue #373)
-            # Fill default_metadata with stuff from the other languages
-            for lang in sorted(self.translated_to):
-                default_metadata.update(self.meta[lang])
 
         # Compose paths
         if self.folder_base is not None:
@@ -180,81 +149,18 @@ class Post(object):
             self.folders = {lang: self.folder_relative for lang in self.config['TRANSLATIONS'].keys()}
         self.folder = self.folders[self.default_lang]
 
-        # Load data field from metadata
         self.data = Functionary(lambda: None, self.default_lang)
-        for lang in self.translations:
-            if self.meta[lang].get('data') is not None:
-                self.data[lang] = utils.load_data(self.meta[lang]['data'])
 
-        if 'date' not in default_metadata and not use_in_feeds:
-            # For pages we don't *really* need a date
-            if self.config['__invariant__']:
-                default_metadata['date'] = datetime.datetime(2013, 12, 31, 23, 59, 59, tzinfo=tzinfo)
-            else:
-                default_metadata['date'] = datetime.datetime.utcfromtimestamp(
-                    os.stat(self.source_path).st_ctime).replace(tzinfo=dateutil.tz.tzutc()).astimezone(tzinfo)
+        self.date = None  # must be overriden!
 
-        # If time zone is set, build localized datetime.
-        try:
-            self.date = to_datetime(self.meta[self.default_lang]['date'], tzinfo)
-        except ValueError:
-            raise ValueError("Invalid date '{0}' in file {1}".format(self.meta[self.default_lang]['date'], source_path))
+        self.publish_later = False
 
-        if 'updated' not in default_metadata:
-            default_metadata['updated'] = default_metadata.get('date', None)
-
-        self.updated = to_datetime(default_metadata['updated'], tzinfo)
-
-        if 'title' not in default_metadata or 'slug' not in default_metadata \
-                or 'date' not in default_metadata:
-            raise ValueError("You must set a title (found '{0}'), a slug (found '{1}') and a date (found '{2}')! "
-                             "[in file {3}]".format(default_metadata.get('title', None),
-                                                    default_metadata.get('slug', None),
-                                                    default_metadata.get('date', None),
-                                                    source_path))
-
-        if 'type' not in default_metadata:
-            # default value is 'text'
-            default_metadata['type'] = 'text'
-
-        self.publish_later = False if self.current_time is None else self.date >= self.current_time
-
-        is_draft = False
-        is_private = False
-        self._tags = {}
-        for lang in self.translated_to:
-            self._tags[lang] = natsort.natsorted(
-                list(set([x.strip() for x in self.meta[lang]['tags'].split(',')])),
-                alg=natsort.ns.F | natsort.ns.IC)
-            self._tags[lang] = [t for t in self._tags[lang] if t]
-            if 'draft' in [_.lower() for _ in self._tags[lang]]:
-                is_draft = True
-                LOGGER.debug('The post "{0}" is a draft.'.format(self.source_path))
-                self._tags[lang].remove('draft')
-
-            # TODO: remove in v8
-            if 'retired' in self._tags[lang]:
-                is_private = True
-                LOGGER.warning('The "retired" tag in post "{0}" is now deprecated and will be removed in v8.  Use "private" instead.'.format(self.source_path))
-                self._tags[lang].remove('retired')
-            # end remove in v8
-
-            if 'private' in self._tags[lang]:
-                is_private = True
-                LOGGER.debug('The post "{0}" is private.'.format(self.source_path))
-                self._tags[lang].remove('private')
-
-        # While draft comes from the tags, it's not really a tag
-        self.is_draft = is_draft
-        self.is_private = is_private
+        self.is_draft = False
+        self.is_private = False
         self.is_post = use_in_feeds
-        self.use_in_feeds = use_in_feeds and not is_draft and not is_private \
-            and not self.publish_later
+        self.use_in_feeds = use_in_feeds
+        self.url_type = None
 
-        # Allow overriding URL_TYPE via meta
-        # The check is done here so meta dicts won’t change inside of
-        # generic_post_rendere
-        self.url_type = self.meta('url_type') or None
         # Register potential extra dependencies
         self.compiler.register_extra_dependencies(self)
 
@@ -265,19 +171,7 @@ class Post(object):
 
     def __repr__(self):
         """Provide a representation of the post object."""
-        # Calculate a hash that represents most data about the post
-        m = hashlib.md5()
-        # source_path modification date (to avoid reading it)
-        m.update(utils.unicode_str(os.stat(self.source_path).st_mtime).encode('utf-8'))
-        clean_meta = {}
-        for k, v in self.meta.items():
-            sub_meta = {}
-            clean_meta[k] = sub_meta
-            for kk, vv in v.items():
-                if vv:
-                    sub_meta[kk] = vv
-        m.update(utils.unicode_str(json.dumps(clean_meta, cls=utils.CustomEncoder, sort_keys=True)).encode('utf-8'))
-        return '<Post: {0!r} {1}>'.format(self.source_path, m.hexdigest())
+        raise NotImplementedError()
 
     def has_pretty_url(self, lang):
         """Check if this page has a pretty URL."""
@@ -307,21 +201,11 @@ class Post(object):
     @property
     def alltags(self):
         """Return ALL the tags for this post."""
-        tags = []
-        for l in self._tags:
-            tags.extend(self._tags[l])
-        return list(set(tags))
+        raise NotImplementedError()
 
     def tags_for_language(self, lang):
         """Return tags for a given language."""
-        if lang in self._tags:
-            return self._tags[lang]
-        elif lang not in self.translated_to and self.skip_untranslated:
-            return []
-        elif self.default_lang in self._tags:
-            return self._tags[self.default_lang]
-        else:
-            return []
+        raise NotImplementedError()
 
     @property
     def tags(self):
@@ -377,7 +261,7 @@ class Post(object):
 
     def formatted_updated(self, date_format):
         """Return the updated date as unicode."""
-        return self.formatted_date(date_format, self.updated)
+        raise NotImplementedError()
 
     def title(self, lang=None):
         """Return localized title.
@@ -513,19 +397,6 @@ class Post(object):
     def deps(self, lang):
         """Return a list of file dependencies to build this post's page."""
         deps = []
-        if self.default_lang in self.translated_to:
-            deps.append(self.base_path)
-            deps.append(self.source_path)
-            if os.path.exists(self.metadata_path):
-                deps.append(self.metadata_path)
-        if lang != self.default_lang:
-            cand_1 = get_translation_candidate(self.config, self.source_path, lang)
-            cand_2 = get_translation_candidate(self.config, self.base_path, lang)
-            if os.path.exists(cand_1):
-                deps.extend([cand_1, cand_2])
-            cand_3 = get_translation_candidate(self.config, self.metadata_path, lang)
-            if os.path.exists(cand_3):
-                deps.append(cand_3)
         if self.meta('data', lang):
             deps.append(self.meta('data', lang))
         deps += self._get_dependencies(self._dependency_file_page[lang])
@@ -546,29 +417,7 @@ class Post(object):
 
     def compile(self, lang):
         """Generate the cache/ file with the compiled post."""
-        dest = self.translated_base_path(lang)
-        if not self.is_translation_available(lang) and not self.config['SHOW_UNTRANSLATED_POSTS']:
-            return
-        # Set the language to the right thing
-        LocaleBorg().set_locale(lang)
-        self.compile_html(
-            self.translated_source_path(lang),
-            dest,
-            self.is_two_file,
-            self,
-            lang)
-        Post.write_depfile(dest, self._depfile[dest], post=self, lang=lang)
-
-        signal('compiled').send({
-            'source': self.translated_source_path(lang),
-            'dest': dest,
-            'post': self,
-            'lang': lang,
-        })
-
-        if self.publish_later:
-            LOGGER.notice('{0} is scheduled to be published in the future ({1})'.format(
-                self.source_path, self.date))
+        raise NotImplementedError()
 
     def fragment_deps(self, lang):
         """Return a list of uptodate dependencies to build this post's fragment.
@@ -577,15 +426,6 @@ class Post(object):
         which generates the fragment.
         """
         deps = []
-        if self.default_lang in self.translated_to:
-            deps.append(self.source_path)
-        if os.path.isfile(self.metadata_path):
-            deps.append(self.metadata_path)
-        lang_deps = []
-        if lang != self.default_lang:
-            lang_deps = [get_translation_candidate(self.config, d, lang) for d in deps]
-            deps += lang_deps
-        deps = [d for d in deps if os.path.exists(d)]
         deps += self._get_dependencies(self._dependency_file_fragment[lang])
         deps += self._get_dependencies(self._dependency_file_fragment[None])
         return sorted(deps)
@@ -604,15 +444,7 @@ class Post(object):
 
     def translated_source_path(self, lang):
         """Return path to the translation's source file."""
-        if lang in self.translated_to:
-            if lang == self.default_lang:
-                return self.source_path
-            else:
-                return get_translation_candidate(self.config, self.source_path, lang)
-        elif lang != self.default_lang:
-            return self.source_path
-        else:
-            return get_translation_candidate(self.config, self.source_path, sorted(self.translated_to)[0])
+        return None
 
     def translated_base_path(self, lang):
         """Return path to the translation's base_path file."""
@@ -923,6 +755,254 @@ class Post(object):
             return '.src' + ext
         else:
             return ext
+
+
+class Post(BasePost):
+    """Represent a blog post or site page."""
+
+    def __init__(
+        self,
+        source_path,
+        config,
+        destination,
+        use_in_feeds,
+        messages,
+        template_name,
+        compiler,
+        destination_base=None
+    ):
+        """Initialize post.
+
+        The source path is the user created post file. From it we calculate
+        the meta file, as well as any translations available, and
+        the .html fragment file path.
+
+        destination_base must be None or a TranslatableSetting instance. If
+        specified, it will be prepended to the destination path.
+        """
+        super(Post, self).__init__(source_path, config, destination, use_in_feeds, messages, template_name, compiler, destination_base)
+        self.post_name = os.path.splitext(source_path)[0]  # posts/blah
+        _relpath = os.path.relpath(self.post_name)
+        if _relpath != self.post_name:
+            self.post_name = _relpath.replace('..' + os.sep, '_..' + os.sep)
+        # cache[\/]posts[\/]blah.html
+        self.base_path = os.path.join(self.config['CACHE_FOLDER'], self.post_name + ".html")
+        # cache/posts/blah.html
+        self._base_path = self.base_path.replace('\\', '/')
+        self.metadata_path = self.post_name + ".meta"  # posts/blah.meta
+        self.is_two_file = True
+        self.newstylemeta = True
+
+        default_metadata, self.newstylemeta = get_meta(self, self.config['FILE_METADATA_REGEXP'], self.config['UNSLUGIFY_TITLES'])
+
+        self.meta[self.default_lang] = default_metadata
+
+        # Load internationalized metadata
+        for lang in self.translations:
+            if os.path.isfile(get_translation_candidate(self.config, self.source_path, lang)):
+                self.translated_to.add(lang)
+            if lang != self.default_lang:
+                meta = defaultdict(lambda: '')
+                meta.update(default_metadata)
+                _meta, _nsm = get_meta(self, self.config['FILE_METADATA_REGEXP'], self.config['UNSLUGIFY_TITLES'], lang)
+                self.newstylemeta = self.newstylemeta and _nsm
+                meta.update(_meta)
+                self.meta[lang] = meta
+
+        if not self.is_translation_available(self.default_lang):
+            # Special case! (Issue #373)
+            # Fill default_metadata with stuff from the other languages
+            for lang in sorted(self.translated_to):
+                default_metadata.update(self.meta[lang])
+
+        # Load data field from metadata
+        for lang in self.translations:
+            if self.meta[lang].get('data') is not None:
+                self.data[lang] = utils.load_data(self.meta[lang]['data'])
+
+        if 'date' not in default_metadata and not use_in_feeds:
+            # For pages we don't *really* need a date
+            if self.config['__invariant__']:
+                default_metadata['date'] = datetime.datetime(2013, 12, 31, 23, 59, 59, tzinfo=self.tzinfo)
+            else:
+                default_metadata['date'] = datetime.datetime.utcfromtimestamp(
+                    os.stat(self.source_path).st_ctime).replace(tzinfo=dateutil.tz.tzutc()).astimezone(self.tzinfo)
+
+        # If time zone is set, build localized datetime.
+        try:
+            self.date = to_datetime(self.meta[self.default_lang]['date'], self.tzinfo)
+        except ValueError:
+            raise ValueError("Invalid date '{0}' in file {1}".format(self.meta[self.default_lang]['date'], source_path))
+
+        if 'updated' not in default_metadata:
+            default_metadata['updated'] = default_metadata.get('date', None)
+
+        self.updated = to_datetime(default_metadata['updated'], self.tzinfo)
+
+        if 'title' not in default_metadata or 'slug' not in default_metadata \
+                or 'date' not in default_metadata:
+            raise ValueError("You must set a title (found '{0}'), a slug (found '{1}') and a date (found '{2}')! "
+                             "[in file {3}]".format(default_metadata.get('title', None),
+                                                    default_metadata.get('slug', None),
+                                                    default_metadata.get('date', None),
+                                                    source_path))
+
+        if 'type' not in default_metadata:
+            # default value is 'text'
+            default_metadata['type'] = 'text'
+
+        self.publish_later = False if self.current_time is None else self.date >= self.current_time
+
+        is_draft = False
+        is_private = False
+        self._tags = {}
+        for lang in self.translated_to:
+            self._tags[lang] = natsort.natsorted(
+                list(set([x.strip() for x in self.meta[lang]['tags'].split(',')])),
+                alg=natsort.ns.F | natsort.ns.IC)
+            self._tags[lang] = [t for t in self._tags[lang] if t]
+            if 'draft' in [_.lower() for _ in self._tags[lang]]:
+                is_draft = True
+                LOGGER.debug('The post "{0}" is a draft.'.format(self.source_path))
+                self._tags[lang].remove('draft')
+
+            # TODO: remove in v8
+            if 'retired' in self._tags[lang]:
+                is_private = True
+                LOGGER.warning('The "retired" tag in post "{0}" is now deprecated and will be removed in v8.  Use "private" instead.'.format(self.source_path))
+                self._tags[lang].remove('retired')
+            # end remove in v8
+
+            if 'private' in self._tags[lang]:
+                is_private = True
+                LOGGER.debug('The post "{0}" is private.'.format(self.source_path))
+                self._tags[lang].remove('private')
+
+        # While draft comes from the tags, it's not really a tag
+        self.is_draft = is_draft
+        self.is_private = is_private
+        self.is_post = use_in_feeds
+        self.use_in_feeds = use_in_feeds and not is_draft and not is_private \
+            and not self.publish_later
+
+        # Allow overriding URL_TYPE via meta
+        # The check is done here so meta dicts won’t change inside of
+        # generic_post_rendere
+        self.url_type = self.meta('url_type') or None
+
+    def __repr__(self):
+        """Provide a representation of the post object."""
+        # Calculate a hash that represents most data about the post
+        m = hashlib.md5()
+        # source_path modification date (to avoid reading it)
+        m.update(utils.unicode_str(os.stat(self.source_path).st_mtime).encode('utf-8'))
+        clean_meta = {}
+        for k, v in self.meta.items():
+            sub_meta = {}
+            clean_meta[k] = sub_meta
+            for kk, vv in v.items():
+                if vv:
+                    sub_meta[kk] = vv
+        m.update(utils.unicode_str(json.dumps(clean_meta, cls=utils.CustomEncoder, sort_keys=True)).encode('utf-8'))
+        return '<Post: {0!r} {1}>'.format(self.source_path, m.hexdigest())
+
+    @property
+    def alltags(self):
+        """Return ALL the tags for this post."""
+        tags = []
+        for l in self._tags:
+            tags.extend(self._tags[l])
+        return list(set(tags))
+
+    def tags_for_language(self, lang):
+        """Return tags for a given language."""
+        if lang in self._tags:
+            return self._tags[lang]
+        elif lang not in self.translated_to and self.skip_untranslated:
+            return []
+        elif self.default_lang in self._tags:
+            return self._tags[self.default_lang]
+        else:
+            return []
+
+    def formatted_updated(self, date_format):
+        """Return the updated date as unicode."""
+        return self.formatted_date(date_format, self.updated)
+
+    def deps(self, lang):
+        """Return a list of file dependencies to build this post's page."""
+        deps = super(Post, self).deps(lang)
+        if self.default_lang in self.translated_to:
+            deps.append(self.base_path)
+            deps.append(self.source_path)
+            if os.path.exists(self.metadata_path):
+                deps.append(self.metadata_path)
+        if lang != self.default_lang:
+            cand_1 = get_translation_candidate(self.config, self.source_path, lang)
+            cand_2 = get_translation_candidate(self.config, self.base_path, lang)
+            if os.path.exists(cand_1):
+                deps.extend([cand_1, cand_2])
+            cand_3 = get_translation_candidate(self.config, self.metadata_path, lang)
+            if os.path.exists(cand_3):
+                deps.append(cand_3)
+        return sorted(deps)
+
+    def compile(self, lang):
+        """Generate the cache/ file with the compiled post."""
+        dest = self.translated_base_path(lang)
+        if not self.is_translation_available(lang) and not self.config['SHOW_UNTRANSLATED_POSTS']:
+            return
+        # Set the language to the right thing
+        LocaleBorg().set_locale(lang)
+        self.compile_html(
+            self.translated_source_path(lang),
+            dest,
+            self.is_two_file,
+            self,
+            lang)
+        Post.write_depfile(dest, self._depfile[dest], post=self, lang=lang)
+
+        signal('compiled').send({
+            'source': self.translated_source_path(lang),
+            'dest': dest,
+            'post': self,
+            'lang': lang,
+        })
+
+        if self.publish_later:
+            LOGGER.notice('{0} is scheduled to be published in the future ({1})'.format(
+                self.source_path, self.date))
+
+    def fragment_deps(self, lang):
+        """Return a list of uptodate dependencies to build this post's fragment.
+
+        These dependencies should be included in ``uptodate`` for the task
+        which generates the fragment.
+        """
+        deps = []
+        if self.default_lang in self.translated_to:
+            deps.append(self.source_path)
+        if os.path.isfile(self.metadata_path):
+            deps.append(self.metadata_path)
+        lang_deps = []
+        if lang != self.default_lang:
+            lang_deps = [get_translation_candidate(self.config, d, lang) for d in deps]
+            deps += lang_deps
+        deps = [d for d in deps if os.path.exists(d)]
+        deps.extend(super(Post, self).fragment_deps(lang))
+        return sorted(deps)
+
+    def translated_source_path(self, lang):
+        """Return path to the translation's source file."""
+        if lang in self.translated_to:
+            if lang == self.default_lang:
+                return self.source_path
+            else:
+                return get_translation_candidate(self.config, self.source_path, lang)
+        elif lang != self.default_lang:
+            return self.source_path
+        else:
+            return get_translation_candidate(self.config, self.source_path, sorted(self.translated_to)[0])
 
 # Code that fetches metadata from different places
 
