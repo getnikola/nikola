@@ -25,6 +25,7 @@
 * `Daniel Aleksandersen <https://github.com/Aeyoun>`_
 * `Daniel Devine <https://github.com/DDevine>`_
 * `Daniel F. Moisset <https://github.com/dmoisset>`_
+* `Daniel Harding <https://github.com/living180>`_
 * `dastagg <https://github.com/dastagg>`_
 * `dastagg <https://github.com/dastagg>`_
 * `David Barragán Merino <https://github.com/bameda>`_
