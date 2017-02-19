@@ -1664,10 +1664,9 @@ class Nikola(object):
         else:
             return self.config['RSS_COPYRIGHT'](lang)
 
-    def generic_rss_renderer(self, lang, title, link, description, timeline, output_path,
-                             rss_teasers, rss_plain, feed_length=10, feed_url=None,
-                             enclosure=_enclosure, rss_links_append_query=None, copyright_=None):
-        """Take all necessary data, and render a RSS feed in output_path."""
+    def generic_rss_feed(self, lang, title, link, description, timeline,
+                         rss_teasers, rss_plain, feed_length=10, feed_url=None,
+                         enclosure=_enclosure, rss_links_append_query=None, copyright_=None):
         rss_obj = utils.ExtendedRSS2(
             title=title,
             link=utils.encodelink(link),
@@ -1746,14 +1745,16 @@ class Nikola(object):
         rss_obj.items = items
         rss_obj.self_url = feed_url
         rss_obj.rss_attrs["xmlns:atom"] = "http://www.w3.org/2005/Atom"
+        return rss_obj
 
-        dst_dir = os.path.dirname(output_path)
-        utils.makedirs(dst_dir)
-        with io.open(output_path, "w+", encoding="utf-8") as rss_file:
-            data = rss_obj.to_xml(encoding='utf-8')
-            if isinstance(data, utils.bytes_str):
-                data = data.decode('utf-8')
-            rss_file.write(data)
+    def generic_rss_renderer(self, lang, title, link, description, timeline, output_path,
+                             rss_teasers, rss_plain, feed_length=10, feed_url=None,
+                             enclosure=_enclosure, rss_links_append_query=None, copyright_=None):
+        """Take all necessary data, and render a RSS feed in output_path."""
+        rss_obj = self.generic_rss_feed(lang, title, link, description, timeline,
+                                        rss_teasers, rss_plain, feed_length=feed_length, feed_url=feed_url,
+                                        enclosure=enclosure, rss_links_append_query=rss_links_append_query, copyright_=copyright_)
+        utils.rss_writer(rss_obj, output_path)
 
     def path(self, kind, name, lang=None, is_link=False, **kwargs):
         r"""Build the path to a certain kind of page.
