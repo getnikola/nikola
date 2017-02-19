@@ -1649,7 +1649,7 @@ class Nikola(object):
 
     def generic_rss_renderer(self, lang, title, link, description, timeline, output_path,
                              rss_teasers, rss_plain, feed_length=10, feed_url=None,
-                             enclosure=_enclosure, rss_links_append_query=None):
+                             enclosure=_enclosure, rss_links_append_query=None, itunes=None):
         """Take all necessary data, and render a RSS feed in output_path."""
         rss_obj = utils.ExtendedRSS2(
             title=title,
@@ -1711,6 +1711,17 @@ class Nikola(object):
             if post.author(lang):
                 rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
 
+            if itunes:
+                args['itunes_author'] = (
+                    post.meta[lang].get('itunes_author')
+                    or post.author(lang))
+                args['itunes_subtitle'] = post.meta[lang].get('itunes_subtitle')
+                args['itunes_summary'] = post.meta[lang].get('itunes_summary') or data
+                if 'itunes_image' in post.meta[lang]:
+                    args['itunes_image'] = urljoin(self.config['BASE_URL'], post.meta[lang]['itunes_image'])
+                args['itunes_duration'] = post.meta[lang].get('itunes_duration')
+                args['itunes_explicit'] = post.meta[lang].get('itunes_explicit')
+
             if enclosure:
                 # enclosure callback returns None if post has no enclosure, or a
                 # 3-tuple of (url, length (0 is valid), mimetype)
@@ -1722,7 +1733,18 @@ class Nikola(object):
 
         rss_obj.items = items
         rss_obj.self_url = feed_url
+
         rss_obj.rss_attrs["xmlns:atom"] = "http://www.w3.org/2005/Atom"
+
+        if itunes:
+            rss_obj.rss_attrs["xmlns:itunes"] = "http://www.itunes.com/dtds/podcast-1.0.dtd"
+            rss_obj.itunes_author = self.config['BLOG_AUTHOR'](lang)
+            rss_obj.itunes_email = self.config['BLOG_EMAIL']
+            rss_obj.itunes_summary = description
+            if 'POSTCAST_IMAGE' in self.config:
+                rss_obj.itunes_image = urljoin(self.config['BASE_URL'], self.config['POSTCAST_IMAGE'])
+            rss_obj.itunes_categories = self.config.get('POSTCAST_CATEGORIES')
+            rss_obj.itunes_explicit = self.config.get('POSTCAST_EXPLICIT')
 
         dst_dir = os.path.dirname(output_path)
         utils.makedirs(dst_dir)
