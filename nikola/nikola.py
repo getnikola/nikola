@@ -1660,6 +1660,11 @@ class Nikola(object):
             language=lang
         )
 
+        copyright = self.config['CONTENT_FOOTER'](lang)
+        if rss_plain:
+            copyright = lxml.html.fromstring(copyright).text_content().strip()
+        rss_obj.copyright = copyright
+
         if feed_url:
             absurl = '/' + feed_url[len(self.config['BASE_URL']):]
             rss_obj.xsl_stylesheet_href = self.url_replacer(absurl, "/assets/xml/rss.xsl")
