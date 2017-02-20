@@ -45,6 +45,6 @@
     "commit": "54c8a883aa3fe2cb39ebda4c401bd92783fc9d7a"
   },
   "_source": "https://github.com/jackmoore/colorbox.git",
-  "_target": "~1.6.0",
+  "_target": "~1",
   "_originalSource": "jquery-colorbox"
 }

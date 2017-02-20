@@ -11,8 +11,8 @@
   "dependencies": {
     "bootstrap": "~3.3.7",
     "jquery": "<2.0.0",
-    "jquery-colorbox": "~1.6.0",
-    "moment": "~2.10.3",
-    "livereload-js": "~2.2.1"
+    "jquery-colorbox": "~1",
+    "moment": "~2",
+    "livereload-js": "~2"
   }
 }
