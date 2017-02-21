@@ -225,7 +225,7 @@ def html5lib_minify(data):
     import html5lib.serializer
     data = html5lib.serializer.serialize(html5lib.parse(data, treebuilder='lxml'),
                                          tree='lxml',
-                                         quote_attr_values=False,
+                                         quote_attr_values='spec',
                                          omit_optional_tags=True,
                                          minimize_boolean_attributes=True,
                                          strip_whitespace=True,
@@ -241,7 +241,7 @@ def html5lib_xmllike(data):
     import html5lib.serializer
     data = html5lib.serializer.serialize(html5lib.parse(data, treebuilder='lxml'),
                                          tree='lxml',
-                                         quote_attr_values=True,
+                                         quote_attr_values='always',
                                          omit_optional_tags=False,
                                          strip_whitespace=False,
                                          alphabetical_attributes=True,

@@ -242,7 +242,7 @@ LEGAL_VALUES = {
         ru='ru',
         sk='sk',
         sl='si',  # country code is si, language code is sl, colorbox is wrong
-        sr='sr',  # warning: this is serbian in Latin alphabet
+        sr='sr',  # warning: this is Serbian in Latin alphabet
         sr_latin='sr',
         sv='sv',
         tr='tr',
@@ -283,6 +283,7 @@ LEGAL_VALUES = {
         lt='lt',
         nb='nb',
         nl='nl',
+        pa='pa-in',
         pl='pl',
         pt='pt',
         pt_br='pt-br',
@@ -293,6 +294,7 @@ LEGAL_VALUES = {
         sr='sr-cyrl',
         sr_latin='sr',
         sv='sv',
+        te='te',
         tr='tr',
         uk='uk',
         zh_cn='zh-cn',
@@ -2094,7 +2096,8 @@ class Nikola(object):
                     quit = True
                 self.post_per_file[dest] = post
                 self.post_per_file[src_dest] = post
-                self.post_per_input_file[src_file] = post
+                if src_file is not None:
+                    self.post_per_input_file[src_file] = post
                 # deduplicate tags_per_language
                 self.tags_per_language[lang] = list(set(self.tags_per_language[lang]))
 
@@ -2173,7 +2176,7 @@ class Nikola(object):
 
     def generic_page_renderer(self, lang, post, filters, context=None):
         """Render post fragments to final HTML pages."""
-        extension = self.get_compiler(post.source_path).extension()
+        extension = post.compiler.extension()
         output_name = os.path.join(self.config['OUTPUT_FOLDER'],
                                    post.destination_path(lang, extension))
 

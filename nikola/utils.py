@@ -1230,18 +1230,19 @@ class LocaleBorg(object):
             # Get a string out of a TranslatableSetting
             if isinstance(date_format, TranslatableSetting):
                 date_format = date_format(current_lang)
-            # First check handlers
-            for handler in self.formatted_date_handlers:
-                fmt_date = handler(date_format, date, current_lang)
-                if fmt_date is not None:
-                    break
-            # If no handler was able to format the date, ask Python
-            if fmt_date is None:
-                if date_format == 'webiso':
-                    # Formatted after RFC 3339 (web ISO 8501 profile) with Zulu
-                    # zone desgignator for times in UTC and no microsecond precision.
-                    fmt_date = date.replace(microsecond=0).isoformat().replace('+00:00', 'Z')
-                else:
+            # Always ask Python if the date_format is webiso
+            if date_format == 'webiso':
+                # Formatted after RFC 3339 (web ISO 8501 profile) with Zulu
+                # zone designator for times in UTC and no microsecond precision.
+                fmt_date = date.replace(microsecond=0).isoformat().replace('+00:00', 'Z')
+            # If not, check handlers
+            else:
+                for handler in self.formatted_date_handlers:
+                    fmt_date = handler(date_format, date, current_lang)
+                    if fmt_date is not None:
+                        break
+                # If no handler was able to format the date, ask Python
+                if fmt_date is None:
                     fmt_date = date.strftime(date_format)
 
             # Issue #383, this changes from py2 to py3

@@ -1,5 +1,5 @@
 //! moment.js locale configuration
-//! locale : catalan (ca)
+//! locale : Catalan [ca]
 //! author : Juan G. Hurtado : https://github.com/juanghurtado
 
 import moment from '../moment';
@@ -7,12 +7,14 @@ import moment from '../moment';
 export default moment.defineLocale('ca', {
     months : 'gener_febrer_març_abril_maig_juny_juliol_agost_setembre_octubre_novembre_desembre'.split('_'),
     monthsShort : 'gen._febr._mar._abr._mai._jun._jul._ag._set._oct._nov._des.'.split('_'),
+    monthsParseExact : true,
     weekdays : 'diumenge_dilluns_dimarts_dimecres_dijous_divendres_dissabte'.split('_'),
     weekdaysShort : 'dg._dl._dt._dc._dj._dv._ds.'.split('_'),
     weekdaysMin : 'Dg_Dl_Dt_Dc_Dj_Dv_Ds'.split('_'),
+    weekdaysParseExact : true,
     longDateFormat : {
         LT : 'H:mm',
-        LTS : 'LT:ss',
+        LTS : 'H:mm:ss',
         L : 'DD/MM/YYYY',
         LL : 'D MMMM YYYY',
         LLL : 'D MMMM YYYY H:mm',
@@ -37,7 +39,7 @@ export default moment.defineLocale('ca', {
         sameElse : 'L'
     },
     relativeTime : {
-        future : 'en %s',
+        future : 'd\'aquí %s',
         past : 'fa %s',
         s : 'uns segons',
         m : 'un minut',
