@@ -298,8 +298,12 @@ class CommandAuto(Command):
         p_uri = urlparse(uri)
         f_path = os.path.join(self.site.config['OUTPUT_FOLDER'], *[unquote(x) for x in p_uri.path.split('/')])
 
+        # mimetypes.guess_type can't handle query strings, so we need
+        # to strip the URI to only the path for mimetype guessing
+        stripped_uri = urlparse.urljoin(url, p_uri.path)
+
         # ‘Pretty’ URIs and root are assumed to be HTML
-        mimetype = 'text/html' if uri.endswith('/') else mimetypes.guess_type(uri)[0] or 'application/octet-stream'
+        mimetype = 'text/html' if uri.endswith('/') else mimetypes.guess_type(stripped_uri)[0] or 'application/octet-stream'
 
         if os.path.isdir(f_path):
             if not p_uri.path.endswith('/'):  # Redirect to avoid breakage
