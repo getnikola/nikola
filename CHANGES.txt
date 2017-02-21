@@ -16,6 +16,7 @@ Features
 Bugfixes
 --------
 
+* Fix mimetype guessing in auto mode (Issue #2645)
 * Fix filters.html5lib_xmllike for laters html5lib (Issue #2648)
 * Skip the current post in post lists (Issue #2666)
 * Fix poor performance when compiling multiple markdown documents with
