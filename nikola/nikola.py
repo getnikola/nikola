@@ -722,8 +722,8 @@ class Nikola(object):
         if self.config['PRESERVE_EXIF_DATA'] and not self.config['EXIF_WHITELIST']:
             utils.LOGGER.warn('You are setting PRESERVE_EXIF_DATA and not EXIF_WHITELIST so EXIF data is not really kept.')
 
-        # Handle CONTENT_FOOTER properly.
-        # We provide the arguments to format in CONTENT_FOOTER_FORMATS.
+        # Handle CONTENT_FOOTER and RSS_COPYRIGHT* properly.
+        # We provide the arguments to format in CONTENT_FOOTER_FORMATS and RSS_COPYRIGHT_FORMATS.
         self.config['CONTENT_FOOTER'].langformat(self.config['CONTENT_FOOTER_FORMATS'])
         self.config['RSS_COPYRIGHT'].langformat(self.config['RSS_COPYRIGHT_FORMATS'])
         self.config['RSS_COPYRIGHT_PLAIN'].langformat(self.config['RSS_COPYRIGHT_FORMATS'])
