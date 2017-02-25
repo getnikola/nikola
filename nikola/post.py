@@ -118,6 +118,9 @@ class Post(object):
         self.pretty_urls = self.config['PRETTY_URLS']
         self.source_path = source_path  # posts/blah.txt
         self.post_name = os.path.splitext(source_path)[0]  # posts/blah
+        _relpath = os.path.relpath(self.post_name)
+        if _relpath != self.post_name:
+            self.post_name = _relpath.replace('..' + os.sep, '_..' + os.sep)
         # cache[\/]posts[\/]blah.html
         self.base_path = os.path.join(self.config['CACHE_FOLDER'], self.post_name + ".html")
         # cache/posts/blah.html
