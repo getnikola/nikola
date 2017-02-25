@@ -1664,7 +1664,7 @@ class Nikola(object):
 
     def generic_rss_renderer(self, lang, title, link, description, timeline, output_path,
                              rss_teasers, rss_plain, feed_length=10, feed_url=None,
-                             enclosure=_enclosure, rss_links_append_query=None, copyright_=True):
+                             enclosure=_enclosure, rss_links_append_query=None, copyright_=None):
         """Take all necessary data, and render a RSS feed in output_path."""
         rss_obj = utils.ExtendedRSS2(
             title=title,
@@ -1675,8 +1675,9 @@ class Nikola(object):
             language=lang
         )
 
-        if copyright_ is True:
+        if copyright_ is None:
             copyright_ = self._get_rss_copyright(lang, rss_plain)
+        # Use the configured or specified copyright string if present.
         if copyright_:
             rss_obj.copyright = copyright_
 
