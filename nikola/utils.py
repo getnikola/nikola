@@ -1270,6 +1270,10 @@ class ExtendedRSS2(rss.RSS2):
         # It's an old style class
         rss.RSS2.__init__(self, **kwargs)
 
+    def _itunes_attributes (self):
+        for tag in ('author', 'summary', 'name', 'email', 'image', 'categories', 'explicit'):
+            yield 'itunes:{}'.format(tag), getattr(self, 'itunes_{}'.format(tag))
+
     def publish(self, handler):
         """Publish a feed."""
         if self.xsl_stylesheet_href:
@@ -1287,31 +1291,16 @@ class ExtendedRSS2(rss.RSS2):
             })
             handler.endElement("atom:link")
 
-        if self.itunes_author:
-            handler.startElement("itunes:author", {})
-            handler.characters(self.itunes_author)
-            handler.endElement("itunes:author")
+        for tag in ('author', 'summary'):
+            _simple_itunes_tag(self, handler, tag)
+        _itunes_image_tag(self, handler)
+        _itunes_explicit_tag(self, handler)
 
-        if self.itunes_summary:
-            handler.startElement("itunes:summary", {})
-            handler.characters(self.itunes_summary)
-            handler.endElement("itunes:summary")
-
-        if self.itunes_author or self.itunes_email:
-            handler.startElement("itunes:creator", {})
-            if self.itunes_author:
-                handler.startElement("itunes:name", {})
-                handler.characters(self.itunes_author)
-                handler.endElement("itunes:name")
-            if self.itunes_email:
-                handler.startElement("itunes:email", {})
-                handler.characters(self.itunes_email)
-                handler.endElement("itunes:email")
-            handler.endElement("itunes:creator")
-
-        if self.itunes_image:
-            handler.startElement("itunes:image", {'href': self.itunes_image})
-            handler.endElement("itunes:image")
+        if self.itunes_name or self.itunes_email:
+            handler.startElement("itunes:owner", {})
+            _simple_itunes_tag(self, handler, 'name')
+            _simple_itunes_tag(self, handler, 'email')
+            handler.endElement("itunes:owner")
 
         if self.itunes_categories:
             for category_entry in self.itunes_categories:
@@ -1325,11 +1314,6 @@ class ExtendedRSS2(rss.RSS2):
                     handler.startElement("itunes:category", {'text': subcategory})
                     handler.endElement("itunes:category")
                 handler.endElement("itunes:category")
-
-        if self.itunes_explicit is not None:
-            handler.startElement("itunes:explicit", {})
-            handler.characters("yes" if self.itunes_explicit else "no")
-            handler.endElement("itunes:explicit")
 
 
 class ExtendedItem(rss.RSSItem):
@@ -1358,34 +1342,32 @@ class ExtendedItem(rss.RSSItem):
             handler.characters(self.creator)
             handler.endElement("dc:creator")
 
-        if self.itunes_author:
-            handler.startElement("itunes:author", {})
-            handler.characters(self.itunes_author)
-            handler.endElement("itunes:author")
+        for tag in ('author', 'subtitle', 'summary', 'duration'):
+            _simple_itunes_tag(self, handler, tag)
+        _itunes_image_tag(self, handler)
+        _itunes_explicit_tag(self, handler)
 
-        if self.itunes_subtitle:
-            handler.startElement("itunes:subtitle", {})
-            handler.characters(self.itunes_subtitle)
-            handler.endElement("itunes:subtitle")
 
-        if self.itunes_summary:
-            handler.startElement("itunes:summary", {})
-            handler.characters(self.itunes_summary)
-            handler.endElement("itunes:summary")
+def _simple_itunes_tag(src, handler, tag):
+    itunes_tag = "itunes:{}".format(tag)
+    value = getattr(src, 'itunes_{}'.format(tag))
+    if value:
+        handler.startElement(itunes_tag, {})
+        handler.characters(value)
+        handler.endElement(itunes_tag)
 
-        if self.itunes_image:
-            handler.startElement("itunes:image", {'href': self.itunes_image})
-            handler.endElement("itunes:image")
 
-        if self.itunes_duration:
-            handler.startElement("itunes:duration", {})
-            handler.characters(self.itunes_duration)
-            handler.endElement("itunes:duration")
+def _itunes_explicit_tag(src, handler):
+    if src.itunes_explicit is not None:
+        handler.startElement("itunes:explicit", {})
+        handler.characters("yes" if src.itunes_explicit else "no")
+        handler.endElement("itunes:explicit")
 
-        if self.itunes_explicit is not None:
-            handler.startElement("itunes:explicit", {})
-            handler.characters("yes" if self.itunes_explicit else "no")
-            handler.endElement("itunes:explicit")
+        
+def _itunes_image_tag(src, handler):
+    if src.itunes_image:
+        handler.startElement("itunes:image", {'href': src.itunes_image})
+        handler.endElement("itunes:image")
 
 
 # \x00 means the "<" was backslash-escaped
