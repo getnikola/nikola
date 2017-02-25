@@ -51,6 +51,7 @@
 * `Hong Xu <https://www.topbug.net>`_
 * `Ivan Teoh <https://github.com/ivanteoh>`_
 * `John Kristensen <https://github.com/jerrykan>`_
+* `Jonathon Anderson <https://github.com/anderbubble>`_
 * `Joshua Barratt <https://github.com/jbarratt>`_
 * `Juan Pedro Fisanotti <https://github.com/fisadev>`_
 * `Juanjo Conti <https://github.com/jjconti>`_
