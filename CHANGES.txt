@@ -18,6 +18,8 @@ Features
 Bugfixes
 --------
 
+* Prevent writing cache files outside of the cache folder
+  (Issue #2684)
 * Fix mimetype guessing in auto mode (Issue #2645)
 * Fix filters.html5lib_xmllike for laters html5lib (Issue #2648)
 * Skip the current post in post lists (Issue #2666)
