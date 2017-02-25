@@ -1267,7 +1267,8 @@ class ExtendedRSS2(rss.RSS2):
         self.itunes_categories = itunes_categories
         self.itunes_explicit = itunes_explicit
 
-        return rss.RSS2.__init__(self, **kwargs)
+        # It's an old style class
+        rss.RSS2.__init__(self, **kwargs)
 
     def publish(self, handler):
         """Publish a feed."""
@@ -1346,8 +1347,9 @@ class ExtendedItem(rss.RSSItem):
         self.itunes_image = itunes_image
         self.itunes_duration = itunes_duration
         self.itunes_explicit = itunes_explicit
+
         # It's an old style class
-        return rss.RSSItem.__init__(self, **kw)
+        rss.RSSItem.__init__(self, **kw)
 
     def publish_extensions(self, handler):
         """Publish extensions."""
