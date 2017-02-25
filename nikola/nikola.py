@@ -1739,6 +1739,7 @@ class Nikola(object):
         if itunes:
             rss_obj.rss_attrs["xmlns:itunes"] = "http://www.itunes.com/dtds/podcast-1.0.dtd"
             rss_obj.itunes_author = self.config['BLOG_AUTHOR'](lang)
+            rss_obj.itunes_name = self.config['BLOG_AUTHOR'](lang)
             rss_obj.itunes_email = self.config['BLOG_EMAIL']
             rss_obj.itunes_summary = description
             if 'POSTCAST_IMAGE' in self.config:
