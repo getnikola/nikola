@@ -1712,15 +1712,15 @@ class Nikola(object):
                 rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
 
             if itunes:
+                for tag in ('subtitle', 'duration', 'explicit'):
+                    key = 'itunes_{}'.format(tag)
+                    args[key] = post.meta[lang].get(key)
                 args['itunes_author'] = (
                     post.meta[lang].get('itunes_author')
                     or post.author(lang))
-                args['itunes_subtitle'] = post.meta[lang].get('itunes_subtitle')
                 args['itunes_summary'] = post.meta[lang].get('itunes_summary') or data
                 if 'itunes_image' in post.meta[lang]:
-                    args['itunes_image'] = urljoin(self.config['BASE_URL'], post.meta[lang]['itunes_image'])
-                args['itunes_duration'] = post.meta[lang].get('itunes_duration')
-                args['itunes_explicit'] = post.meta[lang].get('itunes_explicit')
+                    args['itunes_image'] = self.url_replacer(post.permalink(), post.meta[lang]['itunes_image'], lang, 'absolute')
 
             if enclosure:
                 # enclosure callback returns None if post has no enclosure, or a
