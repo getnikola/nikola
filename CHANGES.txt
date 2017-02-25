@@ -4,10 +4,12 @@ New in master
 Features
 --------
 
+* Append file name (generated from title) if ``nikola new_post``
+  receives directory name as path (Issue #2651)
 * Add a ``require_all_tags`` parameter to the ``post-list`` directive to
   show only posts that have all specified tags. (Issue #2665)
 * Add ``META_GENERATOR_TAG`` option in conf.py allowing the meta generator
-  to be disabled if needed. (Issue #2628)
+  tag to be disabled (Issue #2628)
 * Add ``YUI_COMPRESSOR_EXECUTABLE``, ``CLOSURE_COMPILER_EXECUTABLE``,
   ``OPTIPNG_EXECUTABLE``, ``JPEGOPTIM_EXECUTABLE`` and
   ``HTML_TIDY_EXECUTABLE`` to configure executables for built-in filters.
