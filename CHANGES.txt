@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Write PID of detached ``nikola serve`` process to a file called
+  ``nikolaserve.pid``
 * Append file name (generated from title) if ``nikola new_post``
   receives directory name as path (Issue #2651)
 * Add a ``require_all_tags`` parameter to the ``post-list`` directive to
