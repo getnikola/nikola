@@ -299,7 +299,7 @@ class CommandAuto(Command):
         f_path = os.path.join(self.site.config['OUTPUT_FOLDER'], *[unquote(x) for x in p_uri.path.split('/')])
 
         # ‘Pretty’ URIs and root are assumed to be HTML
-        mimetype = 'text/html' if uri.endswith('/') else mimetypes.guess_type(uri)[0] or 'application/octet-stream'
+        mimetype = 'text/html' if uri.endswith('/') else mimetypes.guess_type(p_uri.path)[0] or 'application/octet-stream'
 
         if os.path.isdir(f_path):
             if not p_uri.path.endswith('/'):  # Redirect to avoid breakage

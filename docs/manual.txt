@@ -567,7 +567,8 @@ The ``new_post`` command supports some options:
 
 The optional ``path`` parameter tells Nikola exactly where to put it instead of guessing from your config.
 So, if you do ``nikola new_post posts/random/foo.txt`` you will have a post in that path, with
-"foo" as its slug.
+"foo" as its slug. You can also provide a directory name, in which case Nikola
+will append the file name for you (generated from title).
 
 The ``-d, --date-path`` option automates creation of ``year/month/day`` or
 similar directory structures. It can be enabled on a per-post basis, or you can
