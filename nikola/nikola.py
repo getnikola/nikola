@@ -475,6 +475,9 @@ class Nikola(object):
             },
             'CONTENT_FOOTER': '',
             'CONTENT_FOOTER_FORMATS': {},
+            'RSS_COPYRIGHT': '',
+            'RSS_COPYRIGHT_PLAIN': '',
+            'RSS_COPYRIGHT_FORMATS': {},
             'COPY_SOURCES': True,
             'CREATE_ARCHIVE_NAVIGATION': False,
             'CREATE_MONTHLY_ARCHIVE': False,
@@ -673,6 +676,8 @@ class Nikola(object):
                                       'AUTHOR_PATH',
                                       'DATE_FORMAT',
                                       'JS_DATE_FORMAT',
+                                      'RSS_COPYRIGHT',
+                                      'RSS_COPYRIGHT_PLAIN',
                                       )
 
         self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
@@ -719,9 +724,11 @@ class Nikola(object):
         if self.config['PRESERVE_EXIF_DATA'] and not self.config['EXIF_WHITELIST']:
             utils.LOGGER.warn('You are setting PRESERVE_EXIF_DATA and not EXIF_WHITELIST so EXIF data is not really kept.')
 
-        # Handle CONTENT_FOOTER properly.
-        # We provide the arguments to format in CONTENT_FOOTER_FORMATS.
+        # Handle CONTENT_FOOTER and RSS_COPYRIGHT* properly.
+        # We provide the arguments to format in CONTENT_FOOTER_FORMATS and RSS_COPYRIGHT_FORMATS.
         self.config['CONTENT_FOOTER'].langformat(self.config['CONTENT_FOOTER_FORMATS'])
+        self.config['RSS_COPYRIGHT'].langformat(self.config['RSS_COPYRIGHT_FORMATS'])
+        self.config['RSS_COPYRIGHT_PLAIN'].langformat(self.config['RSS_COPYRIGHT_FORMATS'])
 
         # propagate USE_SLUGIFY
         utils.USE_SLUGIFY = self.config['USE_SLUGIFY']
@@ -1649,9 +1656,17 @@ class Nikola(object):
             lang = utils.LocaleBorg().current_lang
         return shortcodes.apply_shortcodes(data, self.shortcode_registry, self, filename, lang=lang, with_dependencies=with_dependencies, extra_context=extra_context)
 
+    def _get_rss_copyright(self, lang, rss_plain):
+        if rss_plain:
+            return (
+                self.config['RSS_COPYRIGHT_PLAIN'](lang)
+                or lxml.html.fromstring(self.config['RSS_COPYRIGHT'](lang)).text_content().strip())
+        else:
+            return self.config['RSS_COPYRIGHT'](lang)
+
     def generic_rss_renderer(self, lang, title, link, description, timeline, output_path,
                              rss_teasers, rss_plain, feed_length=10, feed_url=None,
-                             enclosure=_enclosure, rss_links_append_query=None):
+                             enclosure=_enclosure, rss_links_append_query=None, copyright_=None):
         """Take all necessary data, and render a RSS feed in output_path."""
         rss_obj = utils.ExtendedRSS2(
             title=title,
@@ -1661,6 +1676,12 @@ class Nikola(object):
             generator='Nikola (getnikola.com)',
             language=lang
         )
+
+        if copyright_ is None:
+            copyright_ = self._get_rss_copyright(lang, rss_plain)
+        # Use the configured or specified copyright string if present.
+        if copyright_:
+            rss_obj.copyright = copyright_
 
         if feed_url:
             absurl = '/' + feed_url[len(self.config['BASE_URL']):]

@@ -4,6 +4,10 @@ New in master
 Features
 --------
 
+* Add ``RSS_COPYRIGHT``, ``RSS_COPYRIGHT_PLAIN``, and
+  ``RSS_COPYRIGHT_FORMATS`` options in conf.py which can be disabled
+  by specifying ``copyright_=False`` to ``generic_rss_renderer``, or
+  overriden by specifying an explicit value.
 * Write PID of detached ``nikola serve`` process to a file called
   ``nikolaserve.pid``
 * Append file name (generated from title) if ``nikola new_post``
