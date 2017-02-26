@@ -28,7 +28,9 @@
 
 from __future__ import print_function
 import os
+import sys
 import re
+import signal
 import socket
 import webbrowser
 try:
@@ -106,6 +108,17 @@ class CommandServe(Command):
         },
     )
 
+    def shutdown(self, signum=None, _frame=None):
+        """Shut down the server that is running detached."""
+        if self.dns_sd:
+            self.dns_sd.Reset()
+        if os.path.exists(self.serve_pidfile):
+            os.remove(self.serve_pidfile)
+        if not self.detached:
+            self.logger.info("Server is shutting down.")
+        if signum:
+            sys.exit(0)
+
     def _execute(self, options, args):
         """Start test server."""
         self.logger = get_logger('serve', STDERR_HANDLER)
@@ -113,6 +126,7 @@ class CommandServe(Command):
         if not os.path.isdir(out_dir):
             self.logger.error("Missing '{0}' folder?".format(out_dir))
         else:
+            self.serve_pidfile = os.path.abspath('nikolaserve.pid')
             os.chdir(out_dir)
             if '[' in options['address']:
                 options['address'] = options['address'].strip('[').strip(']')
@@ -137,26 +151,30 @@ class CommandServe(Command):
                 self.logger.info("Opening {0} in the default web browser...".format(server_url))
                 webbrowser.open(server_url)
             if options['detach']:
+                self.detached = True
                 OurHTTPRequestHandler.quiet = True
                 try:
                     pid = os.fork()
                     if pid == 0:
+                        signal.signal(signal.SIGTERM, self.shutdown)
                         httpd.serve_forever()
                     else:
-                        self.logger.info("Detached with PID {0}. Run `kill {0}` to stop the server.".format(pid))
+                        with open(self.serve_pidfile, 'w') as fh:
+                            fh.write('{0}\n'.format(pid))
+                        self.logger.info("Detached with PID {0}. Run `kill {0}` or `kill $(cat nikolaserve.pid)` to stop the server.".format(pid))
                 except AttributeError as e:
                     if os.name == 'nt':
                         self.logger.warning("Detaching is not available on Windows, server is running in the foreground.")
                     else:
                         raise e
             else:
+                self.detached = False
                 try:
                     self.dns_sd = dns_sd(options['port'], (options['ipv6'] or '::' in options['address']))
+                    signal.signal(signal.SIGTERM, self.shutdown)
                     httpd.serve_forever()
                 except KeyboardInterrupt:
-                    self.logger.info("Server is shutting down.")
-                    if self.dns_sd:
-                        self.dns_sd.Reset()
+                    self.shutdown()
                     return 130
 
 
