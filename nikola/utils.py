@@ -1363,7 +1363,7 @@ def _itunes_explicit_tag(src, handler):
         handler.characters("yes" if src.itunes_explicit else "no")
         handler.endElement("itunes:explicit")
 
-        
+
 def _itunes_image_tag(src, handler):
     if src.itunes_image:
         handler.startElement("itunes:image", {'href': src.itunes_image})
