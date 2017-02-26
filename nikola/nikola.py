@@ -1715,9 +1715,7 @@ class Nikola(object):
                 for tag in ('subtitle', 'duration', 'explicit'):
                     key = 'itunes_{}'.format(tag)
                     args[key] = post.meta[lang].get(key)
-                args['itunes_author'] = (
-                    post.meta[lang].get('itunes_author')
-                    or post.author(lang))
+                args['itunes_author'] = post.meta[lang].get('itunes_author') or post.author(lang)
                 args['itunes_summary'] = post.meta[lang].get('itunes_summary') or data
                 if 'itunes_image' in post.meta[lang]:
                     args['itunes_image'] = self.url_replacer(post.permalink(), post.meta[lang]['itunes_image'], lang, 'absolute')

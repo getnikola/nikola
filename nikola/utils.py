@@ -1270,7 +1270,7 @@ class ExtendedRSS2(rss.RSS2):
         # It's an old style class
         rss.RSS2.__init__(self, **kwargs)
 
-    def _itunes_attributes (self):
+    def _itunes_attributes(self):
         for tag in ('author', 'summary', 'name', 'email', 'image', 'categories', 'explicit'):
             yield 'itunes:{}'.format(tag), getattr(self, 'itunes_{}'.format(tag))
 
