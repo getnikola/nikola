@@ -1728,7 +1728,7 @@ class Nikola(object):
                             post.date.astimezone(dateutil.tz.tzutc())),
                 'categories': post._tags.get(lang, []),
                 'creator': post.author(lang),
-                'guid': post.permalink(lang, absolute=True),
+                'guid': post.meta[lang].get('guid') or post.permalink(lang, absolute=True),
             }
 
             if post.author(lang):
