@@ -1279,7 +1279,7 @@ class ExtendedItem(rss.RSSItem):
 
     def __init__(self, **kw):
         """Initialize RSS item."""
-        self.creator = kw.pop('creator')
+        self.creator = kw.pop('creator', None)
 
         # It's an old style class
         rss.RSSItem.__init__(self, **kw)
