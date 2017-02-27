@@ -1659,8 +1659,8 @@ class Nikola(object):
     def _get_rss_copyright(self, lang, rss_plain):
         if rss_plain:
             return (
-                self.config['RSS_COPYRIGHT_PLAIN'](lang)
-                or lxml.html.fromstring(self.config['RSS_COPYRIGHT'](lang)).text_content().strip())
+                self.config['RSS_COPYRIGHT_PLAIN'](lang) or
+                lxml.html.fromstring(self.config['RSS_COPYRIGHT'](lang)).text_content().strip())
         else:
             return self.config['RSS_COPYRIGHT'](lang)
 
