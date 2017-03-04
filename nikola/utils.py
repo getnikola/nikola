@@ -2041,6 +2041,7 @@ except (AttributeError, ImportError):
         h = HTMLParser()
         return h.unescape(s)
 
+
 def get_default_jupyter_config():
     """
     Search default jupyter configuration location paths
@@ -2052,7 +2053,7 @@ def get_default_jupyter_config():
     except ImportError:
         # jupyter not installed, must be using IPython
         return config
-    
+
     for parent in jupyter_config_path():
         try:
             for file in os.listdir(parent):
@@ -2064,5 +2065,5 @@ def get_default_jupyter_config():
             # some paths jupyter uses to find configurations
             # may not exist
             pass
-        
+
     return config
