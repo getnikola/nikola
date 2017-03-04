@@ -213,7 +213,7 @@ def get_default_jupyter_config():
                     abs_path = os.path.join(parent, file)
                     with open(abs_path) as config_file:
                         config.update(json.load(config_file))
-        except FileNotFoundError:
+        except OSError:
             # some paths jupyter uses to find configurations
             # may not exist
             pass
