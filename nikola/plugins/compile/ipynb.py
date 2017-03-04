@@ -28,6 +28,7 @@
 
 from __future__ import unicode_literals, print_function
 import io
+import json
 import os
 import sys
 
@@ -61,7 +62,7 @@ except ImportError:
         ipy_modern = None
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs, req_missing, get_logger, STDERR_HANDLER, get_default_jupyter_config
+from nikola.utils import makedirs, req_missing, get_logger, STDERR_HANDLER
 
 
 class CompileIPynb(PageCompiler):
@@ -191,3 +192,30 @@ class CompileIPynb(PageCompiler):
                 nbformat.write(nb, fd, 4)
             else:
                 nbformat.write(nb, fd, 'ipynb')
+
+
+def get_default_jupyter_config():
+    """
+    Search default jupyter configuration location paths
+    and return dictionary from configuration json files.
+    """
+    config = {}
+    try:
+        from jupyter_core.paths import jupyter_config_path
+    except ImportError:
+        # jupyter not installed, must be using IPython
+        return config
+
+    for parent in jupyter_config_path():
+        try:
+            for file in os.listdir(parent):
+                if 'nbconvert' in file and file.endswith('.json'):
+                    abs_path = os.path.join(parent, file)
+                    with open(abs_path) as config_file:
+                        config.update(json.load(config_file))
+        except FileNotFoundError:
+            # some paths jupyter uses to find configurations
+            # may not exist
+            pass
+
+    return config
