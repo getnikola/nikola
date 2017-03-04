@@ -195,9 +195,9 @@ class CompileIPynb(PageCompiler):
 
 
 def get_default_jupyter_config():
-    """
-    Search default jupyter configuration location paths
-    and return dictionary from configuration json files.
+    """Search default jupyter configuration location paths.
+
+    Return dictionary from configuration json files.
     """
     config = {}
     try:
