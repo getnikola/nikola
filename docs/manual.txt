@@ -310,6 +310,10 @@ category
     Like tags, except each post can have only one, and they usually have
     more descriptive names.
 
+guid
+    String used as GUID in RSS feeds and as ID in Atom feeds instead of the
+    permalink.
+
 link
     Link to original source for content. May be displayed by some themes.
 
