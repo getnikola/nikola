@@ -2044,6 +2044,7 @@ except (AttributeError, ImportError):
 
 
 def rss_writer(rss_obj, output_path):
+    """Write an RSS object to an xml file."""
     dst_dir = os.path.dirname(output_path)
     makedirs(dst_dir)
     with io.open(output_path, "w+", encoding="utf-8") as rss_file:

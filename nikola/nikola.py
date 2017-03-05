@@ -1667,6 +1667,7 @@ class Nikola(object):
     def generic_rss_feed(self, lang, title, link, description, timeline,
                          rss_teasers, rss_plain, feed_length=10, feed_url=None,
                          enclosure=_enclosure, rss_links_append_query=None, copyright_=None):
+        """Generate an ExtendedRSS2 feed object for later use."""
         rss_obj = utils.ExtendedRSS2(
             title=title,
             link=utils.encodelink(link),
