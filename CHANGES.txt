@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Accept ``now`` in post-list date conditions
 * Add ``RSS_COPYRIGHT``, ``RSS_COPYRIGHT_PLAIN``, and
   ``RSS_COPYRIGHT_FORMATS`` options in conf.py which can be disabled
   by specifying ``copyright_=False`` to ``generic_rss_renderer``, or

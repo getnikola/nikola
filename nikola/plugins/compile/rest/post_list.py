@@ -99,7 +99,7 @@ class PostList(Directive):
         * clause: attribute comparison_operator value (spaces optional)
           * attribute: year, month, day, hour, month, second, weekday, isoweekday; or empty for full datetime
           * comparison_operator: == != <= >= < >
-          * value: integer or dateutil-compatible date input
+          * value: integer, 'now' or dateutil-compatible date input
 
     ``tags`` : string [, string...]
         Filter posts to show only posts having at least one of the ``tags``.
@@ -273,7 +273,8 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, require_all_t
         filtered_timeline = natsort.natsorted(filtered_timeline, key=lambda post: post.meta[lang][sort], alg=natsort.ns.F | natsort.ns.IC)
 
     if date:
-        filtered_timeline = [p for p in filtered_timeline if date_in_range(date, p.date)]
+        _now = utils.current_time()
+        filtered_timeline = [p for p in filtered_timeline if date_in_range(date, p.date, now=_now)]
 
     for post in filtered_timeline[start:stop:step]:
         if slugs:
