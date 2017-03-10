@@ -179,9 +179,18 @@ class CommandPlugin(Command):
         plugins.sort()
         print('Installed Plugins:')
         print('------------------')
+        maxlength = max(len(i[0]) for i in plugins)
+        if self.site.colorful:
+            formatstring = '\x1b[1m{0:<{2}}\x1b[0m  at {1}'
+        else:
+            formatstring = '{0:<{2}}  at {1}'
         for name, path in plugins:
-            print('{0} at {1}'.format(name, path))
-        print('\n\nAlso, you have disabled these plugins: {}'.format(self.site.config['DISABLED_PLUGINS']))
+            print(formatstring.format(name, path, maxlength))
+        dp = self.site.config['DISABLED_PLUGINS']
+        if dp:
+            print('\n\nAlso, you have disabled these plugins: {}'.format(dp))
+        else:
+            print('\n\nNo plugins are disabled.')
         return 0
 
     def do_upgrade(self, url):
