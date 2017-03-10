@@ -25,7 +25,7 @@
     <header>
         <h1 class="p-name entry-title"><a href="{{ post.permalink() }}" class="u-url">{{ post.title()|e }}</a></h1>
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
             {% if author_pages_generated %}
                 <a href="{{ _link('author', post.author()) }}">{{ post.author()|e }}</a>
             {% else %}
