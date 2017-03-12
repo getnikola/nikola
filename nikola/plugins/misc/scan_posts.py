@@ -106,3 +106,7 @@ class ScanPosts(PostScanner):
                         raise err
 
         return timeline
+
+    def supported_extensions(self):
+        """Return a list of supported file extensions, or None if such a list isn't known beforehand."""
+        return list(set([os.path.splitext(x[0])[1] for x in self.site.config['post_pages']]))

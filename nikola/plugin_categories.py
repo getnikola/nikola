@@ -95,6 +95,10 @@ class PostScanner(BasePlugin):
         """Create a list of posts from some source. Returns a list of Post objects."""
         raise NotImplementedError()
 
+    def supported_extensions(self):
+        """Return a list of supported file extensions, or None if such a list isn't known beforehand."""
+        return None
+
 
 class Command(BasePlugin, DoitCommand):
     """Doit command implementation."""

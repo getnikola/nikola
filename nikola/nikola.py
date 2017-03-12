@@ -960,30 +960,8 @@ class Nikola(object):
         for k, v in self.config['COMPILERS'].items():
             self.config['_COMPILERS_RAW'][k] = list(v)
 
-        compilers = defaultdict(set)
-        # Also add aliases for combinations with TRANSLATIONS_PATTERN
-        for compiler, exts in self.config['COMPILERS'].items():
-            for ext in exts:
-                compilers[compiler].add(ext)
-                for lang in self.config['TRANSLATIONS'].keys():
-                    candidate = utils.get_translation_candidate(self.config, "f" + ext, lang)
-                    compilers[compiler].add(candidate)
-
         # Get search path for themes
         self.themes_dirs = ['themes'] + self.config['EXTRA_THEMES_DIRS']
-
-        # Avoid redundant compilers
-        # Remove compilers that match nothing in POSTS/PAGES
-        # And put them in "bad compilers"
-        pp_exts = set([os.path.splitext(x[0])[1] for x in self.config['post_pages']])
-        self.config['COMPILERS'] = {}
-        self.disabled_compilers = {}
-        self.bad_compilers = set([])
-        for k, v in compilers.items():
-            if pp_exts.intersection(v):
-                self.config['COMPILERS'][k] = sorted(list(v))
-            else:
-                self.bad_compilers.add(k)
 
         self._set_global_context_from_config()
         self._set_global_context_from_data()
@@ -998,6 +976,28 @@ class Nikola(object):
         if self.configured:
             self.state._set_site(self)
             self.cache._set_site(self)
+
+    def _filter_duplicate_plugins(self, plugin_list):
+        """Find repeated plugins and discard the less local copy."""
+        def plugin_position_in_places(plugin):
+            # plugin here is a tuple:
+            # (path to the .plugin file, path to plugin module w/o .py, plugin metadata)
+            for i, place in enumerate(self._plugin_places):
+                if plugin[0].startswith(place):
+                    return i
+
+        plugin_dict = defaultdict(list)
+        for data in plugin_list:
+            plugin_dict[data[2].name].append(data)
+        result = []
+        for name, plugins in plugin_dict.items():
+            if len(plugins) > 1:
+                # Sort by locality
+                plugins.sort(key=plugin_position_in_places)
+                utils.LOGGER.debug("Plugin {} exists in multiple places, using {}".format(
+                    plugins[-1][2].name, plugins[-1][0]))
+            result.append(plugins[-1])
+        return result
 
     def init_plugins(self, commands_only=False, load_all=False):
         """Load plugins as needed."""
@@ -1032,6 +1032,26 @@ class Nikola(object):
                 os.path.expanduser('~/.nikola/plugins'),
             ] + [utils.sys_encode(path) for path in extra_plugins_dirs if path]
 
+        compilers = defaultdict(set)
+        # Also add aliases for combinations with TRANSLATIONS_PATTERN
+        for compiler, exts in self.config['COMPILERS'].items():
+            for ext in exts:
+                compilers[compiler].add(ext)
+                for lang in self.config['TRANSLATIONS'].keys():
+                    candidate = utils.get_translation_candidate(self.config, "f" + ext, lang)
+                    compilers[compiler].add(candidate)
+
+        # Avoid redundant compilers
+        # Remove compilers that match nothing in POSTS/PAGES
+        # And put them in "bad compilers"
+        self.config['COMPILERS'] = {}
+        self.disabled_compilers = {}
+        self.disabled_compiler_extensions = defaultdict(list)
+        self.bad_compilers = set([])
+        for k, v in compilers.items():
+            # self.config['COMPILERS'][k] = sorted(list(v))
+            self.bad_compilers.add(k)
+
         self.plugin_manager.getPluginLocator().setPluginPlaces(self._plugin_places)
         self.plugin_manager.locatePlugins()
         bad_candidates = set([])
@@ -1049,8 +1069,7 @@ class Nikola(object):
                     if p[-1].name in self.bad_compilers:
                         bad_candidates.add(p)
                         self.disabled_compilers[p[-1].name] = p
-                        utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
-                    if p[-1].name not in self.config['COMPILERS'] and \
+                    if p[-1].name not in compilers and \
                             p[-1].details.has_option('Nikola', 'PluginCategory') and p[-1].details.get('Nikola', 'PluginCategory') in ('Compiler', 'PageCompiler'):
                         bad_candidates.add(p)
                         self.disabled_compilers[p[-1].name] = p
@@ -1062,30 +1081,42 @@ class Nikola(object):
                     # Remove compiler extensions we don't need
                     if p[-1].details.has_option('Nikola', 'compiler') and p[-1].details.get('Nikola', 'compiler') in self.disabled_compilers:
                         bad_candidates.add(p)
-                        utils.LOGGER.debug('Not loading compiler extension {}', p[-1].name)
+                        self.disabled_compiler_extensions[p[-1].details.get('Nikola', 'compiler')].append(p)
             self.plugin_manager._candidates = list(set(self.plugin_manager._candidates) - bad_candidates)
 
-        # Find repeated plugins and discard the less local copy
-        def plugin_position_in_places(plugin):
-            # plugin here is a tuple:
-            # (path to the .plugin file, path to plugin module w/o .py, plugin metadata)
-            for i, place in enumerate(self._plugin_places):
-                if plugin[0].startswith(place):
-                    return i
-
-        plugin_dict = defaultdict(list)
-        for data in self.plugin_manager._candidates:
-            plugin_dict[data[2].name].append(data)
-        self.plugin_manager._candidates = []
-        for name, plugins in plugin_dict.items():
-            if len(plugins) > 1:
-                # Sort by locality
-                plugins.sort(key=plugin_position_in_places)
-                utils.LOGGER.debug("Plugin {} exists in multiple places, using {}".format(
-                    plugins[-1][2].name, plugins[-1][0]))
-            self.plugin_manager._candidates.append(plugins[-1])
-
+        self.plugin_manager._candidates = self._filter_duplicate_plugins(self.plugin_manager._candidates)
         self.plugin_manager.loadPlugins()
+
+        # Search for compiler plugins which we disabled but shouldn't have
+        self._activate_plugins_of_category("PostScanner")
+        if not load_all:
+            file_extensions = set()
+            for post_scanner in [p.plugin_object for p in self.plugin_manager.getPluginsOfCategory('PostScanner')]:
+                exts = post_scanner.supported_extensions()
+                if exts is not None:
+                    file_extensions.update(exts)
+                else:
+                    # Stop scanning for more: once we get None, we have to load all compilers anyway
+                    file_extensions = None
+                    break
+            to_add = []
+            for k, v in compilers.items():
+                if file_extensions is None or file_extensions.intersection(v):
+                    self.config['COMPILERS'][k] = sorted(list(v))
+                    self.bad_compilers.remove(k)
+                    p = self.disabled_compilers.pop(k, None)
+                    if p:
+                        to_add.append(p)
+                    for p in self.disabled_compiler_extensions.pop(k, []):
+                        to_add.append(p)
+            for name, p in self.disabled_compilers.items():
+                utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
+            for name, plugins in self.disabled_compiler_extensions.items():
+                for p in plugins:
+                    utils.LOGGER.debug('Not loading compiler extension {}', p[-1].name)
+            if to_add:
+                self.plugin_manager._candidates = self._filter_duplicate_plugins(to_add)
+                self.plugin_manager.loadPlugins()
 
         self._activate_plugins_of_category("Taxonomy")
         self.taxonomy_plugins = {}
@@ -1109,7 +1140,6 @@ class Nikola(object):
             plugin_info.plugin_object.short_help = plugin_info.description
             self._commands[plugin_info.name] = plugin_info.plugin_object
 
-        self._activate_plugins_of_category("PostScanner")
         self._activate_plugins_of_category("Task")
         self._activate_plugins_of_category("LateTask")
         self._activate_plugins_of_category("TaskMultiplier")
@@ -1729,7 +1759,7 @@ class Nikola(object):
                             post.date.astimezone(dateutil.tz.tzutc())),
                 'categories': post._tags.get(lang, []),
                 'creator': post.author(lang),
-                'guid': post.guid(lang),
+                'guid': post.permalink(lang, absolute=True),
             }
 
             if post.author(lang):
@@ -2400,7 +2430,7 @@ class Nikola(object):
             entry_title = lxml.etree.SubElement(entry_root, "title")
             entry_title.text = post.title(lang)
             entry_id = lxml.etree.SubElement(entry_root, "id")
-            entry_id.text = post.guid(lang)
+            entry_id.text = post.permalink(lang, absolute=True)
             entry_updated = lxml.etree.SubElement(entry_root, "updated")
             entry_updated.text = post.formatted_updated('webiso')
             entry_published = lxml.etree.SubElement(entry_root, "published")
