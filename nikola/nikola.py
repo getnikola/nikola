@@ -1111,12 +1111,17 @@ class Nikola(object):
                         to_add.append(p)
             for name, p in self.disabled_compilers.items():
                 utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
-            for name, plugins in self.disabled_compiler_extensions.items():
+            for _, plugins in self.disabled_compiler_extensions.items():
                 for p in plugins:
                     utils.LOGGER.debug('Not loading compiler extension {}', p[-1].name)
             if to_add:
                 self.plugin_manager._candidates = self._filter_duplicate_plugins(to_add)
                 self.plugin_manager.loadPlugins()
+
+        # IPython theme configuration.  If a website has ipynb enabled in post_pages
+        # we should enable the IPython CSS (leaving that up to the theme itself).
+        if 'needs_ipython_css' not in self._GLOBAL_CONTEXT:
+            self._GLOBAL_CONTEXT['needs_ipython_css'] = 'ipynb' in self.config['COMPILERS']
 
         self._activate_plugins_of_category("Taxonomy")
         self.taxonomy_plugins = {}
@@ -1258,11 +1263,6 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['posts_section_title'] = self.config.get('POSTS_SECTION_TITLE')
         self._GLOBAL_CONTEXT['sort_posts'] = utils.sort_posts
         self._GLOBAL_CONTEXT['meta_generator_tag'] = self.config.get('META_GENERATOR_TAG')
-
-        # IPython theme configuration.  If a website has ipynb enabled in post_pages
-        # we should enable the IPython CSS (leaving that up to the theme itself).
-
-        self._GLOBAL_CONTEXT['needs_ipython_css'] = 'ipynb' in self.config['COMPILERS']
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
 
