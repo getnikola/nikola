@@ -188,7 +188,7 @@ class CommandPlugin(Command):
             print(formatstring.format(name, path, maxlength))
         dp = self.site.config['DISABLED_PLUGINS']
         if dp:
-            print('\n\nAlso, you have disabled these plugins: {}'.format(dp))
+            print('\n\nAlso, you have disabled these plugins: {}'.format(', '.join(dp)))
         else:
             print('\n\nNo plugins are disabled.')
         return 0
