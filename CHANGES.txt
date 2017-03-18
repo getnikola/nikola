@@ -27,7 +27,8 @@ Features
 Bugfixes
 --------
 
-* Pass post object and language to reST compiler (for shortcodes)
+* Pass previously missing post object and language to reST compiler
+  and language to Markdown compiler (for shortcodes)
 * Fix crashes when rendering subcategories (Issue #2681)
 * Prevent writing cache files outside of the cache folder
   (Issue #2684)
