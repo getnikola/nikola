@@ -61,7 +61,7 @@ except ImportError:
         ipy_modern = None
 
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs, req_missing, get_logger, STDERR_HANDLER
+from nikola.utils import makedirs, req_missing, get_logger, STDERR_HANDLER, get_default_jupyter_config
 
 
 class CompileIPynb(PageCompiler):
@@ -82,6 +82,7 @@ class CompileIPynb(PageCompiler):
         if flag is None:
             req_missing(['ipython[notebook]>=2.0.0'], 'build this site (compile ipynb)')
         c = Config(self.site.config['IPYNB_CONFIG'])
+        c.update(get_default_jupyter_config())
         exportHtml = HTMLExporter(config=c)
         body, _ = exportHtml.from_notebook_node(nb_json)
         return body
