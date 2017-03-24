@@ -27,6 +27,7 @@ Features
 Bugfixes
 --------
 
+* Ignore ``NEW_POST_DATE_PATH`` when creating pages (Issue #2699)
 * Ensure ``post.updated`` is timezone-aware (Issue #2698)
 * Pass previously missing post object and language to reST compiler
   and language to Markdown compiler (for shortcodes)
