@@ -68,7 +68,7 @@ class PageIndex(Taxonomy):
         if destpath[-(1 + index_len):] == '/' + self.site.config["INDEX_FILE"]:
             destpath = destpath[:-(1 + index_len)]
         i = destpath.rfind('/')
-        return destpath[:i] if i >= 0 else ''
+        return [destpath[:i] if i >= 0 else '']
 
     def get_classification_friendly_name(self, dirname, lang, only_last_component=False):
         """Extract a friendly name from the classification."""
