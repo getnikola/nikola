@@ -242,7 +242,7 @@ class CommandNewPost(Command):
         import_file = options['import']
         wants_available = options['available-formats']
         date_path_opt = options['date-path']
-        date_path_auto = self.site.config['NEW_POST_DATE_PATH']
+        date_path_auto = self.site.config['NEW_POST_DATE_PATH'] and content_type == 'post'
         date_path_format = self.site.config['NEW_POST_DATE_PATH_FORMAT'].strip('/')
 
         if wants_available:

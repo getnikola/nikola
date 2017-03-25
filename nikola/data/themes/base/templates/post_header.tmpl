@@ -31,7 +31,7 @@
     <header>
         ${html_title()}
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 % if author_pages_generated:
                     <a href="${_link('author', post.author())}">${post.author()|h}</a>
                 % else:

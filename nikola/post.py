@@ -203,7 +203,7 @@ class Post(object):
         if 'updated' not in default_metadata:
             default_metadata['updated'] = default_metadata.get('date', None)
 
-        self.updated = to_datetime(default_metadata['updated'])
+        self.updated = to_datetime(default_metadata['updated'], tzinfo)
 
         if 'title' not in default_metadata or 'slug' not in default_metadata \
                 or 'date' not in default_metadata:
