@@ -104,6 +104,7 @@
 * `Sean Pue <https://github.com/seanpue>`_
 * `Simon van der Veldt <https://github.com/simonvanderveldt>`_
 * `Stefan Näwe <https://github.com/snaewe>`_
+* `Stephan Fitzpatrick <https://github.com/knowsuchagency>`_
 * `Sukil Etxenike <https://github.com/sukiletxe>`_
 * `Thibauld Nion <https://github.com/tibonihoo>`_
 * `Thomas Burette <https://github.com/tburette>`_

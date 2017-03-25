@@ -203,7 +203,7 @@ class Post(object):
         if 'updated' not in default_metadata:
             default_metadata['updated'] = default_metadata.get('date', None)
 
-        self.updated = to_datetime(default_metadata['updated'])
+        self.updated = to_datetime(default_metadata['updated'], tzinfo)
 
         if 'title' not in default_metadata or 'slug' not in default_metadata \
                 or 'date' not in default_metadata:
@@ -404,6 +404,17 @@ class Post(object):
         if lang is None:
             lang = nikola.utils.LocaleBorg().current_lang
         return self.meta[lang]['description']
+
+    def guid(self, lang=None):
+        """Return localized GUID."""
+        if lang is None:
+            lang = nikola.utils.LocaleBorg().current_lang
+        if self.meta[lang]['guid']:
+            guid = self.meta[lang]['guid']
+        else:
+            guid = self.permalink(lang, absolute=True)
+
+        return guid
 
     def add_dependency(self, dependency, add='both', lang=None):
         """Add a file dependency for tasks using that post.

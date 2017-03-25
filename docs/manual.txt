@@ -310,6 +310,10 @@ category
     Like tags, except each post can have only one, and they usually have
     more descriptive names.
 
+guid
+    String used as GUID in RSS feeds and as ID in Atom feeds instead of the
+    permalink.
+
 link
     Link to original source for content. May be displayed by some themes.
 
@@ -1482,12 +1486,11 @@ sure you have ``nikola`` and ``git`` installed on your PATH.
      will be deployed. It should be ``gh-pages`` for project pages and
      ``master`` for user pages (user.github.io).
    * ``GITHUB_SOURCE_BRANCH`` is the branch where your Nikola site source will be
-     deployed. We default to ``master``, but user pages should use ``src`` or
-     something else.
+     deployed. We recommend and default to ``src``.
    * ``GITHUB_REMOTE_NAME`` is the remote to which changes are pushed.
    * ``GITHUB_COMMIT_SOURCE`` controls whether or not the source branch is
      automatically committed to and pushed. We recommend setting it to
-     ``True``.
+     ``True``, unless you are automating builds with Travis CI.
 
 4. Create a ``.gitignore`` file. We recommend adding at least the following entries:
 
@@ -2350,7 +2353,7 @@ The following options are recognized:
       * clause: attribute comparison_operator value (spaces optional)
           * attribute: year, month, day, hour, month, second, weekday, isoweekday; or empty for full datetime
           * comparison_operator: == != <= >= < >
-          * value: integer or dateutil-compatible date input
+          * value: integer, 'now' or dateutil-compatible date input
 
 * ``tags`` : string [, string...]
       Filter posts to show only posts having at least one of the ``tags``.

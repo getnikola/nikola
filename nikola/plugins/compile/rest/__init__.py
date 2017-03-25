@@ -103,7 +103,7 @@ class CompileRest(PageCompiler):
         with io.open(dest, "w+", encoding="utf8") as out_file:
             with io.open(source, "r", encoding="utf8") as in_file:
                 data = in_file.read()
-                output, error_level, deps, shortcode_deps = self.compile_string(data, source, is_two_file)
+                output, error_level, deps, shortcode_deps = self.compile_string(data, source, is_two_file, post, lang)
                 out_file.write(output)
             if post is None:
                 if deps.list:

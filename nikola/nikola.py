@@ -1659,8 +1659,8 @@ class Nikola(object):
     def _get_rss_copyright(self, lang, rss_plain):
         if rss_plain:
             return (
-                self.config['RSS_COPYRIGHT_PLAIN'](lang)
-                or lxml.html.fromstring(self.config['RSS_COPYRIGHT'](lang)).text_content().strip())
+                self.config['RSS_COPYRIGHT_PLAIN'](lang) or
+                lxml.html.fromstring(self.config['RSS_COPYRIGHT'](lang)).text_content().strip())
         else:
             return self.config['RSS_COPYRIGHT'](lang)
 
@@ -1728,7 +1728,7 @@ class Nikola(object):
                             post.date.astimezone(dateutil.tz.tzutc())),
                 'categories': post._tags.get(lang, []),
                 'creator': post.author(lang),
-                'guid': post.permalink(lang, absolute=True),
+                'guid': post.guid(lang),
             }
 
             if post.author(lang):
@@ -2399,7 +2399,7 @@ class Nikola(object):
             entry_title = lxml.etree.SubElement(entry_root, "title")
             entry_title.text = post.title(lang)
             entry_id = lxml.etree.SubElement(entry_root, "id")
-            entry_id.text = post.permalink(lang, absolute=True)
+            entry_id.text = post.guid(lang)
             entry_updated = lxml.etree.SubElement(entry_root, "updated")
             entry_updated.text = post.formatted_updated('webiso')
             entry_published = lxml.etree.SubElement(entry_root, "published")
