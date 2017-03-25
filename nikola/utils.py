@@ -97,7 +97,7 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real',
            'clone_treenode', 'flatten_tree_structure',
            'parse_escaped_hierarchical_category_name',
            'join_hierarchical_category_path', 'clean_before_deployment',
-           'sort_posts', 'indent', 'load_data', 'html_unescape',)
+           'sort_posts', 'indent', 'load_data', 'html_unescape', 'rss_writer',)
 
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
@@ -1279,9 +1279,10 @@ class ExtendedItem(rss.RSSItem):
 
     def __init__(self, **kw):
         """Initialize RSS item."""
-        self.creator = kw.pop('creator')
+        self.creator = kw.pop('creator', None)
+
         # It's an old style class
-        return rss.RSSItem.__init__(self, **kw)
+        rss.RSSItem.__init__(self, **kw)
 
     def publish_extensions(self, handler):
         """Publish extensions."""
@@ -2040,3 +2041,14 @@ except (AttributeError, ImportError):
         """Convert all named and numeric character references  in the string s to the corresponding unicode characters."""
         h = HTMLParser()
         return h.unescape(s)
+
+
+def rss_writer(rss_obj, output_path):
+    """Write an RSS object to an xml file."""
+    dst_dir = os.path.dirname(output_path)
+    makedirs(dst_dir)
+    with io.open(output_path, "w+", encoding="utf-8") as rss_file:
+        data = rss_obj.to_xml(encoding='utf-8')
+        if isinstance(data, bytes_str):
+            data = data.decode('utf-8')
+        rss_file.write(data)
