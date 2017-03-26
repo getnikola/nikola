@@ -297,6 +297,7 @@ LEGAL_VALUES = {
         te='te',
         tr='tr',
         uk='uk',
+        ur='ur',
         zh_cn='zh-cn',
         zh_tw='zh-tw'
     ),

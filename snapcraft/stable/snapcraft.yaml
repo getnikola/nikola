@@ -1,5 +1,5 @@
 name: nikola
-version: 7.8.3
+version: 7.8.4
 summary: A static website generator
 description: A static website generator
 confinement: strict
@@ -16,7 +16,7 @@ parts:
         source: script
     nikola:
         source: git://github.com/getnikola/nikola.git
-        source-tag: v7.8.3
+        source-tag: v7.8.4
         stage-packages:
             - locales
             - libc-bin
