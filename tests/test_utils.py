@@ -332,11 +332,11 @@ def test_get_metadata_from_file():
 
 
 def test_get_asset_path():
-    assert get_asset_path('assets/css/rst.css', get_theme_chain('bootstrap3', ['themes'])).endswith('nikola/data/themes/base/assets/css/rst.css')
-    assert get_asset_path('assets/css/theme.css', get_theme_chain('bootstrap3', ['themes'])).endswith('nikola/data/themes/bootstrap3/assets/css/theme.css')
-    assert get_asset_path('nikola.py', get_theme_chain('bootstrap3', ['themes']), {'nikola': ''}).endswith('nikola/nikola.py')
+    assert get_asset_path('assets/css/rst.css', get_theme_chain('bootstrap3', ['themes'])).replace('\\', '/').endswith('nikola/data/themes/base/assets/css/rst.css')
+    assert get_asset_path('assets/css/theme.css', get_theme_chain('bootstrap3', ['themes'])).replace('\\', '/').endswith('nikola/data/themes/bootstrap3/assets/css/theme.css')
+    assert get_asset_path('nikola.py', get_theme_chain('bootstrap3', ['themes']), {'nikola': ''}).replace('\\', '/').endswith('nikola/nikola.py')
     assert get_asset_path('nikola.py', get_theme_chain('bootstrap3', ['themes']), {'nikola': 'nikola'}) is None
-    assert get_asset_path('nikola/nikola.py', get_theme_chain('bootstrap3', ['themes']), {'nikola': 'nikola'}).endswith('nikola/nikola.py')
+    assert get_asset_path('nikola/nikola.py', get_theme_chain('bootstrap3', ['themes']), {'nikola': 'nikola'}).replace('\\', '/').endswith('nikola/nikola.py')
 
 
 def test_get_crumbs():
