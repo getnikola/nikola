@@ -284,7 +284,7 @@ class RelativeLinkTest(DemoBuildTest):
         """Check that the links in output/index.html are correct"""
         test_path = os.path.join(self.target_dir, "output", "index.html")
         flag = False
-        with open(test_path, "rb") as inf:
+        with io.open(test_path, "rb") as inf:
             data = inf.read()
             for _, _, url, _ in lxml.html.iterlinks(data):
                 # Just need to be sure this one is ok
@@ -406,7 +406,7 @@ class RelativeLinkTest2(DemoBuildTest):
         """Check that the links in a page are correct"""
         test_path = os.path.join(self.target_dir, "output", "about-nikola.html")
         flag = False
-        with open(test_path, "rb") as inf:
+        with io.open(test_path, "rb") as inf:
             data = inf.read()
             for _, _, url, _ in lxml.html.iterlinks(data):
                 # Just need to be sure this one is ok
@@ -543,6 +543,81 @@ class RedirectionsTest3(TestCheck):
         nikola.utils.makedirs(os.path.join(self.target_dir, "files", "foo"))
         with io.open(target_path, "w+", encoding="utf8") as outf:
             outf.write("foo")
+
+class PageIndexTest(EmptyBuildTest):
+    """Test if PAGE_INDEX works."""
+
+    @classmethod
+    def patch_site(self):
+        """Enable PAGE_INDEX."""
+        conf_path = os.path.join(self.target_dir, "conf.py")
+        with io.open(conf_path, "a", encoding="utf8") as outf:
+            outf.write("""\n\nPAGE_INDEX = True\n\n""")
+
+    @classmethod
+    def fill_site(self):
+        """Add subdirectories and create pages, one of which creates index.html."""
+        self.init_command.create_empty_site(self.target_dir)
+        self.init_command.create_configuration(self.target_dir)
+
+        pages = os.path.join(self.target_dir, "pages")
+        subdir1 = os.path.join(self.target_dir, "pages", "subdir1")
+        subdir2 = os.path.join(self.target_dir, "pages", "subdir2")
+        nikola.utils.makedirs(subdir1)
+        nikola.utils.makedirs(subdir2)
+
+        with io.open(os.path.join(pages, 'page0.txt'), "w+", encoding="utf8") as outf:
+            outf.write(".. title: Page 0\n.. slug: page0\n\nThis is page 0.\n")
+
+        with io.open(os.path.join(subdir1, 'page1.txt'), "w+", encoding="utf8") as outf:
+            outf.write(".. title: Page 1\n.. slug: page1\n\nThis is page 1.\n")
+        with io.open(os.path.join(subdir1, 'page2.txt'), "w+", encoding="utf8") as outf:
+            outf.write(".. title: Page 2\n.. slug: page2\n\nThis is page 2.\n")
+
+        with io.open(os.path.join(subdir2, 'page3.txt'), "w+", encoding="utf8") as outf:
+            outf.write(".. title: Page3\n.. slug: page3\n\nThis is page 3.\n")
+        with io.open(os.path.join(subdir2, 'foo.txt'), "w+", encoding="utf8") as outf:
+            outf.write(".. title: Not the page index\n.. slug: index\n\nThis is not the page index.\n")
+
+    def test_page_index(self):
+        """Test PAGE_INDEX."""
+        pages = os.path.join(self.target_dir, "output", "pages")
+        subdir1 = os.path.join(self.target_dir, "output", "pages", "subdir1")
+        subdir2 = os.path.join(self.target_dir, "output", "pages", "subdir2")
+
+        # Do all files exist?
+        self.assertTrue(os.path.isfile(os.path.join(pages, 'page0.html')))
+        self.assertTrue(os.path.isfile(os.path.join(pages, 'index.html')))
+        self.assertTrue(os.path.isfile(os.path.join(subdir1, 'page1.html')))
+        self.assertTrue(os.path.isfile(os.path.join(subdir1, 'page2.html')))
+        self.assertTrue(os.path.isfile(os.path.join(subdir1, 'index.html')))
+        self.assertTrue(os.path.isfile(os.path.join(subdir2, 'page3.html')))
+        self.assertTrue(os.path.isfile(os.path.join(subdir2, 'index.html')))
+
+        # Do the indexes only contain the pages the should?
+        with io.open(os.path.join(pages, 'index.html'), 'r', encoding='utf-8') as fh:
+            pages_index = fh.read()
+        self.assertTrue('Page 0' in pages_index)
+        self.assertTrue('Page 1' not in pages_index)
+        self.assertTrue('Page 2' not in pages_index)
+        self.assertTrue('Page 3' not in pages_index)
+        self.assertTrue('This is not the page index.' not in pages_index)
+
+        with io.open(os.path.join(subdir1, 'index.html'), 'r', encoding='utf-8') as fh:
+            subdir1_index = fh.read()
+        self.assertTrue('Page 0' not in subdir1_index)
+        self.assertTrue('Page 1' in subdir1_index)
+        self.assertTrue('Page 2' in subdir1_index)
+        self.assertTrue('Page 3' not in subdir1_index)
+        self.assertTrue('This is not the page index.' not in subdir1_index)
+
+        with io.open(os.path.join(subdir2, 'index.html'), 'r', encoding='utf-8') as fh:
+            subdir2_index = fh.read()
+        self.assertTrue('Page 0' not in subdir2_index)
+        self.assertTrue('Page 1' not in subdir2_index)
+        self.assertTrue('Page 2' not in subdir2_index)
+        self.assertTrue('Page 3' not in subdir2_index)
+        self.assertTrue('This is not the page index.' in subdir2_index)
 
 
 if __name__ == "__main__":

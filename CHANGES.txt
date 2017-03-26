@@ -31,7 +31,7 @@ Bugfixes
 
 * Remove misplaced and duplicated meta description tags (Issue #2694)
 * Fix crash if ``PAGE_INDEX`` is enabled and make them actually work
-  (Issue #2646)
+  (Issues #2646, #2702)
 * Ignore ``NEW_POST_DATE_PATH`` when creating pages (Issue #2699)
 * Ensure ``post.updated`` is timezone-aware (Issue #2698)
 * Pass previously missing post object and language to reST compiler
@@ -46,7 +46,7 @@ Bugfixes
   the markdown compiler. (Issue #2660)
 * Fix crash if ``SHOW_INDEX_PAGE_NAVIGATION`` is ``True`` while
   ``INDEXES_STATIC`` is ``False``. (Issue #2654)
-* Make ``NEW_POST_DATE_PATH`` follow ``rrule`` if it exists (issue #2653)
+* Make ``NEW_POST_DATE_PATH`` follow ``rrule`` if it exists (Issue #2653)
 
 New in v7.8.3
 =============
