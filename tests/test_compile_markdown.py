@@ -64,5 +64,12 @@ class CompileMarkdownTests(BaseTestCase):
         actual_output = self.compile(input_str)
         self.assertEquals(actual_output.strip(), expected_output.strip())
 
+    def test_mdx_podcast(self):
+        input_str = "[podcast]https://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3[/podcast]"
+        expected_output = '<p><audio controls=""><source src="https://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3" type="audio/mpeg"></source></audio></p>'
+        actual_output = self.compile(input_str)
+        self.assertEquals(actual_output.strip(), expected_output.strip())
+
+
 if __name__ == '__main__':
     unittest.main()

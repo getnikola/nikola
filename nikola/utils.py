@@ -469,9 +469,8 @@ class TemplateHookRegistry(object):
     >>> r = TemplateHookRegistry('foo', None)
     >>> r.append('Hello!')
     >>> r.append(lambda x: 'Hello ' + x + '!', False, 'world')
-    >>> str(r())  # str() call is not recommended in real use
+    >>> repr(r())
     'Hello!\nHello world!'
-    >>>
     """
 
     def __init__(self, name, site):

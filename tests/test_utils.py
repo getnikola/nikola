@@ -2,9 +2,13 @@
 from __future__ import unicode_literals
 import unittest
 import mock
+import os
 import lxml.html
 from nikola.post import get_meta
-from nikola.utils import demote_headers, TranslatableSetting
+from nikola.utils import (demote_headers, TranslatableSetting, get_crumbs,
+                          TemplateHookRegistry, get_asset_path, get_theme_chain,
+                          get_translation_candidate)
+from nikola.plugins.task.sitemap import get_base_path as sitemap_get_base_path
 
 
 class dummy(object):
@@ -326,6 +330,63 @@ def test_get_metadata_from_file():
     assert 'title' in g(["", ".. title: FooBar"])
     assert 'title' in g([".. foo: bar", "", "FooBar", "------"])
 
+
+def test_get_asset_path():
+    assert get_asset_path('assets/css/rst.css', get_theme_chain('bootstrap3', ['themes'])).endswith('nikola/data/themes/base/assets/css/rst.css')
+    assert get_asset_path('assets/css/theme.css', get_theme_chain('bootstrap3', ['themes'])).endswith('nikola/data/themes/bootstrap3/assets/css/theme.css')
+    assert get_asset_path('nikola.py', get_theme_chain('bootstrap3', ['themes']), {'nikola': ''}).endswith('nikola/nikola.py')
+    assert get_asset_path('nikola.py', get_theme_chain('bootstrap3', ['themes']), {'nikola': 'nikola'}) is None
+    assert get_asset_path('nikola/nikola.py', get_theme_chain('bootstrap3', ['themes']), {'nikola': 'nikola'}).endswith('nikola/nikola.py')
+
+
+def test_get_crumbs():
+    crumbs = get_crumbs('galleries')
+    assert len(crumbs) == 1
+    assert crumbs[0] == ['#', 'galleries']
+
+    crumbs = get_crumbs(os.path.join('galleries', 'demo'))
+    assert len(crumbs) == 2
+    assert crumbs[0] == ['..', 'galleries']
+    assert crumbs[1] == ['#', 'demo']
+
+    crumbs = get_crumbs(os.path.join('listings', 'foo', 'bar'), is_file=True)
+    assert len(crumbs) == 3
+    assert crumbs[0] == ['..', 'listings']
+    assert crumbs[1] == ['.', 'foo']
+    assert crumbs[2] == ['#', 'bar']
+
+
+def test_get_translation_candidate():
+    config = {'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}', 'DEFAULT_LANG': 'en', 'TRANSLATIONS': {'es': '1', 'en': 1}}
+    assert get_translation_candidate(config, '*.rst', 'es') == '*.es.rst'
+    assert get_translation_candidate(config, 'fancy.post.rst', 'es') == 'fancy.post.es.rst'
+    assert get_translation_candidate(config, '*.es.rst', 'es') == '*.es.rst'
+    assert get_translation_candidate(config, '*.es.rst', 'en') == '*.rst'
+    assert get_translation_candidate(config, 'cache/posts/fancy.post.es.html', 'en') == 'cache/posts/fancy.post.html'
+    assert get_translation_candidate(config, 'cache/posts/fancy.post.html', 'es') == 'cache/posts/fancy.post.es.html'
+    assert get_translation_candidate(config, 'cache/pages/charts.html', 'es') == 'cache/pages/charts.es.html'
+    assert get_translation_candidate(config, 'cache/pages/charts.html', 'en') == 'cache/pages/charts.html'
+
+    config = {'TRANSLATIONS_PATTERN': '{path}.{ext}.{lang}', 'DEFAULT_LANG': 'en', 'TRANSLATIONS': {'es': '1', 'en': 1}}
+    assert get_translation_candidate(config, '*.rst', 'es') == '*.rst.es'
+    assert get_translation_candidate(config, '*.rst.es', 'es') == '*.rst.es'
+    assert get_translation_candidate(config, '*.rst.es', 'en') == '*.rst'
+    assert get_translation_candidate(config, 'cache/posts/fancy.post.html.es', 'en') == 'cache/posts/fancy.post.html'
+    assert get_translation_candidate(config, 'cache/posts/fancy.post.html', 'es') == 'cache/posts/fancy.post.html.es'
+
+
+def test_TemplateHookRegistry():
+    r = TemplateHookRegistry('foo', None)
+    r.append('Hello!')
+    r.append(lambda x: 'Hello ' + x + '!', False, 'world')
+    assert r() == 'Hello!\nHello world!'
+
+
+def test_sitemap_get_base_path():
+    assert sitemap_get_base_path('http://some.site') == '/'
+    assert sitemap_get_base_path('http://some.site/') == '/'
+    assert sitemap_get_base_path('http://some.site/some/sub-path') == '/some/sub-path/'
+    assert sitemap_get_base_path('http://some.site/some/sub-path/') == '/some/sub-path/'
 
 if __name__ == '__main__':
     unittest.main()

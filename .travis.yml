@@ -29,7 +29,6 @@ install:
 - if [[ $NMODE == 'nikola' ]]; then pip install .; fi
 - if [[ $NMODE == 'flake8' ]]; then pip install flake8 pydocstyle; fi
 script:
-- if [[ $NMODE == 'nikola' ]]; then py.test --doctest-modules nikola/; fi
 - if [[ $NMODE == 'nikola' ]]; then py.test tests/; fi
 - if [[ $NMODE == 'nikola' ]]; then nikola; fi
 - if [[ $NMODE == 'nikola' ]]; then nikola help; fi
