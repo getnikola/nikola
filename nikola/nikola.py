@@ -990,7 +990,7 @@ class Nikola(object):
         for data in plugin_list:
             plugin_dict[data[2].name].append(data)
         result = []
-        for name, plugins in plugin_dict.items():
+        for _, plugins in plugin_dict.items():
             if len(plugins) > 1:
                 # Sort by locality
                 plugins.sort(key=plugin_position_in_places)
@@ -1109,7 +1109,7 @@ class Nikola(object):
                         to_add.append(p)
                     for p in self.disabled_compiler_extensions.pop(k, []):
                         to_add.append(p)
-            for name, p in self.disabled_compilers.items():
+            for _, p in self.disabled_compilers.items():
                 utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
             for _, plugins in self.disabled_compiler_extensions.items():
                 for p in plugins:
