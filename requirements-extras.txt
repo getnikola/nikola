@@ -11,5 +11,5 @@ webassets>=0.10.1
 notebook>=4.0.0
 ipykernel>=4.0.0
 ghp-import2>=1.0.0
-ws4py==0.4.0
+ws4py==0.4.1
 watchdog==0.8.3
