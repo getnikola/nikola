@@ -29,6 +29,7 @@ Features
 Bugfixes
 --------
 
+* Remove misplaced and duplicated meta description tags (Issue #2694)
 * Fix crash if ``PAGE_INDEX`` is enabled and make them actually work
   (Issue #2646)
 * Ignore ``NEW_POST_DATE_PATH`` when creating pages (Issue #2699)

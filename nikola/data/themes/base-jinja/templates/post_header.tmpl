@@ -46,9 +46,6 @@
             {% if post.meta('link') %}
                     <p class="linkline"><a href="{{ post.meta('link') }}">{{ messages("Original site") }}</a></p>
             {% endif %}
-            {% if post.description() %}
-                <meta name="description" itemprop="description" content="{{ post.description()|e }}">
-            {% endif %}
         </div>
         {{ html_translations(post) }}
     </header>
