@@ -250,7 +250,11 @@ class RenderTaxonomies(Task):
         template_name = taxonomy.template_for_single_list
         output_name = os.path.join(self.site.config['OUTPUT_FOLDER'], self.site.path(kind, classification, lang))
         context["lang"] = lang
-        context["posts"] = filtered_posts
+        # list.tmpl expects a different format than list_post.tmpl (Issue #2701)
+        if template_name == 'list.tmpl':
+            context["items"] = [(post.title(), post.permalink(), None) for post in filtered_posts]
+        else:
+            context["posts"] = filtered_posts
         context["kind"] = kind
         if "pagekind" not in context:
             context["pagekind"] = ["list", "tag_page"]

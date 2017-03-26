@@ -59,7 +59,9 @@ class TaxonomiesClassifier(SignalHandler):
 
         # Classify posts
         for post in site.timeline:
-            if not post.use_in_feeds:
+            # Do classify pages, but don’t classify posts that are hidden
+            # (draft/private/future)
+            if post.is_post and not post.use_in_feeds:
                 continue
             for taxonomy in taxonomies:
                 if taxonomy.apply_to_posts if post.is_post else taxonomy.apply_to_pages:
