@@ -64,9 +64,6 @@ class PageIndex(Taxonomy):
     def classify(self, post, lang):
         """Classify the given post for the given language."""
         destpath = post.destination_path(lang, sep='/')
-        index_len = len(self.site.config["INDEX_FILE"])
-        if destpath[-(1 + index_len):] == '/' + self.site.config["INDEX_FILE"]:
-            destpath = destpath[:-(1 + index_len)]
         i = destpath.rfind('/')
         return [destpath[:i] if i >= 0 else '']
 
@@ -102,8 +99,12 @@ class PageIndex(Taxonomy):
     def should_generate_classification_page(self, dirname, post_list, lang):
         """Only generates list of posts for classification if this function returns True."""
         short_destination = dirname + '/' + self.site.config['INDEX_FILE']
+        print('-S', short_destination)
+        print('-D', dirname)
+        print('-P', post_list)
         for post in post_list:
             # If there is an index.html pending to be created from a page, do not generate the page index.
+            print(post.destination_path(lang, sep='/'))
             if post.destination_path(lang, sep='/') == short_destination:
                 return False
         return True
