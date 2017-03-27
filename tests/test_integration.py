@@ -545,14 +545,14 @@ class RedirectionsTest3(TestCheck):
             outf.write("foo")
 
 class PageIndexTest(EmptyBuildTest):
-    """Test if PAGE_INDEX works."""
+    """Test if PAGE_INDEX works, with PRETTY_URLS disabled."""
 
     @classmethod
     def patch_site(self):
         """Enable PAGE_INDEX."""
         conf_path = os.path.join(self.target_dir, "conf.py")
         with io.open(conf_path, "a", encoding="utf8") as outf:
-            outf.write("""\n\nPAGE_INDEX = True\n\n""")
+            outf.write("""\n\nPAGE_INDEX = True\nPRETTY_URLS = False\n\n""")
 
     @classmethod
     def fill_site(self):
@@ -619,6 +619,16 @@ class PageIndexTest(EmptyBuildTest):
         self.assertTrue('Page 3' not in subdir2_index)
         self.assertTrue('This is not the page index.' in subdir2_index)
 
+
+class PageIndexPrettyUrlsTest(EmptyBuildTest):
+    """Test if PAGE_INDEX works, with PRETTY_URLS enabled."""
+
+    @classmethod
+    def patch_site(self):
+        """Enable PAGE_INDEX."""
+        conf_path = os.path.join(self.target_dir, "conf.py")
+        with io.open(conf_path, "a", encoding="utf8") as outf:
+            outf.write("""\n\nPAGE_INDEX = True\nPRETTY_URLS = True\n\n""")
 
 if __name__ == "__main__":
     unittest.main()
