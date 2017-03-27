@@ -620,7 +620,7 @@ class PageIndexTest(EmptyBuildTest):
         self.assertTrue('This is not the page index.' in subdir2_index)
 
 
-class PageIndexPrettyUrlsTest(EmptyBuildTest):
+class PageIndexPrettyUrlsTest(PageIndexTest):
     """Test if PAGE_INDEX works, with PRETTY_URLS enabled."""
 
     @classmethod
