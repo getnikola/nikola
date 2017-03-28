@@ -1759,7 +1759,7 @@ class Nikola(object):
                             post.date.astimezone(dateutil.tz.tzutc())),
                 'categories': post._tags.get(lang, []),
                 'creator': post.author(lang),
-                'guid': post.permalink(lang, absolute=True),
+                'guid': post.guid(lang),
             }
 
             if post.author(lang):
