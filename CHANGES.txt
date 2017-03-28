@@ -1,3 +1,14 @@
+New in master
+=============
+
+Features
+--------
+
+Bugfixes
+--------
+
+* Fix PHP posts/pages not rendering on Windows (Issue #2706)
+
 New in v7.8.4
 =============
 

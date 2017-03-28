@@ -328,7 +328,7 @@ def php_template_injection(data):
             phpdata = in_file.read()
         _META_SEPARATOR = '(' + os.linesep * 2 + '|' + ('\n' * 2) + '|' + ("\r\n" * 2) + ')'
         phpdata = re.split(_META_SEPARATOR, phpdata, maxsplit=1)[-1]
-        phpdata = re.sub(template.group(0), phpdata, data)
+        phpdata = data.replace(template.group(0), phpdata)
         return phpdata
     else:
         return data
