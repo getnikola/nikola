@@ -544,6 +544,7 @@ class RedirectionsTest3(TestCheck):
         with io.open(target_path, "w+", encoding="utf8") as outf:
             outf.write("foo")
 
+
 class PageIndexTest(EmptyBuildTest):
     """Test if PAGE_INDEX works, with PRETTY_URLS disabled."""
 
