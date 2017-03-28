@@ -564,7 +564,8 @@ class PageIndexTest(EmptyBuildTest):
         pages = os.path.join(self.target_dir, "pages")
         subdir1 = os.path.join(self.target_dir, "pages", "subdir1")
         subdir2 = os.path.join(self.target_dir, "pages", "subdir2")
-        subdir2 = os.path.join(self.target_dir, "pages", "subdir3")
+        subdir3 = os.path.join(self.target_dir, "pages", "subdir3")
+
         nikola.utils.makedirs(subdir1)
         nikola.utils.makedirs(subdir2)
         nikola.utils.makedirs(subdir3)
@@ -587,6 +588,10 @@ class PageIndexTest(EmptyBuildTest):
         with io.open(os.path.join(subdir3, 'bar.php'), "w+", encoding="utf8") as outf:
             outf.write(".. title: Still not the page index\n.. slug: index\n\nThis is not the page index either.\n")
 
+    def _make_output_path(self, dir, name):
+        """Make a file path to the output."""
+        return os.path.join(dir, name + '.html')
+
     def test_page_index(self):
         """Test PAGE_INDEX."""
         pages = os.path.join(self.target_dir, "output", "pages")
@@ -595,14 +600,15 @@ class PageIndexTest(EmptyBuildTest):
         subdir3 = os.path.join(self.target_dir, "output", "pages", "subdir3")
 
         # Do all files exist?
-        self.assertTrue(os.path.isfile(os.path.join(pages, 'page0.html')))
+        self.assertTrue(os.path.isfile(self._make_output_path(pages, 'page0')))
+        self.assertTrue(os.path.isfile(self._make_output_path(subdir1, 'page1')))
+        self.assertTrue(os.path.isfile(self._make_output_path(subdir1, 'page2')))
+        self.assertTrue(os.path.isfile(self._make_output_path(subdir2, 'page3')))
+        self.assertTrue(os.path.isfile(self._make_output_path(subdir3, 'page4')))
+
         self.assertTrue(os.path.isfile(os.path.join(pages, 'index.html')))
-        self.assertTrue(os.path.isfile(os.path.join(subdir1, 'page1.html')))
-        self.assertTrue(os.path.isfile(os.path.join(subdir1, 'page2.html')))
         self.assertTrue(os.path.isfile(os.path.join(subdir1, 'index.html')))
-        self.assertTrue(os.path.isfile(os.path.join(subdir2, 'page3.html')))
         self.assertTrue(os.path.isfile(os.path.join(subdir2, 'index.html')))
-        self.assertTrue(os.path.isfile(os.path.join(subdir3, 'page4.html')))
         self.assertTrue(os.path.isfile(os.path.join(subdir3, 'index.php')))
         self.assertFalse(os.path.isfile(os.path.join(subdir3, 'index.html')))
 
@@ -653,6 +659,11 @@ class PageIndexPrettyUrlsTest(PageIndexTest):
         conf_path = os.path.join(self.target_dir, "conf.py")
         with io.open(conf_path, "a", encoding="utf8") as outf:
             outf.write("""\n\nPAGE_INDEX = True\nPRETTY_URLS = True\nPAGES = PAGES + (('pages/*.php', 'pages', 'story.tmpl'),)\n\n""")
+
+    def _make_output_path(self, dir, name):
+        """Make a file path to the output."""
+        return os.path.join(dir, name + '/index.html')
+
 
 if __name__ == "__main__":
     unittest.main()
