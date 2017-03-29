@@ -65,7 +65,9 @@ class PageIndex(Taxonomy):
         """Classify the given post for the given language."""
         destpath = post.destination_path(lang, sep='/')
         if post._has_pretty_url(lang):
-            destpath = destpath.rstrip('/index.html')
+            idx = '/index.html'
+            if destpath.endswith(idx):
+                destpath = destpath[:-len(idx)]
         i = destpath.rfind('/')
         return [destpath[:i] if i >= 0 else '']
 
