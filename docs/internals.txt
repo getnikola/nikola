@@ -85,8 +85,8 @@ one of the existing ones.
 .. sidebar:: Tests
 
     While Nikola is not a hardcore TDD project, we like tests. So, please add them if you can.
-    You can do doctests, you can do unit tests, you can do integration tests. There is support
-    for all of them.
+    You can write unit tests or integration tests. (Doctests are not supported
+    anymore due to fragility.)
 
 Posts and Pages
 ---------------
