@@ -953,26 +953,26 @@ def get_crumbs(path, is_file=False, index_folder=None, lang=None):
     >>> crumbs = get_crumbs('galleries')
     >>> len(crumbs)
     1
-    >>> print('|'.join(crumbs[0]))
-    #|galleries
+    >>> crumbs[0]
+    ['#', 'galleries']
 
     >>> crumbs = get_crumbs(os.path.join('galleries','demo'))
     >>> len(crumbs)
     2
-    >>> print('|'.join(crumbs[0]))
-    ..|galleries
-    >>> print('|'.join(crumbs[1]))
-    #|demo
+    >>> crumbs[0]
+    ['..', 'galleries']
+    >>> crumbs[1]
+    ['#', 'demo']
 
     >>> crumbs = get_crumbs(os.path.join('listings','foo','bar'), is_file=True)
     >>> len(crumbs)
     3
-    >>> print('|'.join(crumbs[0]))
-    ..|listings
-    >>> print('|'.join(crumbs[1]))
-    .|foo
-    >>> print('|'.join(crumbs[2]))
-    #|bar
+    >>> crumbs[0]
+    ['..', 'listings']
+    >>> crumbs[1]
+    ['.', 'foo']
+    >>> crumbs[2]
+    ['#', 'bar']
     """
     crumbs = path.split(os.sep)
     _crumbs = []
