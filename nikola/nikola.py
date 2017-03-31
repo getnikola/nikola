@@ -986,7 +986,9 @@ class Nikola(object):
                 self.bad_compilers.add(k)
 
         self._set_global_context_from_config()
-        self._set_global_context_from_data()
+        # Read data files only if a site exists (Issue #2708)
+        if self.configured:
+            self._set_global_context_from_data()
 
         # Set persistent state facility
         self.state = Persistor('state_data.json')
