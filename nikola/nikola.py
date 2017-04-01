@@ -955,6 +955,25 @@ class Nikola(object):
             self.tzinfo = dateutil.tz.gettz()
         self.config['__tzinfo__'] = self.tzinfo
 
+        # Get search path for themes
+        self.themes_dirs = ['themes'] + self.config['EXTRA_THEMES_DIRS']
+
+        # Determine which compilers are needed and sets global context
+        self._init_compilers_and_global_context()
+
+        # Set persistent state facility
+        self.state = Persistor('state_data.json')
+
+        # Set cache facility
+        self.cache = Persistor(os.path.join(self.config['CACHE_FOLDER'], 'cache_data.json'))
+
+        # Create directories for persistors only if a site exists (Issue #2334)
+        if self.configured:
+            self.state._set_site(self)
+            self.cache._set_site(self)
+
+    def _init_compilers_and_global_context(self):
+        """"Determine which compilers to use and set global context."""
         # Store raw compilers for internal use (need a copy for that)
         self.config['_COMPILERS_RAW'] = {}
         for k, v in self.config['COMPILERS'].items():
@@ -969,37 +988,31 @@ class Nikola(object):
                     candidate = utils.get_translation_candidate(self.config, "f" + ext, lang)
                     compilers[compiler].add(candidate)
 
-        # Get search path for themes
-        self.themes_dirs = ['themes'] + self.config['EXTRA_THEMES_DIRS']
-
         # Avoid redundant compilers
-        # Remove compilers that match nothing in POSTS/PAGES
+        # Remove compilers that match nothing in POSTS/PAGES or what other post scanning plugins consider
         # And put them in "bad compilers"
-        pp_exts = set([os.path.splitext(x[0])[1] for x in self.config['post_pages']])
+        pp_exts = set()
+        for p in self.plugin_manager.getPluginsOfCategory('PostScanner'):
+            exts = p.plugin_object.get_appearing_post_extensions()
+            if exts is None:
+                pp_exts = None
+                break
+            for ext in exts:
+                pp_exts.add(ext)
         self.config['COMPILERS'] = {}
         self.disabled_compilers = {}
         self.bad_compilers = set([])
         for k, v in compilers.items():
-            if pp_exts.intersection(v):
+            if pp_exts is None or pp_exts.intersection(v):
                 self.config['COMPILERS'][k] = sorted(list(v))
             else:
                 self.bad_compilers.add(k)
 
+        # Init global context. Partially depends on self.site.config['COMPILERS']
         self._set_global_context_from_config()
         # Read data files only if a site exists (Issue #2708)
         if self.configured:
             self._set_global_context_from_data()
-
-        # Set persistent state facility
-        self.state = Persistor('state_data.json')
-
-        # Set cache facility
-        self.cache = Persistor(os.path.join(self.config['CACHE_FOLDER'], 'cache_data.json'))
-
-        # Create directories for persistors only if a site exists (Issue #2334)
-        if self.configured:
-            self.state._set_site(self)
-            self.cache._set_site(self)
 
     def init_plugins(self, commands_only=False, load_all=False):
         """Load plugins as needed."""

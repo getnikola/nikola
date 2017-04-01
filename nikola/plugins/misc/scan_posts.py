@@ -106,3 +106,7 @@ class ScanPosts(PostScanner):
                         raise err
 
         return timeline
+
+    def get_appearing_post_extensions(self):
+        """Returns a list of post extensions which appear, or None if such a list cannot be computed efficiently."""
+        return [os.path.splitext(x[0])[1] for x in self.site.config['post_pages']]
