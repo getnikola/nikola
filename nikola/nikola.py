@@ -1047,10 +1047,7 @@ class Nikola(object):
         self.config['COMPILERS'] = {}
         self.disabled_compilers = {}
         self.disabled_compiler_extensions = defaultdict(list)
-        self.bad_compilers = set([])
-        for k, v in compilers.items():
-            # self.config['COMPILERS'][k] = sorted(list(v))
-            self.bad_compilers.add(k)
+        self.bad_compilers = set(compilers.keys())
 
         self.plugin_manager.getPluginLocator().setPluginPlaces(self._plugin_places)
         self.plugin_manager.locatePlugins()
