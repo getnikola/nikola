@@ -1062,19 +1062,14 @@ class Nikola(object):
                     else:
                         bad_candidates.add(p)
                 elif self.configured:  # Not commands-only, and configured
-                    # Remove compilers we don't use
-                    if p[-1].name in self.bad_compilers:
-                        bad_candidates.add(p)
-                        self.disabled_compilers[p[-1].name] = p
-                    if p[-1].name not in compilers and \
-                            p[-1].details.has_option('Nikola', 'PluginCategory') and p[-1].details.get('Nikola', 'PluginCategory') in ('Compiler', 'PageCompiler'):
-                        bad_candidates.add(p)
-                        self.disabled_compilers[p[-1].name] = p
-                        utils.LOGGER.debug('Not loading unneeded compiler {}', p[-1].name)
                     # Remove blacklisted plugins
                     if p[-1].name in self.config['DISABLED_PLUGINS']:
                         bad_candidates.add(p)
                         utils.LOGGER.debug('Not loading disabled plugin {}', p[-1].name)
+                    # Remove compilers we don't use
+                    if p[-1].details.has_option('Nikola', 'PluginCategory') and p[-1].details.get('Nikola', 'PluginCategory') in ('Compiler', 'PageCompiler'):
+                        bad_candidates.add(p)
+                        self.disabled_compilers[p[-1].name] = p
                     # Remove compiler extensions we don't need
                     if p[-1].details.has_option('Nikola', 'compiler') and p[-1].details.get('Nikola', 'compiler') in self.disabled_compilers:
                         bad_candidates.add(p)
