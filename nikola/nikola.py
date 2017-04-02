@@ -1041,13 +1041,13 @@ class Nikola(object):
                     candidate = utils.get_translation_candidate(self.config, "f" + ext, lang)
                     compilers[compiler].add(candidate)
 
-        # Avoid redundant compilers
-        # Remove compilers that match nothing in POSTS/PAGES
-        # And put them in "bad compilers"
+        # Avoid redundant compilers (if load_all is False):
+        # Remove compilers (and corresponding compiler extensions) that are not marked as
+        # needed by any PostScanner plugin and put them into self.disabled_compilers
+        # (respectively self.disabled_compiler_extensions).
         self.config['COMPILERS'] = {}
         self.disabled_compilers = {}
         self.disabled_compiler_extensions = defaultdict(list)
-        self.bad_compilers = set(compilers.keys())
 
         self.plugin_manager.getPluginLocator().setPluginPlaces(self._plugin_places)
         self.plugin_manager.locatePlugins()
@@ -1095,7 +1095,6 @@ class Nikola(object):
             for k, v in compilers.items():
                 if file_extensions is None or file_extensions.intersection(v):
                     self.config['COMPILERS'][k] = sorted(list(v))
-                    self.bad_compilers.remove(k)
                     p = self.disabled_compilers.pop(k, None)
                     if p:
                         to_add.append(p)
