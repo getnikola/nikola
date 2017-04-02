@@ -279,7 +279,8 @@ class Post(object):
         m.update(utils.unicode_str(json.dumps(clean_meta, cls=utils.CustomEncoder, sort_keys=True)).encode('utf-8'))
         return '<Post: {0!r} {1}>'.format(self.source_path, m.hexdigest())
 
-    def _has_pretty_url(self, lang):
+    def has_pretty_url(self, lang):
+        """Check if this page has a pretty URL."""
         m = self.meta[lang].get('pretty_url', '')
         if m:
             # match is a non-empty string, overides anything
@@ -287,6 +288,10 @@ class Post(object):
         else:
             # use PRETTY_URLS, unless the slug is 'index'
             return self.pretty_urls and self.meta[lang]['slug'] != 'index'
+
+    def _has_pretty_url(self, lang):
+        """Check if this page has a pretty URL."""
+        return self.has_pretty_url(lang)
 
     @property
     def is_mathjax(self):
@@ -796,7 +801,7 @@ class Post(object):
         if lang is None:
             lang = nikola.utils.LocaleBorg().current_lang
         folder = self.folders[lang]
-        if self._has_pretty_url(lang):
+        if self.has_pretty_url(lang):
             path = os.path.join(self.translations[lang],
                                 folder, self.meta[lang]['slug'], 'index' + extension)
         else:
@@ -874,7 +879,7 @@ class Post(object):
 
         pieces = self.translations[lang].split(os.sep)
         pieces += self.folders[lang].split(os.sep)
-        if self._has_pretty_url(lang):
+        if self.has_pretty_url(lang):
             pieces += [self.meta[lang]['slug'], 'index' + extension]
         else:
             pieces += [self.meta[lang]['slug'] + extension]
