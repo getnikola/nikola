@@ -544,6 +544,6 @@ class CommandNewPost(Command):
     More compilers are available in the Plugins Index.
 
     Compilers marked with ! and ~ require additional configuration:
-        ! not in the PAGES/POSTS tuples (unused)
+        ! not in the POSTS/PAGES tuples and any post scanners (unused)
         ~ not in the COMPILERS dict (disabled)
     Read more: {0}""".format(COMPILERS_DOC_LINK))

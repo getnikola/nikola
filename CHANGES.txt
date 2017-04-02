@@ -10,6 +10,8 @@ Bugfixes
 * Read data files only if Nikola configuration exists (Issue #2708)
 * Make ``PAGE_INDEX`` work with ``PRETTY_URLS`` (Issue #2705)
 * Fix PHP posts/pages not rendering on Windows (Issue #2706)
+* Improving support for PostScanner plugins by asking them which compilers
+  are unused (Issue #2496)
 
 New in v7.8.4
 =============
