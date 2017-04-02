@@ -1089,6 +1089,7 @@ class Nikola(object):
                     file_extensions.update(exts)
                 else:
                     # Stop scanning for more: once we get None, we have to load all compilers anyway
+                    utils.LOGGER.debug("Post scanner {0!r} does not implement `supported_extensions`, loading all compilers".format(post_scanner))
                     file_extensions = None
                     break
             to_add = []
