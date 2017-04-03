@@ -1946,11 +1946,13 @@ different ones, or about other web servers, please share!
 Math
 ----
 
-Nikola supports math input via MathJax.  It is activated via the math roles and
-directives of reStructuredText and the usual LaTeX delimiters
-(backslash-parentheses, backslash-brackets) for other input formats.
+Nikola supports math input via MathJax (by default) or KaTeX.  It is activated
+via the math roles and directives of reStructuredText and the usual LaTeX
+delimiters (backslash-parentheses, backslash-brackets) for other input formats.
 
-To use mathematics in a post, you must add the ``mathjax`` tag.
+To use mathematics in a post, you **must** add the ``mathjax`` tag, no matter
+which renderer you are using.  (Exception: posts that are Jupyter Notebooks are
+automatically marked as math)
 
 We **DO NOT** support the old, deprecated and error-prone ``$inline$``
 delimiters by default. If you want to use them, please add them manually,
