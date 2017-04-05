@@ -694,7 +694,8 @@ class Post(object):
                         reading_time=self.reading_time,
                         remaining_reading_time=self.remaining_reading_time,
                         paragraph_count=self.paragraph_count,
-                        remaining_paragraph_count=self.remaining_paragraph_count)
+                        remaining_paragraph_count=self.remaining_paragraph_count,
+                        post_title=self.title(lang))
                 # This closes all open tags and sanitizes the broken HTML
                 document = lxml.html.fromstring(teaser)
                 try:

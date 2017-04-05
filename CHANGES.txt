@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Add ``{post_title}`` tag for Read More links (Issue #2709)
+
 Bugfixes
 --------
 
