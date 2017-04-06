@@ -2032,12 +2032,12 @@ try:
     html_unescape = html.unescape
 except (AttributeError, ImportError):
     try:
-        from HTMLParser import HTMLParser  # Python 2.6 and 2.7
+        from HTMLParser import HTMLParser  # Python 2.7
     except ImportError:
         from html.parser import HTMLParser  # Python 3 (up to 3.4)
 
     def html_unescape(s):
-        """Convert all named and numeric character references  in the string s to the corresponding unicode characters."""
+        """Convert all named and numeric character references in the string s to the corresponding unicode characters."""
         h = HTMLParser()
         return h.unescape(s)
 
