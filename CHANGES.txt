@@ -9,6 +9,7 @@ Features
 Bugfixes
 --------
 
+* Make date ranges work in shortcode-based post lists (Issue #2690)
 * Read data files only if Nikola configuration exists (Issue #2708)
 * Make ``PAGE_INDEX`` work with ``PRETTY_URLS`` (Issue #2705)
 * Fix PHP posts/pages not rendering on Windows (Issue #2706)
