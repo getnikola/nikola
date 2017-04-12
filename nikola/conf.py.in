@@ -953,7 +953,9 @@ PRETTY_URLS = ${PRETTY_URLS}
 # Do you want a add a Mathjax config file?
 # MATHJAX_CONFIG = ""
 
-# If you are using the compile-ipynb plugin, just add this one:
+# If you are using Jupyter Notebooks, or want support for the $.$
+# syntax (not recommended due to confusion with running text!), just add this
+# one:
 # MATHJAX_CONFIG = """
 # <script type="text/x-mathjax-config">
 # MathJax.Hub.Config({
@@ -975,7 +977,7 @@ PRETTY_URLS = ${PRETTY_URLS}
 # USE_KATEX = False
 
 # If you want to use the old (buggy) inline math $.$ with KaTeX, then
-# you might want to use this feature.
+# you might want to use this config.
 # KATEX_AUTO_RENDER = """
 # delimiters: [
 #     {left: "$$", right: "$$", display: true},
