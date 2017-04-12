@@ -2,6 +2,7 @@
 {% import 'post_helper.tmpl' as helper with context %}
 {% import 'post_header.tmpl' as pheader with context %}
 {% import 'comments_helper.tmpl' as comments with context %}
+{% import 'math_helper.tmpl' as math with context %}
 {% extends 'post.tmpl' %}
 
 {% block content %}
@@ -19,6 +20,6 @@
         {{ comments.comment_form(post.permalink(absolute=True), post.title(), post.base_path) }}
         </section>
     {% endif %}
-    {{ helper.mathjax_script(post) }}
+    {{ math.math_scripts_ifpost(post) }}
 </article>
 {% endblock %}
