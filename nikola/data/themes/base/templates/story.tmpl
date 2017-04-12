@@ -2,6 +2,7 @@
 <%namespace name="helper" file="post_helper.tmpl"/>
 <%namespace name="pheader" file="post_header.tmpl"/>
 <%namespace name="comments" file="comments_helper.tmpl"/>
+<%namespace name="math" file="math_helper.tmpl"/>
 <%inherit file="post.tmpl"/>
 
 <%block name="content">
@@ -19,6 +20,6 @@
         ${comments.comment_form(post.permalink(absolute=True), post.title(), post.base_path)}
         </section>
     %endif
-    ${helper.mathjax_script(post)}
+    ${math.math_scripts_ifpost(post)}
 </article>
 </%block>
