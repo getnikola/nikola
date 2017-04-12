@@ -1,5 +1,6 @@
 ## -*- coding: utf-8 -*-
 <%namespace name="helper" file="index_helper.tmpl"/>
+<%namespace name="math" file="math_helper.tmpl"/>
 <%namespace name="comments" file="comments_helper.tmpl"/>
 <%namespace name="pagination" file="pagination_helper.tmpl"/>
 <%inherit file="base.tmpl"/>
@@ -9,6 +10,7 @@
     % if posts and (permalink == '/' or permalink == '/' + index_file):
         <link rel="prefetch" href="${posts[0].permalink()}" type="text/html">
     % endif
+    ${math.math_styles_ifposts(posts)}
 </%block>
 
 <%block name="content">
@@ -51,5 +53,5 @@
 </div>
 ${helper.html_pager()}
 ${comments.comment_link_script()}
-${helper.mathjax_script(posts)}
+${math.math_scripts_ifposts(posts)}
 </%block>

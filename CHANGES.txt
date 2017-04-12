@@ -1,10 +1,22 @@
 New in master
 =============
 
+Math support changes
+--------------------
+
+* If you edited templates related to indexes and posts (``index.tmpl``,
+  ``post.tmpl``, ``index_helper.tmpl``, ``post_helper.tmpl``) in your
+  templates, you should adjust them to use ``math_helper.tmpl``.
+* If you are using KaTeX, you should remove the CSS snippet from your
+  configuration (templates), as that is now handled by Nikola.
+
 Features
 --------
 
 * Add ``{post_title}`` tag for Read More links (Issue #2709)
+* Include KaTeX CSS automatically (Issue #2715)
+* Split out math code into new ``math_helper.tmpl`` template (Issue
+  #2715)
 
 Bugfixes
 --------

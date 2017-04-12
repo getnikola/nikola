@@ -86,7 +86,5 @@
 </%def>
 
 <%def name="mathjax_script(post)">
-    %if post.is_mathjax:
-        ${math.math_script()}
-    %endif
+    ${math.math_scripts_ifpost(post)}
 </%def>

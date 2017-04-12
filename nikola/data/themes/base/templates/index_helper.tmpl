@@ -20,7 +20,5 @@
 </%def>
 
 <%def name="mathjax_script(posts)">
-    %if any(post.is_mathjax for post in posts):
-    ${math.math_script()}
-    %endif
+    ${math.math_scripts_ifposts(posts)}
 </%def>
