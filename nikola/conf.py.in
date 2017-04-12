@@ -972,9 +972,9 @@ PRETTY_URLS = ${PRETTY_URLS}
 
 # Want to use KaTeX instead of MathJax? While KaTeX is less featureful,
 # it's faster and the output looks better.
-# If you set USE_KATEX to True, you also need to add an extra CSS file
-# like this:
-# EXTRA_HEAD_DATA = """<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">"""
+# If you set USE_KATEX to True, you also need to add an extra CSS file like
+# this: (make sure to match the version Nikola uses -- check it in HTML output)
+# EXTRA_HEAD_DATA = """<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">"""
 # USE_KATEX = False
 
 # If you want to use the old (buggy) inline math $.$ with KaTeX, then
