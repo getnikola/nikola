@@ -830,7 +830,7 @@ class Nikola(object):
 
         # Detect manually added KaTeX CSS (#2715/#2717)
         # TODO: remove on v8
-        if 'katex.min.css' in self.config.get('EXTRA_HEAD_DATA', ''):
+        if any('katex.min.css' in v for v in self.config['EXTRA_HEAD_DATA'].values.values()):
             utils.LOGGER.warn("KaTeX CSS is now added by Nikola whenever needed (if your theme supports it). Please remove katex.min.css from EXTRA_HEAD_DATA in conf.py.")
 
         # Handle old plugin names (from before merging the taxonomy PR #2535)
