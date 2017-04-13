@@ -1951,7 +1951,7 @@ via the math roles and directives of reStructuredText and the usual LaTeX
 delimiters for other input formats.
 
 Configuration
--------------
+~~~~~~~~~~~~~
 
 Nikola uses MathJax by default. If you want to use KaTeX (faster and prettier,
 but may not support every feature yet), set ``USE_KATEX = True`` in
@@ -1961,8 +1961,8 @@ To use mathematics in a post, you **must** add the ``mathjax`` tag, no matter
 which renderer you are using.  (Exception: posts that are Jupyter Notebooks are
 automatically marked as math)
 
-By default, Nikola will accept ``\(.\)`` for inline math; ``\[.\]`` and
-``$$.$$`` for display math. If you want to use the old ``$..$`` syntax as well
+By default, Nikola will accept ``\(...\)`` for inline math; ``\[...\]`` and
+``$$...$$`` for display math. If you want to use the old ``$...$`` syntax as well
 (which may conflict with running text!), you need to use special config for
 your renderer:
 
@@ -1994,7 +1994,7 @@ your renderer:
    """
 
 Inline usage
-------------
+~~~~~~~~~~~~
 
 Inline mathematics are produced using the reST `math` **role** or the LaTeX
 backslash-parentheses delimiters:
@@ -2018,7 +2018,7 @@ backslashes** in the delimiters (``\\(inline math\\)``). Please check your
 output first before reporting bugs.
 
 Display usage
--------------
+~~~~~~~~~~~~~
 
 Display mathematics are produced using the reST `math` **directive** or the
 LaTeX backslash-brackets delimiters:
