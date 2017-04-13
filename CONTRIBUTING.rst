@@ -3,9 +3,11 @@ Patch submission guidelines [1]_
 
 Here are some guidelines about how you can contribute to Nikola:
 
-* First, make sure there is an open issue for your change. Perhaps,
-  if it’s a new feature, you probably want to
-  `discuss it first <http://groups.google.com/group/nikola-discuss>`_
+* If your contribution is a new feature, you should make sure an issue exists
+  for it, and perhaps `discuss it <http://groups.google.com/group/nikola-discuss>`_
+  on the mailing list. If you’re fixing a bug you just noticed, or are making a
+  minor change, creating an issue is optional, but please search for existing
+  issues.
 
 * **Create a new Git branch specific to your change(s).** For example, if
   you’re adding a new feature to foo the bars, do something like the
