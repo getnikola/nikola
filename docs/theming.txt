@@ -204,7 +204,7 @@ Variables available in templates
 --------------------------------
 
 The list of variables available in templates is maintained in a separate
-document: `Template variables <template-variables.html>`_
+document: `Template variables <https://getnikola.com/template-variables.html>`_
 
 Customizing themes to user color preference and section colors
 --------------------------------------------------------------
