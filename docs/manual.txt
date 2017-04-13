@@ -1948,33 +1948,53 @@ Math
 
 Nikola supports math input via MathJax (by default) or KaTeX.  It is activated
 via the math roles and directives of reStructuredText and the usual LaTeX
-delimiters (backslash-parentheses, backslash-brackets) for other input formats.
+delimiters for other input formats.
+
+Configuration
+-------------
+
+Nikola uses MathJax by default. If you want to use KaTeX (faster and prettier,
+but may not support every feature yet), set ``USE_KATEX = True`` in
+``conf.py``.
 
 To use mathematics in a post, you **must** add the ``mathjax`` tag, no matter
 which renderer you are using.  (Exception: posts that are Jupyter Notebooks are
 automatically marked as math)
 
-We **DO NOT** support the old, deprecated and error-prone ``$inline$``
-delimiters by default. If you want to use them, please add them manually,
-like this:
+By default, Nikola will accept ``\(.\)`` for inline math; ``\[.\]`` and
+``$$.$$`` for display math. If you want to use the old ``$..$`` syntax as well
+(which may conflict with running text!), you need to use special config for
+your renderer:
 
 .. code:: python
 
-    MATHJAX_CONFIG = """
-    <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ['$','$'], ["\\\(","\\\)"] ],
-            displayMath: [ ['$$','$$'], ["\\\[","\\\]"] ],
-            processEscapes: true
-        },
-        displayAlign: 'left', // Change this to 'center' to center equations.
-        "HTML-CSS": {
-            styles: {'.MathJax_Display': {"margin": 0}}
-        }
-    });
-    </script>
-    """
+   MATHJAX_CONFIG = """
+   <script type="text/x-mathjax-config">
+   MathJax.Hub.Config({
+       tex2jax: {
+           inlineMath: [ ['$','$'], ["\\\(","\\\)"] ],
+           displayMath: [ ['$$','$$'], ["\\\[","\\\]"] ],
+           processEscapes: true
+       },
+       displayAlign: 'center', // Change this to 'left' if you want left-aligned equations.
+       "HTML-CSS": {
+           styles: {'.MathJax_Display': {"margin": 0}}
+       }
+   });
+   </script>
+   """
+
+   KATEX_AUTO_RENDER = """
+   delimiters: [
+       {left: "$$", right: "$$", display: true},
+       {left: "\\\[", right: "\\\]", display: true},
+       {left: "$", right: "$", display: false},
+       {left: "\\\(", right: "\\\)", display: false}
+   ]
+   """
+
+Inline usage
+------------
 
 Inline mathematics are produced using the reST `math` **role** or the LaTeX
 backslash-parentheses delimiters:
@@ -1996,6 +2016,9 @@ In HTML and other input formats:
 Note that some input formats (including Markdown) require using **double
 backslashes** in the delimiters (``\\(inline math\\)``). Please check your
 output first before reporting bugs.
+
+Display usage
+-------------
 
 Display mathematics are produced using the reST `math` **directive** or the
 LaTeX backslash-brackets delimiters:

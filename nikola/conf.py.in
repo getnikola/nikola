@@ -953,9 +953,8 @@ PRETTY_URLS = ${PRETTY_URLS}
 # Do you want a add a Mathjax config file?
 # MATHJAX_CONFIG = ""
 
-# If you are using Jupyter Notebooks, or want support for the $.$
-# syntax (not recommended due to confusion with running text!), just add this
-# one:
+# If you want support for the $.$ syntax (wihch may conflict with running
+# text!), just use this config:
 # MATHJAX_CONFIG = """
 # <script type="text/x-mathjax-config">
 # MathJax.Hub.Config({
@@ -964,7 +963,7 @@ PRETTY_URLS = ${PRETTY_URLS}
 #         displayMath: [ ['$$','$$'], ["\\\[","\\\]"] ],
 #         processEscapes: true
 #     },
-#     displayAlign: 'left', // Change this to 'center' to center equations.
+#     displayAlign: 'center', // Change this to 'left' if you want left-aligned equations.
 #     "HTML-CSS": {
 #         styles: {'.MathJax_Display': {"margin": 0}}
 #     }
@@ -972,12 +971,12 @@ PRETTY_URLS = ${PRETTY_URLS}
 # </script>
 # """
 
-# Want to use KaTeX instead of MathJax? While KaTeX is less featureful,
-# it's faster and the output looks better.
+# Want to use KaTeX instead of MathJax? While KaTeX may not support every
+# feature yet, it's faster and the output looks better.
 # USE_KATEX = False
 
-# If you want to use the old (buggy) inline math $.$ with KaTeX, then
-# you might want to use this config.
+# KaTeX auto-render settings. If you want support for the $.$ syntax (wihch may
+# conflict with running text!), just use this config:
 # KATEX_AUTO_RENDER = """
 # delimiters: [
 #     {left: "$$", right: "$$", display: true},
