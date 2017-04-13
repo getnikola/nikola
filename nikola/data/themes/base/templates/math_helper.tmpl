@@ -1,0 +1,58 @@
+<%def name="math_scripts()">
+    %if use_katex:
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha256-ExtbCSBuYA7kq1Pz362ibde9nnsHYPt6JxuxYeZbU+c=" crossorigin="anonymous"></script>
+        % if katex_auto_render:
+            <script>
+                renderMathInElement(document.body,
+                    {
+                        ${katex_auto_render}
+                    }
+                );
+            </script>
+        % else:
+            <script>
+                renderMathInElement(document.body);
+            </script>
+        % endif
+    %else:
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-yYfngbEKv4RENfGDvNUqJTqGFcKf31NJEe9OTnnMH3Y=" crossorigin="anonymous"></script>
+        % if mathjax_config:
+        ${mathjax_config}
+        % else:
+        <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
+        </script>
+        % endif
+    %endif
+</%def>
+
+<%def name="math_styles()">
+    % if use_katex:
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+    % endif
+</%def>
+
+<%def name="math_scripts_ifpost(post)">
+    %if post.is_mathjax:
+    ${math_scripts()}
+    %endif
+</%def>
+
+<%def name="math_scripts_ifposts(posts)">
+    %if any(post.is_mathjax for post in posts):
+    ${math_scripts()}
+    %endif
+</%def>
+
+<%def name="math_styles_ifpost(post)">
+    %if post.is_mathjax:
+    ${math_styles()}
+    %endif
+</%def>
+
+<%def name="math_styles_ifposts(posts)">
+    %if any(post.is_mathjax for post in posts):
+    ${math_styles()}
+    %endif
+</%def>

@@ -828,6 +828,11 @@ class Nikola(object):
             utils.LOGGER.warn('The moot comment system has been renamed to muut by the upstream.  Setting COMMENT_SYSTEM to "muut".')
             self.config['COMMENT_SYSTEM'] = 'muut'
 
+        # Detect manually added KaTeX CSS (#2715/#2717)
+        # TODO: remove on v8
+        if any('katex.min.css' in v for v in self.config['EXTRA_HEAD_DATA'].values.values()):
+            utils.LOGGER.warn("KaTeX CSS is now added by Nikola whenever needed (if your theme supports it). Please remove katex.min.css from EXTRA_HEAD_DATA in conf.py.")
+
         # Handle old plugin names (from before merging the taxonomy PR #2535)
         for old_plugin_name, new_plugin_names in TAXONOMY_COMPATIBILITY_PLUGIN_NAME_MAP.items():
             if old_plugin_name in self.config['DISABLED_PLUGINS']:
