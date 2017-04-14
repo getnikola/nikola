@@ -15,6 +15,7 @@ visible in this version of Nikola docs.
    creating-a-site
    Creating a Theme <creating-a-theme>
    theming
+   template-variables
    extending
    internals
    social_buttons
