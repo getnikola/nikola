@@ -46,7 +46,7 @@ Name                                Type                                Descript
 ``blog_title``                      TranslatableSetting<str>            ``BLOG_TITLE`` setting
 ``blog_url``                        str                                 ``SITE_URL`` setting
 ``body_end``                        TranslatableSetting<str>            ``BODY_END`` setting
-``colorbox_locales``                defaultdict<str, str>               dictionary of avilable Colorbox locales
+``colorbox_locales``                defaultdict<str, str>               dictionary of available Colorbox locales
 ``colorize_str_from_base_color``    function                            ``utils.colorize_str_from_base_color`` function
 ``color_hsl_adjust_hex``            function                            ``utils.color_hsl_adjust_hex`` function
 ``comment_system_id``               str                                 ``COMMENT_SYSTEM_ID`` setting
@@ -76,7 +76,7 @@ Name                                Type                                Descript
 ``mathjax_config``                  str                                 ``MATHJAX_CONFIG`` setting
 ``messages``                        dict<dict<str, str>>                translated messages (``{language: {english: translated}}``)
 ``meta_generator_tag``              bool                                ``META_GENERATOR_TAG`` setting
-``momentjs_locales``                defaultdict<str, str>               dictionary of avilable Moment.js locales
+``momentjs_locales``                defaultdict<str, str>               dictionary of available Moment.js locales
 ``navigation_links``                TranslatableSetting                 ``NAVIGATION_LINKS`` setting
 ``needs_ipython_css``               bool                                whether or not IPython CSS is needed by this site
 ``posts_sections``                  bool                                ``POSTS_SECTIONS`` setting
@@ -233,10 +233,10 @@ Hierarchy-related variables are available if and only if ``has_hierarchy`` is Tr
 Name                                                                Type    Description
 ==================================================================  ======  ==============================================================================================================================================================================
 ``<overview_page_variable_name>``                                   str     List of classifications
-``<overview_page_items_variable_name>``                             list    List of items **(name, link)**
-``<overview_page_items_variable_name + "_with_postcount">``         list    List of items **(name, link, number of posts)**
-``<overview_page_hierarchy_variable_name>``                         list?   List of hierarchies **(name, full name, path, link, indent levels, indent to change before, indent to change after)**
-``<overview_page_hierarchy_variable_name + "_with_postcount">``     list?   List of hierarchies, with added counts **(name, full name, path, link, indent levels, indent to change before, indent to change after, number of children, number of posts)**
+``<overview_page_items_variable_name>``                             list    List of items *(name, link)*
+``<overview_page_items_variable_name + "_with_postcount">``         list    List of items *(name, link, number of posts)*
+``<overview_page_hierarchy_variable_name>``                         list?   List of hierarchies *(name, full name, path, link, indent levels, indent to change before, indent to change after)*
+``<overview_page_hierarchy_variable_name + "_with_postcount">``     list?   List of hierarchies, with added counts *(name, full name, path, link, indent levels, indent to change before, indent to change after, number of children, number of posts)*
 ``has_hierarchy``                                                   bool    Value of ``has_hierarchy`` for the taxonomy
 ``permalink``                                                       str     Permanent link to page
 ==================================================================  ======  ==============================================================================================================================================================================
@@ -354,7 +354,7 @@ Name                    Type        Description
 ``enable_comments``     bool        Whether or not comments are enabled in galleries
 ``folders``             list        List of folders (contains *path, title* tuples)
 ``permalink``           str         Permanent link to this page
-``photo_array``         list        Photo array (contains dicts with image data: url, url_thumb, title, size{w, h})
+``photo_array``         list        Photo array (contains dicts with image data: *url, url_thumb, title, size{w, h}*)
 ``photo_array_json``    str         Photo array in JSON format
 ``post``                Post?       The Post object for this gallery
 ``thumbnail_size``      int         ``THUMBNAIL_SIZE`` setting
@@ -421,7 +421,7 @@ Name                Type        Description
 Variables available in post lists
 ---------------------------------
 
-*The global context is not available in post lists.*
+*The global context is NOT available in post lists.*
 
 .. class:: table table-bordered table-striped
 
