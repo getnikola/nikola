@@ -19,7 +19,7 @@ Theming Nikola
 .. class:: lead
 
 This document is a reference about themes. If you want a tutorial, please read
-`Creating a Theme <creating-a-theme.html>`_
+`Creating a Theme <creating-a-theme.html>`_.
 
 The Structure
 -------------
@@ -158,7 +158,7 @@ These are the templates that come with the included themes:
       + ``title``: The title of the image.
       + ``size``: A dict containing ``w`` and ``h``, the real size of the thumbnail.
 
-   * ``photo_array_json``: a JSON dump of photo_array, used in the bootstrap theme by flowr.js
+    * ``photo_array_json``: a JSON dump of photo_array, used in the bootstrap theme by flowr.js
 
 ``list.tmpl``
     Template used to display generic lists of links, which it gets in ``items``,
@@ -199,6 +199,12 @@ require whatever data you want.
 
 Also, you can specify a custom template to be used by a post or page via the ``template`` metadata,
 and custom templates can be added in the ``templates/`` folder of your site.
+
+Variables available in templates
+--------------------------------
+
+The list of variables available in templates is maintained in a separate
+document: `Template variables <https://getnikola.com/template-variables.html>`_
 
 Customizing themes to user color preference and section colors
 --------------------------------------------------------------

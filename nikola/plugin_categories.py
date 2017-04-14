@@ -560,7 +560,7 @@ class Taxonomy(BasePlugin):
         Whether to show the posts for one classification as an index or
         as a post list.
 
-    subcategories_list_template = "taxonomy_list":
+    subcategories_list_template = "taxonomy_list.tmpl":
         The template to use for the subcategories list when
         show_list_as_subcategories_list is True.
 
@@ -617,7 +617,7 @@ class Taxonomy(BasePlugin):
     include_posts_into_hierarchy_root = False
     show_list_as_subcategories_list = False
     show_list_as_index = False
-    subcategories_list_template = "taxonomy_list"
+    subcategories_list_template = "taxonomy_list.tmpl"
     generate_atom_feeds_for_post_lists = False
     template_for_single_list = "tagindex.tmpl"
     template_for_classification_overview = "list.tmpl"
