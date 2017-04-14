@@ -80,7 +80,8 @@ Name                                Type                                Descript
 ``navigation_links``                TranslatableSetting                 ``NAVIGATION_LINKS`` setting
 ``needs_ipython_css``               bool                                whether or not IPython CSS is needed by this site
 ``posts_sections``                  bool                                ``POSTS_SECTIONS`` setting
-``posts_section_are_indexes``       bool                                ``POSTS_SECTION_ARE_INDEXES`` setting
+``posts_section_are_indexes``       bool                                ``POSTS_SECTIONS_ARE_INDEXES`` setting
+``posts_sections_are_indexes``      bool                                ``POSTS_SECTIONS_ARE_INDEXES`` setting
 ``posts_section_colors``            TranslatableSetting                 ``POSTS_SECTION_COLORS`` setting
 ``posts_section_descriptions``      Tss                                 ``POSTS_SECTION_DESCRIPTIONS`` setting
 ``posts_section_from_meta``         bool                                ``POSTS_SECTION_FROM_META`` setting

@@ -548,7 +548,7 @@ class Nikola(object):
             'POSTS': (("posts/*.txt", "posts", "post.tmpl"),),
             'POSTS_SECTIONS': True,
             'POSTS_SECTION_COLORS': {},
-            'POSTS_SECTION_ARE_INDEXES': True,
+            'POSTS_SECTIONS_ARE_INDEXES': True,
             'POSTS_SECTION_DESCRIPTIONS': "",
             'POSTS_SECTION_FROM_META': False,
             'POSTS_SECTION_NAME': "",
@@ -941,6 +941,10 @@ class Nikola(object):
             utils.LOGGER.warn('The STORY_INDEX option is deprecated, use PAGE_INDEX instead.')
             self.config['PAGE_INDEX'] = config['STORY_INDEX']
 
+        if 'POSTS_SECTION_ARE_INDEXES' in config:
+            utils.LOGGER.warn('The POSTS_SECTION_ARE_INDEXES option is deprecated, use POSTS_SECTIONS_ARE_INDEXES instead.')
+            self.config['POSTS_SECTIONS_ARE_INDEXES'] = config['POSTS_SECTION_ARE_INDEXES']
+
         # Configure filters
         for actions in self.config['FILTERS'].values():
             for i, f in enumerate(actions):
@@ -1254,7 +1258,8 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['hidden_authors'] = self.config.get('HIDDEN_AUTHORS')
         self._GLOBAL_CONTEXT['url_replacer'] = self.url_replacer
         self._GLOBAL_CONTEXT['posts_sections'] = self.config.get('POSTS_SECTIONS')
-        self._GLOBAL_CONTEXT['posts_section_are_indexes'] = self.config.get('POSTS_SECTION_ARE_INDEXES')
+        self._GLOBAL_CONTEXT['posts_section_are_indexes'] = self.config.get('POSTS_SECTIONS_ARE_INDEXES')
+        self._GLOBAL_CONTEXT['posts_sections_are_indexes'] = self.config.get('POSTS_SECTIONS_ARE_INDEXES')
         self._GLOBAL_CONTEXT['posts_section_colors'] = self.config.get('POSTS_SECTION_COLORS')
         self._GLOBAL_CONTEXT['posts_section_descriptions'] = self.config.get('POSTS_SECTION_DESCRIPTIONS')
         self._GLOBAL_CONTEXT['posts_section_from_meta'] = self.config.get('POSTS_SECTION_FROM_META')
