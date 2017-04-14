@@ -189,37 +189,57 @@ Variable names enclosed in ``<>`` are dependent on the taxonomy.
 
 .. class:: table table-bordered table-striped
 
-==============  ==========================================  ===================
-Taxonomy        Variable                                    Value
-==============  ==========================================  ===================
-``archive``     ``overview_page_variable_name``             ``archive``
-``authors``     ``overview_page_variable_name``             ``authors``
-``categories``  ``overview_page_variable_name``             ``categories``
-``categories``  ``overview_page_items_variable_name``       ``cat_items``
-``categories``  ``overview_page_hierarchy_variable_name``   ``cat_hierarchy``
-``indexes``     ``overview_page_variable_name``             unavailable (None)
-``page_index``  ``overview_page_variable_name``             ``page_folder``
-``sections``    ``overview_page_variable_name``             ``sections``
-``tags``        ``overview_page_variable_name``             ``tags``
-``tags``        ``overview_page_items_variable_name``       ``items``
-==============  ==========================================  ===================
+======================  ==========================================  ===================
+Taxonomy                Variable                                    Value
+======================  ==========================================  ===================
+``archive``             ``overview_page_variable_name``             ``archive``
+``author``              ``overview_page_variable_name``             ``authors``
+``category``            ``overview_page_variable_name``             ``categories``
+``category``            ``overview_page_items_variable_name``       ``cat_items``
+``category``            ``overview_page_hierarchy_variable_name``   ``cat_hierarchy``
+``index``               ``overview_page_variable_name``             unavailable (None)
+``page_index_folder``   ``overview_page_variable_name``             ``page_folder``
+``section_index``       ``overview_page_variable_name``             ``sections``
+``tag``                 ``overview_page_variable_name``             ``tags``
+``tag``                 ``overview_page_items_variable_name``       ``items``
+======================  ==========================================  ===================
+
+Templates and settings used by taxonomies
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. class:: table table-bordered table-striped
+
+======================  ==================  ==================================  ======================================  ==============================================  ======================================  ==============================  ==============================
+Taxonomy                Has hierarchy       List (one classification) template  Index (one classification) template     Overview (list of classifications) template     Subcategories list template             List is an index                Show as list of subcategories
+======================  ==================  ==================================  ======================================  ==============================================  ======================================  ==============================  ==============================
+(default settings)      no                  tagindex.tmpl                       tagindex.tmpl                           list.tmpl                                       taxonomy_list.tmpl (does not exist)     no                              no
+``archive``             yes (0-3 levels)    list_post.tmpl                      archiveindex.tmpl                       list.tmpl                                       list.tmpl                               ``ARCHIVES_ARE_INDEXES``        ``not CREATE_FULL_ARCHIVES``
+``author``              no                  author.tmpl                         authorindex.tmpl                        authors.tmpl                                    n/a                                     ``AUTHOR_PAGES_ARE_INDEXES``    no
+``category``            yes                 tag.tmpl                            tagindex.tmpl                           tags.tmpl (with tags)                           n/a                                     ``CATEGORY_PAGES_ARE_INDEXES``  n/a
+``index``               no                  n/a                                 index.tmpl                              n/a                                             n/a                                     yes                             no
+``page_index_folder``   yes                 list.tmpl                           n/a                                     n/a                                             n/a                                     no                              no
+``section_index``       no                  list.tmpl                           sectionindex.tmpl                       n/a                                             n/a                                     ``POSTS_SECTIONS_ARE_INDEXES``  no
+``tag``                 no                  tag.tmpl                            tagindex.tmpl                           tags.tmpl (with categories)                     n/a                                     ``TAG_PAGES_ARE_INDEXES``       no
+======================  ==================  ==================================  ======================================  ==============================================  ======================================  ==============================  ==============================
 
 Classification overviews
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+Hierarchy-related variables are available if and only if ``has_hierarchy`` is True.
+
 .. class:: table table-bordered table-striped
 
-==================================================================  ======  ============================================
+==================================================================  ======  ==============================================================================================================================================================================
 Name                                                                Type    Description
-==================================================================  ======  ============================================
+==================================================================  ======  ==============================================================================================================================================================================
 ``<overview_page_variable_name>``                                   str     List of classifications
-``<overview_page_items_variable_name>``                             str     List of items **(name, link)**
-``<overview_page_items_variable_name + "_with_postcount">``         str     List of items **(name, link, count)**
-``<overview_page_hierarchy_variable_name>``                         str?    List of hierarchies
-``<overview_page_hierarchy_variable_name + "_with_postcount">``     str     List of hierarchies, with added counts
+``<overview_page_items_variable_name>``                             list    List of items **(name, link)**
+``<overview_page_items_variable_name + "_with_postcount">``         list    List of items **(name, link, number of posts)**
+``<overview_page_hierarchy_variable_name>``                         list?   List of hierarchies **(name, full name, path, link, indent levels, indent to change before, indent to change after)**
+``<overview_page_hierarchy_variable_name + "_with_postcount">``     list?   List of hierarchies, with added counts **(name, full name, path, link, indent levels, indent to change before, indent to change after, number of children, number of posts)**
 ``has_hierarchy``                                                   bool    Value of ``has_hierarchy`` for the taxonomy
 ``permalink``                                                       str     Permanent link to page
-==================================================================  ======  ============================================
+==================================================================  ======  ==============================================================================================================================================================================
 
 Classification pages (lists)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -246,6 +266,29 @@ Name            Type    Description
 ``items``       list?   List of items
 ``permalink``   str     Permanent link to page
 ==============  ======  =======================
+
+Hierarchical lists
+~~~~~~~~~~~~~~~~~~
+
+The indenting information can be used to render the items as a tree. The values have the following meanings:
+
+ * ``indent levels`` is a list of pairs ``(current_i, count_i)`` giving the current position (``0``, ..., ``count_i-1``) and maximum (``count_i``) in the hierarchy level ``i``;
+ * ``indent to change before`` is the difference of hierarchy levels between the previous and the current item; positive values indicate that the current item is indented further in and can be used to open HTML tags before the item;
+ * ``indent to change after`` is the difference of hierarchy levels between the current and the next item; negative values indicate that the current item is indented further in and can be used to close HTML tags after the item.
+
+Example:
+
+.. code:: text
+
+   +--- levels:[(0,3)], before:1, after:0
+   +-+- levels:[(1,3)], before:0, after:1
+   | +--- levels:[(1,3), (0,2)], before:1, after:0
+   | +-+- levels:[(1,3), (1,2)], before:0, after:1
+   |   +--- levels:[(1,3), (1,2), (0, 1)], before:1, after:-2
+   +-+- levels:[(2,3)], before:-2, after:1
+     +- levels:[(2,3), (0,1)], before:1, after:-2
+
+See ``tags.tmpl`` in the base themes for examples on how to render a tree as nested unordered lists in HTML.
 
 Variables available in archives
 -------------------------------
@@ -356,6 +399,8 @@ Name            Type    Description
 ``items``       list    Tags *(name, link)*
 ``cat_items``   list    Categories *(name, full name, path, link, indent levels, indent to change before, indent to change after)*
 ==============  ======  ===========================================================================================================
+
+For more details about hierarchies, see `Hierarchical lists`_
 
 Variables available in shortcodes
 ---------------------------------
