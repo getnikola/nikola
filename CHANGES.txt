@@ -24,6 +24,7 @@ Features
 Bugfixes
 --------
 
+* Fixes post scanner plugin order (Issue #2720)
 * Rename ``POSTS_SECTION_ARE_INDEXES`` to ``POSTS_SECTIONS_ARE_INDEXES``
 * Make date ranges work in shortcode-based post lists (Issue #2690)
 * Read data files only if Nikola configuration exists (Issue #2708)

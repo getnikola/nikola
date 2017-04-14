@@ -34,6 +34,7 @@ from pkg_resources import resource_filename
 import datetime
 import functools
 import locale
+import operator
 import os
 import json
 import sys
@@ -2098,7 +2099,7 @@ class Nikola(object):
         self.timeline = []
         self.pages = []
 
-        for p in self.plugin_manager.getPluginsOfCategory('PostScanner'):
+        for p in sorted(self.plugin_manager.getPluginsOfCategory('PostScanner'), key=operator.attrgetter('name')):
             timeline = p.plugin_object.scan()
             # FIXME: can there be conflicts here?
             self.timeline.extend(timeline)
