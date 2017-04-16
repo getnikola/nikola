@@ -167,7 +167,7 @@ def closure_compiler(infile, executable='closure-compiler'):
 
 
 @_ConfigurableFilter(executable='OPTIPNG_EXECUTABLE')
-def optipng(infile, executable='optiong'):
+def optipng(infile, executable='optipng'):
     """Run optipng on a file."""
     return runinplace("{} -preserve -o2 -quiet %1".format(executable), infile)
 
