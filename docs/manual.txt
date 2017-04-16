@@ -1698,7 +1698,7 @@ you can embed the same in your posts with the following reST directive:
 
 .. code:: rest
 
-    ..image:: /images/tesla.jpg
+    .. image:: /images/tesla.jpg
 
 Which is equivalent to the following HTML code:
 
