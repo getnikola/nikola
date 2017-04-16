@@ -103,8 +103,9 @@ class Galleries(Task, ImageProcessor):
         self.find_galleries()
         # Create self.gallery_links
         self.create_galleries_paths()
-
-        return super(Galleries, self).set_site(site)
+        r = super(Galleries, self).set_site(site)
+        self.inject_dependency('posts', 'render_galleries')
+        return r
 
     def _find_gallery_path(self, name):
         # The system using self.proper_gallery_links and self.improper_gallery_links

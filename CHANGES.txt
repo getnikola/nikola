@@ -826,6 +826,7 @@ Features
 Bugfixes
 --------
 
+* Ensure galleries are built after the posts task (Issue #1251)
 * Handle strange URLs, like ed2k:// (Issue #1695)
 * Fix very old metadata format support (Issue #1689)
 
