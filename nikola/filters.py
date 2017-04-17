@@ -264,7 +264,8 @@ def typogrify(data):
 
     data = _normalize_html(data)
     data = typo.amp(data)
-    data = typo.widont(data)
+    # Disabled because it breaks the wrapping of headings, see https://github.com/getnikola/nikola/issues/1465
+    # data = typo.widont(data)
     data = typo.smartypants(data)
     # Disabled because of typogrify bug where it breaks <title>
     # data = typo.caps(data)
