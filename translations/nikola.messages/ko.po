@@ -29,7 +29,7 @@ msgstr "%s에 대한 또다른 포스트"
 #. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "LANGUAGE"
-msgstr "영어"
+msgstr "한국어"
 
 msgid "Tags"
 msgstr "태그"
