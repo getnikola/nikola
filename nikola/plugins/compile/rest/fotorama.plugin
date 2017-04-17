@@ -1,0 +1,10 @@
+[Core]
+Name = rest_fotorama
+Module = fotorama
+
+[Documentation]
+Author = Manuel Kaufmann
+Version = 0.1
+Website = http://getnikola.com
+Description = Fotorama directive to display a gallery using http://fotorama.io jQuery plugin
+
