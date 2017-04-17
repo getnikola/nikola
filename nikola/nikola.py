@@ -595,8 +595,6 @@ class Nikola(object):
             'TEMPLATE_FILTERS': {},
             'THEME': 'bootstrap3',
             'THEME_COLOR': '#5670d4',  # light "corporate blue"
-            'THEME_REVEAL_CONFIG_SUBTHEME': 'sky',
-            'THEME_REVEAL_CONFIG_TRANSITION': 'cube',
             'THUMBNAIL_SIZE': 180,
             'UNSLUGIFY_TITLES': False,  # WARNING: conf.py.in overrides this with True for backwards compatibility
             'URL_TYPE': 'rel_path',
@@ -946,6 +944,14 @@ class Nikola(object):
             utils.LOGGER.warn('The POSTS_SECTION_ARE_INDEXES option is deprecated, use POSTS_SECTIONS_ARE_INDEXES instead.')
             self.config['POSTS_SECTIONS_ARE_INDEXES'] = config['POSTS_SECTION_ARE_INDEXES']
 
+        # TODO: remove in v8, or earlier
+        if ('THEME_REVEAL_CONFIG_SUBTHEME' in config or 'THEME_REVEAL_CONFIG_TRANSITION' in config or
+                (self.config['THEME'] in ('reveal', 'reveal-jinja') and
+                 ('subtheme' not in config.GLOBAL_CONTEXT or 'transition' not in config.GLOBAL_CONTEXT))):
+            utils.LOGGER.warn('The THEME_REVEAL_CONFIG_* settings are deprecated. Use `subtheme` and `transition` in GLOBAL_CONTEXT instead.')
+            self._GLOBAL_CONTEXT['subtheme'] = config.get('THEME_REVEAL_CONFIG_SUBTHEME', 'sky')
+            self._GLOBAL_CONTEXT['transition'] = config.get('THEME_REVEAL_CONFIG_TRANSITION', 'cube')
+
         # Configure filters
         for actions in self.config['FILTERS'].values():
             for i, f in enumerate(actions):
@@ -1230,8 +1236,6 @@ class Nikola(object):
             'MATHJAX_CONFIG')
         self._GLOBAL_CONTEXT['use_katex'] = self.config.get('USE_KATEX')
         self._GLOBAL_CONTEXT['katex_auto_render'] = self.config.get('KATEX_AUTO_RENDER')
-        self._GLOBAL_CONTEXT['subtheme'] = self.config.get('THEME_REVEAL_CONFIG_SUBTHEME')
-        self._GLOBAL_CONTEXT['transition'] = self.config.get('THEME_REVEAL_CONFIG_TRANSITION')
         self._GLOBAL_CONTEXT['content_footer'] = self.config.get(
             'CONTENT_FOOTER')
         self._GLOBAL_CONTEXT['generate_atom'] = self.config.get('GENERATE_ATOM')
