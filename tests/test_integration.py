@@ -580,7 +580,6 @@ class SectionPageCollisionTest(EmptyBuildTest):
 
     def test_section_index_avoidance(self):
         """Test section index."""
-        pass
         sec1 = os.path.join(self.target_dir, "output", "sec1")
         foo = os.path.join(self.target_dir, "output", "sec1", "post0")
 
