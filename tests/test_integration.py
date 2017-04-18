@@ -572,7 +572,7 @@ class SectionPageCollisionTest(EmptyBuildTest):
             outf.write(".. title: Page 0\n.. slug: sec1\n\nThis is Page 0.\n")
 
         with io.open(os.path.join(sec1, 'foo.txt'), "w+", encoding="utf8") as outf:
-            outf.write(".. title: Post 0\n.. slug: post0\n\nThis is Post 0.\n")
+            outf.write(".. title: Post 0\n.. slug: post0\n.. date: 2013-03-06 19:08:15\n\nThis is Post 0.\n")
 
     def _make_output_path(self, dir, name):
         """Make a file path to the output."""
