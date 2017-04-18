@@ -582,7 +582,7 @@ class SectionPageCollisionTest(EmptyBuildTest):
         """Test section index."""
         pass
         sec1 = os.path.join(self.target_dir, "output", "sec1")
-        foo = os.path.join(self.target_dir, "output", "sec1", "foo")
+        foo = os.path.join(self.target_dir, "output", "sec1", "post0")
 
         # Do all files exist?
         self.assertTrue(os.path.isfile(self._make_output_path(sec1, 'index')))
