@@ -545,6 +545,56 @@ class RedirectionsTest3(TestCheck):
             outf.write("foo")
 
 
+class SectionPageCollisionTest(EmptyBuildTest):
+    """Test if section indexes avoid pages."""
+
+    @classmethod
+    def patch_site(self):
+        """Enable post sections."""
+        conf_path = os.path.join(self.target_dir, "conf.py")
+        with io.open(conf_path, "a", encoding="utf8") as outf:
+            outf.write("""\n\nPOSTS_SECTIONS = True\nPOSTS_SECTIONS_ARE_INDEXES = True\nPRETTY_URLS = True\nPOSTS = (('posts/*.txt', '', 'post.tmpl'),)\nPAGES = (('pages/*.txt', '', 'story.tmpl'),)\n\n""")
+
+    @classmethod
+    def fill_site(self):
+        """Add subdirectories and create a post in section "sec1" and a page with the same URL as the section index."""
+        self.init_command.create_empty_site(self.target_dir)
+        self.init_command.create_configuration(self.target_dir)
+
+        pages = os.path.join(self.target_dir, "pages")
+        posts = os.path.join(self.target_dir, "posts")
+        sec1 = os.path.join(posts, "sec1")
+
+        nikola.utils.makedirs(pages)
+        nikola.utils.makedirs(sec1)
+
+        with io.open(os.path.join(pages, 'sec1.txt'), "w+", encoding="utf8") as outf:
+            outf.write(".. title: Page 0\n.. slug: sec1\n\nThis is Page 0.\n")
+
+        with io.open(os.path.join(sec1, 'foo.txt'), "w+", encoding="utf8") as outf:
+            outf.write(".. title: Post 0\n.. slug: post0\n\nThis is Post 0.\n")
+
+    def _make_output_path(self, dir, name):
+        """Make a file path to the output."""
+        return os.path.join(dir, name + '.html')
+
+    def test_section_index_avoidance(self):
+        """Test section index."""
+        pass
+        sec1 = os.path.join(self.target_dir, "output", "sec1")
+        foo = os.path.join(self.target_dir, "output", "sec1", "foo")
+
+        # Do all files exist?
+        self.assertTrue(os.path.isfile(self._make_output_path(sec1, 'index')))
+        self.assertTrue(os.path.isfile(self._make_output_path(foo, 'index')))
+
+        # Is it really a page?
+        with io.open(os.path.join(sec1, 'index.html'), 'r', encoding='utf-8') as fh:
+            page = fh.read()
+        self.assertTrue('This is Page 0' not in page)
+        self.assertTrue('This is Post 0' in page)
+
+
 class PageIndexTest(EmptyBuildTest):
     """Test if PAGE_INDEX works, with PRETTY_URLS disabled."""
 
