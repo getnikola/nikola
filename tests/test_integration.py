@@ -590,8 +590,8 @@ class SectionPageCollisionTest(EmptyBuildTest):
         # Is it really a page?
         with io.open(os.path.join(sec1, 'index.html'), 'r', encoding='utf-8') as fh:
             page = fh.read()
-        self.assertTrue('This is Page 0' not in page)
-        self.assertTrue('This is Post 0' in page)
+        self.assertTrue('This is Page 0' in page)
+        self.assertTrue('This is Post 0' not in page)
 
 
 class PageIndexTest(EmptyBuildTest):
