@@ -381,6 +381,7 @@ Bugfixes
 * Fix a format string in ``nikola check`` (Issue #2267)
 * Don't crash wordpress importer when posts are "empty" (Issue #2263)
 * Don't put untranslated and nonexistant posts in sitemap (Issue #2289)
+* Mark as failed tasks when filters fail (Issue #2169)
 
 New in v7.7.6
 =============

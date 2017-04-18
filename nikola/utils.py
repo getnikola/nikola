@@ -936,7 +936,7 @@ def apply_filters(task, filters, skip_ext=None):
                 def unlessLink(action, target):
                     if not os.path.islink(target):
                         if isinstance(action, Callable):
-                            action(target)
+                            return action(target)
                         else:
                             subprocess.check_call(action % target, shell=True)
 

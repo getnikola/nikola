@@ -70,8 +70,11 @@ def apply_to_binary_file(f):
         with open(fname, 'rb') as inf:
             data = inf.read()
         data = f(data)
-        with open(fname, 'wb+') as outf:
-            outf.write(data)
+        if data is not False:
+            with open(fname, 'wb+') as outf:
+                outf.write(data)
+        else:
+            return False
 
     return f_in_file
 
@@ -88,8 +91,11 @@ def apply_to_text_file(f):
         with io.open(fname, 'r', encoding='utf-8') as inf:
             data = inf.read()
         data = f(data)
-        with io.open(fname, 'w+', encoding='utf-8') as outf:
-            outf.write(data)
+        if data is not False:
+            with io.open(fname, 'w+', encoding='utf-8') as outf:
+                outf.write(data)
+        else:
+            return False
 
     return f_in_file
 
@@ -343,11 +349,11 @@ def cssminify(data):
         response = requests.post(url, data=_data)
         if response.status_code != 200:
             LOGGER.error("can't use cssminifier.com: HTTP status {}", response.status_code)
-            return data
+            return False
         return response.text
     except Exception as exc:
         LOGGER.error("can't use cssminifier.com: {}", exc)
-        return data
+        return False
 
 
 @apply_to_text_file
