@@ -529,7 +529,7 @@ class CustomEncoder(json.JSONEncoder):
     """Custom JSON encoder."""
 
     def default(self, obj):
-        """Default encoding handler."""
+        """Create default encoding handler."""
         try:
             return super(CustomEncoder, self).default(obj)
         except TypeError:
@@ -1671,7 +1671,7 @@ def adjust_name_for_index_link(name, i, displayed_i, lang, site, force_addition=
 
 
 def create_redirect(src, dst):
-    """"Create a redirection."""
+    """Create a redirection."""
     makedirs(os.path.dirname(src))
     with io.open(src, "w+", encoding="utf8") as fd:
         fd.write('<!DOCTYPE html>\n<head>\n<meta charset="utf-8">\n'

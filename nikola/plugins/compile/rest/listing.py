@@ -204,5 +204,8 @@ class Listing(Include):
         return super(Listing, self).run()
 
     def assert_has_content(self):
-        """Listing has no content, override check from superclass."""
+        """Override check from superclass with nothing.
+
+        Listing has no content, override check from superclass.
+        """
         pass
