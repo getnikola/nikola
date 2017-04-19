@@ -203,7 +203,7 @@ class NikolaReader(docutils.readers.standalone.Reader):
 
 def shortcode_role(name, rawtext, text, lineno, inliner,
                    options={}, content=[]):
-    """A shortcode role that passes through raw inline HTML."""
+    """Return a shortcode role that passes through raw inline HTML."""
     return [docutils.nodes.raw('', text, format='html')], []
 
 
@@ -270,7 +270,7 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
 
         publish_parts(..., settings_overrides={'input_encoding': 'unicode'})
 
-    Parameters: see `publish_programmatically`.
+    For a description of the parameters, see `publish_programmatically`.
 
     WARNING: `reader` should be None (or NikolaReader()) if you want Nikola to report
              reStructuredText syntax errors.

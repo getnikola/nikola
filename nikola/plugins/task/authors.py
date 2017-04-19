@@ -94,11 +94,11 @@ link://author_rss/joe => /authors/joe.xml""",
         return author
 
     def get_overview_path(self, lang, dest_type='page'):
-        """A path handler for the list of all classifications."""
+        """Return a path for the list of all classifications."""
         return [self.site.config['AUTHOR_PATH'](lang)], 'always'
 
     def get_path(self, author, lang, dest_type='page'):
-        """A path handler for the given classification."""
+        """Return a path for the given classification."""
         if self.site.config['SLUG_AUTHOR_PATH']:
             slug = utils.slugify(author, lang)
         else:

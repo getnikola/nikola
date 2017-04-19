@@ -98,7 +98,7 @@ link://category_rss/dogs => /categories/dogs.xml""",
         return classification[-1] if classification else ''
 
     def get_overview_path(self, lang, dest_type='page'):
-        """A path handler for the list of all classifications."""
+        """Return a path for the list of all classifications."""
         if self.site.config['CATEGORIES_INDEX_PATH'](lang):
             path = self.site.config['CATEGORIES_INDEX_PATH'](lang)
             if path.endswith('/index'):  # TODO: remove in v8
@@ -128,7 +128,7 @@ link://category_rss/dogs => /categories/dogs.xml""",
         return result
 
     def get_path(self, classification, lang, dest_type='page'):
-        """A path handler for the given classification."""
+        """Return a path for the given classification."""
         return [_f for _f in [self.site.config['CATEGORY_PATH'](lang)] if _f] + self.slugify_category_name(classification, lang), 'auto'
 
     def extract_hierarchy(self, classification):

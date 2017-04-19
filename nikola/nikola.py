@@ -389,7 +389,7 @@ class Nikola(object):
     """
 
     def __init__(self, **config):
-        """Setup proper environment for running tasks."""
+        """Initialize proper environment for running tasks."""
         # Register our own path handlers
         self.path_handlers = {
             'slug': self.slug_path,
@@ -1873,7 +1873,7 @@ class Nikola(object):
             return []
 
     def slug_path(self, name, lang):
-        """A link to a post with given slug, if not ambiguous.
+        """Return a link to a post with given slug, if not ambiguous.
 
         Example:
 
@@ -2180,7 +2180,7 @@ class Nikola(object):
         signal('scanned').send(self)
 
     def generic_renderer(self, lang, output_name, template_name, filters, file_deps=None, uptodate_deps=None, context=None, context_deps_remove=None, post_deps_dict=None, url_type=None, is_fragment=False):
-        """Helper function for rendering pages and post lists and other related pages.
+        """Create tasks for rendering pages and post lists and other related pages.
 
         lang is the current language.
         output_name is the destination file name.

@@ -132,7 +132,7 @@ class Archive(Taxonomy):
                 return self.site.MESSAGES[lang]['{month} {day}, {year}'].format(year=year, month=month, day=day)
 
     def get_path(self, classification, lang, dest_type='page'):
-        """A path handler for the given classification."""
+        """Return a path for the given classification."""
         components = [self.site.config['ARCHIVE_PATH']]
         if classification:
             components.extend(classification)

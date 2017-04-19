@@ -97,7 +97,7 @@ link://section_index_rss/cars => /cars/rss.xml""",
         return self._get_section_name(section, lang)
 
     def get_path(self, section, lang, dest_type='page'):
-        """A path handler for the given classification."""
+        """Return a path for the given classification."""
         result = [_f for _f in [section] if _f]
         if dest_type == 'rss':
             return result + ['rss.xml'], 'never'
