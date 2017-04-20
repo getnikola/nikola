@@ -768,8 +768,8 @@ def remove_file(source):
 # slugify is adopted from
 # http://code.activestate.com/recipes/
 # 577257-slugify-make-a-string-usable-in-a-url-or-filename/
-_slugify_strip_re = re.compile(r'[^+\w\s-]')
-_slugify_hyphenate_re = re.compile(r'[-\s]+')
+_slugify_strip_re = re.compile(r'[^+\w\s-]', re.UNICODE)
+_slugify_hyphenate_re = re.compile(r'[-\s]+', re.UNICODE)
 
 
 def slugify(value, lang=None, force=False):
@@ -794,8 +794,8 @@ def slugify(value, lang=None, force=False):
         # This is the standard state of slugify, which actually does some work.
         # It is the preferred style, especially for Western languages.
         value = unicode_str(unidecode(value))
-        value = _slugify_strip_re.sub('', value, re.UNICODE).strip().lower()
-        return _slugify_hyphenate_re.sub('-', value, re.UNICODE)
+        value = _slugify_strip_re.sub('', value).strip().lower()
+        return _slugify_hyphenate_re.sub('-', value)
     else:
         # This is the “disarmed” state of slugify, which lets the user
         # have any character they please (be it regular ASCII with spaces,
