@@ -24,6 +24,8 @@ Features
 Bugfixes
 --------
 
+* No longer creates empty subarchive pages, and no longer create broken
+  archive navigation links on day level (Issue #2734)
 * Fixes post scanner plugin order (Issue #2720)
 * Rename ``POSTS_SECTION_ARE_INDEXES`` to ``POSTS_SECTIONS_ARE_INDEXES``
 * Make date ranges work in shortcode-based post lists (Issue #2690)

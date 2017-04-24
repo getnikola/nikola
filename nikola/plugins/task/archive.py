@@ -242,4 +242,4 @@ class Archive(Taxonomy):
 
     def should_generate_classification_page(self, classification, post_list, lang):
         """Only generates list of posts for classification if this function returns True."""
-        return classification = '' or len(post_list) > 0
+        return classification == '' or len(post_list) > 0
