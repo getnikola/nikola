@@ -223,7 +223,7 @@ def _extract_shortcodes(data):
     in_sc = False
     buffer = []
     shortcodes = {}
-    for i, chunk in enumerate(splitted):
+    for chunk in splitted:
         if chunk[0] == 'TEXT':
             if in_sc:
                 buffer.append(chunk)
