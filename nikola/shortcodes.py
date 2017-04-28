@@ -218,7 +218,6 @@ def _extract_shortcodes(data):
     a dictionary of shortcodes, where the keys are UUIDs and the values
     are the shortcodes themselves ready to process.
     """
-    import pdb; pdb.set_trace()
     splitted = _split_shortcodes(data)
     new_data = []
     in_sc = False
