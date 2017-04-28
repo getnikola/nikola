@@ -84,7 +84,7 @@ class CompileRest(PageCompiler):
         from nikola import shortcodes as sc
         new_data, shortcodes = sc._extract_shortcodes(data)
         output, error_level, deps = rst2html(
-            data, settings_overrides=settings_overrides, logger=self.logger, source_path=source_path, l_add_ln=add_ln, transforms=self.site.rst_transforms,
+            new_data, settings_overrides=settings_overrides, logger=self.logger, source_path=source_path, l_add_ln=add_ln, transforms=self.site.rst_transforms,
             no_title_transform=self.site.config.get('NO_DOCUTILS_TITLE_TRANSFORM', False))
         if not isinstance(output, unicode_str):
             # To prevent some weird bugs here or there.
