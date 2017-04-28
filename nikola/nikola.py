@@ -1692,6 +1692,17 @@ class Nikola(object):
             lang = utils.LocaleBorg().current_lang
         return shortcodes.apply_shortcodes(data, self.shortcode_registry, self, filename, lang=lang, with_dependencies=with_dependencies, extra_context=extra_context)
 
+    def apply_shortcodes2(self, data, shortcodes, filename=None, lang=None, with_dependencies=False, extra_context={}):
+        """Apply shortcodes from the registry on data."""
+        if lang is None:
+            lang = utils.LocaleBorg().current_lang
+        deps = []
+        for k, v in shortcodes:
+            replacement, _deps = shortcodes.apply_shortcodes(v, self.shortcode_registry, self, filename, lang=lang, with_dependencies=with_dependencies, extra_context=extra_context)
+            data.replace(k, replacement)
+            deps.extend(_deps)
+        return data
+
     def _get_rss_copyright(self, lang, rss_plain):
         if rss_plain:
             return (

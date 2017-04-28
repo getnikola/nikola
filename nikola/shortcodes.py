@@ -27,6 +27,9 @@
 """Support for Hugo-style shortcodes."""
 
 from __future__ import unicode_literals
+
+import uuid
+
 from .utils import LOGGER
 import sys
 
@@ -204,6 +207,51 @@ def _parse_shortcode_args(data, start, shortcode_name, start_pos):
             args.append(name)
 
     raise ParsingError("Shortcode '{0}' starting at {1} is not terminated correctly with '%}}}}'!".format(shortcode_name, _format_position(data, start_pos)))
+
+
+def _extract_shortcodes(data):
+    """
+    Returns data, shortcodes:
+    
+    data is the original data, with the shortcodes replaced by UUIDs.
+
+    a dictionary of shortcodes, where the keys are UUIDs and the values
+    are the shortcodes themselves ready to process.
+    """
+    import pdb; pdb.set_trace()
+    splitted = _split_shortcodes(data)
+    new_data = []
+    in_sc = False
+    buffer = []
+    shortcodes = {}
+    for i, chunk in enumerate(splitted):
+        if chunk[0] == 'TEXT':
+            if in_sc:
+                buffer.append(chunk)
+            else:
+                new_data.append(chunk[1])
+        elif chunk[0] == 'SHORTCODE_START':
+            if in_sc:  # Previous sc doesn't close
+                sc_id = str(uuid.uuid4())
+                new_data.append(sc_id)
+                shortcodes[sc_id] = buffer[0][1]
+                for c in buffer[1:]:  # Dump buffered text
+                    new_data.append(c[1])
+            # Need to buffer to know if this SC closes
+            buffer = [chunk]
+            in_sc = True
+        elif chunk[0] == 'SHORTCODE_END':
+            # Previous shortcode closes here
+            buffer.append(chunk)
+            sc_id = str(uuid.uuid4())
+            new_data.append(sc_id)
+            shortcodes[sc_id] = ''.join(x[1] for x in buffer)
+            in_sc = False
+
+    return ''.join(new_data), shortcodes
+
+
+
 
 
 def _split_shortcodes(data):

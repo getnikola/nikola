@@ -81,6 +81,8 @@ class CompileRest(PageCompiler):
             'language_code': LEGAL_VALUES['DOCUTILS_LOCALES'].get(LocaleBorg().current_lang, 'en')
         }
 
+        from nikola import shortcodes as sc
+        new_data, shortcodes = sc._extract_shortcodes(data)
         output, error_level, deps = rst2html(
             data, settings_overrides=settings_overrides, logger=self.logger, source_path=source_path, l_add_ln=add_ln, transforms=self.site.rst_transforms,
             no_title_transform=self.site.config.get('NO_DOCUTILS_TITLE_TRANSFORM', False))
@@ -88,7 +90,8 @@ class CompileRest(PageCompiler):
             # To prevent some weird bugs here or there.
             # Original issue: empty files.  `output` became a bytestring.
             output = output.decode('utf-8')
-        output, shortcode_deps = self.site.apply_shortcodes(output, filename=source_path, with_dependencies=True, extra_context=dict(post=post))
+
+        output, shortcode_deps = self.site.apply_shortcodes2(output, shortcodes, filename=source_path, with_dependencies=True, extra_context=dict(post=post))
         return output, error_level, deps, shortcode_deps
 
     # TODO remove in v8
