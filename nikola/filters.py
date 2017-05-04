@@ -403,6 +403,7 @@ normalize_html = apply_to_text_file(_normalize_html)
 
 @apply_to_text_file
 def add_header_permalinks(data):
+    """Post-process HTML via lxml to add header permalinks Sphinx-style."""
     doc = lxml.html.document_fromstring(data)
     for h in ['h1', 'h2', 'h3', 'h4']:
         nodes = doc.findall('*//%s' % h)
