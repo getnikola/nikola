@@ -295,7 +295,7 @@ class Post(object):
 
     @property
     def is_mathjax(self):
-        """True if this post has the mathjax tag in the current language or is a python notebook."""
+        """Return True if this post has the mathjax tag in the current language or is a python notebook."""
         if self.compiler.name == 'ipynb':
             return True
         lang = nikola.utils.LocaleBorg().current_lang
@@ -724,7 +724,7 @@ class Post(object):
 
     @property
     def reading_time(self):
-        """Reading time based on length of text."""
+        """Return reading time based on length of text."""
         if self._reading_time is None:
             text = self.text(strip_html=True)
             words_per_minute = 220

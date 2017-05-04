@@ -341,7 +341,7 @@ class CommandAuto(Command):
 
     def remove_base_tag(self, data):
         """Comment out any <base> to allow local resolution of relative URLs."""
-        data = re.sub(r'<base\s([^>]*)>', '<!--base \g<1>-->', data, re.IGNORECASE)
+        data = re.sub(r'<base\s([^>]*)>', '<!--base \g<1>-->', data, flags=re.IGNORECASE)
         return data
 
 

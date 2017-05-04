@@ -56,12 +56,20 @@ Here are some guidelines about how you can contribute to Nikola:
   and `added to GitHub <https://github.com/settings/emails>`_
 * **Try writing some tests** if possible — again, following existing tests is
   often easiest, and a good way to tell whether the feature you are modifying is
-  easily testable. You will find instructions in ``tests/README.rst``.
-  (alternatively you can push and wait for Travis to pick up and test your changes,
-  but we encourage to run them locally before pushing.)
+  easily testable.
+* **Test your code.** If you can, run the test suite. You will find instructions
+  in ``tests/README.rst``. (alternatively, you can push and wait for Travis to pick
+  up and test your changes)
+  
+  If running tests is not feasible, please at least confirm that:
+  
+  * the demo site (created with ``nikola init -qd demosite``) builds without errors
+  * the bugs you were trying to fix do not occur anymore (if applicable)
+  * the features you added work properly (if applicable)
+  
 * There are some quirks to how Nikola’s codebase is structured, and to how
   some things need to be done [2]_ but don’t worry, we’ll guide you!
 
 .. [1] Very inspired by `fabric’s <https://github.com/fabric/fabric/blob/master/CONTRIBUTING.rst>`_ — thanks!
 
-.. [2] For example, logging, or always making sure directories are created using ``utils.makedirs()``
+.. [2] For example, logging or always making sure directories are created using ``utils.makedirs()``.

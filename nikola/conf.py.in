@@ -930,7 +930,7 @@ PRETTY_URLS = ${PRETTY_URLS}
 # Do you want a add a Mathjax config file?
 # MATHJAX_CONFIG = ""
 
-# If you want support for the $.$ syntax (wihch may conflict with running
+# If you want support for the $.$ syntax (which may conflict with running
 # text!), just use this config:
 # MATHJAX_CONFIG = """
 # <script type="text/x-mathjax-config">
@@ -977,7 +977,7 @@ PRETTY_URLS = ${PRETTY_URLS}
 # The default is ['fenced_code', 'codehilite']
 MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extra']
 
-# Extra options to pass to the pandoc comand.
+# Extra options to pass to the pandoc command.
 # by default, it's empty, is a list of strings, for example
 # ['-F', 'pandoc-citeproc', '--bibliography=/Users/foo/references.bib']
 # Pandoc does not demote headers by default.  To enable this, you can use, for example
@@ -1026,11 +1026,11 @@ MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extra']
 # between each other. Old Atom feeds with no changes are marked as archived.
 # GENERATE_ATOM = False
 
-# Only inlclude teasers in Atom and RSS feeds. Disabling include the full
+# Only include teasers in Atom and RSS feeds. Disabling include the full
 # content. Defaults to True.
 # FEED_TEASERS = True
 
-# Strip HTML from Atom annd RSS feed summaries and content. Defaults to False.
+# Strip HTML from Atom and RSS feed summaries and content. Defaults to False.
 # FEED_PLAIN = False
 
 # Number of posts in Atom and RSS feeds.

@@ -97,7 +97,7 @@ link://section_index_rss/cars => /cars/rss.xml""",
         return self._get_section_name(section, lang)
 
     def get_path(self, section, lang, dest_type='page'):
-        """A path handler for the given classification."""
+        """Return a path for the given classification."""
         result = [_f for _f in [section] if _f]
         if dest_type == 'rss':
             return result + ['rss.xml'], 'never'
@@ -142,9 +142,11 @@ link://section_index_rss/cars => /cars/rss.xml""",
     def should_generate_classification_page(self, dirname, post_list, lang):
         """Only generates list of posts for classification if this function returns True."""
         short_destination = dirname + '/' + self.site.config['INDEX_FILE']
-        for post in post_list:
-            # If there is an index.html pending to be created from a page, do not generate the section page.
-            # The section page would be useless anyways. (via Issue #2613)
+        # If there is an index.html pending to be created from a page, do not generate the section page.
+        # The section page would be useless anyways. (via Issue #2613)
+        for post in self.site.timeline:
+            if not self.site.config["SHOW_UNTRANSLATED_POSTS"] and not post.is_translation_available(lang):
+                continue
             if post.destination_path(lang, sep='/') == short_destination:
                 return False
         return True

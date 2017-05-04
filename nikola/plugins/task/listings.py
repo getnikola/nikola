@@ -260,7 +260,7 @@ class Listings(Task):
                     }, self.kw["filters"])
 
     def listing_source_path(self, name, lang):
-        """A link to the source code for a listing.
+        """Return a link to the source code for a listing.
 
         It will try to use the file name if it's not ambiguous, or the file path.
 
@@ -276,7 +276,7 @@ class Listings(Task):
         return result
 
     def listing_path(self, namep, lang):
-        """A link to a listing.
+        """Return a link to a listing.
 
         It will try to use the file name if it's not ambiguous, or the file path.
 

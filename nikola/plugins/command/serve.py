@@ -203,9 +203,9 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
     # Note that it might break in future versions of Python, in which case we
     # would need to do even more magic.
     def send_head(self):
-        """Common code for GET and HEAD commands.
+        """Send response code and MIME header.
 
-        This sends the response code and MIME headers.
+        This is common code for GET and HEAD commands.
 
         Return value is either a file object (which has to be copied
         to the outputfile by the caller unless the command was HEAD,
@@ -253,7 +253,7 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
             # Comment out any <base> to allow local resolution of relative URLs.
             data = f.read().decode('utf8')
             f.close()
-            data = re.sub(r'<base\s([^>]*)>', '<!--base \g<1>-->', data, re.IGNORECASE)
+            data = re.sub(r'<base\s([^>]*)>', '<!--base \g<1>-->', data, flags=re.IGNORECASE)
             data = data.encode('utf8')
             f = StringIO()
             f.write(data)
