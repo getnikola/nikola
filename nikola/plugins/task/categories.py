@@ -116,9 +116,6 @@ link://category_rss/dogs => /categories/dogs.xml""",
 
     def slugify_category_name(self, path, lang):
         """Slugify a category name."""
-        if not path:  # Probably used link://category
-            utils.LOGGER.error('Invalid link to a category without passing a category name. Probably meant to use category_index?')
-            raise ValueError()
         if lang is None:  # TODO: remove in v8
             utils.LOGGER.warn("ClassifyCategories.slugify_category_name() called without language!")
             lang = ''

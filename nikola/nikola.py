@@ -1694,7 +1694,7 @@ class Nikola(object):
             lang = utils.LocaleBorg().current_lang
         return shortcodes.apply_shortcodes(data, self.shortcode_registry, self, filename, lang=lang, with_dependencies=with_dependencies, extra_context=extra_context)
 
-    def apply_shortcodes2(self, data, shortcodes, filename=None, lang=None, with_dependencies=False, extra_context=None):
+    def apply_shortcodes_uuid(self, data, shortcodes, filename=None, lang=None, with_dependencies=False, extra_context=None):
         """Apply shortcodes from the registry on data."""
         if lang is None:
             lang = utils.LocaleBorg().current_lang

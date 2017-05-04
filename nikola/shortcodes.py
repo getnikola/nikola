@@ -212,7 +212,7 @@ def _parse_shortcode_args(data, start, shortcode_name, start_pos):
 def _extract_shortcodes(data):
     """
     Returns data, shortcodes:
-    
+
     data is the original data, with the shortcodes replaced by UUIDs.
 
     a dictionary of shortcodes, where the keys are UUIDs and the values
@@ -242,15 +242,12 @@ def _extract_shortcodes(data):
         elif chunk[0] == 'SHORTCODE_END':
             # Previous shortcode closes here
             buffer.append(chunk)
-            sc_id = str(uuid.uuid4())
+            sc_id = str('SHORTCODE{0}REPLACEMENT'.format(str(uuid.uuid4()).replace('-', '')))
             new_data.append(sc_id)
             shortcodes[sc_id] = ''.join(x[1] for x in buffer)
             in_sc = False
 
     return ''.join(new_data), shortcodes
-
-
-
 
 
 def _split_shortcodes(data):
