@@ -20,6 +20,8 @@ Features
 * Include KaTeX CSS automatically when needed (Issue #2715)
 * Split out math code into new ``math_helper.tmpl`` template (Issue
   #2715)
+* Added ``jpegoptim_progressive`` filter to convert jpeg images to progressive
+  jpegs.
 
 Bugfixes
 --------
