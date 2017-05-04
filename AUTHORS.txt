@@ -45,6 +45,7 @@
 * `Felix Schwarz <https://github.com/FelixSchwarz>`_
 * `Florian Finkernagel <https://github.com/TyberiusPrime>`_
 * `follower <https://github.com/follower>`_
+* `George Leslie-Waksman <https://github.com/gwax>`_
 * `Grzegorz Śliwiński <https://github.com/fizyk>`_
 * `Guillermo O. Freschi <https://github.com/Tordek>`_
 * `Hardening <https://github.com/hardening>`_
