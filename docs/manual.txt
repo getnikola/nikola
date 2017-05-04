@@ -1911,6 +1911,13 @@ jsonminify
 xmlminify
    Minify XML files. Suitable for Nikola’s sitemaps and Atom feeds.
 
+add_header_permalinks
+   Add links next to every header, Sphinx-style. You will need to add styling for the `headerlink` class,
+   in `custom.css`, for example::
+
+        .headerlink { opacity: 0.1 }
+        .headerlink:hover { opacity: 1; text-decoration: none; }
+
 You can apply filters to specific posts or pages by using the ``filters`` metadata field:
 
 .. code:: restructuredtext

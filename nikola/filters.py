@@ -33,6 +33,7 @@ import json
 import shutil
 import subprocess
 import tempfile
+import uuid
 import shlex
 
 import lxml
@@ -398,3 +399,14 @@ def _normalize_html(data):
 
 # The function is used in other filters, so the decorator cannot be used directly.
 normalize_html = apply_to_text_file(_normalize_html)
+
+
+@apply_to_text_file
+def add_header_permalinks(data):
+    doc = lxml.html.document_fromstring(data)
+    for h in ['h1', 'h2', 'h3', 'h4']:
+        nodes = doc.findall('*//%s' % h)
+        for node in nodes:
+            new_node = lxml.html.fragment_fromstring('<a id="{0}" href="#{0}" class="headerlink" title="Permalink to this headline">&nbsp;&pi;</a>'.format(uuid.uuid4()))
+            node.append(new_node)
+    return lxml.html.tostring(doc, encoding="unicode")
