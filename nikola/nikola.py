@@ -1705,7 +1705,7 @@ class Nikola(object):
             replacement, _deps = shortcodes.apply_shortcodes(v, self.shortcode_registry, self, filename, lang=lang, with_dependencies=with_dependencies, extra_context=extra_context)
             data.replace(k, replacement)
             deps.extend(_deps)
-        return data
+        return data, deps
 
     def _get_rss_copyright(self, lang, rss_plain):
         if rss_plain:
