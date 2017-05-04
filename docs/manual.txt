@@ -1741,7 +1741,7 @@ Do this if you want to be absolutely sure that no sensitive information should e
 Preserve all EXIF data
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Do this if you really don't mind people knowing where pictures were taken, or camera settings.
+Do this if you really don't mind people knowing where pictures were taken, or camera settings::
 
     PRESERVE_EXIF_DATA = True
     EXIF_WHITELIST = {'*': '*'}
