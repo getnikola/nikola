@@ -231,7 +231,7 @@ def extract_shortcodes(data):
                 new_data.append(chunk[1])
         elif chunk[0] == 'SHORTCODE_START':
             if in_sc:  # Previous sc doesn't close
-                sc_id = str(uuid.uuid4())
+                sc_id = str('SHORTCODE{0}REPLACEMENT'.format(str(uuid.uuid4()).replace('-', '')))
                 new_data.append(sc_id)
                 shortcodes[sc_id] = buffer[0][1]
                 for c in buffer[1:]:  # Dump buffered text
@@ -246,6 +246,13 @@ def extract_shortcodes(data):
             new_data.append(sc_id)
             shortcodes[sc_id] = ''.join(x[1] for x in buffer)
             in_sc = False
+    # Whatever is left in the buffer goes in the text
+    if in_sc:  # Previous sc doesn't close
+        sc_id = str('SHORTCODE{0}REPLACEMENT'.format(str(uuid.uuid4()).replace('-', '')))
+        new_data.append(sc_id)
+        shortcodes[sc_id] = buffer[0][1]
+        for c in buffer[1:]:  # Dump buffered text
+            new_data.append(c[1])
 
     return ''.join(new_data), shortcodes
 
