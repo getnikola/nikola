@@ -218,43 +218,49 @@ def extract_shortcodes(data):
     a dictionary of shortcodes, where the keys are UUIDs and the values
     are the shortcodes themselves ready to process.
     """
-    splitted = _split_shortcodes(data)
-    new_data = []
-    in_sc = False
-    buffer = []
-    shortcodes = {}
-    for chunk in splitted:
-        if chunk[0] == 'TEXT':
-            if in_sc:
-                buffer.append(chunk)
-            else:
-                new_data.append(chunk[1])
-        elif chunk[0] == 'SHORTCODE_START':
-            if in_sc:  # Previous sc doesn't close
-                sc_id = str('SHORTCODE{0}REPLACEMENT'.format(str(uuid.uuid4()).replace('-', '')))
-                new_data.append(sc_id)
-                shortcodes[sc_id] = buffer[0][1]
-                for c in buffer[1:]:  # Dump buffered text
-                    new_data.append(c[1])
-            # Need to buffer to know if this SC closes
-            buffer = [chunk]
-            in_sc = True
-        elif chunk[0] == 'SHORTCODE_END':
-            # Previous shortcode closes here
-            buffer.append(chunk)
-            sc_id = str('SHORTCODE{0}REPLACEMENT'.format(str(uuid.uuid4()).replace('-', '')))
-            new_data.append(sc_id)
-            shortcodes[sc_id] = ''.join(x[1] for x in buffer)
-            in_sc = False
-    # Whatever is left in the buffer goes in the text
-    if in_sc:  # Previous sc doesn't close
-        sc_id = str('SHORTCODE{0}REPLACEMENT'.format(str(uuid.uuid4()).replace('-', '')))
-        new_data.append(sc_id)
-        shortcodes[sc_id] = buffer[0][1]
-        for c in buffer[1:]:  # Dump buffered text
-            new_data.append(c[1])
 
-    return ''.join(new_data), shortcodes
+    shortcodes = {}
+    splitted = _split_shortcodes(data)
+
+    def new_id():
+        return str('SHORTCODE{0}REPLACEMENT'.format(str(uuid.uuid4()).replace('-', '')))
+
+    def extract_data_chunk(data):
+        """Takes a list of splitted shortcodes and returns a string and a tail.
+        The string is data, the tail is ready for a new run of this same function.
+        """
+        text = []
+        for i, token in enumerate(data):
+            if token[0] == 'SHORTCODE_START':
+                name = token[3]
+                sc_id = new_id()
+                text.append(sc_id)
+                # See if this shortcode closes
+                for j in range(i, len(data)):
+                    if data[j][0] == 'SHORTCODE_END' and data[j][3] == name:
+                        # Extract this chunk
+                        from doit.tools import set_trace;
+                        set_trace()
+                        shortcodes[sc_id] = ''.join(t[1] for t in data[i:j+1])
+                        return ''.join(text), data[j+1:]
+                # Doesn't close
+                shortcodes[sc_id] = token[1]
+                return ''.join(text), data[i:]
+            elif token[0] == 'TEXT':
+                text.append(token[1])
+                return ''.join(text), data[1:]
+            elif token[0] == 'SHORTCODE_END':  # This is malformed
+                raise Exception('Closing unopened shortcode {}'.format(token[3]))
+
+
+    text = ''
+    tail = splitted
+    while True:
+        new_text, tail = extract_data_chunk(tail)
+        text += new_text
+        if not tail:
+            break
+    return text, shortcodes
 
 
 def _split_shortcodes(data):
