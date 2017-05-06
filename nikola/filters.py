@@ -33,7 +33,6 @@ import json
 import shutil
 import subprocess
 import tempfile
-import uuid
 import shlex
 
 import lxml
@@ -43,7 +42,7 @@ except ImportError:
     typo = None  # NOQA
 import requests
 
-from .utils import req_missing, LOGGER
+from .utils import req_missing, LOGGER, slugify
 
 
 class _ConfigurableFilter(object):
@@ -405,9 +404,29 @@ normalize_html = apply_to_text_file(_normalize_html)
 def add_header_permalinks(data):
     """Post-process HTML via lxml to add header permalinks Sphinx-style."""
     doc = lxml.html.document_fromstring(data)
-    for h in ['h1', 'h2', 'h3', 'h4']:
-        nodes = doc.findall('*//%s' % h)
+    # Get language for slugify
+    try:
+        lang = doc.attrib['lang']  # <html lang="…">
+    except KeyError:
+        # Circular import workaround (utils imports filters)
+        from nikola.utils import LocaleBorg
+        lang = LocaleBorg().current_lang
+    for h in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
+        nodes = doc.findall('*//' + h)
         for node in nodes:
-            new_node = lxml.html.fragment_fromstring('<a id="{0}" href="#{0}" class="headerlink" title="Permalink to this headline">&nbsp;&pi;</a>'.format(uuid.uuid4()))
+            parent = node.getparent()
+            if 'id' in node.attrib:
+                hid = node.attrib['id']
+            elif 'id' in parent.attrib:
+                # docutils: <div> has an ID and contains the header
+                hid = parent.attrib['id']
+            else:
+                # Using force-mode, because not every character can appear in a
+                # HTML id
+                node.attrib['id'] = slugify(node.text_content(), lang, True)
+                hid = node.attrib['id']
+                # TODO: ignore post titles, site title (?) — configurable blacklist?
+                # TODO: deduplication (another filter)
+            new_node = lxml.html.fragment_fromstring('&nbsp;<a href="#{0}" class="headerlink" title="Permalink to this heading">¶</a>'.format(hid))
             node.append(new_node)
     return lxml.html.tostring(doc, encoding="unicode")

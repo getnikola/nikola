@@ -218,7 +218,6 @@ def req_missing(names, purpose, python=True, optional=False):
     return msg
 
 
-from nikola import filters as task_filters  # NOQA
 ENCODING = sys.getfilesystemencoding() or sys.stdin.encoding
 
 
@@ -900,6 +899,9 @@ def current_time(tzinfo=None):
     else:
         dt = datetime.datetime.now(dateutil.tz.tzlocal())
     return dt
+
+
+from nikola import filters as task_filters  # NOQA
 
 
 def apply_filters(task, filters, skip_ext=None):
