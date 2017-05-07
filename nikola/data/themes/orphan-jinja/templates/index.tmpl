@@ -1,0 +1,20 @@
+{% import "index_helper.tmpl" as helper with context %}
+{% import "disqus_helper.tmpl" as disqus with context %}
+{% extends "base.tmpl" %}
+{% block content %}
+{% for post in posts %}
+<div class="postbox">
+  <h1><a href="{{ post.permalink() }}">{{ post.title() }}</a>
+    <small>&nbsp;&nbsp;
+      {{ messages("Posted") }}: {{ post.formatted_date(date_format) }}
+    </small></h1>
+    <hr>
+    {{ post.text(teaser_only=index_teasers) }}
+    {% if not post.meta('nocomments') %}
+    {{ disqus.html_disqus_link(post.permalink()+"#disqus_thread", post.base_path) }}
+    {% endif %}
+    </div>
+{% endfor %}
+{{ helper.html_pager() }}
+{{ disqus.html_disqus_script() }}
+{% endblock %}

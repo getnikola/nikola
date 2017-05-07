@@ -1,0 +1,30 @@
+{% import 'post_helper.tmpl' as helper with context %}
+{% import 'disqus_helper.tmpl' as disqus with context %}
+{% extends 'base.tmpl' %}
+{% block extra_head %}
+{{ helper.twitter_card_information(post) }}
+{% if post.meta('keywords') %}
+<meta name="keywords" content="{{ post.meta('keywords') }}/>
+{% endif %}
+{% endblock %}
+{% block content %}
+<div class="postbox">
+  {{ helper.html_title() }}
+  <hr>
+  <small>
+    {{ messages("Posted") }}: {{ post.formatted_date(date_format) }}
+    {{ helper.html_translations(post) }}
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+    {% if not post.meta('password') %}:
+    <a href="{{ post.source_link() }}" id="sourcelink">{{ messages("Source") }}</a>
+    {% endif %}
+    {{ helper.html_tags(post) }}
+  </small>
+  <hr>
+  {{ post.text() }}
+  {{ helper.html_pager(post) }}
+  {% if not post.meta('nocomments') %}
+  {{ disqus.html_disqus(post.permalink(absolute=True), post.title(), post.base_path) }}
+  {% endif %}
+  </div>
+  {% endblock %}

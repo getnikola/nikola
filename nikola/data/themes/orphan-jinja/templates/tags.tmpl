@@ -1,0 +1,11 @@
+{% extends "base.tmpl" %}
+{% block content %}
+<div class="postbox">
+  <h1>{{ title }}</h1>
+  <ul class="unstyled">
+    {% for text, link in items %}
+    <li><a class="tag" href="{{ link }}"><span class="badge badge-info">{{ text }}</span></a>
+    {% endfor %}
+    </ul>
+</div>
+{% endblock %}

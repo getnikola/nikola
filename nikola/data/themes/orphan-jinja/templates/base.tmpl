@@ -1,0 +1,36 @@
+{% import 'base_helper.tmpl' as base_helper with context %}
+{{ set_locale(lang) }}
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+  <head>
+    {{ base_helper.html_head() }}
+    {% block extra_head %}{% endblock%}
+    {{ extra_head_data }}
+  </head>
+  <body>
+    {% if add_this_buttons%}
+    <script type="text/javascript">var addthis_config={"ui_language":"${lang}"};</script>
+    {% endif %}
+
+    <h1 id="blog-title">
+      <a href="{{ abs_link('/') }}" title="{{ blog_title }}">{{ blog_title }}</a>
+    </h1>
+    {% block belowtitle %}
+    {% if translations|length > 1 %}
+    <small>
+      {{ messages("Also available in") }}:&nbsp;
+      {{ html_translations() }}
+    </small>
+    {% endif %}
+    {% endblock %}
+    {% block content %}{% endblock %}
+    <small>{{ content_footer }}</small>
+    <!-- Sidebar content -->
+    <ul class="unstyled">
+      <li>{{ license }}
+        {{ base_helper.html_social() }}
+        {{ base_helper.html_sidebar_links() }}</li>
+        <li>{{ search_form }}</li>
+    </ul>
+    {{ analytics }}
+  </body>

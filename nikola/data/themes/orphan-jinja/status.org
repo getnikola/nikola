@@ -1,0 +1,15 @@
+* Files
+- [X] base.tmpl
+- [X] base_helper.tmpl
+- [X] disqus_helper.tmpl
+- [X] gallery.tmpl
+- [X] index.tmpl
+- [X] index_helper.tmpl
+- [X] list.tmpl
+- [X] list_post.tmpl
+- [X] listing.tmpl
+- [X] post.tmpl
+- [X] post_helper.tmpl
+- [X] story.tmpl
+- [X] tag.tmpl
+- [X] tags.tmpl
