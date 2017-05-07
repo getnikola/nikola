@@ -209,7 +209,11 @@ def _parse_shortcode_args(data, start, shortcode_name, start_pos):
     raise ParsingError("Shortcode '{0}' starting at {1} is not terminated correctly with '%}}}}'!".format(shortcode_name, _format_position(data, start_pos)))
 
 
-def extract_shortcodes(data):
+def _new_sc_id():
+    return str('SHORTCODE{0}REPLACEMENT'.format(str(uuid.uuid4()).replace('-', '')))
+
+
+def extract_shortcodes(data, _new_sc_id=_new_sc_id):
     """
     Returns data, shortcodes:
 
@@ -217,13 +221,31 @@ def extract_shortcodes(data):
 
     a dictionary of shortcodes, where the keys are UUIDs and the values
     are the shortcodes themselves ready to process.
+
+    >>> c = 0
+    >>> def _new_sc_id():
+    ...     global c
+    ...     c += 1
+    ...     return 'SC%d' % c
+    >>> extract_shortcodes('{{% foo %}}', _new_sc_id)
+    (u'SC1', {u'SC1': u'{{% foo %}}'})
+    >>> extract_shortcodes('{{% foo %}} bar {{% /foo %}}', _new_sc_id)
+    (u'SC2', {u'SC2': u'{{% foo %}} bar {{% /foo %}}'})
+    >>> extract_shortcodes('AAA{{% foo %}} bar {{% /foo %}}BBB', _new_sc_id)
+    (u'AAASC3BBB', {u'SC3': u'{{% foo %}} bar {{% /foo %}}'})
+    >>> extract_shortcodes('AAA{{% foo %}} {{% bar %}} {{% /foo %}}BBB', _new_sc_id)
+    (u'AAASC4BBB', {u'SC4': u'{{% foo %}} {{% bar %}} {{% /foo %}}'})
+    >>> extract_shortcodes('AAA{{% foo %}} {{% /bar %}} {{% /foo %}}BBB', _new_sc_id)
+    (u'AAASC5BBB', {u'SC5': u'{{% foo %}} {{% /bar %}} {{% /foo %}}'})
+    >>> extract_shortcodes('AAA{{% foo %}} {{% bar %}} quux {{% /bar %}} {{% /foo %}}BBB', _new_sc_id)
+    (u'AAASC6BBB', {u'SC6': u'{{% foo %}} {{% bar %}} quux {{% /bar %}} {{% /foo %}}'})
+    >>> extract_shortcodes('AAA{{% foo %}} BBB {{% bar %}} quux {{% /bar %}} CCC', _new_sc_id)
+    (u'AAASC7 BBB SC8 CCC', {u'SC7': u'{{% foo %}}', u'SC8': u'{{% bar %}} quux {{% /bar %}}'})
+
     """
 
     shortcodes = {}
     splitted = _split_shortcodes(data)
-
-    def new_id():
-        return str('SHORTCODE{0}REPLACEMENT'.format(str(uuid.uuid4()).replace('-', '')))
 
     def extract_data_chunk(data):
         """Takes a list of splitted shortcodes and returns a string and a tail.
@@ -233,25 +255,22 @@ def extract_shortcodes(data):
         for i, token in enumerate(data):
             if token[0] == 'SHORTCODE_START':
                 name = token[3]
-                sc_id = new_id()
+                sc_id = _new_sc_id()
                 text.append(sc_id)
                 # See if this shortcode closes
                 for j in range(i, len(data)):
                     if data[j][0] == 'SHORTCODE_END' and data[j][3] == name:
                         # Extract this chunk
-                        from doit.tools import set_trace;
-                        set_trace()
-                        shortcodes[sc_id] = ''.join(t[1] for t in data[i:j+1])
-                        return ''.join(text), data[j+1:]
+                        shortcodes[sc_id] = ''.join(t[1] for t in data[i:j + 1])
+                        return ''.join(text), data[j + 1:]
                 # Doesn't close
                 shortcodes[sc_id] = token[1]
-                return ''.join(text), data[i:]
+                return ''.join(text), data[i + 1:]
             elif token[0] == 'TEXT':
                 text.append(token[1])
                 return ''.join(text), data[1:]
             elif token[0] == 'SHORTCODE_END':  # This is malformed
                 raise Exception('Closing unopened shortcode {}'.format(token[3]))
-
 
     text = ''
     tail = splitted

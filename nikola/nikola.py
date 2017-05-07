@@ -1703,7 +1703,7 @@ class Nikola(object):
         deps = []
         for k, v in _shortcodes.items():
             replacement, _deps = shortcodes.apply_shortcodes(v, self.shortcode_registry, self, filename, lang=lang, with_dependencies=with_dependencies, extra_context=extra_context)
-            data.replace(k, replacement)
+            data = data.replace(k, replacement)
             deps.extend(_deps)
         return data, deps
 
