@@ -83,11 +83,7 @@ def _skip_nonwhitespace(data, pos):
     for i, x in enumerate(data[pos:]):
         if x.isspace():
             return pos + i
-    while pos < len(data):
-        if data[pos].isspace():
-            break
-        pos += 1
-    return pos
+    return len(data)
 
 
 def _parse_quoted_string(data, start):
