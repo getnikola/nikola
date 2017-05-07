@@ -211,7 +211,7 @@ def _new_sc_id():
 
 def extract_shortcodes(data, _new_sc_id=_new_sc_id):
     """
-    Returns data, shortcodes:
+    Return data with replaced shortcodes, shortcodes.
 
     data is the original data, with the shortcodes replaced by UUIDs.
 
@@ -239,12 +239,12 @@ def extract_shortcodes(data, _new_sc_id=_new_sc_id):
     (u'AAASC7 BBB SC8 CCC', {u'SC7': u'{{% foo %}}', u'SC8': u'{{% bar %}} quux {{% /bar %}}'})
 
     """
-
     shortcodes = {}
     splitted = _split_shortcodes(data)
 
     def extract_data_chunk(data):
-        """Takes a list of splitted shortcodes and returns a string and a tail.
+        """Take a list of splitted shortcodes and return a string and a tail.
+
         The string is data, the tail is ready for a new run of this same function.
         """
         text = []
