@@ -96,9 +96,9 @@ link://section_index_rss/cars => /cars/rss.xml""",
         """Extract a friendly name from the classification."""
         return self._get_section_name(section, lang)
 
-    def get_path(self, section, lang, dest_type='page'):
+    def get_path(self, section, lang, dest_type = 'page'):
         """Return a path for the given classification."""
-        result = [_f for _f in [section] if _f]
+        result = [_f for _f in [self.site.config['SECTION_PATH'] + section] if _f]
         if dest_type == 'rss':
             return result + ['rss.xml'], 'never'
         return result, 'always'
