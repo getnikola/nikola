@@ -209,7 +209,7 @@ def _new_sc_id():
     return str('SHORTCODE{0}REPLACEMENT'.format(str(uuid.uuid4()).replace('-', '')))
 
 
-def extract_shortcodes(data, _new_sc_id=_new_sc_id):
+def extract_shortcodes(data):
     """
     Return data with replaced shortcodes, shortcodes.
 
@@ -217,27 +217,6 @@ def extract_shortcodes(data, _new_sc_id=_new_sc_id):
 
     a dictionary of shortcodes, where the keys are UUIDs and the values
     are the shortcodes themselves ready to process.
-
-    >>> c = 0
-    >>> def _new_sc_id():
-    ...     global c
-    ...     c += 1
-    ...     return 'SC%d' % c
-    >>> extract_shortcodes('{{% foo %}}', _new_sc_id)
-    (u'SC1', {u'SC1': u'{{% foo %}}'})
-    >>> extract_shortcodes('{{% foo %}} bar {{% /foo %}}', _new_sc_id)
-    (u'SC2', {u'SC2': u'{{% foo %}} bar {{% /foo %}}'})
-    >>> extract_shortcodes('AAA{{% foo %}} bar {{% /foo %}}BBB', _new_sc_id)
-    (u'AAASC3BBB', {u'SC3': u'{{% foo %}} bar {{% /foo %}}'})
-    >>> extract_shortcodes('AAA{{% foo %}} {{% bar %}} {{% /foo %}}BBB', _new_sc_id)
-    (u'AAASC4BBB', {u'SC4': u'{{% foo %}} {{% bar %}} {{% /foo %}}'})
-    >>> extract_shortcodes('AAA{{% foo %}} {{% /bar %}} {{% /foo %}}BBB', _new_sc_id)
-    (u'AAASC5BBB', {u'SC5': u'{{% foo %}} {{% /bar %}} {{% /foo %}}'})
-    >>> extract_shortcodes('AAA{{% foo %}} {{% bar %}} quux {{% /bar %}} {{% /foo %}}BBB', _new_sc_id)
-    (u'AAASC6BBB', {u'SC6': u'{{% foo %}} {{% bar %}} quux {{% /bar %}} {{% /foo %}}'})
-    >>> extract_shortcodes('AAA{{% foo %}} BBB {{% bar %}} quux {{% /bar %}} CCC', _new_sc_id)
-    (u'AAASC7 BBB SC8 CCC', {u'SC7': u'{{% foo %}}', u'SC8': u'{{% bar %}} quux {{% /bar %}}'})
-
     """
     shortcodes = {}
     splitted = _split_shortcodes(data)
@@ -268,14 +247,14 @@ def extract_shortcodes(data, _new_sc_id=_new_sc_id):
             elif token[0] == 'SHORTCODE_END':  # This is malformed
                 raise Exception('Closing unopened shortcode {}'.format(token[3]))
 
-    text = ''
+    text = []
     tail = splitted
     while True:
         new_text, tail = extract_data_chunk(tail)
-        text += new_text
+        text.append(new_text)
         if not tail:
             break
-    return text, shortcodes
+    return ''.join(text), shortcodes
 
 
 def _split_shortcodes(data):
