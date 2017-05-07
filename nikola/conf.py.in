@@ -245,7 +245,7 @@ POSTS_SECTIONS = True
 
 # Final locations are:
 # output / TRANSLATION[lang] / SECTION_PATH / SECTION_NAME / index.html (list of posts for a section)
-# output / TRANSLATION[lang] / SECTION_PATH / rss.xml (RSS feed for a section)
+# output / TRANSLATION[lang] / SECTION_PATH / SECTION_NAME / rss.xml (RSS feed for a section)
 # (translatable)
 # SECTION_PATH = ""
 
