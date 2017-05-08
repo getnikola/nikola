@@ -15,23 +15,23 @@ TABLE = {}
 LOGGER = utils.get_logger('scan_posts', utils.STDERR_HANDLER)
 
 
+def _populate():
+    for fname in glob.glob(os.path.join(os.path.dirname(__file__), 'data', '*.json')):
+        with open(fname) as inf:
+            data = json.load(inf)
+            data = data[list(data.keys())[0]]
+            data = data[list(data.keys())[0]]
+            for item in data:
+                if item['key'] in TABLE:
+                    LOGGER.warning('Repeated emoji {}'.format(item['key']))
+                else:
+                    TABLE[item['key']] = item['value']
+
+
 class Plugin(ShortcodePlugin):
     """Plugin for gist directive."""
 
     name = "emoji"
-
-    def _populate(self):
-        for fname in glob.glob(os.path.join(os.path.dirname(__file__), 'data', '*.json')):
-            with open(fname) as inf:
-                data = json.load(inf)
-                data = data[list(data.keys())[0]]
-                data = data[list(data.keys())[0]]
-                for item in data:
-                    if item['key'] in TABLE:
-                        LOGGER.warning('Repeated emoji {}'.format(item['key']))
-                    else:
-                        TABLE[item['key']] = item['value']
-
 
     def handler(self, name, filename=None, site=None, data=None, lang=None, post=None):
         """Create HTML for emoji."""
