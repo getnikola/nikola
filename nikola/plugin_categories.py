@@ -114,7 +114,7 @@ class Command(BasePlugin, DoitCommand):
 
     def __init__(self, *args, **kwargs):
         """Initialize a command."""
-        vim scBasePlugin.__init__(self, *args, **kwargs)
+        BasePlugin.__init__(self, *args, **kwargs)
         DoitCommand.__init__(self)
 
     def __call__(self, config=None, **kwargs):

@@ -93,7 +93,7 @@ class Listings(Task):
         self.proper_input_file_mapping = {}
 
         for input_folder, output_folder in self.kw['listings_folders'].items():
-            for root, dirs, files in os.walk(input_folder, followlinks=True):
+            for root, _, files in os.walk(input_folder, followlinks=True):
                 # Compute relative path; can't use os.path.relpath() here as it returns "." instead of ""
                 rel_path = root[len(input_folder):]
                 if rel_path[:1] == os.sep:
