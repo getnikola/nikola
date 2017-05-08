@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""A matrix! Of languages!"""
 import nikola.nikola
 import os.path
 import glob
