@@ -88,6 +88,9 @@ class TestErrors(BaseTestCase):
 def test_extract_shortcodes(input, expected, monkeypatch):
 
     i = iter('SC%d' % i for i in range(1, 100))
-    monkeypatch.setattr(shortcodes, '_new_sc_id', i.next)
+    if sys.version[0] < 3:
+        monkeypatch.setattr(shortcodes, '_new_sc_id', i.next)
+    else:
+        monkeypatch.setattr(shortcodes, '_new_sc_id', i.__next__)
     extracted = shortcodes.extract_shortcodes(input)
     assert extracted == expected
