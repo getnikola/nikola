@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# This file is public domain according to its author, Brian Hsu
+# This file is public domain according to its author, Roberto Alsina
 
 """Emoji directive for reStructuredText."""
 
