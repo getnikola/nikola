@@ -1060,7 +1060,7 @@ chart
 emoji
     Insert an emoji. For example::
 
-        {{% emoji crying_face %}}
+       {{% raw %}}{{% emoji crying_face %}}{{% /raw %}}
 
     This generates a ``span`` with ``emoji`` CSS class, so you can style it with a nice font if you want.
 
