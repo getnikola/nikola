@@ -58,6 +58,7 @@ import lxml.html
 from yapsy.PluginManager import PluginManager
 from blinker import signal
 
+
 from .post import Post  # NOQA
 from .state import Persistor
 from . import DEBUG, utils, shortcodes
