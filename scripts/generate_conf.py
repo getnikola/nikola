@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Generate a conf.py file from the template, using default settings.
+"""Generate a conf.py file from the template, using default settings."""
 
 import nikola.plugins.command.init
 

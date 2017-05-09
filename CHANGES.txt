@@ -13,7 +13,10 @@ Math support changes
 Features
 --------
 
+
 * New emoji shortcode
+* Add ``SECTION_PATH`` support to move the section indexes to a
+  user-defined location (Issue #2738)
 * Add a list of template variables to documentation (Issues #2328,
   #2712, #2259) and update the theming reference (Issue #2259)
 * Add ``{post_title}`` tag for Read More links (Issue #2709)

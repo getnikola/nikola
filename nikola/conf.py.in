@@ -243,6 +243,12 @@ POSTS_SECTIONS = True
 # are the default and will apply GENERATE_ATOM if set.
 # POSTS_SECTIONS_ARE_INDEXES = True
 
+# Final locations are:
+# output / TRANSLATION[lang] / SECTION_PATH / SECTION_NAME / index.html (list of posts for a section)
+# output / TRANSLATION[lang] / SECTION_PATH / SECTION_NAME / rss.xml (RSS feed for a section)
+# (translatable)
+# SECTION_PATH = ""
+
 # Each post and section page will have an associated color that can be used
 # to style them with a recognizable color detail across your site. A color
 # is assigned to  each section based on shifting the hue of your THEME_COLOR
