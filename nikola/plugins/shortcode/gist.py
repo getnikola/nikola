@@ -13,12 +13,6 @@ class Plugin(ShortcodePlugin):
 
     name = "gist"
 
-    def set_site(self, site):
-        """Set Nikola site."""
-        self.site = site
-        site.register_shortcode('gist', self.handler)
-        return super(Plugin, self).set_site(site)
-
     def get_raw_gist_with_filename(self, gistID, filename):
         """Get raw gist text for a filename."""
         url = '/'.join(("https://gist.github.com/raw", gistID, filename))

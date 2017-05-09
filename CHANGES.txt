@@ -13,6 +13,8 @@ Math support changes
 Features
 --------
 
+
+* New emoji shortcode
 * Add ``SECTION_PATH`` support to move the section indexes to a
   user-defined location (Issue #2738)
 * Add a list of template variables to documentation (Issues #2328,

@@ -402,6 +402,12 @@ class ShortcodePlugin(BasePlugin):
 
     name = "dummy_shortcode_plugin"
 
+    def set_site(self, site):
+        """Set Nikola site."""
+        self.site = site
+        site.register_shortcode(self.name, self.handler)
+        return super(ShortcodePlugin, self).set_site(site)
+
 
 class Importer(Command):
     """Basic structure for importing data into Nikola.
