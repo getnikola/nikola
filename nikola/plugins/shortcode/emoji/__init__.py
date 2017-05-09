@@ -36,7 +36,7 @@ class Plugin(ShortcodePlugin):
     def handler(self, name, filename=None, site=None, data=None, lang=None, post=None):
         """Create HTML for emoji."""
         if not TABLE:
-            self._populate()
+            _populate()
         try:
             output = '''<span class="emoji">{}</span>'''.format(TABLE[name])
         except KeyError:
