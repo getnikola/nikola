@@ -41,6 +41,6 @@ class Plugin(ShortcodePlugin):
             output = '''<span class="emoji">{}</span>'''.format(TABLE[name])
         except KeyError:
             LOGGER.warning('Unknown emoji {}'.format(name))
-            output = '''<span class="emoji, error">{}</span>'''.format(name)
+            output = '''<span class="emoji error">{}</span>'''.format(name)
 
         return output, []
