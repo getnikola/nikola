@@ -1057,6 +1057,13 @@ chart
         'Others',  [14.2, 15.4, 15.3, 8.9, 9, 10.4]
         {{% /chart %}}{{% /raw %}}
 
+emoji
+    Insert an emoji. For example::
+
+        {{% emoji crying_face %}}
+
+    This generates a ``span`` with ``emoji`` CSS class, so you can style it with a nice font if you want.
+
 gist
     Show GitHub gists. If you know the gist's ID, this will show it in your site:
 
