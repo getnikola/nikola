@@ -30,6 +30,7 @@ Features
 Bugfixes
 --------
 
+* Don't break animated GIFs in postprocessing (Issue #2750)
 * More robust shortcodes, no need to escape URLs in reSt, work better
   with LaTeX, etc.
 * No longer creates empty subarchive pages, and no longer create broken

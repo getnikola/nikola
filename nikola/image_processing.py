@@ -98,6 +98,12 @@ class ImageProcessor(object):
             self.resize_svg(src, dst, max_size, bigger_panoramas)
             return
         im = Image.open(src)
+
+        if hasattr(im, 'n_frames') and im.n_frames > 1:
+            # Animated gif, leave as-is
+            utils.copy_file(src, dst)
+            return
+
         size = w, h = im.size
         if w > max_size or h > max_size:
             size = max_size, max_size
