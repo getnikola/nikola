@@ -4,6 +4,8 @@
 u"""Test shortcodes."""
 
 from __future__ import unicode_literals
+import itertools
+
 import pytest
 from nikola import shortcodes
 from .base import FakeSite, BaseTestCase
@@ -74,3 +76,23 @@ class TestErrors(BaseTestCase):
         self.assertRaisesRegexp(shortcodes.ParsingError, "^Found shortcode ending '{{% / %}}' which isn't closing a started shortcode", shortcodes.apply_shortcodes, '{{% / %}}', self.fakesite.shortcode_registry, raise_exceptions=True)
         self.assertRaisesRegexp(shortcodes.ParsingError, "^Syntax error: '{{% /' must be followed by ' %}}'", shortcodes.apply_shortcodes, '{{% / a %}}', self.fakesite.shortcode_registry, raise_exceptions=True)
         self.assertRaisesRegexp(shortcodes.ParsingError, "^Shortcode '<==' starting at .* is not terminated correctly with '%}}'!", shortcodes.apply_shortcodes, '==> {{% <==', self.fakesite.shortcode_registry, raise_exceptions=True)
+
+
+@pytest.mark.parametrize("input, expected", [
+    ('{{% foo %}}', (u'SC1', {u'SC1': u'{{% foo %}}'})),
+    ('{{% foo %}} bar {{% /foo %}}', (u'SC1', {u'SC1': u'{{% foo %}} bar {{% /foo %}}'})),
+    ('AAA{{% foo %}} bar {{% /foo %}}BBB', (u'AAASC1BBB', {u'SC1': u'{{% foo %}} bar {{% /foo %}}'})),
+    ('AAA{{% foo %}} {{% bar %}} {{% /foo %}}BBB', (u'AAASC1BBB', {u'SC1': u'{{% foo %}} {{% bar %}} {{% /foo %}}'})),
+    ('AAA{{% foo %}} {{% /bar %}} {{% /foo %}}BBB', (u'AAASC1BBB', {u'SC1': u'{{% foo %}} {{% /bar %}} {{% /foo %}}'})),
+    ('AAA{{% foo %}} {{% bar %}} quux {{% /bar %}} {{% /foo %}}BBB', (u'AAASC1BBB', {u'SC1': u'{{% foo %}} {{% bar %}} quux {{% /bar %}} {{% /foo %}}'})),
+    ('AAA{{% foo %}} BBB {{% bar %}} quux {{% /bar %}} CCC', (u'AAASC1 BBB SC2 CCC', {u'SC1': u'{{% foo %}}', u'SC2': u'{{% bar %}} quux {{% /bar %}}'})),
+])
+def test_extract_shortcodes(input, expected, monkeypatch):
+
+    i = iter('SC%d' % i for i in range(1, 100))
+    if sys.version_info[0] < 3:
+        monkeypatch.setattr(shortcodes, '_new_sc_id', i.next)
+    else:
+        monkeypatch.setattr(shortcodes, '_new_sc_id', i.__next__)
+    extracted = shortcodes.extract_shortcodes(input)
+    assert extracted == expected

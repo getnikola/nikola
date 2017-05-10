@@ -30,6 +30,8 @@ Features
 Bugfixes
 --------
 
+* More robust shortcodes, no need to escape URLs in reSt, work better
+  with LaTeX, etc.
 * No longer creates empty subarchive pages, and no longer create broken
   archive navigation links on day level (Issue #2734)
 * Fixes post scanner plugin order (Issue #2720)

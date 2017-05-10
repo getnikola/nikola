@@ -58,6 +58,7 @@ import lxml.html
 from yapsy.PluginManager import PluginManager
 from blinker import signal
 
+
 from .post import Post  # NOQA
 from .state import Persistor
 from . import DEBUG, utils, shortcodes
@@ -1688,11 +1689,26 @@ class Nikola(object):
         self.shortcode_registry[name] = f
 
     # XXX in v8, get rid of with_dependencies
-    def apply_shortcodes(self, data, filename=None, lang=None, with_dependencies=False, extra_context={}):
+    def apply_shortcodes(self, data, filename=None, lang=None, with_dependencies=False, extra_context=None):
         """Apply shortcodes from the registry on data."""
+        if extra_context is None:
+            extra_context = {}
         if lang is None:
             lang = utils.LocaleBorg().current_lang
         return shortcodes.apply_shortcodes(data, self.shortcode_registry, self, filename, lang=lang, with_dependencies=with_dependencies, extra_context=extra_context)
+
+    def apply_shortcodes_uuid(self, data, _shortcodes, filename=None, lang=None, with_dependencies=False, extra_context=None):
+        """Apply shortcodes from the registry on data."""
+        if lang is None:
+            lang = utils.LocaleBorg().current_lang
+        if extra_context is None:
+            extra_context = {}
+        deps = []
+        for k, v in _shortcodes.items():
+            replacement, _deps = shortcodes.apply_shortcodes(v, self.shortcode_registry, self, filename, lang=lang, with_dependencies=with_dependencies, extra_context=extra_context)
+            data = data.replace(k, replacement)
+            deps.extend(_deps)
+        return data, deps
 
     def _get_rss_copyright(self, lang, rss_plain):
         if rss_plain:
