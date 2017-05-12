@@ -1,6 +1,6 @@
 #!/snap/nikola/current/usr/bin/python3
-# EASY-INSTALL-ENTRY-SCRIPT: 'Nikola==7.8.4'
-__requires__ = 'Nikola==7.8.4'
+# EASY-INSTALL-ENTRY-SCRIPT: 'Nikola==7.8.6'
+__requires__ = 'Nikola==7.8.6'
 import sys
 from pkg_resources import load_entry_point
 

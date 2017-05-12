@@ -5,6 +5,7 @@ docs/sphinx/internals.txt
 docs/sphinx/manual.txt
 docs/sphinx/path_handlers.txt
 docs/sphinx/social_buttons.txt
+docs/sphinx/template-variables.txt
 docs/sphinx/theming.txt
 nikola/data/samplesite/pages/creating-a-theme.rst
 nikola/data/samplesite/pages/extending.txt
