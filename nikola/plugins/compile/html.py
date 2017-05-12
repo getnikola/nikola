@@ -31,6 +31,7 @@ from __future__ import unicode_literals
 import os
 import io
 
+from nikola import shortcodes as sc
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, write_metadata
 
@@ -45,7 +46,8 @@ class CompileHtml(PageCompiler):
         """Compile HTML into HTML strings, with shortcode support."""
         if not is_two_file:
             _, data = self.split_metadata(data)
-        return self.site.apply_shortcodes(data, with_dependencies=True, extra_context={'post': post})
+        new_data, shortcodes = sc.extract_shortcodes(data)
+        return self.site.apply_shortcodes_uuid(new_data, shortcodes, filename=source_path, with_dependencies=True, extra_context=dict(post=post))
 
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""

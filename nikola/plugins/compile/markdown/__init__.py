@@ -40,6 +40,7 @@ except ImportError:
     gist_extension = None
     podcast_extension = None
 
+form nikola import shortcodes as sc
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, req_missing, write_metadata
 
@@ -91,8 +92,9 @@ class CompileMarkdown(PageCompiler):
             req_missing(['markdown'], 'build this site (compile Markdown)')
         if not is_two_file:
             _, data = self.split_metadata(data)
-        output = self.converter.convert(data)
-        output, shortcode_deps = self.site.apply_shortcodes(output, filename=source_path, with_dependencies=True, extra_context={'post': post})
+        new_data, shortcodes = sc.extract_shortcodes(data)
+        output = self.converter.convert(new_data)
+        output, shortcode_deps = self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, with_dependencies=True, extra_context=dict(post=post))
         return output, shortcode_deps
 
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):

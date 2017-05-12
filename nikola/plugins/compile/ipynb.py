@@ -61,6 +61,7 @@ except ImportError:
         flag = None
         ipy_modern = None
 
+from nikola import shortcodes as sc
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, req_missing, get_logger, STDERR_HANDLER
 
@@ -94,8 +95,9 @@ class CompileIPynb(PageCompiler):
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
         """Compile notebooks into HTML strings."""
-        output = self._compile_string(nbformat.reads(data, current_nbformat))
-        return self.site.apply_shortcodes(output, filename=source_path, with_dependencies=True, extra_context={'post': post})
+        new_data, shortcodes = sc.extract_shortcodes(data)
+        output = self._compile_string(nbformat.reads(new_data, current_nbformat))
+        return self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, with_dependencies=True, extra_context=dict(post=post))
 
     # TODO remove in v8
     def compile_html_string(self, source, is_two_file=True):
