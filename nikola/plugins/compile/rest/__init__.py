@@ -81,14 +81,17 @@ class CompileRest(PageCompiler):
             'language_code': LEGAL_VALUES['DOCUTILS_LOCALES'].get(LocaleBorg().current_lang, 'en')
         }
 
+        from nikola import shortcodes as sc
+        new_data, shortcodes = sc.extract_shortcodes(data)
         output, error_level, deps = rst2html(
-            data, settings_overrides=settings_overrides, logger=self.logger, source_path=source_path, l_add_ln=add_ln, transforms=self.site.rst_transforms,
+            new_data, settings_overrides=settings_overrides, logger=self.logger, source_path=source_path, l_add_ln=add_ln, transforms=self.site.rst_transforms,
             no_title_transform=self.site.config.get('NO_DOCUTILS_TITLE_TRANSFORM', False))
         if not isinstance(output, unicode_str):
             # To prevent some weird bugs here or there.
             # Original issue: empty files.  `output` became a bytestring.
             output = output.decode('utf-8')
-        output, shortcode_deps = self.site.apply_shortcodes(output, filename=source_path, with_dependencies=True, extra_context=dict(post=post))
+
+        output, shortcode_deps = self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, with_dependencies=True, extra_context=dict(post=post))
         return output, error_level, deps, shortcode_deps
 
     # TODO remove in v8
@@ -203,7 +206,7 @@ class NikolaReader(docutils.readers.standalone.Reader):
 
 def shortcode_role(name, rawtext, text, lineno, inliner,
                    options={}, content=[]):
-    """A shortcode role that passes through raw inline HTML."""
+    """Return a shortcode role that passes through raw inline HTML."""
     return [docutils.nodes.raw('', text, format='html')], []
 
 
@@ -270,7 +273,7 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
 
         publish_parts(..., settings_overrides={'input_encoding': 'unicode'})
 
-    Parameters: see `publish_programmatically`.
+    For a description of the parameters, see `publish_programmatically`.
 
     WARNING: `reader` should be None (or NikolaReader()) if you want Nikola to report
              reStructuredText syntax errors.

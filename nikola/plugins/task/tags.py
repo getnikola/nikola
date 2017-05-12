@@ -102,7 +102,7 @@ link://tag_rss/cats => /tags/cats.xml""",
         return name
 
     def get_overview_path(self, lang, dest_type='page'):
-        """A path handler for the list of all classifications."""
+        """Return a path for the list of all classifications."""
         if self.site.config['TAGS_INDEX_PATH'](lang):
             path = self.site.config['TAGS_INDEX_PATH'](lang)
             if path.endswith('/index'):  # TODO: remove in v8
@@ -113,7 +113,7 @@ link://tag_rss/cats => /tags/cats.xml""",
             return [_f for _f in [self.site.config['TAG_PATH'](lang)] if _f], 'always'
 
     def get_path(self, classification, lang, dest_type='page'):
-        """A path handler for the given classification."""
+        """Return a path for the given classification."""
         return [_f for _f in [
             self.site.config['TAG_PATH'](lang),
             self.slugify_tag_name(classification, lang)] if _f], 'auto'

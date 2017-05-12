@@ -93,7 +93,7 @@ class Listings(Task):
         self.proper_input_file_mapping = {}
 
         for input_folder, output_folder in self.kw['listings_folders'].items():
-            for root, dirs, files in os.walk(input_folder, followlinks=True):
+            for root, _, files in os.walk(input_folder, followlinks=True):
                 # Compute relative path; can't use os.path.relpath() here as it returns "." instead of ""
                 rel_path = root[len(input_folder):]
                 if rel_path[:1] == os.sep:
@@ -260,7 +260,7 @@ class Listings(Task):
                     }, self.kw["filters"])
 
     def listing_source_path(self, name, lang):
-        """A link to the source code for a listing.
+        """Return a link to the source code for a listing.
 
         It will try to use the file name if it's not ambiguous, or the file path.
 
@@ -276,7 +276,7 @@ class Listings(Task):
         return result
 
     def listing_path(self, namep, lang):
-        """A link to a listing.
+        """Return a link to a listing.
 
         It will try to use the file name if it's not ambiguous, or the file path.
 

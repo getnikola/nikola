@@ -325,7 +325,7 @@ class PageCompiler(BasePlugin):
         raise NotImplementedError()
 
     def extension(self):
-        """The preferred extension for the output of this compiler."""
+        """Return the preferred extension for the output of this compiler."""
         return ".html"
 
     def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
@@ -401,6 +401,12 @@ class ShortcodePlugin(BasePlugin):
     """A plugin that adds a shortcode."""
 
     name = "dummy_shortcode_plugin"
+
+    def set_site(self, site):
+        """Set Nikola site."""
+        self.site = site
+        site.register_shortcode(self.name, self.handler)
+        return super(ShortcodePlugin, self).set_site(site)
 
 
 class Importer(Command):
@@ -690,9 +696,10 @@ class Taxonomy(BasePlugin):
         raise NotImplementedError()
 
     def get_overview_path(self, lang, dest_type='page'):
-        """A path handler for the classification overview.
+        """Return path for classification overview.
 
-        Must return one or two values (in this order):
+        This path handler for the classification overview must return one or
+        two values (in this order):
          * a list or tuple of strings: the path relative to OUTPUT_DIRECTORY;
          * a string with values 'auto', 'always' or 'never', indicating whether
            INDEX_FILE should be added or not.
@@ -710,9 +717,10 @@ class Taxonomy(BasePlugin):
         raise NotImplementedError()
 
     def get_path(self, classification, lang, dest_type='page'):
-        """A path handler for the given classification.
+        """Return path to the classification page.
 
-        Must return one to three values (in this order):
+        This path handler for the given classification must return one to
+        three values (in this order):
          * a list or tuple of strings: the path relative to OUTPUT_DIRECTORY;
          * a string with values 'auto', 'always' or 'never', indicating whether
            INDEX_FILE should be added or not;

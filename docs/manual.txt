@@ -1057,6 +1057,13 @@ chart
         'Others',  [14.2, 15.4, 15.3, 8.9, 9, 10.4]
         {{% /chart %}}{{% /raw %}}
 
+emoji
+    Insert an emoji. For example::
+
+       {{% raw %}}{{% emoji crying_face %}}{{% /raw %}}
+
+    This generates a ``span`` with ``emoji`` CSS class, so you can style it with a nice font if you want.
+
 gist
     Show GitHub gists. If you know the gist's ID, this will show it in your site:
 
@@ -1741,7 +1748,7 @@ Do this if you want to be absolutely sure that no sensitive information should e
 Preserve all EXIF data
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Do this if you really don't mind people knowing where pictures were taken, or camera settings.
+Do this if you really don't mind people knowing where pictures were taken, or camera settings::
 
     PRESERVE_EXIF_DATA = True
     EXIF_WHITELIST = {'*': '*'}

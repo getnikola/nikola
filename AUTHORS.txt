@@ -27,7 +27,6 @@
 * `Daniel F. Moisset <https://github.com/dmoisset>`_
 * `Daniel Harding <https://github.com/living180>`_
 * `dastagg <https://github.com/dastagg>`_
-* `dastagg <https://github.com/dastagg>`_
 * `David Barragán Merino <https://github.com/bameda>`_
 * `David Beath <https://github.com/DBeath>`_
 * `Dhruv Baldawa <https://github.com/dhruvbaldawa>`_
@@ -45,8 +44,10 @@
 * `Felix Schwarz <https://github.com/FelixSchwarz>`_
 * `Florian Finkernagel <https://github.com/TyberiusPrime>`_
 * `follower <https://github.com/follower>`_
+* `George Leslie-Waksman <https://github.com/gwax>`_
 * `Grzegorz Śliwiński <https://github.com/fizyk>`_
 * `Guillermo O. Freschi <https://github.com/Tordek>`_
+* `h4ckninja <https://github.com/h4ckninja>`_
 * `Hardening <https://github.com/hardening>`_
 * `Hong Xu <https://www.topbug.net>`_
 * `Ivan Teoh <https://github.com/ivanteoh>`_

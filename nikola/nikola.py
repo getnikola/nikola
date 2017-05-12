@@ -58,6 +58,7 @@ import lxml.html
 from yapsy.PluginManager import PluginManager
 from blinker import signal
 
+
 from .post import Post  # NOQA
 from .state import Persistor
 from . import DEBUG, utils, shortcodes
@@ -389,7 +390,7 @@ class Nikola(object):
     """
 
     def __init__(self, **config):
-        """Setup proper environment for running tasks."""
+        """Initialize proper environment for running tasks."""
         # Register our own path handlers
         self.path_handlers = {
             'slug': self.slug_path,
@@ -584,6 +585,7 @@ class Nikola(object):
             'SOCIAL_BUTTONS_CODE': '',
             'SITE_URL': 'https://example.com/',
             'PAGE_INDEX': False,
+            'SECTION_PATH': '',
             'STRIP_INDEXES': False,
             'SITEMAP_INCLUDE_FILELESS_DIRS': True,
             'TAG_PATH': 'categories',
@@ -671,6 +673,7 @@ class Nikola(object):
                                       'TAGS_INDEX_PATH',
                                       'CATEGORY_PATH',
                                       'CATEGORIES_INDEX_PATH',
+                                      'SECTION_PATH',
                                       'INDEX_PATH',
                                       'RSS_PATH',
                                       'AUTHOR_PATH',
@@ -1690,11 +1693,26 @@ class Nikola(object):
         self.shortcode_registry[name] = f
 
     # XXX in v8, get rid of with_dependencies
-    def apply_shortcodes(self, data, filename=None, lang=None, with_dependencies=False, extra_context={}):
+    def apply_shortcodes(self, data, filename=None, lang=None, with_dependencies=False, extra_context=None):
         """Apply shortcodes from the registry on data."""
+        if extra_context is None:
+            extra_context = {}
         if lang is None:
             lang = utils.LocaleBorg().current_lang
         return shortcodes.apply_shortcodes(data, self.shortcode_registry, self, filename, lang=lang, with_dependencies=with_dependencies, extra_context=extra_context)
+
+    def apply_shortcodes_uuid(self, data, _shortcodes, filename=None, lang=None, with_dependencies=False, extra_context=None):
+        """Apply shortcodes from the registry on data."""
+        if lang is None:
+            lang = utils.LocaleBorg().current_lang
+        if extra_context is None:
+            extra_context = {}
+        deps = []
+        for k, v in _shortcodes.items():
+            replacement, _deps = shortcodes.apply_shortcodes(v, self.shortcode_registry, self, filename, lang=lang, with_dependencies=with_dependencies, extra_context=extra_context)
+            data = data.replace(k, replacement)
+            deps.extend(_deps)
+        return data, deps
 
     def _get_rss_copyright(self, lang, rss_plain):
         if rss_plain:
@@ -1835,7 +1853,10 @@ class Nikola(object):
 
         try:
             path = self.path_handlers[kind](name, lang, **kwargs)
-            path = [os.path.normpath(p) for p in path if p != '.']  # Fix Issue #1028
+            if path is None:
+                path = "#"
+            else:
+                path = [os.path.normpath(p) for p in path if p != '.']  # Fix Issue #1028
             if is_link:
                 link = '/' + ('/'.join(path))
                 index_len = len(self.config['INDEX_FILE'])
@@ -1877,7 +1898,7 @@ class Nikola(object):
             return []
 
     def slug_path(self, name, lang):
-        """A link to a post with given slug, if not ambiguous.
+        """Return a link to a post with given slug, if not ambiguous.
 
         Example:
 
@@ -2184,7 +2205,7 @@ class Nikola(object):
         signal('scanned').send(self)
 
     def generic_renderer(self, lang, output_name, template_name, filters, file_deps=None, uptodate_deps=None, context=None, context_deps_remove=None, post_deps_dict=None, url_type=None, is_fragment=False):
-        """Helper function for rendering pages and post lists and other related pages.
+        """Create tasks for rendering pages and post lists and other related pages.
 
         lang is the current language.
         output_name is the destination file name.

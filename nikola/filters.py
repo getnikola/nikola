@@ -178,6 +178,12 @@ def jpegoptim(infile, executable='jpegoptim'):
     return runinplace("{} -p --strip-all -q %1".format(executable), infile)
 
 
+@_ConfigurableFilter(executable='JPEGOPTIM_EXECUTABLE')
+def jpegoptim_progressive(infile, executable='jpegoptim'):
+    """Run jpegoptim on a file and convert to progressive."""
+    return runinplace("{} -p --strip-all --all-progressive -q %1".format(executable), infile)
+
+
 @_ConfigurableFilter(executable='HTML_TIDY_EXECUTABLE')
 def html_tidy_withconfig(infile, executable='tidy5'):
     """Run HTML Tidy with tidy5.conf as config file."""

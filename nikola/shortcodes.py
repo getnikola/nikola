@@ -27,14 +27,11 @@
 """Support for Hugo-style shortcodes."""
 
 from __future__ import unicode_literals
+
+import uuid
+
 from .utils import LOGGER
 import sys
-
-
-# Constants
-_TEXT = 1
-_SHORTCODE_START = 2
-_SHORTCODE_END = 3
 
 
 class ParsingError(Exception):
@@ -83,11 +80,10 @@ def _skip_whitespace(data, pos, must_be_nontrivial=False):
 
 def _skip_nonwhitespace(data, pos):
     """Return first position not before pos which contains a non-whitespace character."""
-    while pos < len(data):
-        if data[pos].isspace():
-            break
-        pos += 1
-    return pos
+    for i, x in enumerate(data[pos:]):
+        if x.isspace():
+            return pos + i
+    return len(data)
 
 
 def _parse_quoted_string(data, start):
@@ -209,14 +205,66 @@ def _parse_shortcode_args(data, start, shortcode_name, start_pos):
     raise ParsingError("Shortcode '{0}' starting at {1} is not terminated correctly with '%}}}}'!".format(shortcode_name, _format_position(data, start_pos)))
 
 
+def _new_sc_id():
+    return str('SHORTCODE{0}REPLACEMENT'.format(str(uuid.uuid4()).replace('-', '')))
+
+
+def extract_shortcodes(data):
+    """
+    Return data with replaced shortcodes, shortcodes.
+
+    data is the original data, with the shortcodes replaced by UUIDs.
+
+    a dictionary of shortcodes, where the keys are UUIDs and the values
+    are the shortcodes themselves ready to process.
+    """
+    shortcodes = {}
+    splitted = _split_shortcodes(data)
+
+    def extract_data_chunk(data):
+        """Take a list of splitted shortcodes and return a string and a tail.
+
+        The string is data, the tail is ready for a new run of this same function.
+        """
+        text = []
+        for i, token in enumerate(data):
+            if token[0] == 'SHORTCODE_START':
+                name = token[3]
+                sc_id = _new_sc_id()
+                text.append(sc_id)
+                # See if this shortcode closes
+                for j in range(i, len(data)):
+                    if data[j][0] == 'SHORTCODE_END' and data[j][3] == name:
+                        # Extract this chunk
+                        shortcodes[sc_id] = ''.join(t[1] for t in data[i:j + 1])
+                        return ''.join(text), data[j + 1:]
+                # Doesn't close
+                shortcodes[sc_id] = token[1]
+                return ''.join(text), data[i + 1:]
+            elif token[0] == 'TEXT':
+                text.append(token[1])
+                return ''.join(text), data[1:]
+            elif token[0] == 'SHORTCODE_END':  # This is malformed
+                raise Exception('Closing unopened shortcode {}'.format(token[3]))
+
+    text = []
+    tail = splitted
+    while True:
+        new_text, tail = extract_data_chunk(tail)
+        text.append(new_text)
+        if not tail:
+            break
+    return ''.join(text), shortcodes
+
+
 def _split_shortcodes(data):
     """Given input data, splits it into a sequence of texts, shortcode starts and shortcode ends.
 
     Returns a list of tuples of the following forms:
 
-        1. (_TEXT, text)
-        2. (_SHORTCODE_START, text, start, name, args)
-        3. (_SHORTCODE_END, text, start, name)
+        1. ("TEXT", text)
+        2. ("SHORTCODE_START", text, start, name, args)
+        3. ("SHORTCODE_END", text, start, name)
 
     Here, text is the raw text represented by the token; start is the starting position in data
     of the token; name is the name of the shortcode; and args is a tuple (args, kw) as returned
@@ -228,9 +276,9 @@ def _split_shortcodes(data):
         # Search for shortcode start
         start = data.find('{{%', pos)
         if start < 0:
-            result.append((_TEXT, data[pos:]))
+            result.append(("TEXT", data[pos:]))
             break
-        result.append((_TEXT, data[pos:start]))
+        result.append(("TEXT", data[pos:start]))
         # Extract name
         name_start = _skip_whitespace(data, start + 3)
         name_end = _skip_nonwhitespace(data, name_start)
@@ -246,13 +294,13 @@ def _split_shortcodes(data):
             # Must be followed by '%}}'
             if pos > len(data) or data[end_start:pos] != '%}}':
                 raise ParsingError("Syntax error: '{{{{% /{0}' must be followed by ' %}}}}' ({1})!".format(name, _format_position(data, end_start)))
-            result.append((_SHORTCODE_END, data[start:pos], start, name))
+            result.append(("SHORTCODE_END", data[start:pos], start, name))
         elif name == '%}}':
             raise ParsingError("Syntax error: '{{{{%' must be followed by shortcode name ({0})!".format(_format_position(data, start)))
         else:
             # This is an opening shortcode
             pos, args = _parse_shortcode_args(data, name_end, shortcode_name=name, start_pos=start)
-            result.append((_SHORTCODE_START, data[start:pos], start, name, args))
+            result.append(("SHORTCODE_START", data[start:pos], start, name, args))
     return result
 
 
@@ -284,17 +332,17 @@ def apply_shortcodes(data, registry, site=None, filename=None, raise_exceptions=
         pos = 0
         while pos < len(sc_data):
             current = sc_data[pos]
-            if current[0] == _TEXT:
+            if current[0] == "TEXT":
                 result.append(current[1])
                 pos += 1
-            elif current[0] == _SHORTCODE_END:
+            elif current[0] == "SHORTCODE_END":
                 raise ParsingError("Found shortcode ending '{{{{% /{0} %}}}}' which isn't closing a started shortcode ({1})!".format(current[3], _format_position(data, current[2])))
-            elif current[0] == _SHORTCODE_START:
+            elif current[0] == "SHORTCODE_START":
                 name = current[3]
                 # Check if we can find corresponding ending
                 found = None
                 for p in range(pos + 1, len(sc_data)):
-                    if sc_data[p][0] == _SHORTCODE_END and sc_data[p][3] == name:
+                    if sc_data[p][0] == "SHORTCODE_END" and sc_data[p][3] == name:
                         found = p
                         break
                 if found:

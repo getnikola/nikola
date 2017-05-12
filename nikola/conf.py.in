@@ -243,6 +243,12 @@ POSTS_SECTIONS = True
 # are the default and will apply GENERATE_ATOM if set.
 # POSTS_SECTIONS_ARE_INDEXES = True
 
+# Final locations are:
+# output / TRANSLATION[lang] / SECTION_PATH / SECTION_NAME / index.html (list of posts for a section)
+# output / TRANSLATION[lang] / SECTION_PATH / SECTION_NAME / rss.xml (RSS feed for a section)
+# (translatable)
+# SECTION_PATH = ""
+
 # Each post and section page will have an associated color that can be used
 # to style them with a recognizable color detail across your site. A color
 # is assigned to  each section based on shifting the hue of your THEME_COLOR
@@ -747,34 +753,11 @@ IMAGE_FOLDERS = {'images': 'images'}
 # Color scheme to be used for code blocks. If your theme provides
 # "assets/css/code.css" this is ignored. Leave empty to disable.
 # Can be any of:
-# algol
-# algol_nu
-# arduino
-# autumn
-# borland
-# bw
-# colorful
-# default
-# emacs
-# friendly
-# fruity
-# igor
-# lovelace
-# manni
-# monokai
-# murphy
-# native
-# paraiso_dark
-# paraiso_light
-# pastie
-# perldoc
-# rrt
-# tango
-# trac
-# vim
-# vs
-# xcode
+# algol, algol_nu, autumn, borland, bw, colorful, default, emacs, friendly,
+# fruity, igor, lovelace, manni, monokai, murphy, native, paraiso-dark,
+# paraiso-light, pastie, perldoc, rrt, tango, trac, vim, vs, xcode
 # This list MAY be incomplete since pygments adds styles every now and then.
+# Check with list(pygments.styles.get_all_styles()) in an interpreter.
 # CODE_COLOR_SCHEME = 'default'
 
 # FAVICONS contains (name, file, size) tuples.
@@ -944,7 +927,7 @@ PRETTY_URLS = ${PRETTY_URLS}
 # Do you want a add a Mathjax config file?
 # MATHJAX_CONFIG = ""
 
-# If you want support for the $.$ syntax (wihch may conflict with running
+# If you want support for the $.$ syntax (which may conflict with running
 # text!), just use this config:
 # MATHJAX_CONFIG = """
 # <script type="text/x-mathjax-config">
@@ -991,7 +974,7 @@ PRETTY_URLS = ${PRETTY_URLS}
 # The default is ['fenced_code', 'codehilite']
 MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extra']
 
-# Extra options to pass to the pandoc comand.
+# Extra options to pass to the pandoc command.
 # by default, it's empty, is a list of strings, for example
 # ['-F', 'pandoc-citeproc', '--bibliography=/Users/foo/references.bib']
 # Pandoc does not demote headers by default.  To enable this, you can use, for example
@@ -1040,11 +1023,11 @@ MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extra']
 # between each other. Old Atom feeds with no changes are marked as archived.
 # GENERATE_ATOM = False
 
-# Only inlclude teasers in Atom and RSS feeds. Disabling include the full
+# Only include teasers in Atom and RSS feeds. Disabling include the full
 # content. Defaults to True.
 # FEED_TEASERS = True
 
-# Strip HTML from Atom annd RSS feed summaries and content. Defaults to False.
+# Strip HTML from Atom and RSS feed summaries and content. Defaults to False.
 # FEED_PLAIN = False
 
 # Number of posts in Atom and RSS feeds.

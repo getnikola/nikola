@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+"""Script to convert templates from Mako to Jinja2."""
+
 import io
 import glob
 import sys

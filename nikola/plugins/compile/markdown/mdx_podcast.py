@@ -69,7 +69,7 @@ class PodcastPattern(Pattern):
 
 
 class PodcastExtension(MarkdownExtension, Extension):
-    """"Podcast extension for Markdown."""
+    """Podcast extension for Markdown."""
 
     def __init__(self, configs={}):
         """Initialize extension."""
