@@ -40,7 +40,7 @@ except ImportError:
     gist_extension = None
     podcast_extension = None
 
-form nikola import shortcodes as sc
+from nikola import shortcodes as sc
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, req_missing, write_metadata
 
