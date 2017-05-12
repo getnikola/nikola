@@ -4,7 +4,7 @@
 .. description: Get help using Nikola, or contact us.
 .. author: The Nikola Team
 
-:Version: 7.8.6
+:Version: 7.8.5
 
 .. class:: alert alert-info pull-right
 
