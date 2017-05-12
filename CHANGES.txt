@@ -30,6 +30,9 @@ Features
 Bugfixes
 --------
 
+* Open ``127.0.0.1`` when using ``nikola serve -b`` and default
+  ``0.0.0.0`` hostname to avoid resolution issues — the site is still
+  available on all interfaces (Issue #2755)
 * Don't break animated GIFs in postprocessing (Issue #2750)
 * More robust shortcodes, no need to escape URLs in reSt, work better
   with LaTeX, etc.
