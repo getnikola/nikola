@@ -221,6 +221,9 @@ def extract_shortcodes(data):
     shortcodes = {}
     splitted = _split_shortcodes(data)
 
+    if not data:  # Empty
+        return '', {}
+
     def extract_data_chunk(data):
         """Take a list of splitted shortcodes and return a string and a tail.
 
