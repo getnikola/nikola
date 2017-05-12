@@ -13,7 +13,8 @@ Math support changes
 Features
 --------
 
-
+* Get rid of ``THEME_REVEAL_CONFIG_*`` settings, use global context
+  instead (Issue #2485)
 * New emoji shortcode
 * Add ``SECTION_PATH`` support to move the section indexes to a
   user-defined location (Issue #2738)
