@@ -1029,7 +1029,7 @@ Built-in shortcodes
 ~~~~~~~~~~~~~~~~~~~
 
 doc
-    Will link to a document in the page, see `Doc directive for details
+    Will link to a document in the page, see `Doc role for details
     <#doc>`__. Example:
 
     .. code:: restructuredtext
