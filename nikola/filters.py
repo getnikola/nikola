@@ -66,10 +66,10 @@ def apply_to_binary_file(f):
     in place.  Reads files in binary mode.
     """
     @wraps(f)
-    def f_in_file(fname):
+    def f_in_file(fname, *args, **kwargs):
         with open(fname, 'rb') as inf:
             data = inf.read()
-        data = f(data)
+        data = f(data, *args, **kwargs)
         with open(fname, 'wb+') as outf:
             outf.write(data)
 
@@ -84,10 +84,10 @@ def apply_to_text_file(f):
     in place.  Reads files in UTF-8.
     """
     @wraps(f)
-    def f_in_file(fname):
+    def f_in_file(fname, *args, **kwargs):
         with io.open(fname, 'r', encoding='utf-8') as inf:
             data = inf.read()
-        data = f(data)
+        data = f(data, *args, **kwargs)
         with io.open(fname, 'w+', encoding='utf-8') as outf:
             outf.write(data)
 
