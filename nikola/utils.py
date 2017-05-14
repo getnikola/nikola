@@ -265,6 +265,10 @@ class Functionary(defaultdict):
         """When called as a function, take an optional lang and return self[lang][key]."""
         if lang is None:
             lang = LocaleBorg().current_lang
+        if lang not in self:
+            LOGGER.warning('Unknown language %s', lang)
+        elif key not in self[lang]:
+            LOGGER.warning('Unknown message %s', key)
         return self[lang][key]
 
 
