@@ -437,3 +437,38 @@ def add_header_permalinks(data, xpath_list=None):
             new_node = lxml.html.fragment_fromstring('<a href="#{0}" class="headerlink" title="Permalink to this heading">¶</a>'.format(hid))
             node.append(new_node)
     return lxml.html.tostring(doc, encoding="unicode")
+
+
+@apply_to_text_file
+def deduplicate_ids(data):
+    """Post-process HTML via lxml to deduplicate IDs."""
+    doc = lxml.html.document_fromstring(data)
+    elements = doc.xpath('//*')
+    all_ids = [element.attrib.get('id') for element in elements]
+    seen_ids = set()
+    duplicated_ids = set()
+    for i in all_ids:
+        if i is not None and i in seen_ids:
+            duplicated_ids.add(i)
+        else:
+            seen_ids.add(i)
+
+    if duplicated_ids:
+        # Well, that sucks.
+        for i in duplicated_ids:
+            # Results are ordered the same way they are ordered in document
+            offending_elements = doc.xpath('//*[@id="{}"]'.format(i))
+            counter = 2
+            for e in offending_elements[1:]:
+                new_id = '{0}-{1}'.format(i, counter)
+                e.attrib['id'] = new_id
+                counter += 1
+                # Find headerlinks that we can fix.
+                headerlinks = e.find_class('headerlink')
+                for hl in headerlinks:
+                    # We might get headerlinks of child elements
+                    if hl.attrib['href'] == '#' + i:
+                        hl.attrib['href'] = '#' + new_id
+        return lxml.html.tostring(doc, encoding='unicode')
+    else:
+        return data

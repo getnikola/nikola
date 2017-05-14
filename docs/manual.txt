@@ -1928,6 +1928,11 @@ add_header_permalinks
         # Include *every* header (not recommended):
         # HEADER_PERMALINKS_XPATH_LIST = ['*//{hx}']
 
+deduplicate_ids
+   Prevent duplicated IDs in HTML output. An incrementing counter is added to
+   offending IDs. If used alongside ``add_header_permalinks``, it will fix
+   those links (it must run **after** that filter)
+
 You can apply filters to specific posts or pages by using the ``filters`` metadata field:
 
 .. code:: restructuredtext
