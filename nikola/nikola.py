@@ -2267,6 +2267,9 @@ class Nikola(object):
         deps = post.deps(lang)
         uptodate_deps = post.deps_uptodate(lang)
         deps.extend(utils.get_asset_path(x, self.THEMES) for x in ('bundles', 'parent', 'engine'))
+        _theme_ini = utils.get_asset_path(self.config['THEME'] + '.theme', self.THEMES)
+        if _theme_ini:
+            deps.append(_theme_ini)
 
         context = copy(context) if context else {}
         context['post'] = post
