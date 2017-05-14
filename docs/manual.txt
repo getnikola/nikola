@@ -1919,7 +1919,7 @@ add_header_permalinks
       .headerlink { opacity: 0.1; margin-left: 0.2em; }
       .headerlink:hover { opacity: 1; text-decoration: none; }
 
-   Additionally, you can provide a custom list of XPath expressions which should be used for finding headers (``{hx}}`` is replaced by headers h1 through h6).
+   Additionally, you can provide a custom list of XPath expressions which should be used for finding headers (``{hx}`` is replaced by headers h1 through h6).
    This is required if you use a custom theme that does not use ``"e-content entry-content"`` as a class for post and page contents.
 
    .. code:: python

@@ -587,7 +587,7 @@ GITHUB_COMMIT_SOURCE = True
 # HTML_TIDY_EXECUTABLE = 'tidy5'
 
 # List of XPath expressions which should be used for finding headers
-# ({hx}} is replaced by headers h1 through h6).
+# ({hx} is replaced by headers h1 through h6).
 # You must change this if you use a custom theme that does not use
 # "e-content entry-content" as a class for post and page contents.
 
