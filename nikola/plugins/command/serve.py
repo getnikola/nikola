@@ -164,11 +164,11 @@ class CommandServe(Command):
                         with open(self.serve_pidfile, 'w') as fh:
                             fh.write('{0}\n'.format(pid))
                         self.logger.info("Detached with PID {0}. Run `kill {0}` or `kill $(cat nikolaserve.pid)` to stop the server.".format(pid))
-                except AttributeError as e:
+                except AttributeError:
                     if os.name == 'nt':
                         self.logger.warning("Detaching is not available on Windows, server is running in the foreground.")
                     else:
-                        raise e
+                        raise
             else:
                 self.detached = False
                 try:
