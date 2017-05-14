@@ -459,7 +459,7 @@ def deduplicate_ids(data):
             # Results are ordered the same way they are ordered in document
             offending_elements = doc.xpath('//*[@id="{}"]'.format(i))
             counter = 2
-            for e in offending_elements[1:]:
+            for e in offending_elements[1::-1]:
                 new_id = '{0}-{1}'.format(i, counter)
                 e.attrib['id'] = new_id
                 counter += 1
