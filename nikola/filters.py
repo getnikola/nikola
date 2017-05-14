@@ -42,7 +42,7 @@ except ImportError:
     typo = None  # NOQA
 import requests
 
-from .utils import req_missing, LOGGER
+from .utils import req_missing, LOGGER, slugify
 
 
 class _ConfigurableFilter(object):
@@ -66,10 +66,10 @@ def apply_to_binary_file(f):
     in place.  Reads files in binary mode.
     """
     @wraps(f)
-    def f_in_file(fname):
+    def f_in_file(fname, *args, **kwargs):
         with open(fname, 'rb') as inf:
             data = inf.read()
-        data = f(data)
+        data = f(data, *args, **kwargs)
         with open(fname, 'wb+') as outf:
             outf.write(data)
 
@@ -84,10 +84,10 @@ def apply_to_text_file(f):
     in place.  Reads files in UTF-8.
     """
     @wraps(f)
-    def f_in_file(fname):
+    def f_in_file(fname, *args, **kwargs):
         with io.open(fname, 'r', encoding='utf-8') as inf:
             data = inf.read()
-        data = f(data)
+        data = f(data, *args, **kwargs)
         with io.open(fname, 'w+', encoding='utf-8') as outf:
             outf.write(data)
 
@@ -398,3 +398,42 @@ def _normalize_html(data):
 
 # The function is used in other filters, so the decorator cannot be used directly.
 normalize_html = apply_to_text_file(_normalize_html)
+
+
+@_ConfigurableFilter(xpath_list='HEADER_PERMALINKS_XPATH_LIST')
+@apply_to_text_file
+def add_header_permalinks(data, xpath_list=None):
+    """Post-process HTML via lxml to add header permalinks Sphinx-style."""
+    doc = lxml.html.document_fromstring(data)
+    # Get language for slugify
+    try:
+        lang = doc.attrib['lang']  # <html lang="…">
+    except KeyError:
+        # Circular import workaround (utils imports filters)
+        from nikola.utils import LocaleBorg
+        lang = LocaleBorg().current_lang
+
+    xpath_set = set()
+    if not xpath_list:
+        xpath_list = ['*//div[@class="e-content entry-content"]//{hx}']
+    for xpath_expr in xpath_list:
+        for hx in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
+            xpath_set.add(xpath_expr.format(hx=hx))
+    for x in xpath_set:
+        nodes = doc.findall(x)
+        for node in nodes:
+            parent = node.getparent()
+            if 'id' in node.attrib:
+                hid = node.attrib['id']
+            elif 'id' in parent.attrib:
+                # docutils: <div> has an ID and contains the header
+                hid = parent.attrib['id']
+            else:
+                # Using force-mode, because not every character can appear in a
+                # HTML id
+                node.attrib['id'] = slugify(node.text_content(), lang, True)
+                hid = node.attrib['id']
+
+            new_node = lxml.html.fragment_fromstring('<a href="#{0}" class="headerlink" title="Permalink to this heading">¶</a>'.format(hid))
+            node.append(new_node)
+    return lxml.html.tostring(doc, encoding="unicode")

@@ -1911,6 +1911,23 @@ jsonminify
 xmlminify
    Minify XML files. Suitable for Nikola’s sitemaps and Atom feeds.
 
+add_header_permalinks
+   Add links next to every header, Sphinx-style. You will need to add styling for the `headerlink` class,
+   in `custom.css`, for example:
+
+   .. code:: css
+      .headerlink { opacity: 0.1; margin-left: 0.2em; }
+      .headerlink:hover { opacity: 1; text-decoration: none; }
+
+   Additionally, you can provide a custom list of XPath expressions which should be used for finding headers (``{hx}}`` is replaced by headers h1 through h6).
+   This is required if you use a custom theme that does not use ``"e-content entry-content"`` as a class for post and page contents.
+
+   .. code:: python
+        # Default value:
+        HEADER_PERMALINKS_XPATH_LIST = ['*//div[@class="e-content entry-content"]//{hx}']
+        # Include *every* header (not recommended):
+        # HEADER_PERMALINKS_XPATH_LIST = ['*//{hx}']
+
 You can apply filters to specific posts or pages by using the ``filters`` metadata field:
 
 .. code:: restructuredtext
