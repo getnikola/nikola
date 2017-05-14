@@ -396,4 +396,5 @@ def _normalize_html(data):
     return '<!DOCTYPE html>\n' + data
 
 
+# The function is used in other filters, so the decorator cannot be used directly.
 normalize_html = apply_to_text_file(_normalize_html)
