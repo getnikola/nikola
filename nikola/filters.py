@@ -400,8 +400,9 @@ def _normalize_html(data):
 normalize_html = apply_to_text_file(_normalize_html)
 
 
+@_ConfigurableFilter(xpath_list='HEADER_PERMALINKS_XPATH_LIST')
 @apply_to_text_file
-def add_header_permalinks(data):
+def add_header_permalinks(data, xpath_list=None):
     """Post-process HTML via lxml to add header permalinks Sphinx-style."""
     doc = lxml.html.document_fromstring(data)
     # Get language for slugify
@@ -411,22 +412,25 @@ def add_header_permalinks(data):
         # Circular import workaround (utils imports filters)
         from nikola.utils import LocaleBorg
         lang = LocaleBorg().current_lang
-    for h in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
-        nodes = doc.findall('*//' + h)
-        for node in nodes:
-            parent = node.getparent()
-            if 'id' in node.attrib:
-                hid = node.attrib['id']
-            elif 'id' in parent.attrib:
-                # docutils: <div> has an ID and contains the header
-                hid = parent.attrib['id']
-            else:
-                # Using force-mode, because not every character can appear in a
-                # HTML id
-                node.attrib['id'] = slugify(node.text_content(), lang, True)
-                hid = node.attrib['id']
-                # TODO: ignore post titles, site title (?) — configurable blacklist?
-                # TODO: deduplication (another filter)
-            new_node = lxml.html.fragment_fromstring('&nbsp;<a href="#{0}" class="headerlink" title="Permalink to this heading">¶</a>'.format(hid))
-            node.append(new_node)
+
+    if not xpath_list:
+        xpath_list = ['*//div[@class="e-content entry-content"]//{hx}']
+    for xpath_expr in xpath_list:
+        for hx in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
+            nodes = doc.findall(xpath_expr.format(hx=hx))
+            for node in nodes:
+                parent = node.getparent()
+                if 'id' in node.attrib:
+                    hid = node.attrib['id']
+                elif 'id' in parent.attrib:
+                    # docutils: <div> has an ID and contains the header
+                    hid = parent.attrib['id']
+                else:
+                    # Using force-mode, because not every character can appear in a
+                    # HTML id
+                    node.attrib['id'] = slugify(node.text_content(), lang, True)
+                    hid = node.attrib['id']
+
+                new_node = lxml.html.fragment_fromstring('<a href="#{0}" class="headerlink" title="Permalink to this heading">¶</a>'.format(hid))
+                node.append(new_node)
     return lxml.html.tostring(doc, encoding="unicode")

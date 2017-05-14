@@ -586,7 +586,14 @@ GITHUB_COMMIT_SOURCE = True
 # (defaults to 'tidy5').
 # HTML_TIDY_EXECUTABLE = 'tidy5'
 
+# List of XPath expressions which should be used for finding headers
+# ({hx}} is replaced by headers h1 through h6).
+# You must change this if you use a custom theme that does not use
+# "e-content entry-content" as a class for post and page contents.
 
+# HEADER_PERMALINKS_XPATH_LIST = ['*//div[@class="e-content entry-content"]//{hx}']
+# Include *every* header (not recommended):
+# HEADER_PERMALINKS_XPATH_LIST = ['*//{hx}']
 
 # Expert setting! Create a gzipped copy of each generated file. Cheap server-
 # side optimization for very high traffic sites or low memory servers.
