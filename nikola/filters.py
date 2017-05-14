@@ -413,24 +413,27 @@ def add_header_permalinks(data, xpath_list=None):
         from nikola.utils import LocaleBorg
         lang = LocaleBorg().current_lang
 
+    xpath_set = set()
     if not xpath_list:
         xpath_list = ['*//div[@class="e-content entry-content"]//{hx}']
     for xpath_expr in xpath_list:
         for hx in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
-            nodes = doc.findall(xpath_expr.format(hx=hx))
-            for node in nodes:
-                parent = node.getparent()
-                if 'id' in node.attrib:
-                    hid = node.attrib['id']
-                elif 'id' in parent.attrib:
-                    # docutils: <div> has an ID and contains the header
-                    hid = parent.attrib['id']
-                else:
-                    # Using force-mode, because not every character can appear in a
-                    # HTML id
-                    node.attrib['id'] = slugify(node.text_content(), lang, True)
-                    hid = node.attrib['id']
+            xpath_set.add(xpath_expr.format(hx=hx))
+    for x in xpath_set:
+        nodes = doc.findall(x)
+        for node in nodes:
+            parent = node.getparent()
+            if 'id' in node.attrib:
+                hid = node.attrib['id']
+            elif 'id' in parent.attrib:
+                # docutils: <div> has an ID and contains the header
+                hid = parent.attrib['id']
+            else:
+                # Using force-mode, because not every character can appear in a
+                # HTML id
+                node.attrib['id'] = slugify(node.text_content(), lang, True)
+                hid = node.attrib['id']
 
-                new_node = lxml.html.fragment_fromstring('<a href="#{0}" class="headerlink" title="Permalink to this heading">¶</a>'.format(hid))
-                node.append(new_node)
+            new_node = lxml.html.fragment_fromstring('<a href="#{0}" class="headerlink" title="Permalink to this heading">¶</a>'.format(hid))
+            node.append(new_node)
     return lxml.html.tostring(doc, encoding="unicode")
