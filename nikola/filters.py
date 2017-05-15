@@ -439,9 +439,12 @@ def add_header_permalinks(data, xpath_list=None):
     return lxml.html.tostring(doc, encoding="unicode")
 
 
+@_ConfigurableFilter(top_classes='DEDUPLICATE_IDS_TOP_CLASSES')
 @apply_to_text_file
-def deduplicate_ids(data):
+def deduplicate_ids(data, top_classes=None):
     """Post-process HTML via lxml to deduplicate IDs."""
+    if not top_classes:
+        top_classes = ('postpage', 'storypage')
     doc = lxml.html.document_fromstring(data)
     elements = doc.xpath('//*')
     all_ids = [element.attrib.get('id') for element in elements]
@@ -459,7 +462,17 @@ def deduplicate_ids(data):
             # Results are ordered the same way they are ordered in document
             offending_elements = doc.xpath('//*[@id="{}"]'.format(i))
             counter = 2
-            for e in offending_elements[-2::-1]:
+            # If this is a story or a post, do it from top to bottom, because
+            # updates to those are more likely to appear at the bottom of pages.
+            # For anything else, including indexes, do it from bottom to top,
+            # because new posts appear at the top of pages.
+            # We also leave the first result out, so there is one element with
+            # "plain" ID
+            if any(doc.find_class(c) for c in top_classes):
+                off = offending_elements[1:]
+            else:
+                off = offending_elements[-2::-1]
+            for e in off:
                 new_id = i
                 while doc.xpath('//*[@id="{}"]'.format(new_id)):
                     new_id = '{0}-{1}'.format(i, counter)

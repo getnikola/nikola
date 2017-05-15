@@ -1933,6 +1933,19 @@ deduplicate_ids
    offending IDs. If used alongside ``add_header_permalinks``, it will fix
    those links (it must run **after** that filter)
 
+   IDs are numbered from the bottom up, which is useful for indexes (updates
+   appear at the top). There are exceptions, which may be configured using
+   ``DEDUPLICATE_IDS_TOP_CLASSES`` — if any of those classes appears sin the
+   document, the IDs are rewritten top-down, which is useful for posts/pages
+   (updates appear at the bottom).
+
+   Note that in rare cases, permalinks might not always be *permanent* in case
+   of edits.
+
+   .. code:: python
+
+      DEDUPLICATE_IDS_TOP_CLASSES = ('postpage', 'storypage')
+
 You can apply filters to specific posts or pages by using the ``filters`` metadata field:
 
 .. code:: restructuredtext
