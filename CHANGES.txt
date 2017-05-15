@@ -10,8 +10,6 @@ Features
 Bugfixes
 --------
 
-* Don't crash when translating untranslated messages.
-
 New in v7.8.5
 =============
 
