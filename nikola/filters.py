@@ -400,10 +400,15 @@ def _normalize_html(data):
 normalize_html = apply_to_text_file(_normalize_html)
 
 
-@_ConfigurableFilter(xpath_list='HEADER_PERMALINKS_XPATH_LIST')
-@apply_to_text_file
-def add_header_permalinks(data, xpath_list=None):
+@_ConfigurableFilter(xpath_list='HEADER_PERMALINKS_XPATH_LIST', file_blacklist='HEADER_PERMALINKS_FILE_BLACKLIST')
+def add_header_permalinks(fname, xpath_list=None, file_blacklist=None):
     """Post-process HTML via lxml to add header permalinks Sphinx-style."""
+    # Blacklist requires custom file handling
+    file_blacklist = file_blacklist or []
+    if fname in file_blacklist:
+        return
+    with io.open(fname, 'r', encoding='utf-8') as inf:
+        data = inf.read()
     doc = lxml.html.document_fromstring(data)
     # Get language for slugify
     try:
@@ -436,4 +441,7 @@ def add_header_permalinks(data, xpath_list=None):
 
             new_node = lxml.html.fragment_fromstring('<a href="#{0}" class="headerlink" title="Permalink to this heading">¶</a>'.format(hid))
             node.append(new_node)
-    return lxml.html.tostring(doc, encoding="unicode")
+
+    data = lxml.html.tostring(doc, encoding="unicode")
+    with io.open(fname, 'w+', encoding='utf-8') as outf:
+        outf.write(data)

@@ -1928,6 +1928,10 @@ add_header_permalinks
         # Include *every* header (not recommended):
         # HEADER_PERMALINKS_XPATH_LIST = ['*//{hx}']
 
+    You can also use a file blacklist (``HEADER_PERMALINKS_FILE_BLACKLIST``),
+    useful for some index pages. Paths include the output directory (eg.
+    ``output/index.html``)
+
 You can apply filters to specific posts or pages by using the ``filters`` metadata field:
 
 .. code:: restructuredtext

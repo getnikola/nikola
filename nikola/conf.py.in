@@ -590,10 +590,13 @@ GITHUB_COMMIT_SOURCE = True
 # ({hx}} is replaced by headers h1 through h6).
 # You must change this if you use a custom theme that does not use
 # "e-content entry-content" as a class for post and page contents.
-
 # HEADER_PERMALINKS_XPATH_LIST = ['*//div[@class="e-content entry-content"]//{hx}']
 # Include *every* header (not recommended):
 # HEADER_PERMALINKS_XPATH_LIST = ['*//{hx}']
+
+# File blacklist for header permalinks. Contains output path
+# (eg. 'output/index.html')
+# HEADER_PERMALINKS_FILE_BLACKLIST = []
 
 # Expert setting! Create a gzipped copy of each generated file. Cheap server-
 # side optimization for very high traffic sites or low memory servers.
