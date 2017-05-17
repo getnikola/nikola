@@ -1784,7 +1784,7 @@ class Nikola(object):
                 # PyRSS2Gen's pubDate is GMT time.
                 'pubDate': (post.date if post.date.tzinfo is None else
                             post.date.astimezone(dateutil.tz.tzutc())),
-                'categories': post._tags.get(lang, []),
+                'categories': post.tags_for_language(lang),
                 'creator': post.author(lang),
                 'guid': post.guid(lang),
             }
