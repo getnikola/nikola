@@ -479,10 +479,11 @@ def deduplicate_ids(data, top_classes=None):
                 off = offending_elements[-2::-1]
             for e in off:
                 new_id = i
-                while doc.xpath('//*[@id="{}"]'.format(new_id)):
+                while new_id in seen_ids:
                     new_id = '{0}-{1}'.format(i, counter)
                     counter += 1
                 e.attrib['id'] = new_id
+                seen_ids.add(new_id)
                 # Find headerlinks that we can fix.
                 headerlinks = e.find_class('headerlink')
                 for hl in headerlinks:
