@@ -12,6 +12,8 @@ Bugfixes
 --------
 
 * Ignore files ending wih "bak" (Issue #2740)
+* Use page.tmpl by default, which is inherited from story.tmpl (Issue
+  #1891)
 
 New in v7.8.5
 =============
