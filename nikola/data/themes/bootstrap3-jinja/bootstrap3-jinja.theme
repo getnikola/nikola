@@ -11,3 +11,6 @@ tags = bootstrap
 family = bootstrap3
 mako_version = bootstrap3
 variants = bootstrap3-gradients, bootstrap3-gradients-jinja
+
+[Nikola]
+bootswatch = True
