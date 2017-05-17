@@ -123,8 +123,8 @@ THEME_COLOR = '#5670d4'
 # Finally, note that destination can be translated, i.e. you can
 # specify a different translation folder per language. Example:
 #     PAGES = (
-#         ("pages/*.rst", {"en": "pages", "de": "seiten"}, "story.tmpl"),
-#         ("pages/*.md", {"en": "pages", "de": "seiten"}, "story.tmpl"),
+#         ("pages/*.rst", {"en": "pages", "de": "seiten"}, "page.tmpl"),
+#         ("pages/*.md", {"en": "pages", "de": "seiten"}, "page.tmpl"),
 #     )
 
 POSTS = ${POSTS}
