@@ -267,7 +267,6 @@ class CommandAuto(Command):
         # move on larger save operations for write protection
         event_path = event.dest_path if hasattr(event, 'dest_path') else event.src_path
         fname = os.path.basename(event_path)
-        from doit.tools import set_trace; set_trace()
         if (fname.endswith('~') or
                 fname.startswith('.') or
                 '__pycache__' in event_path or
