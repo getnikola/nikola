@@ -270,8 +270,8 @@ class CommandAuto(Command):
         if (fname.endswith('~') or
                 fname.startswith('.') or
                 '__pycache__' in event_path or
-                event_path.endswith(('.pyc', '.pyo', '.pyd')) or
-                os.path.isdir(event_path)):  # Skip on folders, these are usually duplicates
+                event_path.endswith(('.pyc', '.pyo', '.pyd', '_bak')) or
+                event.is_directory):  # Skip on folders, these are usually duplicates
             return
         self.logger.info('REBUILDING SITE (from {0})'.format(event_path))
         p = subprocess.Popen(self.cmd_arguments, stderr=subprocess.PIPE)

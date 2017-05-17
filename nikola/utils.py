@@ -28,6 +28,7 @@
 
 from __future__ import print_function, unicode_literals, absolute_import
 import calendar
+import configparser
 import datetime
 import dateutil.tz
 import hashlib
@@ -607,27 +608,52 @@ def get_theme_path(theme):
     return theme
 
 
+def parse_theme_meta(theme_dir):
+    """Parse a .theme meta file."""
+    cp = configparser.ConfigParser()
+    # The `or` case is in case theme_dir ends with a trailing slash
+    theme_name = os.path.basename(theme_dir) or os.path.basename(os.path.dirname(theme_dir))
+    theme_meta_path = os.path.join(theme_dir, theme_name + '.theme')
+    cp.read(theme_meta_path)
+    return cp if cp.has_section('Theme') else None
+
+
 def get_template_engine(themes):
     """Get template engine used by a given theme."""
     for theme_name in themes:
-        engine_path = os.path.join(theme_name, 'engine')
-        if os.path.isfile(engine_path):
-            with open(engine_path) as fd:
-                return fd.readlines()[0].strip()
-    # default
-    return 'mako'
+        meta = parse_theme_meta(theme_name)
+        if meta:
+            e = meta.get('Theme', 'engine', fallback=None)
+            if e:
+                return e
+        else:
+            # Theme still uses old-style parent/engine files
+            engine_path = os.path.join(theme_name, 'engine')
+            if os.path.isfile(engine_path):
+                with open(engine_path) as fd:
+                    return fd.readlines()[0].strip()
+        # default
+        return 'mako'
 
 
 def get_parent_theme_name(theme_name, themes_dirs=None):
     """Get name of parent theme."""
-    parent_path = os.path.join(theme_name, 'parent')
-    if os.path.isfile(parent_path):
-        with open(parent_path) as fd:
-            parent = fd.readlines()[0].strip()
-        if themes_dirs:
+    meta = parse_theme_meta(theme_name)
+    if meta:
+        parent = meta.get('Theme', 'parent', fallback=None)
+        if themes_dirs and parent:
             return get_theme_path_real(parent, themes_dirs)
         return parent
-    return None
+    else:
+        # Theme still uses old-style parent/engine files
+        parent_path = os.path.join(theme_name, 'parent')
+        if os.path.isfile(parent_path):
+            with open(parent_path) as fd:
+                parent = fd.readlines()[0].strip()
+            if themes_dirs:
+                return get_theme_path_real(parent, themes_dirs)
+            return parent
+        return None
 
 
 def get_theme_chain(theme, themes_dirs):

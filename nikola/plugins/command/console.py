@@ -78,10 +78,10 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
         """Run an IPython shell."""
         try:
             import IPython
-        except ImportError as e:
+        except ImportError:
             if willful:
                 req_missing(['IPython'], 'use the IPython console')
-            raise e  # That’s how _execute knows whether to try something else.
+            raise  # That’s how _execute knows whether to try something else.
         else:
             site = self.context['site']  # NOQA
             nikola_site = self.context['site']  # NOQA
@@ -96,7 +96,7 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
         except ImportError as e:
             if willful:
                 req_missing(['bpython'], 'use the bpython console')
-            raise e  # That’s how _execute knows whether to try something else.
+            raise  # That’s how _execute knows whether to try something else.
         else:
             bpython.embed(banner=self.header.format('bpython'), locals_=self.context)
 

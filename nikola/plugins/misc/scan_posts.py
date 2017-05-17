@@ -101,9 +101,9 @@ class ScanPosts(PostScanner):
                             destination_base=destination_translatable
                         )
                         timeline.append(post)
-                    except Exception as err:
+                    except Exception:
                         LOGGER.error('Error reading post {}'.format(base_path))
-                        raise err
+                        raise
 
         return timeline
 

@@ -392,10 +392,10 @@ class RelativeLinkTest2(DemoBuildTest):
         conf_path = os.path.join(self.target_dir, "conf.py")
         with io.open(conf_path, "r", encoding="utf-8") as inf:
             data = inf.read()
-            data = data.replace('("pages/*.txt", "pages", "story.tmpl"),',
-                                '("pages/*.txt", "", "story.tmpl"),')
-            data = data.replace('("pages/*.rst", "pages", "story.tmpl"),',
-                                '("pages/*.rst", "", "story.tmpl"),')
+            data = data.replace('("pages/*.txt", "pages", "page.tmpl"),',
+                                '("pages/*.txt", "", "page.tmpl"),')
+            data = data.replace('("pages/*.rst", "pages", "page.tmpl"),',
+                                '("pages/*.rst", "", "page.tmpl"),')
             data = data.replace('# INDEX_PATH = ""',
                                 'INDEX_PATH = "blog"')
         with io.open(conf_path, "w+", encoding="utf8") as outf:
@@ -553,7 +553,7 @@ class SectionPageCollisionTest(EmptyBuildTest):
         """Enable post sections."""
         conf_path = os.path.join(self.target_dir, "conf.py")
         with io.open(conf_path, "a", encoding="utf8") as outf:
-            outf.write("""\n\nPOSTS_SECTIONS = True\nPOSTS_SECTIONS_ARE_INDEXES = True\nPRETTY_URLS = True\nPOSTS = (('posts/*.txt', '', 'post.tmpl'),)\nPAGES = (('pages/*.txt', '', 'story.tmpl'),)\n\n""")
+            outf.write("""\n\nPOSTS_SECTIONS = True\nPOSTS_SECTIONS_ARE_INDEXES = True\nPRETTY_URLS = True\nPOSTS = (('posts/*.txt', '', 'post.tmpl'),)\nPAGES = (('pages/*.txt', '', 'page.tmpl'),)\n\n""")
 
     @classmethod
     def fill_site(self):
@@ -602,7 +602,7 @@ class PageIndexTest(EmptyBuildTest):
         """Enable PAGE_INDEX."""
         conf_path = os.path.join(self.target_dir, "conf.py")
         with io.open(conf_path, "a", encoding="utf8") as outf:
-            outf.write("""\n\nPAGE_INDEX = True\nPRETTY_URLS = False\nPAGES = PAGES + (('pages/*.php', 'pages', 'story.tmpl'),)\n\n""")
+            outf.write("""\n\nPAGE_INDEX = True\nPRETTY_URLS = False\nPAGES = PAGES + (('pages/*.php', 'pages', 'page.tmpl'),)\n\n""")
 
     @classmethod
     def fill_site(self):
@@ -707,7 +707,7 @@ class PageIndexPrettyUrlsTest(PageIndexTest):
         """Enable PAGE_INDEX."""
         conf_path = os.path.join(self.target_dir, "conf.py")
         with io.open(conf_path, "a", encoding="utf8") as outf:
-            outf.write("""\n\nPAGE_INDEX = True\nPRETTY_URLS = True\nPAGES = PAGES + (('pages/*.php', 'pages', 'story.tmpl'),)\n\n""")
+            outf.write("""\n\nPAGE_INDEX = True\nPRETTY_URLS = True\nPAGES = PAGES + (('pages/*.php', 'pages', 'page.tmpl'),)\n\n""")
 
     def _make_output_path(self, dir, name):
         """Make a file path to the output."""

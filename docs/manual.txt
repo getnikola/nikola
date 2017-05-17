@@ -1928,6 +1928,7 @@ add_header_permalinks
         # Include *every* header (not recommended):
         # HEADER_PERMALINKS_XPATH_LIST = ['*//{hx}']
 
+
 deduplicate_ids
    Prevent duplicated IDs in HTML output. An incrementing counter is added to
    offending IDs. If used alongside ``add_header_permalinks``, it will fix
@@ -1945,6 +1946,11 @@ deduplicate_ids
    .. code:: python
 
       DEDUPLICATE_IDS_TOP_CLASSES = ('postpage', 'storypage')
+
+    You can also use a file blacklist (``HEADER_PERMALINKS_FILE_BLACKLIST``),
+    useful for some index pages. Paths include the output directory (eg.
+    ``output/index.html``)
+
 
 You can apply filters to specific posts or pages by using the ``filters`` metadata field:
 

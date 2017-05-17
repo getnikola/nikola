@@ -382,7 +382,7 @@ def apply_shortcodes(data, registry, site=None, filename=None, raise_exceptions=
     except ParsingError as e:
         if raise_exceptions:
             # Throw up
-            raise e
+            raise
         if filename:
             LOGGER.error("Shortcode error in file {0}: {1}".format(filename, e))
         else:
