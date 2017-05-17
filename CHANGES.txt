@@ -11,6 +11,8 @@ Features
 Bugfixes
 --------
 
+* Ignore files ending wih "bak" (Issue #2740)
+
 New in v7.8.5
 =============
 
