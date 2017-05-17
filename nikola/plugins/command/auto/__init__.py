@@ -267,11 +267,12 @@ class CommandAuto(Command):
         # move on larger save operations for write protection
         event_path = event.dest_path if hasattr(event, 'dest_path') else event.src_path
         fname = os.path.basename(event_path)
+        from doit.tools import set_trace; set_trace()
         if (fname.endswith('~') or
                 fname.startswith('.') or
                 '__pycache__' in event_path or
                 event_path.endswith(('.pyc', '.pyo', '.pyd', '_bak')) or
-                os.path.isdir(event_path)):  # Skip on folders, these are usually duplicates
+                event.is_directory:  # Skip on folders, these are usually duplicates
             return
         self.logger.info('REBUILDING SITE (from {0})'.format(event_path))
         p = subprocess.Popen(self.cmd_arguments, stderr=subprocess.PIPE)
