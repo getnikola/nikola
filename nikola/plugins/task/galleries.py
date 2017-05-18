@@ -258,6 +258,7 @@ class Galleries(Task, ImageProcessor):
                         folder += '/'
                     folders.append((folder, ft))
 
+                context["gallery_path"] = gallery
                 context["folders"] = natsort.natsorted(
                     folders, alg=natsort.ns.F | natsort.ns.IC)
                 context["crumbs"] = utils.get_crumbs(gallery, index_folder=self, lang=lang)

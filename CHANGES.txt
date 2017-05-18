@@ -5,11 +5,17 @@ Features
 --------
 
 * Better error handling when posts can't be parsed (Issue #2771)
+* Use ``.theme`` files to store theme metadata (Issue #2758)
 * New ``add_header_permalinks`` filter, for Sphinx-style header links
   (Issue #2636)
+* Added alternate links for gallery translations (Issue #993)
 
 Bugfixes
 --------
+
+* Ignore files ending wih "bak" (Issue #2740)
+* Use page.tmpl by default, which is inherited from story.tmpl (Issue
+  #1891)
 
 New in v7.8.5
 =============
