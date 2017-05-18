@@ -376,14 +376,6 @@ class DoitNikola(DoitMain):
             # get "global vars" from cmd-line
             args = self.process_args(cmd_args)
 
-            # get specified sub-command or use default='run'
-            if len(args) == 0 or args[0] not in sub_cmds:
-                specified_run = False
-                cmd_name = 'run'
-            else:
-                specified_run = True
-                cmd_name = args.pop(0)
-
             # execute command
             command = sub_cmds.get_plugin(cmd_name)(
                 task_loader=self.task_loader,
