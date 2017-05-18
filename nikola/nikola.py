@@ -1086,8 +1086,7 @@ class Nikola(object):
                     # Remove blacklisted plugins
                     if p[-1].name in self.config['DISABLED_PLUGINS']:
                         bad_candidates.add(p)
-                        utils.LOGGER.debug('Not loading disabled plugin {}', p[-1].name)
-                    # Remove compilers we don't use
+                        utils.LOGGER.debug('Not loading disabled plugin {}', p[-1].name)  # Remove compilers we don't use
                     if p[-1].details.has_option('Nikola', 'PluginCategory') and p[-1].details.get('Nikola', 'PluginCategory') in ('Compiler', 'PageCompiler'):
                         bad_candidates.add(p)
                         self.disabled_compilers[p[-1].name] = p
@@ -2125,7 +2124,11 @@ class Nikola(object):
         self.pages = []
 
         for p in sorted(self.plugin_manager.getPluginsOfCategory('PostScanner'), key=operator.attrgetter('name')):
-            timeline = p.plugin_object.scan()
+            try:
+                timeline = p.plugin_object.scan()
+            except Exception:
+                utils.LOGGER.error('Error reading timeline')
+                raise
             # FIXME: can there be conflicts here?
             self.timeline.extend(timeline)
 

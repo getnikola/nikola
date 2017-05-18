@@ -198,7 +198,12 @@ class Post(object):
         try:
             self.date = to_datetime(self.meta[self.default_lang]['date'], tzinfo)
         except ValueError:
-            raise ValueError("Invalid date '{0}' in file {1}".format(self.meta[self.default_lang]['date'], source_path))
+            if not self.meta[self.default_lang]['date']:
+                msg = 'Missing date in file {}'.format(source_path)
+            else:
+                msg = "Invalid date '{0}' in file {1}".format(self.meta[self.default_lang]['date'], source_path)
+            LOGGER.error(msg)
+            raise ValueError(msg)
 
         if 'updated' not in default_metadata:
             default_metadata['updated'] = default_metadata.get('date', None)
@@ -976,7 +981,9 @@ def get_metadata_from_file(source_path, config=None, lang=None):
             meta_data = [x.strip() for x in meta_file.readlines()]
         return _get_metadata_from_file(meta_data)
     except (UnicodeDecodeError, UnicodeEncodeError):
-        raise ValueError('Error reading {0}: Nikola only supports UTF-8 files'.format(source_path))
+        msg = 'Error reading {0}: Nikola only supports UTF-8 files'.format(source_path)
+        LOGGER.error(msg)
+        raise ValueError(msg)
     except Exception:  # The file may not exist, for multilingual sites
         return {}
 

@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Better error handling when posts can't be parsed (Issue #2771)
 * New ``add_header_permalinks`` filter, for Sphinx-style header links
   (Issue #2636)
 
