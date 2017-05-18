@@ -372,7 +372,7 @@ class DoitNikola(DoitMain):
         try:
             return super(DoitNikola, self).run(cmd_args)
         except Exception:
-            pass
+            return 1
 
     @staticmethod
     def print_version():
