@@ -1,0 +1,10 @@
+[Theme]
+engine = jinja
+parent = base
+author = The Nikola Contributors
+author_url = https://getnikola.com/
+license = MIT
+
+[Family]
+family = base
+mako_version = base

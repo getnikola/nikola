@@ -32,6 +32,7 @@ import io
 import shutil
 import time
 import requests
+import configparser
 
 import pygments
 from pygments.lexers import PythonLexer
@@ -131,6 +132,13 @@ class CommandTheme(Command):
             'default': 'base',
             'help': 'Parent to use for new theme (default: base)',
         },
+        {
+            'name': 'new_legacy_meta',
+            'long': 'legacy-meta',
+            'type': bool,
+            'default': False,
+            'help': 'Create legacy meta files for new theme',
+        },
     ]
 
     def _execute(self, options, args):
@@ -147,6 +155,7 @@ class CommandTheme(Command):
         new = options.get('new')
         new_engine = options.get('new_engine')
         new_parent = options.get('new_parent')
+        new_legacy_meta = options.get('new_legacy_meta')
         command_count = [bool(x) for x in (
             install,
             uninstall,
@@ -172,7 +181,7 @@ class CommandTheme(Command):
         elif copy_template:
             return self.copy_template(copy_template)
         elif new:
-            return self.new_theme(new, new_engine, new_parent)
+            return self.new_theme(new, new_engine, new_parent, new_legacy_meta)
 
     def do_install_deps(self, url, name):
         """Install themes and their dependencies."""
@@ -316,7 +325,7 @@ class CommandTheme(Command):
             LOGGER.error("This file already exists in your templates directory ({0}).".format(base))
             return 3
 
-    def new_theme(self, name, engine, parent):
+    def new_theme(self, name, engine, parent, create_legacy_meta=False):
         """Create a new theme."""
         base = 'themes'
         themedir = os.path.join(base, name)
@@ -326,9 +335,7 @@ class CommandTheme(Command):
             LOGGER.info("Created directory {0}".format(base))
 
         # Check if engine and parent match
-        engine_file = utils.get_asset_path('engine', utils.get_theme_chain(parent, self.site.themes_dirs))
-        with io.open(engine_file, 'r', encoding='utf-8') as fh:
-            parent_engine = fh.read().strip()
+        parent_engine = utils.get_template_engine(utils.get_theme_chain(parent, self.site.themes_dirs))
 
         if parent_engine != engine:
             LOGGER.error("Cannot use engine {0} because parent theme '{1}' uses {2}".format(engine, parent, parent_engine))
@@ -342,12 +349,24 @@ class CommandTheme(Command):
             LOGGER.error("Theme already exists")
             return 2
 
-        with io.open(os.path.join(themedir, 'parent'), 'w', encoding='utf-8') as fh:
-            fh.write(parent + '\n')
-            LOGGER.info("Created file {0}".format(os.path.join(themedir, 'parent')))
-        with io.open(os.path.join(themedir, 'engine'), 'w', encoding='utf-8') as fh:
-            fh.write(engine + '\n')
-            LOGGER.info("Created file {0}".format(os.path.join(themedir, 'engine')))
+        cp = configparser.ConfigParser()
+        cp['Theme'] = {
+            'engine': engine,
+            'parent': parent
+        }
+
+        theme_meta_path = os.path.join(themedir, name + '.theme')
+        with io.open(theme_meta_path, 'w', encoding='utf-8') as fh:
+            cp.write(fh)
+            LOGGER.info("Created file {0}".format(theme_meta_path))
+
+        if create_legacy_meta:
+            with io.open(os.path.join(themedir, 'parent'), 'w', encoding='utf-8') as fh:
+                fh.write(parent + '\n')
+                LOGGER.info("Created file {0}".format(os.path.join(themedir, 'parent')))
+            with io.open(os.path.join(themedir, 'engine'), 'w', encoding='utf-8') as fh:
+                fh.write(engine + '\n')
+                LOGGER.info("Created file {0}".format(os.path.join(themedir, 'engine')))
 
         LOGGER.info("Theme {0} created successfully.".format(themedir))
         LOGGER.notice('Remember to set THEME="{0}" in conf.py to use this theme.'.format(name))
