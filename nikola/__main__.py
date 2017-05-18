@@ -30,6 +30,10 @@ from __future__ import print_function, unicode_literals
 from collections import defaultdict
 import os
 import shutil
+
+from doit.cmdparse import CmdParseError
+from doit.exceptions import InvalidDodoFile, InvalidCommand, InvalidTask
+
 try:
     import readline  # NOQA
 except ImportError:
@@ -285,9 +289,7 @@ class NikolaTaskLoader(TaskLoader):
             signal('initialized').send(self.nikola)
         except Exception:
             LOGGER.error('Error loading tasks')
-            if self.nikola.debug:
-                raise
-            return {}, {}
+            raise
         return tasks + latetasks, DOIT_CONFIG
 
 
@@ -370,8 +372,39 @@ class DoitNikola(DoitMain):
                              "existing Nikola site.")
                 return 3
         try:
-            return super(DoitNikola, self).run(cmd_args)
+
+            # get "global vars" from cmd-line
+            args = self.process_args(cmd_args)
+
+            # get specified sub-command or use default='run'
+            if len(args) == 0 or args[0] not in sub_cmds:
+                specified_run = False
+                cmd_name = 'run'
+            else:
+                specified_run = True
+                cmd_name = args.pop(0)
+
+            # execute command
+            command = sub_cmds.get_plugin(cmd_name)(
+                task_loader=self.task_loader,
+                cmds=sub_cmds,
+                config=self.config, )
+
+            try:
+                return command.parse_execute(args)
+
+            # dont show traceback for user errors.
+            except (CmdParseError, InvalidDodoFile,
+                    InvalidCommand, InvalidTask) as err:
+                if isinstance(err, InvalidCommand):
+                    err.cmd_used = cmd_name if specified_run else None
+                    err.bin_name = self.BIN_NAME
+                sys.stderr.write("ERROR: %s\n" % str(err))
+                return 3
+
         except Exception:
+            if self.nikola.debug:
+                raise
             return 1
 
     @staticmethod
