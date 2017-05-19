@@ -209,9 +209,9 @@
                     var _change = _initialWidth - _newWidth;
 
                     if (_initialWidth != _newWidth) {
-                        $this.html('');
+                        $this.innerHtml = '';
                         var _settings = data.get($this).lastSettings;
-                        _settings.data = data.get($this).data;
+                        _settings.data = data.get($this).lastSettings.data;
                         _settings.maxWidth = $this.offsetWidth - 1;
                         flowr($this, _settings);
                     }
@@ -221,22 +221,21 @@
         // If the responsive var is set to true then listen for resize method
         // and prevent resizing from happening twice if responsive is set again during append phase!
         if (settings.responsive && !data.get($this).__responsive) {
-        // FIXME
-//            $(window).resize(function() {
-//                initialWidth = data.get($this).width;
-//                newWidth = $this.offsetWidth;
-//
-//                //initiate resize
-//                if (initialWidth != newWidth) {
-//                    var task_id = data.get($this).task_id;
-//                    if (task_id) {
-//                        task_id = clearTimeout(task_id);
-//                        task_id = null;
-//                    }
-//                    task_id = setTimeout(utils.reorderContent, 80);
-//                    data.set($this, {task_id: task_id});
-//                }
-//            });
+            window.addEventListener('resize', function() {
+                initialWidth = data.get($this).width;
+                newWidth = $this.offsetWidth;
+
+                //initiate resize
+                if (initialWidth != newWidth) {
+                    var task_id = data.get($this).task_id;
+                    if (task_id) {
+                        task_id = clearTimeout(task_id);
+                        task_id = null;
+                    }
+                    task_id = setTimeout(utils.reorderContent, 80);
+                    data.set($this, {task_id: task_id});
+                }
+            });
             data.set($this, {__responsive: true});
         }
 
@@ -252,7 +251,7 @@
             for (i = 0; i < _data.length; i++) {
                 allData.push(_data[i]);
             }
-            data.set($this, {_data: allData});
+            data.set($this, {data: allData});
 
             // While we have a new row
             while ((rowData = utils.getNextRow(_data, settings)) != null && rowData.data.length > 0) {
