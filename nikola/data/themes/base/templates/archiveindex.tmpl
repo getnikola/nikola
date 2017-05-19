@@ -11,6 +11,9 @@
     %elif generate_atom:
         <link rel="alternate" type="application/atom+xml" title="Atom for the ${archive_name} archive" href="${_link("archive_atom", archive_name)}">
     %endif
+    %for language, archive_path, _ in other_archive_languages:
+        <link rel="alternate" hreflang="${language}" href="${_link('archive', archive_path, language)}">
+    %endfor
 </%block>
 
 <%block name="content_header">

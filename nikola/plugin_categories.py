@@ -602,6 +602,12 @@ class Taxonomy(BasePlugin):
         language, or only the classifications for one language in its language's
         pages.
 
+    other_language_variable_name = None:
+        In case this is not `None`, each classification page will get a list
+        of triples `(other_lang, other_classification, title)` of classifications
+        in other languages which should be linked. The list will be stored in a
+        variable by the name `other_language_variable_name`.
+
     path_handler_docstrings:
         A dictionary of docstrings for path handlers. See eg. nikola.py for
         examples.  Must be overridden, keys are "taxonomy_index", "taxonomy",
@@ -633,6 +639,7 @@ class Taxonomy(BasePlugin):
     minimum_post_count_per_classification_in_overview = 1
     omit_empty_classifications = False
     also_create_classifications_from_other_languages = True
+    other_language_variable_name = None
     path_handler_docstrings = {
         'taxonomy_index': '',
         'taxonomy': '',
@@ -801,3 +808,17 @@ class Taxonomy(BasePlugin):
         `utils.TreeNode` objects.
         """
         pass
+
+    def get_other_language_variants(self, classification, lang, classifications_per_language):
+        """Return a list of variants of the same classification in other languages.
+
+        Given a `classification` in a language `lang`, return a list of pairs
+        `(other_classification, other_lang)` with `lang != other_lang` such that
+        `classification` should be linked to `other_classification`.
+
+        Classifications where links to other language versions makes no sense
+        should simply return an empty list.
+
+        Provided is a set of classifications per language (`classifications_per_language`).
+        """
+        return []

@@ -30,6 +30,7 @@ from __future__ import unicode_literals
 import blinker
 import os
 import natsort
+from collections import defaultdict
 from copy import copy
 try:
     from urlparse import urljoin
@@ -302,15 +303,60 @@ class RenderTaxonomies(Task):
         task['basename'] = self.name
         return task
 
-    def _generate_classification_page(self, taxonomy, classification, post_list, lang):
+    @staticmethod
+    def _sort_classifications(taxonomy, classifications, lang):
+        """Sort the given list of classifications of the given taxonomy and language."""
+        if taxonomy.has_hierarchy:
+            # To sort a hierarchy of classifications correctly, we first
+            # build a tree out of them (and mark for each node whether it
+            # appears in the list), then sort the tree node-wise, and finally
+            # collapse the tree into a list of recombined classifications.
+
+            # Step 1: build hierarchy. Here, each node consists of a boolean
+            # flag (node appears in list) and a dictionary mapping path elements
+            # to nodes.
+            root = [False, {}]
+            for classification in classifications:
+                node = root
+                for elt in taxonomy.extract_hierarchy(classification):
+                    if elt not in node[1]:
+                        node[1][elt] = [False, {}]
+                    node = node[1][elt]
+                node[0] = True
+            # Step 2: sort hierarchy. The result for a node is a pair
+            # (flag, subnodes), where subnodes is a list of pairs (name, subnode).
+
+            def sort_node(node, level=0):
+                keys = natsort.natsorted(node[1].keys(), alg=natsort.ns.F | natsort.ns.IC)
+                taxonomy.sort_classifications(keys, lang, level)
+                subnodes = []
+                for key in keys:
+                    subnodes.append((key, sort_node(node[1][key], level + 1)))
+                return (node[0], subnodes)
+
+            root = sort_node(root)
+            # Step 3: collapse the tree structure into a linear sorted list,
+            # with a node coming before its children.
+
+            def append_node(classifications, node, path=[]):
+                if node[0]:
+                    classifications.append(taxonomy.recombine_classification_from_hierarchy(path))
+                for key, subnode in node[1]:
+                    append_node(classifications, subnode, path + [key])
+
+            classifications = []
+            append_node(classifications, root)
+            return classifications
+        else:
+            # Sorting a flat hierarchy is simpler. We pre-sort with
+            # natsorted and call taxonomy.sort_classifications.
+            classifications = natsort.natsorted(classifications, alg=natsort.ns.F | natsort.ns.IC)
+            taxonomy.sort_classifications(classifications, lang)
+            return classifications
+
+    def _generate_classification_page(self, taxonomy, classification, filtered_posts, generate_list, generate_rss, lang, post_lists_per_lang, classification_set_per_lang=None):
         """Render index or post list and associated feeds per classification."""
-        # Filter list
-        filtered_posts = self._filter_list(post_list, lang)
-        if len(filtered_posts) == 0 and taxonomy.omit_empty_classifications:
-            return
         # Should we create this list?
-        generate_list = taxonomy.should_generate_classification_page(classification, filtered_posts, lang)
-        generate_rss = taxonomy.should_generate_rss_for_classification_page(classification, filtered_posts, lang)
         if not generate_list and not generate_rss:
             return
         # Get data
@@ -335,6 +381,27 @@ class RenderTaxonomies(Task):
         kw["index_file"] = self.site.config['INDEX_FILE']
         context = copy(context)
         context["permalink"] = self.site.link(taxonomy.classification_name, classification, lang)
+        # Get links to other language versions of this classification
+        if classification_set_per_lang is not None:
+            other_lang_links = taxonomy.get_other_language_variants(classification, lang, classification_set_per_lang)
+            # Collect by language
+            links_per_lang = defaultdict(list)
+            for other_lang, link in other_lang_links:
+                # Make sure we ignore the current language (in case the
+                # plugin accidentally returns links for it as well)
+                if other_lang != lang:
+                    links_per_lang[other_lang].append(link)
+            # Sort first by language, then by classification
+            sorted_links = []
+            for other_lang in sorted(links_per_lang.keys()):
+                links = self._sort_classifications(taxonomy, links_per_lang[other_lang], other_lang)
+                sorted_links.extend([(other_lang, classification,
+                                      taxonomy.get_classification_friendly_name(classification, other_lang))
+                                     for classification in links if post_lists_per_lang[other_lang][classification][1]])
+            # Store result in context and kw
+            context[taxonomy.other_language_variable_name] = sorted_links
+            kw[taxonomy.other_language_variable_name] = sorted_links
+        # Allow other plugins to modify the result
         blinker.signal('generate_classification_page').send({
             'site': self.site,
             'taxonomy': taxonomy,
@@ -368,6 +435,42 @@ class RenderTaxonomies(Task):
         self.site.scan_posts()
         yield self.group_task()
 
+        # Cache classification sets per language for taxonomies where
+        # other_language_variable_name is set.
+        classification_set_per_lang = {}
+        for taxonomy in self.site.taxonomy_plugins.values():
+            if taxonomy.other_language_variable_name is not None:
+                lookup = self.site.posts_per_classification[taxonomy.classification_name]
+                cspl = {lang: set(lookup[lang].keys()) for lang in lookup}
+                classification_set_per_lang[taxonomy.classification_name] = cspl
+
+        # Collect post lists for classification pages and determine whether
+        # they should be generated.
+        post_lists_per_lang = {}
+        for taxonomy in self.site.taxonomy_plugins.values():
+            plpl = {}
+            for lang in self.site.config["TRANSLATIONS"]:
+                classifications = {}
+                for tlang, posts_per_classification in self.site.posts_per_classification[taxonomy.classification_name].items():
+                    if lang != tlang and not taxonomy.also_create_classifications_from_other_languages:
+                        continue
+                    classifications.update(posts_per_classification)
+                result = {}
+                for classification, posts in classifications.items():
+                    # Filter list
+                    filtered_posts = self._filter_list(posts, lang)
+                    if len(filtered_posts) == 0 and taxonomy.omit_empty_classifications:
+                        generate_list = False
+                        generate_rss = False
+                    else:
+                        # Should we create this list?
+                        generate_list = taxonomy.should_generate_classification_page(classification, filtered_posts, lang)
+                        generate_rss = taxonomy.should_generate_rss_for_classification_page(classification, filtered_posts, lang)
+                    result[classification] = (filtered_posts, generate_list, generate_rss)
+                plpl[lang] = result
+            post_lists_per_lang[taxonomy.classification_name] = plpl
+
+        # Now generate pages
         for lang in self.site.config["TRANSLATIONS"]:
             # To support that tag and category classifications share the same overview,
             # we explicitly detect this case:
@@ -385,16 +488,9 @@ class RenderTaxonomies(Task):
                         for task in self._generate_classification_overview(taxonomy, lang):
                             yield task
 
-                # Generate classification lists
-                classifications = {}
-                for tlang, posts_per_classification in self.site.posts_per_classification[taxonomy.classification_name].items():
-                    if lang != tlang and not taxonomy.also_create_classifications_from_other_languages:
-                        continue
-                    classifications.update(posts_per_classification)
-
                 # Process classifications
-                for classification, posts in classifications.items():
-                    for task in self._generate_classification_page(taxonomy, classification, posts, lang):
+                for classification, (filtered_posts, generate_list, generate_rss) in post_lists_per_lang[taxonomy.classification_name][lang].items():
+                    for task in self._generate_classification_page(taxonomy, classification, filtered_posts, generate_list, generate_rss, lang, post_lists_per_lang[taxonomy.classification_name], classification_set_per_lang.get(taxonomy.classification_name)):
                         yield task
             # In case we are ignoring plugins for overview, we must have a collision for
             # tags and categories. Handle this special case with extra code.

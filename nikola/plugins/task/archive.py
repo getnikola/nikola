@@ -53,6 +53,7 @@ class Archive(Taxonomy):
     minimum_post_count_per_classification_in_overview = 1
     omit_empty_classifications = False
     also_create_classifications_from_other_languages = False
+    other_language_variable_name = 'other_archive_languages'
     path_handler_docstrings = {
         'archive_index': False,
         'archive': """Link to archive path, name is the year.
@@ -239,3 +240,7 @@ class Archive(Taxonomy):
     def should_generate_classification_page(self, classification, post_list, lang):
         """Only generates list of posts for classification if this function returns True."""
         return classification == '' or len(post_list) > 0
+
+    def get_other_language_variants(self, classification, lang, classifications_per_language):
+        """Return a list of variants of the same classification in other languages."""
+        return [(other_lang, classification) for other_lang, lookup in classifications_per_language.items() if classification in lookup and other_lang != lang]
