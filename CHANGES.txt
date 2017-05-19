@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Ported gallery image layout to base theme (Issue #2775)
 * Better error handling when posts can't be parsed (Issue #2771)
 * Use ``.theme`` files to store theme metadata (Issue #2758)
 * New ``add_header_permalinks`` filter, for Sphinx-style header links

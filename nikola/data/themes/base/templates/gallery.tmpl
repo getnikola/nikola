@@ -22,14 +22,18 @@
     % endfor
     </ul>
     %endif
-    %if photo_array:
-    <ul class="thumbnails">
-        %for image in photo_array:
-            <li><a href="${image['url']}" class="thumbnail image-reference" title="${image['title']}">
-                <img src="${image['url_thumb']}" alt="${image['title']|h}" /></a>
-        %endfor
-    </ul>
-    %endif
+
+<div id="gallery_container"></div>
+%if photo_array:
+<noscript>
+<ul class="thumbnails">
+    %for image in photo_array:
+        <li><a href="${image['url']}" class="thumbnail image-reference" title="${image['title']|h}">
+            <img src="${image['url_thumb']}" alt="${image['title']|h}" /></a>
+    %endfor
+</ul>
+</noscript>
+%endif
 %if site_has_comments and enable_comments:
     ${comments.comment_form(None, permalink, title)}
 %endif
@@ -37,6 +41,15 @@
 
 <%block name="extra_head">
 ${parent.extra_head()}
+<link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
+<style type="text/css">
+    .image-block {
+        display: inline-block;
+    }
+    .flowr_row {
+        width: 100%;
+    }
+    </style>
 %if len(translations) > 1:
     %for langname in translations.keys():
          %if langname != lang:
@@ -46,3 +59,43 @@ ${parent.extra_head()}
 %endif
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
 </%block>
+
+<%block name="extra_js">
+<script src="/assets/js/flowr.js"></script>
+<script>
+jsonContent = ${photo_array_json};
+flowr(document.querySelectorAll("#gallery_container")[0], {
+        data : jsonContent,
+        height : ${thumbnail_size}*.6,
+        padding: 5,
+        rows: -1,
+        render : function(params) {
+            // Just return a div, string or a dom object, anything works fine
+            var img = document.createElement("img");
+            img.setAttribute('src', params.itemData.url_thumb);
+            img.setAttribute('width', params.width);
+            img.setAttribute('height', params.height);
+            img.style.maxWidth = '100%';
+            link = document.createElement("a");
+            link.setAttribute('href', params.itemData.url);
+            link.setAttribute('class', 'image-reference');
+            div = document.createElement("div");
+            div.setAttribute('class', 'image-block');
+            div.setAttribute('title', params.itemData.title);
+            div.setAttribute('data-toggle', "tooltip")
+            link.append(img);
+            div.append(link);
+            //div.hover(div.tooltip());
+            return div;
+        },
+        itemWidth : function(data) { return data.size.w; },
+        itemHeight : function(data) { return data.size.h; },
+        complete : function(params) {
+            if( jsonContent.length > params.renderedItems ) {
+                nextRenderList = jsonContent.slice( params.renderedItems );
+            }
+        }
+    });
+</script>
+</%block>
+
