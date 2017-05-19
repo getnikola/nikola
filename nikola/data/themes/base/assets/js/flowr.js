@@ -11,6 +11,26 @@
 
 
     flowr = function(elem, options) {
+
+        $this = elem;
+
+        var extend = function(out) {
+          out = out || {};
+
+          for (var i = 1; i < arguments.length; i++) {
+            if (!arguments[i])
+              continue;
+
+            for (var key in arguments[i]) {
+              if (arguments[i].hasOwnProperty(key))
+                out[key] = arguments[i][key];
+            }
+          }
+
+          return out;
+        };
+
+
         var data = (function() {
         var lastId = 0,
             store = {};
@@ -21,8 +41,8 @@
                 if (element.myCustomDataTag === undefined) {
                     id = lastId++;
                     element.myCustomDataTag = id;
-                }
-                store[id] = info;
+                } else { id = element.myCustomDataTag; }
+                store[id] = extend(store[id], info);
             },
 
             get: function(element) {
@@ -31,7 +51,21 @@
         };
         }());
 
-        $this = elem;
+        function reorderContent() {
+            var _initialWidth = data.get($this).width;
+            var _newWidth = $this.offsetWidth;
+            var _change = _initialWidth - _newWidth;
+
+            if (_initialWidth != _newWidth) {
+                $this.innerHTML = "";
+                var _settings = data.get($this).lastSettings || {};
+                _settings.data = data.get($this).data || {};
+                _settings.maxWidth = $this.offsetWidth - 1;
+                flowr($this, _settings);
+            }
+        }
+
+
         var ROW_CLASS_NAME = 'flowr-row'; // Class name for the row of flowy
         var MAX_LAST_ROW_GAP = 25; // If the width of last row is lesser than max-width, recalculation is needed
         var NO_COPY_FIELDS = ['complete', 'data', 'responsive']; // these attributes will not be carried forward for append related calls
@@ -52,22 +86,6 @@
             'rows': -1, // Maximum number of rows to render. -1 for no limit.
             'responsive': true // make content responsive
         };
-        var extend = function(out) {
-          out = out || {};
-
-          for (var i = 1; i < arguments.length; i++) {
-            if (!arguments[i])
-              continue;
-
-            for (var key in arguments[i]) {
-              if (arguments[i].hasOwnProperty(key))
-                out[key] = arguments[i][key];
-            }
-          }
-
-          return out;
-        };
-
 
         var settings = extend(DEFAULTS, options);
 
@@ -122,10 +140,7 @@
             }
         }
 
-        // A standalone utility to calculate the item widths for a particular row
-        // Returns rowWidth: width occupied & data : the items in the new row
-        var utils = {
-                getNextRow: function(data, settings) {
+        function getNextRow(data, settings) {
                     var itemIndex = 0;
                     var itemsLength = data.length;
                     var lineItems = [];
@@ -199,24 +214,8 @@
                         data: lineItems,
                         width: testWidth + requiredPadding()
                     };
-                }, //getNextRow
-                reorderContent: function() {
-                    /*
-                     TODO: optimize for faster resizing by reusing dom objects instead of killing the dom
-                     */
-                    var _initialWidth = data.get($this).width;
-                    var _newWidth = $this.offsetWidth;
-                    var _change = _initialWidth - _newWidth;
-
-                    if (_initialWidth != _newWidth) {
-                        $this.innerHtml = '';
-                        var _settings = data.get($this).lastSettings;
-                        _settings.data = data.get($this).lastSettings.data;
-                        _settings.maxWidth = $this.offsetWidth - 1;
-                        flowr($this, _settings);
-                    }
                 }
-            } //utils
+
 
         // If the responsive var is set to true then listen for resize method
         // and prevent resizing from happening twice if responsive is set again during append phase!
@@ -232,7 +231,7 @@
                         task_id = clearTimeout(task_id);
                         task_id = null;
                     }
-                    task_id = setTimeout(utils.reorderContent, 80);
+                    task_id = setTimeout(function() {reorderContent(data);}, 80);
                     data.set($this, {task_id: task_id});
                 }
             });
@@ -254,7 +253,7 @@
             data.set($this, {data: allData});
 
             // While we have a new row
-            while ((rowData = utils.getNextRow(_data, settings)) != null && rowData.data.length > 0) {
+            while ((rowData = getNextRow(_data, settings)) != null && rowData.data.length > 0) {
                 if (settings.rows > 0 && currentRow >= settings.rows)
                     break;
                 // remove the number of elements in the new row from the top of data stack
