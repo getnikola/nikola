@@ -24,14 +24,12 @@
         </nav>
     %endif
     %if other_archive_languages:
-        <nav class="archivelang">
-         <h3 class="posttranslations-intro">${messages("Also available in:")}</h3>
-        <ul>
-        %for language, archive_path, title in other_archive_languages:
-            <li><a href="${_link('archive', archive_path, language)}" rel="alternate">${messages("LANGUAGE", language)} (${title|h})</a></li>
+        <div class="translationslist translations">
+            <h3 class="translationslist-intro">${messages("Also available in:")}</h3>
+        %for language, archive_path, _ in other_archive_languages:
+            <p><a href="${_link('archive', archive_path, language)}" rel="alternate">${messages("LANGUAGE", language)}</a></p>
         %endfor
-        </ul>
-        </nav>
+        </div>
     %endif
 % endif
 </%def>

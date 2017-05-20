@@ -2,6 +2,14 @@
 {% extends 'base.tmpl' %}
 {% import 'archive_navigation_helper.tmpl' as archive_nav with context %}
 
+{% block extra_head %}
+{% if 'archive_page' in pagekind %}
+    {% for language, archive_path, _ in other_archive_languages %}
+        <link rel="alternate" hreflang="{{ language }}" href="{{ _link('archive', archive_path, language) }}">
+    {% endfor %}
+{% endif %}
+{% endblock %}
+
 {% block content %}
 <article class="listpage">
     <header>

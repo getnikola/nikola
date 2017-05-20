@@ -84,7 +84,7 @@ body {
 	float: left;
 }
 
-.posttranslations h3 {
+.posttranslations h3, .translationslist h3 {
 	display: inline;
 	font-size: 1em;
 }
@@ -93,8 +93,20 @@ body {
 	font-size: 2em;
 }
 
-.posttranslations h3:last-child {
+.posttranslations h3:last-child, .translationslist h3:last-child {
 	display: none;
+}
+
+.translationslist p:before {
+    content: " — ";
+}
+
+.translationslist p:first-of-type:before {
+    content: "";
+}
+
+.translationslist p {
+    display: inline;
 }
 
 .postindex article {
