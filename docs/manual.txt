@@ -1916,8 +1916,27 @@ add_header_permalinks
    in `custom.css`, for example:
 
    .. code:: css
-      .headerlink { opacity: 0.1; margin-left: 0.2em; }
-      .headerlink:hover { opacity: 1; text-decoration: none; }
+
+      /* Header permalinks */
+      h1:hover .headerlink, h2:hover .headerlink,
+      h3:hover .headerlink, h4:hover .headerlink,
+      h5:hover .headerlink, h6:hover .headerlink {
+          display: inline;
+      }
+
+      .headerlink {
+          display: none;
+          color: #ddd;
+          margin-left: 0.2em;
+          padding: 0 0.2em;
+      }
+
+      .headerlink:hover {
+          opacity: 1;
+          background: #ddd;
+          color: #000;
+          text-decoration: none;
+      }
 
    Additionally, you can provide a custom list of XPath expressions which should be used for finding headers (``{hx}}`` is replaced by headers h1 through h6).
    This is required if you use a custom theme that does not use ``"e-content entry-content"`` as a class for post and page contents.
