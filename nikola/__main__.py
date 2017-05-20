@@ -275,13 +275,19 @@ class NikolaTaskLoader(TaskLoader):
             }
         DOIT_CONFIG['default_tasks'] = ['render_site', 'post_render']
         DOIT_CONFIG.update(self.nikola._doit_config)
-        tasks = generate_tasks(
-            'render_site',
-            self.nikola.gen_tasks('render_site', "Task", 'Group of tasks to render the site.'))
-        latetasks = generate_tasks(
-            'post_render',
-            self.nikola.gen_tasks('post_render', "LateTask", 'Group of tasks to be executed after site is rendered.'))
-        signal('initialized').send(self.nikola)
+        try:
+            tasks = generate_tasks(
+                'render_site',
+                self.nikola.gen_tasks('render_site', "Task", 'Group of tasks to render the site.'))
+            latetasks = generate_tasks(
+                'post_render',
+                self.nikola.gen_tasks('post_render', "LateTask", 'Group of tasks to be executed after site is rendered.'))
+            signal('initialized').send(self.nikola)
+        except Exception:
+            LOGGER.error('Error loading tasks')
+            if self.nikola.debug:
+                raise
+            sys.exit(3)
         return tasks + latetasks, DOIT_CONFIG
 
 
@@ -363,7 +369,12 @@ class DoitNikola(DoitMain):
                 LOGGER.error("This command needs to run inside an "
                              "existing Nikola site.")
                 return 3
-        return super(DoitNikola, self).run(cmd_args)
+        try:
+            return super(DoitNikola, self).run(cmd_args)
+        except Exception:
+            if self.nikola.debug:
+                raise
+            return 1
 
     @staticmethod
     def print_version():

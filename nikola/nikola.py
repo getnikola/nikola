@@ -2125,7 +2125,11 @@ class Nikola(object):
         self.pages = []
 
         for p in sorted(self.plugin_manager.getPluginsOfCategory('PostScanner'), key=operator.attrgetter('name')):
-            timeline = p.plugin_object.scan()
+            try:
+                timeline = p.plugin_object.scan()
+            except Exception:
+                utils.LOGGER.error('Error reading timeline')
+                raise
             # FIXME: can there be conflicts here?
             self.timeline.extend(timeline)
 
