@@ -490,6 +490,7 @@ def deduplicate_ids(data, top_classes=None):
                     # We might get headerlinks of child elements
                     if hl.attrib['href'] == '#' + i:
                         hl.attrib['href'] = '#' + new_id
+                        break
         return lxml.html.tostring(doc, encoding='unicode')
     else:
         return data
