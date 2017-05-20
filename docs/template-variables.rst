@@ -434,6 +434,7 @@ Name                Type        Description
 ``date_format``     str         The date format for current language
 ``post_list_id``    str         GUID of post list
 ``messages``        dict        The messages dictionary
+``_link``           function    ``Nikola.link`` function
 ==================  ==========  =====================================
 
 .. vim: nowrap textwidth=0

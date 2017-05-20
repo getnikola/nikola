@@ -313,6 +313,7 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, require_all_t
         'date_format': site.GLOBAL_CONTEXT.get('date_format')[lang],
         'post_list_id': post_list_id,
         'messages': site.MESSAGES,
+        '_link': site.link,
     }
     output = site.template_system.render_template(
         template, None, template_data)
