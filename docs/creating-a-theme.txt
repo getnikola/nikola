@@ -115,6 +115,7 @@ then you should use ``base-jinja`` as a parent and ``jinja`` as engine instead::
     $ nikola theme -n lanyon --parent base --engine mako
 
 Edit ``conf.py`` and set ``THEME = 'lanyon'``. Also set ``USE_BUNDLES = False`` (just do it for now, we’ll get to bundles later).
+Also, if you intend to publish your theme on the Index, or want to use it with older versions (v7.8.5 or older), use the ``--legacy-meta`` option for ``nikola theme -n``.
 
 You can now build that site using ``nikola build`` and it will look like this:
 
@@ -824,4 +825,4 @@ The End
 
 And that’s it, that’s a whole theme. Eventually, once people start using it, they will notice small broken details, which will need handling one at a time.
 
-This theme should be available in http://themes.getnikola.com#lanyon and you can see it in action at https://themes.getnikola.com/v7/lanyon/index.html
+This theme should be available in http://themes.getnikola.com/v7/lanyon/ and you can see it in action at https://themes.getnikola.com/v7/lanyon/demo/ .

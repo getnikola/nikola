@@ -61,30 +61,16 @@ less, sass
 
 This mandatory file:
 
-parent
-    A text file that, on its first line, contains the name of the **parent theme**.
-    Any resources missing on this theme, will be looked up in the parent theme
-    (and then in the grandparent, etc).
-
-    The ``parent`` is so you don’t have to create a full theme each time: just
-    create an empty theme, set the parent, and add the bits you want modified.
-    You **must** define a parent, otherwise many features won’t work due to
-    missing templates, messages, and assets.
-
-    I recommend this:
-
-    * If your theme uses Bootstrap 3, inherit the ``bootstrap3`` theme.
-    * If your theme uses Jinja as a template engine, inherit ``base-jinja``
-      or ``bootstrap3-jinja``
-    * In any other case, inherit ``base``.
-
+<theme>.theme
+    An INI file containing theme meta data. The file format is described in
+    detail below, in the `Theme meta files`_ section.
 
 And these optional files:
 
-engine
-    A text file which, on the first line, contains the name of the template engine
-    this theme needs. Currently supported values are "mako" and "jinja". You
-    must create this file if you’re using Jinja2; otherwise, it’s optional.
+parent, engine
+    One-line text files that contain the names of parent and engine themes,
+    respectively.  Those are needed for older versions (Nikola v7.8.5 and
+    older).
 
 bundles
     A text file containing a list of files to be turned into bundles using WebAssets.
@@ -103,6 +89,73 @@ bundles
 
     Templates should use either the bundle or the individual files based on the ``use_bundles``
     variable, which in turn is set by the ``USE_BUNDLES`` option.
+
+Theme meta files
+----------------
+
+As of Nikola v7.8.6, Nikola uses meta files for themes. Those are INI files,
+with the same name as your theme, and a ``.theme`` extension, eg.
+``bootstrap3.theme``. Here is an example, from the bootstrap3 theme:
+
+.. code:: ini
+
+   [Theme]
+   engine = mako
+   parent = base
+   author = The Nikola Contributors
+   author_url = https://getnikola.com/
+   based_on = Bootstrap 3 <http://getbootstrap.com/>
+   license = MIT
+   tags = bootstrap
+
+   [Family]
+   family = bootstrap3
+   jinja_version = bootstrap3-jinja
+   variants = bootstrap3-gradients, bootstrap3-gradients-jinja
+
+   [Nikola]
+   bootswatch = True
+
+The following keys are currently supported:
+
+* ``Theme`` — contains information about the theme.
+
+  * ``engine`` — engine used by the theme. Should be ``mako`` or ``jinja``.
+  * ``parent`` — the parent theme. Any resources missing in this theme, will be
+    looked up in the parent theme (and then in the grandparent, etc).
+
+    The parent is so you don’t have to create a full theme each time: just
+    create an empty theme, set the parent, and add the bits you want modified.
+    You **must** define a parent, otherwise many features won’t work due to
+    missing templates, messages, and assets.
+
+    The following settings are recommended:
+
+    * If your theme uses Bootstrap 3, inherit the ``bootstrap3`` theme.
+    * If your theme uses Jinja as a template engine, inherit ``base-jinja``
+      or ``bootstrap3-jinja``
+    * In any other case, inherit ``base``.
+
+  * ``author``, ``author_url`` — used to identify theme author.
+  * ``based_on`` — optional list of inspirations, frameworks, etc. used in the
+    theme. Should be comma-separated, the format ``Name <URL>`` is recommended.
+  * ``license`` — theme license. Pick MIT if you have no preference.
+  * ``tags`` — optional list of tags (comma-separated) to describe the theme.
+
+* ``Family`` — contains information about other related themes. All values
+  optional.
+
+  * ``family`` — the name of the main theme in a family, which is also used as
+    the family name.
+  * ``mako_version``, ``jinja_version`` — name of the mako/jinja version of the
+    theme.
+  * ``variants`` — comma-separated list of stylistic variants (other than the
+    mako/jinja version listed above)
+
+* ``Nikola`` — Nikola-specific information, currently optional.
+
+  * ``bootswatch`` — whether or not theme supports Bootswatch styling (optional,
+    defaults to False)
 
 Templates
 ---------
@@ -345,7 +398,6 @@ depending on what you want to achieve.
                the <a href="/">front page</a> to see all posts.</p>
         {% endif %}
     {% endif %}
-
 
 
 List of page kinds provided by default plugins:
