@@ -285,6 +285,8 @@ class NikolaTaskLoader(TaskLoader):
             signal('initialized').send(self.nikola)
         except Exception:
             LOGGER.error('Error loading tasks')
+            if self.nikola.debug:
+                raise
             sys.exit(3)
         return tasks + latetasks, DOIT_CONFIG
 
