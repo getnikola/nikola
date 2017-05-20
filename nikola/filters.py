@@ -441,7 +441,9 @@ def add_header_permalinks(fname, xpath_list=None, file_blacklist=None):
 
             new_node = lxml.html.fragment_fromstring('<a href="#{0}" class="headerlink" title="Permalink to this heading">¶</a>'.format(hid))
             node.append(new_node)
-    return lxml.html.tostring(doc, encoding="unicode")
+
+    with io.open(fname, 'w', encoding='utf-8') as outf:
+        outf.write(lxml.html.tostring(doc, encoding="unicode"))
 
 
 @_ConfigurableFilter(top_classes='DEDUPLICATE_IDS_TOP_CLASSES')
