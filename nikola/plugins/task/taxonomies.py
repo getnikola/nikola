@@ -327,6 +327,7 @@ class RenderTaxonomies(Task):
             # (flag, subnodes), where subnodes is a list of pairs (name, subnode).
 
             def sort_node(node, level=0):
+                """Return sorted node, with children as `(name, node)` list instead of a dictionary."""
                 keys = natsort.natsorted(node[1].keys(), alg=natsort.ns.F | natsort.ns.IC)
                 taxonomy.sort_classifications(keys, lang, level)
                 subnodes = []
@@ -338,11 +339,12 @@ class RenderTaxonomies(Task):
             # Step 3: collapse the tree structure into a linear sorted list,
             # with a node coming before its children.
 
-            def append_node(classifications, node, path=[]):
+            def append_node(classifications, node, path, ()):
+                """Append the node and then its children to the classifications list."""
                 if node[0]:
                     classifications.append(taxonomy.recombine_classification_from_hierarchy(path))
                 for key, subnode in node[1]:
-                    append_node(classifications, subnode, path + [key])
+                    append_node(classifications, subnode, path + (key, ))
 
             classifications = []
             append_node(classifications, root)
