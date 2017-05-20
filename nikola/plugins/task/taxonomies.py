@@ -339,7 +339,7 @@ class RenderTaxonomies(Task):
             # Step 3: collapse the tree structure into a linear sorted list,
             # with a node coming before its children.
 
-            def append_node(classifications, node, path, ()):
+            def append_node(classifications, node, path=()):
                 """Append the node and then its children to the classifications list."""
                 if node[0]:
                     classifications.append(taxonomy.recombine_classification_from_hierarchy(path))
