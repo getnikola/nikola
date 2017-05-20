@@ -298,10 +298,10 @@ The archive navigation variables are available only if ``create_archive_navigati
 
 .. class:: table table-bordered table-striped
 
-==============================  ==============  ===============================================
+==============================  ==============  ========================================================================
 Name                            Type            Description
-==============================  ==============  ===============================================
-``archive_name``                str?            Name of the archive
+==============================  ==============  ========================================================================
+``archive_name``                str?            Name of the archive (only if using indexes)
 ``create_archive_navigation``   bool            ``CREATE_ARCHIVE_NAVIGATION`` setting
 ``has_archive_navigation``      bool            Whether or not archive navigation is available
 ``up_archive``                  str?            Link to the archive one level up
@@ -311,7 +311,8 @@ Name                            Type            Description
 ``next_archive``                str?            Link to the next archive
 ``next_archive_name``           str?            Name of the next archive
 ``archive_nodelevel``           int?            Level of the archive
-==============================  ==============  ===============================================
+``other_archive_languages``     list            List of tuples ``(lang, path, name)`` of same archive in other languages
+==============================  ==============  ========================================================================
 
 
 Variables available in author pages

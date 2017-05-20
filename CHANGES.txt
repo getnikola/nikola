@@ -79,6 +79,9 @@ Features
 * New ``add_header_permalinks`` filter, for Sphinx-style header links
   (Issue #2636)
 * Added alternate links for gallery translations (Issue #993)
+* Providing infrastructure for taxonomies for classification pages to
+  link to related classifications in other languages
+* Added alternate links (visible and header) for archives (Issue #993)
 
 Bugfixes
 --------
