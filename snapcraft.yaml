@@ -3,7 +3,7 @@ version: 7.8.5
 summary: A static website generator
 description: A static website generator
 confinement: strict
-grade: devel
+grade: stable
 
 apps:
     nikola:
