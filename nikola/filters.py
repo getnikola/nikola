@@ -442,6 +442,57 @@ def add_header_permalinks(fname, xpath_list=None, file_blacklist=None):
             new_node = lxml.html.fragment_fromstring('<a href="#{0}" class="headerlink" title="Permalink to this heading">¶</a>'.format(hid))
             node.append(new_node)
 
-    data = lxml.html.tostring(doc, encoding="unicode")
-    with io.open(fname, 'w+', encoding='utf-8') as outf:
-        outf.write(data)
+    with io.open(fname, 'w', encoding='utf-8') as outf:
+        outf.write(lxml.html.tostring(doc, encoding="unicode"))
+
+
+@_ConfigurableFilter(top_classes='DEDUPLICATE_IDS_TOP_CLASSES')
+@apply_to_text_file
+def deduplicate_ids(data, top_classes=None):
+    """Post-process HTML via lxml to deduplicate IDs."""
+    if not top_classes:
+        top_classes = ('postpage', 'storypage')
+    doc = lxml.html.document_fromstring(data)
+    elements = doc.xpath('//*')
+    all_ids = [element.attrib.get('id') for element in elements]
+    seen_ids = set()
+    duplicated_ids = set()
+    for i in all_ids:
+        if i is not None and i in seen_ids:
+            duplicated_ids.add(i)
+        else:
+            seen_ids.add(i)
+
+    if duplicated_ids:
+        # Well, that sucks.
+        for i in duplicated_ids:
+            # Results are ordered the same way they are ordered in document
+            offending_elements = doc.xpath('//*[@id="{}"]'.format(i))
+            counter = 2
+            # If this is a story or a post, do it from top to bottom, because
+            # updates to those are more likely to appear at the bottom of pages.
+            # For anything else, including indexes, do it from bottom to top,
+            # because new posts appear at the top of pages.
+            # We also leave the first result out, so there is one element with
+            # "plain" ID
+            if any(doc.find_class(c) for c in top_classes):
+                off = offending_elements[1:]
+            else:
+                off = offending_elements[-2::-1]
+            for e in off:
+                new_id = i
+                while new_id in seen_ids:
+                    new_id = '{0}-{1}'.format(i, counter)
+                    counter += 1
+                e.attrib['id'] = new_id
+                seen_ids.add(new_id)
+                # Find headerlinks that we can fix.
+                headerlinks = e.find_class('headerlink')
+                for hl in headerlinks:
+                    # We might get headerlinks of child elements
+                    if hl.attrib['href'] == '#' + i:
+                        hl.attrib['href'] = '#' + new_id
+                        break
+        return lxml.html.tostring(doc, encoding='unicode')
+    else:
+        return data

@@ -1938,7 +1938,7 @@ add_header_permalinks
           text-decoration: none;
       }
 
-   Additionally, you can provide a custom list of XPath expressions which should be used for finding headers (``{hx}}`` is replaced by headers h1 through h6).
+   Additionally, you can provide a custom list of XPath expressions which should be used for finding headers (``{hx}`` is replaced by headers h1 through h6).
    This is required if you use a custom theme that does not use ``"e-content entry-content"`` as a class for post and page contents.
 
    .. code:: python
@@ -1947,9 +1947,29 @@ add_header_permalinks
         # Include *every* header (not recommended):
         # HEADER_PERMALINKS_XPATH_LIST = ['*//{hx}']
 
+
+deduplicate_ids
+   Prevent duplicated IDs in HTML output. An incrementing counter is added to
+   offending IDs. If used alongside ``add_header_permalinks``, it will fix
+   those links (it must run **after** that filter)
+
+   IDs are numbered from the bottom up, which is useful for indexes (updates
+   appear at the top). There are exceptions, which may be configured using
+   ``DEDUPLICATE_IDS_TOP_CLASSES`` — if any of those classes appears sin the
+   document, the IDs are rewritten top-down, which is useful for posts/pages
+   (updates appear at the bottom).
+
+   Note that in rare cases, permalinks might not always be *permanent* in case
+   of edits.
+
+   .. code:: python
+
+      DEDUPLICATE_IDS_TOP_CLASSES = ('postpage', 'storypage')
+
     You can also use a file blacklist (``HEADER_PERMALINKS_FILE_BLACKLIST``),
     useful for some index pages. Paths include the output directory (eg.
     ``output/index.html``)
+
 
 You can apply filters to specific posts or pages by using the ``filters`` metadata field:
 
