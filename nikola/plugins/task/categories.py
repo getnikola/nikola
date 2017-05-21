@@ -169,7 +169,10 @@ link://category_rss/dogs => /categories/dogs.xml""",
             "category_pages_titles": self.site.config['CATEGORY_PAGES_TITLES'],
         }
         posts = self.site.posts_per_classification[self.classification_name][lang]
-        children = [child for child in node.children if len([post for post in posts.get(child.classification_name, []) if self.site.config['SHOW_UNTRANSLATED_POSTS'] or post.is_translation_available(lang)]) > 0]
+        if node is None:
+            children = []
+        else:
+            children = [child for child in node.children if len([post for post in posts.get(child.classification_name, []) if self.site.config['SHOW_UNTRANSLATED_POSTS'] or post.is_translation_available(lang)]) > 0]
         subcats = [(child.name, self.site.link(self.classification_name, child.classification_name, lang)) for child in children]
         friendly_name = self.get_classification_friendly_name(cat, lang)
         context = {

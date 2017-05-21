@@ -783,7 +783,8 @@ class Taxonomy(BasePlugin):
         the second will be put into the uptodate list of all generated tasks.
 
         For hierarchical taxonomies, node is the `utils.TreeNode` element corresponding
-        to the classification.
+        to the classification. Note that `node` can still be `None` if
+        `also_create_classifications_from_other_languages` is `True`.
 
         Context must contain `title`, which should be something like 'Posts about <classification>'.
         """

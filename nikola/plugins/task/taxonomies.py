@@ -311,7 +311,7 @@ class RenderTaxonomies(Task):
         # Get data
         node = None
         if taxonomy.has_hierarchy:
-            node = self.site.hierarchy_lookup_per_classification[taxonomy.classification_name][lang][classification]
+            node = self.site.hierarchy_lookup_per_classification[taxonomy.classification_name][lang].get(classification)
         context, kw = taxonomy.provide_context_and_uptodate(classification, lang, node)
         kw = copy(kw)
         kw["messages"] = self.site.MESSAGES
