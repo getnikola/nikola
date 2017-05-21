@@ -54,6 +54,7 @@ class ClassifyCategories(Taxonomy):
     minimum_post_count_per_classification_in_overview = 1
     omit_empty_classifications = True
     also_create_classifications_from_other_languages = True
+    other_language_variable_name = 'other_languages'
     path_handler_docstrings = {
         'category_index': """A link to the category index.
 
@@ -82,6 +83,7 @@ link://category_rss/dogs => /categories/dogs.xml""",
         super(ClassifyCategories, self).set_site(site)
         self.show_list_as_index = self.site.config['CATEGORY_PAGES_ARE_INDEXES']
         self.template_for_single_list = "tagindex.tmpl" if self.show_list_as_index else "tag.tmpl"
+        self.translation_manager = utils.ClassificationTranslationManager()
 
     def is_enabled(self, lang=None):
         """Return True if this taxonomy is enabled, or False otherwise."""
@@ -178,7 +180,6 @@ link://category_rss/dogs => /categories/dogs.xml""",
         context = {
             "title": self.site.config['CATEGORY_PAGES_TITLES'].get(lang, {}).get(cat, self.site.MESSAGES[lang]["Posts about %s"] % friendly_name),
             "description": self.site.config['CATEGORY_PAGES_DESCRIPTIONS'].get(lang, {}).get(cat),
-            "kind": "category",
             "pagekind": ["tag_page", "index" if self.show_list_as_index else "list"],
             "tag": friendly_name,
             "category": cat,
@@ -189,3 +190,11 @@ link://category_rss/dogs => /categories/dogs.xml""",
             context["rss_link"] = """<link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for tag {0} ({1})" href="{2}">""".format(friendly_name, lang, self.site.link("category_rss", cat, lang))
         kw.update(context)
         return context, kw
+
+    def get_other_language_variants(self, category, lang, classifications_per_language):
+        """Return a list of variants of the same category in other languages."""
+        return self.translation_manager.get_translations_as_list(category, lang)
+
+    def postprocess_posts_per_classification(self, posts_per_section_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
+        """Rearrange, modify or otherwise use the list of posts per classification and per language."""
+        self.translation_manager.read_from_config(self.site, 'CATEGORY', posts_per_section_per_language, False)

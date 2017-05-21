@@ -70,6 +70,7 @@ try:
 except ImportError:
     husl = None
 
+from blinker import signal
 from collections import defaultdict, Callable, OrderedDict
 from logbook.compat import redirect_logging
 from logbook.more import ExceptionHandler, ColorizedStderrHandler
@@ -2197,3 +2198,108 @@ def sort_classifications(taxonomy, classifications, lang):
         classifications = natsort.natsorted(classifications, alg=natsort.ns.F | natsort.ns.IC)
         taxonomy.sort_classifications(classifications, lang)
         return classifications
+
+
+class ClassificationTranslationManager(object):
+    """Keeps track of which classifications could be translated as which others.
+
+    The internal structure is as follows:
+    - per language, you have a map of classifications to maps
+    - the inner map is a map from other languages to sets of classifications
+      which are considered as translations
+    """
+
+    def __init__(self):
+        self._data = defaultdict(dict)
+
+    def add_translation(self, translation_map):
+        """Add translation of one classification.
+
+        ``translation_map`` must be a dictionary mapping languages to their
+        translations of the added classification.
+        """
+        for lang, classification in translation_map.items():
+            clmap = self._data[lang]
+            cldata = clmap.get(classification)
+            if cldata is None:
+                cldata = defaultdict(set)
+                clmap[classification] = cldata
+            for other_lang, other_classification in translation_map.items():
+                if other_lang != lang:
+                    cldata[other_lang].add(other_classification)
+
+    def get_translations(self, classification, lang):
+        """Get a dict mapping other languages to (unsorted) lists of translated classifications."""
+        clmap = self._data[lang]
+        cldata = clmap.get(classification)
+        if cldata is None:
+            return {}
+        else:
+            return {other_lang: list(classifications) for other_lang, classifications in cldata.items()}
+
+    def get_translations_as_list(self, classification, lang):
+        """Get a list of pairs ``(other_lang, other_classification)`` which are translations of ``classification``."""
+        clmap = self._data[lang]
+        cldata = clmap.get(classification)
+        if cldata is None:
+            return []
+        else:
+            result = []
+            for other_lang, classifications in cldata.items():
+                result.extend([(other_lang, other_classification) for other_classification in classifications])
+            return result
+
+    def has_translations(self, classification, lang):
+        """Return whether we know about the classification in that language.
+
+        Note that this function returning ``True`` does not mean that
+        ``get_translations`` returns a non-empty list, but only that
+        this classification was explicitly added with ``add_translation``
+        at some point.
+        """
+        return self._data[lang].get(classification) is not None
+
+    def add_defaults(self, posts_per_classification_per_language):
+        """Treat every classification as its own literal translation into every other language.
+
+        ``posts_per_classification_per_language`` should be the first argument
+        to ``Taxonomy.postprocess_posts_per_classification``.
+        """
+        # First collect all classifications from all languages
+        all_classifications = set()
+        for lang, classifications in posts_per_classification_per_language.items():
+            all_classifications.update(classifications.keys())
+        # Next, add translation records for all of them
+        for classification in all_classifications:
+            record = {tlang: classification for tlang in posts_per_classification_per_language}
+            self.add_translation(record)
+
+    def read_from_config(self, site, basename, posts_per_classification_per_language, add_defaults_default):
+        """Read translations from config.
+
+        ``site`` should be the Nikola site object. Will consider
+        the variables ``<basename>_TRANSLATIONS`` and
+        ``<basename>_TRANSLATIONS_ADD_DEFAULTS``.
+
+        ``posts_per_classification_per_language`` should be the first argument
+        to ``Taxonomy.postprocess_posts_per_classification``, i.e. this function
+        should be called from that function. ``add_defaults_default`` specifies
+        what the default value for ``<basename>_TRANSLATIONS_ADD_DEFAULTS`` is.
+
+        Also sends signal via blinker to allow interested plugins to add
+        translations by themselves. The signal name used is
+        ``<lower(basename)>_translations_config``, and the argument is a dict
+        with entries ``translation_manager``, ``site`` and
+        ``posts_per_classification_per_language``.
+        """
+        # Add translations
+        for record in site.config.get('{}_TRANSLATIONS'.format(basename), []):
+            self.add_translation(record)
+        # Add default translations
+        if site.config.get('{}_TRANSLATIONS_ADD_DEFAULTS'.format(basename), add_defaults_default):
+            self.add_defaults(posts_per_classification_per_language)
+        # Use blinker to inform interested parties (plugins) that they can add
+        # translations themselves
+        args = {'translation_manager': self, 'site': site,
+                'posts_per_classification_per_language': posts_per_classification_per_language}
+        signal('_translations_config'.format(basename.lower())).send(args)

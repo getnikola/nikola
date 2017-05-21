@@ -256,7 +256,6 @@ class RenderTaxonomies(Task):
             context["items"] = [(post.title(), post.permalink(), None) for post in filtered_posts]
         else:
             context["posts"] = filtered_posts
-        context["kind"] = kind
         if "pagekind" not in context:
             context["pagekind"] = ["list", "tag_page"]
         task = self.site.generic_post_list_renderer(lang, filtered_posts, output_name, template_name, kw['filters'], context)
@@ -330,6 +329,7 @@ class RenderTaxonomies(Task):
         kw["index_file"] = self.site.config['INDEX_FILE']
         context = copy(context)
         context["permalink"] = self.site.link(taxonomy.classification_name, classification, lang)
+        context["kind"] = taxonomy.classification_name
         # Get links to other language versions of this classification
         if classification_set_per_lang is not None:
             other_lang_links = taxonomy.get_other_language_variants(classification, lang, classification_set_per_lang)
@@ -346,7 +346,7 @@ class RenderTaxonomies(Task):
                 links = utils.sort_classifications(taxonomy, links_per_lang[other_lang], other_lang)
                 sorted_links.extend([(other_lang, classification,
                                       taxonomy.get_classification_friendly_name(classification, other_lang))
-                                     for classification in links if post_lists_per_lang[other_lang][classification][1]])
+                                     for classification in links if post_lists_per_lang[other_lang].get(classification, ('', False, False))[1]])
             # Store result in context and kw
             context[taxonomy.other_language_variable_name] = sorted_links
             kw[taxonomy.other_language_variable_name] = sorted_links

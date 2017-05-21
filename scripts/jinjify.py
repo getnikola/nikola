@@ -24,6 +24,7 @@ dumb_replacements = [
     ["fb: http://ogp.me/ns/fb# \\", "fb: http://ogp.me/ns/fb#"],
     ['dir="rtl" \\', 'dir="rtl"'],
     ['sorted(translations)', 'translations|sort'],
+    ['is not UNDEFINED', 'is defined'],
 ]
 
 dumber_replacements = [

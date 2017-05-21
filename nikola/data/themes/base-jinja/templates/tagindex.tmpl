@@ -2,6 +2,7 @@
 {% extends 'index.tmpl' %}
 
 {% block content_header %}
+    {{ parent.content_header() }}
     <header>
         <h1>{{ title|e }}</h1>
         {% if description %}

@@ -11,10 +11,24 @@
         <link rel="prefetch" href="{{ posts[0].permalink() }}" type="text/html">
     {% endif %}
     {{ math.math_styles_ifposts(posts) }}
+    {% if other_languages is defined and other_languages %}
+        {% for language, classification, _ in other_languages %}
+            <link rel="alternate" hreflang="{{ language }}" href="{{ _link(kind, classification, language) }}">
+        {% endfor %}
+    {% endif %}
 {% endblock %}
 
 {% block content %}
-{% block content_header %}{% endblock %}
+{% block content_header %}
+    {% if other_languages is defined and other_languages %}
+        <div class="translationslist translations">
+            <h3 class="translationslist-intro">{{ messages("Also available in:") }}</h3>
+        {% for language, classification, name in other_languages %}
+            <p><a href="{{ _link(kind, classification, language) }}" rel="alternate">{{ messages("LANGUAGE", language) }} ({{ name|e }})</a></p>
+        {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
 {% if 'main_index' in pagekind %}
     {{ front_index_header }}
 {% endif %}

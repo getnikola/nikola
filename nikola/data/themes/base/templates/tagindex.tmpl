@@ -2,6 +2,7 @@
 <%inherit file="index.tmpl"/>
 
 <%block name="content_header">
+    ${parent.content_header()}
     <header>
         <h1>${title|h}</h1>
         %if description:

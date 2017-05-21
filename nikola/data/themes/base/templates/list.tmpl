@@ -3,11 +3,11 @@
 <%namespace name="archive_nav" file="archive_navigation_helper.tmpl" import="*"/>
 
 <%block name="extra_head">
-%if 'archive_page' in pagekind:
-    %for language, archive_path, _ in other_archive_languages:
-        <link rel="alternate" hreflang="${language}" href="${_link('archive', archive_path, language)}">
-    %endfor
-%endif
+    %if other_languages is not UNDEFINED and other_languages:
+        %for language, classification, _ in other_languages:
+            <link rel="alternate" hreflang="${language}" href="${_link(kind, classification, language)}">
+        %endfor
+    %endif
 </%block>
 
 <%block name="content">
@@ -16,6 +16,14 @@
         <h1>${title|h}</h1>
     </header>
     ${archive_nav.archive_navigation()}
+    %if other_languages is not UNDEFINED and other_languages:
+        <div class="translationslist translations">
+            <h3 class="translationslist-intro">${messages("Also available in:")}</h3>
+        %for language, classification, name in other_languages:
+            <p><a href="${_link(kind, classification, language)}" rel="alternate">${messages("LANGUAGE", language)} (${name|h})</a></p>
+        %endfor
+        </div>
+    %endif
     %if items:
     <ul class="postlist">
     % for text, link, count in items:

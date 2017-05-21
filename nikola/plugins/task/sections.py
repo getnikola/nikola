@@ -47,6 +47,7 @@ class ClassifySections(Taxonomy):
     apply_to_pages = False
     omit_empty_classifications = True
     also_create_classifications_from_other_languages = False
+    other_language_variable_name = 'other_languages'
     path_handler_docstrings = {
         'section_index_index': False,
         'section_index': """Link to the index for a section.
@@ -68,10 +69,11 @@ link://section_index_rss/cars => /cars/rss.xml""",
 
     def set_site(self, site):
         """Set Nikola site."""
+        super(ClassifySections, self).set_site(site)
         self.show_list_as_index = site.config["POSTS_SECTIONS_ARE_INDEXES"]
         self.template_for_single_list = "sectionindex.tmpl" if self.show_list_as_index else "list.tmpl"
         self.enable_for_lang = {}
-        return super(ClassifySections, self).set_site(site)
+        self.translation_manager = utils.ClassificationTranslationManager()
 
     def is_enabled(self, lang=None):
         """Return True if this taxonomy is enabled, or False otherwise."""
@@ -139,6 +141,7 @@ link://section_index_rss/cars => /cars/rss.xml""",
                         continue
                     sections.add(section)
             self.enable_for_lang[lang] = (len(sections) > 1)
+        self.translation_manager.read_from_config(self.site, 'SECTION', posts_per_section_per_language, False)
 
     def should_generate_classification_page(self, dirname, post_list, lang):
         """Only generates list of posts for classification if this function returns True."""
@@ -151,3 +154,7 @@ link://section_index_rss/cars => /cars/rss.xml""",
             if post.destination_path(lang, sep='/') == short_destination:
                 return False
         return True
+
+    def get_other_language_variants(self, dirname, lang, classifications_per_language):
+        """Return a list of variants of the same section in other languages."""
+        return self.translation_manager.get_translations_as_list(dirname, lang)
