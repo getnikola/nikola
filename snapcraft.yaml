@@ -16,7 +16,6 @@ parts:
         source: scripts/snapcraft
     nikola:
         source: git://github.com/getnikola/nikola.git
-        source-tag: v7.8.5
         stage-packages:
             - locales
             - libc-bin
