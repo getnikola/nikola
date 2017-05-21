@@ -284,9 +284,10 @@ class NikolaTaskLoader(TaskLoader):
                 self.nikola.gen_tasks('post_render', "LateTask", 'Group of tasks to be executed after site is rendered.'))
             signal('initialized').send(self.nikola)
         except Exception:
-            LOGGER.error('Error loading tasks')
+            LOGGER.error('Error loading tasks. An unhandled exception occurred.')
             if self.nikola.debug:
                 raise
+            _print_exception()
             sys.exit(3)
         return tasks + latetasks, DOIT_CONFIG
 
@@ -372,8 +373,10 @@ class DoitNikola(DoitMain):
         try:
             return super(DoitNikola, self).run(cmd_args)
         except Exception:
+            LOGGER.error('An unhandled exception occurred.')
             if self.nikola.debug:
                 raise
+            _print_exception()
             return 1
 
     @staticmethod
@@ -408,6 +411,13 @@ def levenshtein(s1, s2):
         previous_row = current_row
 
     return previous_row[-1]
+
+
+def _print_exception():
+    """Print an exception in a friendlier, shorter style."""
+    etype, evalue, _ = sys.exc_info()
+    LOGGER.error(''.join(traceback.format_exception(etype, evalue, None, limit=0, chain=False)).strip())
+    LOGGER.notice("To see more details, run Nikola in debug mode (set environment variable NIKOLA_DEBUG=1)")
 
 
 if __name__ == "__main__":
