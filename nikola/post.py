@@ -670,7 +670,7 @@ class Post(object):
             if str(e) == "Document is empty":
                 return ""
             # let other errors raise
-            raise(e)
+            raise
         base_url = self.permalink(lang=lang)
         document.make_links_absolute(base_url)
 
@@ -768,7 +768,7 @@ class Post(object):
                 if str(e) == "Document is empty":
                     return ""
                 # let other errors raise
-                raise(e)
+                raise
 
             # output is a float, for no real reason at all
             self._paragraph_count = int(document.xpath('count(//p)'))
@@ -786,7 +786,7 @@ class Post(object):
                 if str(e) == "Document is empty":
                     return ""
                 # let other errors raise
-                raise(e)
+                raise
 
             self._remaining_paragraph_count = self.paragraph_count - int(document.xpath('count(//p)'))
         return self._remaining_paragraph_count

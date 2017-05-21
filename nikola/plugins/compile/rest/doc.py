@@ -64,7 +64,7 @@ def _doc_link(rawtext, text, options={}, content=[]):
 
     try:
         if post is None:
-            raise ValueError
+            raise ValueError("No post with matching slug found.")
     except ValueError:
         return False, False, None, None, slug
 

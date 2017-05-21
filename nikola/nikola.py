@@ -1776,7 +1776,7 @@ class Nikola(object):
                         if str(e) == "Document is empty":
                             data = ""
                         else:  # let other errors raise
-                            raise(e)
+                            raise
             args = {
                 'title': post.title(lang),
                 'link': post.permalink(lang, absolute=True, query=feed_append_query),
@@ -2448,7 +2448,7 @@ class Nikola(object):
                     if str(e) == "Document is empty":
                         text = ""
                     else:  # let other errors raise
-                        raise(e)
+                        raise
             return text.strip()
 
         for post in posts:
