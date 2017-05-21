@@ -414,7 +414,7 @@ def levenshtein(s1, s2):
 
 
 def _print_exception():
-    """Print an exception in a more friendly, shorter style."""
+    """Print an exception in a friendlier, shorter style."""
     etype, evalue, _ = sys.exc_info()
     LOGGER.error(''.join(traceback.format_exception(etype, evalue, None, limit=0, chain=False)).strip())
     LOGGER.notice("To see more details, run Nikola in debug mode (set environment variable NIKOLA_DEBUG=1)")
