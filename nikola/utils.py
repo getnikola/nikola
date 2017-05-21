@@ -2302,4 +2302,4 @@ class ClassificationTranslationManager(object):
         # translations themselves
         args = {'translation_manager': self, 'site': site,
                 'posts_per_classification_per_language': posts_per_classification_per_language}
-        signal('_translations_config'.format(basename.lower())).send(args)
+        signal('{}_translations_config'.format(basename.lower())).send(args)
