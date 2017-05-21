@@ -60,16 +60,12 @@ class Archive(Taxonomy):
         Example:
 
         link://archive/2013 => /archives/2013/index.html""",
-        'archive_atom': """Link to archive Atom path, name is the year.
+        'archive_atom': """Link to archive Atom path, name is the year (archive pages must be indexes).
 
         Example:
 
         link://archive_atom/2013 => /archives/2013/index.atom""",
-        'archive_rss': """Link to archive RSS path, name is the year.
-
-        Example:
-
-        link://archive_rss/2013 => /archives/2013/rss.xml""",
+        'archive_rss': False,
     }
 
     def set_site(self, site):
