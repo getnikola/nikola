@@ -2267,7 +2267,7 @@ class ClassificationTranslationManager(object):
         """
         # First collect all classifications from all languages
         all_classifications = set()
-        for lang, classifications in posts_per_classification_per_language.items():
+        for _, classifications in posts_per_classification_per_language.items():
             all_classifications.update(classifications.keys())
         # Next, add translation records for all of them
         for classification in all_classifications:
