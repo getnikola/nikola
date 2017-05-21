@@ -301,7 +301,7 @@ The archive navigation variables are available only if ``create_archive_navigati
 ==============================  ==============  ===============================================
 Name                            Type            Description
 ==============================  ==============  ===============================================
-``archive_name``                str?            Name of the archive (only if using indexes)
+``archive_name``                str?            Name of the archive
 ``create_archive_navigation``   bool            ``CREATE_ARCHIVE_NAVIGATION`` setting
 ``has_archive_navigation``      bool            Whether or not archive navigation is available
 ``up_archive``                  str?            Link to the archive one level up
@@ -376,6 +376,17 @@ Name                Type        Description
 ``files``           list<str>   List of files in the folder
 ``source_link``     str         Link to the source file
 ==================  ==========  ========================================
+
+Variables available in sections
+-------------------------------
+
+.. class:: table table-bordered table-striped
+
+===========  =====  ========================
+Name         Type   Description
+===========  =====  ========================
+``section``  str    Section name (internal)
+===========  =====  ========================
 
 Variables available in tag pages
 --------------------------------

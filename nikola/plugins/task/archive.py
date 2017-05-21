@@ -180,6 +180,7 @@ class Archive(Taxonomy):
             "title": title,
             "pagekind": [page_kind, "archive_page"],
             "create_archive_navigation": self.site.config["CREATE_ARCHIVE_NAVIGATION"],
+            "archive_name": classification if classification else None
         }
 
         # Generate links for hierarchies
@@ -210,7 +211,6 @@ class Archive(Taxonomy):
         else:
             context["has_archive_navigation"] = False
         if page_kind == 'index':
-            context["archive_name"] = classification if classification else None
             context["is_feed_stale"] = kw["is_feed_stale"]
         kw.update(context)
         return context, kw

@@ -122,7 +122,8 @@ link://section_index_rss/cars => /cars/rss.xml""",
         context = {
             "title": section_title,
             "description": self.site.config['POSTS_SECTION_DESCRIPTIONS'](lang)[section] if section in self.site.config['POSTS_SECTION_DESCRIPTIONS'](lang) else "",
-            "pagekind": ["section_page", "index" if self.show_list_as_index else "list"]
+            "pagekind": ["section_page", "index" if self.show_list_as_index else "list"],
+            "section": section,
         }
         kw.update(context)
         return context, kw
