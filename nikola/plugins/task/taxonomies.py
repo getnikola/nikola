@@ -303,59 +303,6 @@ class RenderTaxonomies(Task):
         task['basename'] = self.name
         return task
 
-    @staticmethod
-    def _sort_classifications(taxonomy, classifications, lang):
-        """Sort the given list of classifications of the given taxonomy and language."""
-        if taxonomy.has_hierarchy:
-            # To sort a hierarchy of classifications correctly, we first
-            # build a tree out of them (and mark for each node whether it
-            # appears in the list), then sort the tree node-wise, and finally
-            # collapse the tree into a list of recombined classifications.
-
-            # Step 1: build hierarchy. Here, each node consists of a boolean
-            # flag (node appears in list) and a dictionary mapping path elements
-            # to nodes.
-            root = [False, {}]
-            for classification in classifications:
-                node = root
-                for elt in taxonomy.extract_hierarchy(classification):
-                    if elt not in node[1]:
-                        node[1][elt] = [False, {}]
-                    node = node[1][elt]
-                node[0] = True
-            # Step 2: sort hierarchy. The result for a node is a pair
-            # (flag, subnodes), where subnodes is a list of pairs (name, subnode).
-
-            def sort_node(node, level=0):
-                """Return sorted node, with children as `(name, node)` list instead of a dictionary."""
-                keys = natsort.natsorted(node[1].keys(), alg=natsort.ns.F | natsort.ns.IC)
-                taxonomy.sort_classifications(keys, lang, level)
-                subnodes = []
-                for key in keys:
-                    subnodes.append((key, sort_node(node[1][key], level + 1)))
-                return (node[0], subnodes)
-
-            root = sort_node(root)
-            # Step 3: collapse the tree structure into a linear sorted list,
-            # with a node coming before its children.
-
-            def append_node(classifications, node, path=()):
-                """Append the node and then its children to the classifications list."""
-                if node[0]:
-                    classifications.append(taxonomy.recombine_classification_from_hierarchy(path))
-                for key, subnode in node[1]:
-                    append_node(classifications, subnode, path + (key, ))
-
-            classifications = []
-            append_node(classifications, root)
-            return classifications
-        else:
-            # Sorting a flat hierarchy is simpler. We pre-sort with
-            # natsorted and call taxonomy.sort_classifications.
-            classifications = natsort.natsorted(classifications, alg=natsort.ns.F | natsort.ns.IC)
-            taxonomy.sort_classifications(classifications, lang)
-            return classifications
-
     def _generate_classification_page(self, taxonomy, classification, filtered_posts, generate_list, generate_rss, lang, post_lists_per_lang, classification_set_per_lang=None):
         """Render index or post list and associated feeds per classification."""
         # Should we create this list?
@@ -396,7 +343,7 @@ class RenderTaxonomies(Task):
             # Sort first by language, then by classification
             sorted_links = []
             for other_lang in sorted(links_per_lang.keys()):
-                links = self._sort_classifications(taxonomy, links_per_lang[other_lang], other_lang)
+                links = utils.sort_classifications(taxonomy, links_per_lang[other_lang], other_lang)
                 sorted_links.extend([(other_lang, classification,
                                       taxonomy.get_classification_friendly_name(classification, other_lang))
                                      for classification in links if post_lists_per_lang[other_lang][classification][1]])

@@ -95,7 +95,7 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real',
            'get_displayed_page_number', 'adjust_name_for_index_path_list',
            'adjust_name_for_index_path', 'adjust_name_for_index_link',
            'NikolaPygmentsHTML', 'create_redirect', 'TreeNode',
-           'clone_treenode', 'flatten_tree_structure',
+           'clone_treenode', 'flatten_tree_structure', 'sort_classifications',
            'parse_escaped_hierarchical_category_name',
            'join_hierarchical_category_path', 'clean_before_deployment',
            'sort_posts', 'indent', 'load_data', 'html_unescape', 'rss_writer',
@@ -2134,3 +2134,66 @@ def map_metadata(meta, key, config):
     for foreign, ours in config.get('METADATA_MAPPING', {}).get(key, {}).items():
         if foreign in meta:
             meta[ours] = meta[foreign]
+
+
+def sort_classifications(taxonomy, classifications, lang):
+    """Sort the given list of classifications of the given taxonomy and language.
+
+    ``taxonomy`` must be a ``Taxonomy`` plugin.
+    ``classifications`` must be an iterable collection of
+    classification strings for that taxonomy.
+    ``lang`` is the language the classifications are for.
+
+    The result will be returned as a sorted list. Sorting will
+    happen according to the way the complete classification
+    hierarchy for the taxonomy is sorted.
+    """
+    if taxonomy.has_hierarchy:
+        # To sort a hierarchy of classifications correctly, we first
+        # build a tree out of them (and mark for each node whether it
+        # appears in the list), then sort the tree node-wise, and finally
+        # collapse the tree into a list of recombined classifications.
+
+        # Step 1: build hierarchy. Here, each node consists of a boolean
+        # flag (node appears in list) and a dictionary mapping path elements
+        # to nodes.
+        root = [False, {}]
+        for classification in classifications:
+            node = root
+            for elt in taxonomy.extract_hierarchy(classification):
+                if elt not in node[1]:
+                    node[1][elt] = [False, {}]
+                node = node[1][elt]
+            node[0] = True
+        # Step 2: sort hierarchy. The result for a node is a pair
+        # (flag, subnodes), where subnodes is a list of pairs (name, subnode).
+
+        def sort_node(node, level=0):
+            """Return sorted node, with children as `(name, node)` list instead of a dictionary."""
+            keys = natsort.natsorted(node[1].keys(), alg=natsort.ns.F | natsort.ns.IC)
+            taxonomy.sort_classifications(keys, lang, level)
+            subnodes = []
+            for key in keys:
+                subnodes.append((key, sort_node(node[1][key], level + 1)))
+            return (node[0], subnodes)
+
+        root = sort_node(root)
+        # Step 3: collapse the tree structure into a linear sorted list,
+        # with a node coming before its children.
+
+        def append_node(classifications, node, path=()):
+            """Append the node and then its children to the classifications list."""
+            if node[0]:
+                classifications.append(taxonomy.recombine_classification_from_hierarchy(path))
+            for key, subnode in node[1]:
+                append_node(classifications, subnode, path + (key, ))
+
+        classifications = []
+        append_node(classifications, root)
+        return classifications
+    else:
+        # Sorting a flat hierarchy is simpler. We pre-sort with
+        # natsorted and call taxonomy.sort_classifications.
+        classifications = natsort.natsorted(classifications, alg=natsort.ns.F | natsort.ns.IC)
+        taxonomy.sort_classifications(classifications, lang)
+        return classifications
