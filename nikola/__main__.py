@@ -129,7 +129,9 @@ def main(args=None):
             conf = loader.load_module()
         else:
             conf = imp.load_source("conf", conf_filename_bytes)
-        config = conf.__dict__
+        if 'yaml_config' in conf.__dict__:
+            config = conf.__dict__.pop('yaml_config')
+        config.update(conf.__dict__)
     except Exception:
         if os.path.exists(conf_filename):
             msg = traceback.format_exc(0)
