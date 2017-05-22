@@ -12,7 +12,10 @@ output/
 # 
 .DS_Store
 
-# Created by https://www.gitignore.io/api/pydev,python,pycharm
+# All of .idea should be ignored
+.idea/
+
+# Created by https://www.gitignore.io/api/pydev,python,pycharm,vim
 
 ### PyCharm ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
@@ -179,4 +182,16 @@ ENV/
 # mkdocs documentation
 /site
 
-# End of https://www.gitignore.io/api/pydev,python,pycharm
+### Vim ###
+# swap
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-v][a-z]
+[._]sw[a-p]
+# session
+Session.vim
+# temporary
+.netrwhist
+*~
+
+# End of https://www.gitignore.io/api/pydev,python,pycharm,vim
