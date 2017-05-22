@@ -44,7 +44,7 @@
         ${comments.comment_form(post.permalink(absolute=True), post.title(), post._base_path)}
         </section>
     % endif
-    ${math.math_styles_ifpost(post)}
+    ${math.math_scripts_ifpost(post)}
 </article>
 ${comments.comment_link_script()}
 </%block>
