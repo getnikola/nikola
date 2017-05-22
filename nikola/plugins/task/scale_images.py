@@ -71,8 +71,8 @@ class ScaleImage(Task, ImageProcessor):
 
     def process_image(self, src, dst, thumb):
         """Resize an image."""
-        self.resize_image(src, dst, self.kw['max_image_size'], False, preserve_exif_data=self.kw['preserve_exif_data'], exif_whitelist=self.kw['exif_whitelist'])
-        self.resize_image(src, thumb, self.kw['image_thumbnail_size'], False, preserve_exif_data=self.kw['preserve_exif_data'], exif_whitelist=self.kw['exif_whitelist'])
+        self.resize_image(src, dst, self.kw['max_image_size'], True, preserve_exif_data=self.kw['preserve_exif_data'], exif_whitelist=self.kw['exif_whitelist'])
+        self.resize_image(src, thumb, self.kw['image_thumbnail_size'], True, preserve_exif_data=self.kw['preserve_exif_data'], exif_whitelist=self.kw['exif_whitelist'])
 
     def gen_tasks(self):
         """Copy static files into the output folder."""
