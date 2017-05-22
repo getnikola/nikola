@@ -16,6 +16,7 @@ Features
 Bugfixes
 --------
 
+* Enable larger panorama thumbnails (Issue #2780)
 * Disable ``archive_rss`` link handler, which was useless because no
   such RSS was ever generated (Issue #2783)
 * Ignore files ending wih "bak" (Issue #2740)
