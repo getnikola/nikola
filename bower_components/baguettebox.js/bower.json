@@ -1,0 +1,31 @@
+{
+  "name": "baguettebox.js",
+  "version": "1.8.2",
+  "description": "Simple and easy to use lightbox script written in pure JavaScript",
+  "main": [
+    "./dist/baguetteBox.js",
+    "./dist/baguetteBox.css"
+  ],
+  "keywords": [
+    "lightbox"
+  ],
+  "authors": [
+    "feimosi"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/feimosi/baguetteBox.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/feimosi/baguetteBox.js.git"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "src/index.html",
+    "build/index.html",
+    "build/img"
+  ]
+}
