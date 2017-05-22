@@ -512,9 +512,23 @@ class TemplateHookRegistry(object):
         c = callable(inp)
         self._items.append((c, inp, wants_site_and_context, args, kwargs))
 
+    def calculate_deps(self):
+        """Calculate dependencies for a registry."""
+        deps = []
+        for is_callable, inp, wants_site_and_context, args, kwargs in self._items:
+            if not is_callable:
+                name = inp
+            elif hasattr(inp, 'template_registry_identifier'):
+                name = inp.template_registry_identifier
+            elif hasattr(inp, '__doc__'):
+                name = inp.__doc__
+            else:
+                name = '_undefined_callable_'
+            deps.append((is_callable, name, wants_site_and_context, args, kwargs))
+
     def __hash__(self):
         """Return hash of a registry."""
-        return hash(config_changed({self.name: self._items})._calc_digest())
+        return hash(config_changed({self.name: self.calculate_deps()})._calc_digest())
 
     def __str__(self):
         """Stringify a registry."""

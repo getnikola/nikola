@@ -173,7 +173,7 @@ class Galleries(Task, ImageProcessor):
         self.image_ext_list.extend(self.site.config.get('EXTRA_IMAGE_EXTENSIONS', []))
 
         for k, v in self.site.GLOBAL_CONTEXT['template_hooks'].items():
-            self.kw['||template_hooks|{0}||'.format(k)] = v._items
+            self.kw['||template_hooks|{0}||'.format(k)] = v.calculate_deps()
 
         self.site.scan_posts()
         yield self.group_task()
