@@ -187,7 +187,7 @@ class Listings(Task):
                 uptodate = {'c': self.site.GLOBAL_CONTEXT}
 
                 for k, v in self.site.GLOBAL_CONTEXT['template_hooks'].items():
-                    uptodate['||template_hooks|{0}||'.format(k)] = v._items
+                    uptodate['||template_hooks|{0}||'.format(k)] = v.calculate_deps()
 
                 for k in self.site._GLOBAL_CONTEXT_TRANSLATABLE:
                     uptodate[k] = self.site.GLOBAL_CONTEXT[k](self.kw['default_lang'])

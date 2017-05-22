@@ -2243,7 +2243,7 @@ class Nikola(object):
             deps_dict.update(post_deps_dict)
 
         for k, v in self.GLOBAL_CONTEXT['template_hooks'].items():
-            deps_dict['||template_hooks|{0}||'.format(k)] = v._items
+            deps_dict['||template_hooks|{0}||'.format(k)] = v.calculate_deps()
 
         for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
             deps_dict[k] = deps_dict['global'][k](lang)
