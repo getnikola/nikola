@@ -3,7 +3,7 @@
 <%namespace name="archive_nav" file="archive_navigation_helper.tmpl" import="*"/>
 
 <%block name="extra_head">
-    %if other_languages is not UNDEFINED and other_languages:
+    %if has_other_languages and other_languages:
         %for language, classification, _ in other_languages:
             <link rel="alternate" hreflang="${language}" href="${_link(kind, classification, language)}">
         %endfor
@@ -16,7 +16,7 @@
         <h1>${title|h}</h1>
     </header>
     ${archive_nav.archive_navigation()}
-    %if other_languages is not UNDEFINED and other_languages:
+    %if has_other_languages and other_languages:
         <div class="translationslist translations">
             <h3 class="translationslist-intro">${messages("Also available in:")}</h3>
         %for language, classification, name in other_languages:

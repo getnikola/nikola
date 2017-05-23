@@ -2377,6 +2377,8 @@ class Nikola(object):
         context["nextlink"] = None
         if extra_context:
             context.update(extra_context)
+        if 'has_other_languages' not in context:
+            context['has_other_languages'] = False
 
         post_deps_dict = {}
         post_deps_dict["posts"] = [(p.meta[lang]['title'], p.permalink(lang)) for p in posts]
@@ -2626,6 +2628,8 @@ class Nikola(object):
             context = context_source.copy()
             if 'pagekind' not in context:
                 context['pagekind'] = ['index']
+            if 'has_other_languages' not in context:
+                context['has_other_languages'] = False
             ipages_i = displayed_page_numbers[i]
             if kw["indexes_pages"]:
                 indexes_pages = kw["indexes_pages"] % ipages_i

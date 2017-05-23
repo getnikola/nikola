@@ -39,7 +39,7 @@
                 <p class="feedlink"><a href="{{ _link(kind + "_rss", tag) }}" type="application/rss+xml">{{ messages('RSS feed') }}</a></p>
             {% endif %}
         </div>
-        {% if other_languages is defined and other_languages %}
+        {% if has_other_languages and other_languages %}
             <div class="translationslist translations">
                 <h3 class="translationslist-intro">{{ messages("Also available in:") }}</h3>
             {% for language, classification, name in other_languages %}

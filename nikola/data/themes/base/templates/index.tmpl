@@ -11,7 +11,7 @@
         <link rel="prefetch" href="${posts[0].permalink()}" type="text/html">
     % endif
     ${math.math_styles_ifposts(posts)}
-    %if other_languages is not UNDEFINED and other_languages:
+    %if has_other_languages and other_languages:
         %for language, classification, _ in other_languages:
             <link rel="alternate" hreflang="${language}" href="${_link(kind, classification, language)}">
         %endfor
@@ -20,7 +20,7 @@
 
 <%block name="content">
 <%block name="content_header">
-    %if other_languages is not UNDEFINED and other_languages:
+    %if has_other_languages and other_languages:
         <div class="translationslist translations">
             <h3 class="translationslist-intro">${messages("Also available in:")}</h3>
         %for language, classification, name in other_languages:

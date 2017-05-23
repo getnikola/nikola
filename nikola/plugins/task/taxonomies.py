@@ -348,8 +348,11 @@ class RenderTaxonomies(Task):
                                       taxonomy.get_classification_friendly_name(classification, other_lang))
                                      for classification in links if post_lists_per_lang[other_lang].get(classification, ('', False, False))[1]])
             # Store result in context and kw
+            context['has_other_languages'] = True
             context['other_languages'] = sorted_links
             kw['other_languages'] = sorted_links
+        else:
+            context['has_other_languages'] = False
         # Allow other plugins to modify the result
         blinker.signal('generate_classification_page').send({
             'site': self.site,
