@@ -439,7 +439,7 @@ HIDDEN_CATEGORIES = []
 # For example:
 #   [
 #     {'en': 'private', 'de': 'Privat'},
-#     {'en': 'business', 'fr': 'Arbeit'},
+#     {'en': 'business', 'fr': 'travail'},
 #   ]
 # CATEGORY_TRANSLATIONS = []
 
