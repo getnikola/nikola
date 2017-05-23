@@ -89,7 +89,7 @@ link://author_rss/joe => /authors/joe.xml""",
 
     def classify(self, post, lang):
         """Classify the given post for the given language."""
-        return [post.author()]
+        return [post.author(lang=lang)]
 
     def get_classification_friendly_name(self, author, lang, only_last_component=False):
         """Extract a friendly name from the classification."""
