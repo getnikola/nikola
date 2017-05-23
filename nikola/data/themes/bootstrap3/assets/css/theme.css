@@ -118,15 +118,18 @@ article.post-micro {
 }
 
 .metadata p:before,
-.postlist .listdate:after {
+.postlist .listdate:after,
+.translationslist p:before {
     content: " — ";
 }
 
-.metadata p:first-of-type:before {
+.metadata p:first-of-type:before,
+.translationslist p:first-of-type:before {
     content: "";
 }
 
-.metadata p {
+.metadata p,
+.translationslist p {
     display: inline;
 }
 
@@ -138,18 +141,6 @@ article.post-micro {
 
 .posttranslations h3:last-child, .translationslist h3:last-child {
     display: none;
-}
-
-.translationslist p:before {
-    content: " — ";
-}
-
-.translationslist p:first-of-type:before {
-    content: "";
-}
-
-.translationslist p {
-    display: inline;
 }
 
 .entry-content {
