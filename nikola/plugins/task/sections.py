@@ -141,7 +141,7 @@ link://section_index_rss/cars => /cars/rss.xml""",
                         continue
                     sections.add(section)
             self.enable_for_lang[lang] = (len(sections) > 1)
-        self.translation_manager.read_from_config(self.site, 'SECTION', posts_per_section_per_language, False)
+        self.translation_manager.read_from_config(self.site, 'POST_SECTION', posts_per_section_per_language, False)
 
     def should_generate_classification_page(self, dirname, post_list, lang):
         """Only generates list of posts for classification if this function returns True."""
