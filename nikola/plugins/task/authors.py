@@ -48,7 +48,7 @@ class ClassifyAuthors(Taxonomy):
     minimum_post_count_per_classification_in_overview = 1
     omit_empty_classifications = False
     also_create_classifications_from_other_languages = False
-    other_language_variable_name = 'other_languages'
+    add_other_languages_variable = True
     path_handler_docstrings = {
         'author_index': """ Link to the authors index.
 

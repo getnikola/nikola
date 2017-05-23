@@ -348,8 +348,8 @@ class RenderTaxonomies(Task):
                                       taxonomy.get_classification_friendly_name(classification, other_lang))
                                      for classification in links if post_lists_per_lang[other_lang].get(classification, ('', False, False))[1]])
             # Store result in context and kw
-            context[taxonomy.other_language_variable_name] = sorted_links
-            kw[taxonomy.other_language_variable_name] = sorted_links
+            context['other_languages'] = sorted_links
+            kw['other_languages'] = sorted_links
         # Allow other plugins to modify the result
         blinker.signal('generate_classification_page').send({
             'site': self.site,
@@ -385,10 +385,10 @@ class RenderTaxonomies(Task):
         yield self.group_task()
 
         # Cache classification sets per language for taxonomies where
-        # other_language_variable_name is set.
+        # add_other_languages_variable is True.
         classification_set_per_lang = {}
         for taxonomy in self.site.taxonomy_plugins.values():
-            if taxonomy.other_language_variable_name is not None:
+            if taxonomy.add_other_languages_variable:
                 lookup = self.site.posts_per_classification[taxonomy.classification_name]
                 cspl = {lang: set(lookup[lang].keys()) for lang in lookup}
                 classification_set_per_lang[taxonomy.classification_name] = cspl

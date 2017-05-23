@@ -247,29 +247,29 @@ Classification pages (lists)
 
 .. class:: table table-bordered table-striped
 
-==================================  ==============  =============================================================
-Name                                Type            Description
-==================================  ==============  =============================================================
-``kind``                            str             The classification name
-``items``                           list?           List of items for ``list.tmpl`` *(title, permalink, None)*
-``posts``                           list<Post>?     List of items for other templates
-``kind``                            str             The classification name
-``permalink``                       str             Permanent link to page
-``<other_language_variable_name>``  list<tuple>     List of triples ``(other_lang, other_classification, title)``
-==================================  ==============  =============================================================
+===================  ==============  =============================================================
+Name                 Type            Description
+===================  ==============  =============================================================
+``kind``             str             The classification name
+``items``            list?           List of items for ``list.tmpl`` *(title, permalink, None)*
+``posts``            list<Post>?     List of items for other templates
+``kind``             str             The classification name
+``permalink``        str             Permanent link to page
+``other_languages``  list<tuple>     List of triples ``(other_lang, other_classification, title)``
+===================  ==============  =============================================================
 
 Subclassification page
 ~~~~~~~~~~~~~~~~~~~~~~
 
 .. class:: table table-bordered table-striped
 
-==================================  ===========  =============================================================
-Name                                Type         Description
-==================================  ===========  =============================================================
-``items``                           list?        List of items
-``permalink``                       str          Permanent link to page
-``<other_language_variable_name>``  list<tuple>  List of triples ``(other_lang, other_classification, title)``
-==================================  ===========  =============================================================
+===================  ===========  =============================================================
+Name                 Type         Description
+===================  ===========  =============================================================
+``items``            list?        List of items
+``permalink``        str          Permanent link to page
+``other_languages``  list<tuple>  List of triples ``(other_lang, other_classification, title)``
+===================  ===========  =============================================================
 
 Hierarchical lists
 ~~~~~~~~~~~~~~~~~~

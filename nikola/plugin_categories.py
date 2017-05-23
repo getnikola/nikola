@@ -602,11 +602,11 @@ class Taxonomy(BasePlugin):
         language, or only the classifications for one language in its language's
         pages.
 
-    other_language_variable_name = None:
-        In case this is not `None`, each classification page will get a list
+    add_other_languages_variable = False:
+        In case this is `True`, each classification page will get a list
         of triples `(other_lang, other_classification, title)` of classifications
-        in other languages which should be linked. The list will be stored in a
-        variable by the name `other_language_variable_name`.
+        in other languages which should be linked. The list will be stored in the
+        variable `other_languages`.
 
     path_handler_docstrings:
         A dictionary of docstrings for path handlers. See eg. nikola.py for
@@ -639,7 +639,7 @@ class Taxonomy(BasePlugin):
     minimum_post_count_per_classification_in_overview = 1
     omit_empty_classifications = False
     also_create_classifications_from_other_languages = True
-    other_language_variable_name = None
+    add_other_languages_variable = False
     path_handler_docstrings = {
         'taxonomy_index': '',
         'taxonomy': '',

@@ -54,7 +54,7 @@ class ClassifyCategories(Taxonomy):
     minimum_post_count_per_classification_in_overview = 1
     omit_empty_classifications = True
     also_create_classifications_from_other_languages = True
-    other_language_variable_name = 'other_languages'
+    add_other_languages_variable = True
     path_handler_docstrings = {
         'category_index': """A link to the category index.
 

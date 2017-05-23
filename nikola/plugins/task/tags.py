@@ -50,7 +50,7 @@ class ClassifyTags(Taxonomy):
     apply_to_pages = False
     omit_empty_classifications = True
     also_create_classifications_from_other_languages = True
-    other_language_variable_name = 'other_languages'
+    add_other_languages_variable = True
     path_handler_docstrings = {
         'tag_index': """A link to the tag index.
 
