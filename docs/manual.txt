@@ -2028,8 +2028,10 @@ To use mathematics in a post, you **must** add the ``mathjax`` tag, no matter
 which renderer you are using.  (Exception: posts that are Jupyter Notebooks are
 automatically marked as math)
 
-By default, Nikola will accept ``\(...\)`` for inline math; ``\[...\]`` and
-``$$...$$`` for display math. If you want to use the old ``$...$`` syntax as well
+.. Note to editors: the paragraph below uses U+200B, zero-width space. Don’t break it.
+
+By default, Nikola will accept ``\​(...\​)`` for inline math; ``\​[...\​]`` and
+``$​$...$​$`` for display math. If you want to use the old ``$...$`` syntax as well
 (which may conflict with running text!), you need to use special config for
 your renderer:
 
@@ -2059,6 +2061,9 @@ your renderer:
        {left: "\\\(", right: "\\\)", display: false}
    ]
    """
+
+*(Note: the previous paragraph uses invisible characters to prevent rendering
+TeX for display, so don’t copy the examples with three dots to your posts)*
 
 Inline usage
 ~~~~~~~~~~~~
