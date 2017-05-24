@@ -950,7 +950,7 @@ class Nikola(object):
         # TODO: remove in v8, or earlier
         if ('THEME_REVEAL_CONFIG_SUBTHEME' in config or 'THEME_REVEAL_CONFIG_TRANSITION' in config or
                 (self.config['THEME'] in ('reveal', 'reveal-jinja') and
-                 ('subtheme' not in config.GLOBAL_CONTEXT or 'transition' not in config.GLOBAL_CONTEXT))):
+                 ('subtheme' not in config['GLOBAL_CONTEXT'] or 'transition' not in config['GLOBAL_CONTEXT']))):
             utils.LOGGER.warn('The THEME_REVEAL_CONFIG_* settings are deprecated. Use `subtheme` and `transition` in GLOBAL_CONTEXT instead.')
             self._GLOBAL_CONTEXT['subtheme'] = config.get('THEME_REVEAL_CONFIG_SUBTHEME', 'sky')
             self._GLOBAL_CONTEXT['transition'] = config.get('THEME_REVEAL_CONFIG_TRANSITION', 'cube')
