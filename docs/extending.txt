@@ -537,9 +537,10 @@ HTML:
 
     # In set_site
     def generate_html_bit(name, ftype='js'):
+        """Generate HTML for an asset."""
         return '<script src="/assets/{t}/{n}.{t}">'.format(n=name, t=ftype)
 
-    site.template_hooks['extra_head'].append(generate_html_bit, False, 'fancyplugin', type='js')
+    site.template_hooks['extra_head'].append(generate_html_bit, False, 'fancyplugin', ftype='js')
 
 
 The second argument to ``append()`` is used to determine whether the function
@@ -547,11 +548,11 @@ needs access to the current template context and the site.  If it is set to
 ``True``, the function will also receive ``site`` and ``context`` keyword
 arguments.  Example use:
 
-
 .. code-block:: python
 
     # In set_site
     def greeting(addr, endswith='', site=None, context=None):
+        """Greet someone."""
         if context['lang'] == 'en':
             greet = u'Hello'
         elif context['lang'] == 'es':
@@ -563,6 +564,13 @@ arguments.  Example use:
         endswith=endswith) + t
 
     site.template_hooks['page_header'].append(greeting, True, u'Nikola Tesla', endswith=u'!')
+
+Dependencies for template hooks:
+
+* if the input is a string, the string value, alongside arguments to ``append``, is used for calculating dependencies
+* if the input is a callable, it attempts ``input.template_registry_identifier``, then ``input.__doc__``, and if neither is available, it uses a static string.
+
+Make sure to provide at least a docstring, or a identifier, to ensure rebuilds work properly.
 
 Shortcodes
 ==========
@@ -579,7 +587,7 @@ So, if you are creating a plugin that generates markup, it may be a good idea
 to register it as a shortcode in addition of to restructured text directive or
 markdown extension, thus making it available to all markup formats.
 
-To implement your own shortcodes from a plugin, you can create a plugin inheriting ``ShortcodePlugin`` and 
+To implement your own shortcodes from a plugin, you can create a plugin inheriting ``ShortcodePlugin`` and
 from its ``set_site`` method,  call
 
 ``Nikola.register_shortcode(name, func)`` with the following arguments:
@@ -610,7 +618,7 @@ variable keyword arguments):
     between them, otherwise ``None``.
 
 ``lang``:
-    The current language.    
+    The current language.
 
 If the shortcode tag has arguments of the form ``foo=bar`` they will be
 passed as named arguments. Everything else will be passed as positional
