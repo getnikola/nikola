@@ -17,6 +17,7 @@ Bugfixes
 --------
 
 * Use ``locale.getdefaultlocale()`` for better locale guessing
+  (credit: @madduck)
 * Save dependencies for template hooks properly (using ``.__doc__`` or
   ``.template_registry_identifier`` for callables)
 * Enable larger panorama thumbnails (Issue #2780)
