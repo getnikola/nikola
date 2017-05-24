@@ -38,7 +38,7 @@ except ImportError:
     from urllib.parse import urljoin  # NOQA
 
 from nikola.plugin_categories import Task
-from nikola import utils
+from nikola import utils, hierarchy_utils
 from nikola.nikola import _enclosure
 
 
@@ -67,9 +67,9 @@ class RenderTaxonomies(Task):
             def acceptor(node):
                 return len(self._filter_list(self.site.posts_per_classification[taxonomy.classification_name][lang][node.classification_name], lang)) >= kw["minimum_post_count"]
 
-            clipped_root_list = [utils.clone_treenode(node, parent=None, acceptor=acceptor) for node in self.site.hierarchy_per_classification[taxonomy.classification_name][lang]]
+            clipped_root_list = [hierarchy_utils.clone_treenode(node, parent=None, acceptor=acceptor) for node in self.site.hierarchy_per_classification[taxonomy.classification_name][lang]]
             clipped_root_list = [node for node in clipped_root_list if node]
-            clipped_flat_hierarchy = utils.flatten_tree_structure(clipped_root_list)
+            clipped_flat_hierarchy = hierarchy_utils.flatten_tree_structure(clipped_root_list)
 
             classifications = [cat.classification_name for cat in clipped_flat_hierarchy]
         else:
@@ -343,7 +343,7 @@ class RenderTaxonomies(Task):
             # Sort first by language, then by classification
             sorted_links = []
             for other_lang in sorted(links_per_lang.keys()):
-                links = utils.sort_classifications(taxonomy, links_per_lang[other_lang], other_lang)
+                links = hierarchy_utils.sort_classifications(taxonomy, links_per_lang[other_lang], other_lang)
                 sorted_links.extend([(other_lang, classification,
                                       taxonomy.get_classification_friendly_name(classification, other_lang))
                                      for classification in links if post_lists_per_lang[other_lang].get(classification, ('', False, False))[1]])

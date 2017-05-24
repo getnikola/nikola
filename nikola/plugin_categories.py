@@ -782,9 +782,9 @@ class Taxonomy(BasePlugin):
         Must return a tuple of two dicts. The first is merged into the page's context,
         the second will be put into the uptodate list of all generated tasks.
 
-        For hierarchical taxonomies, node is the `utils.TreeNode` element corresponding
-        to the classification. Note that `node` can still be `None` if
-        `also_create_classifications_from_other_languages` is `True`.
+        For hierarchical taxonomies, node is the `hierarchy_utils.TreeNode` element
+        corresponding to the classification. Note that `node` can still be `None`
+        if `also_create_classifications_from_other_languages` is `True`.
 
         Context must contain `title`, which should be something like 'Posts about <classification>'.
         """
@@ -804,9 +804,9 @@ class Taxonomy(BasePlugin):
         For compatibility reasons, the list could be stored somewhere else as well.
 
         In case `has_hierarchy` is `True`, `flat_hierarchy_per_lang` is the flat
-        hierarchy consisting of `utils.TreeNode` elements, and `hierarchy_lookup_per_lang`
-        is the corresponding hierarchy lookup mapping classification strings to
-        `utils.TreeNode` objects.
+        hierarchy consisting of `hierarchy_utils.TreeNode` elements, and
+        `hierarchy_lookup_per_lang` is the corresponding hierarchy lookup mapping
+        classification strings to `hierarchy_utils.TreeNode` objects.
         """
         pass
 

@@ -29,7 +29,7 @@
 from __future__ import unicode_literals
 
 from nikola.plugin_categories import Taxonomy
-from nikola import utils
+from nikola import utils, hierarchy_utils
 
 
 class ClassifyCategories(Taxonomy):
@@ -135,11 +135,11 @@ link://category_rss/dogs => /categories/dogs.xml""",
 
     def extract_hierarchy(self, classification):
         """Given a classification, return a list of parts in the hierarchy."""
-        return utils.parse_escaped_hierarchical_category_name(classification)
+        return hierarchy_utils.parse_escaped_hierarchical_category_name(classification)
 
     def recombine_classification_from_hierarchy(self, hierarchy):
         """Given a list of parts in the hierarchy, return the classification string."""
-        return utils.join_hierarchical_category_path(hierarchy)
+        return hierarchy_utils.join_hierarchical_category_path(hierarchy)
 
     def provide_overview_context_and_uptodate(self, lang):
         """Provide data for the context and the uptodate list for the list of all classifiations."""
