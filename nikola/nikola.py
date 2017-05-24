@@ -2817,6 +2817,17 @@ def guess_locale_from_lang_posix(lang):
     if is_valid_locale(str(lang)):
         locale_n = str(lang)
     else:
+        # Guess using locale.getdefaultlocale()
+        try:
+            # str() is the default string type: bytes on py2, unicode on py3
+            # only that type is accepted by the locale module
+            locale_n = str('.'.join(locale.getdefaultlocale()))
+        except (ValueError, TypeError):
+            pass
+        # Use guess only if it’s the same language
+        if not locale_n.startswith(lang.lower()):
+            locale_n = str()
+    if not locale_n or not is_valid_locale(locale_n):
         # this works in Travis when locale support set by Travis suggestion
         locale_n = str((locale.normalize(lang).split('.')[0]) + '.UTF-8')
     if not is_valid_locale(locale_n):
