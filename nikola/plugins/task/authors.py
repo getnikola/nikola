@@ -144,10 +144,10 @@ link://author_rss/joe => /authors/joe.xml""",
         """Return a list of variants of the same author in other languages."""
         return self.translation_manager.get_translations_as_list(author, lang)
 
-    def postprocess_posts_per_classification(self, posts_per_author_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
+    def postprocess_posts_per_classification(self, posts_per_classification_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
         """Rearrange, modify or otherwise use the list of posts per classification and per language."""
         more_than_one = False
-        for lang, posts_per_author in posts_per_author_per_language.items():
+        for lang, posts_per_author in posts_per_classification_per_language.items():
             authors = set()
             for author, posts in posts_per_author.items():
                 for post in posts:
@@ -158,4 +158,4 @@ link://author_rss/joe => /authors/joe.xml""",
                 more_than_one = True
         self.generate_author_pages = self.site.config["ENABLE_AUTHOR_PAGES"] and more_than_one
         self.site.GLOBAL_CONTEXT["author_pages_generated"] = self.generate_author_pages
-        self.translation_manager.add_defaults(posts_per_author_per_language)
+        self.translation_manager.add_defaults(posts_per_classification_per_language)

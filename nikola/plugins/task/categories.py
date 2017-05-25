@@ -195,6 +195,6 @@ link://category_rss/dogs => /categories/dogs.xml""",
         """Return a list of variants of the same category in other languages."""
         return self.translation_manager.get_translations_as_list(category, lang)
 
-    def postprocess_posts_per_classification(self, posts_per_section_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
+    def postprocess_posts_per_classification(self, posts_per_classification_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
         """Rearrange, modify or otherwise use the list of posts per classification and per language."""
-        self.translation_manager.read_from_config(self.site, 'CATEGORY', posts_per_section_per_language, False)
+        self.translation_manager.read_from_config(self.site, 'CATEGORY', posts_per_classification_per_language, False)
