@@ -303,7 +303,7 @@ POSTS_SECTIONS = True
 # For example:
 #   [
 #     {'en': 'private', 'de': 'Privat'},
-#     {'en': 'business', 'fr': 'Arbeit'},
+#     {'en': 'work', 'fr': 'travail', 'de': 'Arbeit'},
 #   ]
 # POSTS_SECTION_TRANSLATIONS = []
 
@@ -364,17 +364,8 @@ HIDDEN_TAGS = ['mathjax']
 # TAGLIST_MINIMUM_POSTS = 1
 
 # A list of dictionaries specifying tags which translate to each other.
-# For example:
-#   [
-#     {'en': 'car', 'de': 'Auto'},
-#     {'en': 'window', 'fr': 'fenêtre'},
-#   ]
-# Note that tags in the same language can appear more than once, for
-# example if they have different meaning:
-#   [
-#     {'en': 'cloud', 'de': 'Wolke'},  # the fluffy thing in the sky
-#     {'en': 'cloud', 'de': 'Cloud'},  # cloud computing
-#   ]
+# Format: a list of dicts {language: translation, language2: translation2, …}
+# See POSTS_SECTION_TRANSLATIONS example above.
 # TAG_TRANSLATIONS = []
 
 # If set to True, a tag in a language will be treated as a translation
@@ -436,11 +427,8 @@ CATEGORY_OUTPUT_FLAT_HIERARCHY = ${CATEGORY_OUTPUT_FLAT_HIERARCHY}
 HIDDEN_CATEGORIES = []
 
 # A list of dictionaries specifying categories which translate to each other.
-# For example:
-#   [
-#     {'en': 'private', 'de': 'Privat'},
-#     {'en': 'business', 'fr': 'travail'},
-#   ]
+# Format: a list of dicts {language: translation, language2: translation2, …}
+# See POSTS_SECTION_TRANSLATIONS example above.
 # CATEGORY_TRANSLATIONS = []
 
 # If set to True, a category in a language will be treated as a translation
