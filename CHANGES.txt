@@ -28,6 +28,12 @@ Bugfixes
 * Use page.tmpl by default, which is inherited from story.tmpl (Issue
   #1891)
 
+Other
+-----
+
+* Limit Jupyter support to notebook >= 4.0.0 (it already was in
+  requirements-extras.txt; Issue #2733)
+
 New in v7.8.5
 =============
 
