@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Guess file format from file name on new_post (Issue #2798)
 * Use BaguetteBox as lightbox in base theme (Issue #2777)
 * New ``deduplicate_ids``, for preventing duplication of HTML id
   attributes (Issue #2570)

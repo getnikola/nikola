@@ -273,6 +273,14 @@ class CommandNewPost(Command):
                 if extension in extensions:
                     content_format = compiler
 
+        elif not content_format and import_file:
+            # content_format not specified. If import_file was given, use
+            # it to guess (Issue #2798)
+            extension = os.path.splitext(import_file)[-1]
+            for compiler, extensions in self.site.config['COMPILERS'].items():
+                if extension in extensions:
+                    content_format = compiler
+
         elif not content_format:  # Issue #400
             content_format = get_default_compiler(
                 is_post,
