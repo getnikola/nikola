@@ -118,12 +118,14 @@ class DemoBuildTest(EmptyBuildTest):
 
     def test_index_in_sitemap(self):
         sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
-        sitemap_data = io.open(sitemap_path, "r", encoding="utf8").read()
+        with io.open(sitemap_path, "r", encoding="utf8") as inf:
+            sitemap_data = inf.read()
         self.assertTrue('<loc>https://example.com/index.html</loc>' in sitemap_data)
 
     def test_avoid_double_slash_in_rss(self):
         rss_path = os.path.join(self.target_dir, "output", "rss.xml")
-        rss_data = io.open(rss_path, "r", encoding="utf8").read()
+        with io.open(rss_path, "r", encoding="utf8") as inf:
+            rss_data = inf.read()
         self.assertFalse('https://example.com//' in rss_data)
 
 
@@ -174,8 +176,10 @@ class FuturePostTest(EmptyBuildTest):
         self.assertTrue(os.path.isfile(index_path))
         self.assertTrue(os.path.isfile(foo_path))
         self.assertTrue(os.path.isfile(bar_path))
-        index_data = io.open(index_path, "r", encoding="utf8").read()
-        sitemap_data = io.open(sitemap_path, "r", encoding="utf8").read()
+        with io.open(index_path, "r", encoding="utf8") as inf:
+            index_data = inf.read()
+        with io.open(sitemap_path, "r", encoding="utf8") as inf:
+            sitemap_data = inf.read()
         self.assertTrue('foo.html' in index_data)
         self.assertFalse('bar.html' in index_data)
         self.assertTrue('foo.html' in sitemap_data)
@@ -297,7 +301,8 @@ class RelativeLinkTest(DemoBuildTest):
     def test_index_in_sitemap(self):
         """Test that the correct path is in sitemap, and not the wrong one."""
         sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
-        sitemap_data = io.open(sitemap_path, "r", encoding="utf8").read()
+        with io.open(sitemap_path, "r", encoding="utf8") as inf:
+            sitemap_data = inf.read()
         self.assertFalse('<loc>https://example.com/</loc>' in sitemap_data)
         self.assertTrue('<loc>https://example.com/foo/bar/index.html</loc>' in sitemap_data)
 
@@ -337,7 +342,8 @@ class TestCheckAbsoluteSubFolder(TestCheck):
     def test_index_in_sitemap(self):
         """Test that the correct path is in sitemap, and not the wrong one."""
         sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
-        sitemap_data = io.open(sitemap_path, "r", encoding="utf8").read()
+        with io.open(sitemap_path, "r", encoding="utf8") as inf:
+            sitemap_data = inf.read()
         self.assertTrue('<loc>https://example.com/foo/index.html</loc>' in sitemap_data)
 
 
@@ -419,7 +425,8 @@ class RelativeLinkTest2(DemoBuildTest):
     def test_index_in_sitemap(self):
         """Test that the correct path is in sitemap, and not the wrong one."""
         sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
-        sitemap_data = io.open(sitemap_path, "r", encoding="utf8").read()
+        with io.open(sitemap_path, "r", encoding="utf8") as inf:
+            sitemap_data = inf.read()
         self.assertFalse('<loc>https://example.com/</loc>' in sitemap_data)
         self.assertTrue('<loc>https://example.com/blog/index.html</loc>' in sitemap_data)
 
@@ -495,7 +502,7 @@ class SubdirRunningTest(DemoBuildTest):
 
         with cd(os.path.join(self.target_dir, 'posts')):
             result = __main__.main(['build'])
-            self.assertEquals(result, 0)
+            self.assertEqual(result, 0)
 
 
 class RedirectionsTest1(TestCheck):
