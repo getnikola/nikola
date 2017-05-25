@@ -159,9 +159,9 @@ link://category_rss/dogs => /categories/dogs.xml""",
         kw.update(context)
         return context, kw
 
-    def provide_context_and_uptodate(self, cat, lang, node=None):
+    def provide_context_and_uptodate(self, classification, lang, node=None):
         """Provide data for the context and the uptodate list for the list of the given classifiation."""
-        cat_path = self.extract_hierarchy(cat)
+        cat_path = self.extract_hierarchy(classification)
         kw = {
             'category_path': self.site.config['CATEGORY_PATH'],
             'category_prefix': self.site.config['CATEGORY_PREFIX'],
@@ -176,24 +176,24 @@ link://category_rss/dogs => /categories/dogs.xml""",
         else:
             children = [child for child in node.children if len([post for post in posts.get(child.classification_name, []) if self.site.config['SHOW_UNTRANSLATED_POSTS'] or post.is_translation_available(lang)]) > 0]
         subcats = [(child.name, self.site.link(self.classification_name, child.classification_name, lang)) for child in children]
-        friendly_name = self.get_classification_friendly_name(cat, lang)
+        friendly_name = self.get_classification_friendly_name(classification, lang)
         context = {
-            "title": self.site.config['CATEGORY_PAGES_TITLES'].get(lang, {}).get(cat, self.site.MESSAGES[lang]["Posts about %s"] % friendly_name),
-            "description": self.site.config['CATEGORY_PAGES_DESCRIPTIONS'].get(lang, {}).get(cat),
+            "title": self.site.config['CATEGORY_PAGES_TITLES'].get(lang, {}).get(classification, self.site.MESSAGES[lang]["Posts about %s"] % friendly_name),
+            "description": self.site.config['CATEGORY_PAGES_DESCRIPTIONS'].get(lang, {}).get(classification),
             "pagekind": ["tag_page", "index" if self.show_list_as_index else "list"],
             "tag": friendly_name,
-            "category": cat,
+            "category": classification,
             "category_path": cat_path,
             "subcategories": subcats,
         }
         if self.show_list_as_index:
-            context["rss_link"] = """<link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for tag {0} ({1})" href="{2}">""".format(friendly_name, lang, self.site.link("category_rss", cat, lang))
+            context["rss_link"] = """<link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for tag {0} ({1})" href="{2}">""".format(friendly_name, lang, self.site.link("category_rss", classification, lang))
         kw.update(context)
         return context, kw
 
-    def get_other_language_variants(self, category, lang, classifications_per_language):
+    def get_other_language_variants(self, classification, lang, classifications_per_language):
         """Return a list of variants of the same category in other languages."""
-        return self.translation_manager.get_translations_as_list(category, lang)
+        return self.translation_manager.get_translations_as_list(classification, lang)
 
     def postprocess_posts_per_classification(self, posts_per_classification_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
         """Rearrange, modify or otherwise use the list of posts per classification and per language."""

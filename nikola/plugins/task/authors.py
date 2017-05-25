@@ -91,20 +91,20 @@ link://author_rss/joe => /authors/joe.xml""",
         """Classify the given post for the given language."""
         return [post.author(lang=lang)]
 
-    def get_classification_friendly_name(self, author, lang, only_last_component=False):
+    def get_classification_friendly_name(self, classification, lang, only_last_component=False):
         """Extract a friendly name from the classification."""
-        return author
+        return classification
 
     def get_overview_path(self, lang, dest_type='page'):
         """Return a path for the list of all classifications."""
         return [self.site.config['AUTHOR_PATH'](lang)], 'always'
 
-    def get_path(self, author, lang, dest_type='page'):
+    def get_path(self, classification, lang, dest_type='page'):
         """Return a path for the given classification."""
         if self.site.config['SLUG_AUTHOR_PATH']:
-            slug = utils.slugify(author, lang)
+            slug = utils.slugify(classification, lang)
         else:
-            slug = author
+            slug = classification
         return [self.site.config['AUTHOR_PATH'](lang), slug], 'auto'
 
     def provide_overview_context_and_uptodate(self, lang):
@@ -121,28 +121,28 @@ link://author_rss/joe => /authors/joe.xml""",
         kw.update(context)
         return context, kw
 
-    def provide_context_and_uptodate(self, author, lang, node=None):
+    def provide_context_and_uptodate(self, classification, lang, node=None):
         """Provide data for the context and the uptodate list for the list of the given classifiation."""
         descriptions = self.site.config['AUTHOR_PAGES_DESCRIPTIONS']
         kw = {
             "messages": self.site.MESSAGES,
         }
         context = {
-            "author": author,
-            "title": kw["messages"][lang]["Posts by %s"] % author,
-            "description": descriptions[lang][author] if lang in descriptions and author in descriptions[lang] else None,
+            "author": classification,
+            "title": kw["messages"][lang]["Posts by %s"] % classification,
+            "description": descriptions[lang][classification] if lang in descriptions and classification in descriptions[lang] else None,
             "pagekind": ["index" if self.show_list_as_index else "list", "author_page"],
         }
         if self.site.config["GENERATE_RSS"]:
             rss_link = ("""<link rel="alternate" type="application/rss+xml" title="RSS for author {0} ({1})" href="{2}">""".format(
-                author, lang, self.site.link('author_rss', author, lang)))
+                classification, lang, self.site.link('author_rss', classification, lang)))
             context['rss_link'] = rss_link
         kw.update(context)
         return context, kw
 
-    def get_other_language_variants(self, author, lang, classifications_per_language):
+    def get_other_language_variants(self, classification, lang, classifications_per_language):
         """Return a list of variants of the same author in other languages."""
-        return self.translation_manager.get_translations_as_list(author, lang)
+        return self.translation_manager.get_translations_as_list(classification, lang)
 
     def postprocess_posts_per_classification(self, posts_per_classification_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
         """Rearrange, modify or otherwise use the list of posts per classification and per language."""
