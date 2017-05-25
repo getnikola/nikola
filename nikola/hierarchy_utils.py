@@ -139,6 +139,7 @@ def flatten_tree_structure(root_list):
     elements = []
 
     def generate(input_list, indent_levels_so_far):
+        """Generate flat list of nodes."""
         for index, element in enumerate(input_list):
             # add to destination
             elements.append(element)
@@ -205,6 +206,7 @@ def parse_escaped_hierarchical_category_name(category_name):
 def join_hierarchical_category_path(category_path):
     """Join a category path."""
     def escape(s):
+        """Espace one part of category path."""
         return s.replace('\\', '\\\\').replace('/', '\\/')
 
     return '/'.join([escape(p) for p in category_path])
