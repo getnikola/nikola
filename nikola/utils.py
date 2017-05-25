@@ -2018,9 +2018,10 @@ class ClassificationTranslationManager(object):
         """Return whether we know about the classification in that language.
 
         Note that this function returning ``True`` does not mean that
-        ``get_translations`` returns a non-empty list, but only that
-        this classification was explicitly added with ``add_translation``
-        at some point.
+        ``get_translations`` returns a non-empty dict or that
+        ``get_translations_as_list`` returns a non-empty list, but only
+        that this classification was explicitly added with
+        ``add_translation`` at some point.
         """
         return self._data[lang].get(classification) is not None
 
