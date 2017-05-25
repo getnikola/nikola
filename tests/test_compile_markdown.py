@@ -38,7 +38,7 @@ class CompileMarkdownTests(BaseTestCase):
     def test_compile_empty(self):
         input_str = ''
         actual_output = self.compile(input_str)
-        self.assertEquals(actual_output, '')
+        self.assertEqual(actual_output, '')
 
     def test_compile_code_hilite(self):
         input_str = '''\
@@ -55,20 +55,20 @@ class CompileMarkdownTests(BaseTestCase):
 '''
 
         actual_output = self.compile(input_str)
-        self.assertEquals(actual_output.strip(), expected_output.strip())
+        self.assertEqual(actual_output.strip(), expected_output.strip())
 
     def test_compile_strikethrough(self):
         input_str = '~~striked out text~~'
         expected_output = '<p><del>striked out text</del></p>'
 
         actual_output = self.compile(input_str)
-        self.assertEquals(actual_output.strip(), expected_output.strip())
+        self.assertEqual(actual_output.strip(), expected_output.strip())
 
     def test_mdx_podcast(self):
         input_str = "[podcast]https://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3[/podcast]"
         expected_output = '<p><audio controls=""><source src="https://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3" type="audio/mpeg"></source></audio></p>'
         actual_output = self.compile(input_str)
-        self.assertEquals(actual_output.strip(), expected_output.strip())
+        self.assertEqual(actual_output.strip(), expected_output.strip())
 
 
 if __name__ == '__main__':

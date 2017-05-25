@@ -429,8 +429,8 @@ class Galleries(Task, ImageProcessor):
         exclude_path = os.path.join(gallery_path, "exclude.meta")
 
         try:
-            f = open(exclude_path, 'r')
-            excluded_image_name_list = f.read().split()
+            with open(exclude_path, 'r') as f:
+                excluded_image_name_list = f.read().split()
         except IOError:
             excluded_image_name_list = []
 

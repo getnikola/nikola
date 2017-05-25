@@ -20,7 +20,13 @@
          {{ footer.html_footer() }}
     </div>
     {{ base.late_load_js() }}
+    {% if use_cdn %}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.8.2/baguetteBox.min.js"></script>
+    {% else %}
+        <script src="/assets/js/baguetteBox.min.js"></script>
+    {% endif %}
     {% block extra_js %}{% endblock %}
+    <script>baguetteBox.run('a.reference');</script>
     {{ body_end }}
     {{ template_hooks['body_end']() }}
 </body>

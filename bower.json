@@ -13,6 +13,7 @@
     "jquery": "<2.0.0",
     "jquery-colorbox": "~1",
     "moment": "~2",
-    "livereload-js": "~2"
+    "livereload-js": "~2",
+    "baguettebox.js": "~1.8"
   }
 }
