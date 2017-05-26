@@ -998,7 +998,9 @@ To use them from plugins, please see `Extending Nikola <https://getnikola.com/ex
 Using a shortcode
 ~~~~~~~~~~~~~~~~~
 
-In your content files, a shortcode can be called by using this form::
+In your content files, a shortcode can be called by using this form:
+
+.. code:: text
 
     {{% raw %}}{{% name parameters %}}{{% /raw %}}
 
@@ -1008,7 +1010,9 @@ The first word is always the name of the shortcode. Parameters follow the name. 
 
 Some shortcodes use or require closing shortcodes. Like HTML, the opening and closing shortcodes match (name only), the closing being prepended with a slash.
 
-Example of a paired shortcode (note that we don't have a highlight shortcode yet ;-)::
+Example of a paired shortcode (note that we don't have a highlight shortcode yet ;-):
+
+.. code:: text
 
     {{% raw %}}{{% highlight python %}} A bunch of code here {{% /highlight %}}{{% /raw %}}
 
@@ -1018,7 +1022,9 @@ Example of a paired shortcode (note that we don't have a highlight shortcode yet
     For some shortcodes there are alternative docutils directives (example, you can use the media
     **directive** instead of the media shortcode.
 
-    Also, you can use the shortcode **role**::
+    Also, you can use the shortcode **role**:
+
+    .. code:: text
 
        :sc:`{{% raw %}}{{% shortcode here %}}{{% /raw %}}`
 
@@ -1040,14 +1046,18 @@ post-list
     Will show a list of posts, see the `Post List directive for details <#post-list>`__
 
 media
-    Display media embedded from a URL, for example, this will embed a youtube video::
+    Display media embedded from a URL, for example, this will embed a youtube video:
+
+    .. code:: text
 
         {{% raw %}}{{% media url="https://www.youtube.com/watch?v=Nck6BZga7TQ" %}}{{% /raw %}}
 
 
 chart
     Create charts via PyGal. This is similar to the `chart directive <#chart>`__ except the syntax is adapted to
-    shortcodes. This is an example::
+    shortcodes. This is an example:
+
+    .. code:: text
 
         {{% raw %}}{{% chart Bar title='Browser usage evolution (in %)' %}}
         x_labels='["2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012"]'%}}
@@ -1058,7 +1068,9 @@ chart
         {{% /chart %}}{{% /raw %}}
 
 emoji
-    Insert an emoji. For example::
+    Insert an emoji. For example:
+
+    .. code:: text
 
        {{% raw %}}{{% emoji crying_face %}}{{% /raw %}}
 
@@ -1098,27 +1110,38 @@ object, it will be available as ``site``. Use with care :-)
 
 See :doc:`extending` for detailed information.
 
-For example, if your ``shortcodes/foo.tmpl`` contains this::
+For example, if your ``shortcodes/foo.tmpl`` contains this:
+
+.. code:: text
 
     This uses the bar variable: ${bar}
 
-And your post contains this::
+And your post contains this:
+
+.. code:: text
 
     {{% raw %}}{{% foo bar=bla %}}{{% /raw %}}
 
-Then the output file will contain::
+Then the output file will contain:
+
+.. code:: text
 
     This uses the bar variable: bla
 
-Finally, you can use a template shortcode without a file, by inserting the template in the shortcode itself::
+Finally, you can use a template shortcode without a file, by inserting the
+template in the shortcode itself:
 
-    {{% raw %}}
-    {{% template %}}
+
+.. code:: html+mako
+
+    {{% raw %}}{{% template %}}{{% /raw %}}
+    <ul>
     % for foo in bar:
-        <li> ${foo}
+    <li>${foo}</li>
     % endfor
-    {{% /template %}}
-    {{% /raw %}}
+    </ul>
+    {{% raw %}}{{% /template %}}{{% /raw %}}
+
 
 In that case, the template engine used will be your theme's and the arguments you pass,
 as well as the global context from your ``conf.py``, are available to the template you
@@ -1740,7 +1763,9 @@ see which one you prefer.
 Strip all EXIF data
 ~~~~~~~~~~~~~~~~~~~
 
-Do this if you want to be absolutely sure that no sensitive information should ever leak::
+Do this if you want to be absolutely sure that no sensitive information should ever leak:
+
+.. code:: python
 
     PRESERVE_EXIF_DATA = False
     EXIF_WHITELIST = {}
@@ -1748,7 +1773,9 @@ Do this if you want to be absolutely sure that no sensitive information should e
 Preserve all EXIF data
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Do this if you really don't mind people knowing where pictures were taken, or camera settings::
+Do this if you really don't mind people knowing where pictures were taken, or camera settings:
+
+.. code:: python
 
     PRESERVE_EXIF_DATA = True
     EXIF_WHITELIST = {'*': '*'}
@@ -1781,7 +1808,9 @@ Each IFD in turn contains a number of tags. For example, 0th contains a ImageWid
 You can tell Nikola exactly which IFDs to keep, and within each IFD, which tags to keep,
 using the EXIF_WHITELIST option.
 
-Let's see an example::
+Let's see an example:
+
+.. code:: python
 
     PRESERVE_EXIF_DATA = True
     EXIF_WHITELIST = {
@@ -2711,6 +2740,9 @@ For pdb debugging in Nikola, you should use ``doit.tools.set_trace()`` instead
 of the usual pdb call.  By default, doit (and thus Nikola) redirects stdout and
 stderr.  Thus, you must use the different call.  (Alternatively, you could run
 with ``nikola build -v 2``, which disables the redirections.)
+
+To show more logging messages, as well as full tracebacks, you need to set an
+environment variable: ``NIKOLA_DEBUG=1``
 
 Shell Tab Completion
 ~~~~~~~~~~~~~~~~~~~~
