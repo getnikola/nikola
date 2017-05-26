@@ -6,8 +6,8 @@ Features
 
 * Guess file format from file name on new_post (Issue #2798)
 * Use BaguetteBox as lightbox in base theme (Issue #2777)
-* New ``deduplicate_ids``, for preventing duplication of HTML id
-  attributes (Issue #2570)
+* New ``deduplicate_ids`` filter, for preventing duplication of HTML
+  ``id`` attributes (Issue #2570)
 * Ported gallery image layout to base theme (Issue #2775)
 * Better error handling when posts can't be parsed (Issue #2771)
 * Use ``.theme`` files to store theme metadata (Issue #2758)
