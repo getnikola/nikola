@@ -1,0 +1,38 @@
+## -*- coding: utf-8 -*-
+<%inherit file="list_post.tmpl"/>
+<%namespace name="feed" file="feed_helper.tmpl" import="*"/>
+
+<%block name="extra_head">
+    ${parent.extra_head()}
+    ${feed.head(tag)}
+</%block>
+
+
+<%block name="content">
+<article class="tagpage">
+    <header>
+        <h1>${title|h}</h1>
+        %if description:
+            <p>${description}</p>
+        %endif
+        %if subcategories:
+        ${messages('Subcategories:')}
+        <ul>
+            %for name, link in subcategories:
+            <li><a href="${link}">${name|h}</a></li>
+            %endfor
+        </ul>
+        %endif
+        <div class="metadata">
+            ${feed.link(tag)}
+        </div>
+    </header>
+    %if posts:
+        <ul class="postlist">
+        % for post in posts:
+            <li><time class="listdate" datetime="${post.formatted_date('webiso')}" title="${post.formatted_date(date_format)|h}">${post.formatted_date(date_format)|h}</time> <a href="${post.permalink()}" class="listtitle">${post.title()|h}<a></li>
+        % endfor
+        </ul>
+    %endif
+</article>
+</%block>

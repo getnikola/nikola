@@ -1,0 +1,25 @@
+## -*- coding: utf-8 -*-
+<%inherit file="index.tmpl"/>
+<%namespace name="feed" file="feed_helper.tmpl" import="*"/>
+
+<%block name="content_header">
+    <header>
+        <h1>${title|h}</h1>
+        %if description:
+        <p>${description}</p>
+        %endif
+        %if subcategories:
+        ${messages('Subcategories:')}
+        <ul>
+            %for name, link in subcategories:
+            <li><a href="${link}">${name|h}</a></li>
+            %endfor
+        </ul>
+        %endif
+    </header>
+</%block>
+
+<%block name="extra_head">
+    ${parent.extra_head()}
+    ${feed.head(tag)}
+</%block>

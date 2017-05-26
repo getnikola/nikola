@@ -1,0 +1,13 @@
+{#  -*- coding: utf-8 -*- #}
+{% extends 'index.tmpl' %}
+{% import 'archive_navigation_helper.tmpl' as archive_nav with context %}
+{% import 'feed_helper.tmpl' as feed with context %}
+
+{% block extra_head %}
+    {{ super() }}
+    {{ feed.head(archive_name) }}
+{% endblock %}
+
+{% block content_header %}
+    {{ archive_nav.archive_navigation() }}
+{% endblock %}

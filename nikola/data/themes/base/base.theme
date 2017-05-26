@@ -1,5 +1,6 @@
 [Theme]
 engine = mako
+parent = core
 author = The Nikola Contributors
 author_url = https://getnikola.com/
 license = MIT

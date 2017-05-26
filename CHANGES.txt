@@ -5,6 +5,8 @@ Features
 --------
 
 * Support for YAML and TOML metadata (Issue #2801)
+* Added ``core`` and ``core-jinja`` themes to provide a low level
+  starting point for theme developers. (Issue #2744)
 
 Bugfixes
 --------

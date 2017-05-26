@@ -1,0 +1,91 @@
+{#  -*- coding: utf-8 -*- #}
+{% import 'math_helper.tmpl' as math with context %}
+
+{% macro meta_translations(post) %}
+    {% if translations|length > 1 %}
+        {% for langname in translations|sort %}
+            {% if langname != lang and ((not post.skip_untranslated) or post.is_translation_available(langname)) %}
+                <link rel="alternate" hreflang="{{ langname }}" href="{{ post.permalink(langname) }}">
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
+
+{% macro html_tags(post) %}
+    {% if post.tags %}
+        <ul itemprop="keywords" class="tags">
+        {% for tag in post.tags %}
+          {% if tag not in hidden_tags %}
+            <li><a class="tag p-category" href="{{ _link('tag', tag) }}" rel="tag">{{ tag|e }}</a></li>
+          {% endif %}
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}
+
+{% macro html_pager(post) %}
+    {% if post.prev_post or post.next_post %}
+        <ul class="pager hidden-print">
+        {% if post.prev_post %}
+            <li class="previous">
+                <a href="{{ post.prev_post.permalink() }}" rel="prev" title="{{ post.prev_post.title()|e }}">{{ messages("Previous post") }}</a>
+            </li>
+        {% endif %}
+        {% if post.next_post %}
+            <li class="next">
+                <a href="{{ post.next_post.permalink() }}" rel="next" title="{{ post.next_post.title()|e }}">{{ messages("Next post") }}</a>
+            </li>
+        {% endif %}
+        </ul>
+    {% endif %}
+{% endmacro %}
+
+{% macro open_graph_metadata(post) %}
+{% if use_open_graph %}
+    <meta property="og:site_name" content="{{ blog_title|e }}">
+    <meta property="og:title" content="{{ post.title()[:70]|e }}">
+    <meta property="og:url" content="{{ abs_link(permalink) }}">
+    {% if post.description() %}
+    <meta property="og:description" content="{{ post.description()[:200]|e }}">
+    {% else %}
+    <meta property="og:description" content="{{ post.text(strip_html=True)[:200]|e }}">
+    {% endif %}
+    {% if post.previewimage %}
+    <meta property="og:image" content="{{ url_replacer(permalink, post.previewimage, lang, 'absolute') }}">
+    {% endif %}
+    <meta property="og:type" content="article">
+{#  Will only work with Pintrest and breaks everywhere else who expect a [Facebook] URI. #}
+{#     %if post.author(): #}
+{#     <meta property="article:author" content="{{ post.author()|e }}"> #}
+{#     %endif #}
+    {% if post.date.isoformat() %}
+    <meta property="article:published_time" content="{{ post.formatted_date('webiso') }}">
+    {% endif %}
+    {% if post.tags %}
+        {% for tag in post.tags %}
+           <meta property="article:tag" content="{{ tag|e }}">
+        {% endfor %}
+    {% endif %}
+{% endif %}
+{% endmacro %}
+
+{% macro twitter_card_information(post) %}
+{% if twitter_card and twitter_card['use_twitter_cards'] %}
+    <meta name="twitter:card" content="{{ twitter_card.get('card', 'summary')|e }}">
+    {% if 'site:id' in twitter_card %}
+    <meta name="twitter:site:id" content="{{ twitter_card['site:id'] }}">
+    {% elif 'site' in twitter_card %}
+    <meta name="twitter:site" content="{{ twitter_card['site'] }}">
+    {% endif %}
+    {% if 'creator:id' in twitter_card %}
+    <meta name="twitter:creator:id" content="{{ twitter_card['creator:id'] }}">
+    {% elif 'creator' in twitter_card %}
+    <meta name="twitter:creator" content="{{ twitter_card['creator'] }}">
+    {% endif %}
+{% endif %}
+{% endmacro %}
+
+{#  This function is deprecated; use math_helper directly. #}
+{% macro mathjax_script(post) %}
+    {{ math.math_scripts_ifpost(post) }}
+{% endmacro %}

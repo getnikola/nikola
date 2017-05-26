@@ -1,0 +1,30 @@
+{#  -*- coding: utf-8 -*- #}
+{% extends 'list_post.tmpl' %}
+{% import 'feed_helper.tmpl' as feed with context %}
+
+{% block extra_head %}
+    {{ super() }}
+    {{ feed.head(author) }}
+{% endblock %}
+
+
+{% block content %}
+<article class="authorpage">
+    <header>
+        <h1>{{ title|e }}</h1>
+        {% if description %}
+            <p>{{ description }}</p>
+        {% endif %}
+        <div class="metadata">
+            {{ feed.link(author) }}
+        </div>
+    </header>
+    {% if posts %}
+        <ul class="postlist">
+            {% for post in posts %}
+                <li><time class="listdate" datetime="{{ post.formatted_date('webiso') }}" title="{{ post.formatted_date(date_format)|e }}">{{ post.formatted_date(date_format)|e }}</time> <a href="{{ post.permalink() }}" class="listtitle">{{ post.title()|e }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</article>
+{% endblock %}

@@ -1,6 +1,6 @@
 [Theme]
 engine = jinja
-parent = base
+parent = core-jinja
 author = The Nikola Contributors
 author_url = https://getnikola.com/
 license = MIT
