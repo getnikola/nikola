@@ -8,6 +8,7 @@ MESSAGES = {
     "(active)": "(attivo)",
     "Also available in:": "Disponibile anche in:",
     "Archive": "Archivio",
+    "Atom feed": "",
     "Authors": "Autori",
     "Categories": "Categorie",
     "Comments": "Commenti",

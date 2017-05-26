@@ -8,6 +8,7 @@ MESSAGES = {
     "(active)": "(aktív)",
     "Also available in:": "Olvasható még:",
     "Archive": "Archív",
+    "Atom feed": "",
     "Authors": "Szerzők",
     "Categories": "Kategóriák",
     "Comments": "Hozzászólások",

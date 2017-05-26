@@ -8,6 +8,7 @@ MESSAGES = {
     "(active)": "(aktiv)",
     "Also available in:": "Həmçinin mövcuddur:",
     "Archive": "Arxiv",
+    "Atom feed": "",
     "Authors": "Müəlliflər",
     "Categories": "Kateqoriyalar",
     "Comments": "Şərhlər",

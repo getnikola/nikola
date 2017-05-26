@@ -1,31 +1,34 @@
 ## -*- coding: utf-8 -*-
+<%namespace name="feed" file="feed_helper.tmpl" import="*"/>
 
 <%def name="html_headstart()">
 <!DOCTYPE html>
 <html \
-prefix='\
-%if use_open_graph or (twitter_card and twitter_card['use_twitter_cards']):
-og: http://ogp.me/ns# article: http://ogp.me/ns/article# \
-%endif
-%if comment_system == 'facebook':
-fb: http://ogp.me/ns/fb#
-%endif
-' \
-%if use_open_graph or (twitter_card and twitter_card['use_twitter_cards']):
-vocab="http://ogp.me/ns" \
-%endif
+% if use_open_graph or (twitter_card and twitter_card['use_twitter_cards']) or (comment_system == 'facebook'):
+    prefix='\
+        % if use_open_graph or (twitter_card and twitter_card['use_twitter_cards']):
+            og: http://ogp.me/ns# article: http://ogp.me/ns/article# \
+        %endif
+        %if comment_system == 'facebook':
+            fb: http://ogp.me/ns/fb# \
+        %endif
+    ' \
+    %if use_open_graph or (twitter_card and twitter_card['use_twitter_cards']):
+        vocab="http://ogp.me/ns" \
+    %endif
+% endif
 % if is_rtl:
-dir="rtl" \
+    dir="rtl" \
 % endif
 \
 lang="${lang}">
 <head>
     <meta charset="utf-8">
     % if use_base_tag:
-    <base href="${abs_link(permalink)}">
+        <base href="${abs_link(permalink)}">
     % endif
     %if description:
-    <meta name="description" content="${description|h}">
+        <meta name="description" content="${description|h}">
     %endif
     <meta name="viewport" content="width=device-width">
     %if title == blog_title:
@@ -37,9 +40,9 @@ lang="${lang}">
     ${html_stylesheets()}
     <meta name="theme-color" content="${theme_color}">
     % if meta_generator_tag:
-    <meta name="generator" content="Nikola (getnikola.com)">
+        <meta name="generator" content="Nikola (getnikola.com)">
     % endif
-    ${html_feedlinks()}
+    ${feed.head()}
     <link rel="canonical" href="${abs_link(permalink)}">
 
     %if favicons:
@@ -60,9 +63,9 @@ lang="${lang}">
     %endif
 
     %if use_cdn:
-        <!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+        <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script><![endif]-->
     %else:
-        <!--[if lt IE 9]><script src="${url_replacer(permalink, '/assets/js/html5.js', lang, url_type)}"></script><![endif]-->
+        <!--[if lt IE 9]><script src="${url_replacer(permalink, '/assets/js/html5shiv-printshiv.min.js', lang, url_type)}"></script><![endif]-->
     %endif
 
     ${extra_head_data}
@@ -95,27 +98,9 @@ lang="${lang}">
     % endif
 </%def>
 
+### This function is deprecated; use feed_helper directly.
 <%def name="html_feedlinks()">
-    %if rss_link:
-        ${rss_link}
-    %elif generate_rss:
-        %if len(translations) > 1:
-            %for language in sorted(translations):
-                <link rel="alternate" type="application/rss+xml" title="RSS (${language})" href="${_link('rss', None, language)}">
-            %endfor
-        %else:
-            <link rel="alternate" type="application/rss+xml" title="RSS" href="${_link('rss', None)}">
-        %endif
-    %endif
-    %if generate_atom:
-        %if len(translations) > 1:
-            %for language in sorted(translations):
-                <link rel="alternate" type="application/atom+xml" title="Atom (${language})" href="${_link('index_atom', None, language)}">
-            %endfor
-        %else:
-            <link rel="alternate" type="application/atom+xml" title="Atom" href="${_link('index_atom', None)}">
-        %endif
-    %endif
+    ${feed.head()}
 </%def>
 
 <%def name="html_translations()">

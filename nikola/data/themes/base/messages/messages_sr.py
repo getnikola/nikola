@@ -8,6 +8,7 @@ MESSAGES = {
     "(active)": "(активно)",
     "Also available in:": "Такође доступан у:",
     "Archive": "Архива",
+    "Atom feed": "",
     "Authors": "",
     "Categories": "Категорије",
     "Comments": "Коментари",

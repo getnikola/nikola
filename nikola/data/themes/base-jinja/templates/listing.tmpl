@@ -6,10 +6,10 @@
 {% if folders or files %}
 <ul>
 {% for name in folders %}
-    <li><a href="{{ name|urlencode }}"><i class="icon-folder-open"></i> {{ name|e }}</a>
+    <li><a href="{{ name|urlencode }}" class="listing-folder">{{ name|e }}</a>
 {% endfor %}
 {% for name in files %}
-    <li><a href="{{ name|urlencode }}.html"><i class="icon-file"></i> {{ name|e }}</a>
+    <li><a href="{{ name|urlencode }}.html" class="listing-file">{{ name|e }}</a>
 {% endfor %}
 </ul>
 {% endif %}
@@ -22,5 +22,3 @@
     {{ code }}
 {% endif %}
 {% endblock %}
-
-

@@ -8,6 +8,7 @@ MESSAGES = {
     "(active)": "(активне)",
     "Also available in:": "Іншою мовою:",
     "Archive": "Архів",
+    "Atom feed": "",
     "Authors": "Автори",
     "Categories": "Категорії",
     "Comments": "Коментарі",

@@ -8,6 +8,7 @@ MESSAGES = {
     "(active)": "(aktyvi)",
     "Also available in:": "Taip pat turimas šiomis kalbomis:",
     "Archive": "Archyvas",
+    "Atom feed": "",
     "Authors": "Autoriai",
     "Categories": "Kategorijos",
     "Comments": "Komentarai",

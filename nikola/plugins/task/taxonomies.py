@@ -220,6 +220,7 @@ class RenderTaxonomies(Task):
             return self.site.path(feed.format(kind), classification, lang, alternative_path=force_addition, page=i)
 
         context = copy(context)
+        context["kind"] = kind
         if "pagekind" not in context:
             context["pagekind"] = ["index", "tag_page"]
         template_name = taxonomy.template_for_single_list

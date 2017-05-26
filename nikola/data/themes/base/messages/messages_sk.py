@@ -8,6 +8,7 @@ MESSAGES = {
     "(active)": "(aktívne)",
     "Also available in:": "Tiež dostupné v:",
     "Archive": "Archív",
+    "Atom feed": "",
     "Authors": "",
     "Categories": "Kategórie",
     "Comments": "Komentáre",

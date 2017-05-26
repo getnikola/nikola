@@ -83,7 +83,9 @@ def jinjify(in_theme, out_theme):
 
     # Copy assets in bootstrap/bootstrap3
     if child == 'bootstrap3-jinja':
-        shutil.rmtree(os.path.join(out_theme, "assets"))
+        assets_dir = os.path.join(out_theme, "assets")
+        if os.path.exists(assets_dir):
+            shutil.rmtree(assets_dir)
         shutil.copytree(
             os.path.join(in_theme, "assets"), os.path.join(out_theme, "assets"),
             symlinks=True)
