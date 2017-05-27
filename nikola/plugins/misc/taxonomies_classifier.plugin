@@ -1,0 +1,12 @@
+[Core]
+name = classify_taxonomies
+module = taxonomies_classifier
+
+[Documentation]
+author = Roberto Alsina
+version = 1.0
+website = https://getnikola.com/
+description = Classifies the timeline into taxonomies.
+
+[Nikola]
+PluginCategory = SignalHandler

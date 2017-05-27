@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -35,6 +35,8 @@ from nikola.plugin_categories import PostScanner
 from nikola import utils
 from nikola.post import Post
 
+LOGGER = utils.get_logger('scan_posts', utils.STDERR_HANDLER)
+
 
 class ScanPosts(PostScanner):
     """Scan posts in the site."""
@@ -53,10 +55,10 @@ class ScanPosts(PostScanner):
                 self.site.config['post_pages']:
             if not self.site.quiet:
                 print(".", end='', file=sys.stderr)
+            destination_translatable = utils.TranslatableSetting('destination', destination, self.site.config['TRANSLATIONS'])
             dirname = os.path.dirname(wildcard)
             for dirpath, _, _ in os.walk(dirname, followlinks=True):
-                dest_dir = os.path.normpath(os.path.join(destination,
-                                            os.path.relpath(dirpath, dirname)))  # output/destination/foo/
+                rel_dest_dir = os.path.relpath(dirpath, dirname)
                 # Get all the untranslated paths
                 dir_glob = os.path.join(dirpath, os.path.basename(wildcard))  # posts/foo/*.rst
                 untranslated = glob.glob(dir_glob)
@@ -87,15 +89,24 @@ class ScanPosts(PostScanner):
                         continue
                     else:
                         seen.add(base_path)
-                    post = Post(
-                        base_path,
-                        self.site.config,
-                        dest_dir,
-                        use_in_feeds,
-                        self.site.MESSAGES,
-                        template_name,
-                        self.site.get_compiler(base_path)
-                    )
-                    timeline.append(post)
+                    try:
+                        post = Post(
+                            base_path,
+                            self.site.config,
+                            rel_dest_dir,
+                            use_in_feeds,
+                            self.site.MESSAGES,
+                            template_name,
+                            self.site.get_compiler(base_path),
+                            destination_base=destination_translatable
+                        )
+                        timeline.append(post)
+                    except Exception:
+                        LOGGER.error('Error reading post {}'.format(base_path))
+                        raise
 
         return timeline
+
+    def supported_extensions(self):
+        """Return a list of supported file extensions, or None if such a list isn't known beforehand."""
+        return list({os.path.splitext(x[0])[1] for x in self.site.config['post_pages']})

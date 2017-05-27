@@ -9,5 +9,5 @@ website = https://getnikola.com/
 description = Manage Nikola plugins
 
 [Nikola]
-plugincategory = Command
+PluginCategory = Command
 

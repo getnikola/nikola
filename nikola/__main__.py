@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -68,7 +68,7 @@ _RETURN_DOITNIKOLA = False
 def main(args=None):
     """Run Nikola."""
     colorful = False
-    if sys.stderr.isatty() and os.name != 'nt' and os.getenv('NIKOLA_MONO') is None:
+    if sys.stderr.isatty() and os.name != 'nt' and os.getenv('NIKOLA_MONO') is None and os.getenv('TERM') != 'dumb':
         colorful = True
 
     ColorfulStderrHandler._colorful = colorful
@@ -155,7 +155,7 @@ def main(args=None):
             req_missing(['freezegun'], 'perform invariant builds')
 
     if config:
-        if os.path.exists('plugins') and not os.path.exists('plugins/__init__.py'):
+        if os.path.isdir('plugins') and not os.path.exists('plugins/__init__.py'):
             with open('plugins/__init__.py', 'w') as fh:
                 fh.write('# Plugin modules go here.')
 
@@ -247,6 +247,7 @@ class Clean(DoitClean):
                 shutil.rmtree(cache_folder)
         return super(Clean, self).clean_tasks(tasks, dryrun)
 
+
 # Nikola has its own "auto" commands that uses livereload.
 # Expose original doit "auto" command as "doit_auto".
 DoitAuto.name = 'doit_auto'
@@ -274,13 +275,20 @@ class NikolaTaskLoader(TaskLoader):
             }
         DOIT_CONFIG['default_tasks'] = ['render_site', 'post_render']
         DOIT_CONFIG.update(self.nikola._doit_config)
-        tasks = generate_tasks(
-            'render_site',
-            self.nikola.gen_tasks('render_site', "Task", 'Group of tasks to render the site.'))
-        latetasks = generate_tasks(
-            'post_render',
-            self.nikola.gen_tasks('post_render', "LateTask", 'Group of tasks to be executed after site is rendered.'))
-        signal('initialized').send(self.nikola)
+        try:
+            tasks = generate_tasks(
+                'render_site',
+                self.nikola.gen_tasks('render_site', "Task", 'Group of tasks to render the site.'))
+            latetasks = generate_tasks(
+                'post_render',
+                self.nikola.gen_tasks('post_render', "LateTask", 'Group of tasks to be executed after site is rendered.'))
+            signal('initialized').send(self.nikola)
+        except Exception:
+            LOGGER.error('Error loading tasks. An unhandled exception occurred.')
+            if self.nikola.debug:
+                raise
+            _print_exception()
+            sys.exit(3)
         return tasks + latetasks, DOIT_CONFIG
 
 
@@ -362,7 +370,14 @@ class DoitNikola(DoitMain):
                 LOGGER.error("This command needs to run inside an "
                              "existing Nikola site.")
                 return 3
-        return super(DoitNikola, self).run(cmd_args)
+        try:
+            return super(DoitNikola, self).run(cmd_args)
+        except Exception:
+            LOGGER.error('An unhandled exception occurred.')
+            if self.nikola.debug:
+                raise
+            _print_exception()
+            return 1
 
     @staticmethod
     def print_version():
@@ -396,6 +411,13 @@ def levenshtein(s1, s2):
         previous_row = current_row
 
     return previous_row[-1]
+
+
+def _print_exception():
+    """Print an exception in a friendlier, shorter style."""
+    etype, evalue, _ = sys.exc_info()
+    LOGGER.error(''.join(traceback.format_exception(etype, evalue, None, limit=0, chain=False)).strip())
+    LOGGER.notice("To see more details, run Nikola in debug mode (set environment variable NIKOLA_DEBUG=1)")
 
 
 if __name__ == "__main__":

@@ -227,6 +227,10 @@ class FakeSite(object):
             return
         self.shortcode_registry[name] = f
 
-    def apply_shortcodes(self, data):
+    def apply_shortcodes(self, data, *a, **kw):
         """Apply shortcodes from the registry on data."""
-        return nikola.shortcodes.apply_shortcodes(data, self.shortcode_registry)
+        return nikola.shortcodes.apply_shortcodes(data, self.shortcode_registry, **kw)
+
+    def apply_shortcodes_uuid(self, data, shortcodes, *a, **kw):
+        """Apply shortcodes from the registry on data."""
+        return nikola.shortcodes.apply_shortcodes(data, self.shortcode_registry, **kw)

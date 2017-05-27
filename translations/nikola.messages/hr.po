@@ -1,5 +1,5 @@
 # Messages in Nikola
-# Copyright (C) 2012-2013
+# Copyright (C) 2012-2016
 # This file is distributed under the same license as the Nikola package.
 # 
 # Translators:
@@ -7,6 +7,7 @@
 # Translators:
 # Translators:
 # Translators:
+# Gour <gour@atmarama.net>, 2016
 # Saša Savić <sasa.savic@protonmail.com>, 2015
 # tty, 2013
 # tty, 2013-2014
@@ -15,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2015-08-31 07:51+0000\n"
+"PO-Revision-Date: 2017-01-07 11:37+0000\n"
 "Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/ralsina/nikola/language/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -101,7 +102,7 @@ msgid "Posts for {month} {year}"
 msgstr "Postovi za {month} {year}"
 
 msgid "Posts for {month} {day}, {year}"
-msgstr ""
+msgstr "Objave za {month} {day}, {year}"
 
 msgid "Nothing found."
 msgstr "Nema ničeg."
@@ -127,21 +128,41 @@ msgstr "(aktivno)"
 
 #. Default content for a new post
 msgid "Write your post here."
-msgstr ""
+msgstr "Napiši svoju objavu ovdje"
 
 #. Default content for a new page
 msgid "Write your page here."
-msgstr ""
+msgstr "Napiši svoju stranicu ovdje"
 
 msgid "Uncategorized"
-msgstr ""
+msgstr "Nekategorizirano"
 
 #. Used for feeds of any format
 msgid "Updates"
-msgstr ""
+msgstr "Nadopune"
 
 msgid "Authors"
-msgstr ""
+msgstr "Autori"
 
 msgid "Posts by %s"
+msgstr "Objave od %s"
+
+msgid "Toggle navigation"
+msgstr ""
+
+#. Used to format months per year
+msgid "{month} {year}"
+msgstr ""
+
+#. Used to format a date
+msgid "{month} {day}, {year}"
+msgstr ""
+
+msgid "Previous"
+msgstr ""
+
+msgid "Up"
+msgstr ""
+
+msgid "Next"
 msgstr ""

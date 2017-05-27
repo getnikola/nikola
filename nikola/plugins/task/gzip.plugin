@@ -9,5 +9,5 @@ website = https://getnikola.com/
 description = Create gzipped copies of files
 
 [Nikola]
-plugincategory = Task
+PluginCategory = Task
 

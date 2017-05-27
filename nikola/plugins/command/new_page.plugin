@@ -9,5 +9,5 @@ website = https://getnikola.com/
 description = Create a new page.
 
 [Nikola]
-plugincategory = Command
+PluginCategory = Command
 

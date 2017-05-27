@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina, Chris Warrick and others.
+# Copyright © 2012-2017 Roberto Alsina, Chris Warrick and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -107,6 +107,7 @@ class CommandNewPage(Command):
         options['tags'] = ''
         options['schedule'] = False
         options['is_page'] = True
+        options['date-path'] = False
         # Even though stuff was split into `new_page`, it’s easier to do it
         # there not to duplicate the code.
         p = self.site.plugin_manager.getPluginByName('new_post', 'Command').plugin_object

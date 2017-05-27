@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -24,7 +24,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Implementation of compile_html for HTML+php."""
+"""Page compiler plugin for PHP."""
 
 from __future__ import unicode_literals
 
@@ -42,14 +42,18 @@ class CompilePhp(PageCompiler):
     name = "php"
     friendly_name = "PHP"
 
-    def compile_html(self, source, dest, is_two_file=True):
-        """Compile source file into HTML and save as dest."""
+    def compile(self, source, dest, is_two_file=True, post=None, lang=None):
+        """Compile the source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
         with io.open(dest, "w+", encoding="utf8") as out_file:
             with open(source, "rb") as in_file:
                 hash = md5(in_file.read()).hexdigest()
                 out_file.write('<!-- __NIKOLA_PHP_TEMPLATE_INJECTION source:{0} checksum:{1}__ -->'.format(source, hash))
         return True
+
+    def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
+        """Compile PHP into HTML strings."""
+        return data
 
     def create_post(self, path, **kw):
         """Create a new post."""

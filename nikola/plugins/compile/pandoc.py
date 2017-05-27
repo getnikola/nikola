@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -24,7 +24,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Implementation of compile_html based on pandoc.
+"""Page compiler plugin for pandoc.
 
 You will need, of course, to install pandoc
 """
@@ -37,7 +37,6 @@ import subprocess
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import req_missing, makedirs, write_metadata
-from nikola.shortcodes import apply_shortcodes
 
 
 class CompilePandoc(PageCompiler):
@@ -51,18 +50,29 @@ class CompilePandoc(PageCompiler):
         self.config_dependencies = [str(site.config['PANDOC_OPTIONS'])]
         super(CompilePandoc, self).set_site(site)
 
-    def compile_html(self, source, dest, is_two_file=True):
-        """Compile source file into HTML and save as dest."""
+    def compile(self, source, dest, is_two_file=True, post=None, lang=None):
+        """Compile the source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
         try:
             subprocess.check_call(['pandoc', '-o', dest, source] + self.site.config['PANDOC_OPTIONS'])
             with open(dest, 'r', encoding='utf-8') as inf:
-                output = apply_shortcodes(inf.read(), self.site.shortcode_registry, self.site, source)
+                output, shortcode_deps = self.site.apply_shortcodes(inf.read(), with_dependencies=True)
             with open(dest, 'w', encoding='utf-8') as outf:
                 outf.write(output)
+            if post is None:
+                if shortcode_deps:
+                    self.logger.error(
+                        "Cannot save dependencies for post {0} (post unknown)",
+                        source)
+            else:
+                post._depfile[dest] += shortcode_deps
         except OSError as e:
             if e.strreror == 'No such file or directory':
                 req_missing(['pandoc'], 'build this site (compile with pandoc)', python=False)
+
+    def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
+        """Compile into HTML strings."""
+        raise ValueError("Pandoc compiler does not support compile_string due to multiple output formats")
 
     def create_post(self, path, **kw):
         """Create a new post."""

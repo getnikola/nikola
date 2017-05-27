@@ -14,10 +14,13 @@
 </ul>
 {% endif %}
 {% if code %}
+    <h1>{{ title }}
+        {% if source_link %}
+            <small><a href="{{ source_link }}">({{ messages("Source") }})</a></small>
+        {% endif %}
+        </h1>
     {{ code }}
 {% endif %}
-{% if source_link %}
-    <p class="sourceline"><a href="{{ source_link }}" id="sourcelink">{{ messages("Source") }}</a></p>
-{% endif %}
 {% endblock %}
+
 

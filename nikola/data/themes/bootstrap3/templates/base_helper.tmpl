@@ -40,7 +40,10 @@ lang="${lang}">
     %endif
 
     ${html_stylesheets()}
-    <meta content="${theme_color}" name="theme-color">
+    <meta name="theme-color" content="${theme_color}">
+    % if meta_generator_tag:
+    <meta name="generator" content="Nikola (getnikola.com)">
+    % endif
     ${html_feedlinks()}
     <link rel="canonical" href="${abs_link(permalink)}">
 
@@ -61,11 +64,10 @@ lang="${lang}">
         <link rel="next" href="${nextlink}" type="text/html">
     %endif
 
-    ${mathjax_config}
     %if use_cdn:
         <!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
     %else:
-        <!--[if lt IE 9]><script src="${url_replacer(permalink, '/assets/js/html5.js', lang)}"></script><![endif]-->
+        <!--[if lt IE 9]><script src="${url_replacer(permalink, '/assets/js/html5.js', lang, url_type)}"></script><![endif]-->
     %endif
 
     ${extra_head_data}

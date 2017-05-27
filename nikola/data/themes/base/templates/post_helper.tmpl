@@ -1,4 +1,5 @@
 ## -*- coding: utf-8 -*-
+<%namespace name="math" file="math_helper.tmpl"/>
 
 <%def name="meta_translations(post)">
     %if len(translations) > 1:
@@ -85,22 +86,5 @@
 </%def>
 
 <%def name="mathjax_script(post)">
-    %if post.is_mathjax:
-        %if use_katex:
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/contrib/auto-render.min.js"></script>
-            <script>
-                renderMathInElement(document.body);
-            </script>
-        %else:
-            <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"> </script>
-            % if mathjax_config:
-            ${mathjax_config}
-            % else:
-            <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
-            </script>
-            % endif
-        %endif
-    %endif
+    ${math.math_scripts_ifpost(post)}
 </%def>

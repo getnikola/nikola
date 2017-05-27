@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -79,7 +79,7 @@ class CommandDeploy(Command):
             last_deploy = dateutil.parser.parse(last_deploy)
             clean = False
 
-        if self.site.config['COMMENT_SYSTEM_ID'] == 'nikolademo':
+        if self.site.config['COMMENT_SYSTEM'] and self.site.config['COMMENT_SYSTEM_ID'] == 'nikolademo':
             self.logger.warn("\nWARNING WARNING WARNING WARNING\n"
                              "You are deploying using the nikolademo Disqus account.\n"
                              "That means you will not be able to moderate the comments in your own site.\n"

@@ -9,5 +9,5 @@ website = https://getnikola.com/
 description = Support for Jinja2 templates.
 
 [Nikola]
-plugincategory = Template
+PluginCategory = Template
 

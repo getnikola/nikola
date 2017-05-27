@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -50,7 +50,7 @@ class CommandPlugin(Command):
 
     json = None
     name = "plugin"
-    doc_usage = "[[-u][--user] --install name] | [[-u] [-l |--upgrade|--list-installed] | [--uninstall name]]"
+    doc_usage = "[-u url] [--user] [-i name] [-r name] [--upgrade] [-l] [--list-installed]"
     doc_purpose = "manage plugins"
     output_dir = None
     needs_config = False
@@ -177,11 +177,20 @@ class CommandPlugin(Command):
             plugins.append([plugin.name, p])
 
         plugins.sort()
-        print('Installed Plugins')
-        print('-----------------')
+        print('Installed Plugins:')
+        print('------------------')
+        maxlength = max(len(i[0]) for i in plugins)
+        if self.site.colorful:
+            formatstring = '\x1b[1m{0:<{2}}\x1b[0m  at {1}'
+        else:
+            formatstring = '{0:<{2}}  at {1}'
         for name, path in plugins:
-            print('{0} at {1}'.format(name, path))
-        print('\n\nAlso, you have disabled these plugins: {}'.format(self.site.config['DISABLED_PLUGINS']))
+            print(formatstring.format(name, path, maxlength))
+        dp = self.site.config['DISABLED_PLUGINS']
+        if dp:
+            print('\n\nAlso, you have disabled these plugins: {}'.format(', '.join(dp)))
+        else:
+            print('\n\nNo plugins are disabled.')
         return 0
 
     def do_upgrade(self, url):
@@ -265,6 +274,7 @@ class CommandPlugin(Command):
                       'package manager.')
             else:
                 LOGGER.info('Dependency installation succeeded.')
+
         reqnpypath = os.path.join(dest_path, 'requirements-nonpy.txt')
         if os.path.exists(reqnpypath):
             LOGGER.notice('This plugin has third-party '
@@ -280,6 +290,27 @@ class CommandPlugin(Command):
 
             print('You have to install those yourself or through a package '
                   'manager.')
+
+        req_plug_path = os.path.join(dest_path, 'requirements-plugins.txt')
+        if os.path.exists(req_plug_path):
+            LOGGER.notice('This plugin requires other Nikola plugins.')
+            LOGGER.info('Installing plugins...')
+            plugin_failure = False
+            try:
+                with io.open(req_plug_path, 'r', encoding='utf-8') as inf:
+                    for plugname in inf.readlines():
+                        plugin_failure = self.do_install(url, plugname.strip(), show_install_notes) != 0
+            except Exception:
+                plugin_failure = True
+            if plugin_failure:
+                LOGGER.error('Could not install a plugin.')
+                print('Contents of the requirements-plugins.txt file:\n')
+                with io.open(req_plug_path, 'r', encoding='utf-8') as fh:
+                    print(utils.indent(fh.read(), 4 * ' '))
+                print('You have to install those yourself manually.')
+            else:
+                LOGGER.info('Dependency installation succeeded.')
+
         confpypath = os.path.join(dest_path, 'conf.py.sample')
         if os.path.exists(confpypath) and show_install_notes:
             LOGGER.notice('This plugin has a sample config file.  Integrate it with yours in order to make this plugin work!')

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -39,6 +39,7 @@ import docutils.writers.html4css1
 import docutils.parsers.rst.directives
 from docutils.parsers.rst import roles
 
+from nikola.nikola import LEGAL_VALUES
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import (
     unicode_str,
@@ -48,7 +49,6 @@ from nikola.utils import (
     STDERR_HANDLER,
     LocaleBorg
 )
-from nikola.shortcodes import apply_shortcodes
 
 
 class CompileRest(PageCompiler):
@@ -59,7 +59,7 @@ class CompileRest(PageCompiler):
     demote_headers = True
     logger = None
 
-    def compile_html_string(self, data, source_path=None, is_two_file=True):
+    def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
         """Compile reST into HTML strings."""
         # If errors occur, this will be added to the line number reported by
         # docutils so the line number matches the actual line number (off by
@@ -78,36 +78,44 @@ class CompileRest(PageCompiler):
             'syntax_highlight': 'short',
             'math_output': 'mathjax',
             'template': default_template_path,
-            'language_code': LocaleBorg().current_lang,
+            'language_code': LEGAL_VALUES['DOCUTILS_LOCALES'].get(LocaleBorg().current_lang, 'en')
         }
 
+        from nikola import shortcodes as sc
+        new_data, shortcodes = sc.extract_shortcodes(data)
         output, error_level, deps = rst2html(
-            data, settings_overrides=settings_overrides, logger=self.logger, source_path=source_path, l_add_ln=add_ln, transforms=self.site.rst_transforms)
+            new_data, settings_overrides=settings_overrides, logger=self.logger, source_path=source_path, l_add_ln=add_ln, transforms=self.site.rst_transforms,
+            no_title_transform=self.site.config.get('NO_DOCUTILS_TITLE_TRANSFORM', False))
         if not isinstance(output, unicode_str):
             # To prevent some weird bugs here or there.
             # Original issue: empty files.  `output` became a bytestring.
             output = output.decode('utf-8')
-        return output, error_level, deps
 
-    def compile_html(self, source, dest, is_two_file=True):
-        """Compile source file into HTML and save as dest."""
+        output, shortcode_deps = self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, with_dependencies=True, extra_context=dict(post=post))
+        return output, error_level, deps, shortcode_deps
+
+    # TODO remove in v8
+    def compile_html_string(self, data, source_path=None, is_two_file=True):
+        """Compile reST into HTML strings."""
+        return self.compile_string(data, source_path, is_two_file)
+
+    def compile(self, source, dest, is_two_file=True, post=None, lang=None):
+        """Compile the source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
         error_level = 100
         with io.open(dest, "w+", encoding="utf8") as out_file:
             with io.open(source, "r", encoding="utf8") as in_file:
                 data = in_file.read()
-                output, error_level, deps = self.compile_html_string(data, source, is_two_file)
-                output = apply_shortcodes(output, self.site.shortcode_registry, self.site, source)
+                output, error_level, deps, shortcode_deps = self.compile_string(data, source, is_two_file, post, lang)
                 out_file.write(output)
-            try:
-                post = self.site.post_per_input_file[source]
-            except KeyError:
+            if post is None:
                 if deps.list:
                     self.logger.error(
-                        "Cannot save dependencies for post {0} due to unregistered source file name",
+                        "Cannot save dependencies for post {0} (post unknown)",
                         source)
             else:
                 post._depfile[dest] += deps.list
+                post._depfile[dest] += shortcode_deps
         if error_level < 3:
             return True
         else:
@@ -178,11 +186,15 @@ class NikolaReader(docutils.readers.standalone.Reader):
     def __init__(self, *args, **kwargs):
         """Initialize the reader."""
         self.transforms = kwargs.pop('transforms', [])
+        self.no_title_transform = kwargs.pop('no_title_transform', False)
         docutils.readers.standalone.Reader.__init__(self, *args, **kwargs)
 
     def get_transforms(self):
         """Get docutils transforms."""
-        return docutils.readers.standalone.Reader(self).get_transforms() + self.transforms
+        transforms = docutils.readers.standalone.Reader(self).get_transforms() + self.transforms
+        if self.no_title_transform:
+            transforms = [t for t in transforms if str(t) != "<class 'docutils.transforms.frontmatter.DocTitle'>"]
+        return transforms
 
     def new_document(self):
         """Create and return a new empty document tree (root node)."""
@@ -194,8 +206,9 @@ class NikolaReader(docutils.readers.standalone.Reader):
 
 def shortcode_role(name, rawtext, text, lineno, inliner,
                    options={}, content=[]):
-    """A shortcode role that passes through raw inline HTML."""
+    """Return a shortcode role that passes through raw inline HTML."""
     return [docutils.nodes.raw('', text, format='html')], []
+
 
 roles.register_canonical_role('raw-html', shortcode_role)
 roles.register_canonical_role('html', shortcode_role)
@@ -247,7 +260,8 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
              parser=None, parser_name='restructuredtext', writer=None,
              writer_name='html', settings=None, settings_spec=None,
              settings_overrides=None, config_section=None,
-             enable_exit_status=None, logger=None, l_add_ln=0, transforms=None):
+             enable_exit_status=None, logger=None, l_add_ln=0, transforms=None,
+             no_title_transform=False):
     """Set up & run a ``Publisher``, and return a dictionary of document parts.
 
     Dictionary keys are the names of parts, and values are Unicode strings;
@@ -259,18 +273,18 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
 
         publish_parts(..., settings_overrides={'input_encoding': 'unicode'})
 
-    Parameters: see `publish_programmatically`.
+    For a description of the parameters, see `publish_programmatically`.
 
     WARNING: `reader` should be None (or NikolaReader()) if you want Nikola to report
              reStructuredText syntax errors.
     """
     if reader is None:
-        reader = NikolaReader(transforms=transforms)
+        reader = NikolaReader(transforms=transforms, no_title_transform=no_title_transform)
         # For our custom logging, we have special needs and special settings we
         # specify here.
         # logger    a logger from Nikola
         # source   source filename (docutils gets a string)
-        # add_ln   amount of metadata lines (see comment in compile_html above)
+        # add_ln   amount of metadata lines (see comment in CompileRest.compile above)
         reader.l_settings = {'logger': logger, 'source': source_path,
                              'add_ln': l_add_ln}
 
@@ -286,6 +300,7 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
     pub.publish(enable_exit_status=enable_exit_status)
 
     return pub.writer.parts['docinfo'] + pub.writer.parts['fragment'], pub.document.reporter.max_level, pub.settings.record_dependencies
+
 
 # Alignment helpers for extensions
 _align_options_base = ('left', 'center', 'right')

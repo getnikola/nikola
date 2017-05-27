@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2013-2016 Udo Spallek, Roberto Alsina and others.
+# Copyright © 2013-2017 Udo Spallek, Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -31,6 +31,7 @@ from __future__ import unicode_literals
 import os
 import uuid
 import natsort
+import operator
 
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
@@ -98,11 +99,15 @@ class PostList(Directive):
         * clause: attribute comparison_operator value (spaces optional)
           * attribute: year, month, day, hour, month, second, weekday, isoweekday; or empty for full datetime
           * comparison_operator: == != <= >= < >
-          * value: integer or dateutil-compatible date input
+          * value: integer, 'now' or dateutil-compatible date input
 
     ``tags`` : string [, string...]
         Filter posts to show only posts having at least one of the ``tags``.
         Defaults to None.
+
+    ``require_all_tags`` : flag
+        Change tag filter behaviour to show only posts that have all specified ``tags``.
+        Defaults to False.
 
     ``categories`` : string [, string...]
         Filter posts to show only posts having one of the ``categories``.
@@ -143,6 +148,7 @@ class PostList(Directive):
         'reverse': directives.flag,
         'sort': directives.unchanged,
         'tags': directives.unchanged,
+        'require_all_tags': directives.flag,
         'categories': directives.unchanged,
         'sections': directives.unchanged,
         'slugs': directives.unchanged,
@@ -161,6 +167,7 @@ class PostList(Directive):
         stop = self.options.get('stop')
         reverse = self.options.get('reverse', False)
         tags = self.options.get('tags')
+        require_all_tags = 'require_all_tags' in self.options
         categories = self.options.get('categories')
         sections = self.options.get('sections')
         slugs = self.options.get('slugs')
@@ -171,20 +178,23 @@ class PostList(Directive):
         template = self.options.get('template', 'post_list_directive.tmpl')
         sort = self.options.get('sort')
         date = self.options.get('date')
+        filename = self.state.document.settings._nikola_source_path
 
-        output = _do_post_list(start, stop, reverse, tags, categories, sections, slugs, post_type, type,
-                               all, lang, template, sort, state=self.state, site=self.site, date=date)
+        output, deps = _do_post_list(start, stop, reverse, tags, require_all_tags, categories, sections, slugs, post_type, type,
+                                     all, lang, template, sort, state=self.state, site=self.site, date=date, filename=filename)
         self.state.document.settings.record_dependencies.add("####MAGIC####TIMELINE")
+        for d in deps:
+            self.state.document.settings.record_dependencies.add(d)
         if output:
             return [nodes.raw('', output, format='html')]
         else:
             return []
 
 
-def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=None,
+def _do_post_list(start=None, stop=None, reverse=False, tags=None, require_all_tags=False, categories=None,
                   sections=None, slugs=None, post_type='post', type=False, all=False,
                   lang=None, template='post_list_directive.tmpl', sort=None,
-                  id=None, data=None, state=None, site=None, date=None, filename=None):
+                  id=None, data=None, state=None, site=None, date=None, filename=None, post=None):
     if lang is None:
         lang = utils.LocaleBorg().current_lang
     if site.invariant:  # for testing purposes
@@ -208,7 +218,6 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
         stop = int(stop)
 
     # Parse tags/categories/sections/slugs (input is strings)
-    tags = [t.strip().lower() for t in tags.split(',')] if tags else []
     categories = [c.strip().lower() for c in categories.split(',')] if categories else []
     sections = [s.strip().lower() for s in sections.split(',')] if sections else []
     slugs = [s.strip() for s in slugs.split(',')] if slugs else []
@@ -223,7 +232,7 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
     # TODO: remove in v8
     if all is not False:
         timeline = [p for p in site.timeline]
-    elif post_type == 'page':
+    elif post_type == 'page' or post_type == 'pages':
         timeline = [p for p in site.timeline if not p.use_in_feeds]
     elif post_type == 'all':
         timeline = [p for p in site.timeline]
@@ -231,12 +240,15 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
         timeline = [p for p in site.timeline if p.use_in_feeds]
 
     # TODO: replaces all, uncomment in v8
-    # if post_type == 'page':
+    # if post_type == 'page' or post_type == 'pages':
     #    timeline = [p for p in site.timeline if not p.use_in_feeds]
     # elif post_type == 'all':
     #    timeline = [p for p in site.timeline]
     # else: # post
     #    timeline = [p for p in site.timeline if p.use_in_feeds]
+
+    # self_post should be removed from timeline because this is redundant
+    timeline = [p for p in timeline if p.source_path != filename]
 
     if categories:
         timeline = [p for p in timeline if p.meta('category', lang=lang).lower() in categories]
@@ -244,24 +256,25 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
     if sections:
         timeline = [p for p in timeline if p.section_name(lang).lower() in sections]
 
-    for post in timeline:
-        if tags:
-            cont = True
-            tags_lower = [t.lower() for t in post.tags]
-            for tag in tags:
-                if tag in tags_lower:
-                    cont = False
-
-            if cont:
-                continue
-
-        filtered_timeline.append(post)
+    if tags:
+        tags = {t.strip().lower() for t in tags.split(',')}
+        if require_all_tags:
+            compare = set.issubset
+        else:
+            compare = operator.and_
+        for post in timeline:
+            post_tags = {t.lower() for t in post.tags}
+            if compare(tags, post_tags):
+                filtered_timeline.append(post)
+    else:
+        filtered_timeline = timeline
 
     if sort:
         filtered_timeline = natsort.natsorted(filtered_timeline, key=lambda post: post.meta[lang][sort], alg=natsort.ns.F | natsort.ns.IC)
 
     if date:
-        filtered_timeline = [p for p in filtered_timeline if date_in_range(date, p.date)]
+        _now = utils.current_time()
+        filtered_timeline = [p for p in filtered_timeline if date_in_range(utils.html_unescape(date), p.date, now=_now)]
 
     for post in filtered_timeline[start:stop:step]:
         if slugs:
@@ -282,15 +295,16 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
         posts += [post]
 
     if not posts:
-        return ''
+        return '', []
 
+    template_deps = site.template_system.template_deps(template)
     if state:
         # Register template as a dependency (Issue #2391)
-        state.document.settings.record_dependencies.add(
-            site.template_system.get_template_path(template))
+        for d in template_deps:
+            state.document.settings.record_dependencies.add(d)
     elif self_post:
-        self_post.register_depfile(
-            site.template_system.get_template_path(template), lang=lang)
+        for d in template_deps:
+            self_post.register_depfile(d, lang=lang)
 
     template_data = {
         'lang': lang,
@@ -299,10 +313,12 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, categories=No
         'date_format': site.GLOBAL_CONTEXT.get('date_format')[lang],
         'post_list_id': post_list_id,
         'messages': site.MESSAGES,
+        '_link': site.link,
     }
     output = site.template_system.render_template(
         template, None, template_data)
-    return output
+    return output, template_deps
+
 
 # Request file name from shortcode (Issue #2412)
 _do_post_list.nikola_shortcode_pass_filename = True

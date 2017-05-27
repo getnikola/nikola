@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -54,7 +54,7 @@ class RenderPages(Task):
                 if post.is_post:
                     context = {'pagekind': ['post_page']}
                 else:
-                    context = {'pagekind': ['story_page']}
+                    context = {'pagekind': ['story_page', 'page_page']}
                 for task in self.site.generic_page_renderer(lang, post, kw["filters"], context):
                     task['uptodate'] = task['uptodate'] + [config_changed(kw, 'nikola.plugins.task.pages')]
                     task['basename'] = self.name

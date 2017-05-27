@@ -1,34 +1,20 @@
 //! moment.js locale configuration
-//! locale : Georgian (ka)
+//! locale : Georgian [ka]
 //! author : Irakli Janiashvili : https://github.com/irakli-janiashvili
 
 import moment from '../moment';
 
-function monthsCaseReplace(m, format) {
-    var months = {
-        'nominative': 'იანვარი_თებერვალი_მარტი_აპრილი_მაისი_ივნისი_ივლისი_აგვისტო_სექტემბერი_ოქტომბერი_ნოემბერი_დეკემბერი'.split('_'),
-        'accusative': 'იანვარს_თებერვალს_მარტს_აპრილის_მაისს_ივნისს_ივლისს_აგვისტს_სექტემბერს_ოქტომბერს_ნოემბერს_დეკემბერს'.split('_')
-    },
-    nounCase = (/D[oD] *MMMM?/).test(format) ?
-        'accusative' :
-        'nominative';
-    return months[nounCase][m.month()];
-}
-function weekdaysCaseReplace(m, format) {
-    var weekdays = {
-        'nominative': 'კვირა_ორშაბათი_სამშაბათი_ოთხშაბათი_ხუთშაბათი_პარასკევი_შაბათი'.split('_'),
-        'accusative': 'კვირას_ორშაბათს_სამშაბათს_ოთხშაბათს_ხუთშაბათს_პარასკევს_შაბათს'.split('_')
-    },
-    nounCase = (/(წინა|შემდეგ)/).test(format) ?
-        'accusative' :
-        'nominative';
-    return weekdays[nounCase][m.day()];
-}
-
 export default moment.defineLocale('ka', {
-    months : monthsCaseReplace,
+    months : {
+        standalone: 'იანვარი_თებერვალი_მარტი_აპრილი_მაისი_ივნისი_ივლისი_აგვისტო_სექტემბერი_ოქტომბერი_ნოემბერი_დეკემბერი'.split('_'),
+        format: 'იანვარს_თებერვალს_მარტს_აპრილის_მაისს_ივნისს_ივლისს_აგვისტს_სექტემბერს_ოქტომბერს_ნოემბერს_დეკემბერს'.split('_')
+    },
     monthsShort : 'იან_თებ_მარ_აპრ_მაი_ივნ_ივლ_აგვ_სექ_ოქტ_ნოე_დეკ'.split('_'),
-    weekdays : weekdaysCaseReplace,
+    weekdays : {
+        standalone: 'კვირა_ორშაბათი_სამშაბათი_ოთხშაბათი_ხუთშაბათი_პარასკევი_შაბათი'.split('_'),
+        format: 'კვირას_ორშაბათს_სამშაბათს_ოთხშაბათს_ხუთშაბათს_პარასკევს_შაბათს'.split('_'),
+        isFormat: /(წინა|შემდეგ)/
+    },
     weekdaysShort : 'კვი_ორშ_სამ_ოთხ_ხუთ_პარ_შაბ'.split('_'),
     weekdaysMin : 'კვ_ორ_სა_ოთ_ხუ_პა_შა'.split('_'),
     longDateFormat : {
@@ -55,10 +41,10 @@ export default moment.defineLocale('ka', {
         },
         past : function (s) {
             if ((/(წამი|წუთი|საათი|დღე|თვე)/).test(s)) {
-                return s.replace(/(ი|ე)$/, 'ის წინ');
+                return s.replace(/(ი|ე)$/, 'ის უკან');
             }
             if ((/წელი/).test(s)) {
-                return s.replace(/წელი$/, 'წლის წინ');
+                return s.replace(/წელი$/, 'წლის უკან');
             }
         },
         s : 'რამდენიმე წამი',
@@ -73,7 +59,7 @@ export default moment.defineLocale('ka', {
         y : 'წელი',
         yy : '%d წელი'
     },
-    ordinalParse: /0|1-ლი|მე-\d{1,2}|\d{1,2}-ე/,
+    dayOfMonthOrdinalParse: /0|1-ლი|მე-\d{1,2}|\d{1,2}-ე/,
     ordinal : function (number) {
         if (number === 0) {
             return number;

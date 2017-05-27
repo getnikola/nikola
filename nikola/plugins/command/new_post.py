@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -111,7 +111,7 @@ def get_date(schedule=False, rule=None, last_date=None, tz=None, iso8601=False):
         else:
             tz_str = ' UTC'
 
-    return date.strftime('%Y-%m-%d %H:%M:%S') + tz_str
+    return (date.strftime('%Y-%m-%d %H:%M:%S') + tz_str, date)
 
 
 class CommandNewPost(Command):
@@ -204,7 +204,14 @@ class CommandNewPost(Command):
             'default': '',
             'help': 'Import an existing file instead of creating a placeholder'
         },
-
+        {
+            'name': 'date-path',
+            'short': 'd',
+            'long': 'date-path',
+            'type': bool,
+            'default': False,
+            'help': 'Create post with date path (eg. year/month/day, see NEW_POST_DATE_PATH_FORMAT in config)'
+        },
     ]
 
     def _execute(self, options, args):
@@ -234,6 +241,9 @@ class CommandNewPost(Command):
         twofile = options['twofile']
         import_file = options['import']
         wants_available = options['available-formats']
+        date_path_opt = options['date-path']
+        date_path_auto = self.site.config['NEW_POST_DATE_PATH'] and content_type == 'post'
+        date_path_format = self.site.config['NEW_POST_DATE_PATH_FORMAT'].strip('/')
 
         if wants_available:
             self.print_compilers()
@@ -262,7 +272,7 @@ class CommandNewPost(Command):
                 self.site.config['post_pages'])
 
         if content_format not in compiler_names:
-            LOGGER.error("Unknown {0} format {1}, maybe you need to install a plugin?".format(content_type, content_format))
+            LOGGER.error("Unknown {0} format {1}, maybe you need to install a plugin or enable an existing one?".format(content_type, content_format))
             self.print_compilers()
             return
         compiler_plugin = self.site.plugin_manager.getPluginByName(
@@ -301,7 +311,14 @@ class CommandNewPost(Command):
                     path = path.decode(sys.stdin.encoding)
                 except (AttributeError, TypeError):  # for tests
                     path = path.decode('utf-8')
-            slug = utils.slugify(os.path.splitext(os.path.basename(path))[0], lang=self.site.default_lang)
+            if os.path.isdir(path):
+                # If the user provides a directory, add the file name generated from title (Issue #2651)
+                slug = utils.slugify(title, lang=self.site.default_lang)
+                pattern = os.path.basename(entry[0])
+                suffix = pattern[1:]
+                path = os.path.join(path, slug + suffix)
+            else:
+                slug = utils.slugify(os.path.splitext(os.path.basename(path))[0], lang=self.site.default_lang)
 
         if isinstance(author, utils.bytes_str):
                 try:
@@ -315,7 +332,7 @@ class CommandNewPost(Command):
         self.site.scan_posts()
         timeline = self.site.timeline
         last_date = None if not timeline else timeline[0].date
-        date = get_date(schedule, rule, last_date, self.site.tzinfo, self.site.config['FORCE_ISO8601'])
+        date, dateobj = get_date(schedule, rule, last_date, self.site.tzinfo, self.site.config['FORCE_ISO8601'])
         data = {
             'title': title,
             'slug': slug,
@@ -330,10 +347,14 @@ class CommandNewPost(Command):
             pattern = os.path.basename(entry[0])
             suffix = pattern[1:]
             output_path = os.path.dirname(entry[0])
+            if date_path_auto or date_path_opt:
+                output_path += os.sep + dateobj.strftime(date_path_format)
 
             txt_path = os.path.join(output_path, slug + suffix)
             meta_path = os.path.join(output_path, slug + ".meta")
         else:
+            if date_path_opt:
+                LOGGER.warn("A path has been specified, ignoring -d")
             txt_path = os.path.join(self.site.original_cwd, path)
             meta_path = os.path.splitext(txt_path)[0] + ".meta"
 
@@ -523,6 +544,6 @@ class CommandNewPost(Command):
     More compilers are available in the Plugins Index.
 
     Compilers marked with ! and ~ require additional configuration:
-        ! not in the PAGES/POSTS tuples (unused)
+        ! not in the POSTS/PAGES tuples and any post scanners (unused)
         ~ not in the COMPILERS dict (disabled)
     Read more: {0}""".format(COMPILERS_DOC_LINK))

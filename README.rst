@@ -18,6 +18,9 @@ In goes content, out comes a website, ready to deploy.
 .. image:: http://img.shields.io/badge/license-MIT-green.svg
    :target: https://github.com/getnikola/nikola/blob/master/LICENSE.txt
 
+.. image:: https://build.snapcraft.io/badge/getnikola/nikola.svg
+   :target: https://build.snapcraft.io/user/getnikola/nikola
+
 Why Static Websites?
 --------------------
 
@@ -38,9 +41,9 @@ It has many features, but here are some of the nicer ones:
 * `reStructuredText`_ or Markdown as input language (also Wiki, BBCode, Textile, and HTML)
 * Easy `image galleries`_ (just drop files in a folder!)
 * Syntax highlighting for almost any programming language or markup
-* Multilingual sites, `translated to 18 languages.`__
+* Multilingual sites, `translated to 50 languages.`__
 * Doesn't reinvent wheels, leverages existing tools.
-* Python 2.7, 3.3, 3.4 and 3.5 compatible.
+* Python 2.7, 3.3, 3.4, 3.5 and 3.6 compatible.
 
 .. _Nikola Handbook: https://getnikola.com/handbook.html#why-static
 __ https://users.getnikola.com/

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -68,7 +68,6 @@ from .utils import (
     get_translation_candidate,
     unslugify,
 )
-from .rc4 import rc4
 
 __all__ = ('Post',)
 
@@ -87,17 +86,21 @@ class Post(object):
         use_in_feeds,
         messages,
         template_name,
-        compiler
+        compiler,
+        destination_base=None
     ):
         """Initialize post.
 
         The source path is the user created post file. From it we calculate
         the meta file, as well as any translations available, and
         the .html fragment file path.
+
+        destination_base must be None or a TranslatableSetting instance. If
+        specified, it will be prepended to the destination path.
         """
         self.config = config
         self.compiler = compiler
-        self.compile_html = self.compiler.compile_html
+        self.compile_html = self.compiler.compile
         self.demote_headers = self.compiler.demote_headers and self.config['DEMOTE_HEADERS']
         tzinfo = self.config['__tzinfo__']
         if self.config['FUTURE_IS_NOW']:
@@ -115,14 +118,18 @@ class Post(object):
         self.pretty_urls = self.config['PRETTY_URLS']
         self.source_path = source_path  # posts/blah.txt
         self.post_name = os.path.splitext(source_path)[0]  # posts/blah
+        _relpath = os.path.relpath(self.post_name)
+        if _relpath != self.post_name:
+            self.post_name = _relpath.replace('..' + os.sep, '_..' + os.sep)
         # cache[\/]posts[\/]blah.html
         self.base_path = os.path.join(self.config['CACHE_FOLDER'], self.post_name + ".html")
         # cache/posts/blah.html
         self._base_path = self.base_path.replace('\\', '/')
         self.metadata_path = self.post_name + ".meta"  # posts/blah.meta
-        self.folder = destination
-        self.translations = self.config['TRANSLATIONS']
+        self.folder_relative = destination
+        self.folder_base = destination_base
         self.default_lang = self.config['DEFAULT_LANG']
+        self.translations = self.config['TRANSLATIONS']
         self.messages = messages
         self.skip_untranslated = not self.config['SHOW_UNTRANSLATED_POSTS']
         self._template_name = template_name
@@ -161,8 +168,26 @@ class Post(object):
             for lang in sorted(self.translated_to):
                 default_metadata.update(self.meta[lang])
 
+        # Compose paths
+        if self.folder_base is not None:
+            # Use translatable destination folders
+            self.folders = {}
+            for lang in self.config['TRANSLATIONS'].keys():
+                self.folders[lang] = os.path.normpath(os.path.join(
+                    self.folder_base(lang), self.folder_relative))
+        else:
+            # Old behavior (non-translatable destination path, normalized by scanner)
+            self.folders = {lang: self.folder_relative for lang in self.config['TRANSLATIONS'].keys()}
+        self.folder = self.folders[self.default_lang]
+
+        # Load data field from metadata
+        self.data = Functionary(lambda: None, self.default_lang)
+        for lang in self.translations:
+            if self.meta[lang].get('data') is not None:
+                self.data[lang] = utils.load_data(self.meta[lang]['data'])
+
         if 'date' not in default_metadata and not use_in_feeds:
-            # For stories we don't *really* need a date
+            # For pages we don't *really* need a date
             if self.config['__invariant__']:
                 default_metadata['date'] = datetime.datetime(2013, 12, 31, 23, 59, 59, tzinfo=tzinfo)
             else:
@@ -170,21 +195,28 @@ class Post(object):
                     os.stat(self.source_path).st_ctime).replace(tzinfo=dateutil.tz.tzutc()).astimezone(tzinfo)
 
         # If time zone is set, build localized datetime.
-        self.date = to_datetime(self.meta[self.default_lang]['date'], tzinfo)
+        try:
+            self.date = to_datetime(self.meta[self.default_lang]['date'], tzinfo)
+        except ValueError:
+            if not self.meta[self.default_lang]['date']:
+                msg = 'Missing date in file {}'.format(source_path)
+            else:
+                msg = "Invalid date '{0}' in file {1}".format(self.meta[self.default_lang]['date'], source_path)
+            LOGGER.error(msg)
+            raise ValueError(msg)
 
         if 'updated' not in default_metadata:
             default_metadata['updated'] = default_metadata.get('date', None)
 
-        self.updated = to_datetime(default_metadata['updated'])
+        self.updated = to_datetime(default_metadata['updated'], tzinfo)
 
         if 'title' not in default_metadata or 'slug' not in default_metadata \
                 or 'date' not in default_metadata:
-            raise OSError("You must set a title (found '{0}'), a slug (found "
-                          "'{1}') and a date (found '{2}')! [in file "
-                          "{3}]".format(default_metadata.get('title', None),
-                                        default_metadata.get('slug', None),
-                                        default_metadata.get('date', None),
-                                        source_path))
+            raise ValueError("You must set a title (found '{0}'), a slug (found '{1}') and a date (found '{2}')! "
+                             "[in file {3}]".format(default_metadata.get('title', None),
+                                                    default_metadata.get('slug', None),
+                                                    default_metadata.get('date', None),
+                                                    source_path))
 
         if 'type' not in default_metadata:
             # default value is 'text'
@@ -224,6 +256,10 @@ class Post(object):
         self.use_in_feeds = use_in_feeds and not is_draft and not is_private \
             and not self.publish_later
 
+        # Allow overriding URL_TYPE via meta
+        # The check is done here so meta dicts won’t change inside of
+        # generic_post_rendere
+        self.url_type = self.meta('url_type') or None
         # Register potential extra dependencies
         self.compiler.register_extra_dependencies(self)
 
@@ -248,17 +284,23 @@ class Post(object):
         m.update(utils.unicode_str(json.dumps(clean_meta, cls=utils.CustomEncoder, sort_keys=True)).encode('utf-8'))
         return '<Post: {0!r} {1}>'.format(self.source_path, m.hexdigest())
 
-    def _has_pretty_url(self, lang):
-        if self.pretty_urls and \
-                self.meta[lang].get('pretty_url', '') != 'False' and \
-                self.meta[lang]['slug'] != 'index':
-            return True
+    def has_pretty_url(self, lang):
+        """Check if this page has a pretty URL."""
+        m = self.meta[lang].get('pretty_url', '')
+        if m:
+            # match is a non-empty string, overides anything
+            return m == 'True'
         else:
-            return False
+            # use PRETTY_URLS, unless the slug is 'index'
+            return self.pretty_urls and self.meta[lang]['slug'] != 'index'
+
+    def _has_pretty_url(self, lang):
+        """Check if this page has a pretty URL."""
+        return self.has_pretty_url(lang)
 
     @property
     def is_mathjax(self):
-        """True if this post has the mathjax tag in the current language or is a python notebook."""
+        """Return True if this post has the mathjax tag in the current language or is a python notebook."""
         if self.compiler.name == 'ipynb':
             return True
         lang = nikola.utils.LocaleBorg().current_lang
@@ -373,6 +415,17 @@ class Post(object):
             lang = nikola.utils.LocaleBorg().current_lang
         return self.meta[lang]['description']
 
+    def guid(self, lang=None):
+        """Return localized GUID."""
+        if lang is None:
+            lang = nikola.utils.LocaleBorg().current_lang
+        if self.meta[lang]['guid']:
+            guid = self.meta[lang]['guid']
+        else:
+            guid = self.permalink(lang, absolute=True)
+
+        return guid
+
     def add_dependency(self, dependency, add='both', lang=None):
         """Add a file dependency for tasks using that post.
 
@@ -432,10 +485,13 @@ class Post(object):
         self._depfile[dest].append(dep)
 
     @staticmethod
-    def write_depfile(dest, deps_list):
+    def write_depfile(dest, deps_list, post=None, lang=None):
         """Write a depfile for a given language."""
-        deps_path = dest + '.dep'
-        if deps_list:
+        if post is None or lang is None:
+            deps_path = dest + '.dep'
+        else:
+            deps_path = post.compiler.get_dep_filename(post, lang)
+        if deps_list or (post.compiler.use_dep_file if post else False):
             deps_list = [p for p in deps_list if p != dest]  # Don't depend on yourself (#1671)
             with io.open(deps_path, "w+", encoding="utf8") as deps_file:
                 deps_file.write('\n'.join(deps_list))
@@ -475,6 +531,8 @@ class Post(object):
             cand_3 = get_translation_candidate(self.config, self.metadata_path, lang)
             if os.path.exists(cand_3):
                 deps.append(cand_3)
+        if self.meta('data', lang):
+            deps.append(self.meta('data', lang))
         deps += self._get_dependencies(self._dependency_file_page[lang])
         deps += self._get_dependencies(self._dependency_file_page[None])
         return sorted(deps)
@@ -493,14 +551,6 @@ class Post(object):
 
     def compile(self, lang):
         """Generate the cache/ file with the compiled post."""
-        def wrap_encrypt(path, password):
-            """Wrap a post with encryption."""
-            with io.open(path, 'r+', encoding='utf8') as inf:
-                data = inf.read() + "<!--tail-->"
-            data = CRYPT.substitute(data=rc4(password, data))
-            with io.open(path, 'w+', encoding='utf8') as outf:
-                outf.write(data)
-
         dest = self.translated_base_path(lang)
         if not self.is_translation_available(lang) and not self.config['SHOW_UNTRANSLATED_POSTS']:
             return
@@ -509,21 +559,18 @@ class Post(object):
         self.compile_html(
             self.translated_source_path(lang),
             dest,
-            self.is_two_file)
-        Post.write_depfile(dest, self._depfile[dest])
+            self.is_two_file,
+            self,
+            lang)
+        Post.write_depfile(dest, self._depfile[dest], post=self, lang=lang)
 
         signal('compiled').send({
             'source': self.translated_source_path(lang),
             'dest': dest,
             'post': self,
+            'lang': lang,
         })
 
-        if self.meta('password'):
-            # TODO: get rid of this feature one day (v8?; warning added in v7.3.0.)
-            LOGGER.warn("The post {0} is using the `password` attribute, which may stop working in the future.")
-            LOGGER.warn("Please consider switching to a more secure method of encryption.")
-            LOGGER.warn("More details: https://github.com/getnikola/nikola/issues/1547")
-            wrap_encrypt(dest, self.meta('password'))
         if self.publish_later:
             LOGGER.notice('{0} is scheduled to be published in the future ({1})'.format(
                 self.source_path, self.date))
@@ -623,7 +670,7 @@ class Post(object):
             if str(e) == "Document is empty":
                 return ""
             # let other errors raise
-            raise(e)
+            raise
         base_url = self.permalink(lang=lang)
         document.make_links_absolute(base_url)
 
@@ -652,7 +699,8 @@ class Post(object):
                         reading_time=self.reading_time,
                         remaining_reading_time=self.remaining_reading_time,
                         paragraph_count=self.paragraph_count,
-                        remaining_paragraph_count=self.remaining_paragraph_count)
+                        remaining_paragraph_count=self.remaining_paragraph_count,
+                        post_title=self.title(lang))
                 # This closes all open tags and sanitizes the broken HTML
                 document = lxml.html.fromstring(teaser)
                 try:
@@ -665,7 +713,7 @@ class Post(object):
                 # Not all posts have a body. For example, you may have a page statically defined in the template that does not take content as input.
                 content = lxml.html.fromstring(data)
                 data = content.text_content().strip()  # No whitespace wanted.
-            except lxml.etree.ParserError:
+            except (lxml.etree.ParserError, ValueError):
                 data = ""
         elif data:
             if self.demote_headers:
@@ -681,7 +729,7 @@ class Post(object):
 
     @property
     def reading_time(self):
-        """Reading time based on length of text."""
+        """Return reading time based on length of text."""
         if self._reading_time is None:
             text = self.text(strip_html=True)
             words_per_minute = 220
@@ -720,7 +768,7 @@ class Post(object):
                 if str(e) == "Document is empty":
                     return ""
                 # let other errors raise
-                raise(e)
+                raise
 
             # output is a float, for no real reason at all
             self._paragraph_count = int(document.xpath('count(//p)'))
@@ -738,7 +786,7 @@ class Post(object):
                 if str(e) == "Document is empty":
                     return ""
                 # let other errors raise
-                raise(e)
+                raise
 
             self._remaining_paragraph_count = self.paragraph_count - int(document.xpath('count(//p)'))
         return self._remaining_paragraph_count
@@ -758,12 +806,13 @@ class Post(object):
         """
         if lang is None:
             lang = nikola.utils.LocaleBorg().current_lang
-        if self._has_pretty_url(lang):
+        folder = self.folders[lang]
+        if self.has_pretty_url(lang):
             path = os.path.join(self.translations[lang],
-                                self.folder, self.meta[lang]['slug'], 'index' + extension)
+                                folder, self.meta[lang]['slug'], 'index' + extension)
         else:
             path = os.path.join(self.translations[lang],
-                                self.folder, self.meta[lang]['slug'] + extension)
+                                folder, self.meta[lang]['slug'] + extension)
         if sep != os.sep:
             path = path.replace(os.sep, sep)
         if path.startswith('./'):
@@ -835,8 +884,8 @@ class Post(object):
             extension = self.compiler.extension()
 
         pieces = self.translations[lang].split(os.sep)
-        pieces += self.folder.split(os.sep)
-        if self._has_pretty_url(lang):
+        pieces += self.folders[lang].split(os.sep)
+        if self.has_pretty_url(lang):
             pieces += [self.meta[lang]['slug'], 'index' + extension]
         else:
             pieces += [self.meta[lang]['slug'] + extension]
@@ -932,7 +981,9 @@ def get_metadata_from_file(source_path, config=None, lang=None):
             meta_data = [x.strip() for x in meta_file.readlines()]
         return _get_metadata_from_file(meta_data)
     except (UnicodeDecodeError, UnicodeEncodeError):
-        raise ValueError('Error reading {0}: Nikola only supports UTF-8 files'.format(source_path))
+        msg = 'Error reading {0}: Nikola only supports UTF-8 files'.format(source_path)
+        LOGGER.error(msg)
+        raise ValueError(msg)
     except Exception:  # The file may not exist, for multilingual sites
         return {}
 
@@ -1163,53 +1214,3 @@ def insert_hyphens(node, hyphenator):
 
     for child in node.iterchildren():
         insert_hyphens(child, hyphenator)
-
-
-CRYPT = string.Template("""\
-<script>
-function rc4(key, str) {
-    var s = [], j = 0, x, res = '';
-    for (var i = 0; i < 256; i++) {
-        s[i] = i;
-    }
-    for (i = 0; i < 256; i++) {
-        j = (j + s[i] + key.charCodeAt(i % key.length)) % 256;
-        x = s[i];
-        s[i] = s[j];
-        s[j] = x;
-    }
-    i = 0;
-    j = 0;
-    for (var y = 0; y < str.length; y++) {
-        i = (i + 1) % 256;
-        j = (j + s[i]) % 256;
-        x = s[i];
-        s[i] = s[j];
-        s[j] = x;
-        res += String.fromCharCode(str.charCodeAt(y) ^ s[(s[i] + s[j]) % 256]);
-    }
-    return res;
-}
-function decrypt() {
-    key = $$("#key").val();
-    crypt_div = $$("#encr")
-    crypted = crypt_div.html();
-    decrypted = rc4(key, window.atob(crypted));
-    if (decrypted.substr(decrypted.length - 11) == "<!--tail-->"){
-        crypt_div.html(decrypted);
-        $$("#pwform").hide();
-        crypt_div.show();
-    } else { alert("Wrong password"); };
-}
-</script>
-
-<div id="encr" style="display: none;">${data}</div>
-<div id="pwform">
-<form onsubmit="javascript:decrypt(); return false;" class="form-inline">
-<fieldset>
-<legend>This post is password-protected.</legend>
-<input type="password" id="key" placeholder="Type password here">
-<button type="submit" class="btn">Show Content</button>
-</fieldset>
-</form>
-</div>""")

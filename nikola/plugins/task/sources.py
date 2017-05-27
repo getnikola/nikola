@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -61,12 +61,8 @@ class Sources(Task):
                     # do not publish PHP sources
                     if post.source_ext(True) == post.compiler.extension():
                         continue
-                    source = post.source_path
-                    if lang != kw["default_lang"]:
-                        source_lang = utils.get_translation_candidate(self.site.config, source, lang)
-                        if os.path.exists(source_lang):
-                            source = source_lang
-                    if os.path.isfile(source):
+                    source = post.translated_source_path(lang)
+                    if source is not None and os.path.isfile(source):
                         yield {
                             'basename': 'render_sources',
                             'name': os.path.normpath(output_name),

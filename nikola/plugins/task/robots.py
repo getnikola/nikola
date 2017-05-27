@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -60,6 +60,7 @@ class RobotsFile(LateTask):
         def write_robots():
             if kw["site_url"] != urljoin(kw["site_url"], "/"):
                 utils.LOGGER.warn('robots.txt not ending up in server root, will be useless')
+                utils.LOGGER.info('Add "robots" to DISABLED_PLUGINS to disable this warning and robots.txt generation.')
 
             with io.open(robots_path, 'w+', encoding='utf8') as outf:
                 outf.write("Sitemap: {0}\n\n".format(sitemapindex_url))

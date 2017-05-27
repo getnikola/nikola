@@ -1,14 +1,17 @@
 //! moment.js locale configuration
-//! locale : modern greek (el)
+//! locale : Greek [el]
 //! author : Aggelos Karalias : https://github.com/mehiel
 
 import moment from '../moment';
+import isFunction from '../lib/utils/is-function';
 
 export default moment.defineLocale('el', {
     monthsNominativeEl : 'Ιανουάριος_Φεβρουάριος_Μάρτιος_Απρίλιος_Μάιος_Ιούνιος_Ιούλιος_Αύγουστος_Σεπτέμβριος_Οκτώβριος_Νοέμβριος_Δεκέμβριος'.split('_'),
     monthsGenitiveEl : 'Ιανουαρίου_Φεβρουαρίου_Μαρτίου_Απριλίου_Μαΐου_Ιουνίου_Ιουλίου_Αυγούστου_Σεπτεμβρίου_Οκτωβρίου_Νοεμβρίου_Δεκεμβρίου'.split('_'),
     months : function (momentToFormat, format) {
-        if (/D/.test(format.substring(0, format.indexOf('MMMM')))) { // if there is a day number before 'MMMM'
+        if (!momentToFormat) {
+            return this._monthsNominativeEl;
+        } else if (/D/.test(format.substring(0, format.indexOf('MMMM')))) { // if there is a day number before 'MMMM'
             return this._monthsGenitiveEl[momentToFormat.month()];
         } else {
             return this._monthsNominativeEl[momentToFormat.month()];
@@ -55,7 +58,7 @@ export default moment.defineLocale('el', {
     calendar : function (key, mom) {
         var output = this._calendarEl[key],
             hours = mom && mom.hours();
-        if (typeof output === 'function') {
+        if (isFunction(output)) {
             output = output.apply(mom);
         }
         return output.replace('{}', (hours % 12 === 1 ? 'στη' : 'στις'));
@@ -75,7 +78,7 @@ export default moment.defineLocale('el', {
         y : 'ένας χρόνος',
         yy : '%d χρόνια'
     },
-    ordinalParse: /\d{1,2}η/,
+    dayOfMonthOrdinalParse: /\d{1,2}η/,
     ordinal: '%dη',
     week : {
         dow : 1, // Monday is the first day of the week.

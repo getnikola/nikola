@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2013-2016 Michael Rabbitt, Roberto Alsina and others.
+# Copyright © 2013-2017 Michael Rabbitt, Roberto Alsina and others.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the
@@ -69,7 +69,7 @@ class PodcastPattern(Pattern):
 
 
 class PodcastExtension(MarkdownExtension, Extension):
-    """"Podcast extension for Markdown."""
+    """Podcast extension for Markdown."""
 
     def __init__(self, configs={}):
         """Initialize extension."""
@@ -91,6 +91,7 @@ class PodcastExtension(MarkdownExtension, Extension):
 def makeExtension(configs=None):  # pragma: no cover
     """Make Markdown extension."""
     return PodcastExtension(configs)
+
 
 if __name__ == '__main__':
     import doctest

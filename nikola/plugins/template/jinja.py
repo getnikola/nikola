@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -31,7 +31,6 @@ from __future__ import unicode_literals
 import os
 import io
 import json
-from collections import deque
 try:
     import jinja2
     from jinja2 import meta
@@ -39,7 +38,7 @@ except ImportError:
     jinja2 = None  # NOQA
 
 from nikola.plugin_categories import TemplateSystem
-from nikola.utils import makedirs, req_missing
+from nikola.utils import makedirs, req_missing, sort_posts
 
 
 class JinjaTemplates(TemplateSystem):
@@ -48,6 +47,7 @@ class JinjaTemplates(TemplateSystem):
     name = "jinja"
     lookup = None
     dependency_cache = {}
+    per_file_cache = {}
 
     def __init__(self):
         """Initialize Jinja2 environment with extended set of filters."""
@@ -65,6 +65,7 @@ class JinjaTemplates(TemplateSystem):
         self.lookup.trim_blocks = True
         self.lookup.lstrip_blocks = True
         self.lookup.filters['tojson'] = json.dumps
+        self.lookup.filters['sort_posts'] = sort_posts
         self.lookup.globals['enumerate'] = enumerate
         self.lookup.globals['isinstance'] = isinstance
         self.lookup.globals['tuple'] = tuple
@@ -103,27 +104,29 @@ class JinjaTemplates(TemplateSystem):
         """Render template to a string using context."""
         return self.lookup.from_string(template).render(**context)
 
+    def get_string_deps(self, text):
+        """Find dependencies for a template string."""
+        deps = set([])
+        ast = self.lookup.parse(text)
+        dep_names = meta.find_referenced_templates(ast)
+        for dep_name in dep_names:
+            filename = self.lookup.loader.get_source(self.lookup, dep_name)[1]
+            sub_deps = [filename] + self.get_deps(filename)
+            self.dependency_cache[dep_name] = sub_deps
+            deps |= set(sub_deps)
+        return list(deps)
+
+    def get_deps(self, filename):
+        """Return paths to dependencies for the template loaded from filename."""
+        with io.open(filename, 'r', encoding='utf-8') as fd:
+            text = fd.read()
+        return self.get_string_deps(text)
+
     def template_deps(self, template_name):
         """Generate list of dependencies for a template."""
-        # Cache the lists of dependencies for each template name.
         if self.dependency_cache.get(template_name) is None:
-            # Use a breadth-first search to find all templates this one
-            # depends on.
-            queue = deque([template_name])
-            visited_templates = set([template_name])
-            deps = []
-            while len(queue) > 0:
-                curr = queue.popleft()
-                source, filename = self.lookup.loader.get_source(self.lookup,
-                                                                 curr)[:2]
-                deps.append(filename)
-                ast = self.lookup.parse(source)
-                dep_names = meta.find_referenced_templates(ast)
-                for dep_name in dep_names:
-                    if (dep_name not in visited_templates and dep_name is not None):
-                        visited_templates.add(dep_name)
-                        queue.append(dep_name)
-            self.dependency_cache[template_name] = deps
+            filename = self.lookup.loader.get_source(self.lookup, template_name)[1]
+            self.dependency_cache[template_name] = [filename] + self.get_deps(filename)
         return self.dependency_cache[template_name]
 
     def get_template_path(self, template_name):

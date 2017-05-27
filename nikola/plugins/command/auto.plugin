@@ -9,5 +9,5 @@ website = https://getnikola.com/
 description = Automatically detect site changes, rebuild and optionally refresh a browser.
 
 [Nikola]
-plugincategory = Command
+PluginCategory = Command
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -28,14 +28,15 @@
 
 from __future__ import print_function, unicode_literals, absolute_import
 import calendar
+import configparser
 import datetime
 import dateutil.tz
 import hashlib
-import husl
 import io
 import locale
 import logging
 import natsort
+import operator
 import os
 import re
 import json
@@ -56,6 +57,19 @@ except ImportError:
     from urllib.parse import urlparse, urlunparse  # NOQA
 import warnings
 import PyRSS2Gen as rss
+try:
+    import pytoml as toml
+except ImportError:
+    toml = None
+try:
+    import yaml
+except ImportError:
+    yaml = None
+try:
+    import husl
+except ImportError:
+    husl = None
+
 from collections import defaultdict, Callable, OrderedDict
 from logbook.compat import redirect_logging
 from logbook.more import ExceptionHandler, ColorizedStderrHandler
@@ -69,8 +83,9 @@ from doit.cmdparse import CmdParse
 
 from nikola import DEBUG
 
-__all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_chain', 'load_messages', 'copy_tree',
-           'copy_file', 'slugify', 'unslugify', 'to_datetime', 'apply_filters',
+__all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real',
+           'get_theme_chain', 'load_messages', 'copy_tree', 'copy_file',
+           'slugify', 'unslugify', 'to_datetime', 'apply_filters',
            'config_changed', 'get_crumbs', 'get_tzname', 'get_asset_path',
            '_reload', 'unicode_str', 'bytes_str', 'unichr', 'Functionary',
            'TranslatableSetting', 'TemplateHookRegistry', 'LocaleBorg',
@@ -80,8 +95,10 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_chain', 'load_messages'
            'get_displayed_page_number', 'adjust_name_for_index_path_list',
            'adjust_name_for_index_path', 'adjust_name_for_index_link',
            'NikolaPygmentsHTML', 'create_redirect', 'TreeNode',
-           'flatten_tree_structure', 'parse_escaped_hierarchical_category_name',
-           'join_hierarchical_category_path', 'clean_before_deployment', 'indent')
+           'clone_treenode', 'flatten_tree_structure',
+           'parse_escaped_hierarchical_category_name',
+           'join_hierarchical_category_path', 'clean_before_deployment',
+           'sort_posts', 'indent', 'load_data', 'html_unescape', 'rss_writer',)
 
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
@@ -152,6 +169,7 @@ def showwarning(message, category, filename, lineno, file=None, line=None):
         n = str(category)
     get_logger(n, STDERR_HANDLER).warn('{0}:{1}: {2}'.format(filename, lineno, message))
 
+
 warnings.showwarning = showwarning
 
 
@@ -201,7 +219,6 @@ def req_missing(names, purpose, python=True, optional=False):
     return msg
 
 
-from nikola import filters as task_filters  # NOQA
 ENCODING = sys.getfilesystemencoding() or sys.stdin.encoding
 
 
@@ -452,9 +469,8 @@ class TemplateHookRegistry(object):
     >>> r = TemplateHookRegistry('foo', None)
     >>> r.append('Hello!')
     >>> r.append(lambda x: 'Hello ' + x + '!', False, 'world')
-    >>> str(r())  # str() call is not recommended in real use
+    >>> repr(r())
     'Hello!\nHello world!'
-    >>>
     """
 
     def __init__(self, name, site):
@@ -513,7 +529,7 @@ class CustomEncoder(json.JSONEncoder):
     """Custom JSON encoder."""
 
     def default(self, obj):
-        """Default encoding handler."""
+        """Create default encoding handler."""
         try:
             return super(CustomEncoder, self).default(obj)
         except TypeError:
@@ -572,46 +588,80 @@ class config_changed(tools.config_changed):
                                                            sort_keys=True))
 
 
-def get_theme_path(theme, _themes_dir='themes'):
+def get_theme_path_real(theme, themes_dirs):
     """Return the path where the given theme's files are located.
 
     Looks in ./themes and in the place where themes go when installed.
     """
-    dir_name = os.path.join(_themes_dir, theme)
-    if os.path.isdir(dir_name):
-        return dir_name
+    for themes_dir in themes_dirs:
+        dir_name = os.path.join(themes_dir, theme)
+        if os.path.isdir(dir_name):
+            return dir_name
     dir_name = resource_filename('nikola', os.path.join('data', 'themes', theme))
     if os.path.isdir(dir_name):
         return dir_name
     raise Exception("Can't find theme '{0}'".format(theme))
 
 
-def get_template_engine(themes, _themes_dir='themes'):
+def get_theme_path(theme):
+    """Return the theme's path, which equals the theme's name."""
+    return theme
+
+
+def parse_theme_meta(theme_dir):
+    """Parse a .theme meta file."""
+    cp = configparser.ConfigParser()
+    # The `or` case is in case theme_dir ends with a trailing slash
+    theme_name = os.path.basename(theme_dir) or os.path.basename(os.path.dirname(theme_dir))
+    theme_meta_path = os.path.join(theme_dir, theme_name + '.theme')
+    cp.read(theme_meta_path)
+    return cp if cp.has_section('Theme') else None
+
+
+def get_template_engine(themes):
     """Get template engine used by a given theme."""
     for theme_name in themes:
-        engine_path = os.path.join(get_theme_path(theme_name, _themes_dir), 'engine')
-        if os.path.isfile(engine_path):
-            with open(engine_path) as fd:
-                return fd.readlines()[0].strip()
-    # default
-    return 'mako'
+        meta = parse_theme_meta(theme_name)
+        if meta:
+            e = meta.get('Theme', 'engine', fallback=None)
+            if e:
+                return e
+        else:
+            # Theme still uses old-style parent/engine files
+            engine_path = os.path.join(theme_name, 'engine')
+            if os.path.isfile(engine_path):
+                with open(engine_path) as fd:
+                    return fd.readlines()[0].strip()
+        # default
+        return 'mako'
 
 
-def get_parent_theme_name(theme_name, _themes_dir='themes'):
+def get_parent_theme_name(theme_name, themes_dirs=None):
     """Get name of parent theme."""
-    parent_path = os.path.join(get_theme_path(theme_name, _themes_dir), 'parent')
-    if os.path.isfile(parent_path):
-        with open(parent_path) as fd:
-            return fd.readlines()[0].strip()
-    return None
+    meta = parse_theme_meta(theme_name)
+    if meta:
+        parent = meta.get('Theme', 'parent', fallback=None)
+        if themes_dirs and parent:
+            return get_theme_path_real(parent, themes_dirs)
+        return parent
+    else:
+        # Theme still uses old-style parent/engine files
+        parent_path = os.path.join(theme_name, 'parent')
+        if os.path.isfile(parent_path):
+            with open(parent_path) as fd:
+                parent = fd.readlines()[0].strip()
+            if themes_dirs:
+                return get_theme_path_real(parent, themes_dirs)
+            return parent
+        return None
 
 
-def get_theme_chain(theme, _themes_dir='themes'):
-    """Create the full theme inheritance chain."""
-    themes = [theme]
+def get_theme_chain(theme, themes_dirs):
+    """Create the full theme inheritance chain including paths."""
+    themes = [get_theme_path_real(theme, themes_dirs)]
 
     while True:
-        parent = get_parent_theme_name(themes[-1], _themes_dir)
+        parent = get_parent_theme_name(themes[-1], themes_dirs=themes_dirs)
         # Avoid silly loops
         if parent is None or parent in themes:
             break
@@ -635,7 +685,7 @@ class LanguageNotFoundError(Exception):
         return 'cannot find language {0}'.format(self.lang)
 
 
-def load_messages(themes, translations, default_lang):
+def load_messages(themes, translations, default_lang, themes_dirs):
     """Load theme's messages into context.
 
     All the messages from parent themes are loaded,
@@ -645,7 +695,7 @@ def load_messages(themes, translations, default_lang):
     oldpath = list(sys.path)
     for theme_name in themes[::-1]:
         msg_folder = os.path.join(get_theme_path(theme_name), 'messages')
-        default_folder = os.path.join(get_theme_path('base'), 'messages')
+        default_folder = os.path.join(get_theme_path_real('base', themes_dirs), 'messages')
         sys.path.insert(0, default_folder)
         sys.path.insert(0, msg_folder)
         english = __import__('messages_en')
@@ -739,11 +789,12 @@ def remove_file(source):
     elif os.path.isfile(source) or os.path.islink(source):
         os.remove(source)
 
+
 # slugify is adopted from
 # http://code.activestate.com/recipes/
 # 577257-slugify-make-a-string-usable-in-a-url-or-filename/
-_slugify_strip_re = re.compile(r'[^+\w\s-]')
-_slugify_hyphenate_re = re.compile(r'[-\s]+')
+_slugify_strip_re = re.compile(r'[^+\w\s-]', re.UNICODE)
+_slugify_hyphenate_re = re.compile(r'[-\s]+', re.UNICODE)
 
 
 def slugify(value, lang=None, force=False):
@@ -768,8 +819,8 @@ def slugify(value, lang=None, force=False):
         # This is the standard state of slugify, which actually does some work.
         # It is the preferred style, especially for Western languages.
         value = unicode_str(unidecode(value))
-        value = _slugify_strip_re.sub('', value, re.UNICODE).strip().lower()
-        return _slugify_hyphenate_re.sub('-', value, re.UNICODE)
+        value = _slugify_strip_re.sub('', value).strip().lower()
+        return _slugify_hyphenate_re.sub('-', value)
     else:
         # This is the “disarmed” state of slugify, which lets the user
         # have any character they please (be it regular ASCII with spaces,
@@ -876,6 +927,9 @@ def current_time(tzinfo=None):
     return dt
 
 
+from nikola import filters as task_filters  # NOQA
+
+
 def apply_filters(task, filters, skip_ext=None):
     """Apply filters to a task.
 
@@ -898,7 +952,7 @@ def apply_filters(task, filters, skip_ext=None):
                 if ext == key:
                     return value
             else:
-                assert False, key
+                raise ValueError("Cannot find filter match for {0}".format(key))
 
     for target in task.get('targets', []):
         ext = os.path.splitext(target)[-1].lower()
@@ -927,26 +981,26 @@ def get_crumbs(path, is_file=False, index_folder=None, lang=None):
     >>> crumbs = get_crumbs('galleries')
     >>> len(crumbs)
     1
-    >>> print('|'.join(crumbs[0]))
-    #|galleries
+    >>> crumbs[0]
+    ['#', 'galleries']
 
     >>> crumbs = get_crumbs(os.path.join('galleries','demo'))
     >>> len(crumbs)
     2
-    >>> print('|'.join(crumbs[0]))
-    ..|galleries
-    >>> print('|'.join(crumbs[1]))
-    #|demo
+    >>> crumbs[0]
+    ['..', 'galleries']
+    >>> crumbs[1]
+    ['#', 'demo']
 
     >>> crumbs = get_crumbs(os.path.join('listings','foo','bar'), is_file=True)
     >>> len(crumbs)
     3
-    >>> print('|'.join(crumbs[0]))
-    ..|listings
-    >>> print('|'.join(crumbs[1]))
-    .|foo
-    >>> print('|'.join(crumbs[2]))
-    #|bar
+    >>> crumbs[0]
+    ['..', 'listings']
+    >>> crumbs[1]
+    ['.', 'foo']
+    >>> crumbs[2]
+    ['#', 'bar']
     """
     crumbs = path.split(os.sep)
     _crumbs = []
@@ -978,7 +1032,7 @@ def get_crumbs(path, is_file=False, index_folder=None, lang=None):
     return list(reversed(_crumbs))
 
 
-def get_asset_path(path, themes, files_folders={'files': ''}, _themes_dir='themes', output_dir='output'):
+def get_asset_path(path, themes, files_folders={'files': ''}, output_dir='output'):
     """Return the "real", absolute path to the asset.
 
     By default, it checks which theme provides the asset.
@@ -987,27 +1041,24 @@ def get_asset_path(path, themes, files_folders={'files': ''}, _themes_dir='theme
     If it's not provided by either, it will be chacked in output, where
     it may have been created by another plugin.
 
-    >>> print(get_asset_path('assets/css/rst.css', ['bootstrap3', 'base']))
+    >>> print(get_asset_path('assets/css/rst.css', get_theme_chain('bootstrap3', ['themes'])))
     /.../nikola/data/themes/base/assets/css/rst.css
 
-    >>> print(get_asset_path('assets/css/theme.css', ['bootstrap3', 'base']))
+    >>> print(get_asset_path('assets/css/theme.css', get_theme_chain('bootstrap3', ['themes'])))
     /.../nikola/data/themes/bootstrap3/assets/css/theme.css
 
-    >>> print(get_asset_path('nikola.py', ['bootstrap3', 'base'], {'nikola': ''}))
+    >>> print(get_asset_path('nikola.py', get_theme_chain('bootstrap3', ['themes']), {'nikola': ''}))
     /.../nikola/nikola.py
 
-    >>> print(get_asset_path('nikola.py', ['bootstrap3', 'base'], {'nikola': 'nikola'}))
+    >>> print(get_asset_path('nikola.py', get_theme_chain('bootstrap3', ['themes']), {'nikola': 'nikola'}))
     None
 
-    >>> print(get_asset_path('nikola/nikola.py', ['bootstrap3', 'base'], {'nikola': 'nikola'}))
+    >>> print(get_asset_path('nikola/nikola.py', get_theme_chain('bootstrap3', ['themes']), {'nikola': 'nikola'}))
     /.../nikola/nikola.py
 
     """
     for theme_name in themes:
-        candidate = os.path.join(
-            get_theme_path(theme_name, _themes_dir),
-            path
-        )
+        candidate = os.path.join(get_theme_path(theme_name), path)
         if os.path.isfile(candidate):
             return candidate
     for src, rel_dst in files_folders.items():
@@ -1065,7 +1116,6 @@ class LocaleBorg(object):
     NOTE: never use locale.getlocale() , it can return values that
     locale.setlocale will not accept in Windows XP, 7 and pythons 2.6, 2.7, 3.3
     Examples: "Spanish", "French" can't do the full circle set / get / set
-    That used to break calendar, but now seems is not the case, with month at least
     """
 
     initialized = False
@@ -1080,7 +1130,8 @@ class LocaleBorg(object):
                 locale.setlocale(locale.LC_ALL, locale_n) will succeed
                 locale_n expressed in the string form, like "en.utf8"
         """
-        assert initial_lang is not None and initial_lang in locales
+        if initial_lang is None or initial_lang not in locales:
+            raise ValueError("Unknown initial language {0}".format(initial_lang))
         cls.reset()
         cls.locales = locales
         cls.month_name_handlers = []
@@ -1184,20 +1235,16 @@ class LocaleBorg(object):
                 res = handler(month_no, lang)
                 if res is not None:
                     return res
-            if sys.version_info[0] == 3:  # Python 3
-                with calendar.different_locale(self.locales[lang]):
-                    s = calendar.month_name[month_no]
-                # for py3 s is unicode
-            else:  # Python 2
-                with calendar.TimeEncoding(self.locales[lang]):
-                    s = calendar.month_name[month_no]
+            old_lang = self.current_lang
+            self.__set_locale(lang)
+            s = calendar.month_name[month_no]
+            self.__set_locale(old_lang)
+            if sys.version_info[0] == 2:
                 enc = self.encodings[lang]
                 if not enc:
                     enc = 'UTF-8'
 
                 s = s.decode(enc)
-            # paranoid about calendar ending in the wrong locale (windows)
-            self.__set_locale(self.current_lang)
             return s
 
     def formatted_date(self, date_format, date):
@@ -1210,18 +1257,19 @@ class LocaleBorg(object):
             # Get a string out of a TranslatableSetting
             if isinstance(date_format, TranslatableSetting):
                 date_format = date_format(current_lang)
-            # First check handlers
-            for handler in self.formatted_date_handlers:
-                fmt_date = handler(date_format, date, current_lang)
-                if fmt_date is not None:
-                    break
-            # If no handler was able to format the date, ask Python
-            if fmt_date is None:
-                if date_format == 'webiso':
-                    # Formatted after RFC 3339 (web ISO 8501 profile) with Zulu
-                    # zone desgignator for times in UTC and no microsecond precision.
-                    fmt_date = date.replace(microsecond=0).isoformat().replace('+00:00', 'Z')
-                else:
+            # Always ask Python if the date_format is webiso
+            if date_format == 'webiso':
+                # Formatted after RFC 3339 (web ISO 8501 profile) with Zulu
+                # zone designator for times in UTC and no microsecond precision.
+                fmt_date = date.replace(microsecond=0).isoformat().replace('+00:00', 'Z')
+            # If not, check handlers
+            else:
+                for handler in self.formatted_date_handlers:
+                    fmt_date = handler(date_format, date, current_lang)
+                    if fmt_date is not None:
+                        break
+                # If no handler was able to format the date, ask Python
+                if fmt_date is None:
                     fmt_date = date.strftime(date_format)
 
             # Issue #383, this changes from py2 to py3
@@ -1258,9 +1306,10 @@ class ExtendedItem(rss.RSSItem):
 
     def __init__(self, **kw):
         """Initialize RSS item."""
-        self.creator = kw.pop('creator')
+        self.creator = kw.pop('creator', None)
+
         # It's an old style class
-        return rss.RSSItem.__init__(self, **kw)
+        rss.RSSItem.__init__(self, **kw)
 
     def publish_extensions(self, handler):
         """Publish extensions."""
@@ -1348,10 +1397,10 @@ def get_translation_candidate(config, path, lang):
     cache/posts/fancy.post.html
     >>> print(get_translation_candidate(config, 'cache/posts/fancy.post.html', 'es'))
     cache/posts/fancy.post.es.html
-    >>> print(get_translation_candidate(config, 'cache/stories/charts.html', 'es'))
-    cache/stories/charts.es.html
-    >>> print(get_translation_candidate(config, 'cache/stories/charts.html', 'en'))
-    cache/stories/charts.html
+    >>> print(get_translation_candidate(config, 'cache/pages/charts.html', 'es'))
+    cache/pages/charts.es.html
+    >>> print(get_translation_candidate(config, 'cache/pages/charts.html', 'en'))
+    cache/pages/charts.html
 
     >>> config = {'TRANSLATIONS_PATTERN': '{path}.{ext}.{lang}', 'DEFAULT_LANG': 'en', 'TRANSLATIONS': {'es':'1', 'en': 1}}
     >>> print(get_translation_candidate(config, '*.rst', 'es'))
@@ -1650,7 +1699,7 @@ def adjust_name_for_index_link(name, i, displayed_i, lang, site, force_addition=
 
 
 def create_redirect(src, dst):
-    """"Create a redirection."""
+    """Create a redirection."""
     makedirs(os.path.dirname(src))
     with io.open(src, "w+", encoding="utf8") as fd:
         fd.write('<!DOCTYPE html>\n<head>\n<meta charset="utf-8">\n'
@@ -1715,6 +1764,49 @@ class TreeNode(object):
     def get_children(self):
         """Get children of a node."""
         return self.children
+
+    def __str__(self):
+        """Stringify node (return name)."""
+        return self.name
+
+    def _repr_partial(self):
+        """Return partial representation."""
+        if self.parent:
+            return "{0}/{1!r}".format(self.parent._repr_partial(), self.name)
+        else:
+            return repr(self.name)
+
+    def __repr__(self):
+        """Return programmer-friendly node representation."""
+        return "<TreeNode {0}>".format(self._repr_partial())
+
+
+def clone_treenode(treenode, parent=None, acceptor=lambda x: True):
+    """Clone a TreeNode.
+
+    Children are only cloned if `acceptor` returns `True` when
+    applied on them.
+
+    Returns the cloned node if it has children or if `acceptor`
+    applied to it returns `True`. In case neither applies, `None`
+    is returned.
+    """
+    # Copy standard TreeNode stuff
+    node_clone = TreeNode(treenode.name, parent)
+    node_clone.children = [clone_treenode(node, parent=node_clone, acceptor=acceptor) for node in treenode.children]
+    node_clone.children = [node for node in node_clone.children if node]
+    node_clone.indent_levels = treenode.indent_levels
+    node_clone.indent_change_before = treenode.indent_change_before
+    node_clone.indent_change_after = treenode.indent_change_after
+    if hasattr(treenode, 'classification_path'):
+        # Copy stuff added by taxonomies_classifier plugin
+        node_clone.classification_path = treenode.classification_path
+        node_clone.classification_name = treenode.classification_name
+
+    # Accept this node if there are no children (left) and acceptor fails
+    if not node_clone.children and not acceptor(treenode):
+        return None
+    return node_clone
 
 
 def flatten_tree_structure(root_list):
@@ -1813,16 +1905,17 @@ def colorize_str_from_base_color(string, base_color):
     def degreediff(dega, degb):
         return min(abs(dega - degb), abs((degb - dega) + 360))
 
-    def husl_similar_from_base(string, base_color):
-        h, s, l = husl.hex_to_husl(base_color)
-        old_h = h
-        idx = 0
-        while degreediff(old_h, h) < 27 and idx < 16:
-            h = 360.0 * (float(hash_str(string, idx)) / 255)
-            idx += 1
-        return husl.husl_to_hex(h, s, l)
-
-    return husl_similar_from_base(string, base_color)
+    if husl is None:
+        req_missing(['husl'], 'Use color mixing (section colors)',
+                    optional=True)
+        return base_color
+    h, s, l = husl.hex_to_husl(base_color)
+    old_h = h
+    idx = 0
+    while degreediff(old_h, h) < 27 and idx < 16:
+        h = 360.0 * (float(hash_str(string, idx)) / 255)
+        idx += 1
+    return husl.husl_to_hex(h, s, l)
 
 
 def color_hsl_adjust_hex(hexstr, adjust_h=None, adjust_s=None, adjust_l=None):
@@ -1886,6 +1979,40 @@ def clean_before_deployment(site):
     return undeployed_posts
 
 
+def sort_posts(posts, *keys):
+    """Sort posts by a given predicate. Helper function for templates.
+
+    If a key starts with '-', it is sorted in descending order.
+
+    Usage examples::
+
+        sort_posts(timeline, 'title', 'date')
+        sort_posts(timeline, 'author', '-section_name')
+    """
+    # We reverse the keys to get the usual ordering method: the first key
+    # provided is the most important sorting predicate (first by 'title', then
+    # by 'date' in the first example)
+    for key in reversed(keys):
+        if key.startswith('-'):
+            key = key[1:]
+            reverse = True
+        else:
+            reverse = False
+        try:
+            # An attribute (or method) of the Post object
+            a = getattr(posts[0], key)
+            if callable(a):
+                keyfunc = operator.methodcaller(key)
+            else:
+                keyfunc = operator.attrgetter(key)
+        except AttributeError:
+            # Post metadata
+            keyfunc = operator.methodcaller('meta', key)
+
+        posts = sorted(posts, reverse=reverse, key=keyfunc)
+    return posts
+
+
 # Stolen from textwrap in Python 3.4.3.
 def indent(text, prefix, predicate=None):
     """Add 'prefix' to the beginning of selected lines in 'text'.
@@ -1903,3 +2030,52 @@ def indent(text, prefix, predicate=None):
         for line in text.splitlines(True):
             yield (prefix + line if predicate(line) else line)
     return ''.join(prefixed_lines())
+
+
+def load_data(path):
+    """Given path to a file, load data from it."""
+    ext = os.path.splitext(path)[-1]
+    loader = None
+    if ext in {'.yml', '.yaml'}:
+        loader = yaml
+        if yaml is None:
+            req_missing(['yaml'], 'use YAML data files')
+            return {}
+    elif ext in {'.json', '.js'}:
+        loader = json
+    elif ext in {'.toml', '.tml'}:
+        if toml is None:
+            req_missing(['toml'], 'use TOML data files')
+            return {}
+        loader = toml
+    if loader is None:
+        return
+    with io.open(path, 'r', encoding='utf8') as inf:
+        return loader.load(inf)
+
+
+# see http://stackoverflow.com/a/2087433
+try:
+    import html  # Python 3.4 and newer
+    html_unescape = html.unescape
+except (AttributeError, ImportError):
+    try:
+        from HTMLParser import HTMLParser  # Python 2.7
+    except ImportError:
+        from html.parser import HTMLParser  # Python 3 (up to 3.4)
+
+    def html_unescape(s):
+        """Convert all named and numeric character references in the string s to the corresponding unicode characters."""
+        h = HTMLParser()
+        return h.unescape(s)
+
+
+def rss_writer(rss_obj, output_path):
+    """Write an RSS object to an xml file."""
+    dst_dir = os.path.dirname(output_path)
+    makedirs(dst_dir)
+    with io.open(output_path, "w+", encoding="utf-8") as rss_file:
+        data = rss_obj.to_xml(encoding='utf-8')
+        if isinstance(data, bytes_str):
+            data = data.decode('utf-8')
+        rss_file.write(data)

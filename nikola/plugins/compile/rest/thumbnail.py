@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2014-2016 Pelle Nilsson and others.
+# Copyright © 2014-2017 Pelle Nilsson and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated

@@ -9,5 +9,5 @@ website = https://getnikola.com/
 description = Generate google sitemap.
 
 [Nikola]
-plugincategory = Task
+PluginCategory = Task
 

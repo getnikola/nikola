@@ -4,7 +4,7 @@
 
 
 """ Test cases for Nikola ReST extensions.
-A base class ReSTExtensionTestCase provides the tests basic behaivor.
+A base class ReSTExtensionTestCase provides the tests basic behaviour.
 Subclasses must override the "sample" class attribute with the ReST markup.
 The sample will be rendered as HTML using publish_parts() by setUp().
 One method is provided for checking the resulting HTML:
@@ -76,7 +76,7 @@ class ReSTExtensionTestCase(BaseTestCase):
         p = FakePost('', '')
         p._depfile[outf] = []
         self.compiler.site.post_per_input_file[inf] = p
-        self.html = self.compiler.compile_html(inf, outf)
+        self.html = self.compiler.compile(inf, outf)
         with io.open(outf, 'r', encoding='utf8') as f:
             self.html = f.read()
         os.unlink(inf)

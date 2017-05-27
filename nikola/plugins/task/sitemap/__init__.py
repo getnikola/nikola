@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -321,6 +321,7 @@ class Sitemap(LateTask):
             # microsecond precision is stripped for compatibility.
             lastmod = datetime.datetime.utcfromtimestamp(os.stat(p).st_mtime).replace(tzinfo=dateutil.tz.gettz('UTC'), second=0, microsecond=0).isoformat().replace('+00:00', 'Z')
             return lastmod
+
 
 if __name__ == '__main__':
     import doctest

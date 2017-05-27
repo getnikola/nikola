@@ -1,7 +1,7 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 # The Release Script
 # Based on Python Project Template by Chris Warrick
-# Copyright © 2013-2016, Chris Warrick.
+# Copyright © 2013-2017, Chris Warrick.
 # All rights reserved.
 
 # Permission is hereby granted, free of charge, to any
@@ -46,6 +46,10 @@ function cleanup {
 status '*** Nikola Release Scripts'
 dates=$(date '+%s')
 
+# Make sure we're up-to-date
+git checkout master
+git pull origin master
+
 echo -n "Version (in format X.Y.Z): "
 read version
 
@@ -85,9 +89,8 @@ sed "s/release = .*/release = '$version'/g" docs/sphinx/conf.py -i
 sed "s/:Version: .*/:Version: $version/g" docs/*.txt docs/*.rst -i
 sed "s/:Version: .*/:Version: Nikola $version/g" docs/man/nikola.rst -i
 sed "s/__version__ = .*/__version__ = '$version'/g" nikola/__init__.py -i
-sed "s/version: .*/version: $version/g" snapcraft/snapcraft.yaml -i
-sed "s/source-tag: .*/source-tag: v$version/g" snapcraft/snapcraft.yaml -i
-sed "s/Nikola==.*/Nikola==$version/g" snapcraft/nikola.py -i
+sed "s/version: .*/version: $version/g" snapcraft.yaml -i
+sed "s/Nikola==.*'/Nikola==$version'/g" snapcraft/nikola.py -i
 
 setopt errexit # Exit on errors
 

@@ -203,8 +203,8 @@ class TranslatedBuildTest(EmptyBuildTest):
 
     def test_translated_titles(self):
         """Check that translated title is picked up."""
-        en_file = os.path.join(self.target_dir, "output", "stories", "1.html")
-        pl_file = os.path.join(self.target_dir, "output", self.ol, "stories", "1.html")
+        en_file = os.path.join(self.target_dir, "output", "pages", "1.html")
+        pl_file = os.path.join(self.target_dir, "output", self.ol, "pages", "1.html")
         # Files should be created
         self.assertTrue(os.path.isfile(en_file))
         self.assertTrue(os.path.isfile(pl_file))
@@ -223,8 +223,8 @@ class TranslationsPatternTest1(TranslatedBuildTest):
     @classmethod
     def patch_site(self):
         """Set the TRANSLATIONS_PATTERN to the old v6 default"""
-        os.rename(os.path.join(self.target_dir, "stories", "1.%s.txt" % self.ol),
-                  os.path.join(self.target_dir, "stories", "1.txt.%s" % self.ol)
+        os.rename(os.path.join(self.target_dir, "pages", "1.%s.txt" % self.ol),
+                  os.path.join(self.target_dir, "pages", "1.txt.%s" % self.ol)
                   )
         conf_path = os.path.join(self.target_dir, "conf.py")
         with io.open(conf_path, "r", encoding="utf-8") as inf:
@@ -241,7 +241,7 @@ class MissingDefaultLanguageTest(TranslatedBuildTest):
     @classmethod
     def fill_site(self):
         super(MissingDefaultLanguageTest, self).fill_site()
-        os.unlink(os.path.join(self.target_dir, "stories", "1.txt"))
+        os.unlink(os.path.join(self.target_dir, "pages", "1.txt"))
 
     def test_translated_titles(self):
         """Do not test titles as we just removed the translation"""
@@ -255,8 +255,8 @@ class TranslationsPatternTest2(TranslatedBuildTest):
     def patch_site(self):
         """Set the TRANSLATIONS_PATTERN to the old v6 default"""
         conf_path = os.path.join(self.target_dir, "conf.py")
-        os.rename(os.path.join(self.target_dir, "stories", "1.%s.txt" % self.ol),
-                  os.path.join(self.target_dir, "stories", "1.txt.%s" % self.ol)
+        os.rename(os.path.join(self.target_dir, "pages", "1.%s.txt" % self.ol),
+                  os.path.join(self.target_dir, "pages", "1.txt.%s" % self.ol)
                   )
         with io.open(conf_path, "r", encoding="utf-8") as inf:
             data = inf.read()
@@ -284,7 +284,7 @@ class RelativeLinkTest(DemoBuildTest):
         """Check that the links in output/index.html are correct"""
         test_path = os.path.join(self.target_dir, "output", "index.html")
         flag = False
-        with open(test_path, "rb") as inf:
+        with io.open(test_path, "rb") as inf:
             data = inf.read()
             for _, _, url, _ in lxml.html.iterlinks(data):
                 # Just need to be sure this one is ok
@@ -384,7 +384,7 @@ class TestCheckFailure(DemoBuildTest):
 
 
 class RelativeLinkTest2(DemoBuildTest):
-    """Check that dropping stories to the root doesn't break links."""
+    """Check that dropping pages to the root doesn't break links."""
 
     @classmethod
     def patch_site(self):
@@ -392,10 +392,10 @@ class RelativeLinkTest2(DemoBuildTest):
         conf_path = os.path.join(self.target_dir, "conf.py")
         with io.open(conf_path, "r", encoding="utf-8") as inf:
             data = inf.read()
-            data = data.replace('("stories/*.txt", "stories", "story.tmpl"),',
-                                '("stories/*.txt", "", "story.tmpl"),')
-            data = data.replace('("stories/*.rst", "stories", "story.tmpl"),',
-                                '("stories/*.rst", "", "story.tmpl"),')
+            data = data.replace('("pages/*.txt", "pages", "page.tmpl"),',
+                                '("pages/*.txt", "", "page.tmpl"),')
+            data = data.replace('("pages/*.rst", "pages", "page.tmpl"),',
+                                '("pages/*.rst", "", "page.tmpl"),')
             data = data.replace('# INDEX_PATH = ""',
                                 'INDEX_PATH = "blog"')
         with io.open(conf_path, "w+", encoding="utf8") as outf:
@@ -403,10 +403,10 @@ class RelativeLinkTest2(DemoBuildTest):
             outf.flush()
 
     def test_relative_links(self):
-        """Check that the links in a story are correct"""
+        """Check that the links in a page are correct"""
         test_path = os.path.join(self.target_dir, "output", "about-nikola.html")
         flag = False
-        with open(test_path, "rb") as inf:
+        with io.open(test_path, "rb") as inf:
             data = inf.read()
             for _, _, url, _ in lxml.html.iterlinks(data):
                 # Just need to be sure this one is ok
@@ -543,6 +543,175 @@ class RedirectionsTest3(TestCheck):
         nikola.utils.makedirs(os.path.join(self.target_dir, "files", "foo"))
         with io.open(target_path, "w+", encoding="utf8") as outf:
             outf.write("foo")
+
+
+class SectionPageCollisionTest(EmptyBuildTest):
+    """Test if section indexes avoid pages."""
+
+    @classmethod
+    def patch_site(self):
+        """Enable post sections."""
+        conf_path = os.path.join(self.target_dir, "conf.py")
+        with io.open(conf_path, "a", encoding="utf8") as outf:
+            outf.write("""\n\nPOSTS_SECTIONS = True\nPOSTS_SECTIONS_ARE_INDEXES = True\nPRETTY_URLS = True\nPOSTS = (('posts/*.txt', '', 'post.tmpl'),)\nPAGES = (('pages/*.txt', '', 'page.tmpl'),)\n\n""")
+
+    @classmethod
+    def fill_site(self):
+        """Add subdirectories and create a post in section "sec1" and a page with the same URL as the section index."""
+        self.init_command.create_empty_site(self.target_dir)
+        self.init_command.create_configuration(self.target_dir)
+
+        pages = os.path.join(self.target_dir, "pages")
+        posts = os.path.join(self.target_dir, "posts")
+        sec1 = os.path.join(posts, "sec1")
+
+        nikola.utils.makedirs(pages)
+        nikola.utils.makedirs(sec1)
+
+        with io.open(os.path.join(pages, 'sec1.txt'), "w+", encoding="utf8") as outf:
+            outf.write(".. title: Page 0\n.. slug: sec1\n\nThis is Page 0.\n")
+
+        with io.open(os.path.join(sec1, 'foo.txt'), "w+", encoding="utf8") as outf:
+            outf.write(".. title: Post 0\n.. slug: post0\n.. date: 2013-03-06 19:08:15\n\nThis is Post 0.\n")
+
+    def _make_output_path(self, dir, name):
+        """Make a file path to the output."""
+        return os.path.join(dir, name + '.html')
+
+    def test_section_index_avoidance(self):
+        """Test section index."""
+        sec1 = os.path.join(self.target_dir, "output", "sec1")
+        foo = os.path.join(self.target_dir, "output", "sec1", "post0")
+
+        # Do all files exist?
+        self.assertTrue(os.path.isfile(self._make_output_path(sec1, 'index')))
+        self.assertTrue(os.path.isfile(self._make_output_path(foo, 'index')))
+
+        # Is it really a page?
+        with io.open(os.path.join(sec1, 'index.html'), 'r', encoding='utf-8') as fh:
+            page = fh.read()
+        self.assertTrue('This is Page 0' in page)
+        self.assertTrue('This is Post 0' not in page)
+
+
+class PageIndexTest(EmptyBuildTest):
+    """Test if PAGE_INDEX works, with PRETTY_URLS disabled."""
+
+    @classmethod
+    def patch_site(self):
+        """Enable PAGE_INDEX."""
+        conf_path = os.path.join(self.target_dir, "conf.py")
+        with io.open(conf_path, "a", encoding="utf8") as outf:
+            outf.write("""\n\nPAGE_INDEX = True\nPRETTY_URLS = False\nPAGES = PAGES + (('pages/*.php', 'pages', 'page.tmpl'),)\n\n""")
+
+    @classmethod
+    def fill_site(self):
+        """Add subdirectories and create pages, one of which creates index.html."""
+        self.init_command.create_empty_site(self.target_dir)
+        self.init_command.create_configuration(self.target_dir)
+
+        pages = os.path.join(self.target_dir, "pages")
+        subdir1 = os.path.join(self.target_dir, "pages", "subdir1")
+        subdir2 = os.path.join(self.target_dir, "pages", "subdir2")
+        subdir3 = os.path.join(self.target_dir, "pages", "subdir3")
+
+        nikola.utils.makedirs(subdir1)
+        nikola.utils.makedirs(subdir2)
+        nikola.utils.makedirs(subdir3)
+
+        with io.open(os.path.join(pages, 'page0.txt'), "w+", encoding="utf8") as outf:
+            outf.write(".. title: Page 0\n.. slug: page0\n\nThis is page 0.\n")
+
+        with io.open(os.path.join(subdir1, 'page1.txt'), "w+", encoding="utf8") as outf:
+            outf.write(".. title: Page 1\n.. slug: page1\n\nThis is page 1.\n")
+        with io.open(os.path.join(subdir1, 'page2.txt'), "w+", encoding="utf8") as outf:
+            outf.write(".. title: Page 2\n.. slug: page2\n\nThis is page 2.\n")
+
+        with io.open(os.path.join(subdir2, 'page3.txt'), "w+", encoding="utf8") as outf:
+            outf.write(".. title: Page 3\n.. slug: page3\n\nThis is page 3.\n")
+        with io.open(os.path.join(subdir2, 'foo.txt'), "w+", encoding="utf8") as outf:
+            outf.write(".. title: Not the page index\n.. slug: index\n\nThis is not the page index.\n")
+
+        with io.open(os.path.join(subdir3, 'page4.txt'), "w+", encoding="utf8") as outf:
+            outf.write(".. title: Page 4\n.. slug: page4\n\nThis is page 4.\n")
+        with io.open(os.path.join(subdir3, 'bar.php'), "w+", encoding="utf8") as outf:
+            outf.write(".. title: Still not the page index\n.. slug: index\n\nThis is not the page index either.\n")
+
+    def _make_output_path(self, dir, name):
+        """Make a file path to the output."""
+        return os.path.join(dir, name + '.html')
+
+    def test_page_index(self):
+        """Test PAGE_INDEX."""
+        pages = os.path.join(self.target_dir, "output", "pages")
+        subdir1 = os.path.join(self.target_dir, "output", "pages", "subdir1")
+        subdir2 = os.path.join(self.target_dir, "output", "pages", "subdir2")
+        subdir3 = os.path.join(self.target_dir, "output", "pages", "subdir3")
+
+        # Do all files exist?
+        self.assertTrue(os.path.isfile(self._make_output_path(pages, 'page0')))
+        self.assertTrue(os.path.isfile(self._make_output_path(subdir1, 'page1')))
+        self.assertTrue(os.path.isfile(self._make_output_path(subdir1, 'page2')))
+        self.assertTrue(os.path.isfile(self._make_output_path(subdir2, 'page3')))
+        self.assertTrue(os.path.isfile(self._make_output_path(subdir3, 'page4')))
+
+        self.assertTrue(os.path.isfile(os.path.join(pages, 'index.html')))
+        self.assertTrue(os.path.isfile(os.path.join(subdir1, 'index.html')))
+        self.assertTrue(os.path.isfile(os.path.join(subdir2, 'index.html')))
+        self.assertTrue(os.path.isfile(os.path.join(subdir3, 'index.php')))
+        self.assertFalse(os.path.isfile(os.path.join(subdir3, 'index.html')))
+
+        # Do the indexes only contain the pages the should?
+        with io.open(os.path.join(pages, 'index.html'), 'r', encoding='utf-8') as fh:
+            pages_index = fh.read()
+        self.assertTrue('Page 0' in pages_index)
+        self.assertTrue('Page 1' not in pages_index)
+        self.assertTrue('Page 2' not in pages_index)
+        self.assertTrue('Page 3' not in pages_index)
+        self.assertTrue('Page 4' not in pages_index)
+        self.assertTrue('This is not the page index' not in pages_index)
+
+        with io.open(os.path.join(subdir1, 'index.html'), 'r', encoding='utf-8') as fh:
+            subdir1_index = fh.read()
+        self.assertTrue('Page 0' not in subdir1_index)
+        self.assertTrue('Page 1' in subdir1_index)
+        self.assertTrue('Page 2' in subdir1_index)
+        self.assertTrue('Page 3' not in subdir1_index)
+        self.assertTrue('Page 4' not in subdir1_index)
+        self.assertTrue('This is not the page index' not in subdir1_index)
+
+        with io.open(os.path.join(subdir2, 'index.html'), 'r', encoding='utf-8') as fh:
+            subdir2_index = fh.read()
+        self.assertTrue('Page 0' not in subdir2_index)
+        self.assertTrue('Page 1' not in subdir2_index)
+        self.assertTrue('Page 2' not in subdir2_index)
+        self.assertTrue('Page 3' not in subdir2_index)
+        self.assertTrue('Page 4' not in subdir2_index)
+        self.assertTrue('This is not the page index.' in subdir2_index)
+
+        with io.open(os.path.join(subdir3, 'index.php'), 'r', encoding='utf-8') as fh:
+            subdir3_index = fh.read()
+        self.assertTrue('Page 0' not in subdir3_index)
+        self.assertTrue('Page 1' not in subdir3_index)
+        self.assertTrue('Page 2' not in subdir3_index)
+        self.assertTrue('Page 3' not in subdir3_index)
+        self.assertTrue('Page 4' not in subdir3_index)
+        self.assertTrue('This is not the page index either.' in subdir3_index)
+
+
+class PageIndexPrettyUrlsTest(PageIndexTest):
+    """Test if PAGE_INDEX works, with PRETTY_URLS enabled."""
+
+    @classmethod
+    def patch_site(self):
+        """Enable PAGE_INDEX."""
+        conf_path = os.path.join(self.target_dir, "conf.py")
+        with io.open(conf_path, "a", encoding="utf8") as outf:
+            outf.write("""\n\nPAGE_INDEX = True\nPRETTY_URLS = True\nPAGES = PAGES + (('pages/*.php', 'pages', 'page.tmpl'),)\n\n""")
+
+    def _make_output_path(self, dir, name):
+        """Make a file path to the output."""
+        return os.path.join(dir, name + '/index.html')
 
 
 if __name__ == "__main__":

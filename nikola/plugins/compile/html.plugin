@@ -9,5 +9,5 @@ website = https://getnikola.com/
 description = Compile HTML into HTML (just copy)
 
 [Nikola]
-plugincategory = Compiler
+PluginCategory = Compiler
 friendlyname = HTML

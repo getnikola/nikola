@@ -1,5 +1,5 @@
 # Messages in Nikola
-# Copyright (C) 2012-2013
+# Copyright (C) 2012-2016
 # This file is distributed under the same license as the Nikola package.
 # 
 # Translators:
@@ -8,7 +8,7 @@
 # Translators:
 # Translators:
 # Hossein Raysehman <rayeshman@gmail.com>, 2014
-# Shahinism <ishahinism@gmail.com>, 2013,2015
+# Shahinism <ishahinism@gmail.com>, 2013,2015-2016
 # Soroosh Azary Marhabi <soroosh@azary.ir>, 2013
 # Shahinism <ishahinism@gmail.com>, 2013
 # Soroosh Azary Marhabi <soroosh@azary.ir>, 2013
@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2015-08-31 07:51+0000\n"
+"PO-Revision-Date: 2017-01-07 11:37+0000\n"
 "Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
 "Language-Team: Persian (http://www.transifex.com/ralsina/nikola/language/fa/)\n"
 "MIME-Version: 1.0\n"
@@ -121,29 +121,49 @@ msgid "Skip to main content"
 msgstr "متن اصلی را نادیده بگیر"
 
 msgid "Subcategories:"
-msgstr ""
+msgstr "زیر بخش‌ها:"
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
-msgstr ""
+msgstr "(فعال)"
 
 #. Default content for a new post
 msgid "Write your post here."
-msgstr ""
+msgstr "متن پست‌تان را این‌جا بنویسید."
 
 #. Default content for a new page
 msgid "Write your page here."
-msgstr ""
+msgstr "من صفحه را این‌جا بنویسید. "
 
 msgid "Uncategorized"
-msgstr ""
+msgstr "دسته‌بندی نشده"
 
 #. Used for feeds of any format
 msgid "Updates"
-msgstr ""
+msgstr "بروزرسانی‌ها"
 
 msgid "Authors"
-msgstr ""
+msgstr "نویسنده‌ها"
 
 msgid "Posts by %s"
+msgstr "ارسال‌های %s"
+
+msgid "Toggle navigation"
+msgstr ""
+
+#. Used to format months per year
+msgid "{month} {year}"
+msgstr ""
+
+#. Used to format a date
+msgid "{month} {day}, {year}"
+msgstr ""
+
+msgid "Previous"
+msgstr ""
+
+msgid "Up"
+msgstr ""
+
+msgid "Next"
 msgstr ""

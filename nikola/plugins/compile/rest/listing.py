@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -119,6 +119,7 @@ class CodeBlock(Directive):
 
         return [node]
 
+
 # Monkey-patch: replace insane docutils CodeBlock with our implementation.
 docutils.parsers.rst.directives.body.CodeBlock = CodeBlock
 docutils.parsers.rst.directives.misc.CodeBlock = CodeBlock
@@ -136,6 +137,7 @@ class Plugin(RestExtension):
         # leaving these to make the code directive work with
         # docutils < 0.9
         CodeBlock.site = site
+        Listing.site = site
         directives.register_directive('code', CodeBlock)
         directives.register_directive('code-block', CodeBlock)
         directives.register_directive('sourcecode', CodeBlock)
@@ -189,8 +191,11 @@ class Listing(Include):
             self.content = fileobject.read().splitlines()
         self.state.document.settings.record_dependencies.add(fpath)
         target = urlunsplit(("link", 'listing', fpath.replace('\\', '/'), '', ''))
+        src_target = urlunsplit(("link", 'listing_source', fpath.replace('\\', '/'), '', ''))
+        src_label = self.site.MESSAGES('Source')
         generated_nodes = (
-            [core.publish_doctree('`{0} <{1}>`_'.format(_fname, target))[0]])
+            [core.publish_doctree('`{0} <{1}>`_  `({2}) <{3}>`_' .format(
+                _fname, target, src_label, src_target))[0]])
         generated_nodes += self.get_code_from_file(fileobject)
         return generated_nodes
 
@@ -199,5 +204,8 @@ class Listing(Include):
         return super(Listing, self).run()
 
     def assert_has_content(self):
-        """Listing has no content, override check from superclass."""
+        """Override check from superclass with nothing.
+
+        Listing has no content, override check from superclass.
+        """
         pass

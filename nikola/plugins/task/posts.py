@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -85,11 +85,12 @@ class RenderPosts(Task):
                         deps_dict[k] = self.site.config.get(k)
                 dest = post.translated_base_path(lang)
                 file_dep = [p for p in post.fragment_deps(lang) if not p.startswith("####MAGIC####")]
+                extra_targets = post.compiler.get_extra_targets(post, lang, dest)
                 task = {
                     'basename': self.name,
                     'name': dest,
                     'file_dep': file_dep,
-                    'targets': [dest],
+                    'targets': [dest] + extra_targets,
                     'actions': [(post.compile, (lang, )),
                                 (update_deps, (post, lang, )),
                                 ],

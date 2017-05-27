@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -29,7 +29,7 @@
 from __future__ import absolute_import
 import os
 
-__version__ = "7.7.11"
+__version__ = '7.8.5'
 DEBUG = bool(os.getenv('NIKOLA_DEBUG'))
 
 from .nikola import Nikola  # NOQA

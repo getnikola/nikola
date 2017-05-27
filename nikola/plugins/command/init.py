@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -78,9 +78,9 @@ SAMPLE_CONF = {
     ("posts/*.html", "posts", "post.tmpl"),
 )""",
     'PAGES': """(
-    ("stories/*.rst", "stories", "story.tmpl"),
-    ("stories/*.txt", "stories", "story.tmpl"),
-    ("stories/*.html", "stories", "story.tmpl"),
+    ("pages/*.rst", "pages", "page.tmpl"),
+    ("pages/*.txt", "pages", "page.tmpl"),
+    ("pages/*.html", "pages", "page.tmpl"),
 )""",
     'COMPILERS': """{
     "rest": ('.rst', '.txt'),
@@ -285,7 +285,7 @@ class CommandInit(Command):
     @classmethod
     def create_empty_site(cls, target):
         """Create an empty site with directories only."""
-        for folder in ('files', 'galleries', 'listings', 'posts', 'stories'):
+        for folder in ('files', 'galleries', 'listings', 'posts', 'pages'):
             makedirs(os.path.join(target, folder))
 
     @staticmethod
@@ -360,7 +360,7 @@ class CommandInit(Command):
             # Assuming that base contains all the locales, and that base does
             # not inherit from anywhere.
             try:
-                messages = load_messages(['base'], tr, default)
+                messages = load_messages(['base'], tr, default, themes_dirs=['themes'])
                 SAMPLE_CONF['NAVIGATION_LINKS'] = format_navigation_links(langs, default, messages, SAMPLE_CONF['STRIP_INDEXES'])
             except nikola.utils.LanguageNotFoundError as e:
                 print("    ERROR: the language '{0}' is not supported.".format(e.lang))

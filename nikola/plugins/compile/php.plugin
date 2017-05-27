@@ -9,5 +9,5 @@ website = https://getnikola.com/
 description = Compile PHP into HTML (just copy and name the file .php)
 
 [Nikola]
-plugincategory = Compiler
+PluginCategory = Compiler
 friendlyname = PHP

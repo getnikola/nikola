@@ -1,13 +1,18 @@
 {#  -*- coding: utf-8 -*- #}
 {% extends 'index.tmpl' %}
+{% import 'archive_navigation_helper.tmpl' as archive_nav with context %}
 
 {% block extra_head %}
     {{ super() }}
     {% if translations|length > 1 and generate_atom %}
         {% for language in translations|sort %}
-            <link rel="alternate" type="application/atom+xml" title="Atom for the {{ archive_name }} section ({{ language }})" href="{{ _link("archive_atom", archive_name, language) }}">
+            <link rel="alternate" type="application/atom+xml" title="Atom for the {{ archive_name }} archive ({{ language }})" href="{{ _link("archive_atom", archive_name, language) }}">
         {% endfor %}
     {% elif generate_atom %}
         <link rel="alternate" type="application/atom+xml" title="Atom for the {{ archive_name }} archive" href="{{ _link("archive_atom", archive_name) }}">
     {% endif %}
+{% endblock %}
+
+{% block content_header %}
+    {{ archive_nav.archive_navigation() }}
 {% endblock %}

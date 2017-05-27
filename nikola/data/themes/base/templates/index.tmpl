@@ -1,6 +1,8 @@
 ## -*- coding: utf-8 -*-
 <%namespace name="helper" file="index_helper.tmpl"/>
+<%namespace name="math" file="math_helper.tmpl"/>
 <%namespace name="comments" file="comments_helper.tmpl"/>
+<%namespace name="pagination" file="pagination_helper.tmpl"/>
 <%inherit file="base.tmpl"/>
 
 <%block name="extra_head">
@@ -8,6 +10,7 @@
     % if posts and (permalink == '/' or permalink == '/' + index_file):
         <link rel="prefetch" href="${posts[0].permalink()}" type="text/html">
     % endif
+    ${math.math_styles_ifposts(posts)}
 </%block>
 
 <%block name="content">
@@ -15,13 +18,16 @@
 % if 'main_index' in pagekind:
     ${front_index_header}
 % endif
+% if page_links:
+    ${pagination.page_navigation(current_page, page_links, prevlink, nextlink, prev_next_links_reversed)}
+% endif
 <div class="postindex">
 % for post in posts:
     <article class="h-entry post-${post.meta('type')}">
     <header>
         <h1 class="p-name entry-title"><a href="${post.permalink()}" class="u-url">${post.title()|h}</a></h1>
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
             % if author_pages_generated:
                 <a href="${_link('author', post.author())}">${post.author()|h}</a>
             % else:
@@ -47,5 +53,5 @@
 </div>
 ${helper.html_pager()}
 ${comments.comment_link_script()}
-${helper.mathjax_script(posts)}
+${math.math_scripts_ifposts(posts)}
 </%block>

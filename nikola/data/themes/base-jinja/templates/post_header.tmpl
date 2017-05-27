@@ -23,7 +23,7 @@
 
 {% macro html_sourcelink() %}
     {% if show_sourcelink %}
-        <p class="sourceline"><a href="{{ post.source_link() }}" id="sourcelink">{{ messages("Source") }}</a></p>
+        <p class="sourceline"><a href="{{ post.source_link() }}" class="sourcelink">{{ messages("Source") }}</a></p>
     {% endif %}
 {% endmacro %}
 
@@ -31,7 +31,7 @@
     <header>
         {{ html_title() }}
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 {% if author_pages_generated %}
                     <a href="{{ _link('author', post.author()) }}">{{ post.author()|e }}</a>
                 {% else %}
@@ -45,9 +45,6 @@
             {{ html_sourcelink() }}
             {% if post.meta('link') %}
                     <p class="linkline"><a href="{{ post.meta('link') }}">{{ messages("Original site") }}</a></p>
-            {% endif %}
-            {% if post.description() %}
-                <meta name="description" itemprop="description" content="{{ post.description()|e }}">
             {% endif %}
         </div>
         {{ html_translations(post) }}

@@ -26,7 +26,11 @@ class PyTest(TestCommand):
 with open('requirements.txt', 'r') as fh:
     dependencies = [l.strip() for l in fh]
 
-extras = {}
+extras = {
+    ':python_version >= "3.4"': ['doit>=0.28.0'],
+    ':python_version == "3.3"': ['doit>=0.30.1'],
+    ':python_version == "2.7"': ['doit>=0.28.0,<=0.29.0'],
+}
 
 with open('requirements-extras.txt', 'r') as fh:
     extras['extras'] = [l.strip() for l in fh][1:]
@@ -112,7 +116,7 @@ class nikola_install(install):
 
 
 setup(name='Nikola',
-      version='7.7.11',
+      version='7.8.5',
       description='A modular, fast, simple, static website and blog generator',
       long_description=open('README.rst').read(),
       author='Roberto Alsina and others',
@@ -138,6 +142,7 @@ setup(name='Nikola',
                    'Programming Language :: Python :: 3.3',
                    'Programming Language :: Python :: 3.4',
                    'Programming Language :: Python :: 3.5',
+                   'Programming Language :: Python :: 3.6',
                    'Topic :: Internet',
                    'Topic :: Internet :: WWW/HTTP',
                    'Topic :: Text Processing :: Markup'),

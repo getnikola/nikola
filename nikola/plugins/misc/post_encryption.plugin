@@ -1,0 +1,12 @@
+[Core]
+Name = post_encryption
+Module = post_encryption
+
+[Documentation]
+Author = Roberto Alsina
+Version = 1.0
+Website = https://getnikola.com/
+Description = Encrypt posts with passwords
+
+[Nikola]
+PluginCategory = SignalHandler

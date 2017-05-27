@@ -1,6 +1,7 @@
 -r requirements.txt
 Markdown>=2.4.0
 Jinja2>=2.7.2
+husl>=4.0.2
 pyphen>=0.9.1
 micawber>=0.3.0
 pygal>=2.0.0
@@ -10,5 +11,5 @@ webassets>=0.10.1
 notebook>=4.0.0
 ipykernel>=4.0.0
 ghp-import2>=1.0.0
-ws4py==0.3.5
+ws4py==0.4.2
 watchdog==0.8.3

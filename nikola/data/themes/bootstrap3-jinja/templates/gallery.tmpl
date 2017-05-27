@@ -49,6 +49,13 @@
         width: 100%;
     }
     </style>
+{% if translations|length > 1 %}
+    {% for langname in translations.keys() %}
+         {% if langname != lang %}
+             <link rel="alternate" hreflang="{{ langname }}" href="{{ _link('gallery', gallery_path, langname) }}">
+         {% endif %}
+    {% endfor %}
+{% endif %}
 {% endblock %}
 
 

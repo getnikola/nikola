@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina, Chris Warrick and others.
+# Copyright © 2012-2017 Roberto Alsina, Chris Warrick and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -32,10 +32,12 @@ import io
 import shutil
 import time
 import requests
+import configparser
 
 import pygments
 from pygments.lexers import PythonLexer
 from pygments.formatters import TerminalFormatter
+from pkg_resources import resource_filename
 
 from nikola.plugin_categories import Command
 from nikola import utils
@@ -48,7 +50,7 @@ class CommandTheme(Command):
 
     json = None
     name = "theme"
-    doc_usage = "[-i theme_name] [-r theme_name] [-l] [-u url] [-g] [-n theme_name] [-c template_name]"
+    doc_usage = "[-u url] [-i theme_name] [-r theme_name] [-l] [--list-installed] [-g] [-n theme_name] [-c template_name]"
     doc_purpose = "manage themes"
     output_dir = 'themes'
     cmd_options = [
@@ -75,6 +77,13 @@ class CommandTheme(Command):
             'type': bool,
             'default': False,
             'help': 'Show list of available themes.'
+        },
+        {
+            'name': 'list_installed',
+            'long': 'list-installed',
+            'type': bool,
+            'help': "List the installed themes with their location.",
+            'default': False
         },
         {
             'name': 'url',
@@ -123,6 +132,13 @@ class CommandTheme(Command):
             'default': 'base',
             'help': 'Parent to use for new theme (default: base)',
         },
+        {
+            'name': 'new_legacy_meta',
+            'long': 'legacy-meta',
+            'type': bool,
+            'default': False,
+            'help': 'Create legacy meta files for new theme',
+        },
     ]
 
     def _execute(self, options, args):
@@ -133,15 +149,18 @@ class CommandTheme(Command):
         install = options.get('install')
         uninstall = options.get('uninstall')
         list_available = options.get('list')
+        list_installed = options.get('list_installed')
         get_path = options.get('getpath')
         copy_template = options.get('copy-template')
         new = options.get('new')
         new_engine = options.get('new_engine')
         new_parent = options.get('new_parent')
+        new_legacy_meta = options.get('new_legacy_meta')
         command_count = [bool(x) for x in (
             install,
             uninstall,
             list_available,
+            list_installed,
             get_path,
             copy_template,
             new)].count(True)
@@ -151,6 +170,8 @@ class CommandTheme(Command):
 
         if list_available:
             return self.list_available(url)
+        elif list_installed:
+            return self.list_installed()
         elif install:
             return self.do_install_deps(url, install)
         elif uninstall:
@@ -160,7 +181,7 @@ class CommandTheme(Command):
         elif copy_template:
             return self.copy_template(copy_template)
         elif new:
-            return self.new_theme(new, new_engine, new_parent)
+            return self.new_theme(new, new_engine, new_parent, new_legacy_meta)
 
     def do_install_deps(self, url, name):
         """Install themes and their dependencies."""
@@ -170,11 +191,11 @@ class CommandTheme(Command):
         installstatus = self.do_install(name, data)
         # See if the theme's parent is available. If not, install it
         while True:
-            parent_name = utils.get_parent_theme_name(name)
+            parent_name = utils.get_parent_theme_name(utils.get_theme_path_real(name, self.site.themes_dirs))
             if parent_name is None:
                 break
             try:
-                utils.get_theme_path(parent_name)
+                utils.get_theme_path_real(parent_name, self.site.themes_dirs)
                 break
             except:  # Not available
                 self.do_install(parent_name, data)
@@ -204,7 +225,7 @@ class CommandTheme(Command):
         else:
             dest_path = os.path.join(self.output_dir, name)
             try:
-                theme_path = utils.get_theme_path(name)
+                theme_path = utils.get_theme_path_real(name, self.site.themes_dirs)
                 LOGGER.error("Theme '{0}' is already installed in {1}".format(name, theme_path))
             except Exception:
                 LOGGER.error("Can't find theme {0}".format(name))
@@ -227,9 +248,14 @@ class CommandTheme(Command):
     def do_uninstall(self, name):
         """Uninstall a theme."""
         try:
-            path = utils.get_theme_path(name)
+            path = utils.get_theme_path_real(name, self.site.themes_dirs)
         except Exception:
             LOGGER.error('Unknown theme: {0}'.format(name))
+            return 1
+        # Don't uninstall builtin themes (Issue #2510)
+        blocked = os.path.dirname(utils.__file__)
+        if path.startswith(blocked):
+            LOGGER.error("Can't delete builtin theme: {0}".format(name))
             return 1
         LOGGER.warning('About to uninstall theme: {0}'.format(name))
         LOGGER.warning('This will delete {0}'.format(path))
@@ -243,7 +269,7 @@ class CommandTheme(Command):
     def get_path(self, name):
         """Get path for an installed theme."""
         try:
-            path = utils.get_theme_path(name)
+            path = utils.get_theme_path_real(name, self.site.themes_dirs)
             print(path)
         except Exception:
             print("not installed")
@@ -257,6 +283,18 @@ class CommandTheme(Command):
         for theme in sorted(data.keys()):
             print(theme)
         return 0
+
+    def list_installed(self):
+        """List all installed themes."""
+        print("Installed Themes:")
+        print("-----------------")
+        themes = []
+        themes_dirs = self.site.themes_dirs + [resource_filename('nikola', os.path.join('data', 'themes'))]
+        for tdir in themes_dirs:
+            themes += [(i, os.path.join(tdir, i)) for i in os.listdir(tdir)]
+        for tname, tpath in sorted(set(themes)):
+            if os.path.isdir(tpath):
+                print("{0} at {1}".format(tname, tpath))
 
     def copy_template(self, template):
         """Copy the named template file from the parent to a local theme or to templates/."""
@@ -287,7 +325,7 @@ class CommandTheme(Command):
             LOGGER.error("This file already exists in your templates directory ({0}).".format(base))
             return 3
 
-    def new_theme(self, name, engine, parent):
+    def new_theme(self, name, engine, parent, create_legacy_meta=False):
         """Create a new theme."""
         base = 'themes'
         themedir = os.path.join(base, name)
@@ -297,9 +335,7 @@ class CommandTheme(Command):
             LOGGER.info("Created directory {0}".format(base))
 
         # Check if engine and parent match
-        engine_file = utils.get_asset_path('engine', utils.get_theme_chain(parent))
-        with io.open(engine_file, 'r', encoding='utf-8') as fh:
-            parent_engine = fh.read().strip()
+        parent_engine = utils.get_template_engine(utils.get_theme_chain(parent, self.site.themes_dirs))
 
         if parent_engine != engine:
             LOGGER.error("Cannot use engine {0} because parent theme '{1}' uses {2}".format(engine, parent, parent_engine))
@@ -313,12 +349,24 @@ class CommandTheme(Command):
             LOGGER.error("Theme already exists")
             return 2
 
-        with io.open(os.path.join(themedir, 'parent'), 'w', encoding='utf-8') as fh:
-            fh.write(parent + '\n')
-            LOGGER.info("Created file {0}".format(os.path.join(themedir, 'parent')))
-        with io.open(os.path.join(themedir, 'engine'), 'w', encoding='utf-8') as fh:
-            fh.write(engine + '\n')
-            LOGGER.info("Created file {0}".format(os.path.join(themedir, 'engine')))
+        cp = configparser.ConfigParser()
+        cp['Theme'] = {
+            'engine': engine,
+            'parent': parent
+        }
+
+        theme_meta_path = os.path.join(themedir, name + '.theme')
+        with io.open(theme_meta_path, 'w', encoding='utf-8') as fh:
+            cp.write(fh)
+            LOGGER.info("Created file {0}".format(theme_meta_path))
+
+        if create_legacy_meta:
+            with io.open(os.path.join(themedir, 'parent'), 'w', encoding='utf-8') as fh:
+                fh.write(parent + '\n')
+                LOGGER.info("Created file {0}".format(os.path.join(themedir, 'parent')))
+            with io.open(os.path.join(themedir, 'engine'), 'w', encoding='utf-8') as fh:
+                fh.write(engine + '\n')
+                LOGGER.info("Created file {0}".format(os.path.join(themedir, 'engine')))
 
         LOGGER.info("Theme {0} created successfully.".format(themedir))
         LOGGER.notice('Remember to set THEME="{0}" in conf.py to use this theme.'.format(name))

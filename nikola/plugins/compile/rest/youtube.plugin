@@ -4,7 +4,7 @@ module = youtube
 
 [Nikola]
 compiler = rest
-plugincategory = CompilerExtension
+PluginCategory = CompilerExtension
 
 [Documentation]
 version = 0.1

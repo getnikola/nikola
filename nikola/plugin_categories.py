@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -49,6 +49,7 @@ __all__ = (
     'SignalHandler',
     'ConfigPlugin',
     'PostScanner',
+    'Taxonomy',
 )
 
 
@@ -82,6 +83,10 @@ class BasePlugin(IPlugin):
         """Add 'dependency' to the target task's task_deps."""
         self.site.injected_deps[target].append(dependency)
 
+    def get_deps(self, filename):
+        """Find the dependencies for a file."""
+        return []
+
 
 class PostScanner(BasePlugin):
     """The scan method of these plugins is called by Nikola.scan_posts."""
@@ -89,6 +94,10 @@ class PostScanner(BasePlugin):
     def scan(self):
         """Create a list of posts from some source. Returns a list of Post objects."""
         raise NotImplementedError()
+
+    def supported_extensions(self):
+        """Return a list of supported file extensions, or None if such a list isn't known beforehand."""
+        return None
 
 
 class Command(BasePlugin, DoitCommand):
@@ -150,6 +159,7 @@ def help(self):
         text.append(self.doc_description)
     return "\n".join(text)
 
+
 DoitCommand.help = help
 
 
@@ -200,6 +210,14 @@ class TemplateSystem(BasePlugin):
         """Return filenames which are dependencies for a template."""
         raise NotImplementedError()
 
+    def get_deps(self, filename):
+        """Return paths to dependencies for the template loaded from filename."""
+        raise NotImplementedError()
+
+    def get_string_deps(self, text):
+        """Find dependencies for a template string."""
+        raise NotImplementedError()
+
     def render_template(self, template_name, output_name, context):
         """Render template to a file using context.
 
@@ -238,6 +256,7 @@ class PageCompiler(BasePlugin):
     friendly_name = ''
     demote_headers = False
     supports_onefile = True
+    use_dep_file = True  # If set to false, the .dep file is never written and not automatically added as a target
     default_metadata = {
         'title': '',
         'slug': '',
@@ -250,9 +269,13 @@ class PageCompiler(BasePlugin):
     }
     config_dependencies = []
 
-    def _read_extra_deps(self, post):
+    def get_dep_filename(self, post, lang):
+        """Return the .dep file's name for the given post and language."""
+        return post.translated_base_path(lang) + '.dep'
+
+    def _read_extra_deps(self, post, lang):
         """Read contents of .dep file and return them as a list."""
-        dep_path = post.base_path + '.dep'
+        dep_path = self.get_dep_filename(post, lang)
         if os.path.isfile(dep_path):
             with io.open(dep_path, 'r+', encoding='utf8') as depf:
                 deps = [l.strip() for l in depf.readlines()]
@@ -261,10 +284,40 @@ class PageCompiler(BasePlugin):
 
     def register_extra_dependencies(self, post):
         """Add dependency to post object to check .dep file."""
-        post.add_dependency(lambda: self._read_extra_deps(post), 'fragment')
+        def create_lambda(lang):
+            # We create a lambda like this so we can pass `lang` to it, because if we didn’t
+            # add that function, `lang` would always be the last language in TRANSLATIONS.
+            # (See http://docs.python-guide.org/en/latest/writing/gotchas/#late-binding-closures)
+            return lambda: self._read_extra_deps(post, lang)
 
-    def compile_html(self, source, dest, is_two_file=False):
-        """Compile the source, save it on dest."""
+        for lang in self.site.config['TRANSLATIONS']:
+            post.add_dependency(create_lambda(lang), 'fragment', lang=lang)
+
+    def get_extra_targets(self, post, lang, dest):
+        """Return a list of extra targets for the render_posts task when compiling the post for the specified language."""
+        if self.use_dep_file:
+            return [self.get_dep_filename(post, lang)]
+        else:
+            return []
+
+    def compile(self, source, dest, is_two_file=True, post=None, lang=None):
+        """Compile the source file into HTML and save as dest."""
+        # For backwards compatibility, call `compile_html`
+        # If you are implementing a compiler, please implement `compile` and
+        # ignore `compile_html`
+        self.compile_html(source, dest, is_two_file)
+
+    def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
+        """Compile the source file into HTML strings (with shortcode support).
+
+        Returns a tuple of at least two elements: HTML string [0] and shortcode dependencies [last].
+        """
+        # This function used to have some different APIs in different places.
+        raise NotImplementedError()
+
+    # TODO remove in v8
+    def compile_html(self, source, dest, is_two_file=True):
+        """Compile the source, save it on dest (DEPRECATED)."""
         raise NotImplementedError()
 
     def create_post(self, path, content=None, onefile=False, is_page=False, **kw):
@@ -272,7 +325,7 @@ class PageCompiler(BasePlugin):
         raise NotImplementedError()
 
     def extension(self):
-        """The preferred extension for the output of this compiler."""
+        """Return the preferred extension for the output of this compiler."""
         return ".html"
 
     def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
@@ -349,6 +402,12 @@ class ShortcodePlugin(BasePlugin):
 
     name = "dummy_shortcode_plugin"
 
+    def set_site(self, site):
+        """Set Nikola site."""
+        self.site = site
+        site.register_shortcode(self.name, self.handler)
+        return super(ShortcodePlugin, self).set_site(site)
+
 
 class Importer(Command):
     """Basic structure for importing data into Nikola.
@@ -413,7 +472,7 @@ class Importer(Command):
         """Go through self.items and save them."""
 
     def import_story(self):
-        """Create a story."""
+        """Create a page."""
         raise NotImplementedError()
 
     def import_post(self):
@@ -431,3 +490,314 @@ class Importer(Command):
     def save_post(self):
         """Save a post to disk."""
         raise NotImplementedError()
+
+
+class Taxonomy(BasePlugin):
+    """Taxonomy for posts.
+
+    A taxonomy plugin allows to classify posts (see #2107) by
+    classification strings. Classification plugins must adjust
+    a set of options to determine certain aspects.
+
+    The following options are class attributes with their default
+    values. These variables should be set in the class definition,
+    in the constructor or latest in the `set_site` function.
+
+    classification_name = "taxonomy":
+        The classification name to be used for path handlers.
+        Must be overridden!
+
+    overview_page_items_variable_name = "items":
+        When rendering the overview page, its template will have a list
+        of pairs
+            (friendly_name, link)
+        for the classifications available in a variable by this name.
+
+        The template will also have a list
+            (friendly_name, link, post_count)
+        for the classifications available in a variable by the name
+        `overview_page_items_variable_name + '_with_postcount'`.
+
+    overview_page_variable_name = "taxonomy":
+        When rendering the overview page, its template will have a list
+        of classifications available in a variable by this name.
+
+    overview_page_hierarchy_variable_name = "taxonomy_hierarchy":
+        When rendering the overview page, its template will have a list
+        of tuples
+            (friendly_name, classification, classification_path, link,
+             indent_levels, indent_change_before, indent_change_after)
+        available in a variable by this name. These tuples can be used
+        to render the hierarchy as a tree.
+
+        The template will also have a list
+            (friendly_name, classification, classification_path, link,
+             indent_levels, indent_change_before, indent_change_after,
+             number_of_children, post_count)
+        available in the variable by the name
+        `overview_page_hierarchy_variable_name + '_with_postcount'`.
+
+    more_than_one_classifications_per_post = False:
+        If True, there can be more than one classification per post; in that case,
+        the classification data in the metadata is stored as a list. If False,
+        the classification data in the metadata is stored as a string, or None
+        when no classification is given.
+
+    has_hierarchy = False:
+        Whether the classification has a hierarchy.
+
+    include_posts_from_subhierarchies = False:
+        If True, the post list for a classification includes all posts with a
+        sub-classification (in case has_hierarchy is True).
+
+    include_posts_into_hierarchy_root = False:
+        If True, include_posts_from_subhierarchies == True will also insert
+        posts into the post list for the empty hierarchy [].
+
+    show_list_as_subcategories_list = False:
+        If True, for every classification which has at least one
+        subclassification, create a list of subcategories instead of a list/index
+        of posts. This is only used when has_hierarchy = True. The template
+        specified in subcategories_list_template will be used. If this is set
+        to True, it is recommended to set include_posts_from_subhierarchies to
+        True to get correct post counts.
+
+    show_list_as_index = False:
+        Whether to show the posts for one classification as an index or
+        as a post list.
+
+    subcategories_list_template = "taxonomy_list.tmpl":
+        The template to use for the subcategories list when
+        show_list_as_subcategories_list is True.
+
+    generate_atom_feeds_for_post_lists = False:
+        Whether to generate Atom feeds for post lists in case GENERATE_ATOM is set.
+
+    template_for_single_list = "tagindex.tmpl":
+        The template to use for the post list for one classification.
+
+    template_for_classification_overview = "list.tmpl":
+        The template to use for the classification overview page.
+        Set to None to avoid generating overviews.
+
+    always_disable_rss = False:
+        Whether to always disable RSS feed generation
+
+    apply_to_posts = True:
+        Whether this classification applies to posts.
+
+    apply_to_pages = False:
+        Whether this classification applies to pages.
+
+    minimum_post_count_per_classification_in_overview = 1:
+        The minimum number of posts a classification must have to be listed in
+        the overview.
+
+    omit_empty_classifications = False:
+        Whether post lists resp. indexes should be created for empty
+        classifications.
+
+    also_create_classifications_from_other_languages = True:
+        Whether to include all classifications for all languages in every
+        language, or only the classifications for one language in its language's
+        pages.
+
+    path_handler_docstrings:
+        A dictionary of docstrings for path handlers. See eg. nikola.py for
+        examples.  Must be overridden, keys are "taxonomy_index", "taxonomy",
+        "taxonomy_atom", "taxonomy_rss" (but using classification_name instead
+        of "taxonomy").  If one of the values is False, the corresponding path
+        handler will not be created.
+    """
+
+    name = "dummy_taxonomy"
+
+    # Adjust the following values in your plugin!
+    classification_name = "taxonomy"
+    overview_page_variable_name = "taxonomy"
+    overview_page_items_variable_name = "items"
+    overview_page_hierarchy_variable_name = "taxonomy_hierarchy"
+    more_than_one_classifications_per_post = False
+    has_hierarchy = False
+    include_posts_from_subhierarchies = False
+    include_posts_into_hierarchy_root = False
+    show_list_as_subcategories_list = False
+    show_list_as_index = False
+    subcategories_list_template = "taxonomy_list.tmpl"
+    generate_atom_feeds_for_post_lists = False
+    template_for_single_list = "tagindex.tmpl"
+    template_for_classification_overview = "list.tmpl"
+    always_disable_rss = False
+    apply_to_posts = True
+    apply_to_pages = False
+    minimum_post_count_per_classification_in_overview = 1
+    omit_empty_classifications = False
+    also_create_classifications_from_other_languages = True
+    path_handler_docstrings = {
+        'taxonomy_index': '',
+        'taxonomy': '',
+        'taxonomy_atom': '',
+        'taxonomy_rss': '',
+    }
+
+    def is_enabled(self, lang=None):
+        """Return True if this taxonomy is enabled, or False otherwise.
+
+        If lang is None, this determins whether the classification is
+        made at all. If lang is not None, this determines whether the
+        overview page and the classification lists are created for this
+        language.
+        """
+        return True
+
+    def get_implicit_classifications(self, lang):
+        """Return a list of classification strings which should always appear in posts_per_classification."""
+        return []
+
+    def classify(self, post, lang):
+        """Classify the given post for the given language.
+
+        Must return a list or tuple of strings.
+        """
+        raise NotImplementedError()
+
+    def sort_posts(self, posts, classification, lang):
+        """Sort the given list of posts.
+
+        Allows the plugin to order the posts per classification as it wants.
+        The posts will be ordered by date (latest first) before calling
+        this function. This function must sort in-place.
+        """
+        pass
+
+    def sort_classifications(self, classifications, lang, level=None):
+        """Sort the given list of classification strings.
+
+        Allows the plugin to order the classifications as it wants. The
+        classifications will be ordered by `natsort` before calling this
+        function. This function must sort in-place.
+
+        For hierarchical taxonomies, the elements of the list are a single
+        path element of the path returned by `extract_hierarchy()`. The index
+        of the path element in the path will be provided in `level`.
+        """
+        pass
+
+    def get_classification_friendly_name(self, classification, lang, only_last_component=False):
+        """Extract a friendly name from the classification.
+
+        The result of this function is usually displayed to the user, instead
+        of using the classification string.
+
+        The argument `only_last_component` is only relevant to hierarchical
+        taxonomies. If it is set, the printable name should only describe the
+        last component of `classification` if possible.
+        """
+        raise NotImplementedError()
+
+    def get_overview_path(self, lang, dest_type='page'):
+        """Return path for classification overview.
+
+        This path handler for the classification overview must return one or
+        two values (in this order):
+         * a list or tuple of strings: the path relative to OUTPUT_DIRECTORY;
+         * a string with values 'auto', 'always' or 'never', indicating whether
+           INDEX_FILE should be added or not.
+
+        Note that this function must always return a list or tuple of strings;
+        the other return value is optional with default value `'auto'`.
+
+        In case INDEX_FILE should potentially be added, the last element in the
+        returned path must have no extension, and the PRETTY_URLS config must
+        be ignored by this handler. The return value will be modified based on
+        the PRETTY_URLS and INDEX_FILE settings.
+
+        `dest_type` can be either 'page', 'feed' (for Atom feed) or 'rss'.
+        """
+        raise NotImplementedError()
+
+    def get_path(self, classification, lang, dest_type='page'):
+        """Return path to the classification page.
+
+        This path handler for the given classification must return one to
+        three values (in this order):
+         * a list or tuple of strings: the path relative to OUTPUT_DIRECTORY;
+         * a string with values 'auto', 'always' or 'never', indicating whether
+           INDEX_FILE should be added or not;
+         * an integer if a specific page of the index is to be targeted (will be
+           ignored for post lists), or `None` if the most current page is targeted.
+
+        Note that this function must always return a list or tuple of strings;
+        the other two return values are optional with default values `'auto'` and
+        `None`.
+
+        In case INDEX_FILE should potentially be added, the last element in the
+        returned path must have no extension, and the PRETTY_URLS config must
+        be ignored by this handler. The return value will be modified based on
+        the PRETTY_URLS and INDEX_FILE settings.
+
+        `dest_type` can be either 'page', 'feed' (for Atom feed) or 'rss'.
+
+        For hierarchical taxonomies, the result of extract_hierarchy is provided
+        as `classification`. For non-hierarchical taxonomies, the classification
+        string itself is provided as `classification`.
+        """
+        raise NotImplementedError()
+
+    def extract_hierarchy(self, classification):
+        """Given a classification, return a list of parts in the hierarchy.
+
+        For non-hierarchical taxonomies, it usually suffices to return
+        `[classification]`.
+        """
+        return [classification]
+
+    def recombine_classification_from_hierarchy(self, hierarchy):
+        """Given a list of parts in the hierarchy, return the classification string.
+
+        For non-hierarchical taxonomies, it usually suffices to return hierarchy[0].
+        """
+        return hierarchy[0]
+
+    def provide_overview_context_and_uptodate(self, lang):
+        """Provide data for the context and the uptodate list for the classifiation overview.
+
+        Must return a tuple of two dicts. The first is merged into the page's context,
+        the second will be put into the uptodate list of all generated tasks.
+
+        Context must contain `title`.
+        """
+        raise NotImplementedError()
+
+    def provide_context_and_uptodate(self, classification, lang, node=None):
+        """Provide data for the context and the uptodate list for the list of the given classifiation.
+
+        Must return a tuple of two dicts. The first is merged into the page's context,
+        the second will be put into the uptodate list of all generated tasks.
+
+        For hierarchical taxonomies, node is the `utils.TreeNode` element corresponding
+        to the classification.
+
+        Context must contain `title`, which should be something like 'Posts about <classification>'.
+        """
+        raise NotImplementedError()
+
+    def should_generate_classification_page(self, classification, post_list, lang):
+        """Only generates list of posts for classification if this function returns True."""
+        return True
+
+    def should_generate_rss_for_classification_page(self, classification, post_list, lang):
+        """Only generates RSS feed for list of posts for classification if this function returns True."""
+        return self.should_generate_classification_page(classification, post_list, lang)
+
+    def postprocess_posts_per_classification(self, posts_per_classification_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
+        """Rearrange, modify or otherwise use the list of posts per classification and per language.
+
+        For compatibility reasons, the list could be stored somewhere else as well.
+
+        In case `has_hierarchy` is `True`, `flat_hierarchy_per_lang` is the flat
+        hierarchy consisting of `utils.TreeNode` elements, and `hierarchy_lookup_per_lang`
+        is the corresponding hierarchy lookup mapping classification strings to
+        `utils.TreeNode` objects.
+        """
+        pass

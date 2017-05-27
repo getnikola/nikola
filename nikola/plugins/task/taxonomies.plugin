@@ -1,0 +1,12 @@
+[Core]
+name = render_taxonomies
+module = taxonomies
+
+[Documentation]
+author = Roberto Alsina
+version = 1.0
+website = https://getnikola.com/
+description = Render the taxonomy overviews, classification pages and feeds.
+
+[Nikola]
+PluginCategory = Task

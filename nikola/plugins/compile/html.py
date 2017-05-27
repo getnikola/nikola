@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -24,16 +24,16 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Implementation of compile_html for HTML source files."""
+"""Page compiler plugin for HTML source files."""
 
 from __future__ import unicode_literals
 
 import os
 import io
 
+from nikola import shortcodes as sc
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, write_metadata
-from nikola.shortcodes import apply_shortcodes
 
 
 class CompileHtml(PageCompiler):
@@ -42,16 +42,28 @@ class CompileHtml(PageCompiler):
     name = "html"
     friendly_name = "HTML"
 
-    def compile_html(self, source, dest, is_two_file=True):
-        """Compile source file into HTML and save as dest."""
+    def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
+        """Compile HTML into HTML strings, with shortcode support."""
+        if not is_two_file:
+            _, data = self.split_metadata(data)
+        new_data, shortcodes = sc.extract_shortcodes(data)
+        return self.site.apply_shortcodes_uuid(new_data, shortcodes, filename=source_path, with_dependencies=True, extra_context=dict(post=post))
+
+    def compile(self, source, dest, is_two_file=True, post=None, lang=None):
+        """Compile the source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
         with io.open(dest, "w+", encoding="utf8") as out_file:
             with io.open(source, "r", encoding="utf8") as in_file:
                 data = in_file.read()
-            if not is_two_file:
-                _, data = self.split_metadata(data)
-            data = apply_shortcodes(data, self.site.shortcode_registry, self.site, source)
+            data, shortcode_deps = self.compile_string(data, source, is_two_file, post, lang)
             out_file.write(data)
+        if post is None:
+            if shortcode_deps:
+                self.logger.error(
+                    "Cannot save dependencies for post {0} (post unknown)",
+                    source)
+        else:
+            post._depfile[dest] += shortcode_deps
         return True
 
     def create_post(self, path, **kw):

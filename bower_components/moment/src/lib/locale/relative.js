@@ -2,6 +2,7 @@ export var defaultRelativeTime = {
     future : 'in %s',
     past   : '%s ago',
     s  : 'a few seconds',
+    ss : '%d seconds',
     m  : 'a minute',
     mm : '%d minutes',
     h  : 'an hour',
@@ -14,14 +15,16 @@ export var defaultRelativeTime = {
     yy : '%d years'
 };
 
+import isFunction from '../utils/is-function';
+
 export function relativeTime (number, withoutSuffix, string, isFuture) {
     var output = this._relativeTime[string];
-    return (typeof output === 'function') ?
+    return (isFunction(output)) ?
         output(number, withoutSuffix, string, isFuture) :
         output.replace(/%d/i, number);
 }
 
 export function pastFuture (diff, output) {
     var format = this._relativeTime[diff > 0 ? 'future' : 'past'];
-    return typeof format === 'function' ? format(output) : format.replace(/%s/i, output);
+    return isFunction(format) ? format(output) : format.replace(/%s/i, output);
 }

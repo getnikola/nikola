@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -94,7 +94,7 @@ class CommandAuto(Command):
             'long': 'port',
             'default': 8000,
             'type': int,
-            'help': 'Port nummber (default: 8000)',
+            'help': 'Port number (default: 8000)',
         },
         {
             'name': 'address',
@@ -270,8 +270,8 @@ class CommandAuto(Command):
         if (fname.endswith('~') or
                 fname.startswith('.') or
                 '__pycache__' in event_path or
-                event_path.endswith(('.pyc', '.pyo', '.pyd')) or
-                os.path.isdir(event_path)):  # Skip on folders, these are usually duplicates
+                event_path.endswith(('.pyc', '.pyo', '.pyd', '_bak')) or
+                event.is_directory):  # Skip on folders, these are usually duplicates
             return
         self.logger.info('REBUILDING SITE (from {0})'.format(event_path))
         p = subprocess.Popen(self.cmd_arguments, stderr=subprocess.PIPE)
@@ -299,7 +299,7 @@ class CommandAuto(Command):
         f_path = os.path.join(self.site.config['OUTPUT_FOLDER'], *[unquote(x) for x in p_uri.path.split('/')])
 
         # ‘Pretty’ URIs and root are assumed to be HTML
-        mimetype = 'text/html' if uri.endswith('/') else mimetypes.guess_type(uri)[0] or 'application/octet-stream'
+        mimetype = 'text/html' if uri.endswith('/') else mimetypes.guess_type(p_uri.path)[0] or 'application/octet-stream'
 
         if os.path.isdir(f_path):
             if not p_uri.path.endswith('/'):  # Redirect to avoid breakage
@@ -341,7 +341,7 @@ class CommandAuto(Command):
 
     def remove_base_tag(self, data):
         """Comment out any <base> to allow local resolution of relative URLs."""
-        data = re.sub(r'<base\s([^>]*)>', '<!--base \g<1>-->', data, re.IGNORECASE)
+        data = re.sub(r'<base\s([^>]*)>', '<!--base \g<1>-->', data, flags=re.IGNORECASE)
         return data
 
 

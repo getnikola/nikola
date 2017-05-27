@@ -33,8 +33,7 @@
     "tag": "v2.2.1",
     "commit": "91fdfa00a3e7fac0482397a315e18947c54bbfd3"
   },
-  "_source": "git://github.com/livereload/livereload-js.git",
-  "_target": "~2.2.1",
-  "_originalSource": "livereload-js",
-  "_direct": true
+  "_source": "https://github.com/livereload/livereload-js.git",
+  "_target": "~2",
+  "_originalSource": "livereload-js"
 }

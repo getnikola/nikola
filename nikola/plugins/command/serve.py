@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -28,7 +28,9 @@
 
 from __future__ import print_function
 import os
+import sys
 import re
+import signal
 import socket
 import webbrowser
 try:
@@ -106,6 +108,17 @@ class CommandServe(Command):
         },
     )
 
+    def shutdown(self, signum=None, _frame=None):
+        """Shut down the server that is running detached."""
+        if self.dns_sd:
+            self.dns_sd.Reset()
+        if os.path.exists(self.serve_pidfile):
+            os.remove(self.serve_pidfile)
+        if not self.detached:
+            self.logger.info("Server is shutting down.")
+        if signum:
+            sys.exit(0)
+
     def _execute(self, options, args):
         """Start test server."""
         self.logger = get_logger('serve', STDERR_HANDLER)
@@ -113,6 +126,7 @@ class CommandServe(Command):
         if not os.path.isdir(out_dir):
             self.logger.error("Missing '{0}' folder?".format(out_dir))
         else:
+            self.serve_pidfile = os.path.abspath('nikolaserve.pid')
             os.chdir(out_dir)
             if '[' in options['address']:
                 options['address'] = options['address'].strip('[').strip(']')
@@ -132,31 +146,37 @@ class CommandServe(Command):
             if options['browser']:
                 if ipv6:
                     server_url = "http://[{0}]:{1}/".format(*sa)
+                elif sa[0] == '0.0.0.0':
+                    server_url = "http://127.0.0.1:{1}/".format(*sa)
                 else:
                     server_url = "http://{0}:{1}/".format(*sa)
                 self.logger.info("Opening {0} in the default web browser...".format(server_url))
                 webbrowser.open(server_url)
             if options['detach']:
+                self.detached = True
                 OurHTTPRequestHandler.quiet = True
                 try:
                     pid = os.fork()
                     if pid == 0:
+                        signal.signal(signal.SIGTERM, self.shutdown)
                         httpd.serve_forever()
                     else:
-                        self.logger.info("Detached with PID {0}. Run `kill {0}` to stop the server.".format(pid))
-                except AttributeError as e:
+                        with open(self.serve_pidfile, 'w') as fh:
+                            fh.write('{0}\n'.format(pid))
+                        self.logger.info("Detached with PID {0}. Run `kill {0}` or `kill $(cat nikolaserve.pid)` to stop the server.".format(pid))
+                except AttributeError:
                     if os.name == 'nt':
                         self.logger.warning("Detaching is not available on Windows, server is running in the foreground.")
                     else:
-                        raise e
+                        raise
             else:
+                self.detached = False
                 try:
                     self.dns_sd = dns_sd(options['port'], (options['ipv6'] or '::' in options['address']))
+                    signal.signal(signal.SIGTERM, self.shutdown)
                     httpd.serve_forever()
                 except KeyboardInterrupt:
-                    self.logger.info("Server is shutting down.")
-                    if self.dns_sd:
-                        self.dns_sd.Reset()
+                    self.shutdown()
                     return 130
 
 
@@ -185,9 +205,9 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
     # Note that it might break in future versions of Python, in which case we
     # would need to do even more magic.
     def send_head(self):
-        """Common code for GET and HEAD commands.
+        """Send response code and MIME header.
 
-        This sends the response code and MIME headers.
+        This is common code for GET and HEAD commands.
 
         Return value is either a file object (which has to be copied
         to the outputfile by the caller unless the command was HEAD,
@@ -235,7 +255,7 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
             # Comment out any <base> to allow local resolution of relative URLs.
             data = f.read().decode('utf8')
             f.close()
-            data = re.sub(r'<base\s([^>]*)>', '<!--base \g<1>-->', data, re.IGNORECASE)
+            data = re.sub(r'<base\s([^>]*)>', '<!--base \g<1>-->', data, flags=re.IGNORECASE)
             data = data.encode('utf8')
             f = StringIO()
             f.write(data)

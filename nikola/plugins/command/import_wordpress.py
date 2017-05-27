@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2016 Roberto Alsina and others.
+# Copyright © 2012-2017 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -36,6 +36,11 @@ import json
 import requests
 from lxml import etree
 from collections import defaultdict
+
+try:
+    import html2text
+except:
+    html2text = None
 
 try:
     from urlparse import urlparse
@@ -170,6 +175,20 @@ class CommandImportWordpress(Command, ImportMixin):
             'help': "Export comments as .wpcomment files",
         },
         {
+            'name': 'html2text',
+            'long': 'html2text',
+            'default': False,
+            'type': bool,
+            'help': "Uses html2text (needs to be installed with pip) to transform WordPress posts to MarkDown during import",
+        },
+        {
+            'name': 'transform_to_markdown',
+            'long': 'transform-to-markdown',
+            'default': False,
+            'type': bool,
+            'help': "Uses WordPress page compiler to transform WordPress posts to HTML and then use html2text to transform them to MarkDown during import",
+        },
+        {
             'name': 'transform_to_html',
             'long': 'transform-to-html',
             'default': False,
@@ -262,6 +281,9 @@ class CommandImportWordpress(Command, ImportMixin):
         self.export_categories_as_categories = options.get('export_categories_as_categories', False)
         self.export_comments = options.get('export_comments', False)
 
+        self.html2text = options.get('html2text', False)
+        self.transform_to_markdown = options.get('transform_to_markdown', False)
+
         self.transform_to_html = options.get('transform_to_html', False)
         self.use_wordpress_compiler = options.get('use_wordpress_compiler', False)
         self.install_wordpress_compiler = options.get('install_wordpress_compiler', False)
@@ -280,10 +302,18 @@ class CommandImportWordpress(Command, ImportMixin):
         self.separate_qtranslate_content = options.get('separate_qtranslate_content')
         self.translations_pattern = options.get('translations_pattern')
 
-        if self.transform_to_html and self.use_wordpress_compiler:
-            LOGGER.warn("It does not make sense to combine --transform-to-html with --use-wordpress-compiler, as the first converts all posts to HTML and the latter option affects zero posts.")
+        count = (1 if self.html2text else 0) + (1 if self.transform_to_html else 0) + (1 if self.transform_to_markdown else 0)
+        if count > 1:
+            LOGGER.error("You can use at most one of the options --html2text, --transform-to-html and --transform-to-markdown.")
+            return False
+        if (self.html2text or self.transform_to_html or self.transform_to_markdown) and self.use_wordpress_compiler:
+            LOGGER.warn("It does not make sense to combine --use-wordpress-compiler with any of --html2text, --transform-to-html and --transform-to-markdown, as the latter convert all posts to HTML and the first option then affects zero posts.")
 
-        if self.transform_to_html:
+        if (self.html2text or self.transform_to_markdown) and not html2text:
+            LOGGER.error("You need to install html2text via 'pip install html2text' before you can use the --html2text and --transform-to-markdown options.")
+            return False
+
+        if self.transform_to_html or self.transform_to_markdown:
             self._find_wordpress_compiler()
             if not self.wordpress_page_compiler and self.install_wordpress_compiler:
                 if not install_plugin(self.site, 'wordpress_compiler', output_dir='plugins'):  # local install
@@ -309,7 +339,7 @@ class CommandImportWordpress(Command, ImportMixin):
                 # cat_id = get_text_tag(cat, '{{{0}}}term_id'.format(wordpress_namespace), None)
                 cat_slug = get_text_tag(cat, '{{{0}}}category_nicename'.format(wordpress_namespace), None)
                 cat_parent_slug = get_text_tag(cat, '{{{0}}}category_parent'.format(wordpress_namespace), None)
-                cat_name = get_text_tag(cat, '{{{0}}}cat_name'.format(wordpress_namespace), None)
+                cat_name = utils.html_unescape(get_text_tag(cat, '{{{0}}}cat_name'.format(wordpress_namespace), None))
                 cat_path = [cat_name]
                 if cat_parent_slug in cat_map:
                     cat_path = cat_map[cat_parent_slug] + cat_path
@@ -452,7 +482,7 @@ class CommandImportWordpress(Command, ImportMixin):
         PAGES = '(\n'
         for extension in extensions:
             POSTS += '    ("posts/*.{0}", "posts", "post.tmpl"),\n'.format(extension)
-            PAGES += '    ("stories/*.{0}", "stories", "story.tmpl"),\n'.format(extension)
+            PAGES += '    ("pages/*.{0}", "pages", "story.tmpl"),\n'.format(extension)
         POSTS += ')\n'
         PAGES += ')\n'
         context['POSTS'] = POSTS
@@ -667,10 +697,10 @@ class CommandImportWordpress(Command, ImportMixin):
         return content
 
     @staticmethod
-    def transform_caption(content):
+    def transform_caption(content, use_html=False):
         """Transform captions."""
-        new_caption = re.sub(r'\[/caption\]', '', content)
-        new_caption = re.sub(r'\[caption.*\]', '', new_caption)
+        new_caption = re.sub(r'\[/caption\]', '</h1>' if use_html else '', content)
+        new_caption = re.sub(r'\[caption.*\]', '<h1>' if use_html else '', new_caption)
 
         return new_caption
 
@@ -693,6 +723,26 @@ class CommandImportWordpress(Command, ImportMixin):
                 except TypeError:  # old versions of the plugin don't support the additional argument
                     content = self.wordpress_page_compiler.compile_to_string(content)
                 return content, 'html', True
+            elif self.transform_to_markdown:
+                # First convert to HTML with WordPress plugin
+                additional_data = {}
+                if attachments is not None:
+                    additional_data['attachments'] = attachments
+                try:
+                    content = self.wordpress_page_compiler.compile_to_string(content, additional_data=additional_data)
+                except TypeError:  # old versions of the plugin don't support the additional argument
+                    content = self.wordpress_page_compiler.compile_to_string(content)
+                # Now convert to MarkDown with html2text
+                h = html2text.HTML2Text()
+                content = h.handle(content)
+                return content, 'md', False
+            elif self.html2text:
+                # TODO: what to do with [code] blocks?
+                # content = self.transform_code(content)
+                content = self.transform_caption(content, use_html=True)
+                h = html2text.HTML2Text()
+                content = h.handle(content)
+                return content, 'md', False
             elif self.use_wordpress_compiler:
                 return content, 'wp', False
             else:
@@ -774,16 +824,16 @@ class CommandImportWordpress(Command, ImportMixin):
                 if text in self._category_paths:
                     cats.append(self._category_paths[text])
                 else:
-                    cats.append(utils.join_hierarchical_category_path([text]))
+                    cats.append(utils.join_hierarchical_category_path([utils.html_unescape(text)]))
             other_meta['categories'] = ','.join(cats)
             if len(cats) > 0:
                 other_meta['category'] = cats[0]
                 if len(cats) > 1:
                     LOGGER.warn(('Post "{0}" has more than one category! ' +
                                  'Will only use the first one.').format(post_name))
-            tags_cats = tags
+            tags_cats = [utils.html_unescape(tag) for tag in tags]
         else:
-            tags_cats = tags + categories
+            tags_cats = [utils.html_unescape(tag) for tag in tags + categories]
         return tags_cats, other_meta
 
     _tag_sanitize_map = {True: {}, False: {}}
@@ -1048,7 +1098,7 @@ class CommandImportWordpress(Command, ImportMixin):
             if post_type == 'post':
                 out_folder_slug = self.import_postpage_item(item, wordpress_namespace, 'posts', attachments)
             else:
-                out_folder_slug = self.import_postpage_item(item, wordpress_namespace, 'stories', attachments)
+                out_folder_slug = self.import_postpage_item(item, wordpress_namespace, 'pages', attachments)
             # Process attachment data
             if attachments is not None:
                 # If post was exported, store data

@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 /*
-	Copyright © 2014-2016 Daniel Aleksandersen and others.
+	Copyright © 2014-2017 Daniel Aleksandersen and others.
 
 	Permission is hereby granted, free of charge, to any
 	person obtaining a copy of this software and associated
@@ -131,19 +131,24 @@ body {
 .postindexpager .pager .next:before {
 	content: "↓ ";
 }
-.postindexpager .pager .previous:before {
+.postindexpager .pager .previous:before,
+.archivenav .pager .up:before {
 	content: "↑ ";
 }
-.postpromonav .pager .next:after {
+.postpromonav .pager .next:after,
+.archivenav .pager .next:after {
 	content: " →";
 }
-.postpromonav .pager .previous:dir(rtl):after {
+.postpromonav .pager .previous:dir(rtl):after,
+.archivenav .pager .previous:dir(rtl):after {
 	content: " →";
 }
-.postpromonav .pager .previous:before {
+.postpromonav .pager .previous:before,
+.archivenav .pager .previous:before {
 	content: "← ";
 }
-.postpromonav .pager .next:dir(rtl):before {
+.postpromonav .pager .next:dir(rtl):before,
+.archivenav .pager .next:dir(rtl):before {
 	content: "← ";
 }
 
@@ -156,21 +161,36 @@ body {
 	height: 1em;
 }
 .postpromonav .tags li,
-.postpromonav .pager li {
+.postpromonav .pager li,
+.archivenav .pager li {
 	display: inline-block;
 }
-.postpromonav .pager .next {
+.archivenav .pager {
+	text-align: center
+}
+.postpromonav .pager .next,
+.archivenav .pager .next {
 	float: right;
 }
-.postpromonav .pager .next:dir(rtl) {
+.postpromonav .pager .next:dir(rtl),
+.archivenav .pager .next:dir(rtl) {
 	float: left;
 }
 
-.postpromonav .pager .previous {
+.postpromonav .pager .previous,
+.archivenav .pager .previous {
 	float: left;
 }
-.postpromonav .pager .previous:dir(rtl) {
+.postpromonav .pager .previous:dir(rtl),
+.archivenav .pager .previous:dir(rtl) {
 	float: right;
+}
+
+.archivenav .pager .disabled,
+.archivenav .pager .disabled a,
+.archivenav .pager .disabled:link {
+    color: #888;
+    cursor: not-allowed;
 }
 
 .metadata p {

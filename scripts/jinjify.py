@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+"""Script to convert templates from Mako to Jinja2."""
+
 import io
 import glob
 import sys
@@ -78,12 +80,6 @@ def jinjify(in_theme, out_theme):
 
     if child in mappings:
         parent = mappings[child]
-
-    with io.open(os.path.join(out_theme, "parent"), "w+", encoding='utf-8') as outf:
-        outf.write(u'{0}\n'.format(parent))
-
-    with io.open(os.path.join(out_theme, "engine"), "w+", encoding='utf-8') as outf:
-        outf.write(u"jinja\n")
 
     # Copy assets in bootstrap/bootstrap3
     if child == 'bootstrap3-jinja':
@@ -228,7 +224,7 @@ def jinjify_shortcodes(in_dir, out_dir):
             data = mako2jinja(inf)
         with open(out_file, 'w') as outf:
             outf.write(data)
-            
+
 
 def usage():
     print("Usage: python {} [in-dir] [out-dir]".format(sys.argv[0]))

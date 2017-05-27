@@ -4,14 +4,293 @@ New in master
 Features
 --------
 
+* New ``deduplicate_ids``, for preventing duplication of HTML id
+  attributes (Issue #2570)
+* Ported gallery image layout to base theme (Issue #2775)
+* Better error handling when posts can't be parsed (Issue #2771)
+* Use ``.theme`` files to store theme metadata (Issue #2758)
+* New ``add_header_permalinks`` filter, for Sphinx-style header links
+  (Issue #2636)
+* Added alternate links for gallery translations (Issue #993)
+
+Bugfixes
+--------
+
+* Disable ``archive_rss`` link handler, which was useless because no
+  such RSS was ever generated (Issue #2783)
+* Ignore files ending wih "bak" (Issue #2740)
+* Use page.tmpl by default, which is inherited from story.tmpl (Issue
+  #1891)
+
+New in v7.8.5
+=============
+
+Math support changes
+--------------------
+
+* If you edited templates related to indexes and posts (``index.tmpl``,
+  ``post.tmpl``, ``index_helper.tmpl``, ``post_helper.tmpl``) in your
+  templates, you should adjust them to use ``math_helper.tmpl``.
+* If you are using KaTeX, you should remove the CSS snippet from your
+  configuration (templates), as that is now handled by Nikola.
+
+Features
+--------
+
+* Get rid of ``THEME_REVEAL_CONFIG_*`` settings, use global context
+  instead (Issue #2485)
+* New emoji shortcode
+* Add ``SECTION_PATH`` support to move the section indexes to a
+  user-defined location (Issue #2738)
+* Add a list of template variables to documentation (Issues #2328,
+  #2712, #2259) and update the theming reference (Issue #2259)
+* Add ``{post_title}`` tag for Read More links (Issue #2709)
+* Include MathJax config only when needed (via Issue #2715)
+* Include KaTeX CSS automatically when needed (Issue #2715)
+* Split out math code into new ``math_helper.tmpl`` template (Issue
+  #2715)
+* Added ``jpegoptim_progressive`` filter to convert jpeg images to progressive
+  jpegs.
+
+Bugfixes
+--------
+
+* Open ``127.0.0.1`` when using ``nikola serve -b`` and default
+  ``0.0.0.0`` hostname to avoid resolution issues — the site is still
+  available on all interfaces (Issue #2755)
+* Don't break animated GIFs in postprocessing (Issue #2750)
+* More robust shortcodes, no need to escape URLs in reSt, work better
+  with LaTeX, etc.
+* No longer creates empty subarchive pages, and no longer create broken
+  archive navigation links on day level (Issue #2734)
+* Fixes post scanner plugin order (Issue #2720)
+* Rename ``POSTS_SECTION_ARE_INDEXES`` to ``POSTS_SECTIONS_ARE_INDEXES``
+* Make date ranges work in shortcode-based post lists (Issue #2690)
+* Read data files only if Nikola configuration exists (Issue #2708)
+* Make ``PAGE_INDEX`` work with ``PRETTY_URLS`` (Issue #2705)
+* Fix PHP posts/pages not rendering on Windows (Issue #2706)
+* Improving support for PostScanner plugins by asking them which compilers
+  are unused (Issue #2496)
+
+New in v7.8.4
+=============
+
+Features
+--------
+
+* Refactor RSS feed generation to allow better plugin access
+* Add Jupyter config as dependency for jupyter posts (by @knowsuchagency)
+* Make ``nikola plugin --list-installed`` more readable (Issue #2692)
+* Accept ``now`` in post-list date conditions
+* Add ``RSS_COPYRIGHT``, ``RSS_COPYRIGHT_PLAIN``, and
+  ``RSS_COPYRIGHT_FORMATS`` options in conf.py which can be disabled
+  by specifying ``copyright_=False`` to ``generic_rss_renderer``, or
+  overriden by specifying an explicit value.
+* Write PID of detached ``nikola serve`` process to a file called
+  ``nikolaserve.pid``
+* Append file name (generated from title) if ``nikola new_post``
+  receives directory name as path (Issue #2651)
+* Add a ``require_all_tags`` parameter to the ``post-list`` directive to
+  show only posts that have all specified tags. (Issue #2665)
+* Add ``META_GENERATOR_TAG`` option in conf.py allowing the meta generator
+  tag to be disabled (Issue #2628)
+* Add ``YUI_COMPRESSOR_EXECUTABLE``, ``CLOSURE_COMPILER_EXECUTABLE``,
+  ``OPTIPNG_EXECUTABLE``, ``JPEGOPTIM_EXECUTABLE`` and
+  ``HTML_TIDY_EXECUTABLE`` to configure executables for built-in filters.
+  (Issue #2615)
+* Allow setting custom GUID in feeds (Issue #2378)
+
+Bugfixes
+--------
+
+* Remove misplaced and duplicated meta description tags (Issue #2694)
+* Fix crash if ``PAGE_INDEX`` is enabled and make them actually work
+  (Issues #2646, #2702)
+* Ignore ``NEW_POST_DATE_PATH`` when creating pages (Issue #2699)
+* Ensure ``post.updated`` is timezone-aware (Issue #2698)
+* Pass previously missing post object and language to reST compiler
+  and language to Markdown compiler (for shortcodes)
+* Fix crashes when rendering subcategories (Issue #2681)
+* Prevent writing cache files outside of the cache folder
+  (Issue #2684)
+* Fix mimetype guessing in auto mode (Issue #2645)
+* Fix filters.html5lib_xmllike for laters html5lib (Issue #2648)
+* Skip the current post in post lists (Issue #2666)
+* Fix poor performance when compiling multiple markdown documents with
+  the markdown compiler. (Issue #2660)
+* Fix crash if ``SHOW_INDEX_PAGE_NAVIGATION`` is ``True`` while
+  ``INDEXES_STATIC`` is ``False``. (Issue #2654)
+* Make ``NEW_POST_DATE_PATH`` follow ``rrule`` if it exists (Issue #2653)
+
+New in v7.8.3
+=============
+
+Emergency bugfix release (``nikola new_page`` did not work in v7.8.2).
+
+Features
+--------
+
+* Sort posts chronologically with one unified function (easier to
+  change). (Issue #2627)
+* Sort posts in the following order (most important last): source path
+  (A-Z), title (A-Z), date (reverse chronological order), priority
+  meta number (descending). (Issue #2627)
+
+Bugfixes
+--------
+
+* Fix a bug that prevents ``nikola new_page`` from working (Issue #2631)
+
+New in v7.8.2
+=============
+
+**Minor API change:** The ``compile_string`` compiler method (partially
+internal) now takes a post argument and returns between two and four
+values, adding ``shortcode_deps`` and shortcode support. See issues
+#2623 and #2624.
+
+Features
+--------
+
+* Add meta generator tag to default templates to promote Nikola
+  (Issue #2619)
+* Add ``nikola new_post -d`` and ``NEW_POST_DATE_PATH`` to allow
+  automatic creation of year/month/day (date-based) directory
+  structures (Issue #2513)
+* Allow enabling pretty URLs with per-post setting (Issue #2613)
+* Add a ``sort_posts`` function (available as Jinja filter in global
+  context), which allows general-purpose timeline sorting (Issue
+  #2602)
+* Allow creating archive navigation (Issue #1639)
+* Accept a ``page`` argument for taxonomy paths (Issue #2585)
+* Query strings in magic links are passed as keyword arguments to path
+  handlers (via Issue #2580)
+* Accept arbitrary arguments to path handlers (via Issue #2580)
+* Added new ``typogrify_oldschool`` filter (Issue #2574)
+* Improving handling of .dep files, and allowing compilers to specify
+  additional targets for the ``render_posts`` task (Issue #2536)
+* ``render_template`` and ``generic_renderer`` can now create HTML
+  fragments.
+* Allow posts to set custom ``URL_TYPE`` by using the ``url_type``
+  meta tag (useful for HTML fragments inserted using JavaScript)
+* Plugins can depend on other plugins being installed (Issue #2533)
+* The destination folder in ``POSTS`` and ``PAGES`` can now be
+  translated (Issue #2116)
+* Pass ``post`` object and ``lang`` to post compilers (Issue #2531)
+* Pass ``url_type`` into template's context.
+* Make thumbnail naming configurable with ``IMAGE_THUMBNAIL_FORMAT``.
+* There is a new plugin category ``Taxonomy`` which allows to easily
+  create new taxonomies. All of the existing taxonomies (authors,
+  archives, indexes, page index, sections, tags, and categories)
+  have been converted to the new system. (Issue #2107)
+* Added ``CATEGORIES_INDEX_PATH``, similar to ``TAGS_INDEX_PATH``.
+  (Issue #2567)
+* Made ``INDEX_PATH``, ``RSS_PATH`` and ``AUTHOR_PATH`` translatable.
+  (Issue #1914)
+* Added setting ``SHOW_INDEX_PAGE_NAVIGATION`` which enables a basic
+  page navigation for indexes. (Issue #2299)
+* Added settings ``DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED`` and
+  ``DISABLE_INDEXES_PLUGIN_RSS_FEED`` to disable specific parts of
+  the ``classify_indexes`` taxonomy plugin. (Issue #2591)
+
+Bugfixes
+--------
+
+* Work around conflicts between posts and sections trying to render
+  index.html files (via Issue #2613)
+* Make ``AUTHOR_PAGES_ARE_INDEXES`` really work (Issue #2600)
+* WordPress importer now correctly handles &amp; etc. in tags.
+  (Issue #2557)
+* If ``CODE_COLOR_SCHEME`` is empty, don’t generate ``code.css``
+  (Issue #2597)
+* Don’t warn about ``nikolademo`` DISQUS account when comments are
+  disabled (Issue #2588)
+* Make ``data`` from global context available to templated shortcodes
+  as ``global_data`` (Issue #2488)
+* Don't crash if plugins is a file (Issue #2539)
+* Don't mangle bare ``#`` links (Issue #2553)
+* ``generic_index_renderer`` now always produces output. It previously
+  did not when the post list was empty and ``INDEXES_STATIC == False``.
+  (via Issue #2579)
+
+
+New in v7.8.1
+=============
+
+Features
+--------
+
+* Add Hebrew translation by Yitzhak Bar Geva
+* Add Chinese (Traditional) ``zh_TW`` translation by Po-Wen Chi
+* Add ``nikola theme --list-installed`` (Issue #2504)
+* Add ``KATEX_AUTO_RENDER`` setting to configure math delimiters
+* Update KaTeX version to 0.6.0: support aligned math display
+* Better support for a tree of files in ``data/``
+
+
+Bugfixes
+--------
+
+* Rename ``stories`` to ``pages`` in most of the codebase (Issue
+  #1891)
+* Report missing/unknown dates in posts with filenames
+  (Issues #2505, #2506)
+* Report filename of post that raised exception when scanning
+  (Issue #2505)
+* Accept ``page`` and ``pages`` for the ``type`` field in post lists
+* Don’t crash if a post list has no posts (Issue #2489)
+
+New in v7.8.0
+=============
+
+Features
+--------
+
+* Exposed ``gist`` as a shortcode (Issue #2459)
+* Always copy source files for listings (Issue #2473)
+* Detect dependencies in template strings (Issue #2455)
+* RSS feeds for sections (Issue #2068)
+* New ``data`` metadata that loads data from external files (Issue #2450)
+* Shortcode to escape to the template language (Issue #1227)
+* Added link to raw file in listings (Issue #1995)
+* New NO_DOCUTILS_TITLE_TRANSFORM (Issue #2382)
+* Update options of chart directive to Pygal 2.2.3
+* Pass global context to template shortcodes (Issue #2424)
+* Added new options --html2text and --transform-to-markdown
+  to WordPress importer (Issue #2261)
+* Listing: guess the lexer if cannot be determined from the file name.
+* Read files from data/ and insert data in global context (Issue #2477)
+
+Bugfixes
+--------
+
+* Added link to sources in the output of listing directive (Issue #2472)
+* Fix Windows crash with calendar locales (Issue #2332)
+* Remove the (useless) ``<base>`` tag by default; change conf.py to
+  opt in (Issue #2471)
+* Show tag descriptions when TAG_PAGES_ARE_INDEXES is True (Issue #2444)
+* Record template dependencies for post-list shortcut (Issue #2451)
+* Default to English for docutils messages if no translations exist
+  (Issues #2422, #2437)
+
+New in v7.7.12
+==============
+
+Features
+--------
+
+* New Telugu translation by Chillar Anand
 * Add ``sections`` filtering in the post list directive
   (Issue #2409)
 * Update Bootstrap to v3.3.7
+* Add ``EXTRA_THEMES_DIRS`` search path, similar to ``EXTRA_PLUGINS_DIRS``,
+  to locate themes at other places (Issue #2427)
 
 Bugfixes
 --------
 
 * Added code documentation to ReadTheDocs (Issue #2124)
+  (https://nikola.readthedocs.io/en/latest/)
 * Pass language to docutils so admonitions are translated (Issue #2422)
 * Put 2-file post metadata in the same place as the text file when
   specifying a path in ``new_post``, ``new_page`` (Issue #2420)

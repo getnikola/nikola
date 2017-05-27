@@ -1,6 +1,8 @@
 {#  -*- coding: utf-8 -*- #}
 {% import 'index_helper.tmpl' as helper with context %}
+{% import 'math_helper.tmpl' as math with context %}
 {% import 'comments_helper.tmpl' as comments with context %}
+{% import 'pagination_helper.tmpl' as pagination with context %}
 {% extends 'base.tmpl' %}
 
 {% block extra_head %}
@@ -8,6 +10,7 @@
     {% if posts and (permalink == '/' or permalink == '/' + index_file) %}
         <link rel="prefetch" href="{{ posts[0].permalink() }}" type="text/html">
     {% endif %}
+    {{ math.math_styles_ifposts(posts) }}
 {% endblock %}
 
 {% block content %}
@@ -15,13 +18,16 @@
 {% if 'main_index' in pagekind %}
     {{ front_index_header }}
 {% endif %}
+{% if page_links %}
+    {{ pagination.page_navigation(current_page, page_links, prevlink, nextlink, prev_next_links_reversed) }}
+{% endif %}
 <div class="postindex">
 {% for post in posts %}
     <article class="h-entry post-{{ post.meta('type') }}">
     <header>
         <h1 class="p-name entry-title"><a href="{{ post.permalink() }}" class="u-url">{{ post.title()|e }}</a></h1>
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
             {% if author_pages_generated %}
                 <a href="{{ _link('author', post.author()) }}">{{ post.author()|e }}</a>
             {% else %}
@@ -47,5 +53,5 @@
 </div>
 {{ helper.html_pager() }}
 {{ comments.comment_link_script() }}
-{{ helper.mathjax_script(posts) }}
+{{ math.math_scripts_ifposts(posts) }}
 {% endblock %}
