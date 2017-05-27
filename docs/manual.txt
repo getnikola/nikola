@@ -2622,6 +2622,33 @@ With this command Nikola will import into the folder ``import_location``.
 If the folder already exists Nikola will not overwrite an existing ``conf.py``.
 Instead a new file with a timestamp at the end of the filename will be created.
 
+Integrating Other Sites Into Nikola
+-----------------------------------
+
+Explain this well
+
+::
+
+    # This is a list of feeds whose contents will be imported as posts into
+    # your blog via the "nikola continuous_import" command.
+
+    FEEDS = {
+        'goodreads': {
+            'url': 'https://www.goodreads.com/review/list_rss/1512608?key=N4VCVq54T-sxk8wx4UMRYIZKMVqQpbZN4gdYG22R4dv04LM2&shelf=read',
+            'template': 'goodreads.tmpl',
+            'output_folder': 'posts/goodreads',
+            'format': 'html',
+            'lang': 'en',
+            'metadata': {
+                'title': 'title',
+                'date': 'published',
+                'tags': 'books, goodreads',
+            }
+        }
+    }
+
+
+
 Using Twitter Cards
 -------------------
 
