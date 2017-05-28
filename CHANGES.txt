@@ -4,7 +4,8 @@ New in master
 Features
 --------
 
-* Support for YAML metadata (Issue #2801)
+
+* Support for YAML and TOML metadata (Issue #2801)
 
 New in v7.8.6
 =============

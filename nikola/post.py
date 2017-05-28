@@ -52,6 +52,10 @@ try:
 except ImportError:
     pyphen = None
 try:
+    import toml
+except ImportError:
+    toml = None
+try:
     import yaml
 except ImportError:
     yaml = None
@@ -1038,6 +1042,15 @@ def _get_metadata_from_file(meta_data):
         for k in meta:
             if meta[k] is None:
                 meta[k] = ''
+        return meta
+
+    # If 1st line is '+++', then it's TOML metadata
+    if meta_data[0] == '+++':
+        if toml is None:
+            utils.req_missing('toml', 'use TOML metadata', optional=True)
+            raise ValueError('Error parsing metadata')
+        idx = meta_data.index('+++', 1)
+        meta = toml.load('\n'.join(meta_data[1:idx]))
         return meta
 
     # First, get metadata from the beginning of the file,
