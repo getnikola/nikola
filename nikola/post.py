@@ -51,6 +51,10 @@ try:
     import pyphen
 except ImportError:
     pyphen = None
+try:
+    import yaml
+except ImportError:
+    yaml = None
 
 from math import ceil  # for reading time feature
 
@@ -1022,6 +1026,19 @@ def _get_metadata_from_file(meta_data):
     # Skip up to one empty line at the beginning (for txt2tags)
     if not meta_data[0]:
         meta_data = meta_data[1:]
+
+    # If 1st line is '---', then it's YAML metadata
+    if meta_data[0] == '---':
+        if yaml is None:
+            utils.req_missing('pyyaml', 'use YAML metadata', optional=True)
+            raise ValueError('Error parsing metadata')
+        idx = meta_data.index('---', 1)
+        meta = yaml.safe_load('\n'.join(meta_data[1:idx]))
+        # We expect empty metadata to be '', not None
+        for k in meta:
+            if meta[k] is None:
+                meta[k] = ''
+        return meta
 
     # First, get metadata from the beginning of the file,
     # up to first empty line
