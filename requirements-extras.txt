@@ -13,3 +13,5 @@ ipykernel>=4.0.0
 ghp-import2>=1.0.0
 ws4py==0.4.2
 watchdog==0.8.3
+PyYAML==3.12
+

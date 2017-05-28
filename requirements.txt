@@ -13,4 +13,3 @@ setuptools>=20.3
 natsort>=3.5.2
 requests>=2.2.0
 piexif>=1.0.3
-PyYAML==3.12
