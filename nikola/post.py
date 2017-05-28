@@ -1033,7 +1033,7 @@ def _get_metadata_from_file(meta_data):
             utils.req_missing('pyyaml', 'use YAML metadata', optional=True)
             raise ValueError('Error parsing metadata')
         idx = meta_data.index('---', 1)
-        meta = yaml.load('\n'.join(meta_data[1:idx]))
+        meta = yaml.safe_load('\n'.join(meta_data[1:idx]))
         # We expect empty metadata to be '', not None
         for k in meta:
             if meta[k] is None:
