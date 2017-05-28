@@ -2050,8 +2050,10 @@ def load_data(path):
     """Given path to a file, load data from it."""
     ext = os.path.splitext(path)[-1]
     loader = None
+    function = 'load'
     if ext in {'.yml', '.yaml'}:
         loader = yaml
+        function = 'safe_load'
         if yaml is None:
             req_missing(['yaml'], 'use YAML data files')
             return {}
@@ -2065,7 +2067,7 @@ def load_data(path):
     if loader is None:
         return
     with io.open(path, 'r', encoding='utf8') as inf:
-        return loader.load(inf)
+        return getattr(loader, function)(inf)
 
 
 # see http://stackoverflow.com/a/2087433
