@@ -1038,6 +1038,7 @@ def _get_metadata_from_file(meta_data):
         for k in meta:
             if meta[k] is None:
                 meta[k] = ''
+        return meta
 
     # First, get metadata from the beginning of the file,
     # up to first empty line
