@@ -278,7 +278,9 @@ Metadata fields
 ~~~~~~~~~~~~~~~
 
 Nikola supports many metadata fields in posts. All of them are
-translatable and almost all are optional. The meta field format is:
+translatable and almost all are optional. Metadata can be in different formats.
+
+The "traditional" meta field format is:
 
 .. code:: text
 
@@ -286,6 +288,17 @@ translatable and almost all are optional. The meta field format is:
 
 You can add your own metadata fields in the same manner. If you are not using
 reStructuredText, make sure the fields are in a HTML comment in output.
+
+Current Nikola versions experimentally support YAML metadata wrapped by a "---" separator
+and in that case, the usual YAML syntax is used:
+
+.. code:: yaml
+
+   ---
+   title: How to make money
+   slug: how-to-make-money
+   date: 2012-09-15 19:52:05 UTC
+   ---
 
 Basic
 `````
