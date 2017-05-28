@@ -1172,8 +1172,8 @@ it will be replaced by "baz".
 
 Individual posts can also have a data file. Those are specified using the
 ``data`` meta field (path relative to ``conf.py``, can be different in
-different languages). Those are accessible as eg.
-``${post.meta('data')['bar']`` in templates. `Template-based shortcodes`_ are a
+different post languages). Those are accessible as eg.
+``${post.data['bar']}`` in templates. `Template-based shortcodes`_ are a
 good idea in this case.
 
 Data files can be useful for eg. auto-generated sites, where users provide
