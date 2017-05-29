@@ -44,7 +44,7 @@ except ImportError:
 
 from nikola import shortcodes as sc
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs, req_missing, get_logger, STDERR_HANDLER
+from nikola.utils import makedirs, req_missing, get_logger, STDERR_HANDLER, LocaleBorg
 
 
 class CompileIPynb(PageCompiler):
@@ -113,7 +113,9 @@ class CompileIPynb(PageCompiler):
         will be assume to be in the 'nikola' subfield.
         """
         self._req_missing_ipynb()
-        source = post.source_path
+        if lang is None:
+            lang = LocaleBorg().current_lang
+        source = post.translated_source_path(lang)
         with io.open(source, "r", encoding="utf8") as in_file:
             nb_json = nbformat.read(in_file, current_nbformat)
         # Metadata might not exist in two-file posts or in hand-crafted
