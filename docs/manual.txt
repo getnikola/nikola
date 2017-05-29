@@ -312,18 +312,6 @@ TOML metadata should be wrapped by a "+++" separator and in that case, the usual
    date = "2012-09-15 19:52:05 UTC"
    +++
 
-JSON metadata is wrapped in braces and the usual JSON syntax applies. Be careful not to leave any
-braces alone in a line other than the last one:
-
-.. code:: json
-
-   {
-   title: "How to make money"
-   slug:  "how-to-make-money"
-   date: "2012-09-15 19:52:05 UTC"
-   }
-
-
 Basic
 `````
 
