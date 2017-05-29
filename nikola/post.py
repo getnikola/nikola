@@ -153,7 +153,6 @@ class Post(object):
         self._dependency_uptodate_page = defaultdict(list)
         self._depfile = defaultdict(list)
 
-
         # Load internationalized metadata
         for lang in self.translations:
             if os.path.isfile(get_translation_candidate(self.config, self.source_path, lang)):
