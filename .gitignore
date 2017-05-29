@@ -195,5 +195,5 @@ Session.vim
 *~
 
 # Demo for Bagguette
-bower_components/baguettebox.js/demo
+/bower_components/baguettebox.js/demo/*
 # End of https://www.gitignore.io/api/pydev,python,pycharm,vim
