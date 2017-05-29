@@ -59,9 +59,9 @@ class ThreadLocalMarkdown(threading.local):
         """Convert data to HTML and reset internal state."""
         result = self.markdown.convert(data)
         try:
-            meta = self.markdown.Meta.copy()
-            for k in meta:  # This reads everything as lists
-                meta[k] = ','.join(meta[k])
+            meta = {}
+            for k in self.markdown.Meta:  # This reads everything as lists
+                meta[k.lower()] = ','.join(self.markdown.Meta[k])
         except Exception:
             meta = {}
         self.markdown.reset()
