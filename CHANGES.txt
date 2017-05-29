@@ -6,7 +6,7 @@ Features
 
 * Support for Markdown Meta extension for Pelican 
   compatibility (Issue #1923)
-* Support for YAML and TOML metadata (Issue #2801)
+* Support for JSON, YAML and TOML metadata (Issue #2801)
 
 New in v7.8.6
 =============
