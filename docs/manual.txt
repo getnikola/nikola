@@ -312,6 +312,14 @@ TOML metadata should be wrapped by a "+++" separator and in that case, the usual
    date = "2012-09-15 19:52:05 UTC"
    +++
 
+Markdown Metadata only works in markdown files, and requires the ``markdown.extensions.meta`` extension.
+The exact format is described in the `markdown metadata extension docs <https://pythonhosted.org/Markdown/extensions/meta_data.html>`__
+
+.. code::
+
+   title: How to make money
+   slug: how-to-make-money
+   date: 2012-09-15 19:52:05 UTC
 
 Basic
 `````
