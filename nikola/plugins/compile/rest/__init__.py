@@ -59,6 +59,38 @@ class CompileRest(PageCompiler):
     demote_headers = True
     logger = None
 
+    def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
+        """Read the metadata from a post, and return a metadata dict."""
+        if lang is None:
+            lang = LocaleBorg().current_lang
+        source = post.translated_source_path(lang)
+
+        with io.open(source, 'r', encoding='utf-8') as inf:
+            document = docutils.core.publish_doctree(
+                inf.read(), reader_name='standalone',
+                settings_overrides={'expose_internals':
+                                        ['refnames', 'do_not_expose'],
+                                    'report_level': 5})
+        meta = {}
+        if 'title' in document:
+            meta['title'] = document['title']
+        for docinfo in document.traverse(docutils.nodes.docinfo):
+            for element in docinfo.children:
+                if element.tagname == 'field':  # custom fields (e.g. summary)
+                    name_elem, body_elem = element.children
+                    name = name_elem.astext()
+                    value = body_elem.astext()
+                elif element.tagname == 'authors':  # author list
+                    name = element.tagname
+                    value = [element.astext() for element in element.children]
+                else:  # standard fields (e.g. address)
+                    name = element.tagname
+                    value = element.astext()
+                name = name.lower()
+
+                meta[name] = value
+        return meta
+
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
         """Compile reST into HTML strings."""
         # If errors occur, this will be added to the line number reported by
