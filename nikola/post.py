@@ -1053,6 +1053,16 @@ def _get_metadata_from_file(meta_data):
         meta = toml.load('\n'.join(meta_data[1:idx]))
         return meta
 
+    # If 1st line is '{', then it's JSON metadata
+    if meta_data[0] == '{':
+        idx = meta_data.index('}', 1)
+        meta = json.loads('\n'.join(meta_data[1:idx]))
+        # We expect empty metadata to be '', not None
+        for k in meta:
+            if meta[k] is None:
+                meta[k] = ''
+        return meta
+
     # First, get metadata from the beginning of the file,
     # up to first empty line
 
