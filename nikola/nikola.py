@@ -2823,7 +2823,7 @@ def guess_locale_from_lang_posix(lang):
             # only that type is accepted by the locale module
             locale_n = str('.'.join(locale.getdefaultlocale()))
         except (ValueError, TypeError):
-            pass
+            locale_n = str()
         # Use guess only if it’s the same language
         if not locale_n.startswith(lang.lower()):
             locale_n = str()

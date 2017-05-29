@@ -6,6 +6,11 @@ Features
 
 * Support for JSON, YAML and TOML metadata (Issue #2801)
 
+Bugfixes
+--------
+
+* Fix unbound variable error in locale guessing (Issue #2806)
+
 New in v7.8.6
 =============
 
