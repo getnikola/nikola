@@ -150,8 +150,7 @@ class CompileMarkdown(PageCompiler):
             req_missing(['markdown'], 'build this site (compile Markdown)')
         if lang is None:
             lang = LocaleBorg().current_lang
-        # FIXME: what about translations????
-        source = post.source_path
+        source = post.translated_source_path(lang)
         with io.open(source, 'r', encoding='utf-8') as inf:
             _, meta = self.converter.convert(inf.read())
         return meta

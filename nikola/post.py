@@ -153,15 +153,18 @@ class Post(object):
         self._dependency_uptodate_page = defaultdict(list)
         self._depfile = defaultdict(list)
 
-        default_metadata, self.newstylemeta = get_meta(self, self.config['FILE_METADATA_REGEXP'], self.config['UNSLUGIFY_TITLES'])
-
-        self.meta = Functionary(lambda: None, self.default_lang)
-        self.meta[self.default_lang] = default_metadata
 
         # Load internationalized metadata
         for lang in self.translations:
             if os.path.isfile(get_translation_candidate(self.config, self.source_path, lang)):
                 self.translated_to.add(lang)
+
+        default_metadata, self.newstylemeta = get_meta(self, self.config['FILE_METADATA_REGEXP'], self.config['UNSLUGIFY_TITLES'])
+
+        self.meta = Functionary(lambda: None, self.default_lang)
+        self.meta[self.default_lang] = default_metadata
+
+        for lang in self.translations:
             if lang != self.default_lang:
                 meta = defaultdict(lambda: '')
                 meta.update(default_metadata)
