@@ -1,3 +1,6 @@
+# Demo for Bagguette
+/bower_components/baguettebox.js/demo/*
+
 *.db
 *~
 *.diff
@@ -194,6 +197,4 @@ Session.vim
 .netrwhist
 *~
 
-# Demo for Bagguette
-/bower_components/baguettebox.js/demo/*
 # End of https://www.gitignore.io/api/pydev,python,pycharm,vim

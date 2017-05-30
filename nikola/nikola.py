@@ -604,6 +604,7 @@ class Nikola(object):
             'USE_BUNDLES': True,
             'USE_CDN': False,
             'USE_CDN_WARNING': True,
+            'USE_REST_DOCINFO_METADATA': False,
             'USE_FILENAME_AS_TITLE': True,
             'USE_KATEX': False,
             'USE_OPEN_GRAPH': True,

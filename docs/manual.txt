@@ -321,6 +321,19 @@ The exact format is described in the `markdown metadata extension docs <https://
    slug: how-to-make-money
    date: 2012-09-15 19:52:05 UTC
 
+Nikola can extract metadata from reStructured Text docinfo fields and the document itself, too:
+
+.. code::
+
+    How to make money
+    =================
+
+    :slug: how-to-make-money
+    :date: 2012-09-15 19:52:05 UTC
+
+To do this, you need  ``USE_REST_DOCINFO_METADATA = True`` in your ``conf.py``, and Nikola will hide
+the docinfo fields in the output.
+
 Basic
 `````
 

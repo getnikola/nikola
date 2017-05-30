@@ -61,6 +61,8 @@ class CompileRest(PageCompiler):
 
     def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
         """Read the metadata from a post, and return a metadata dict."""
+        if not self.site.config['USE_REST_DOCINFO_METADATA']:
+            return {}
         if lang is None:
             lang = LocaleBorg().current_lang
         source = post.translated_source_path(lang)
