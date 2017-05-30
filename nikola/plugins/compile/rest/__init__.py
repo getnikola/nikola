@@ -32,6 +32,7 @@ import os
 
 import docutils.core
 import docutils.nodes
+import docutils.transforms
 import docutils.utils
 import docutils.io
 import docutils.readers.standalone
@@ -117,6 +118,8 @@ class CompileRest(PageCompiler):
 
         from nikola import shortcodes as sc
         new_data, shortcodes = sc.extract_shortcodes(data)
+        if self.site.config['USE_REST_DOCINFO_METADATA']:
+            self.site.rst_transforms.append(RemoveDocinfo)
         output, error_level, deps = rst2html(
             new_data, settings_overrides=settings_overrides, logger=self.logger, source_path=source_path, l_add_ln=add_ln, transforms=self.site.rst_transforms,
             no_title_transform=self.site.config.get('NO_DOCUTILS_TITLE_TRANSFORM', False))
@@ -342,3 +345,15 @@ _align_options_base = ('left', 'center', 'right')
 
 def _align_choice(argument):
     return docutils.parsers.rst.directives.choice(argument, _align_options_base + ("none", ""))
+
+class RemoveDocinfo(docutils.transforms.Transform):
+
+    """
+    Remove docinfo nodes.
+    """
+
+    default_priority = 870
+
+    def apply(self):
+        for node in self.document.traverse(docutils.nodes.docinfo):
+            node.parent.remove(node)
