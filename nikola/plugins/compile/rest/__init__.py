@@ -62,7 +62,7 @@ class CompileRest(PageCompiler):
 
     def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
         """Read the metadata from a post, and return a metadata dict."""
-        if not self.site.config['USE_REST_DOCINFO_METADATA']:
+        if not self.site.config.get('USE_REST_DOCINFO_METADATA'):
             return {}
         if lang is None:
             lang = LocaleBorg().current_lang
@@ -118,7 +118,7 @@ class CompileRest(PageCompiler):
 
         from nikola import shortcodes as sc
         new_data, shortcodes = sc.extract_shortcodes(data)
-        if self.site.config['USE_REST_DOCINFO_METADATA']:
+        if self.site.config.get('USE_REST_DOCINFO_METADATA'):
             self.site.rst_transforms.append(RemoveDocinfo)
         output, error_level, deps = rst2html(
             new_data, settings_overrides=settings_overrides, logger=self.logger, source_path=source_path, l_add_ln=add_ln, transforms=self.site.rst_transforms,
