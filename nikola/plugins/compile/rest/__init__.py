@@ -332,7 +332,6 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
     pub.set_source(source, None)
     pub.settings._nikola_source_path = source_path
     pub.set_destination(None, destination_path)
-    from doit.tools import set_trace; set_trace()
     pub.publish(enable_exit_status=enable_exit_status)
 
     return pub.writer.parts['docinfo'] + pub.writer.parts['fragment'], pub.document.reporter.max_level, pub.settings.record_dependencies, pub.document
