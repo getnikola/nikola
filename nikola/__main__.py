@@ -27,32 +27,38 @@
 """The main function of Nikola."""
 
 from __future__ import print_function, unicode_literals
-from collections import defaultdict
+
 import os
 import shutil
+import sys
+import traceback
+from collections import defaultdict
+
+from blinker import signal
+from doit.cmd_auto import Auto as DoitAuto
+from doit.cmd_base import TaskLoader
+from doit.cmd_clean import Clean as DoitClean
+from doit.cmd_completion import TabCompletion
+from doit.cmd_help import Help as DoitHelp
+from doit.cmd_run import Run as DoitRun
+from doit.doit_cmd import DoitMain
+from doit.loader import generate_tasks
+from doit.reporter import ExecutedOnlyReporter
+from logbook import NullHandler
+
+from . import __version__
+from .nikola import Nikola
+from .plugin_categories import Command
+from .utils import (LOGGER, STDERR_HANDLER, STRICT_HANDLER,
+                    ColorfulStderrHandler, get_root_dir, req_missing,
+                    sys_decode, sys_encode)
+
 try:
     import readline  # NOQA
 except ImportError:
     pass  # This is only so raw_input/input does nicer things if it's available
-import sys
-import traceback
 
-from doit.loader import generate_tasks
-from doit.cmd_base import TaskLoader
-from doit.reporter import ExecutedOnlyReporter
-from doit.doit_cmd import DoitMain
-from doit.cmd_help import Help as DoitHelp
-from doit.cmd_run import Run as DoitRun
-from doit.cmd_clean import Clean as DoitClean
-from doit.cmd_completion import TabCompletion
-from doit.cmd_auto import Auto as DoitAuto
-from logbook import NullHandler
-from blinker import signal
 
-from . import __version__
-from .plugin_categories import Command
-from .nikola import Nikola
-from .utils import sys_decode, sys_encode, get_root_dir, req_missing, LOGGER, STRICT_HANDLER, STDERR_HANDLER, ColorfulStderrHandler
 
 if sys.version_info[0] == 3:
     import importlib.machinery
