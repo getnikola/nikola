@@ -6,6 +6,7 @@ Features
 
 * Support for reStructured text docinfo metadata with
   USE_REST_DOCINFO_METADATA option, defaulting to False (Issue #1923)
+* New HIDE_REST_DOCINFO option, defaulting to False.
 * Support for Markdown Meta extension for Pelican
   compatibility (Issue #1923)
 * Support for YAML and TOML metadata (Issue #2801)

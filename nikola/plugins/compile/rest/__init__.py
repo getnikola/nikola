@@ -116,7 +116,7 @@ class CompileRest(PageCompiler):
 
         from nikola import shortcodes as sc
         new_data, shortcodes = sc.extract_shortcodes(data)
-        if self.site.config.get('USE_REST_DOCINFO_METADATA'):
+        if self.site.config.get('HIDE_REST_DOCINFO', False):
             self.site.rst_transforms.append(RemoveDocinfo)
         output, error_level, deps, _ = rst2html(
             new_data, settings_overrides=settings_overrides, logger=self.logger, source_path=source_path, l_add_ln=add_ln, transforms=self.site.rst_transforms,
