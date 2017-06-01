@@ -59,7 +59,6 @@ except ImportError:
     pass  # This is only so raw_input/input does nicer things if it's available
 
 
-
 if sys.version_info[0] == 3:
     import importlib.machinery
 else:
