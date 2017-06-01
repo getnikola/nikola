@@ -343,6 +343,7 @@ _align_options_base = ('left', 'center', 'right')
 def _align_choice(argument):
     return docutils.parsers.rst.directives.choice(argument, _align_options_base + ("none", ""))
 
+
 class RemoveDocinfo(docutils.transforms.Transform):
     """Remove docinfo nodes."""
 
