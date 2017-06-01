@@ -66,14 +66,12 @@ class CompileRest(PageCompiler):
             return {}
         if lang is None:
             lang = LocaleBorg().current_lang
-        source = post.translated_source_path(lang)
+        source_path = post.translated_source_path(lang)
 
-        with io.open(source, 'r', encoding='utf-8') as inf:
-            document = docutils.core.publish_doctree(
-                inf.read(), reader_name='standalone',
-                settings_overrides={'expose_internals':
-                                        ['refnames', 'do_not_expose'],
-                                    'report_level': 5})
+
+        with io.open(source_path, 'r', encoding='utf-8') as inf:
+            data = inf.read()
+            _, _, _, document = rst2html(data, logger=self.logger, source_path=source_path, transforms=self.site.rst_transforms, no_title_transform=False)
         meta = {}
         if 'title' in document:
             meta['title'] = document['title']
@@ -120,7 +118,7 @@ class CompileRest(PageCompiler):
         new_data, shortcodes = sc.extract_shortcodes(data)
         if self.site.config.get('USE_REST_DOCINFO_METADATA'):
             self.site.rst_transforms.append(RemoveDocinfo)
-        output, error_level, deps = rst2html(
+        output, error_level, deps, _ = rst2html(
             new_data, settings_overrides=settings_overrides, logger=self.logger, source_path=source_path, l_add_ln=add_ln, transforms=self.site.rst_transforms,
             no_title_transform=self.site.config.get('NO_DOCUTILS_TITLE_TRANSFORM', False))
         if not isinstance(output, unicode_str):
@@ -334,9 +332,10 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
     pub.set_source(source, None)
     pub.settings._nikola_source_path = source_path
     pub.set_destination(None, destination_path)
+    from doit.tools import set_trace; set_trace()
     pub.publish(enable_exit_status=enable_exit_status)
 
-    return pub.writer.parts['docinfo'] + pub.writer.parts['fragment'], pub.document.reporter.max_level, pub.settings.record_dependencies
+    return pub.writer.parts['docinfo'] + pub.writer.parts['fragment'], pub.document.reporter.max_level, pub.settings.record_dependencies, pub.document
 
 
 # Alignment helpers for extensions
