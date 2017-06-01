@@ -68,7 +68,6 @@ class CompileRest(PageCompiler):
             lang = LocaleBorg().current_lang
         source_path = post.translated_source_path(lang)
 
-
         with io.open(source_path, 'r', encoding='utf-8') as inf:
             data = inf.read()
             _, _, _, document = rst2html(data, logger=self.logger, source_path=source_path, transforms=self.site.rst_transforms, no_title_transform=False)
