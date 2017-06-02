@@ -517,6 +517,7 @@ class Nikola(object):
             'GZIP_EXTENSIONS': ('.txt', '.htm', '.html', '.css', '.js', '.json', '.xml'),
             'HIDDEN_AUTHORS': [],
             'HIDDEN_TAGS': [],
+            'HIDE_REST_DOCINFO': False,
             'HIDDEN_CATEGORIES': [],
             'HYPHENATE': False,
             'IMAGE_FOLDERS': {'images': ''},
