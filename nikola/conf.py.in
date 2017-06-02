@@ -1135,6 +1135,12 @@ MARKDOWN_EXTENSIONS = ['markdown.extensions.fenced_code', 'markdown.extensions.c
 # (Note the '.*\/' in the beginning -- matches source paths relative to conf.py)
 # FILE_METADATA_REGEXP = None
 
+# If enabled, extract metadata from docinfo fields in reSt documents
+# USE_REST_DOCINFO_METADATA = False
+
+# If enabled, hide docinfo fields in reSt document output
+# HIDE_REST_DOCINFO = False
+
 # If you hate "Filenames with Capital Letters and Spaces.md", you should
 # set this to true.
 UNSLUGIFY_TITLES = True

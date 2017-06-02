@@ -153,15 +153,17 @@ class Post(object):
         self._dependency_uptodate_page = defaultdict(list)
         self._depfile = defaultdict(list)
 
+        # Load internationalized metadata
+        for lang in self.translations:
+            if os.path.isfile(get_translation_candidate(self.config, self.source_path, lang)):
+                self.translated_to.add(lang)
+
         default_metadata, self.newstylemeta = get_meta(self, self.config['FILE_METADATA_REGEXP'], self.config['UNSLUGIFY_TITLES'])
 
         self.meta = Functionary(lambda: None, self.default_lang)
         self.meta[self.default_lang] = default_metadata
 
-        # Load internationalized metadata
         for lang in self.translations:
-            if os.path.isfile(get_translation_candidate(self.config, self.source_path, lang)):
-                self.translated_to.add(lang)
             if lang != self.default_lang:
                 meta = defaultdict(lambda: '')
                 meta.update(default_metadata)
@@ -1003,24 +1005,6 @@ re_rst_title = re.compile(r'^([{0}]{{4,}})'.format(re.escape(
     string.punctuation)))
 
 
-def _get_title_from_contents(meta_data):
-    """Extract title from file contents, LAST RESOURCE."""
-    piece = meta_data[:]
-    title = None
-    for i, line in enumerate(piece):
-        if re_rst_title.findall(line) and i > 0:
-            title = meta_data[i - 1].strip()
-            break
-        if (re_rst_title.findall(line) and i >= 0 and
-                re_rst_title.findall(meta_data[i + 2])):
-            title = meta_data[i + 1].strip()
-            break
-        if re_md_title.findall(line):
-            title = re_md_title.findall(line)[0]
-            break
-    return title
-
-
 def _get_metadata_from_file(meta_data):
     """Extract metadata from a post's source file."""
     meta = {}
@@ -1062,12 +1046,6 @@ def _get_metadata_from_file(meta_data):
         match = re_meta(line)
         if match[0]:
             meta[match[0]] = match[1]
-
-    # If we have no title, try to get it from document
-    if 'title' not in meta:
-        t = _get_title_from_contents(meta_data)
-        if t is not None:
-            meta['title'] = t
 
     return meta
 

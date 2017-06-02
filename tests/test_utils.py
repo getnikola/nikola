@@ -42,32 +42,6 @@ class GetMetaTest(unittest.TestCase):
         self.assertFalse('description' in meta)
         self.assertTrue(nsm)
 
-    def test_get_title_from_rest(self):
-        file_metadata = ".. slug: write-tests-now\n"\
-                        ".. date: 2012/09/15 19:52:05\n"\
-                        ".. tags:\n"\
-                        ".. link:\n"\
-                        ".. description:\n\n"\
-                        "Post Title\n"\
-                        "----------\n"
-
-        opener_mock = mock.mock_open(read_data=file_metadata)
-
-        post = dummy()
-        post.source_path = 'file_with_metadata'
-        post.metadata_path = 'file_with_metadata.meta'
-
-        with mock.patch('nikola.post.io.open', opener_mock, create=True):
-            meta, nsm = get_meta(post)
-
-        self.assertEqual('Post Title', meta['title'])
-        self.assertEqual('write-tests-now', meta['slug'])
-        self.assertEqual('2012/09/15 19:52:05', meta['date'])
-        self.assertFalse('tags' in meta)
-        self.assertFalse('link' in meta)
-        self.assertFalse('description' in meta)
-        self.assertTrue(nsm)
-
     def test_get_title_from_fname(self):
         file_metadata = ".. slug: write-tests-now\n"\
                         ".. date: 2012/09/15 19:52:05\n"\
@@ -322,13 +296,9 @@ def test_get_metadata_from_file():
     from nikola.post import _get_metadata_from_file
     g = _get_metadata_from_file
     assert list(g([]).values()) == []
-    assert str(g(["======", "FooBar", "======"])["title"]) == 'FooBar'
-    assert str(g(["FooBar", "======"])["title"]) == 'FooBar'
-    assert str(g(["#FooBar"])["title"]) == 'FooBar'
     assert str(g([".. title: FooBar"])["title"]) == 'FooBar'
     assert 'title' not in g(["", "", ".. title: FooBar"])
     assert 'title' in g(["", ".. title: FooBar"])
-    assert 'title' in g([".. foo: bar", "", "FooBar", "------"])
 
 
 def test_get_asset_path():

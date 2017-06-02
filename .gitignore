@@ -1,3 +1,6 @@
+# Demo for Bagguette
+/bower_components/baguettebox.js/demo/*
+
 *.db
 *~
 *.diff
@@ -15,6 +18,7 @@ output/
 # All of .idea should be ignored
 .idea/
 .vscode/
+node_modules
 
 # Created by https://www.gitignore.io/api/pydev,python,pycharm,vim
 
@@ -195,6 +199,4 @@ Session.vim
 .netrwhist
 *~
 
-# Demo for Bagguette
-bower_components/baguettebox.js/demo
 # End of https://www.gitignore.io/api/pydev,python,pycharm,vim
