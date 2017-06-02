@@ -156,6 +156,11 @@ The following keys are currently supported:
 
   * ``bootswatch`` — whether or not theme supports Bootswatch styling (optional,
     defaults to False)
+  * ``ignored_assets`` — comma-separated list of assets to ignore (relative to
+    the ``assets/`` directory, eg. ``css/theme.css``)
+  * ``ignore_colorbox_i18n`` — prevent copying Colorbox locales. Accepted
+    values: ``all`` (all ignored), ``unused`` (used locales copied),
+    ``none`` (all copied)
 
 Templates
 ---------
