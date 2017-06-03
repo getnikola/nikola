@@ -417,18 +417,19 @@ For more details about hierarchies, see `Hierarchical lists`_
 Variables available in shortcodes
 ---------------------------------
 
-*The global context is available in shortcodes.*
+*The global context is available in templated shortcodes.*
 
 .. class:: table table-bordered table-striped
 
-==================  ==========  ====================================================
+==================  ==========  ===========================================================================
 Name                Type        Description
-==================  ==========  ====================================================
+==================  ==========  ===========================================================================
 ``lang``            str         Current language
 ``_args``           list<str>   Arguments given to the shortcode
 ``data``            str         Shortcode contents
 ``post``            Post        Post object (if available)
-==================  ==========  ====================================================
+``filename``        str?        file name, if ``shortcode_function.nikola_shortcode_pass_filename = True``
+==================  ==========  ===========================================================================
 
 Variables available in post lists
 ---------------------------------
