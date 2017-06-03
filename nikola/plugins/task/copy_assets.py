@@ -80,11 +80,19 @@ class CopyAssets(Task):
         if ignore_colorbox_i18n == "unused":
             # Check what colorbox languages we need so we can ignore the rest
             needed_colorbox_languages = [LEGAL_VALUES['COLORBOX_LOCALES'][i] for i in kw['translations']]
+            needed_colorbox_languages = [i for i in needed_colorbox_languages if i]  # remove '' for en
+            # ignored_filenames is passed to copy_tree to avoid creating
+            # directories. Since ignored_assets are full paths, and copy_tree
+            #  works on single filenames, we can’t use that here.
+            if not needed_colorbox_languages:
+                ignored_filenames = set(["colorbox-i18n"])
+            else:
+                ignored_filenames = set()
 
         for theme_name in kw['themes']:
             src = os.path.join(utils.get_theme_path(theme_name), 'assets')
             dst = os.path.join(kw['output_folder'], 'assets')
-            for task in utils.copy_tree(src, dst):
+            for task in utils.copy_tree(src, dst, ignored_filenames=ignored_filenames):
                 asset_name = os.path.relpath(task['name'], dst)
                 if task['name'] in tasks or asset_name in ignored_assets:
                     continue

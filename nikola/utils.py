@@ -738,7 +738,7 @@ def load_messages(themes, translations, default_lang, themes_dirs):
     return messages
 
 
-def copy_tree(src, dst, link_cutoff=None):
+def copy_tree(src, dst, link_cutoff=None, ignored_filenames=None):
     """Copy a src tree to the dst folder.
 
     Example:
@@ -749,11 +749,13 @@ def copy_tree(src, dst, link_cutoff=None):
     should copy "themes/defauts/assets/foo/bar" to
     "output/assets/foo/bar"
 
-    if link_cutoff is set, then the links pointing at things
+    If link_cutoff is set, then the links pointing at things
     *inside* that folder will stay as links, and links
     pointing *outside* that folder will be copied.
+
+    ignored_filenames is a set of file names that will be ignored.
     """
-    ignore = set(['.svn'])
+    ignore = set(['.svn', '.git']) | (ignored_filenames or set())
     base_len = len(src.split(os.sep))
     for root, dirs, files in os.walk(src, followlinks=True):
         root_parts = root.split(os.sep)
