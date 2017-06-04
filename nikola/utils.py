@@ -2103,7 +2103,8 @@ def rss_writer(rss_obj, output_path):
 def map_metadata(meta, key, config):
     """Map metadata from other platforms to Nikola names.
 
-    This uses the METADATA_MAPPING setting (via ``config``) and modifies the dict in place."""
+    This uses the METADATA_MAPPING setting (via ``config``) and modifies the dict in place.
+    """
     for foreign, ours in config['METADATA_MAPPING'].get(key, {}).items():
         if foreign in meta:
             meta[ours] = meta[foreign]
