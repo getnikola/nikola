@@ -43,7 +43,11 @@
             <div class="translationslist translations">
                 <h3 class="translationslist-intro">${messages("Also available in:")}</h3>
             %for language, classification, name in other_languages:
-                <p><a href="${_link(kind, classification, language)}" rel="alternate">${messages("LANGUAGE", language)} (${name|h})</a></p>
+                <p><a href="${_link(kind, classification, language)}" rel="alternate">${messages("LANGUAGE", language)}
+                %if kind != 'archive':
+                    (${name|h})
+                %endif
+            </a></p>
             %endfor
             </div>
         %endif
