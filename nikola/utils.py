@@ -2105,6 +2105,6 @@ def map_metadata(meta, key, config):
 
     This uses the METADATA_MAPPING setting (via ``config``) and modifies the dict in place.
     """
-    for foreign, ours in config['METADATA_MAPPING'].get(key, {}).items():
+    for foreign, ours in config.get('METADATA_MAPPING', {}).get(key, {}).items():
         if foreign in meta:
             meta[ours] = meta[foreign]
