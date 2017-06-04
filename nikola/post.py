@@ -239,8 +239,12 @@ class Post(object):
         is_private = False
         self._tags = {}
         for lang in self.translated_to:
+            if isinstance(self.meta[lang]['tags'], (list, tuple, set)):
+                _tag_list = self.meta[lang]['tags']
+            else:
+                _tag_list = self.meta[lang]['tags'].split(',')
             self._tags[lang] = natsort.natsorted(
-                list(set([x.strip() for x in self.meta[lang]['tags'].split(',')])),
+                list(set([x.strip() for x in _tag_list])),
                 alg=natsort.ns.F | natsort.ns.IC)
             self._tags[lang] = [t for t in self._tags[lang] if t]
             if 'draft' in [_.lower() for _ in self._tags[lang]]:
