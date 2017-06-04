@@ -61,7 +61,7 @@ from blinker import signal
 
 from .post import Post  # NOQA
 from .state import Persistor
-from . import DEBUG, utils, shortcodes
+from . import DEBUG, filters, utils, shortcodes
 from .plugin_categories import (
     Command,
     LateTask,
@@ -415,6 +415,7 @@ class Nikola(object):
         self._template_system = None
         self._THEMES = None
         self._MESSAGES = None
+        self.filters = {}
         self.debug = DEBUG
         self.loghandlers = utils.STDERR_HANDLER  # TODO remove on v8
         self.colorful = config.pop('__colorful__', False)
@@ -959,17 +960,6 @@ class Nikola(object):
             self._GLOBAL_CONTEXT['subtheme'] = config.get('THEME_REVEAL_CONFIG_SUBTHEME', 'sky')
             self._GLOBAL_CONTEXT['transition'] = config.get('THEME_REVEAL_CONFIG_TRANSITION', 'cube')
 
-        # Configure filters
-        for actions in self.config['FILTERS'].values():
-            for i, f in enumerate(actions):
-                if hasattr(f, 'configuration_variables'):
-                    args = {}
-                    for arg, config in f.configuration_variables.items():
-                        if config in self.config:
-                            args[arg] = self.config[config]
-                    if args:
-                        actions[i] = functools.partial(f, **args)
-
         # We use one global tzinfo object all over Nikola.
         try:
             self.tzinfo = dateutil.tz.gettz(self.config['TIMEZONE'])
@@ -985,6 +975,15 @@ class Nikola(object):
 
         # Get search path for themes
         self.themes_dirs = ['themes'] + self.config['EXTRA_THEMES_DIRS']
+
+        # Register default filters
+        filter_name_format = 'filters.{0}'
+        for filter_name, filter_definition in filters.__dict__.items():
+            # Ignore objects whose name starts with an underscore, or which are not callable
+            if filter_name.startswith('_') or not callable(filter_definition):
+                continue
+            # Register all other objects as filters
+            self.register_filter(filter_name_format.format(filter_name), filter_definition)
 
         self._set_global_context_from_config()
         # Read data files only if a site exists (Issue #2708)
@@ -1185,8 +1184,28 @@ class Nikola(object):
             self.compilers[plugin_info.name] = \
                 plugin_info.plugin_object
 
+        # Load config plugins and register templated shortcodes
         self._activate_plugins_of_category("ConfigPlugin")
         self._register_templated_shortcodes()
+
+        # Check with registered filters and configure filters
+        for actions in self.config['FILTERS'].values():
+            for i, f in enumerate(actions):
+                if isinstance(f, str):
+                    # Check whether this denotes a registered filter
+                    _f = self.filters.get(f)
+                    if _f is not None:
+                        f = _f
+                        actions[i] = f
+                if hasattr(f, 'configuration_variables'):
+                    args = {}
+                    for arg, config in f.configuration_variables.items():
+                        if config in self.config:
+                            args[arg] = self.config[config]
+                    if args:
+                        actions[i] = functools.partial(f, **args)
+
+        # Signal that we are configured
         signal('configured').send(self)
 
     def _set_global_context_from_config(self):
@@ -1983,6 +2002,17 @@ class Nikola(object):
         url = '/'.join(['..'] * (len(src_elems) - i - 1) + dst_elems[i:])
         url = utils.encodelink(url)
         return url
+
+    def register_filter(self, filter_name, filter_definition):
+        """Register a filter.
+
+        filter_name should be a name not confusable with an actual
+        executable. filter_definition should be a callable accepting
+        one argument (the filename).
+        """
+        if filter_name in self.filters:
+            utils.LOGGER.warn('''The filter "{0}" is defined more than once.'''.format(filter_name))
+        self.filters[filter_name] = filter_definition
 
     def file_exists(self, path, not_empty=False):
         """Check if the file exists. If not_empty is True, it also must not be empty."""

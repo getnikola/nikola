@@ -1955,15 +1955,14 @@ To do that, you can use the provided helper adding this in your ``conf.py``:
 
 .. code:: python
 
-  from nikola import filters
-
   FILTERS = {
-    ".css": [filters.yui_compressor],
-    ".js": [filters.yui_compressor],
+    ".css": ["filters.yui_compressor"],
+    ".js": ["filters.yui_compressor"],
   }
 
-Where ``filters.yui_compressor`` is a helper function provided by Nikola. You can
-replace that with strings describing command lines, or arbitrary python functions.
+Where ``"filters.yui_compressor"`` points to a helper function provided by Nikola in the
+``filters`` module. You can replace that with strings describing command lines, or
+arbitrary python functions.
 
 If there's any specific thing you expect to be generally useful as a filter, contact
 me and I will add it to the filters library so that more people use it.
@@ -1999,65 +1998,65 @@ The currently available filters are:
         ".html": [apply_to_text_file(string.upper)]
       }
 
-html_tidy_nowrap
+filters.html_tidy_nowrap
    Prettify HTML 5 documents with `tidy5 <http://www.html-tidy.org/>`_
 
-html_tidy_wrap
+filters.html_tidy_wrap
    Prettify HTML 5 documents wrapped at 80 characters with `tidy5 <http://www.html-tidy.org/>`_
 
-html_tidy_wrap_attr
+filters.html_tidy_wrap_attr
    Prettify HTML 5 documents and wrap lines and attributes with `tidy5 <http://www.html-tidy.org/>`_
 
-html_tidy_mini
+filters.html_tidy_mini
    Minify HTML 5 into smaller documents with `tidy5 <http://www.html-tidy.org/>`_
 
-html_tidy_withconfig
+filters.html_tidy_withconfig
    Run `tidy5 <http://www.html-tidy.org/>`_ with ``tidy5.conf`` as the config file (supplied by user)
 
-html5lib_minify
+filters.html5lib_minify
    Minify HTML5 using html5lib_minify
 
-html5lib_xmllike
+filters.html5lib_xmllike
    Format using html5lib
 
-typogrify
+filters.typogrify
    Improve typography using `typogrify <http://static.mintchaos.com/projects/typogrify/>`__
 
-typogrify_sans_widont
+filters.typogrify_sans_widont
    Same as typogrify without the widont filter
 
-minify_lines
+filters.minify_lines
    **THIS FILTER HAS BEEN TURNED INTO A NOOP** and currently does nothing.
 
-normalize_html
+filters.normalize_html
    Pass HTML through LXML to normalize it. For example, it will resolve ``&quot;`` to actual
    quotes. Usually not needed.
 
-yui_compressor
+filters.yui_compressor
    Compress CSS/JavaScript using `YUI compressor <http://yui.github.io/yuicompressor/>`_
 
-closure_compiler
+filters.closure_compiler
    Compile, compress, and optimize JavaScript `Google Closure Compiler <https://developers.google.com/closure/compiler/>`_
 
-optipng
+filters.optipng
    Compress PNG files using `optipng <http://optipng.sourceforge.net/>`_
 
-jpegoptim
+filters.jpegoptim
    Compress JPEG files using `jpegoptim <http://www.kokkonen.net/tjko/projects.html>`_
 
-cssminify
+filters.cssminify
    Minify CSS using http://cssminifier.com/ (requires Internet access)
 
-jsminify
+filters.jsminify
    Minify JS using http://javascript-minifier.com/ (requires Internet access)
 
-jsonminify
+filters.jsonminify
    Minify JSON files (strip whitespace and use minimal separators).
 
-xmlminify
+filters.xmlminify
    Minify XML files. Suitable for Nikola’s sitemaps and Atom feeds.
 
-add_header_permalinks
+filters.add_header_permalinks
    Add links next to every header, Sphinx-style. You will need to add styling for the `headerlink` class,
    in `custom.css`, for example:
 
@@ -2094,7 +2093,7 @@ add_header_permalinks
         # HEADER_PERMALINKS_XPATH_LIST = ['*//{hx}']
 
 
-deduplicate_ids
+filters.deduplicate_ids
    Prevent duplicated IDs in HTML output. An incrementing counter is added to
    offending IDs. If used alongside ``add_header_permalinks``, it will fix
    those links (it must run **after** that filter)
