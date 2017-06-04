@@ -108,9 +108,9 @@ class RenderPosts(Task):
                 for i, f in enumerate(ff):
                     if not f:
                         continue
-                    filter = self.site.filters.get(f)
-                    if filter is not None:  # A registered filter
-                        flist.append(filter)
+                    _f = self.site.filters.get(f)
+                    if _f is not None:  # A registered filter
+                        flist.append(_f)
                     else:
                         flist.append(f)
                 yield utils.apply_filters(task, {os.path.splitext(dest)[-1]: flist})

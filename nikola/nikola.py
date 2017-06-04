@@ -1193,9 +1193,9 @@ class Nikola(object):
             for i, f in list(enumerate(actions)):
                 if isinstance(f, str):
                     # Check whether this denotes a registered filter
-                    filter = self.filters.get(f)
-                    if filter is not None:
-                        f = filter
+                    _f = self.filters.get(f)
+                    if _f is not None:
+                        f = _f
                         actions[i] = f
                 if hasattr(f, 'configuration_variables'):
                     args = {}
