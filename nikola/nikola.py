@@ -414,7 +414,7 @@ class Nikola(object):
         self._template_system = None
         self._THEMES = None
         self._MESSAGES = None
-        self._filters = {}
+        self.filters = {}
         self.debug = DEBUG
         self.loghandlers = utils.STDERR_HANDLER  # TODO remove on v8
         self.colorful = config.pop('__colorful__', False)
@@ -1182,7 +1182,7 @@ class Nikola(object):
             for i, f in list(enumerate(actions)):
                 if isinstance(f, str):
                     # Check whether this denotes a registered filter
-                    filter = self._filters.get(f)
+                    filter = self.filters.get(f)
                     if filter is not None:
                         actions[i] = filter
 
@@ -2002,10 +2002,10 @@ class Nikola(object):
         executable. filter_definition should be a callable accepting
         one argument (the filename).
         """
-        prev_filter = self._filters.get(filter_name)
+        prev_filter = self.filters.get(filter_name)
         if prev_filter is not None:
             utils.LOGGER.warn('''The filter "{0}" is defined more than once.'''.format(filter_name))
-        self._filters[filter_name] = filter_definition
+        self.filters[filter_name] = filter_definition
 
     def file_exists(self, path, not_empty=False):
         """Check if the file exists. If not_empty is True, it also must not be empty."""
