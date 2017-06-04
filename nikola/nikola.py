@@ -1177,18 +1177,15 @@ class Nikola(object):
         self._activate_plugins_of_category("ConfigPlugin")
         self._register_templated_shortcodes()
 
-        # Check with registered filters
+        # Check with registered filters and configure filters
         for actions in self.config['FILTERS'].values():
             for i, f in list(enumerate(actions)):
                 if isinstance(f, str):
                     # Check whether this denotes a registered filter
                     filter = self.filters.get(f)
                     if filter is not None:
-                        actions[i] = filter
-
-        # Configure filters
-        for actions in self.config['FILTERS'].values():
-            for i, f in enumerate(actions):
+                        f = filter
+                        actions[i] = f
                 if hasattr(f, 'configuration_variables'):
                     args = {}
                     for arg, config in f.configuration_variables.items():
