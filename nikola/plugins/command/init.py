@@ -108,6 +108,7 @@ SAMPLE_CONF = {
     ),
 }""",
     'REDIRECTIONS': [],
+    '_METADATA_MAPPING_FORMATS': ', '.join(LEGAL_VALUES['METADATA_MAPPING'])
 }
 
 
@@ -212,7 +213,7 @@ def prepare_config(config):
     """Parse sample config with JSON."""
     p = config.copy()
     p.update({k: json.dumps(v, ensure_ascii=False) for k, v in p.items()
-             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS', '_SUPPORTED_LANGUAGES', '_SUPPORTED_COMMENT_SYSTEMS', 'INDEX_READ_MORE_LINK', 'FEED_READ_MORE_LINK')})
+             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS', '_SUPPORTED_LANGUAGES', '_SUPPORTED_COMMENT_SYSTEMS', 'INDEX_READ_MORE_LINK', 'FEED_READ_MORE_LINK', '_METADATA_MAPPING_FORMATS')})
     # READ_MORE_LINKs require some special treatment.
     p['INDEX_READ_MORE_LINK'] = "'" + p['INDEX_READ_MORE_LINK'].replace("'", "\\'") + "'"
     p['FEED_READ_MORE_LINK'] = "'" + p['FEED_READ_MORE_LINK'].replace("'", "\\'") + "'"

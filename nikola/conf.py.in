@@ -1135,11 +1135,22 @@ MARKDOWN_EXTENSIONS = ['markdown.extensions.fenced_code', 'markdown.extensions.c
 # (Note the '.*\/' in the beginning -- matches source paths relative to conf.py)
 # FILE_METADATA_REGEXP = None
 
-# If enabled, extract metadata from docinfo fields in reSt documents
+# If enabled, extract metadata from docinfo fields in reST documents
 # USE_REST_DOCINFO_METADATA = False
 
-# If enabled, hide docinfo fields in reSt document output
+# If enabled, hide docinfo fields in reST document output
 # HIDE_REST_DOCINFO = False
+
+# Map metadata from other formats to Nikola names.
+# Supported formats: ${_METADATA_MAPPING_FORMATS}
+# METADATA_MAPPING = {}
+#
+# Example for Pelican compatibility:
+# METADATA_MAPPING = {
+#     "rest_docinfo": {"summary": "description", "modified": "updated"},
+#     "markdown_metadata": {"summary": "description", "modified": "updated"}
+# }
+# Other examples: https://getnikola.com/handbook.html#mapping-metadata-from-other-formats
 
 # If you hate "Filenames with Capital Letters and Spaces.md", you should
 # set this to true.

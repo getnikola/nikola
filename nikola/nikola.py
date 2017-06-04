@@ -355,7 +355,8 @@ LEGAL_VALUES = {
         'sv': 'sv',
         'zh_cn': 'zh_cn',
         'zh_tw': 'zh_tw'
-    }
+    },
+    "METADATA_MAPPING": ["yaml", "toml", "rest_docinfo", "markdown_metadata"],
 }
 
 # Mapping old pre-taxonomy plugin names to new post-taxonomy plugin names
@@ -544,6 +545,7 @@ class Nikola(object):
             'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],  # FIXME: Add 'extras' in v8
             'MAX_IMAGE_SIZE': 1280,
             'MATHJAX_CONFIG': '',
+            'METADATA_MAPPING': {},
             'NEW_POST_DATE_PATH': False,
             'NEW_POST_DATE_PATH_FORMAT': '%Y/%m/%d',
             'OLD_THEME_SUPPORT': True,

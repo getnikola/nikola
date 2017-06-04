@@ -48,7 +48,8 @@ from nikola.utils import (
     makedirs,
     write_metadata,
     STDERR_HANDLER,
-    LocaleBorg
+    LocaleBorg,
+    map_metadata
 )
 
 
@@ -89,6 +90,9 @@ class CompileRest(PageCompiler):
                 name = name.lower()
 
                 meta[name] = value
+
+        # Map metadata from other platforms to names Nikola expects (Issue #2817)
+        map_metadata(meta, 'rest_docinfo', self.site.config)
         return meta
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):

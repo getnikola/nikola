@@ -75,6 +75,7 @@ from .utils import (
     demote_headers,
     get_translation_candidate,
     unslugify,
+    map_metadata
 )
 
 __all__ = ('Post',)
@@ -1026,6 +1027,8 @@ def _get_metadata_from_file(meta_data):
         for k in meta:
             if meta[k] is None:
                 meta[k] = ''
+        # Map metadata from other platforms to names Nikola expects (Issue #2817)
+        map_metadata(meta, 'yaml', self.config)
         return meta
 
     # If 1st line is '+++', then it's TOML metadata
@@ -1035,6 +1038,8 @@ def _get_metadata_from_file(meta_data):
             raise ValueError('Error parsing metadata')
         idx = meta_data.index('+++', 1)
         meta = toml.load('\n'.join(meta_data[1:idx]))
+        # Map metadata from other platforms to names Nikola expects (Issue #2817)
+        map_metadata(meta, 'toml', self.config)
         return meta
 
     # First, get metadata from the beginning of the file,

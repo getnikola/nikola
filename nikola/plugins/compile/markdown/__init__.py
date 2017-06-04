@@ -42,7 +42,7 @@ except ImportError:
 
 from nikola import shortcodes as sc
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs, req_missing, write_metadata, LocaleBorg
+from nikola.utils import makedirs, req_missing, write_metadata, LocaleBorg, map_metadata
 
 
 class ThreadLocalMarkdown(threading.local):
@@ -152,5 +152,8 @@ class CompileMarkdown(PageCompiler):
             lang = LocaleBorg().current_lang
         source = post.translated_source_path(lang)
         with io.open(source, 'r', encoding='utf-8') as inf:
+            # Note: markdown meta returns lowercase keys
             _, meta = self.converter.convert(inf.read())
+        # Map metadata from other platforms to names Nikola expects (Issue #2817)
+        map_metadata(meta, 'markdown_metadata', self.site.config)
         return meta

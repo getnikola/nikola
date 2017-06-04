@@ -278,63 +278,7 @@ Metadata fields
 ~~~~~~~~~~~~~~~
 
 Nikola supports many metadata fields in posts. All of them are
-translatable and almost all are optional. Metadata can be in different formats.
-
-The "traditional" meta field format is:
-
-.. code:: text
-
-   .. name: value
-
-You can add your own metadata fields in the same manner. If you are not using
-reStructuredText, make sure the fields are in a HTML comment in output.
-
-Current Nikola versions experimentally supports other metadata formats that make it more compatiblw with
-other static site generators.
-
-YAML metadata should be wrapped by a "---" separator and in that case, the usual YAML syntax is used:
-
-.. code:: yaml
-
-   ---
-   title: How to make money
-   slug: how-to-make-money
-   date: 2012-09-15 19:52:05 UTC
-   ---
-
-TOML metadata should be wrapped by a "+++" separator and in that case, the usual TOML syntax is used:
-
-.. code:: yaml
-
-   +++
-   title = "How to make money"
-   slug =  "how-to-make-money"
-   date = "2012-09-15 19:52:05 UTC"
-   +++
-
-Markdown Metadata only works in markdown files, and requires the ``markdown.extensions.meta`` extension 
-(see `MARKDOWN_EXTENSIONS <#markdown>`__). The exact format is described in 
-the `markdown metadata extension docs <https://pythonhosted.org/Markdown/extensions/meta_data.html>`__
-
-.. code::
-
-   title: How to make money
-   slug: how-to-make-money
-   date: 2012-09-15 19:52:05 UTC
-
-Nikola can extract metadata from reStructured Text docinfo fields and the document itself, too:
-
-.. code::
-
-    How to make money
-    =================
-
-    :slug: how-to-make-money
-    :date: 2012-09-15 19:52:05 UTC
-
-To do this, you need  ``USE_REST_DOCINFO_METADATA = True`` in your ``conf.py``, 
-and Nikola will hide the docinfo fields in the output if you set 
-``HIDE_REST_DOCINFO = True``.
+translatable and almost all are optional.
 
 Basic
 `````
@@ -460,31 +404,155 @@ to your configuration:
     }
 
 
-.. note:: The Two-File Format
+Metadata formats
+~~~~~~~~~~~~~~~~
 
-   Nikola originally used a separate ``.meta`` file. That will still work!
-   The format of the meta files is the same as shown above (i.e. only
-   the 7 base fields, in the order listed above), but without the
-   explanations:
+Metadata can be in different formats.
+Current Nikola versions experimentally supports other metadata formats that make it more compatible with
+other static site generators. The currently supported metadata formats are:
 
-    .. code:: text
+* reST-style comments (``.. name: value`` — default format)
+* Two-file format (reST-style comments or 7-line)
+* Jupyter Notebook metadata
+* YAML, between ``---`` (Jekyll, Hugo)
+* TOML, between ``+++`` (Hugo)
+* reST docinfo (Pelican)
+* Markdown metadata extension (Pelican)
 
-        How to make money
-        how-to-make-money
-        2012-09-15 19:52:05 UTC
+You can add arbitrary meta fields in any format.
 
-   However, starting with Nikola v7, you can now use ``.meta`` files and put
-   all metadata you want, complete with the explanations — they look just like
-   the beginning of our reST files.
+reST-style comments
+```````````````````
 
-      .. code:: restructuredtext
+The “traditional” and default meta field format is:
 
-         .. title: How to make money
-         .. slug: how-to-make-money
-         .. date: 2012-09-15 19:52:05 UTC
+.. code:: text
 
-   Both file formats are supported; however, the new format is preferred, if
-   possible.
+   .. name: value
+
+If you are not using reStructuredText, make sure the fields are in a HTML comment in output.
+
+Two-file format
+```````````````
+
+Meta information can also be specified in separate ``.meta`` files. Those support reST-style metadata, with names and custom fields. They look like the beginning of our reST files:
+
+.. code:: text
+
+    .. title: How to make money
+    .. slug: how-to-make-money
+    .. date: 2012-09-15 19:52:05 UTC
+
+There is also an older version of the format. It uses the 7 base fields, in order, without names and custom meta:
+
+.. code:: text
+
+    How to make money
+    how-to-make-money
+    2012-09-15 19:52:05 UTC
+
+The support for this older format is kept only for backwards compatibility and will be removed in a future version. You can use `a converter plugin <https://plugins.getnikola.com/v7/upgrade_metadata/>`_ if you’re still using that format.
+
+Jupyter Notebook metadata
+`````````````````````````
+
+Jupyter posts can store meta information inside ``.ipynb`` files by using the ``nikola`` key inside notebook metadata. It can be edited by using *Edit → Edit Notebook Metadata* in Jupyter. Note that values are currently only strings. Sample metadata (Jupyter-specific information omitted):
+
+.. code:: json
+
+    {
+        "nikola": {
+            "title": "How to make money",
+            "slug": "how-to-make-money",
+            "date": "2012-09-15 19:52:05 UTC"
+        }
+    }
+
+
+YAML metadata
+`````````````
+
+YAML metadata should be wrapped by a ``---`` separator (three dashes) and in that case, the usual YAML syntax is used:
+
+.. code:: yaml
+
+   ---
+   title: How to make money
+   slug: how-to-make-money
+   date: 2012-09-15 19:52:05 UTC
+   ---
+
+TOML metadata
+`````````````
+
+TOML metadata should be wrapped by a "+++" separator (three plus signs) and in that case, the usual TOML syntax is used:
+
+.. code:: yaml
+
+   +++
+   title = "How to make money"
+   slug =  "how-to-make-money"
+   date = "2012-09-15 19:52:05 UTC"
+   +++
+
+reST docinfo
+````````````
+
+Nikola can extract metadata from reStructuredText docinfo fields and the document itself, too:
+
+.. code:: restructuredtext
+
+    How to make money
+    =================
+
+    :slug: how-to-make-money
+    :date: 2012-09-15 19:52:05 UTC
+
+To do this, you need  ``USE_REST_DOCINFO_METADATA = True`` in your ``conf.py``,
+and Nikola will hide the docinfo fields in the output if you set
+``HIDE_REST_DOCINFO = True``.
+
+Note that keys are converted to lowercase automatically.
+
+Markdown metadata
+`````````````````
+
+Markdown Metadata only works in Markdown files, and requires the ``markdown.extensions.meta`` extension
+(see `MARKDOWN_EXTENSIONS <#markdown>`__). The exact format is described in
+the `markdown metadata extension docs <https://pythonhosted.org/Markdown/extensions/meta_data.html>`__
+
+.. code:: text
+
+   title: How to make money
+   slug: how-to-make-money
+   date: 2012-09-15 19:52:05 UTC
+
+Note that keys are converted to lowercase automatically.
+
+Mapping metadata from other formats
+```````````````````````````````````
+
+If you import posts from other engines, those may not work with Nikola out of the box due to differing names. However, you can create a mapping to convert meta field names from those formats into what Nikola expects.
+
+For Pelican, use:
+
+.. code:: python
+
+    METADATA_MAPPING = {
+        "rest_docinfo": {"summary": "description", "modified": "updated"},
+        "markdown_metadata": {"summary": "description", "modified": "updated"}
+    }
+
+For Hugo, use:
+
+.. code:: python
+
+    METADATA_MAPPING = {
+        "yaml": {"lastmod": "updated"},
+        "toml": {"lastmod": "updated"}
+    }
+
+The following source names are supported: ``yaml``, ``toml``, ``rest_docinfo``, ``markdown_metadata``.
 
 Multilingual posts
 ~~~~~~~~~~~~~~~~~~
