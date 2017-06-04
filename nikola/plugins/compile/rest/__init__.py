@@ -91,6 +91,10 @@ class CompileRest(PageCompiler):
 
                 meta[name] = value
 
+        # Put 'authors' meta field contents in 'author', too
+        if 'authors' in meta and 'author' not in meta:
+            meta['author'] = '; '.join(meta['authors'])
+
         # Map metadata from other platforms to names Nikola expects (Issue #2817)
         map_metadata(meta, 'rest_docinfo', self.site.config)
         return meta
