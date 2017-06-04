@@ -30,7 +30,7 @@ from copy import copy
 import os
 
 from nikola.plugin_categories import Task
-from nikola import filters, utils
+from nikola import utils
 
 
 def update_deps(post, lang, task):
