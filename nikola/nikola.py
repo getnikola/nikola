@@ -1999,8 +1999,7 @@ class Nikola(object):
         executable. filter_definition should be a callable accepting
         one argument (the filename).
         """
-        prev_filter = self.filters.get(filter_name)
-        if prev_filter is not None:
+        if filter_name in self.filters:
             utils.LOGGER.warn('''The filter "{0}" is defined more than once.'''.format(filter_name))
         self.filters[filter_name] = filter_definition
 
