@@ -108,12 +108,9 @@ class RenderPosts(Task):
                 for i, f in enumerate(ff):
                     if not f:
                         continue
-                    if f.startswith('filters.'):  # A function from the filters module
-                        f = f[8:]
-                        try:
-                            flist.append(getattr(filters, f))
-                        except AttributeError:
-                            pass
+                    filter = self.site._filters.get(f)
+                    if filter is not None:  # A registered filter
+                        flist.append(filter)
                     else:
                         flist.append(f)
                 yield utils.apply_filters(task, {os.path.splitext(dest)[-1]: flist})

@@ -414,6 +414,7 @@ class Nikola(object):
         self._template_system = None
         self._THEMES = None
         self._MESSAGES = None
+        self._filters = {}
         self.debug = DEBUG
         self.loghandlers = utils.STDERR_HANDLER  # TODO remove on v8
         self.colorful = config.pop('__colorful__', False)
@@ -957,17 +958,6 @@ class Nikola(object):
             self._GLOBAL_CONTEXT['subtheme'] = config.get('THEME_REVEAL_CONFIG_SUBTHEME', 'sky')
             self._GLOBAL_CONTEXT['transition'] = config.get('THEME_REVEAL_CONFIG_TRANSITION', 'cube')
 
-        # Configure filters
-        for actions in self.config['FILTERS'].values():
-            for i, f in enumerate(actions):
-                if hasattr(f, 'configuration_variables'):
-                    args = {}
-                    for arg, config in f.configuration_variables.items():
-                        if config in self.config:
-                            args[arg] = self.config[config]
-                    if args:
-                        actions[i] = functools.partial(f, **args)
-
         # We use one global tzinfo object all over Nikola.
         try:
             self.tzinfo = dateutil.tz.gettz(self.config['TIMEZONE'])
@@ -1183,8 +1173,31 @@ class Nikola(object):
             self.compilers[plugin_info.name] = \
                 plugin_info.plugin_object
 
+        # Load config plugins and register templated shortcodes
         self._activate_plugins_of_category("ConfigPlugin")
         self._register_templated_shortcodes()
+
+        # Check with registered filters
+        for actions in self.config['FILTERS'].values():
+            for i, f in list(enumerate(actions)):
+                if isinstance(f, str):
+                    # Check whether this denotes a registered filter
+                    filter = self._filters.get(f)
+                    if filter is not None:
+                        actions[i] = filter
+
+        # Configure filters
+        for actions in self.config['FILTERS'].values():
+            for i, f in enumerate(actions):
+                if hasattr(f, 'configuration_variables'):
+                    args = {}
+                    for arg, config in f.configuration_variables.items():
+                        if config in self.config:
+                            args[arg] = self.config[config]
+                    if args:
+                        actions[i] = functools.partial(f, **args)
+
+        # Signal that we are configured
         signal('configured').send(self)
 
     def _set_global_context_from_config(self):
@@ -1981,6 +1994,18 @@ class Nikola(object):
         url = '/'.join(['..'] * (len(src_elems) - i - 1) + dst_elems[i:])
         url = utils.encodelink(url)
         return url
+
+    def register_filter(self, filter_name, filter_definition):
+        """Register a filter.
+
+        filter_name should be a name not confusable with an actual
+        executable. filter_definition should be a callable accepting
+        one argument (the filename).
+        """
+        prev_filter = self._filters.get(filter_name)
+        if prev_filter is not None:
+            utils.LOGGER.warn('''The filter "{0}" is defined more than once.'''.format(filter_name))
+        self._filters[filter_name] = filter_definition
 
     def file_exists(self, path, not_empty=False):
         """Check if the file exists. If not_empty is True, it also must not be empty."""
