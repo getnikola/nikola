@@ -98,7 +98,8 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real',
            'clone_treenode', 'flatten_tree_structure',
            'parse_escaped_hierarchical_category_name',
            'join_hierarchical_category_path', 'clean_before_deployment',
-           'sort_posts', 'indent', 'load_data', 'html_unescape', 'rss_writer',)
+           'sort_posts', 'indent', 'load_data', 'html_unescape', 'rss_writer',
+           'map_metadata',)
 
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
@@ -2097,3 +2098,13 @@ def rss_writer(rss_obj, output_path):
         if isinstance(data, bytes_str):
             data = data.decode('utf-8')
         rss_file.write(data)
+
+
+def map_metadata(meta, key, config):
+    """Map metadata from other platforms to Nikola names.
+
+    This uses the METADATA_MAPPING setting (via ``config``) and modifies the dict in place.
+    """
+    for foreign, ours in config['METADATA_MAPPING'].get(key, {}).items():
+        if foreign in meta:
+            meta[ours] = meta[foreign]

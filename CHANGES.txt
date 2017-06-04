@@ -7,9 +7,12 @@ Features
 * Support ignoring assets via ``ignore_assets`` theme meta field
   (Issue #2812)
 * Ignore unused Colorbox locales (Issue #2812)
+* Accept tag metadata as lists for YAML/TOML (Issue #2801)
+* Support for mapping metadata from other formats to Nikola names
+  using the ``METADATA_MAPPING`` setting (Issue #2817)
 * Support for reStructured text docinfo metadata with
-  USE_REST_DOCINFO_METADATA option, defaulting to False (Issue #1923)
-* New HIDE_REST_DOCINFO option, defaulting to False.
+  ``USE_REST_DOCINFO_METADATA`` option, defaulting to False (Issue #1923)
+* New ``HIDE_REST_DOCINFO`` option, defaulting to False.
 * Support for Markdown Metadata for Pelican compatibility by adding
   ``'markdown.extensions.meta'`` to ``MARKDOWN_EXTENSIONS`` (Issue #1923)
 * Support for YAML and TOML metadata (Issue #2801)

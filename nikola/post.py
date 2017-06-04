@@ -75,6 +75,7 @@ from .utils import (
     demote_headers,
     get_translation_candidate,
     unslugify,
+    map_metadata
 )
 
 __all__ = ('Post',)
@@ -238,8 +239,12 @@ class Post(object):
         is_private = False
         self._tags = {}
         for lang in self.translated_to:
+            if isinstance(self.meta[lang]['tags'], (list, tuple, set)):
+                _tag_list = self.meta[lang]['tags']
+            else:
+                _tag_list = self.meta[lang]['tags'].split(',')
             self._tags[lang] = natsort.natsorted(
-                list(set([x.strip() for x in self.meta[lang]['tags'].split(',')])),
+                list(set([x.strip() for x in _tag_list])),
                 alg=natsort.ns.F | natsort.ns.IC)
             self._tags[lang] = [t for t in self._tags[lang] if t]
             if 'draft' in [_.lower() for _ in self._tags[lang]]:
@@ -989,7 +994,7 @@ def get_metadata_from_file(source_path, config=None, lang=None):
             source_path += '.' + lang
         with io.open(source_path, "r", encoding="utf-8-sig") as meta_file:
             meta_data = [x.strip() for x in meta_file.readlines()]
-        return _get_metadata_from_file(meta_data)
+        return _get_metadata_from_file(meta_data, config)
     except (UnicodeDecodeError, UnicodeEncodeError):
         msg = 'Error reading {0}: Nikola only supports UTF-8 files'.format(source_path)
         LOGGER.error(msg)
@@ -1005,7 +1010,7 @@ re_rst_title = re.compile(r'^([{0}]{{4,}})'.format(re.escape(
     string.punctuation)))
 
 
-def _get_metadata_from_file(meta_data):
+def _get_metadata_from_file(meta_data, config=None):
     """Extract metadata from a post's source file."""
     meta = {}
     if not meta_data:
@@ -1026,6 +1031,8 @@ def _get_metadata_from_file(meta_data):
         for k in meta:
             if meta[k] is None:
                 meta[k] = ''
+        # Map metadata from other platforms to names Nikola expects (Issue #2817)
+        map_metadata(meta, 'yaml', config)
         return meta
 
     # If 1st line is '+++', then it's TOML metadata
@@ -1035,6 +1042,8 @@ def _get_metadata_from_file(meta_data):
             raise ValueError('Error parsing metadata')
         idx = meta_data.index('+++', 1)
         meta = toml.load('\n'.join(meta_data[1:idx]))
+        # Map metadata from other platforms to names Nikola expects (Issue #2817)
+        map_metadata(meta, 'toml', config)
         return meta
 
     # First, get metadata from the beginning of the file,
