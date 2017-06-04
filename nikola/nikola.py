@@ -978,9 +978,7 @@ class Nikola(object):
         filter_name_format = 'filters.{0}'
         for filter_name, filter_definition in filters.__dict__.items():
             # Ignore objects whose name starts with an underscore, or which are not callable
-            if filter_name.startswith('_'):
-                continue
-            if not callable(filter_definition):
+            if filter_name.startswith('_') or not callable(filter_definition):
                 continue
             # Register all other objects as filters
             self.register_filter(filter_name_format.format(filter_name), filter_definition)
@@ -1190,7 +1188,7 @@ class Nikola(object):
 
         # Check with registered filters and configure filters
         for actions in self.config['FILTERS'].values():
-            for i, f in list(enumerate(actions)):
+            for i, f in enumerate(actions):
                 if isinstance(f, str):
                     # Check whether this denotes a registered filter
                     _f = self.filters.get(f)
