@@ -983,7 +983,7 @@ class Nikola(object):
             if not callable(filter_definition):
                 continue
             # Register all other objects as filters
-            site.register_filter(filter_name_format.format(filter_name), filter_definition)
+            self.register_filter(filter_name_format.format(filter_name), filter_definition)
 
         self._set_global_context_from_config()
         # Read data files only if a site exists (Issue #2708)
