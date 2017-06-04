@@ -647,8 +647,8 @@ def get_template_engine(themes):
             if os.path.isfile(engine_path):
                 with open(engine_path) as fd:
                     return fd.readlines()[0].strip()
-        # default
-        return 'mako'
+    # default
+    return 'mako'
 
 
 def get_parent_theme_name(theme_name, themes_dirs=None):

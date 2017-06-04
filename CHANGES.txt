@@ -20,6 +20,7 @@ Features
 Bugfixes
 --------
 
+* Use inheritance tree when looking for theme engine (Issue #2816)
 * Fix unbound variable error in locale guessing (Issue #2806)
 
 New in v7.8.6
