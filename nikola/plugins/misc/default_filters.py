@@ -46,7 +46,7 @@ class DefaultFilters(ConfigPlugin):
             # Ignore objects whose name starts with an underscore, or which are not callable
             if filter_name.startswith('_'):
                 continue
-            if not hasattr(filter_definition, '__call__'):
+            if not callable(filter_definition):
                 continue
             # Register all other objects as filters
             site.register_filter(filter_name_format.format(filter_name), filter_definition)
