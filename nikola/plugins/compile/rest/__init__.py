@@ -32,6 +32,7 @@ import os
 
 import docutils.core
 import docutils.nodes
+import docutils.transforms
 import docutils.utils
 import docutils.io
 import docutils.readers.standalone
@@ -59,6 +60,37 @@ class CompileRest(PageCompiler):
     demote_headers = True
     logger = None
 
+    def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
+        """Read the metadata from a post, and return a metadata dict."""
+        if not self.site.config.get('USE_REST_DOCINFO_METADATA'):
+            return {}
+        if lang is None:
+            lang = LocaleBorg().current_lang
+        source_path = post.translated_source_path(lang)
+
+        with io.open(source_path, 'r', encoding='utf-8') as inf:
+            data = inf.read()
+            _, _, _, document = rst2html(data, logger=self.logger, source_path=source_path, transforms=self.site.rst_transforms, no_title_transform=False)
+        meta = {}
+        if 'title' in document:
+            meta['title'] = document['title']
+        for docinfo in document.traverse(docutils.nodes.docinfo):
+            for element in docinfo.children:
+                if element.tagname == 'field':  # custom fields (e.g. summary)
+                    name_elem, body_elem = element.children
+                    name = name_elem.astext()
+                    value = body_elem.astext()
+                elif element.tagname == 'authors':  # author list
+                    name = element.tagname
+                    value = [element.astext() for element in element.children]
+                else:  # standard fields (e.g. address)
+                    name = element.tagname
+                    value = element.astext()
+                name = name.lower()
+
+                meta[name] = value
+        return meta
+
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
         """Compile reST into HTML strings."""
         # If errors occur, this will be added to the line number reported by
@@ -83,7 +115,9 @@ class CompileRest(PageCompiler):
 
         from nikola import shortcodes as sc
         new_data, shortcodes = sc.extract_shortcodes(data)
-        output, error_level, deps = rst2html(
+        if self.site.config.get('HIDE_REST_DOCINFO', False):
+            self.site.rst_transforms.append(RemoveDocinfo)
+        output, error_level, deps, _ = rst2html(
             new_data, settings_overrides=settings_overrides, logger=self.logger, source_path=source_path, l_add_ln=add_ln, transforms=self.site.rst_transforms,
             no_title_transform=self.site.config.get('NO_DOCUTILS_TITLE_TRANSFORM', False))
         if not isinstance(output, unicode_str):
@@ -299,7 +333,7 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
     pub.set_destination(None, destination_path)
     pub.publish(enable_exit_status=enable_exit_status)
 
-    return pub.writer.parts['docinfo'] + pub.writer.parts['fragment'], pub.document.reporter.max_level, pub.settings.record_dependencies
+    return pub.writer.parts['docinfo'] + pub.writer.parts['fragment'], pub.document.reporter.max_level, pub.settings.record_dependencies, pub.document
 
 
 # Alignment helpers for extensions
@@ -308,3 +342,14 @@ _align_options_base = ('left', 'center', 'right')
 
 def _align_choice(argument):
     return docutils.parsers.rst.directives.choice(argument, _align_options_base + ("none", ""))
+
+
+class RemoveDocinfo(docutils.transforms.Transform):
+    """Remove docinfo nodes."""
+
+    default_priority = 870
+
+    def apply(self):
+        """Remove docinfo nodes."""
+        for node in self.document.traverse(docutils.nodes.docinfo):
+            node.parent.remove(node)

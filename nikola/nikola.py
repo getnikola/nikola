@@ -517,6 +517,7 @@ class Nikola(object):
             'GZIP_EXTENSIONS': ('.txt', '.htm', '.html', '.css', '.js', '.json', '.xml'),
             'HIDDEN_AUTHORS': [],
             'HIDDEN_TAGS': [],
+            'HIDE_REST_DOCINFO': False,
             'HIDDEN_CATEGORIES': [],
             'HYPHENATE': False,
             'IMAGE_FOLDERS': {'images': ''},
@@ -604,6 +605,7 @@ class Nikola(object):
             'USE_BUNDLES': True,
             'USE_CDN': False,
             'USE_CDN_WARNING': True,
+            'USE_REST_DOCINFO_METADATA': False,
             'USE_FILENAME_AS_TITLE': True,
             'USE_KATEX': False,
             'USE_OPEN_GRAPH': True,
@@ -950,7 +952,7 @@ class Nikola(object):
         # TODO: remove in v8, or earlier
         if ('THEME_REVEAL_CONFIG_SUBTHEME' in config or 'THEME_REVEAL_CONFIG_TRANSITION' in config or
                 (self.config['THEME'] in ('reveal', 'reveal-jinja') and
-                 ('subtheme' not in config.GLOBAL_CONTEXT or 'transition' not in config.GLOBAL_CONTEXT))):
+                 ('subtheme' not in config['GLOBAL_CONTEXT'] or 'transition' not in config['GLOBAL_CONTEXT']))):
             utils.LOGGER.warn('The THEME_REVEAL_CONFIG_* settings are deprecated. Use `subtheme` and `transition` in GLOBAL_CONTEXT instead.')
             self._GLOBAL_CONTEXT['subtheme'] = config.get('THEME_REVEAL_CONFIG_SUBTHEME', 'sky')
             self._GLOBAL_CONTEXT['transition'] = config.get('THEME_REVEAL_CONFIG_TRANSITION', 'cube')
@@ -2243,7 +2245,7 @@ class Nikola(object):
             deps_dict.update(post_deps_dict)
 
         for k, v in self.GLOBAL_CONTEXT['template_hooks'].items():
-            deps_dict['||template_hooks|{0}||'.format(k)] = v._items
+            deps_dict['||template_hooks|{0}||'.format(k)] = v.calculate_deps()
 
         for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
             deps_dict[k] = deps_dict['global'][k](lang)
@@ -2817,6 +2819,17 @@ def guess_locale_from_lang_posix(lang):
     if is_valid_locale(str(lang)):
         locale_n = str(lang)
     else:
+        # Guess using locale.getdefaultlocale()
+        try:
+            # str() is the default string type: bytes on py2, unicode on py3
+            # only that type is accepted by the locale module
+            locale_n = str('.'.join(locale.getdefaultlocale()))
+        except (ValueError, TypeError):
+            locale_n = str()
+        # Use guess only if it’s the same language
+        if not locale_n.startswith(lang.lower()):
+            locale_n = str()
+    if not locale_n or not is_valid_locale(locale_n):
         # this works in Travis when locale support set by Travis suggestion
         locale_n = str((locale.normalize(lang).split('.')[0]) + '.UTF-8')
     if not is_valid_locale(locale_n):

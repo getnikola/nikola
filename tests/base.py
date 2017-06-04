@@ -161,7 +161,7 @@ class FakeSite(object):
             'DISABLED_PLUGINS': [],
             'EXTRA_PLUGINS': [],
             'DEFAULT_LANG': 'en',
-            'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],
+            'MARKDOWN_EXTENSIONS': ['markdown.extensions.fenced_code', 'markdown.extensions.codehilite'],
             'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}',
             'LISTINGS_FOLDERS': {'listings': 'listings'},
         }

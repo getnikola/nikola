@@ -33,6 +33,10 @@ import os
 
 from nikola.plugin_categories import Task
 from nikola import utils
+from nikola.nikola import LEGAL_VALUES
+
+_COLORBOX_PREFIX = 'js|colorbox-i18n|jquery.colorbox-'.replace('|', os.sep)
+_COLORBOX_SLICE = slice(len(_COLORBOX_PREFIX), -3)
 
 
 class CopyAssets(Task):
@@ -48,6 +52,7 @@ class CopyAssets(Task):
         """
         kw = {
             "themes": self.site.THEMES,
+            "translations": self.site.translations,
             "files_folders": self.site.config['FILES_FOLDERS'],
             "output_folder": self.site.config['OUTPUT_FOLDER'],
             "filters": self.site.config['FILTERS'],
@@ -63,12 +68,41 @@ class CopyAssets(Task):
                                               files_folders=kw['files_folders'], output_dir=None)
         yield self.group_task()
 
+        main_theme = utils.get_theme_path(kw['themes'][0])
+        theme_ini = utils.parse_theme_meta(main_theme)
+        if theme_ini:
+            ignored_assets = theme_ini.get("Nikola", "ignored_assets", fallback='').split(',')
+            ignore_colorbox_i18n = theme_ini.get("Nikola", "ignore_colorbox_i18n", fallback="unused")
+        else:
+            ignored_assets = []
+            ignore_colorbox_i18n = "unused"
+
+        if ignore_colorbox_i18n == "unused":
+            # Check what colorbox languages we need so we can ignore the rest
+            needed_colorbox_languages = [LEGAL_VALUES['COLORBOX_LOCALES'][i] for i in kw['translations']]
+            needed_colorbox_languages = [i for i in needed_colorbox_languages if i]  # remove '' for en
+            # ignored_filenames is passed to copy_tree to avoid creating
+            # directories. Since ignored_assets are full paths, and copy_tree
+            #  works on single filenames, we can’t use that here.
+            if not needed_colorbox_languages:
+                ignored_filenames = set(["colorbox-i18n"])
+            else:
+                ignored_filenames = set()
+
         for theme_name in kw['themes']:
             src = os.path.join(utils.get_theme_path(theme_name), 'assets')
             dst = os.path.join(kw['output_folder'], 'assets')
-            for task in utils.copy_tree(src, dst):
-                if task['name'] in tasks:
+            for task in utils.copy_tree(src, dst, ignored_filenames=ignored_filenames):
+                asset_name = os.path.relpath(task['name'], dst)
+                if task['name'] in tasks or asset_name in ignored_assets:
                     continue
+                elif asset_name.startswith(_COLORBOX_PREFIX):
+                    if ignore_colorbox_i18n == "all" or ignore_colorbox_i18n is True:
+                        continue
+
+                    colorbox_lang = asset_name[_COLORBOX_SLICE]
+                    if ignore_colorbox_i18n == "unused" and colorbox_lang not in needed_colorbox_languages:
+                        continue
                 tasks[task['name']] = task
                 task['uptodate'] = [utils.config_changed(kw, 'nikola.plugins.task.copy_assets')]
                 task['basename'] = self.name

@@ -4,8 +4,31 @@ New in master
 Features
 --------
 
-* New ``deduplicate_ids``, for preventing duplication of HTML id
-  attributes (Issue #2570)
+* Support ignoring assets via ``ignore_assets`` theme meta field
+  (Issue #2812)
+* Ignore unused Colorbox locales (Issue #2812)
+* Support for reStructured text docinfo metadata with
+  USE_REST_DOCINFO_METADATA option, defaulting to False (Issue #1923)
+* New HIDE_REST_DOCINFO option, defaulting to False.
+* Support for Markdown Metadata for Pelican compatibility by adding
+  ``'markdown.extensions.meta'`` to ``MARKDOWN_EXTENSIONS`` (Issue #1923)
+* Support for YAML and TOML metadata (Issue #2801)
+
+Bugfixes
+--------
+
+* Fix unbound variable error in locale guessing (Issue #2806)
+
+New in v7.8.6
+=============
+
+Features
+--------
+
+* Guess file format from file name on new_post (Issue #2798)
+* Use BaguetteBox as lightbox in base theme (Issue #2777)
+* New ``deduplicate_ids`` filter, for preventing duplication of HTML
+  ``id`` attributes (Issue #2570)
 * Ported gallery image layout to base theme (Issue #2775)
 * Better error handling when posts can't be parsed (Issue #2771)
 * Use ``.theme`` files to store theme metadata (Issue #2758)
@@ -16,11 +39,22 @@ Features
 Bugfixes
 --------
 
+* Use ``locale.getdefaultlocale()`` for better locale guessing
+  (credit: @madduck)
+* Save dependencies for template hooks properly (using ``.__doc__`` or
+  ``.template_registry_identifier`` for callables)
+* Enable larger panorama thumbnails (Issue #2780)
 * Disable ``archive_rss`` link handler, which was useless because no
   such RSS was ever generated (Issue #2783)
 * Ignore files ending wih "bak" (Issue #2740)
 * Use page.tmpl by default, which is inherited from story.tmpl (Issue
   #1891)
+
+Other
+-----
+
+* Limit Jupyter support to notebook >= 4.0.0 (it already was in
+  requirements-extras.txt; Issue #2733)
 
 New in v7.8.5
 =============

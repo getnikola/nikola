@@ -213,7 +213,8 @@ class CommandCheck(Command):
                 return False
 
             if '.html' == fname[-5:]:
-                d = lxml.html.fromstring(open(filename, 'rb').read())
+                with open(filename, 'rb') as inf:
+                    d = lxml.html.fromstring(inf.read())
                 extra_objs = lxml.html.fromstring('<html/>')
 
                 # Turn elements with a srcset attribute into individual img elements with src attributes

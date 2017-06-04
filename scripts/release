@@ -90,7 +90,6 @@ sed "s/:Version: .*/:Version: $version/g" docs/*.txt docs/*.rst -i
 sed "s/:Version: .*/:Version: Nikola $version/g" docs/man/nikola.rst -i
 sed "s/__version__ = .*/__version__ = '$version'/g" nikola/__init__.py -i
 sed "s/version: .*/version: $version/g" snapcraft.yaml -i
-sed "s/Nikola==.*'/Nikola==$version'/g" snapcraft/nikola.py -i
 
 setopt errexit # Exit on errors
 

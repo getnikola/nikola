@@ -834,6 +834,8 @@ CONTENT_FOOTER = 'Contents &copy; {date} \
 # tuples of tuples of positional arguments and dicts of keyword arguments
 # to format().  For example, {'en': (('Hello'), {'target': 'World'})}
 # results in CONTENT_FOOTER['en'].format('Hello', target='World').
+# If you need to use the literal braces '{' and '}' in your footer text, use
+# '{{' and '}}' to escape them (str.format is used)
 # WARNING: If you do not use multiple languages with CONTENT_FOOTER, this
 #          still needs to be a dict of this format.  (it can be empty if you
 #          do not need formatting)
@@ -982,7 +984,7 @@ PRETTY_URLS = ${PRETTY_URLS}
 # Note: most Nikola-specific extensions are done via the Nikola plugin system,
 #       with the MarkdownExtension class and should not be added here.
 # The default is ['fenced_code', 'codehilite']
-MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extra']
+MARKDOWN_EXTENSIONS = ['markdown.extensions.fenced_code', 'markdown.extensions.codehilite', 'markdown.extensions.extra']
 
 # Extra options to pass to the pandoc command.
 # by default, it's empty, is a list of strings, for example
@@ -1132,6 +1134,12 @@ MARKDOWN_EXTENSIONS = ['fenced_code', 'codehilite', 'extra']
 # '.*\/(?P<date>\d{4}-\d{2}-\d{2})-(?P<slug>.*)-(?P<title>.*)\.rst'
 # (Note the '.*\/' in the beginning -- matches source paths relative to conf.py)
 # FILE_METADATA_REGEXP = None
+
+# If enabled, extract metadata from docinfo fields in reSt documents
+# USE_REST_DOCINFO_METADATA = False
+
+# If enabled, hide docinfo fields in reSt document output
+# HIDE_REST_DOCINFO = False
 
 # If you hate "Filenames with Capital Letters and Spaces.md", you should
 # set this to true.

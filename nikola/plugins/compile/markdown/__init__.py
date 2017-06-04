@@ -42,7 +42,7 @@ except ImportError:
 
 from nikola import shortcodes as sc
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs, req_missing, write_metadata
+from nikola.utils import makedirs, req_missing, write_metadata, LocaleBorg
 
 
 class ThreadLocalMarkdown(threading.local):
@@ -58,8 +58,14 @@ class ThreadLocalMarkdown(threading.local):
     def convert(self, data):
         """Convert data to HTML and reset internal state."""
         result = self.markdown.convert(data)
+        try:
+            meta = {}
+            for k in self.markdown.Meta:  # This reads everything as lists
+                meta[k.lower()] = ','.join(self.markdown.Meta[k])
+        except Exception:
+            meta = {}
         self.markdown.reset()
-        return result
+        return result, meta
 
 
 class CompileMarkdown(PageCompiler):
@@ -85,6 +91,7 @@ class CompileMarkdown(PageCompiler):
         extensions.extend(site_extensions)
         if Markdown is not None:
             self.converter = ThreadLocalMarkdown(extensions)
+        self.support_metadata = 'markdown.extensions.meta' in extensions
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
         """Compile Markdown into HTML strings."""
@@ -93,7 +100,7 @@ class CompileMarkdown(PageCompiler):
         if not is_two_file:
             _, data = self.split_metadata(data)
         new_data, shortcodes = sc.extract_shortcodes(data)
-        output = self.converter.convert(new_data)
+        output, _ = self.converter.convert(new_data)
         output, shortcode_deps = self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, with_dependencies=True, extra_context=dict(post=post))
         return output, shortcode_deps
 
@@ -134,3 +141,16 @@ class CompileMarkdown(PageCompiler):
                 fd.write(write_metadata(metadata))
                 fd.write('-->\n\n')
             fd.write(content)
+
+    def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
+        """Read the metadata from a post, and return a metadata dict."""
+        if not self.support_metadata:
+            return {}
+        if Markdown is None:
+            req_missing(['markdown'], 'build this site (compile Markdown)')
+        if lang is None:
+            lang = LocaleBorg().current_lang
+        source = post.translated_source_path(lang)
+        with io.open(source, 'r', encoding='utf-8') as inf:
+            _, meta = self.converter.convert(inf.read())
+        return meta

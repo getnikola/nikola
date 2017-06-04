@@ -20,6 +20,16 @@ ln -sf ../../../../../../bower_components/bootstrap/dist/fonts/* .
 git add .
 popd
 
+# Link baguettebox.js to base theme
+pushd nikola/data/themes/base/assets/js
+ln -sf ../../../../../../bower_components/baguettebox.js/dist/*js .
+git add .
+popd
+pushd nikola/data/themes/base/assets/css
+ln -sf ../../../../../../bower_components/baguettebox.js/dist/*css .
+git add .
+popd
+
 # Link moment.js to base theme
 pushd nikola/data/themes/base/assets/js
 ln -sf ../../../../../../bower_components/moment/min/moment-with-locales.min.js .

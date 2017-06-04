@@ -75,11 +75,13 @@ lang="{{ lang }}">
 {% macro html_stylesheets() %}
     {% if use_bundles %}
         {% if use_cdn %}
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.8.2/baguetteBox.min.css" rel="stylesheet" type="text/css">
             <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
         {% else %}
             <link href="/assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
         {% endif %}
     {% else %}
+        <link href="/assets/css/baguetteBox.min.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/rst.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/code.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/theme.css" rel="stylesheet" type="text/css">

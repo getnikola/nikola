@@ -512,9 +512,23 @@ class TemplateHookRegistry(object):
         c = callable(inp)
         self._items.append((c, inp, wants_site_and_context, args, kwargs))
 
+    def calculate_deps(self):
+        """Calculate dependencies for a registry."""
+        deps = []
+        for is_callable, inp, wants_site_and_context, args, kwargs in self._items:
+            if not is_callable:
+                name = inp
+            elif hasattr(inp, 'template_registry_identifier'):
+                name = inp.template_registry_identifier
+            elif hasattr(inp, '__doc__'):
+                name = inp.__doc__
+            else:
+                name = '_undefined_callable_'
+            deps.append((is_callable, name, wants_site_and_context, args, kwargs))
+
     def __hash__(self):
         """Return hash of a registry."""
-        return hash(config_changed({self.name: self._items})._calc_digest())
+        return hash(config_changed({self.name: self.calculate_deps()})._calc_digest())
 
     def __str__(self):
         """Stringify a registry."""
@@ -724,7 +738,7 @@ def load_messages(themes, translations, default_lang, themes_dirs):
     return messages
 
 
-def copy_tree(src, dst, link_cutoff=None):
+def copy_tree(src, dst, link_cutoff=None, ignored_filenames=None):
     """Copy a src tree to the dst folder.
 
     Example:
@@ -735,11 +749,13 @@ def copy_tree(src, dst, link_cutoff=None):
     should copy "themes/defauts/assets/foo/bar" to
     "output/assets/foo/bar"
 
-    if link_cutoff is set, then the links pointing at things
+    If link_cutoff is set, then the links pointing at things
     *inside* that folder will stay as links, and links
     pointing *outside* that folder will be copied.
+
+    ignored_filenames is a set of file names that will be ignored.
     """
-    ignore = set(['.svn'])
+    ignore = set(['.svn', '.git']) | (ignored_filenames or set())
     base_len = len(src.split(os.sep))
     for root, dirs, files in os.walk(src, followlinks=True):
         root_parts = root.split(os.sep)
@@ -2036,8 +2052,10 @@ def load_data(path):
     """Given path to a file, load data from it."""
     ext = os.path.splitext(path)[-1]
     loader = None
+    function = 'load'
     if ext in {'.yml', '.yaml'}:
         loader = yaml
+        function = 'safe_load'
         if yaml is None:
             req_missing(['yaml'], 'use YAML data files')
             return {}
@@ -2051,7 +2069,7 @@ def load_data(path):
     if loader is None:
         return
     with io.open(path, 'r', encoding='utf8') as inf:
-        return loader.load(inf)
+        return getattr(loader, function)(inf)
 
 
 # see http://stackoverflow.com/a/2087433

@@ -51,6 +51,14 @@ try:
     import pyphen
 except ImportError:
     pyphen = None
+try:
+    import toml
+except ImportError:
+    toml = None
+try:
+    import yaml
+except ImportError:
+    yaml = None
 
 from math import ceil  # for reading time feature
 
@@ -145,15 +153,17 @@ class Post(object):
         self._dependency_uptodate_page = defaultdict(list)
         self._depfile = defaultdict(list)
 
+        # Load internationalized metadata
+        for lang in self.translations:
+            if os.path.isfile(get_translation_candidate(self.config, self.source_path, lang)):
+                self.translated_to.add(lang)
+
         default_metadata, self.newstylemeta = get_meta(self, self.config['FILE_METADATA_REGEXP'], self.config['UNSLUGIFY_TITLES'])
 
         self.meta = Functionary(lambda: None, self.default_lang)
         self.meta[self.default_lang] = default_metadata
 
-        # Load internationalized metadata
         for lang in self.translations:
-            if os.path.isfile(get_translation_candidate(self.config, self.source_path, lang)):
-                self.translated_to.add(lang)
             if lang != self.default_lang:
                 meta = defaultdict(lambda: '')
                 meta.update(default_metadata)
@@ -995,24 +1005,6 @@ re_rst_title = re.compile(r'^([{0}]{{4,}})'.format(re.escape(
     string.punctuation)))
 
 
-def _get_title_from_contents(meta_data):
-    """Extract title from file contents, LAST RESOURCE."""
-    piece = meta_data[:]
-    title = None
-    for i, line in enumerate(piece):
-        if re_rst_title.findall(line) and i > 0:
-            title = meta_data[i - 1].strip()
-            break
-        if (re_rst_title.findall(line) and i >= 0 and
-                re_rst_title.findall(meta_data[i + 2])):
-            title = meta_data[i + 1].strip()
-            break
-        if re_md_title.findall(line):
-            title = re_md_title.findall(line)[0]
-            break
-    return title
-
-
 def _get_metadata_from_file(meta_data):
     """Extract metadata from a post's source file."""
     meta = {}
@@ -1023,6 +1015,28 @@ def _get_metadata_from_file(meta_data):
     if not meta_data[0]:
         meta_data = meta_data[1:]
 
+    # If 1st line is '---', then it's YAML metadata
+    if meta_data[0] == '---':
+        if yaml is None:
+            utils.req_missing('pyyaml', 'use YAML metadata', optional=True)
+            raise ValueError('Error parsing metadata')
+        idx = meta_data.index('---', 1)
+        meta = yaml.safe_load('\n'.join(meta_data[1:idx]))
+        # We expect empty metadata to be '', not None
+        for k in meta:
+            if meta[k] is None:
+                meta[k] = ''
+        return meta
+
+    # If 1st line is '+++', then it's TOML metadata
+    if meta_data[0] == '+++':
+        if toml is None:
+            utils.req_missing('toml', 'use TOML metadata', optional=True)
+            raise ValueError('Error parsing metadata')
+        idx = meta_data.index('+++', 1)
+        meta = toml.load('\n'.join(meta_data[1:idx]))
+        return meta
+
     # First, get metadata from the beginning of the file,
     # up to first empty line
 
@@ -1032,12 +1046,6 @@ def _get_metadata_from_file(meta_data):
         match = re_meta(line)
         if match[0]:
             meta[match[0]] = match[1]
-
-    # If we have no title, try to get it from document
-    if 'title' not in meta:
-        t = _get_title_from_contents(meta_data)
-        if t is not None:
-            meta['title'] = t
 
     return meta
 
