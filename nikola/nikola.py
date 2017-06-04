@@ -61,7 +61,7 @@ from blinker import signal
 
 from .post import Post  # NOQA
 from .state import Persistor
-from . import DEBUG, utils, shortcodes
+from . import DEBUG, filters, utils, shortcodes
 from .plugin_categories import (
     Command,
     LateTask,
@@ -973,6 +973,17 @@ class Nikola(object):
 
         # Get search path for themes
         self.themes_dirs = ['themes'] + self.config['EXTRA_THEMES_DIRS']
+
+        # Register default filters
+        filter_name_format = 'filters.{0}'
+        for filter_name, filter_definition in filters.__dict__.items():
+            # Ignore objects whose name starts with an underscore, or which are not callable
+            if filter_name.startswith('_'):
+                continue
+            if not callable(filter_definition):
+                continue
+            # Register all other objects as filters
+            site.register_filter(filter_name_format.format(filter_name), filter_definition)
 
         self._set_global_context_from_config()
         # Read data files only if a site exists (Issue #2708)

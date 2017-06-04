@@ -26,8 +26,7 @@
 
 """Utility functions to help run filters on files.
 
-All filters defined in this module are registered in the
-default_filters plugin.
+All filters defined in this module are registered in Nikola.__init__.
 """
 
 from functools import wraps
