@@ -3,6 +3,7 @@ Pillow>=2.4.0
 python-dateutil>=2.4.0
 docutils>=0.12
 mako>=1.0.0
+Markdown>=2.4.0
 unidecode>=0.04.16
 lxml>=3.3.5
 Yapsy>=1.11.223
