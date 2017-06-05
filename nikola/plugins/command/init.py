@@ -74,11 +74,13 @@ SAMPLE_CONF = {
     'FEED_READ_MORE_LINK': DEFAULT_FEED_READ_MORE_LINK,
     'POSTS': """(
     ("posts/*.rst", "posts", "post.tmpl"),
+    ("posts/*.md", "posts", "post.tmpl"),
     ("posts/*.txt", "posts", "post.tmpl"),
     ("posts/*.html", "posts", "post.tmpl"),
 )""",
     'PAGES': """(
     ("pages/*.rst", "pages", "page.tmpl"),
+    ("pages/*.md", "pages", "page.tmpl"),
     ("pages/*.txt", "pages", "page.tmpl"),
     ("pages/*.html", "pages", "page.tmpl"),
 )""",
