@@ -1458,23 +1458,23 @@ def get_translation_candidate(config, path, lang):
             return config['TRANSLATIONS_PATTERN'].format(path=p, ext=e, lang=lang)
 
 
-def write_metadata(data, format='nikola'):
+def write_metadata(data, _format='nikola'):
     """Write metadata."""
-    format = format.lower()
-    if format not in ['nikola', 'yaml', 'toml', 'pelican_rest', 'pelican_md']:
-        LOGGER.warn('Unknown METADATA_FORMAT %s, using "nikola" format', format)
+    _format = _format.lower()
+    if _format not in ['nikola', 'yaml', 'toml', 'pelican_rest', 'pelican_md']:
+        LOGGER.warn('Unknown METADATA_FORMAT %s, using "nikola" format', _format)
 
-    if format == 'yaml':
+    if _format == 'yaml':
         if yaml is None:
             req_missing('pyyaml', 'use YAML metadata', optional=False)
         return '\n'.join(('---', yaml.safe_dump(data, default_flow_style=False), '---', ''))
 
-    elif format == 'toml':
+    elif _format == 'toml':
         if toml is None:
             req_missing('toml', 'use TOML metadata', optional=False)
         return '\n'.join(('+++', toml.dumps(data), '+++', ''))
 
-    elif format == 'pelican_rest':
+    elif _format == 'pelican_rest':
         title = data.pop('title')
         results = [
             '=' * len(title),
@@ -1484,7 +1484,7 @@ def write_metadata(data, format='nikola'):
         ] + [':{0}: {1}'.format(k, v) for k, v in data.items() if v] + ['']
         return '\n'.join(results)
 
-    elif format == 'pelican_md':
+    elif _format == 'pelican_md':
         results = ['{0}: {1}'.format(k, v) for k, v in data.items() if v] + ['', '']
         return '\n'.join(results)
 
