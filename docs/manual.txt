@@ -9,7 +9,7 @@
 The Nikola Handbook
 ===================
 
-:Version: 7.8.6
+:Version: 7.8.7
 
 .. class:: alert alert-info pull-right
 
@@ -2097,10 +2097,11 @@ filters.add_header_permalinks
    This is required if you use a custom theme that does not use ``"e-content entry-content"`` as a class for post and page contents.
 
    .. code:: python
-        # Default value:
-        HEADER_PERMALINKS_XPATH_LIST = ['*//div[@class="e-content entry-content"]//{hx}']
-        # Include *every* header (not recommended):
-        # HEADER_PERMALINKS_XPATH_LIST = ['*//{hx}']
+
+      # Default value:
+      HEADER_PERMALINKS_XPATH_LIST = ['*//div[@class="e-content entry-content"]//{hx}']
+      # Include *every* header (not recommended):
+      # HEADER_PERMALINKS_XPATH_LIST = ['*//{hx}']
 
 
 filters.deduplicate_ids

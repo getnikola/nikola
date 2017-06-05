@@ -1,5 +1,27 @@
-New in master
+New in v7.8.7
 =============
+
+In an effort to improve interoperability with other static site
+generators, make importing data easier, and help with world
+domination, Nikola v7.8.7 ships with support for the following
+metadata formats:
+
+* reST-style comments (``.. name: value`` — default format)
+* Two-file format (reST-style comments or 7-line)
+* Jupyter Notebook metadata
+* YAML, between ``---`` (Jekyll, Hugo)
+* TOML, between ``+++`` (Hugo)
+* reST docinfo (Pelican)
+* Markdown metadata extension (Pelican)
+
+In addition, Markdown is now enabled and required by default.
+More details: <https://getnikola.com/handbook.html#metadata-formats>
+
+The release also fixes two important bugs, one that crashes when
+trying to detect locale in some edge cases, and another which made
+some themes quietly leak template files.  If you’re using a
+Jinja2-based theme that does not have its own ``parent`` file, please
+force a rebuild (``nikola build -a``).
 
 Features
 --------
