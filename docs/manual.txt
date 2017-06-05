@@ -1269,6 +1269,16 @@ variables in your shortcode template, with a caveat: Because of an unfortunate
 implementation detail (a name conflict), ``data`` is called ``global_data``
 when used in a shortcode.
 
+If you have some template code that you want to appear in both a template and
+shortcode, you can put the shared code in a separate template and import it in both
+places. Shortcodes can import any template inside ``templates/`` and themes,
+and call any macros defined in those.
+
+For example, if you define a macro ``foo(x, y)`` in
+``templates/shared_sc.tmpl``, you can include ``shared_foo.tmpl`` in
+``templates/special_post.tmpl`` and ``shortcodes/foo.tmpl`` and then call the
+``${shared_foo.foo(x, y)}`` macro.
+
 The Global Context and Data files
 ---------------------------------
 
