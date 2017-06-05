@@ -35,7 +35,7 @@ import io
 from yapsy.IPlugin import IPlugin
 from doit.cmd_base import Command as DoitCommand
 
-from .utils import LOGGER, first_line, req_missing
+from .utils import LOGGER, first_line
 
 __all__ = (
     'Command',
