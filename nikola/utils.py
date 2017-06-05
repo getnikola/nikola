@@ -1458,24 +1458,48 @@ def get_translation_candidate(config, path, lang):
             return config['TRANSLATIONS_PATTERN'].format(path=p, ext=e, lang=lang)
 
 
-def write_metadata(data):
+def write_metadata(data, format='nikola'):
     """Write metadata."""
-    order = ('title', 'slug', 'date', 'tags', 'category', 'link', 'description', 'type')
-    f = '.. {0}: {1}'
-    meta = []
-    for k in order:
-        try:
-            meta.append(f.format(k, data.pop(k)))
-        except KeyError:
-            pass
+    format = format.lower()
+    if format not in ['nikola', 'yaml', 'toml', 'pelican_rest', 'pelican_md']:
+        LOGGER.warn('Unknown METADATA_FORMAT %s, using "nikola" format', format)
 
-    # Leftover metadata (user-specified/non-default).
-    for k in natsort.natsorted(list(data.keys()), alg=natsort.ns.F | natsort.ns.IC):
-        meta.append(f.format(k, data[k]))
+    if format == 'yaml':
+        if yaml is None:
+            req_missing('pyyaml', 'use YAML metadata', optional=False)
+            return '\n'.join(('---', yaml.dump(data), '---'), '')
+    elif format == 'toml':
+        if toml is None:
+            req_missing('toml', 'use TOML metadata', optional=False)
+            return '\n'.join(('+++', toml.dumps(data), '+++'), '')
+    elif format == 'pelican_rest':
+        title = data.pop('title')
+        results = [
+            '=' * len(title),
+            title,
+            '=' * len(title),
+            ''
+        ] + [':{0}: {1}'.format(k, v) for k, v in data.items()] + ['']
+        return '\n'.join(results)
 
-    meta.append('')
+    elif format == 'pelican_md':
+        ['{0}: {1}'.format(k, v) for k, v in data.items()] + ['']
+        return '\n'.join(results)
 
-    return '\n'.join(meta)
+    else:  # Nikola, default
+        order = ('title', 'slug', 'date', 'tags', 'category', 'link', 'description', 'type')
+        f = '.. {0}: {1}'
+        meta = []
+        for k in order:
+            try:
+                meta.append(f.format(k, data.pop(k)))
+            except KeyError:
+                pass
+        # Leftover metadata (user-specified/non-default).
+        for k in natsort.natsorted(list(data.keys()), alg=natsort.ns.F | natsort.ns.IC):
+            meta.append(f.format(k, data[k]))
+        meta.append('')
+        return '\n'.join(meta)
 
 
 def ask(query, default=None):

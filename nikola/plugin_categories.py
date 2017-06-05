@@ -328,27 +328,6 @@ class PageCompiler(BasePlugin):
         """Compile the source, save it on dest (DEPRECATED)."""
         raise NotImplementedError()
 
-    def format_metadata(self, metadata, format='nikola'):
-        """Return a string with metadata formatted according to preferences."""
-        format = self.site.config.get('METADATA_FORMAT', format).lower()
-
-        if format not in ['nikola', 'yaml', 'toml']:
-            LOGGER.warn('Unknown METADATA_FORMAT %s', format)
-
-        if format == 'yaml':
-            if yaml is None:
-                req_missing('pyyaml', 'use YAML metadata', optional=False)
-                return '\n'.join(('---', yaml.dump(metadata), '---'))
-        elif format == 'toml':
-            if toml is None:
-                req_missing('toml', 'use TOML metadata', optional=False)
-                return '\n'.join(('+++', toml.dumps(metadata), '+++'))
-        else:  # Nikola
-            results = []
-            for k, v in metadata.items:
-                results.append('.. {k}: {v}'.format(k=k, v=v))
-            return '\n'.join(results)
-
     def create_post(self, path, content=None, onefile=False, is_page=False, **kw):
         """Create post file with optional metadata."""
         raise NotImplementedError()
