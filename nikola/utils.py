@@ -1467,11 +1467,11 @@ def write_metadata(data, format='nikola'):
     if format == 'yaml':
         if yaml is None:
             req_missing('pyyaml', 'use YAML metadata', optional=False)
-            return '\n'.join(('---', yaml.dump(data), '---'), '')
+        return '\n'.join(('---', yaml.safe_dump(data, default_flow_style=False), '---', ''))
     elif format == 'toml':
         if toml is None:
             req_missing('toml', 'use TOML metadata', optional=False)
-            return '\n'.join(('+++', toml.dumps(data), '+++'), '')
+        return '\n'.join(('+++', toml.dumps(data), '+++', ''))
     elif format == 'pelican_rest':
         title = data.pop('title')
         results = [
@@ -1479,11 +1479,11 @@ def write_metadata(data, format='nikola'):
             title,
             '=' * len(title),
             ''
-        ] + [':{0}: {1}'.format(k, v) for k, v in data.items()] + ['']
+        ] + [':{0}: {1}'.format(k, v) for k, v in data.items() if v] + ['']
         return '\n'.join(results)
 
     elif format == 'pelican_md':
-        ['{0}: {1}'.format(k, v) for k, v in data.items()] + ['']
+        results = ['{0}: {1}'.format(k, v) for k, v in data.items() if v] + ['', '']
         return '\n'.join(results)
 
     else:  # Nikola, default

@@ -139,10 +139,11 @@ class CompileMarkdown(PageCompiler):
             if onefile:
                 format = self.site.config.get('METADATA_FORMAT', 'nikola')
                 if format == 'pelican':
-                    format = 'pelican_md'                
-                fd.write('<!-- \n')
-                fd.write(write_metadata(metadata, format))
-                fd.write('-->\n\n')
+                    format = 'pelican_md'
+                data = write_metadata(metadata, format)
+                if format == 'nikola':
+                    data = '<!--\n' + data + '-->\n\n'
+                fd.write(data)
             fd.write(content)
 
     def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
@@ -156,6 +157,12 @@ class CompileMarkdown(PageCompiler):
         source = post.translated_source_path(lang)
         with io.open(source, 'r', encoding='utf-8') as inf:
             # Note: markdown meta returns lowercase keys
+            data = inf.read()
+            # If the metadata starts with "---" it's actually YAML and
+            # we should not let markdown parse it, because it will do
+            # bad things like setting empty tags to "''"
+            if data.splitlines()[0] == '---':
+                return {}
             _, meta = self.converter.convert(inf.read())
         # Map metadata from other platforms to names Nikola expects (Issue #2817)
         map_metadata(meta, 'markdown_metadata', self.site.config)
