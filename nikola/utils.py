@@ -1468,10 +1468,12 @@ def write_metadata(data, format='nikola'):
         if yaml is None:
             req_missing('pyyaml', 'use YAML metadata', optional=False)
         return '\n'.join(('---', yaml.safe_dump(data, default_flow_style=False), '---', ''))
+
     elif format == 'toml':
         if toml is None:
             req_missing('toml', 'use TOML metadata', optional=False)
         return '\n'.join(('+++', toml.dumps(data), '+++', ''))
+
     elif format == 'pelican_rest':
         title = data.pop('title')
         results = [
