@@ -206,6 +206,13 @@ COMPILERS = ${COMPILERS}
 # Set to False for two-file posts, with separate metadata.
 # ONE_FILE_POSTS = True
 
+# Preferred metadata format for new posts
+# "Nikola": reSt comments wrapped in a comment if needed (default)
+# "YAML": YAML wrapped in "---" 
+# "TOML": TOML wrapped in "+++"
+# "Pelican": Native markdown metadata or reSt docinfo fields. Nikola style for other formats.
+# METADATA_FORMAT = "Nikola"
+
 # Use date-based path when creating posts?
 # Can be enabled on a per-post basis with `nikola new_post -d`.
 # The setting is ignored when creating pages (`-d` still works).
