@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Enable markdown by default (part of Issue #2809)
 * Allowing to register filters from plugins, and allowing to specify default
   filters as strings of the form ``filters.<name>`` (part of Issue #2475)
 * Support ignoring assets via ``ignore_assets`` theme meta field
