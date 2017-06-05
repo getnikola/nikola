@@ -34,14 +34,6 @@ import io
 
 from yapsy.IPlugin import IPlugin
 from doit.cmd_base import Command as DoitCommand
-try:
-    import toml
-except ImportError:
-    toml = None
-try:
-    import yaml
-except ImportError:
-    yaml = None
 
 from .utils import LOGGER, first_line, req_missing
 
