@@ -546,7 +546,7 @@ class Nikola(object):
             'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],  # FIXME: Add 'extras' in v8
             'MAX_IMAGE_SIZE': 1280,
             'MATHJAX_CONFIG': '',
-            'METADATA_FORMAT': 'Nikola',
+            'METADATA_FORMAT': 'nikola',
             'METADATA_MAPPING': {},
             'NEW_POST_DATE_PATH': False,
             'NEW_POST_DATE_PATH_FORMAT': '%Y/%m/%d',
