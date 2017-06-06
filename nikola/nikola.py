@@ -962,7 +962,7 @@ class Nikola(object):
             self._GLOBAL_CONTEXT['transition'] = config.get('THEME_REVEAL_CONFIG_TRANSITION', 'cube')
 
         # The pelican metadata format requires a markdown extension
-        if config.get('METADATA_FORMAT', 'nikola') == 'pelican':
+        if config.get('METADATA_FORMAT', 'nikola').lower() == 'pelican':
             if 'markdown.extensions.meta' not in config.get('MARKDOWN_EXTENSIONS', []):
                 utils.LOGGER.warn('To use the pelican metadata format you may need to add "markdown.extensions.meta" to your MARKDOWN_EXTENSIONS setting.')
 

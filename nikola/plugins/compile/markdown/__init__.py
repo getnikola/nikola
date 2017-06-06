@@ -137,7 +137,7 @@ class CompileMarkdown(PageCompiler):
             content += '\n'
         with io.open(path, "w+", encoding="utf8") as fd:
             if onefile:
-                _format = self.site.config.get('METADATA_FORMAT', 'nikola')
+                _format = self.site.config.get('METADATA_FORMAT', 'nikola').lower()
                 if _format == 'pelican':
                     _format = 'pelican_md'
                 data = write_metadata(metadata, _format)
