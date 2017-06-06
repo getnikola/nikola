@@ -218,7 +218,8 @@ class TestLocaleBorg(unittest.TestCase):
         lang_11, loc_11 = LocaleSupportInTesting.langlocales['default']
         nikola.utils.LocaleBorg.reset()
         self.assertRaises(Exception, nikola.utils.LocaleBorg)
-        self.assertRaises(Exception, nikola.utils.LocaleBorg.set_locale, lang_11)
+        self.assertRaises(
+            Exception, nikola.utils.LocaleBorg.set_locale, lang_11)
 
     def test_set_locale_raises_on_invalid_lang(self):
         lang_11, loc_11 = LocaleSupportInTesting.langlocales['default']
@@ -238,10 +239,15 @@ class TestTestPreconditions(unittest.TestCase):
        instaled or environmet variables NIKOLA_LOCALE_DEFAULT  or
        NIKOLA_LOCALE_OTHER with bad values.
     """
+
     def test_langlocale_default_availability(self):
         msg = "META ERROR: The pair lang, locale : {0} {1} is invalid"
-        self.assertTrue(nikola.nikola.is_valid_locale(loc_11), msg.format(lang_11, loc_11))
+        self.assertTrue(
+            nikola.nikola.is_valid_locale(loc_11),
+            msg.format(lang_11, loc_11))
 
     def test_langlocale_other_availability(self):
         msg = "META ERROR: The pair lang, locale : {0} {1} is invalid"
-        self.assertTrue(nikola.nikola.is_valid_locale(loc_22), msg.format(lang_22, loc_22))
+        self.assertTrue(
+            nikola.nikola.is_valid_locale(loc_22),
+            msg.format(lang_22, loc_22))

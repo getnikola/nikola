@@ -39,5 +39,6 @@ def main(import_directory=None):
     os.chdir(import_directory)
     os.system('nikola build')
 
+
 if __name__ == '__main__':
     main()
