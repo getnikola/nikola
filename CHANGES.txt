@@ -1,3 +1,11 @@
+New in master
+=============
+
+Features
+--------
+
+* Extract metadata from HTML meta and title tags like Pelican (Issue #1923)
+
 New in v7.8.7
 =============
 
