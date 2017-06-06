@@ -109,6 +109,6 @@ class CompileHtml(PageCompiler):
             elif k == 'keywords':
                 k = 'tags'
             metadata[k] = tag.get('content', '')
-        map_metadata(metadata, 'rest_docinfo', self.site.config)
+        map_metadata(metadata, 'html_metadata', self.site.config)
         return metadata
 
