@@ -4,7 +4,6 @@
 u"""Test shortcodes."""
 
 from __future__ import unicode_literals
-import itertools
 
 import pytest
 from nikola import shortcodes
@@ -18,9 +17,9 @@ def noargs(site, data='', lang=''):
 
 def arg(*args, **kwargs):
     # don’t clutter the kwargs dict
-    _ = kwargs.pop('site')
+    kwargs.pop('site')
     data = kwargs.pop('data')
-    lang = kwargs.pop('lang')
+    kwargs.pop('lang')
     # TODO hack for Python 2.7 -- remove when possible
     if sys.version_info[0] == 2:
         args = tuple(i.encode('utf-8') for i in args)

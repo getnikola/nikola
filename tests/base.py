@@ -21,7 +21,6 @@ import logbook
 
 import nikola.utils
 import nikola.shortcodes
-nikola.utils.LOGGER.handlers.append(logbook.TestHandler())
 
 from yapsy.PluginManager import PluginManager
 from nikola.plugin_categories import (
@@ -35,6 +34,7 @@ from nikola.plugin_categories import (
     MarkdownExtension,
     RestExtension
 )
+nikola.utils.LOGGER.handlers.append(logbook.TestHandler())
 
 BaseTestCase = unittest.TestCase
 

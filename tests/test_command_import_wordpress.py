@@ -222,7 +222,6 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
 
         write_metadata = mock.MagicMock()
         write_content = mock.MagicMock()
-        write_post = mock.MagicMock()
         write_attachments_info = mock.MagicMock()
         download_mock = mock.MagicMock()
 

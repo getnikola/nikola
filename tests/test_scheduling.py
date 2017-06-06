@@ -2,8 +2,6 @@
 from __future__ import unicode_literals, absolute_import
 
 import datetime
-import locale
-import os
 import sys
 
 import dateutil.parser
@@ -18,7 +16,8 @@ try:
 except ImportError:
     _freeze_time = False
 
-    def freeze_time(x): return lambda y: y
+    def freeze_time(x):
+        return lambda y: y
 
 _NOW = datetime.datetime(  # Thursday
     2013, 8, 22, 10, 0, 0, tzinfo=dateutil.tz.tzutc())

@@ -32,7 +32,8 @@ class FakeCompiler(object):
     compile_html = None
     compile = None
 
-    def extension(self): return '.html'
+    def extension(self):
+        return '.html'
     name = "fake"
 
     def read_metadata(*args, **kwargs):
