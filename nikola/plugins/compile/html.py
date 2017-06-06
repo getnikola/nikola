@@ -28,12 +28,14 @@
 
 from __future__ import unicode_literals
 
-import os
 import io
+import os
+
+import lxml.html
 
 from nikola import shortcodes as sc
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs, write_metadata
+from nikola.utils import LocaleBorg, makedirs, map_metadata, write_metadata
 
 
 class CompileHtml(PageCompiler):
@@ -84,3 +86,29 @@ class CompileHtml(PageCompiler):
                 fd.write(write_metadata(metadata))
                 fd.write('-->\n\n')
             fd.write(content)
+
+    def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
+        """Read the metadata from a post's meta tags, and return a metadata dict."""
+        if lang is None:
+            lang = LocaleBorg().current_lang
+        source_path = post.translated_source_path(lang)
+
+        with io.open(source_path, 'r', encoding='utf-8') as inf:
+            data = inf.read()
+
+        metadata = {}
+        doc = lxml.html.document_fromstring(data)
+        title_tag = doc.find('*//title')
+        if title_tag is not None:
+            metadata['title'] = title_tag.text
+        meta_tags = doc.findall('*//meta')
+        for tag in meta_tags:
+            k = tag.get('name').lower()
+            if not k:
+                continue
+            elif k == 'keywords':
+                k = 'tags'
+            metadata[k] = tag.get('content', '')
+        map_metadata(metadata, 'html_metadata', self.site.config)
+        return metadata
+

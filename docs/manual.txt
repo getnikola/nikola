@@ -418,6 +418,7 @@ other static site generators. The currently supported metadata formats are:
 * TOML, between ``+++`` (Hugo)
 * reST docinfo (Pelican)
 * Markdown metadata extension (Pelican)
+* HTML meta tags (Pelican)
 
 You can add arbitrary meta fields in any format.
 
@@ -529,6 +530,30 @@ the `markdown metadata extension docs <https://pythonhosted.org/Markdown/extensi
 
 Note that keys are converted to lowercase automatically.
 
+HTML meta tags
+``````````````
+
+For HTML source files, metadata will be extracted from ``meta`` tags, and the title from the ``title`` tag.
+Following Pelican's behaviour, tags can be put in a "tags" meta tag or in a "keywords" meta tag. Example:
+
+.. code:: html
+
+    <html>
+        <head>
+            <title>My super title</title>
+            <meta name="tags" content="thats, awesome" />
+            <meta name="date" content="2012-07-09 22:28" />
+            <meta name="modified" content="2012-07-10 20:14" />
+            <meta name="category" content="yeah" />
+            <meta name="authors" content="Conan Doyle" />
+            <meta name="summary" content="Short version for index and feeds" />
+        </head>
+        <body>
+            This is the content of my super blog post.
+        </body>
+    </html>
+
+
 Mapping metadata from other formats
 ```````````````````````````````````
 
@@ -541,6 +566,7 @@ For Pelican, use:
     METADATA_MAPPING = {
         "rest_docinfo": {"summary": "description", "modified": "updated"},
         "markdown_metadata": {"summary": "description", "modified": "updated"}
+        "html_metadata": {"summary": "description", "modified": "updated"}
     }
 
 For Hugo, use:
