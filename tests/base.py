@@ -78,9 +78,14 @@ class LocaleSupportInTesting(object):
             return
         defaults = {
             'posix': {
-                # non-windows defaults, must be two locales suported by .travis.yml
+                # non-windows/non-osx defaults, must be two locales suported by .travis.yml
                 'default': ("en", str("en_US.utf8")),
                 'other': ("pl", str("pl_PL.utf8")),
+            },
+            'osx': {
+                # osx defaults
+                'default': ("en", str("en_US.UTF-8")),
+                'other': ("pl", str("pl_PL.UTF-8")),
             },
             'windows': {
                 # windows defaults
@@ -88,7 +93,11 @@ class LocaleSupportInTesting(object):
                 'other': ("pl", str("Polish")),
             },
         }
-        os_id = 'windows' if sys.platform == 'win32' else 'posix'
+        platforms = {
+            'win32': 'windows',
+            'darwin': 'osx',
+        }
+        os_id = platforms.get(sys.platform, 'posix')
         langlocales = {}
         for suffix in ['other', 'default']:
             try:

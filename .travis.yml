@@ -1,7 +1,9 @@
 before_install:
 - pip install --upgrade pip wheel
 language: python
-cache: apt
+cache:
+- apt
+- pip
 sudo: false
 addons:
   apt:
@@ -16,6 +18,15 @@ python:
 - '3.6'
 matrix:
   include:
+  - os: osx
+    language: generic
+    env: NMODE=nikola
+    python: '3.6'
+    before_install:
+    - brew upgrade pyenv
+    - eval "$(pyenv init -)"
+    - pyenv install 3.6.1
+    - pyenv global 3.6.1
   - python: '3.6'
     env: NMODE=flake8
 env:
