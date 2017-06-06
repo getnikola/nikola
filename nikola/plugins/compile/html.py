@@ -111,4 +111,3 @@ class CompileHtml(PageCompiler):
             metadata[k] = tag.get('content', '')
         map_metadata(metadata, 'html_metadata', self.site.config)
         return metadata
-

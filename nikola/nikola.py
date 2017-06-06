@@ -965,8 +965,9 @@ class Nikola(object):
         if config.get('METADATA_FORMAT', 'nikola').lower() == 'pelican':
             if 'markdown.extensions.meta' not in config.get('MARKDOWN_EXTENSIONS', []) \
                     and 'markdown' in self.config['COMPILERS']:
-                utils.LOGGER.warn('To use the pelican metadata format you need to add '
-                '"markdown.extensions.meta" to your MARKDOWN_EXTENSIONS setting.')
+                utils.LOGGER.warn(
+                    'To use the pelican metadata format you need to add '
+                    '"markdown.extensions.meta" to your MARKDOWN_EXTENSIONS setting.')
 
         # We use one global tzinfo object all over Nikola.
         try:
