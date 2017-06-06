@@ -11,6 +11,7 @@ Features
 Bugfixes
 --------
 
+* Support empty lines in YAML/TOML metadata (Part of issue #2801)
 * Tests run on macOS.
 
 New in v7.8.7
