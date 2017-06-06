@@ -422,6 +422,14 @@ other static site generators. The currently supported metadata formats are:
 
 You can add arbitrary meta fields in any format.
 
+When you create new posts, by default the metadata will be created as reST style comments.
+If you prefer a different format, you can set the ``METADATA_FORMAT`` to one of these values:
+
+* ``"Nikola"``: reSt comments wrapped in a comment if needed (default)
+* ``"YAML"``: YAML wrapped in "---" 
+* ``"TOML"``: TOML wrapped in "+++"
+* ``"Pelican"``: Native markdown metadata or reSt docinfo fields. Nikola style for other formats.
+
 reST-style comments
 ```````````````````
 
@@ -520,7 +528,7 @@ Markdown metadata
 
 Markdown Metadata only works in Markdown files, and requires the ``markdown.extensions.meta`` extension
 (see `MARKDOWN_EXTENSIONS <#markdown>`__). The exact format is described in
-the `markdown metadata extension docs <https://pythonhosted.org/Markdown/extensions/meta_data.html>`__
+the `markdown metadata extension docs. <https://pythonhosted.org/Markdown/extensions/meta_data.html>`__
 
 .. code:: text
 

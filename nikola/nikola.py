@@ -546,6 +546,7 @@ class Nikola(object):
             'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],  # FIXME: Add 'extras' in v8
             'MAX_IMAGE_SIZE': 1280,
             'MATHJAX_CONFIG': '',
+            'METADATA_FORMAT': 'nikola',
             'METADATA_MAPPING': {},
             'NEW_POST_DATE_PATH': False,
             'NEW_POST_DATE_PATH_FORMAT': '%Y/%m/%d',
@@ -959,6 +960,13 @@ class Nikola(object):
             utils.LOGGER.warn('The THEME_REVEAL_CONFIG_* settings are deprecated. Use `subtheme` and `transition` in GLOBAL_CONTEXT instead.')
             self._GLOBAL_CONTEXT['subtheme'] = config.get('THEME_REVEAL_CONFIG_SUBTHEME', 'sky')
             self._GLOBAL_CONTEXT['transition'] = config.get('THEME_REVEAL_CONFIG_TRANSITION', 'cube')
+
+        # The pelican metadata format requires a markdown extension
+        if config.get('METADATA_FORMAT').lower() == 'pelican':
+            if 'markdown.extensions.meta' not in config.get('MARKDOWN_EXTENSIONS', []) \
+                    and 'markdown' in self.config['COMPILERS']:
+                utils.LOGGER.warn('To use the pelican metadata format you need to add '
+                '"markdown.extensions.meta" to your MARKDOWN_EXTENSIONS setting.')
 
         # We use one global tzinfo object all over Nikola.
         try:

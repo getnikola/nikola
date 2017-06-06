@@ -1126,8 +1126,8 @@ def get_meta(post, file_metadata_regexp=None, unslugify_titles=False, lang=None)
 
     If ``file_metadata_regexp`` is given it will be tried to read
     metadata from the filename.
-    If ``unslugify_titles`` is True, the extracted title (if any) will be unslugified, as is done in galleries.
-    If any metadata is then found inside the file the metadata from the
+    If ``unslugify_titles`` is True, the extracted title (if any) will be unslugified, as is
+    done in galleries. If any metadata is then found inside the file the metadata from the
     file will override previous findings.
     """
     meta = defaultdict(lambda: '')
@@ -1201,7 +1201,8 @@ def hyphenate(dom, _lang):
                 skippable_nodes = ['kbd', 'code', 'samp', 'mark', 'math', 'data', 'ruby', 'svg']
                 if node.getchildren():
                     for child in node.getchildren():
-                        if child.tag in skippable_nodes or (child.tag == 'span' and 'math' in child.get('class', [])):
+                        if child.tag in skippable_nodes or (child.tag == 'span' and 'math'
+                                                            in child.get('class', [])):
                             skip_node = True
                 elif 'math' in node.get('class', []):
                     skip_node = True
