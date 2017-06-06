@@ -425,10 +425,10 @@ You can add arbitrary meta fields in any format.
 When you create new posts, by default the metadata will be created as reST style comments.
 If you prefer a different format, you can set the ``METADATA_FORMAT`` to one of these values:
 
-* ``"Nikola"``: reSt comments wrapped in a comment if needed (default)
-* ``"YAML"``: YAML wrapped in "---" 
+* ``"Nikola"``: reST comments wrapped in a comment if needed (default)
+* ``"YAML"``: YAML wrapped in "---"
 * ``"TOML"``: TOML wrapped in "+++"
-* ``"Pelican"``: Native markdown metadata or reSt docinfo fields. Nikola style for other formats.
+* ``"Pelican"``: Native markdown metadata or reST docinfo fields. Nikola style for other formats.
 
 reST-style comments
 ```````````````````
