@@ -161,9 +161,9 @@ class CompileMarkdown(PageCompiler):
             # If the metadata starts with "---" it's actually YAML and
             # we should not let markdown parse it, because it will do
             # bad things like setting empty tags to "''"
-            if data.splitlines()[0] == '---':
+            if data.startswith('---\n'):
                 return {}
-            _, meta = self.converter.convert(inf.read())
+            _, meta = self.converter.convert(data)
         # Map metadata from other platforms to names Nikola expects (Issue #2817)
         map_metadata(meta, 'markdown_metadata', self.site.config)
         return meta
