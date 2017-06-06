@@ -8,6 +8,11 @@ Features
   (Nikola/YAML/TOML/Pelican) (Part of Issue #2801)
 * Extract metadata from HTML meta and title tags like Pelican (Issue #1923)
 
+Bugfixes
+--------
+
+* Tests run on macOS.
+
 New in v7.8.7
 =============
 

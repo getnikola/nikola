@@ -34,6 +34,9 @@ class TestHarcodedFallbacks(unittest.TestCase):
         if sys.platform == 'win32':
             self.assertTrue(nikola.nikola.is_valid_locale(str('English')))
             self.assertTrue(nikola.nikola.is_valid_locale(str('C')))
+        elif sys.platform == 'darwin':
+            self.assertTrue(nikola.nikola.is_valid_locale(str('en_US.UTF-8')))
+            self.assertTrue(nikola.nikola.is_valid_locale(str('C')))
         else:
             # the 1st is desired in Travis, not a problem if fails in user host
             self.assertTrue(nikola.nikola.is_valid_locale(str('en_US.utf8')))
