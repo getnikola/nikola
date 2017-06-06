@@ -418,6 +418,7 @@ other static site generators. The currently supported metadata formats are:
 * TOML, between ``+++`` (Hugo)
 * reST docinfo (Pelican)
 * Markdown metadata extension (Pelican)
+* HTML meta tags (Pelican)
 
 You can add arbitrary meta fields in any format.
 
@@ -529,8 +530,8 @@ the `markdown metadata extension docs <https://pythonhosted.org/Markdown/extensi
 
 Note that keys are converted to lowercase automatically.
 
-HTML metadata
-`````````````
+HTML meta tags
+``````````````
 
 For HTML source files, metadata will be extracted from ``meta`` tags, and the title from the ``title`` tag.
 Following Pelican's behaviour, tags can be put in a "tags" meta tag or in a "keywords" meta tag. Example:
