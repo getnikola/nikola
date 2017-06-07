@@ -9,10 +9,12 @@ Features
 * Extract metadata from HTML meta and title tags like Pelican (Issue #1923)
 * Update assets in the ``base`` and ``base-jinja`` themes and clean
   up code (Issue #2744)
+* Show captions in the base theme gallery (Part of issue #2777)
 
 Bugfixes
 --------
 
+* Add alt attribute to images in galleries in base theme (Part of issue #2777)
 * Support empty lines in YAML/TOML metadata (Part of issue #2801)
 * Tests run on macOS.
 
