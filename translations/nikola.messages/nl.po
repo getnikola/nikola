@@ -164,3 +164,6 @@ msgstr "Omhoog"
 
 msgid "Next"
 msgstr "Volgende"
+
+msgid "Atom feed"
+msgstr ""

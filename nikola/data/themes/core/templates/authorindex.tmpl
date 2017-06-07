@@ -1,0 +1,8 @@
+## -*- coding: utf-8 -*-
+<%inherit file="index.tmpl"/>
+<%namespace name="feed" file="feed_helper.tmpl" import="*"/>
+
+<%block name="extra_head">
+    ${parent.extra_head()}
+    ${feed.head(author)}
+</%block>

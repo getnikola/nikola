@@ -167,3 +167,6 @@ msgstr "Do góry"
 
 msgid "Next"
 msgstr "Następne"
+
+msgid "Atom feed"
+msgstr ""

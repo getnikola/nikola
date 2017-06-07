@@ -1,0 +1,20 @@
+{#  -*- coding: utf-8 -*- #}
+{% extends 'index.tmpl' %}
+{% import 'feed_helper.tmpl' as feed with context %}
+
+{% block extra_head %}
+    {{ super() }}
+    {% if generate_atom %}
+        <link rel="alternate" type="application/atom+xml" title="Atom for the {{ posts[0].section_name()|e }} section" href="{{ _link('section_index_atom', posts[0].section_slug()) }}">
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="sectionindex">
+    <header>
+        <h2><a href="{{ _link('section_index', posts[0].section_slug()) }}">{{ title|e }}</a></h2>
+        {{ feed.link(posts[0].section_slug()) }}
+    </header>
+    {{ super() }}
+</div>
+{% endblock %}

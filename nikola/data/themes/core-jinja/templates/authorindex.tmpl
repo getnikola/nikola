@@ -1,0 +1,8 @@
+{#  -*- coding: utf-8 -*- #}
+{% extends 'index.tmpl' %}
+{% import 'feed_helper.tmpl' as feed with context %}
+
+{% block extra_head %}
+    {{ super() }}
+    {{ feed.head(author) }}
+{% endblock %}

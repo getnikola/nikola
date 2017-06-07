@@ -1,0 +1,10 @@
+{#  -*- coding: utf-8 -*- #}
+
+{% macro html_footer() %}
+    {% if content_footer %}
+        <footer id="footer">
+            <p>{{ content_footer }}</p>
+            {{ template_hooks['page_footer']() }}
+        </footer>
+    {% endif %}
+{% endmacro %}

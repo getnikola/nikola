@@ -166,3 +166,6 @@ msgstr "Ylös"
 
 msgid "Next"
 msgstr "Seuraava"
+
+msgid "Atom feed"
+msgstr ""

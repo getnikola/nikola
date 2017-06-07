@@ -57,6 +57,8 @@ Features
 * Support for Markdown Metadata for Pelican compatibility by adding
   ``'markdown.extensions.meta'`` to ``MARKDOWN_EXTENSIONS`` (Issue #1923)
 * Support for YAML and TOML metadata (Issue #2801)
+* Added ``core`` and ``core-jinja`` themes to provide a low level
+  starting point for theme developers. (Issue #2744)
 
 Bugfixes
 --------
