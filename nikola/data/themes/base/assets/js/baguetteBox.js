@@ -1,1 +1,0 @@
-../../../../../../bower_components/baguettebox.js/dist/baguetteBox.js
