@@ -8,6 +8,7 @@ MESSAGES = {
     "(active)": "(etkin)",
     "Also available in:": "Şu dilde de mevcut:",
     "Archive": "Arşiv",
+    "Atom feed": "",
     "Authors": "Yazarlar",
     "Categories": "Kategoriler",
     "Comments": "Yorumlar",

@@ -8,6 +8,7 @@ MESSAGES = {
     "(active)": "",
     "Also available in:": "Saadaval ka:",
     "Archive": "Arhiiv",
+    "Atom feed": "",
     "Authors": "",
     "Categories": "Kategooriad",
     "Comments": "",

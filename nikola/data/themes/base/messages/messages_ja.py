@@ -8,6 +8,7 @@ MESSAGES = {
     "(active)": "(有効)",
     "Also available in:": "他の言語で読む:",
     "Archive": "文書一覧",
+    "Atom feed": "",
     "Authors": "著者一覧",
     "Categories": "カテゴリ",
     "Comments": "コメント",

@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, absolute_import
 
-import os
-import sys
-
 import unittest
 import mock
 
@@ -23,7 +20,8 @@ class CommandInitCallTest(unittest.TestCase):
         copy_sample_site_patch = mock.patch(
             'nikola.plugins.command.init.CommandInit.copy_sample_site', self.copy_sample_site)
         create_configuration_patch = mock.patch(
-            'nikola.plugins.command.init.CommandInit.create_configuration', self.create_configuration)
+            'nikola.plugins.command.init.CommandInit.create_configuration',
+            self.create_configuration)
         create_empty_site_patch = mock.patch(
             'nikola.plugins.command.init.CommandInit.create_empty_site', self.create_empty_site)
 
@@ -52,7 +50,9 @@ class CommandInitCallTest(unittest.TestCase):
         self.assertTrue(self.create_empty_site.called)
 
     def test_init_args(self):
-        arguments = dict(options={'demo': True, 'quiet': True}, args=['destination'])
+        arguments = dict(
+            options={'demo': True, 'quiet': True},
+            args=['destination'])
         self.init_command.execute(**arguments)
 
         self.assertFalse(self.ask_questions.called)

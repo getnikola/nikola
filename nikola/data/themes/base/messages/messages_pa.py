@@ -8,6 +8,7 @@ MESSAGES = {
     "(active)": "(ਚਲੰਤ)",
     "Also available in:": "ਹੋਰ  ਉਪਲਬਧ ਬੋਲੀਆਂ:",
     "Archive": "ਆਰਕਾਈਵ",
+    "Atom feed": "",
     "Authors": "ਲੇਖਕ",
     "Categories": "ਸ਼੍ਰੇਣੀ",
     "Comments": "ਟਿੱਪਣੀਆਂ",

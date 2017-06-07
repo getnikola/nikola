@@ -1,5 +1,6 @@
 {#  -*- coding: utf-8 -*- #}
 {% extends 'index.tmpl' %}
+{% import 'feed_helper.tmpl' as feed with context %}
 
 {% block content_header %}
     {{ parent.content_header() }}
@@ -21,11 +22,5 @@
 
 {% block extra_head %}
     {{ super() }}
-    {% if translations|length > 1 and generate_atom %}
-        {% for language in translations|sort %}
-            <link rel="alternate" type="application/atom+xml" title="Atom for the {{ tag|e }} section ({{ language }})" href="{{ _link(kind + "_atom", tag, language) }}">
-        {% endfor %}
-    {% elif generate_atom %}
-        <link rel="alternate" type="application/atom+xml" title="Atom for the {{ tag|e }} section" href="{{ _link("tag" + "_atom", tag) }}">
-    {% endif %}
+    {{ feed.head(tag) }}
 {% endblock %}

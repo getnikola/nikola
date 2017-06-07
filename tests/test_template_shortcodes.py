@@ -58,7 +58,8 @@ def test_onearg(fakesite):
         fakesite._make_renderfunc('arg={{ _args[0] }}')
 
     assert fakesite.apply_shortcodes('{{% test1 onearg %}}') == 'arg=onearg'
-    assert fakesite.apply_shortcodes('{{% test1 "one two" %}}') == 'arg=one two'
+    assert fakesite.apply_shortcodes(
+        '{{% test1 "one two" %}}') == 'arg=one two'
 
 
 def test_kwarg(fakesite):

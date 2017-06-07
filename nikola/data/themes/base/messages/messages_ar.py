@@ -8,6 +8,7 @@ MESSAGES = {
     "(active)": "",
     "Also available in:": "أيضا متوفر في:",
     "Archive": "الأرشيف",
+    "Atom feed": "",
     "Authors": "",
     "Categories": "فئات",
     "Comments": "التّعليقات",

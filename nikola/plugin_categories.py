@@ -338,7 +338,12 @@ class PageCompiler(BasePlugin):
         This splits in the first empty line that is NOT at the beginning
         of the document.
         """
-        split_result = re.split('(\n\n|\r\n\r\n)', data.lstrip(), maxsplit=1)
+        if data.startswith('---'):  # YAML metadata
+            split_result = re.split('(\n---\n\n|\r\n---\r\n\r\n)', data.lstrip(), maxsplit=1)
+        elif data.startswith('+++'):  # TOML metadata
+            split_result = re.split('(\n+++\n\n|\r\n+++\r\n\r\n)', data.lstrip(), maxsplit=1)
+        else:
+            split_result = re.split('(\n\n|\r\n\r\n)', data.lstrip(), maxsplit=1)
         if len(split_result) == 1:
             return '', split_result[0]
         # ['metadata', '\n\n', 'post content']

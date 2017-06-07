@@ -8,6 +8,7 @@ MESSAGES = {
     "(active)": "",
     "Also available in:": "Διαθέσιμο και στα:",
     "Archive": "Αρχείο",
+    "Atom feed": "",
     "Authors": "",
     "Categories": "Κατηγορίες",
     "Comments": "Σχόλια",

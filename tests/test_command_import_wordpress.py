@@ -43,14 +43,18 @@ Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
 Comments, questions and suggestions are welcome !
 <!--:-->"""
         content_translations = self.module.separate_qtranslate_content(content)
-        self.assertEqual("""Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+        self.assertEqual(
+            """Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
 
 Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
-""", content_translations["fr"])
-        self.assertEqual("""If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
+""",
+            content_translations["fr"])
+        self.assertEqual(
+            """If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
 
 Comments, questions and suggestions are welcome !
-""", content_translations["en"])
+""",
+            content_translations["en"])
 
     def test_split_a_two_language_post_with_teaser(self):
         content = """<!--:fr-->Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
@@ -65,18 +69,22 @@ Plus de détails ici !
 More details here !
 <!--:-->"""
         content_translations = self.module.separate_qtranslate_content(content)
-        self.assertEqual("""Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+        self.assertEqual(
+            """Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
 
 Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
  <!--more--> \n\
 Plus de détails ici !
-""", content_translations["fr"])
-        self.assertEqual("""If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
+""",
+            content_translations["fr"])
+        self.assertEqual(
+            """If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
 
 Comments, questions and suggestions are welcome !
  <!--more--> \n\
 More details here !
-""", content_translations["en"])
+""",
+            content_translations["en"])
 
     def test_split_a_two_language_post_with_intermission(self):
         content = """<!--:fr-->Voila voila<!--:-->COMMON<!--:en-->BLA<!--:-->"""
@@ -107,11 +115,14 @@ class CommandImportWordpressRunTest(BasicCommandImportWordpress):
 
         site_generation_patch = mock.patch('os.system', self.site_generation)
         data_import_patch = mock.patch(
-            'nikola.plugins.command.import_wordpress.CommandImportWordpress.import_posts', self.data_import)
+            'nikola.plugins.command.import_wordpress.CommandImportWordpress.import_posts',
+            self.data_import)
         write_urlmap_patch = mock.patch(
-            'nikola.plugins.command.import_wordpress.CommandImportWordpress.write_urlmap_csv', self.write_urlmap)
+            'nikola.plugins.command.import_wordpress.CommandImportWordpress.write_urlmap_csv',
+            self.write_urlmap)
         write_configuration_patch = mock.patch(
-            'nikola.plugins.command.import_wordpress.CommandImportWordpress.write_configuration', self.write_configuration)
+            'nikola.plugins.command.import_wordpress.CommandImportWordpress.write_configuration',
+            self.write_configuration)
 
         self.patches = [site_generation_patch, data_import_patch,
                         write_urlmap_patch, write_configuration_patch]
@@ -211,7 +222,6 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
 
         write_metadata = mock.MagicMock()
         write_content = mock.MagicMock()
-        write_post = mock.MagicMock()
         write_attachments_info = mock.MagicMock()
         download_mock = mock.MagicMock()
 
@@ -230,12 +240,14 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
 
         self.assertTrue(write_metadata.called)
         write_metadata.assert_any_call(
-            'new_site/pages/kontakt.meta'.replace('/', os.sep), 'Kontakt',
-            'kontakt', '2009-07-16 20:20:32', '', [], **{'wp-status': 'publish'})
+            'new_site/pages/kontakt.meta'.replace('/', os.sep),
+            'Kontakt', 'kontakt', '2009-07-16 20:20:32', '', [],
+            **{'wp-status': 'publish'})
 
         self.assertTrue(write_content.called)
-        write_content.assert_any_call('new_site/posts/2007/04/hoert.md'.replace('/', os.sep),
-                                      """An image.
+        write_content.assert_any_call(
+            'new_site/posts/2007/04/hoert.md'.replace('/', os.sep),
+            """An image.
 
 <img class="size-full wp-image-16" title="caption test" src="http://some.blog/wp-content/uploads/2009/07/caption_test.jpg" alt="caption test" width="739" height="517" />
 
@@ -249,7 +261,8 @@ print sys.version
 ```
 
 The end.
-""", True)
+""",
+            True)
 
         self.assertTrue(write_attachments_info.called)
         write_attachments_info.assert_any_call('new_site/posts/2008/07/arzt-und-pfusch-s-i-c-k.attachments.json'.replace('/', os.sep),
@@ -301,8 +314,7 @@ Diese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammen
             'http://some.blog/wp-content/uploads/2012/12/2012-12-19-1355925145_1024x600_scrot-96x96.png',
             'http://some.blog/wp-content/uploads/2012/12/2012-12-19-1355925145_1024x600_scrot-48x48.png',
             'http://some.blog/wp-content/uploads/2012/12/2012-12-19-1355925145_1024x600_scrot-96x96.png',
-            'http://some.blog/wp-content/uploads/2012/12/2012-12-19-1355925145_1024x600_scrot-150x150.png'
-        ]
+            'http://some.blog/wp-content/uploads/2012/12/2012-12-19-1355925145_1024x600_scrot-150x150.png']
 
         for link in image_thumbnails:
             self.assertTrue(
@@ -327,7 +339,8 @@ Diese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammen
         with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_code', transform_code):
             with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_caption', transform_caption):
                 with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_multiple_newlines', transform_newlines):
-                    self.import_command.transform_content("random content", "wp", None)
+                    self.import_command.transform_content(
+                        "random content", "wp", None)
 
         self.assertTrue(transform_code.called)
         self.assertTrue(transform_caption.called)
@@ -407,12 +420,13 @@ newlines.
 
 """
         self.import_command.squash_newlines = False
-        self.assertEqual(content,
-                         self.import_command.transform_multiple_newlines(content))
+        self.assertEqual(
+            content, self.import_command.transform_multiple_newlines(content))
 
         self.import_command.squash_newlines = True
-        self.assertEqual(expected_content,
-                         self.import_command.transform_multiple_newlines(content))
+        self.assertEqual(
+            expected_content, self.import_command.transform_multiple_newlines(
+                content))
 
     def test_transform_caption_with_link_inside(self):
         content = """[caption caption="Fehlermeldung"]<a href="http://some.blog/openttd-missing_sound.png"><img class="size-thumbnail wp-image-551" title="openttd-missing_sound" src="http://some.blog/openttd-missing_sound-150x150.png" alt="Fehlermeldung" /></a>[/caption]"""
@@ -461,7 +475,9 @@ newlines.
         redirections = self.import_command.configure_redirections(url_map)
 
         self.assertEqual(1, len(redirections))
-        self.assertTrue(('somewhere/else/index.html', '/posts/somewhereelse.html') in redirections)
+        self.assertTrue(
+            ('somewhere/else/index.html', '/posts/somewhereelse.html')
+            in redirections)
 
 
 if __name__ == '__main__':

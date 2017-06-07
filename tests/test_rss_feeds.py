@@ -22,7 +22,8 @@ fake_conf['__tzinfo__'] = dateutil.tz.tzutc()
 fake_conf['DEFAULT_LANG'] = 'en'
 fake_conf['TRANSLATIONS'] = {'en': ''}
 fake_conf['BASE_URL'] = 'http://some.blog/'
-fake_conf['BLOG_AUTHOR'] = nikola.nikola.utils.TranslatableSetting('BLOG_AUTHOR', 'Nikola Tesla', ['en'])
+fake_conf['BLOG_AUTHOR'] = nikola.nikola.utils.TranslatableSetting(
+    'BLOG_AUTHOR', 'Nikola Tesla', ['en'])
 fake_conf['TRANSLATIONS_PATTERN'] = '{path}.{lang}.{ext}'
 
 
@@ -30,7 +31,9 @@ class FakeCompiler(object):
     demote_headers = False
     compile_html = None
     compile = None
-    extension = lambda self: '.html'
+
+    def extension(self):
+        return '.html'
     name = "fake"
 
     def read_metadata(*args, **kwargs):
@@ -74,15 +77,10 @@ class RSSFeedTest(unittest.TestCase):
                     opener_mock = mock.mock_open()
 
                     with mock.patch('nikola.nikola.io.open', opener_mock, create=True):
-                        nikola.nikola.Nikola().generic_rss_renderer('en',
-                                                                    "blog_title",
-                                                                    self.blog_url,
-                                                                    "blog_description",
-                                                                    [example_post,
-                                                                     ],
-                                                                    'testfeed.rss',
-                                                                    True,
-                                                                    False)
+                        nikola.nikola.Nikola().generic_rss_renderer(
+                            'en', "blog_title", self.blog_url,
+                            "blog_description", [example_post, ],
+                            'testfeed.rss', True, False)
 
                     opener_mock.assert_called_once_with(
                         'testfeed.rss', 'w+', encoding='utf-8')
@@ -107,10 +105,13 @@ class RSSFeedTest(unittest.TestCase):
         '''The items in the feed need to have valid urls in link and guid.'''
         # This validation regex is taken from django.core.validators
         url_validation_regex = re.compile(r'^(?:http|ftp)s?://'  # http:// or https://
-                                          r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'  # domain...
+                                          # domain...
+                                          r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'
                                           r'localhost|'  # localhost...
-                                          r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|'  # ...or ipv4
-                                          r'\[?[A-F0-9]*:[A-F0-9:]+\]?)'  # ...or ipv6
+                                          # ...or ipv4
+                                          r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|'
+                                          # ...or ipv6
+                                          r'\[?[A-F0-9]*:[A-F0-9:]+\]?)'
                                           r'(?::\d+)?'  # optional port
                                           r'(?:/?|[/?]\S+)$', re.IGNORECASE)
 
@@ -151,6 +152,7 @@ class RSSFeedTest(unittest.TestCase):
         document = etree.parse(StringIO(self.file_content))
 
         self.assertTrue(xmlschema.validate(document))
+
 
 if __name__ == '__main__':
     unittest.main()

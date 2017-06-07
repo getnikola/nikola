@@ -2,8 +2,6 @@
 from __future__ import unicode_literals, absolute_import
 
 import datetime
-import locale
-import os
 import sys
 
 import dateutil.parser
@@ -17,7 +15,9 @@ try:
     _freeze_time = True
 except ImportError:
     _freeze_time = False
-    freeze_time = lambda x: lambda y: y
+
+    def freeze_time(x):
+        return lambda y: y
 
 _NOW = datetime.datetime(  # Thursday
     2013, 8, 22, 10, 0, 0, tzinfo=dateutil.tz.tzutc())
@@ -111,7 +111,8 @@ class TestScheduling(BaseTestCase):
         # Corresponding time has already passed, today; rule specifies HOUR
         date = TODAY.replace(day=15, hour=7)
         expected = TODAY.replace(day=29, hour=9)
-        self.assertEqual(expected, get_date(True, RULE_TH + ';BYHOUR=9', date, tz=UTC)[1])
+        self.assertEqual(expected, get_date(
+            True, RULE_TH + ';BYHOUR=9', date, tz=UTC)[1])
         # Corresponding time has not passed today
         date = TODAY.replace(day=15, hour=18)
         expected = TODAY.replace(day=22, hour=18)
@@ -126,6 +127,7 @@ class TestScheduling(BaseTestCase):
         date = TODAY.replace(day=22, hour=18)
         expected = TODAY.replace(day=29, hour=18)
         self.assertEqual(expected, get_date(True, RULE_TH, date, tz=UTC)[1])
+
 
 if __name__ == '__main__':
     import unittest
