@@ -1,6 +1,7 @@
 {#  -*- coding: utf-8 -*- #}
 
 {% import 'annotation_helper.tmpl' as notes with context %}
+{% import 'feed_helper.tmpl' as feed with context %}
 {% macro html_headstart() %}
 <!DOCTYPE html>
 <html
@@ -44,6 +45,7 @@ lang="{{ lang }}">
     {% if meta_generator_tag %}
     <meta name="generator" content="Nikola (getnikola.com)">
     {% endif %}
+    {{ feed.head() }}
     {{ html_feedlinks() }}
     <link rel="canonical" href="{{ abs_link(permalink) }}">
 
@@ -116,7 +118,8 @@ lang="{{ lang }}">
         {% else %}
             <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
         {% endif %}
-        <link href="/assets/css/rst.css" rel="stylesheet" type="text/css">
+        <link href="/assets/css/html4css1.css" rel="stylesheet" type="text/css">
+        <link href="/assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/code.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/colorbox.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/theme.css" rel="stylesheet" type="text/css">
@@ -159,26 +162,7 @@ lang="{{ lang }}">
 {% endmacro %}
 
 {% macro html_feedlinks() %}
-    {% if rss_link %}
-        {{ rss_link }}
-    {% elif generate_rss %}
-        {% if translations|length > 1 %}
-            {% for language in translations|sort %}
-                <link rel="alternate" type="application/rss+xml" title="RSS ({{ language }})" href="{{ _link('rss', None, language) }}">
-            {% endfor %}
-        {% else %}
-            <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ _link('rss', None) }}">
-        {% endif %}
-    {% endif %}
-    {% if generate_atom %}
-        {% if translations|length > 1 %}
-            {% for language in translations|sort %}
-                <link rel="alternate" type="application/atom+xml" title="Atom ({{ language }})" href="{{ _link('index_atom', None, language) }}">
-            {% endfor %}
-        {% else %}
-            <link rel="alternate" type="application/atom+xml" title="Atom" href="{{ _link('index_atom', None) }}">
-        {% endif %}
-    {% endif %}
+    {{ feed.head() }}
 {% endmacro %}
 
 {% macro html_translations() %}
