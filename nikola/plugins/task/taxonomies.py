@@ -343,15 +343,23 @@ class RenderTaxonomies(Task):
                     links_per_lang[other_lang].append(link)
             # Sort first by language, then by classification
             sorted_links = []
-            for other_lang in sorted(links_per_lang.keys()):
-                links = hierarchy_utils.sort_classifications(taxonomy, links_per_lang[other_lang], other_lang)
-                sorted_links.extend([(other_lang, classification,
-                                      taxonomy.get_classification_friendly_name(classification, other_lang))
-                                     for classification in links if post_lists_per_lang[other_lang].get(classification, ('', False, False))[1]])
+            sorted_links_all = []
+            for other_lang in sorted(list(links_per_lang.keys()) + [lang]):
+                if other_lang == lang:
+                    sorted_links_all.append((lang, classification, taxonomy.get_classification_friendly_name(classification, lang)))
+                else:
+                    links = hierarchy_utils.sort_classifications(taxonomy, links_per_lang[other_lang], other_lang)
+                    links = [(other_lang, other_classification,
+                              taxonomy.get_classification_friendly_name(other_classification, other_lang))
+                             for other_classification in links if post_lists_per_lang[other_lang].get(other_classification, ('', False, False))[1]]
+                    sorted_links.extend(links)
+                    sorted_links_all.extend(links)
             # Store result in context and kw
             context['has_other_languages'] = True
             context['other_languages'] = sorted_links
+            context['all_languages'] = sorted_links_all
             kw['other_languages'] = sorted_links
+            kw['all_languages'] = sorted_links_all
         else:
             context['has_other_languages'] = False
         # Allow other plugins to modify the result
