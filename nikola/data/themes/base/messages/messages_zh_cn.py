@@ -8,6 +8,7 @@ MESSAGES = {
     "(active)": "(活跃)",
     "Also available in:": "其他语言版本：",
     "Archive": "文章存档",
+    "Atom feed": "",
     "Authors": "作者",
     "Categories": "分类",
     "Comments": "注释",

@@ -8,6 +8,7 @@ MESSAGES = {
     "(active)": "(aktif)",
     "Also available in:": "Juga tersedia dalam:",
     "Archive": "Arsip",
+    "Atom feed": "",
     "Authors": "Penulis",
     "Categories": "Kategori",
     "Comments": "Komentar",

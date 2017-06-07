@@ -85,6 +85,7 @@
 {% endif %}
 {% endmacro %}
 
+{#  This function is deprecated; use math_helper directly. #}
 {% macro mathjax_script(post) %}
     {{ math.math_scripts_ifpost(post) }}
 {% endmacro %}

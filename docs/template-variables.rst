@@ -256,6 +256,8 @@ Name            Type            Description
 ``permalink``   str             Permanent link to page
 ==============  ==============  ===========================================================
 
+Index-style classification pages have ``kind`` in addtion to the usual index variables.
+
 Subclassification page
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -335,7 +337,6 @@ Variables available in category pages
 ==================  ==========  =====================================================
 Name                Type        Description
 ==================  ==========  =====================================================
-``kind``            str         Always ``"category"``
 ``category``        str         Category name
 ``category_path``   list<str>   Category hierarchy
 ``rss_link``        str?        Link to RSS (HTML fragment, only if using indexes)
@@ -396,7 +397,6 @@ Variables available in tag pages
 =========  =====  =================
 Name       Type   Description
 =========  =====  =================
-``kind``   str    Always ``"tag"``
 ``tag``    str    Tag name
 =========  =====  =================
 

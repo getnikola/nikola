@@ -8,6 +8,7 @@ MESSAGES = {
     "(active)": "(aktibo)",
     "Also available in:": "Eskuragarria hizkuntza hauetan ere:",
     "Archive": "Artxiboa",
+    "Atom feed": "",
     "Authors": "Egileak",
     "Categories": "Kategoriak",
     "Comments": "Iruzkinak",

@@ -8,6 +8,7 @@ MESSAGES = {
     "(active)": "(啟用)",
     "Also available in:": "其他語言版本：",
     "Archive": "彙整",
+    "Atom feed": "",
     "Authors": "作者",
     "Categories": "分類",
     "Comments": "迴響",

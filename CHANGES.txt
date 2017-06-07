@@ -4,9 +4,11 @@ New in master
 Features
 --------
 
-* New METADATA_FORMAT option to choose preferred metadata format 
+* New METADATA_FORMAT option to choose preferred metadata format
   (Nikola/YAML/TOML/Pelican) (Part of Issue #2801)
 * Extract metadata from HTML meta and title tags like Pelican (Issue #1923)
+* Update assets in the ``base`` and ``base-jinja`` themes and clean
+  up code (Issue #2744)
 
 Bugfixes
 --------

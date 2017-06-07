@@ -8,6 +8,7 @@ MESSAGES = {
     "(active)": "(క్రియాశీల)",
     "Also available in:": "ఇందులో కూడా లభించును:",
     "Archive": "అభిలేఖలు ",
+    "Atom feed": "",
     "Authors": "రచయితలు",
     "Categories": "వర్గాలు",
     "Comments": "వ్యాఖ్యలు",

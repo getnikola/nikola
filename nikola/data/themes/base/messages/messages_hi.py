@@ -8,6 +8,7 @@ MESSAGES = {
     "(active)": "(सक्रिय)",
     "Also available in:": "उपलब्ध भाषाएँ:",
     "Archive": "आर्काइव",
+    "Atom feed": "",
     "Authors": "लेखक",
     "Categories": "श्रेणियाँ",
     "Comments": "टिप्पणियाँ",

@@ -8,6 +8,7 @@ MESSAGES = {
     "(active)": "(فعال)",
     "Also available in:": "ان میں بھی دستیاب:",
     "Archive": "آرکائیو",
+    "Atom feed": "",
     "Authors": "مصنفین",
     "Categories": "زمرے",
     "Comments": "تبصرے",

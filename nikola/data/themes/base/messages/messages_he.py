@@ -8,6 +8,7 @@ MESSAGES = {
     "(active)": "(פעיל)",
     "Also available in:": "זמין גם ב:",
     "Archive": "ארכיב",
+    "Atom feed": "",
     "Authors": "מחברים",
     "Categories": "קטגוריות",
     "Comments": "הערות",

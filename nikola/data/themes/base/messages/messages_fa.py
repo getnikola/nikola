@@ -8,6 +8,7 @@ MESSAGES = {
     "(active)": "(فعال)",
     "Also available in:": "همچنین قابل دسترس از:",
     "Archive": "آرشیو",
+    "Atom feed": "",
     "Authors": "نویسنده‌ها",
     "Categories": "دسته‌ها",
     "Comments": "دیدگاه‌‌‌ها",
