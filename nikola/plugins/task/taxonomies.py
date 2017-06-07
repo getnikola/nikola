@@ -443,7 +443,10 @@ class RenderTaxonomies(Task):
 
                 # Process classifications
                 for classification, (filtered_posts, generate_list, generate_rss) in post_lists_per_lang[taxonomy.classification_name][lang].items():
-                    for task in self._generate_classification_page(taxonomy, classification, filtered_posts, generate_list, generate_rss, lang, post_lists_per_lang[taxonomy.classification_name], classification_set_per_lang.get(taxonomy.classification_name)):
+                    for task in self._generate_classification_page(taxonomy, classification, filtered_posts,
+                                                                   generate_list, generate_rss, lang,
+                                                                   post_lists_per_lang[taxonomy.classification_name],
+                                                                   classification_set_per_lang.get(taxonomy.classification_name)):
                         yield task
             # In case we are ignoring plugins for overview, we must have a collision for
             # tags and categories. Handle this special case with extra code.
