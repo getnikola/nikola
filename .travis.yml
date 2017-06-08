@@ -20,13 +20,14 @@ matrix:
   include:
   - os: osx
     language: generic
-    env: NMODE=nikola
+    env: NMODE=nikola OS=macOS
     python: '3.6'
     before_install:
-    - brew upgrade pyenv
-    - eval "$(pyenv init -)"
-    - pyenv install 3.6.1
-    - pyenv global 3.6.1
+    - brew install python3
+    - pip3 install virtualenv
+    - python3 -m virtualenv nikola-tests-venv
+    - source nikola-tests-venv/bin/activate
+    - pip install --upgrade pip wheel
   - python: '3.6'
     env: NMODE=flake8
 env:
