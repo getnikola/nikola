@@ -3,6 +3,7 @@
 <%namespace name="math" file="math_helper.tmpl"/>
 <%namespace name="comments" file="comments_helper.tmpl"/>
 <%namespace name="pagination" file="pagination_helper.tmpl"/>
+<%namespace name="translation_links" file="translation_link_helper.tmpl" import="*"/>
 <%inherit file="base.tmpl"/>
 
 <%block name="extra_head">
@@ -15,18 +16,7 @@
 
 <%block name="content">
 <%block name="content_header">
-    %if has_other_languages and other_languages:
-        <div class="translationslist translations">
-            <h3 class="translationslist-intro">${messages("Also available in:")}</h3>
-        %for language, classification, name in other_languages:
-            <p><a href="${_link(kind, classification, language)}" rel="alternate">${messages("LANGUAGE", language)}
-            %if kind != 'archive':
-                (${name|h})
-            %endif
-            </a></p>
-        %endfor
-        </div>
-    %endif
+    ${translation_links.translation_link()}
 </%block>
 % if 'main_index' in pagekind:
     ${front_index_header}

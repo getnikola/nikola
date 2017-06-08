@@ -3,6 +3,7 @@
 {% import 'math_helper.tmpl' as math with context %}
 {% import 'comments_helper.tmpl' as comments with context %}
 {% import 'pagination_helper.tmpl' as pagination with context %}
+{% import 'translation_link_helper.tmpl' as translation_links with context %}
 {% extends 'base.tmpl' %}
 
 {% block extra_head %}
@@ -15,18 +16,7 @@
 
 {% block content %}
 {% block content_header %}
-    {% if has_other_languages and other_languages %}
-        <div class="translationslist translations">
-            <h3 class="translationslist-intro">{{ messages("Also available in:") }}</h3>
-        {% for language, classification, name in other_languages %}
-            <p><a href="{{ _link(kind, classification, language) }}" rel="alternate">{{ messages("LANGUAGE", language) }}
-            {% if kind != 'archive' %}
-                ({{ name|e }})
-            {% endif %}
-            </a></p>
-        {% endfor %}
-        </div>
-    {% endif %}
+    {{ translation_links.translation_link() }}
 {% endblock %}
 {% if 'main_index' in pagekind %}
     {{ front_index_header }}
