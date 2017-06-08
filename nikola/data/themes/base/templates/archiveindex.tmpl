@@ -1,11 +1,11 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="index.tmpl"/>
 <%namespace name="archive_nav" file="archive_navigation_helper.tmpl" import="*"/>
-<%namespace name="feed" file="feed_helper.tmpl" import="*"/>
+<%namespace name="translation_links" file="translation_link_helper.tmpl" import="*"/>
 
 <%block name="extra_head">
     ${parent.extra_head()}
-    ${feed.head(archive_name)}
+    ${translation_links.head(archive_name)}
 </%block>
 
 <%block name="content_header">

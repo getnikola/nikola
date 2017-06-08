@@ -1,10 +1,10 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="list_post.tmpl"/>
-<%namespace name="feed" file="feed_helper.tmpl" import="*"/>
+<%namespace name="translation_links" file="translation_link_helper.tmpl" import="*"/>
 
 <%block name="extra_head">
     ${parent.extra_head()}
-    ${feed.head(tag)}
+    ${translation_links.head(tag)}
 </%block>
 
 
@@ -24,7 +24,7 @@
         </ul>
         %endif
         <div class="metadata">
-            ${feed.link(tag)}
+            ${translation_links.link(tag)}
         </div>
         %if has_other_languages and other_languages:
             <div class="translationslist translations">

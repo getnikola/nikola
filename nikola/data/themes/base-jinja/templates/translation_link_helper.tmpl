@@ -38,6 +38,11 @@
             {% endif %}
         {% endif %}
     {% endif %}
+    {% if has_other_languages and other_languages %}
+        {% for language, classification, _ in other_languages %}
+            <link rel="alternate" hreflang="{{ language }}" href="{{ _link(kind, classification, language) }}">
+        {% endfor %}
+    {% endif %}
 {% endmacro %}
 
 {% macro link(classification) %}

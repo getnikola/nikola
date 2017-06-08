@@ -1,10 +1,10 @@
 {#  -*- coding: utf-8 -*- #}
 {% extends 'list_post.tmpl' %}
-{% import 'feed_helper.tmpl' as feed with context %}
+{% import 'translation_link_helper.tmpl' as translation_links with context %}
 
 {% block extra_head %}
     {{ super() }}
-    {{ feed.head(tag) }}
+    {{ translation_links.head(tag) }}
 {% endblock %}
 
 
@@ -24,13 +24,17 @@
         </ul>
         {% endif %}
         <div class="metadata">
-            {{ feed.link(tag) }}
+            {{ translation_links.link(tag) }}
         </div>
         {% if has_other_languages and other_languages %}
             <div class="translationslist translations">
                 <h3 class="translationslist-intro">{{ messages("Also available in:") }}</h3>
             {% for language, classification, name in other_languages %}
-                <p><a href="{{ _link(kind, classification, language) }}" rel="alternate">{{ messages("LANGUAGE", language) }} ({{ name|e }})</a></p>
+                <p><a href="{{ _link(kind, classification, language) }}" rel="alternate">{{ messages("LANGUAGE", language) }}
+                {% if kind != 'archive' %}
+                    ({{ name|e }})
+                {% endif %}
+            </a></p>
             {% endfor %}
             </div>
         {% endif %}

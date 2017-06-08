@@ -1,5 +1,5 @@
 {#  -*- coding: utf-8 -*- #}
-{% import 'feed_helper.tmpl' as feed with context %}
+{% import 'translation_link_helper.tmpl' as translation_links with context %}
 
 {% macro html_headstart() %}
 <!DOCTYPE html>
@@ -42,7 +42,7 @@ lang="{{ lang }}">
     {% if meta_generator_tag %}
         <meta name="generator" content="Nikola (getnikola.com)">
     {% endif %}
-    {{ feed.head() }}
+    {{ translation_links.head() }}
     <link rel="canonical" href="{{ abs_link(permalink) }}">
 
     {% if favicons %}
@@ -100,7 +100,7 @@ lang="{{ lang }}">
 
 {#  This function is deprecated; use feed_helper directly. #}
 {% macro html_feedlinks() %}
-    {{ feed.head() }}
+    {{ translation_links.head() }}
 {% endmacro %}
 
 {% macro html_translations() %}

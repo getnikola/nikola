@@ -1,11 +1,11 @@
 {#  -*- coding: utf-8 -*- #}
 {% extends 'index.tmpl' %}
 {% import 'archive_navigation_helper.tmpl' as archive_nav with context %}
-{% import 'feed_helper.tmpl' as feed with context %}
+{% import 'translation_link_helper.tmpl' as translation_links with context %}
 
 {% block extra_head %}
     {{ super() }}
-    {{ feed.head(archive_name) }}
+    {{ translation_links.head(archive_name) }}
 {% endblock %}
 
 {% block content_header %}

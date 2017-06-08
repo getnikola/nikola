@@ -1,6 +1,6 @@
 {#  -*- coding: utf-8 -*- #}
 {% extends 'index.tmpl' %}
-{% import 'feed_helper.tmpl' as feed with context %}
+{% import 'translation_link_helper.tmpl' as translation_links with context %}
 
 {% block content_header %}
     {{ parent.content_header() }}
@@ -22,5 +22,5 @@
 
 {% block extra_head %}
     {{ super() }}
-    {{ feed.head(tag) }}
+    {{ translation_links.head(tag) }}
 {% endblock %}

@@ -11,11 +11,6 @@
         <link rel="prefetch" href="${posts[0].permalink()}" type="text/html">
     % endif
     ${math.math_styles_ifposts(posts)}
-    %if has_other_languages and other_languages:
-        %for language, classification, _ in other_languages:
-            <link rel="alternate" hreflang="${language}" href="${_link(kind, classification, language)}">
-        %endfor
-    %endif
 </%block>
 
 <%block name="content">

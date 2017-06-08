@@ -2,14 +2,6 @@
 {% extends 'base.tmpl' %}
 {% import 'archive_navigation_helper.tmpl' as archive_nav with context %}
 
-{% block extra_head %}
-    {% if has_other_languages and other_languages %}
-        {% for language, classification, _ in other_languages %}
-            <link rel="alternate" hreflang="{{ language }}" href="{{ _link(kind, classification, language) }}">
-        {% endfor %}
-    {% endif %}
-{% endblock %}
-
 {% block content %}
 <article class="listpage">
     <header>
@@ -20,7 +12,11 @@
         <div class="translationslist translations">
             <h3 class="translationslist-intro">{{ messages("Also available in:") }}</h3>
         {% for language, classification, name in other_languages %}
-            <p><a href="{{ _link(kind, classification, language) }}" rel="alternate">{{ messages("LANGUAGE", language) }} ({{ name|e }})</a></p>
+            <p><a href="{{ _link(kind, classification, language) }}" rel="alternate">{{ messages("LANGUAGE", language) }}
+            {% if kind != 'archive' %}
+                ({{ name|e }})
+            {% endif %}
+            </a></p>
         {% endfor %}
         </div>
     {% endif %}
