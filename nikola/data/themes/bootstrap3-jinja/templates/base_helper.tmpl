@@ -1,7 +1,7 @@
 {#  -*- coding: utf-8 -*- #}
 
 {% import 'annotation_helper.tmpl' as notes with context %}
-{% import 'translation_link_helper.tmpl' as translation_links with context %}
+{% import 'feeds_translations_helper.tmpl' as feeds_translations with context %}
 {% macro html_headstart() %}
 <!DOCTYPE html>
 <html
@@ -45,7 +45,7 @@ lang="{{ lang }}">
     {% if meta_generator_tag %}
     <meta name="generator" content="Nikola (getnikola.com)">
     {% endif %}
-    {{ translation_links.head() }}
+    {{ feeds_translations.head() }}
     <link rel="canonical" href="{{ abs_link(permalink) }}">
 
     {% if favicons %}
@@ -161,7 +161,7 @@ lang="{{ lang }}">
 {% endmacro %}
 
 {% macro html_feedlinks() %}
-    {{ translation_links.head() }}
+    {{ feeds_translations.head() }}
 {% endmacro %}
 
 {% macro html_translations() %}
