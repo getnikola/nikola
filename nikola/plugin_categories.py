@@ -819,7 +819,7 @@ class Taxonomy(BasePlugin):
         """Return a list of variants of the same classification in other languages.
 
         Given a `classification` in a language `lang`, return a list of pairs
-        `(other_classification, other_lang)` with `lang != other_lang` such that
+        `(other_lang, other_classification)` with `lang != other_lang` such that
         `classification` should be linked to `other_classification`.
 
         Classifications where links to other language versions makes no sense
