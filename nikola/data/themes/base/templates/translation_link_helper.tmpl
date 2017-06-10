@@ -45,7 +45,7 @@
     % endif
 </%def>
 
-<%def name="link(classification)">
+<%def name="feed_link(classification)">
     % if len(translations) > 1:
         % for language in sorted(translations):
             % if generate_atom or generate_rss:

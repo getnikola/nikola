@@ -45,7 +45,7 @@
     {% endif %}
 {% endmacro %}
 
-{% macro link(classification) %}
+{% macro feed_link(classification) %}
     {% if translations|length > 1 %}
         {% for language in translations|sort %}
             {% if generate_atom or generate_rss %}
