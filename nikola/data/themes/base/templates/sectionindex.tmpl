@@ -1,17 +1,17 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="index.tmpl"/>
-<%namespace name="translation_links" file="translation_link_helper.tmpl" import="*"/>
+<%namespace name="feeds_translations" file="feeds_translations_helper.tmpl.tmpl" import="*"/>
 
 <%block name="extra_head">
     ${parent.extra_head()}
-    ${translation_links.head(section)}
+    ${feeds_translations.head(section)}
 </%block>
 
 <%block name="content">
 <div class="sectionindex">
     <header>
         <h2><a href="${_link('section_index', section)}">${title|h}</a></h2>
-        ${translation_links.feed_link(section)}
+        ${feeds_translations.feed_link(section)}
     </header>
     ${parent.content()}
 </div>

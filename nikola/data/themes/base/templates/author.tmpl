@@ -1,10 +1,10 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="list_post.tmpl"/>
-<%namespace name="translation_links" file="translation_link_helper.tmpl" import="*"/>
+<%namespace name="feeds_translations" file="feeds_translations_helper.tmpl.tmpl" import="*"/>
 
 <%block name="extra_head">
     ${parent.extra_head()}
-    ${translation_links.head(author)}
+    ${feeds_translations.head(author)}
 </%block>
 
 
@@ -16,7 +16,7 @@
             <p>${description}</p>
         %endif
         <div class="metadata">
-            ${translation_links.feed_link(author)}
+            ${feeds_translations.feed_link(author)}
         </div>
     </header>
     %if posts:

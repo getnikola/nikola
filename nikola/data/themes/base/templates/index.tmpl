@@ -3,7 +3,7 @@
 <%namespace name="math" file="math_helper.tmpl"/>
 <%namespace name="comments" file="comments_helper.tmpl"/>
 <%namespace name="pagination" file="pagination_helper.tmpl"/>
-<%namespace name="translation_links" file="translation_link_helper.tmpl" import="*"/>
+<%namespace name="feeds_translations" file="feeds_translations_helper.tmpl.tmpl" import="*"/>
 <%inherit file="base.tmpl"/>
 
 <%block name="extra_head">
@@ -16,7 +16,7 @@
 
 <%block name="content">
 <%block name="content_header">
-    ${translation_links.translation_link()}
+    ${feeds_translations.translation_link()}
 </%block>
 % if 'main_index' in pagekind:
     ${front_index_header}

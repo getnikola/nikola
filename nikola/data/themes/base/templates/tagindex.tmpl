@@ -1,6 +1,6 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="index.tmpl"/>
-<%namespace name="translation_links" file="translation_link_helper.tmpl" import="*"/>
+<%namespace name="feeds_translations" file="feeds_translations_helper.tmpl.tmpl" import="*"/>
 
 <%block name="content_header">
     ${parent.content_header()}
@@ -22,5 +22,5 @@
 
 <%block name="extra_head">
     ${parent.extra_head()}
-    ${translation_links.head(tag)}
+    ${feeds_translations.head(tag)}
 </%block>

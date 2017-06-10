@@ -1,17 +1,17 @@
 {#  -*- coding: utf-8 -*- #}
 {% extends 'index.tmpl' %}
-{% import 'translation_link_helper.tmpl' as translation_links with context %}
+{% import 'feeds_translations_helper.tmpl.tmpl' as feeds_translations with context %}
 
 {% block extra_head %}
     {{ super() }}
-    {{ translation_links.head(section) }}
+    {{ feeds_translations.head(section) }}
 {% endblock %}
 
 {% block content %}
 <div class="sectionindex">
     <header>
         <h2><a href="{{ _link('section_index', section) }}">{{ title|e }}</a></h2>
-        {{ translation_links.feed_link(section) }}
+        {{ feeds_translations.feed_link(section) }}
     </header>
     {{ super() }}
 </div>
