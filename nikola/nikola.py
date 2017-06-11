@@ -562,7 +562,7 @@ class Nikola(object):
             'PRESERVE_EXIF_DATA': False,
             'PAGES': (("pages/*.txt", "pages", "page.tmpl"),),
             'PANDOC_OPTIONS': [],
-            'PRETTY_URLS': False,
+            'PRETTY_URLS': True,
             'FUTURE_IS_NOW': False,
             'INDEX_READ_MORE_LINK': DEFAULT_INDEX_READ_MORE_LINK,
             'REDIRECTIONS': [],
