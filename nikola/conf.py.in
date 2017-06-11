@@ -198,7 +198,7 @@ TIMEZONE = ${TIMEZONE}
 # compilers unless you write the interface for it yourself.
 #
 # 'rest' is reStructuredText
-# 'markdown' is MarkDown
+# 'markdown' is Markdown
 # 'html' assumes the file is HTML and just copies it
 COMPILERS = ${COMPILERS}
 

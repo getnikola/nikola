@@ -9,7 +9,6 @@ init:
   - ps: "ls C:/Python*"
 install:
   - "%PYTHON%/python.exe -m pip install -U pip setuptools"
-  - "%PYTHON%/Scripts/pip.exe install --no-index -f https://users.getnikola.com/static/nikola-windows-wheels lxml"
   - "%PYTHON%/Scripts/pip.exe install -r requirements-extras.txt pytest coverage pytest-cov mock freezegun"
   - "%PYTHON%/Scripts/pip.exe install ."
 
