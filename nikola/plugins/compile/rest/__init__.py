@@ -132,7 +132,7 @@ class CompileRest(PageCompiler):
             # Original issue: empty files.  `output` became a bytestring.
             output = output.decode('utf-8')
 
-        output, shortcode_deps = self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, with_dependencies=True, extra_context=dict(post=post))
+        output, shortcode_deps = self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, extra_context={'post': post})
         return output, error_level, deps, shortcode_deps
 
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):

@@ -80,7 +80,7 @@ class CompileIPynb(PageCompiler):
         """Compile notebooks into HTML strings."""
         new_data, shortcodes = sc.extract_shortcodes(data)
         output = self._compile_string(nbformat.reads(new_data, current_nbformat))
-        return self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, with_dependencies=True, extra_context=dict(post=post))
+        return self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, extra_context={'post': post})
 
     def compile(self, source, dest, is_two_file=False, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""

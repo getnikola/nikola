@@ -100,7 +100,7 @@ class CompileMarkdown(PageCompiler):
             _, data = self.split_metadata(data)
         new_data, shortcodes = sc.extract_shortcodes(data)
         output, _ = self.converter.convert(new_data)
-        output, shortcode_deps = self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, with_dependencies=True, extra_context=dict(post=post))
+        output, shortcode_deps = self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, extra_context={'post': post})
         return output, shortcode_deps
 
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):
