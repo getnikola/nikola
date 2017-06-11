@@ -4,6 +4,12 @@ New in master
 Features
 --------
 
+* Providing infrastructure for taxonomies for classification pages to
+  link to related classifications in other languages
+* Added alternate links (visible and header) for archives and authors
+  (Issue #993)
+* Added options to add alternative links (visible and header) for
+  tags, sections and categories.
 * New METADATA_FORMAT option to choose preferred metadata format
   (Nikola/YAML/TOML/Pelican) (Part of Issue #2801)
 * Extract metadata from HTML meta and title tags like Pelican (Issue #1923)

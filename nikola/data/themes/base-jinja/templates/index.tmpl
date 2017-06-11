@@ -3,6 +3,7 @@
 {% import 'math_helper.tmpl' as math with context %}
 {% import 'comments_helper.tmpl' as comments with context %}
 {% import 'pagination_helper.tmpl' as pagination with context %}
+{% import 'feeds_translations_helper.tmpl' as feeds_translations with context %}
 {% extends 'base.tmpl' %}
 
 {% block extra_head %}
@@ -14,7 +15,9 @@
 {% endblock %}
 
 {% block content %}
-{% block content_header %}{% endblock %}
+{% block content_header %}
+    {{ feeds_translations.translation_link() }}
+{% endblock %}
 {% if 'main_index' in pagekind %}
     {{ front_index_header }}
 {% endif %}

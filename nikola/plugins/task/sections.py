@@ -47,6 +47,7 @@ class ClassifySections(Taxonomy):
     apply_to_pages = False
     omit_empty_classifications = True
     also_create_classifications_from_other_languages = False
+    add_other_languages_variable = True
     path_handler_docstrings = {
         'section_index_index': False,
         'section_index': """Link to the index for a section.
@@ -68,10 +69,11 @@ link://section_index_rss/cars => /cars/rss.xml""",
 
     def set_site(self, site):
         """Set Nikola site."""
+        super(ClassifySections, self).set_site(site)
         self.show_list_as_index = site.config["POSTS_SECTIONS_ARE_INDEXES"]
         self.template_for_single_list = "sectionindex.tmpl" if self.show_list_as_index else "list.tmpl"
         self.enable_for_lang = {}
-        return super(ClassifySections, self).set_site(site)
+        self.translation_manager = utils.ClassificationTranslationManager()
 
     def is_enabled(self, lang=None):
         """Return True if this taxonomy is enabled, or False otherwise."""
@@ -103,34 +105,34 @@ link://section_index_rss/cars => /cars/rss.xml""",
             return result + ['rss.xml'], 'never'
         return result, 'always'
 
-    def provide_context_and_uptodate(self, section, lang, node=None):
+    def provide_context_and_uptodate(self, classification, lang, node=None):
         """Provide data for the context and the uptodate list for the list of the given classifiation."""
         kw = {
             "messages": self.site.MESSAGES,
         }
-        section_name = self._get_section_name(section, lang)
+        section_name = self._get_section_name(classification, lang)
         # Compose section title
         section_title = section_name
         posts_section_title = self.site.config['POSTS_SECTION_TITLE'](lang)
         if isinstance(posts_section_title, dict):
-            if section in posts_section_title:
-                section_title = posts_section_title[section]
+            if classification in posts_section_title:
+                section_title = posts_section_title[classification]
         elif isinstance(posts_section_title, (utils.bytes_str, utils.unicode_str)):
             section_title = posts_section_title
         section_title = section_title.format(name=section_name)
         # Compose context
         context = {
             "title": section_title,
-            "description": self.site.config['POSTS_SECTION_DESCRIPTIONS'](lang)[section] if section in self.site.config['POSTS_SECTION_DESCRIPTIONS'](lang) else "",
+            "description": self.site.config['POSTS_SECTION_DESCRIPTIONS'](lang)[classification] if classification in self.site.config['POSTS_SECTION_DESCRIPTIONS'](lang) else "",
             "pagekind": ["section_page", "index" if self.show_list_as_index else "list"],
-            "section": section,
+            "section": classification,
         }
         kw.update(context)
         return context, kw
 
-    def postprocess_posts_per_classification(self, posts_per_section_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
+    def postprocess_posts_per_classification(self, posts_per_classification_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
         """Rearrange, modify or otherwise use the list of posts per classification and per language."""
-        for lang, posts_per_section in posts_per_section_per_language.items():
+        for lang, posts_per_section in posts_per_classification_per_language.items():
             # Don't build sections when there is only one, a.k.a. default setups
             sections = set()
             for section, posts in posts_per_section.items():
@@ -139,10 +141,11 @@ link://section_index_rss/cars => /cars/rss.xml""",
                         continue
                     sections.add(section)
             self.enable_for_lang[lang] = (len(sections) > 1)
+        self.translation_manager.read_from_config(self.site, 'POSTS_SECTION', posts_per_classification_per_language, False)
 
-    def should_generate_classification_page(self, dirname, post_list, lang):
+    def should_generate_classification_page(self, classification, post_list, lang):
         """Only generates list of posts for classification if this function returns True."""
-        short_destination = dirname + '/' + self.site.config['INDEX_FILE']
+        short_destination = classification + '/' + self.site.config['INDEX_FILE']
         # If there is an index.html pending to be created from a page, do not generate the section page.
         # The section page would be useless anyways. (via Issue #2613)
         for post in self.site.timeline:
@@ -151,3 +154,7 @@ link://section_index_rss/cars => /cars/rss.xml""",
             if post.destination_path(lang, sep='/') == short_destination:
                 return False
         return True
+
+    def get_other_language_variants(self, classification, lang, classifications_per_language):
+        """Return a list of variants of the same section in other languages."""
+        return self.translation_manager.get_translations_as_list(classification, lang, classifications_per_language)

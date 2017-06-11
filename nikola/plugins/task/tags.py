@@ -50,6 +50,7 @@ class ClassifyTags(Taxonomy):
     apply_to_pages = False
     omit_empty_classifications = True
     also_create_classifications_from_other_languages = True
+    add_other_languages_variable = True
     path_handler_docstrings = {
         'tag_index': """A link to the tag index.
 
@@ -79,6 +80,7 @@ link://tag_rss/cats => /tags/cats.xml""",
         self.show_list_as_index = self.site.config['TAG_PAGES_ARE_INDEXES']
         self.template_for_single_list = "tagindex.tmpl" if self.show_list_as_index else "tag.tmpl"
         self.minimum_post_count_per_classification_in_overview = self.site.config['TAGLIST_MINIMUM_POSTS']
+        self.translation_manager = utils.ClassificationTranslationManager()
 
     def is_enabled(self, lang=None):
         """Return True if this taxonomy is enabled, or False otherwise."""
@@ -136,7 +138,7 @@ link://tag_rss/cats => /tags/cats.xml""",
         kw.update(context)
         return context, kw
 
-    def provide_context_and_uptodate(self, tag, lang, node=None):
+    def provide_context_and_uptodate(self, classification, lang, node=None):
         """Provide data for the context and the uptodate list for the list of the given classifiation."""
         kw = {
             "tag_path": self.site.config['TAG_PATH'],
@@ -147,13 +149,20 @@ link://tag_rss/cats => /tags/cats.xml""",
             "tag_pages_titles": self.site.config['TAG_PAGES_TITLES'],
         }
         context = {
-            "title": self.site.config['TAG_PAGES_TITLES'].get(lang, {}).get(tag, self.site.MESSAGES[lang]["Posts about %s"] % tag),
-            "description": self.site.config['TAG_PAGES_DESCRIPTIONS'].get(lang, {}).get(tag),
-            "kind": "tag",
+            "title": self.site.config['TAG_PAGES_TITLES'].get(lang, {}).get(classification, self.site.MESSAGES[lang]["Posts about %s"] % classification),
+            "description": self.site.config['TAG_PAGES_DESCRIPTIONS'].get(lang, {}).get(classification),
             "pagekind": ["tag_page", "index" if self.show_list_as_index else "list"],
-            "tag": tag,
+            "tag": classification,
         }
         if self.show_list_as_index:
-            context["rss_link"] = """<link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for tag {0} ({1})" href="{2}">""".format(tag, lang, self.site.link("tag_rss", tag, lang))
+            context["rss_link"] = """<link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for tag {0} ({1})" href="{2}">""".format(classification, lang, self.site.link("tag_rss", classification, lang))
         kw.update(context)
         return context, kw
+
+    def get_other_language_variants(self, classification, lang, classifications_per_language):
+        """Return a list of variants of the same tag in other languages."""
+        return self.translation_manager.get_translations_as_list(classification, lang, classifications_per_language)
+
+    def postprocess_posts_per_classification(self, posts_per_classification_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
+        """Rearrange, modify or otherwise use the list of posts per classification and per language."""
+        self.translation_manager.read_from_config(self.site, 'TAG', posts_per_classification_per_language, False)

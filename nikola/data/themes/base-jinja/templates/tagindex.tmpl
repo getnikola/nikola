@@ -1,8 +1,9 @@
 {#  -*- coding: utf-8 -*- #}
 {% extends 'index.tmpl' %}
-{% import 'feed_helper.tmpl' as feed with context %}
+{% import 'feeds_translations_helper.tmpl' as feeds_translations with context %}
 
 {% block content_header %}
+    {{ parent.content_header() }}
     <header>
         <h1>{{ title|e }}</h1>
         {% if description %}
@@ -21,5 +22,5 @@
 
 {% block extra_head %}
     {{ super() }}
-    {{ feed.head(tag) }}
+    {{ feeds_translations.head(tag) }}
 {% endblock %}

@@ -1,5 +1,5 @@
 ## -*- coding: utf-8 -*-
-<%namespace name="feed" file="feed_helper.tmpl" import="*"/>
+<%namespace name="feeds_translations" file="feeds_translations_helper.tmpl" import="*"/>
 
 <%def name="html_headstart()">
 <!DOCTYPE html>
@@ -42,7 +42,7 @@ lang="${lang}">
     % if meta_generator_tag:
         <meta name="generator" content="Nikola (getnikola.com)">
     % endif
-    ${feed.head()}
+    ${feeds_translations.head()}
     <link rel="canonical" href="${abs_link(permalink)}">
 
     %if favicons:
@@ -100,7 +100,7 @@ lang="${lang}">
 
 ### This function is deprecated; use feed_helper directly.
 <%def name="html_feedlinks()">
-    ${feed.head()}
+    ${feeds_translations.head()}
 </%def>
 
 <%def name="html_translations()">

@@ -29,7 +29,7 @@
 from __future__ import unicode_literals
 
 from nikola.plugin_categories import Taxonomy
-from nikola import utils
+from nikola import utils, hierarchy_utils
 
 
 class ClassifyCategories(Taxonomy):
@@ -54,6 +54,7 @@ class ClassifyCategories(Taxonomy):
     minimum_post_count_per_classification_in_overview = 1
     omit_empty_classifications = True
     also_create_classifications_from_other_languages = True
+    add_other_languages_variable = True
     path_handler_docstrings = {
         'category_index': """A link to the category index.
 
@@ -82,6 +83,7 @@ link://category_rss/dogs => /categories/dogs.xml""",
         super(ClassifyCategories, self).set_site(site)
         self.show_list_as_index = self.site.config['CATEGORY_PAGES_ARE_INDEXES']
         self.template_for_single_list = "tagindex.tmpl" if self.show_list_as_index else "tag.tmpl"
+        self.translation_manager = utils.ClassificationTranslationManager()
 
     def is_enabled(self, lang=None):
         """Return True if this taxonomy is enabled, or False otherwise."""
@@ -133,11 +135,11 @@ link://category_rss/dogs => /categories/dogs.xml""",
 
     def extract_hierarchy(self, classification):
         """Given a classification, return a list of parts in the hierarchy."""
-        return utils.parse_escaped_hierarchical_category_name(classification)
+        return hierarchy_utils.parse_escaped_hierarchical_category_name(classification)
 
     def recombine_classification_from_hierarchy(self, hierarchy):
         """Given a list of parts in the hierarchy, return the classification string."""
-        return utils.join_hierarchical_category_path(hierarchy)
+        return hierarchy_utils.join_hierarchical_category_path(hierarchy)
 
     def provide_overview_context_and_uptodate(self, lang):
         """Provide data for the context and the uptodate list for the list of all classifiations."""
@@ -157,9 +159,9 @@ link://category_rss/dogs => /categories/dogs.xml""",
         kw.update(context)
         return context, kw
 
-    def provide_context_and_uptodate(self, cat, lang, node=None):
+    def provide_context_and_uptodate(self, classification, lang, node=None):
         """Provide data for the context and the uptodate list for the list of the given classifiation."""
-        cat_path = self.extract_hierarchy(cat)
+        cat_path = self.extract_hierarchy(classification)
         kw = {
             'category_path': self.site.config['CATEGORY_PATH'],
             'category_prefix': self.site.config['CATEGORY_PREFIX'],
@@ -169,20 +171,30 @@ link://category_rss/dogs => /categories/dogs.xml""",
             "category_pages_titles": self.site.config['CATEGORY_PAGES_TITLES'],
         }
         posts = self.site.posts_per_classification[self.classification_name][lang]
-        children = [child for child in node.children if len([post for post in posts.get(child.classification_name, []) if self.site.config['SHOW_UNTRANSLATED_POSTS'] or post.is_translation_available(lang)]) > 0]
+        if node is None:
+            children = []
+        else:
+            children = [child for child in node.children if len([post for post in posts.get(child.classification_name, []) if self.site.config['SHOW_UNTRANSLATED_POSTS'] or post.is_translation_available(lang)]) > 0]
         subcats = [(child.name, self.site.link(self.classification_name, child.classification_name, lang)) for child in children]
-        friendly_name = self.get_classification_friendly_name(cat, lang)
+        friendly_name = self.get_classification_friendly_name(classification, lang)
         context = {
-            "title": self.site.config['CATEGORY_PAGES_TITLES'].get(lang, {}).get(cat, self.site.MESSAGES[lang]["Posts about %s"] % friendly_name),
-            "description": self.site.config['CATEGORY_PAGES_DESCRIPTIONS'].get(lang, {}).get(cat),
-            "kind": "category",
+            "title": self.site.config['CATEGORY_PAGES_TITLES'].get(lang, {}).get(classification, self.site.MESSAGES[lang]["Posts about %s"] % friendly_name),
+            "description": self.site.config['CATEGORY_PAGES_DESCRIPTIONS'].get(lang, {}).get(classification),
             "pagekind": ["tag_page", "index" if self.show_list_as_index else "list"],
             "tag": friendly_name,
-            "category": cat,
+            "category": classification,
             "category_path": cat_path,
             "subcategories": subcats,
         }
         if self.show_list_as_index:
-            context["rss_link"] = """<link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for tag {0} ({1})" href="{2}">""".format(friendly_name, lang, self.site.link("category_rss", cat, lang))
+            context["rss_link"] = """<link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for tag {0} ({1})" href="{2}">""".format(friendly_name, lang, self.site.link("category_rss", classification, lang))
         kw.update(context)
         return context, kw
+
+    def get_other_language_variants(self, classification, lang, classifications_per_language):
+        """Return a list of variants of the same category in other languages."""
+        return self.translation_manager.get_translations_as_list(classification, lang, classifications_per_language)
+
+    def postprocess_posts_per_classification(self, posts_per_classification_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
+        """Rearrange, modify or otherwise use the list of posts per classification and per language."""
+        self.translation_manager.read_from_config(self.site, 'CATEGORY', posts_per_classification_per_language, False)

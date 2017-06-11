@@ -36,7 +36,7 @@ import sys
 from collections import defaultdict
 
 from nikola.plugin_categories import SignalHandler
-from nikola import utils
+from nikola import utils, hierarchy_utils
 
 
 class TaxonomiesClassifier(SignalHandler):
@@ -124,7 +124,7 @@ class TaxonomiesClassifier(SignalHandler):
                         """Create hierarchy."""
                         result = {}
                         for name, children in hierarchy.items():
-                            node = utils.TreeNode(name, parent)
+                            node = hierarchy_utils.TreeNode(name, parent)
                             node.children = create_hierarchy(children, node, level + 1)
                             node.classification_path = [pn.name for pn in node.get_path()]
                             node.classification_name = taxonomy.recombine_classification_from_hierarchy(node.classification_path)
@@ -136,13 +136,13 @@ class TaxonomiesClassifier(SignalHandler):
 
                     root_list = create_hierarchy(hierarchy)
                     if '' in posts_per_classification:
-                        node = utils.TreeNode('', parent=None)
+                        node = hierarchy_utils.TreeNode('', parent=None)
                         node.children = root_list
                         node.classification_path = []
                         node.classification_name = ''
                         hierarchy_lookup[node.name] = node
                         root_list = [node]
-                    flat_hierarchy = utils.flatten_tree_structure(root_list)
+                    flat_hierarchy = hierarchy_utils.flatten_tree_structure(root_list)
                     # Store result
                     site.hierarchy_per_classification[taxonomy.classification_name][lang] = root_list
                     site.flat_hierarchy_per_classification[taxonomy.classification_name][lang] = flat_hierarchy

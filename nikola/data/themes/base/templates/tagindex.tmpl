@@ -1,8 +1,9 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="index.tmpl"/>
-<%namespace name="feed" file="feed_helper.tmpl" import="*"/>
+<%namespace name="feeds_translations" file="feeds_translations_helper.tmpl" import="*"/>
 
 <%block name="content_header">
+    ${parent.content_header()}
     <header>
         <h1>${title|h}</h1>
         %if description:
@@ -21,5 +22,5 @@
 
 <%block name="extra_head">
     ${parent.extra_head()}
-    ${feed.head(tag)}
+    ${feeds_translations.head(tag)}
 </%block>

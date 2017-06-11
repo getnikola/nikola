@@ -607,6 +607,12 @@ class Taxonomy(BasePlugin):
         language, or only the classifications for one language in its language's
         pages.
 
+    add_other_languages_variable = False:
+        In case this is `True`, each classification page will get a list
+        of triples `(other_lang, other_classification, title)` of classifications
+        in other languages which should be linked. The list will be stored in the
+        variable `other_languages`.
+
     path_handler_docstrings:
         A dictionary of docstrings for path handlers. See eg. nikola.py for
         examples.  Must be overridden, keys are "taxonomy_index", "taxonomy",
@@ -638,6 +644,7 @@ class Taxonomy(BasePlugin):
     minimum_post_count_per_classification_in_overview = 1
     omit_empty_classifications = False
     also_create_classifications_from_other_languages = True
+    add_other_languages_variable = False
     path_handler_docstrings = {
         'taxonomy_index': '',
         'taxonomy': '',
@@ -780,8 +787,9 @@ class Taxonomy(BasePlugin):
         Must return a tuple of two dicts. The first is merged into the page's context,
         the second will be put into the uptodate list of all generated tasks.
 
-        For hierarchical taxonomies, node is the `utils.TreeNode` element corresponding
-        to the classification.
+        For hierarchical taxonomies, node is the `hierarchy_utils.TreeNode` element
+        corresponding to the classification. Note that `node` can still be `None`
+        if `also_create_classifications_from_other_languages` is `True`.
 
         Context must contain `title`, which should be something like 'Posts about <classification>'.
         """
@@ -801,8 +809,22 @@ class Taxonomy(BasePlugin):
         For compatibility reasons, the list could be stored somewhere else as well.
 
         In case `has_hierarchy` is `True`, `flat_hierarchy_per_lang` is the flat
-        hierarchy consisting of `utils.TreeNode` elements, and `hierarchy_lookup_per_lang`
-        is the corresponding hierarchy lookup mapping classification strings to
-        `utils.TreeNode` objects.
+        hierarchy consisting of `hierarchy_utils.TreeNode` elements, and
+        `hierarchy_lookup_per_lang` is the corresponding hierarchy lookup mapping
+        classification strings to `hierarchy_utils.TreeNode` objects.
         """
         pass
+
+    def get_other_language_variants(self, classification, lang, classifications_per_language):
+        """Return a list of variants of the same classification in other languages.
+
+        Given a `classification` in a language `lang`, return a list of pairs
+        `(other_lang, other_classification)` with `lang != other_lang` such that
+        `classification` should be linked to `other_classification`.
+
+        Classifications where links to other language versions makes no sense
+        should simply return an empty list.
+
+        Provided is a set of classifications per language (`classifications_per_language`).
+        """
+        return []

@@ -54,7 +54,7 @@ except ImportError:
     phpserialize = None  # NOQA
 
 from nikola.plugin_categories import Command
-from nikola import utils
+from nikola import utils, hierarchy_utils
 from nikola.utils import req_missing, unicode_str
 from nikola.plugins.basic_import import ImportMixin, links
 from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN
@@ -346,7 +346,7 @@ class CommandImportWordpress(Command, ImportMixin):
                 cat_map[cat_slug] = cat_path
             self._category_paths = dict()
             for cat, path in cat_map.items():
-                self._category_paths[cat] = utils.join_hierarchical_category_path(path)
+                self._category_paths[cat] = hierarchy_utils.join_hierarchical_category_path(path)
 
     def _execute(self, options={}, args=[]):
         """Import a WordPress blog from an export file into a Nikola site."""
@@ -824,7 +824,7 @@ class CommandImportWordpress(Command, ImportMixin):
                 if text in self._category_paths:
                     cats.append(self._category_paths[text])
                 else:
-                    cats.append(utils.join_hierarchical_category_path([utils.html_unescape(text)]))
+                    cats.append(hierarchy_utils.join_hierarchical_category_path([utils.html_unescape(text)]))
             other_meta['categories'] = ','.join(cats)
             if len(cats) > 0:
                 other_meta['category'] = cats[0]

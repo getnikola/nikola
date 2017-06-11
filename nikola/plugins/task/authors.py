@@ -48,6 +48,7 @@ class ClassifyAuthors(Taxonomy):
     minimum_post_count_per_classification_in_overview = 1
     omit_empty_classifications = False
     also_create_classifications_from_other_languages = False
+    add_other_languages_variable = True
     path_handler_docstrings = {
         'author_index': """ Link to the authors index.
 
@@ -73,9 +74,10 @@ link://author_rss/joe => /authors/joe.xml""",
 
     def set_site(self, site):
         """Set Nikola site."""
+        super(ClassifyAuthors, self).set_site(site)
         self.show_list_as_index = site.config['AUTHOR_PAGES_ARE_INDEXES']
         self.template_for_single_list = "authorindex.tmpl" if self.show_list_as_index else "author.tmpl"
-        return super(ClassifyAuthors, self).set_site(site)
+        self.translation_manager = utils.ClassificationTranslationManager()
 
     def is_enabled(self, lang=None):
         """Return True if this taxonomy is enabled, or False otherwise."""
@@ -87,22 +89,22 @@ link://author_rss/joe => /authors/joe.xml""",
 
     def classify(self, post, lang):
         """Classify the given post for the given language."""
-        return [post.author()]
+        return [post.author(lang=lang)]
 
-    def get_classification_friendly_name(self, author, lang, only_last_component=False):
+    def get_classification_friendly_name(self, classification, lang, only_last_component=False):
         """Extract a friendly name from the classification."""
-        return author
+        return classification
 
     def get_overview_path(self, lang, dest_type='page'):
         """Return a path for the list of all classifications."""
         return [self.site.config['AUTHOR_PATH'](lang)], 'always'
 
-    def get_path(self, author, lang, dest_type='page'):
+    def get_path(self, classification, lang, dest_type='page'):
         """Return a path for the given classification."""
         if self.site.config['SLUG_AUTHOR_PATH']:
-            slug = utils.slugify(author, lang)
+            slug = utils.slugify(classification, lang)
         else:
-            slug = author
+            slug = classification
         return [self.site.config['AUTHOR_PATH'](lang), slug], 'auto'
 
     def provide_overview_context_and_uptodate(self, lang):
@@ -119,29 +121,33 @@ link://author_rss/joe => /authors/joe.xml""",
         kw.update(context)
         return context, kw
 
-    def provide_context_and_uptodate(self, author, lang, node=None):
+    def provide_context_and_uptodate(self, classification, lang, node=None):
         """Provide data for the context and the uptodate list for the list of the given classifiation."""
         descriptions = self.site.config['AUTHOR_PAGES_DESCRIPTIONS']
         kw = {
             "messages": self.site.MESSAGES,
         }
         context = {
-            "author": author,
-            "title": kw["messages"][lang]["Posts by %s"] % author,
-            "description": descriptions[lang][author] if lang in descriptions and author in descriptions[lang] else None,
+            "author": classification,
+            "title": kw["messages"][lang]["Posts by %s"] % classification,
+            "description": descriptions[lang][classification] if lang in descriptions and classification in descriptions[lang] else None,
             "pagekind": ["index" if self.show_list_as_index else "list", "author_page"],
         }
         if self.site.config["GENERATE_RSS"]:
             rss_link = ("""<link rel="alternate" type="application/rss+xml" title="RSS for author {0} ({1})" href="{2}">""".format(
-                author, lang, self.site.link('author_rss', author, lang)))
+                classification, lang, self.site.link('author_rss', classification, lang)))
             context['rss_link'] = rss_link
         kw.update(context)
         return context, kw
 
-    def postprocess_posts_per_classification(self, posts_per_author_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
+    def get_other_language_variants(self, classification, lang, classifications_per_language):
+        """Return a list of variants of the same author in other languages."""
+        return self.translation_manager.get_translations_as_list(classification, lang, classifications_per_language)
+
+    def postprocess_posts_per_classification(self, posts_per_classification_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
         """Rearrange, modify or otherwise use the list of posts per classification and per language."""
         more_than_one = False
-        for lang, posts_per_author in posts_per_author_per_language.items():
+        for lang, posts_per_author in posts_per_classification_per_language.items():
             authors = set()
             for author, posts in posts_per_author.items():
                 for post in posts:
@@ -152,3 +158,4 @@ link://author_rss/joe => /authors/joe.xml""",
                 more_than_one = True
         self.generate_author_pages = self.site.config["ENABLE_AUTHOR_PAGES"] and more_than_one
         self.site.GLOBAL_CONTEXT["author_pages_generated"] = self.generate_author_pages
+        self.translation_manager.add_defaults(posts_per_classification_per_language)

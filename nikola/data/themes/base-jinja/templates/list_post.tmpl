@@ -1,6 +1,7 @@
 {#  -*- coding: utf-8 -*- #}
 {% extends 'base.tmpl' %}
 {% import 'archive_navigation_helper.tmpl' as archive_nav with context %}
+{% import 'feeds_translations_helper.tmpl' as feeds_translations with context %}
 
 {% block content %}
 <article class="listpage">
@@ -8,6 +9,7 @@
         <h1>{{ title|e }}</h1>
     </header>
     {{ archive_nav.archive_navigation() }}
+    {{ feeds_translations.translation_link() }}
     {% if posts %}
     <ul class="postlist">
     {% for post in posts %}

@@ -1,4 +1,6 @@
 ## -*- coding: utf-8 -*-
+
+## Handles both feeds and translations
 <%def name="head(classification=None)">
     % if rss_link:
         ${rss_link}
@@ -38,9 +40,14 @@
             % endif
         % endif
     % endif
+    % if has_other_languages and other_languages:
+        % for language, classification, _ in other_languages:
+            <link rel="alternate" hreflang="${language}" href="${_link(kind, classification, language)}">
+        % endfor
+    % endif
 </%def>
 
-<%def name="link(classification)">
+<%def name="feed_link(classification)">
     % if len(translations) > 1:
         % for language in sorted(translations):
             % if generate_atom or generate_rss:
@@ -66,4 +73,19 @@
             </p>
         % endif
     % endif
+</%def>
+
+<%def name="translation_link()">
+    %if has_other_languages and other_languages:
+        <div class="translationslist translations">
+            <h3 class="translationslist-intro">${messages("Also available in:")}</h3>
+        %for language, classification, name in other_languages:
+            <p><a href="${_link(kind, classification, language)}" rel="alternate">${messages("LANGUAGE", language)}
+            %if kind != 'archive':
+                (${name|h})
+            %endif
+            </a></p>
+        %endfor
+        </div>
+    %endif
 </%def>

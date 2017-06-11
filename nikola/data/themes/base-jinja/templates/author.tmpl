@@ -1,10 +1,10 @@
 {#  -*- coding: utf-8 -*- #}
 {% extends 'list_post.tmpl' %}
-{% import 'feed_helper.tmpl' as feed with context %}
+{% import 'feeds_translations_helper.tmpl' as feeds_translations with context %}
 
 {% block extra_head %}
     {{ super() }}
-    {{ feed.head(author) }}
+    {{ feeds_translations.head(author) }}
 {% endblock %}
 
 
@@ -16,7 +16,7 @@
             <p>{{ description }}</p>
         {% endif %}
         <div class="metadata">
-            {{ feed.link(author) }}
+            {{ feeds_translations.feed_link(author) }}
         </div>
     </header>
     {% if posts %}

@@ -1,10 +1,10 @@
 {#  -*- coding: utf-8 -*- #}
 {% extends 'list_post.tmpl' %}
-{% import 'feed_helper.tmpl' as feed with context %}
+{% import 'feeds_translations_helper.tmpl' as feeds_translations with context %}
 
 {% block extra_head %}
     {{ super() }}
-    {{ feed.head(tag) }}
+    {{ feeds_translations.head(tag) }}
 {% endblock %}
 
 
@@ -24,8 +24,9 @@
         </ul>
         {% endif %}
         <div class="metadata">
-            {{ feed.link(tag) }}
+            {{ feeds_translations.feed_link(tag) }}
         </div>
+        {{ feeds_translations.translation_link() }}
     </header>
     {% if posts %}
         <ul class="postlist">

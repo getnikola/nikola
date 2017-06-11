@@ -61,7 +61,7 @@ from blinker import signal
 
 from .post import Post  # NOQA
 from .state import Persistor
-from . import DEBUG, filters, utils, shortcodes
+from . import DEBUG, filters, utils, hierarchy_utils, shortcodes
 from .plugin_categories import (
     Command,
     LateTask,
@@ -464,6 +464,8 @@ class Nikola(object):
             'CATEGORY_PREFIX': 'cat_',
             'CATEGORY_ALLOW_HIERARCHIES': False,
             'CATEGORY_OUTPUT_FLAT_HIERARCHY': False,
+            'CATEGORY_TRANSLATIONS': [],
+            'CATEGORY_TRANSLATIONS_ADD_DEFAULTS': False,
             'CODE_COLOR_SCHEME': 'default',
             'COMMENT_SYSTEM': 'disqus',
             'COMMENTS_IN_GALLERIES': False,
@@ -560,6 +562,8 @@ class Nikola(object):
             'POSTS_SECTION_FROM_META': False,
             'POSTS_SECTION_NAME': "",
             'POSTS_SECTION_TITLE': "{name}",
+            'POSTS_SECTION_TRANSLATIONS': [],
+            'POSTS_SECTION_TRANSLATIONS_ADD_DEFAULTS': False,
             'PRESERVE_EXIF_DATA': False,
             # TODO: change in v8
             'PAGES': (("stories/*.txt", "stories", "story.tmpl"),),
@@ -597,6 +601,8 @@ class Nikola(object):
             'TAG_PAGES_ARE_INDEXES': False,
             'TAG_PAGES_DESCRIPTIONS': {},
             'TAG_PAGES_TITLES': {},
+            'TAG_TRANSLATIONS': [],
+            'TAG_TRANSLATIONS_ADD_DEFAULTS': False,
             'TAGS_INDEX_PATH': '',
             'TAGLIST_MINIMUM_POSTS': 1,
             'TEMPLATE_FILTERS': {},
@@ -2079,7 +2085,7 @@ class Nikola(object):
         """Parse a category name into a hierarchy."""
         if self.config['CATEGORY_ALLOW_HIERARCHIES']:
             try:
-                return utils.parse_escaped_hierarchical_category_name(category_name)
+                return hierarchy_utils.parse_escaped_hierarchical_category_name(category_name)
             except Exception as e:
                 utils.LOGGER.error(str(e))
                 sys.exit(1)
@@ -2089,7 +2095,7 @@ class Nikola(object):
     def category_path_to_category_name(self, category_path):
         """Translate a category path to a category name."""
         if self.config['CATEGORY_ALLOW_HIERARCHIES']:
-            return utils.join_hierarchical_category_path(category_path)
+            return hierarchy_utils.join_hierarchical_category_path(category_path)
         else:
             return ''.join(category_path)
 
@@ -2114,7 +2120,7 @@ class Nikola(object):
             """Create category hierarchy."""
             result = []
             for name, children in cat_hierarchy.items():
-                node = utils.TreeNode(name, parent)
+                node = hierarchy_utils.TreeNode(name, parent)
                 node.children = create_hierarchy(children, node)
                 node.category_path = [pn.name for pn in node.get_path()]
                 node.category_name = self.category_path_to_category_name(node.category_path)
@@ -2125,7 +2131,7 @@ class Nikola(object):
 
         root_list = create_hierarchy(self.category_hierarchy)
         # Next, flatten the hierarchy
-        self.category_hierarchy = utils.flatten_tree_structure(root_list)
+        self.category_hierarchy = hierarchy_utils.flatten_tree_structure(root_list)
 
     @staticmethod
     def sort_posts_chronologically(posts, lang=None):
@@ -2371,6 +2377,8 @@ class Nikola(object):
         context["nextlink"] = None
         if extra_context:
             context.update(extra_context)
+        if 'has_other_languages' not in context:
+            context['has_other_languages'] = False
 
         post_deps_dict = {}
         post_deps_dict["posts"] = [(p.meta[lang]['title'], p.permalink(lang)) for p in posts]
@@ -2620,6 +2628,8 @@ class Nikola(object):
             context = context_source.copy()
             if 'pagekind' not in context:
                 context['pagekind'] = ['index']
+            if 'has_other_languages' not in context:
+                context['has_other_languages'] = False
             ipages_i = displayed_page_numbers[i]
             if kw["indexes_pages"]:
                 indexes_pages = kw["indexes_pages"] % ipages_i

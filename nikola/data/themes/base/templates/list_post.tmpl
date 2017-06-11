@@ -1,6 +1,7 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="base.tmpl"/>
 <%namespace name="archive_nav" file="archive_navigation_helper.tmpl" import="*"/>
+<%namespace name="feeds_translations" file="feeds_translations_helper.tmpl" import="*"/>
 
 <%block name="content">
 <article class="listpage">
@@ -8,6 +9,7 @@
         <h1>${title|h}</h1>
     </header>
     ${archive_nav.archive_navigation()}
+    ${feeds_translations.translation_link()}
     %if posts:
     <ul class="postlist">
     % for post in posts:
