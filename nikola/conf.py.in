@@ -907,13 +907,6 @@ COMMENT_SYSTEM = ${COMMENT_SYSTEM}
 # is in the manual.
 COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 
-# Enable annotations using annotateit.org?
-# If set to False, you can still enable them for individual posts and pages
-# setting the "annotations" metadata.
-# If set to True, you can disable them for individual posts and pages using
-# the "noannotations" metadata.
-# ANNOTATIONS = False
-
 # Create index.html for page folders?
 # WARNING: if a page would conflict with the index file (usually
 #          caused by setting slug to `index`), the PAGE_INDEX

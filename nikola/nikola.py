@@ -438,7 +438,6 @@ class Nikola(object):
 
         # This is the default config
         self.config = {
-            'ANNOTATIONS': False,
             'ARCHIVE_PATH': "",
             'ARCHIVE_FILENAME': "archive.html",
             'ARCHIVES_ARE_INDEXES': False,
@@ -1091,7 +1090,6 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['exists'] = self.file_exists
         self._GLOBAL_CONTEXT['SLUG_AUTHOR_PATH'] = self.config['SLUG_AUTHOR_PATH']
         self._GLOBAL_CONTEXT['SLUG_TAG_PATH'] = self.config['SLUG_TAG_PATH']
-        self._GLOBAL_CONTEXT['annotations'] = self.config['ANNOTATIONS']
         self._GLOBAL_CONTEXT['index_display_post_count'] = self.config[
             'INDEX_DISPLAY_POST_COUNT']
         self._GLOBAL_CONTEXT['index_file'] = self.config['INDEX_FILE']

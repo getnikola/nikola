@@ -195,9 +195,6 @@ These are the templates that come with the included themes:
     Template used to render the multipost indexes. The posts are in a ``posts`` variable.
     Some functionality is in the ``index_helper.tmpl`` helper template.
 
-``annotation_helper.tmpl`` (internal)
-    Code for the optional annotations feature.
-
 ``archive_navigation_helper.tmpl``
     Code that implements archive navigation (previous/up/next). Included by
     archive templates.

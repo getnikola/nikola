@@ -130,11 +130,6 @@ lang="${lang}">
         <link href="/assets/css/ipython.min.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/nikola_ipython.css" rel="stylesheet" type="text/css">
     % endif
-    % if annotations and post and not post.meta('noannotations'):
-        ${notes.css()}
-    % elif not annotations and post and post.meta('annotations'):
-        ${notes.css()}
-    % endif
 </%def>
 
 <%def name="html_navigation_links()">

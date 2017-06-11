@@ -39,7 +39,6 @@ Name                                Type                                Descript
 ==================================  ==================================  ================================================================================
 ``_link``                           function                            ``Nikola.link`` function
 ``abs_link``                        function                            ``Nikola.abs_link`` function
-``annotations``                     bool                                ``ANNOTATIONS`` setting
 ``author_pages_generated``          bool                                False
 ``blog_author``                     TranslatableSetting<str>            ``BLOG_AUTHOR`` setting
 ``blog_description``                TranslatableSetting<str>            ``BLOG_DESCRIPTION`` setting

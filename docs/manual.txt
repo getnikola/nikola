@@ -78,7 +78,7 @@ Nikola can't do:
 * Twitter
 * Facebook
 * An Issue tracker
-* Anything with forms, really (except for `comments <#comments-and-annotations>`_!)
+* Anything with forms, really (except for `comments`_!)
 
 Keep in mind that "static" doesn't mean **boring**. You can have animations, slides
 or whatever fancy CSS3/HTML5 thingie you like. It only means all that HTML is
@@ -325,9 +325,6 @@ Extra
 author
     Author of the post, will be used in the RSS feed and possibly in the post
     display (theme-dependent)
-
-annotations / noannotations
-    Override the value of the ``ANNOTATIONS`` option for this specific post or page.
 
 enclosure
     Add an enclosure to this post when it's used in RSS. See `more information about enclosures <http://en.wikipedia.org/wiki/RSS_enclosure>`__
@@ -1718,8 +1715,8 @@ GitLab also offers rebuild automation if you want to use Nikola with GitLab
 Pages. Check out the example `Nikola site on GitLab
 <https://gitlab.com/pages/nikola>`_.
 
-Comments and Annotations
-------------------------
+Comments
+--------
 
 While Nikola creates static sites, there is a minimum level of user interaction you
 are probably expecting: comments.
@@ -1798,18 +1795,6 @@ You can disable comments for a post by adding a "nocomments" metadata field to i
 
     You need jQuery, but not because Facebook wants it (see Issue
     #639).
-
-An alternative or complement to comments are annotations. Nikola integrates
-the annotation service provided by `AnnotateIt. <http://annotateit.org/>`_
-To use it, set the ``ANNOTATIONS`` option to True. This is specially useful
-if you want feedback on specific parts of your writing.
-
-You can enable or disable annotations for specific posts or pages using the
-``annotations`` and ``noannotations`` metadata.
-
-Annotations require jQuery and are therefore not supported in the base theme.
-You can check bootstrap theme's ``base.html`` for details on how to handle them in
-custom themes.
 
 Images and Galleries
 --------------------
