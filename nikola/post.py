@@ -1041,7 +1041,7 @@ def _get_metadata_from_file(meta_data, config=None):
             utils.req_missing('toml', 'use TOML metadata', optional=True)
             raise ValueError('Error parsing metadata')
         idx = meta_data.index('+++', 1)
-        meta = toml.load('\n'.join(meta_data[1:idx]))
+        meta = toml.loads('\n'.join(meta_data[1:idx]))
         # Map metadata from other platforms to names Nikola expects (Issue #2817)
         map_metadata(meta, 'toml', config)
         return meta

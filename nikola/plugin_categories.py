@@ -339,9 +339,9 @@ class PageCompiler(BasePlugin):
         of the document.
         """
         if data.startswith('---'):  # YAML metadata
-            split_result = re.split('(\n---\n\n|\r\n---\r\n\r\n)', data.lstrip(), maxsplit=1)
+            split_result = re.split('(\n---\n|\r\n---\r\n)', data.lstrip(), maxsplit=1)
         elif data.startswith('+++'):  # TOML metadata
-            split_result = re.split('(\n+++\n\n|\r\n+++\r\n\r\n)', data.lstrip(), maxsplit=1)
+            split_result = re.split('(\n\\+\\+\\+\n|\r\n\\+\\+\\+\r\n)', data.lstrip(), maxsplit=1)
         else:
             split_result = re.split('(\n\n|\r\n\r\n)', data.lstrip(), maxsplit=1)
         if len(split_result) == 1:
