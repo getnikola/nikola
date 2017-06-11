@@ -87,9 +87,6 @@ else:
 DEFAULT_INDEX_READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
 DEFAULT_FEED_READ_MORE_LINK = '<p><a href="{link}">{read_more}…</a> ({min_remaining_read})</p>'
 
-# Default pattern for translation files' names
-DEFAULT_TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
-
 
 config_changed = utils.config_changed
 
@@ -606,6 +603,7 @@ class Nikola(object):
             'THEME': 'bootstrap3',
             'THEME_COLOR': '#5670d4',  # light "corporate blue"
             'THUMBNAIL_SIZE': 180,
+            'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}',
             'UNSLUGIFY_TITLES': False,  # WARNING: conf.py.in overrides this with True for backwards compatibility
             'URL_TYPE': 'rel_path',
             'USE_BASE_TAG': False,

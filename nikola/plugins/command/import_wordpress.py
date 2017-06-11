@@ -56,7 +56,6 @@ from nikola.plugin_categories import Command
 from nikola import utils, hierarchy_utils
 from nikola.utils import req_missing, unicode_str
 from nikola.plugins.basic_import import ImportMixin, links
-from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN
 from nikola.plugins.command.init import SAMPLE_CONF, prepare_config, format_default_translations_config
 
 LOGGER = utils.get_logger('import_wordpress', utils.STDERR_HANDLER)
@@ -450,7 +449,6 @@ class CommandImportWordpress(Command, ImportMixin):
         context = SAMPLE_CONF.copy()
         self.lang = get_text_tag(channel, 'language', 'en')[:2]
         context['DEFAULT_LANG'] = self.lang
-        context['TRANSLATIONS_PATTERN'] = DEFAULT_TRANSLATIONS_PATTERN
         context['BLOG_TITLE'] = get_text_tag(channel, 'title',
                                              'PUT TITLE HERE')
         context['BLOG_DESCRIPTION'] = get_text_tag(
