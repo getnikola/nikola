@@ -26,7 +26,6 @@
 
 """Compile reStructuredText to HTML, using Nikola architecture."""
 
-from __future__ import unicode_literals, print_function
 
 import io
 import lxml.html

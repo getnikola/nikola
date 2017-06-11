@@ -26,7 +26,6 @@
 
 """The Post class."""
 
-from __future__ import unicode_literals, print_function, absolute_import
 
 import io
 from collections import defaultdict

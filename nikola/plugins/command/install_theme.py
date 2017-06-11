@@ -26,7 +26,6 @@
 
 """Install a theme."""
 
-from __future__ import print_function
 
 from nikola import utils
 from nikola.plugin_categories import Command

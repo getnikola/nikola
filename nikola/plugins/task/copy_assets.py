@@ -26,7 +26,6 @@
 
 """Copy theme assets into output."""
 
-from __future__ import unicode_literals
 
 import io
 import os

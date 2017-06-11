@@ -2,7 +2,6 @@
 
 u"""Test slugify."""
 
-from __future__ import unicode_literals
 import nikola.utils
 
 

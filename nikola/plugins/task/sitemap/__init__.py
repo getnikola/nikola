@@ -26,7 +26,6 @@
 
 """Generate a sitemap."""
 
-from __future__ import print_function, absolute_import, unicode_literals
 import io
 import datetime
 import dateutil.tz

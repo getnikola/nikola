@@ -26,7 +26,6 @@
 
 """Bundle assets using WebAssets."""
 
-from __future__ import unicode_literals
 
 import os
 

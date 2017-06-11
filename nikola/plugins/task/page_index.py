@@ -26,7 +26,6 @@
 
 """Render the page index."""
 
-from __future__ import unicode_literals
 
 from nikola.plugin_categories import Taxonomy
 

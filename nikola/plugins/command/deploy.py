@@ -26,7 +26,6 @@
 
 """Deploy site."""
 
-from __future__ import print_function
 import io
 from datetime import datetime
 from dateutil.tz import gettz

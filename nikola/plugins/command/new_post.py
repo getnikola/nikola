@@ -26,7 +26,6 @@
 
 """Create a new post."""
 
-from __future__ import unicode_literals, print_function
 import io
 import datetime
 import operator

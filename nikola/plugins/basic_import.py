@@ -26,7 +26,6 @@
 
 """Mixin for importer plugins."""
 
-from __future__ import unicode_literals, print_function
 import io
 import csv
 import datetime

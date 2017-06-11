@@ -26,7 +26,6 @@
 
 """Support for Hugo-style shortcodes."""
 
-from __future__ import unicode_literals
 
 import uuid
 

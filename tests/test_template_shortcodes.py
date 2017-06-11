@@ -2,7 +2,6 @@
 # vim: set wrap textwidth=100
 """Test template-based shortcodes."""
 
-from __future__ import unicode_literals
 
 import pytest
 from nikola import Nikola

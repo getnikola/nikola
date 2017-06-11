@@ -26,7 +26,6 @@
 
 """Post list directive for reStructuredText."""
 
-from __future__ import unicode_literals
 
 import os
 import uuid

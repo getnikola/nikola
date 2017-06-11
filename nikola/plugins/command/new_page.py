@@ -26,7 +26,6 @@
 
 """Create a new page."""
 
-from __future__ import unicode_literals, print_function
 
 from nikola.plugin_categories import Command
 

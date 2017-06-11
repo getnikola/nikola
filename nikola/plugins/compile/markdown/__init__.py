@@ -26,7 +26,6 @@
 
 """Page compiler plugin for Markdown."""
 
-from __future__ import unicode_literals
 
 import io
 import os

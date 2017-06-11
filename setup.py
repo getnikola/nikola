@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-# Don't use __future__ in this script, it breaks buildout
-# from __future__ import print_function
 import os
 import sys
 import shutil

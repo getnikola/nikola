@@ -26,7 +26,6 @@
 
 """Nikola -- a modular, fast, simple, static website generator."""
 
-from __future__ import absolute_import
 import os
 
 __version__ = '7.8.8'

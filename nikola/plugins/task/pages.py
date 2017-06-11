@@ -26,7 +26,6 @@
 
 """Render pages into output."""
 
-from __future__ import unicode_literals
 from nikola.plugin_categories import Task
 from nikola.utils import config_changed
 

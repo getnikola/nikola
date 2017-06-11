@@ -26,7 +26,6 @@
 
 """Deploy site to GitHub Pages."""
 
-from __future__ import print_function
 import os
 import subprocess
 from textwrap import dedent

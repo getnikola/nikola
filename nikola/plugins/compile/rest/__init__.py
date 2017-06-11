@@ -26,7 +26,6 @@
 
 """reStructuredText compiler for Nikola."""
 
-from __future__ import unicode_literals
 import io
 import os
 

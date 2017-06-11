@@ -75,7 +75,6 @@ Error Case: non-existent file:
     [:gist: 4747847 doesntexist.py]
 """
 
-from __future__ import unicode_literals, print_function
 
 try:
     from markdown.extensions import Extension

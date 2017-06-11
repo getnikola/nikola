@@ -26,7 +26,6 @@
 
 """Utility functions."""
 
-from __future__ import print_function, unicode_literals, absolute_import
 import calendar
 import configparser
 import datetime

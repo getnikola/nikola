@@ -26,7 +26,6 @@
 
 """windows utilities to workaround problems with symlinks in a git clone."""
 
-from __future__ import print_function, unicode_literals
 import os
 import shutil
 import io

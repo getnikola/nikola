@@ -26,7 +26,6 @@
 
 """Render the tag pages and feeds."""
 
-from __future__ import unicode_literals
 
 from nikola.plugin_categories import Taxonomy
 from nikola import utils
