@@ -64,7 +64,7 @@ class PostList(Directive):
     Post List
     =========
     :Directive Arguments: None.
-    :Directive Options: lang, start, stop, reverse, sort, date, tags, categories, sections, slugs, post_type, all, template, id
+    :Directive Options: lang, start, stop, reverse, sort, date, tags, categories, sections, slugs, post_type, template, id
     :Directive Content: None.
 
     The posts appearing in the list can be filtered by options.
@@ -125,10 +125,6 @@ class PostList(Directive):
         Show only ``posts``, ``pages`` or ``all``.
         Replaces ``all``. Defaults to ``posts``.
 
-    ``all`` : flag
-        (deprecated, use ``post_type`` instead)
-        Shows all posts and pages in the post list.  Defaults to show only posts.
-
     ``lang`` : string
         The language of post *titles* and *links*.
         Defaults to default language.
@@ -154,7 +150,6 @@ class PostList(Directive):
         'slugs': directives.unchanged,
         'post_type': directives.unchanged,
         'type': directives.unchanged,
-        'all': directives.flag,
         'lang': directives.unchanged,
         'template': directives.path,
         'id': directives.unchanged,
@@ -173,7 +168,6 @@ class PostList(Directive):
         slugs = self.options.get('slugs')
         post_type = self.options.get('post_type')
         type = self.options.get('type', False)
-        all = self.options.get('all', False)
         lang = self.options.get('lang', utils.LocaleBorg().current_lang)
         template = self.options.get('template', 'post_list_directive.tmpl')
         sort = self.options.get('sort')
@@ -181,7 +175,7 @@ class PostList(Directive):
         filename = self.state.document.settings._nikola_source_path
 
         output, deps = _do_post_list(start, stop, reverse, tags, require_all_tags, categories, sections, slugs, post_type, type,
-                                     all, lang, template, sort, state=self.state, site=self.site, date=date, filename=filename)
+                                     lang, template, sort, state=self.state, site=self.site, date=date, filename=filename)
         self.state.document.settings.record_dependencies.add("####MAGIC####TIMELINE")
         for d in deps:
             self.state.document.settings.record_dependencies.add(d)
@@ -192,7 +186,7 @@ class PostList(Directive):
 
 
 def _do_post_list(start=None, stop=None, reverse=False, tags=None, require_all_tags=False, categories=None,
-                  sections=None, slugs=None, post_type='post', type=False, all=False,
+                  sections=None, slugs=None, post_type='post', type=False,
                   lang=None, template='post_list_directive.tmpl', sort=None,
                   id=None, data=None, state=None, site=None, date=None, filename=None, post=None):
     if lang is None:
@@ -229,23 +223,12 @@ def _do_post_list(start=None, stop=None, reverse=False, tags=None, require_all_t
     if type is not False:
         post_type = type
 
-    # TODO: remove in v8
-    if all is not False:
-        timeline = [p for p in site.timeline]
-    elif post_type == 'page' or post_type == 'pages':
+    if post_type == 'page' or post_type == 'pages':
         timeline = [p for p in site.timeline if not p.use_in_feeds]
     elif post_type == 'all':
         timeline = [p for p in site.timeline]
     else:  # post
         timeline = [p for p in site.timeline if p.use_in_feeds]
-
-    # TODO: replaces all, uncomment in v8
-    # if post_type == 'page' or post_type == 'pages':
-    #    timeline = [p for p in site.timeline if not p.use_in_feeds]
-    # elif post_type == 'all':
-    #    timeline = [p for p in site.timeline]
-    # else: # post
-    #    timeline = [p for p in site.timeline if p.use_in_feeds]
 
     # self_post should be removed from timeline because this is redundant
     timeline = [p for p in timeline if p.source_path != filename]

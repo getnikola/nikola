@@ -187,7 +187,6 @@ class FakeSite(object):
             "MarkdownExtension": MarkdownExtension,
             "RestExtension": RestExtension
         })
-        self.loghandlers = nikola.utils.STDERR_HANDLER  # TODO remove on v8
         self.shortcode_registry = {}
         self.plugin_manager.setPluginInfoExtension('plugin')
         if sys.version_info[0] == 3:

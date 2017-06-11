@@ -136,11 +136,6 @@ class CompileRest(PageCompiler):
         output, shortcode_deps = self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, with_dependencies=True, extra_context=dict(post=post))
         return output, error_level, deps, shortcode_deps
 
-    # TODO remove in v8
-    def compile_html_string(self, data, source_path=None, is_two_file=True):
-        """Compile reST into HTML strings."""
-        return self.compile_string(data, source_path, is_two_file)
-
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))

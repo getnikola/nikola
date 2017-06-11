@@ -833,8 +833,6 @@ def slugify(value, lang=None, force=False):
     >>> print(slugify('foo bar', lang='en'))
     foo-bar
     """
-    if lang is None:  # TODO: remove in v8
-        LOGGER.warn("slugify() called without language!")
     if not isinstance(value, unicode_str):
         raise ValueError("Not a unicode object: {0}".format(value))
     if USE_SLUGIFY or force:
@@ -865,8 +863,6 @@ def unslugify(value, lang=None, discard_numbers=True):
     If discard_numbers is True, numbers right at the beginning of input
     will be removed.
     """
-    if lang is None:  # TODO: remove in v8
-        LOGGER.warn("unslugify() called without language!")
     if discard_numbers:
         value = re.sub('^[0-9]+', '', value)
     value = re.sub('([_\-\.])', ' ', value)

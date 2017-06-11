@@ -417,7 +417,6 @@ class Nikola(object):
         self._MESSAGES = None
         self.filters = {}
         self.debug = DEBUG
-        self.loghandlers = utils.STDERR_HANDLER  # TODO remove on v8
         self.colorful = config.pop('__colorful__', False)
         self.invariant = config.pop('__invariant__', False)
         self.quiet = config.pop('__quiet__', False)
@@ -545,7 +544,7 @@ class Nikola(object):
             'LISTINGS_FOLDERS': {'listings': 'listings'},
             'LOGO_URL': '',
             'NAVIGATION_LINKS': {},
-            'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],  # FIXME: Add 'extras' in v8
+            'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite', 'extra'],
             'MAX_IMAGE_SIZE': 1280,
             'MATHJAX_CONFIG': '',
             'METADATA_FORMAT': 'nikola',
@@ -565,8 +564,7 @@ class Nikola(object):
             'POSTS_SECTION_TRANSLATIONS': [],
             'POSTS_SECTION_TRANSLATIONS_ADD_DEFAULTS': False,
             'PRESERVE_EXIF_DATA': False,
-            # TODO: change in v8
-            'PAGES': (("stories/*.txt", "stories", "story.tmpl"),),
+            'PAGES': (("pages/*.txt", "pages", "page.tmpl"),),
             'PANDOC_OPTIONS': [],
             'PRETTY_URLS': False,
             'FUTURE_IS_NOW': False,
@@ -621,7 +619,7 @@ class Nikola(object):
             'USE_OPEN_GRAPH': True,
             'USE_SLUGIFY': True,
             'TIMEZONE': 'UTC',
-            'WRITE_TAG_CLOUD': True,
+            'WRITE_TAG_CLOUD': False,
             'DEPLOY_DRAFTS': True,
             'DEPLOY_FUTURE': False,
             'SCHEDULE_ALL': False,
@@ -697,7 +695,6 @@ class Nikola(object):
 
         self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
                                              'blog_title',
-                                             'blog_desc',  # TODO: remove in v8
                                              'blog_description',
                                              'license',
                                              'content_footer',
@@ -762,91 +759,6 @@ class Nikola(object):
         for i1, i2, i3 in self.config['PAGES']:
             self.config['post_pages'].append([i1, i2, i3, False])
 
-        # RSS_TEASERS has been replaced with FEED_TEASERS
-        # TODO: remove on v8
-        if 'RSS_TEASERS' in config:
-            utils.LOGGER.warn('The RSS_TEASERS option is deprecated, use FEED_TEASERS instead.')
-            if 'FEED_TEASERS' in config:
-                utils.LOGGER.warn('FEED_TEASERS conflicts with RSS_TEASERS, ignoring RSS_TEASERS.')
-            self.config['FEED_TEASERS'] = config['RSS_TEASERS']
-
-        # RSS_PLAIN has been replaced with FEED_PLAIN
-        # TODO: remove on v8
-        if 'RSS_PLAIN' in config:
-            utils.LOGGER.warn('The RSS_PLAIN option is deprecated, use FEED_PLAIN instead.')
-            if 'FEED_PLAIN' in config:
-                utils.LOGGER.warn('FEED_PLIN conflicts with RSS_PLAIN, ignoring RSS_PLAIN.')
-            self.config['FEED_PLAIN'] = config['RSS_PLAIN']
-
-        # RSS_LINKS_APPEND_QUERY has been replaced with FEED_LINKS_APPEND_QUERY
-        # TODO: remove on v8
-        if 'RSS_LINKS_APPEND_QUERY' in config:
-            utils.LOGGER.warn('The RSS_LINKS_APPEND_QUERY option is deprecated, use FEED_LINKS_APPEND_QUERY instead.')
-            if 'FEED_LINKS_APPEND_QUERY' in config:
-                utils.LOGGER.warn('FEED_LINKS_APPEND_QUERY conflicts with RSS_LINKS_APPEND_QUERY, ignoring RSS_LINKS_APPEND_QUERY.')
-            self.config['FEED_LINKS_APPEND_QUERY'] = config['RSS_LINKS_APPEND_QUERY']
-
-        # RSS_READ_MORE_LINK has been replaced with FEED_READ_MORE_LINK
-        # TODO: remove on v8
-        if 'RSS_READ_MORE_LINK' in config:
-            utils.LOGGER.warn('The RSS_READ_MORE_LINK option is deprecated, use FEED_READ_MORE_LINK instead.')
-            if 'FEED_READ_MORE_LINK' in config:
-                utils.LOGGER.warn('FEED_READ_MORE_LINK conflicts with RSS_READ_MORE_LINK, ignoring RSS_READ_MORE_LINK')
-            self.config['FEED_READ_MORE_LINK'] = utils.TranslatableSetting('FEED_READ_MORE_LINK', config['RSS_READ_MORE_LINK'], self.config['TRANSLATIONS'])
-
-        # DEFAULT_TRANSLATIONS_PATTERN was changed from "p.e.l" to "p.l.e"
-        # TODO: remove on v8
-        if 'TRANSLATIONS_PATTERN' not in self.config:
-            if len(self.config.get('TRANSLATIONS', {})) > 1:
-                utils.LOGGER.warn('You do not have a TRANSLATIONS_PATTERN set in your config, yet you have multiple languages.')
-                utils.LOGGER.warn('Setting TRANSLATIONS_PATTERN to the pre-v6 default ("{path}.{ext}.{lang}").')
-                utils.LOGGER.warn('Please add the proper pattern to your conf.py.  (The new default in v7 is "{0}".)'.format(DEFAULT_TRANSLATIONS_PATTERN))
-                self.config['TRANSLATIONS_PATTERN'] = "{path}.{ext}.{lang}"
-            else:
-                # use v7 default there
-                self.config['TRANSLATIONS_PATTERN'] = DEFAULT_TRANSLATIONS_PATTERN
-
-        # HIDE_SOURCELINK has been replaced with the inverted SHOW_SOURCELINK
-        # TODO: remove on v8
-        if 'HIDE_SOURCELINK' in config:
-            utils.LOGGER.warn('The HIDE_SOURCELINK option is deprecated, use SHOW_SOURCELINK instead.')
-            if 'SHOW_SOURCELINK' in config:
-                utils.LOGGER.warn('HIDE_SOURCELINK conflicts with SHOW_SOURCELINK, ignoring HIDE_SOURCELINK.')
-            self.config['SHOW_SOURCELINK'] = not config['HIDE_SOURCELINK']
-
-        # HIDE_UNTRANSLATED_POSTS has been replaced with the inverted SHOW_UNTRANSLATED_POSTS
-        # TODO: remove on v8
-        if 'HIDE_UNTRANSLATED_POSTS' in config:
-            utils.LOGGER.warn('The HIDE_UNTRANSLATED_POSTS option is deprecated, use SHOW_UNTRANSLATED_POSTS instead.')
-            if 'SHOW_UNTRANSLATED_POSTS' in config:
-                utils.LOGGER.warn('HIDE_UNTRANSLATED_POSTS conflicts with SHOW_UNTRANSLATED_POSTS, ignoring HIDE_UNTRANSLATED_POSTS.')
-            self.config['SHOW_UNTRANSLATED_POSTS'] = not config['HIDE_UNTRANSLATED_POSTS']
-
-        # READ_MORE_LINK has been split into INDEX_READ_MORE_LINK and RSS_READ_MORE_LINK
-        # TODO: remove on v8
-        if 'READ_MORE_LINK' in config:
-            utils.LOGGER.warn('The READ_MORE_LINK option is deprecated, use INDEX_READ_MORE_LINK and RSS_READ_MORE_LINK instead.')
-            if 'INDEX_READ_MORE_LINK' in config:
-                utils.LOGGER.warn('READ_MORE_LINK conflicts with INDEX_READ_MORE_LINK, ignoring READ_MORE_LINK.')
-            else:
-                self.config['INDEX_READ_MORE_LINK'] = utils.TranslatableSetting('INDEX_READ_MORE_LINK', config['READ_MORE_LINK'], self.config['TRANSLATIONS'])
-
-            if 'RSS_READ_MORE_LINK' in config:
-                utils.LOGGER.warn('READ_MORE_LINK conflicts with RSS_READ_MORE_LINK, ignoring READ_MORE_LINK.')
-            else:
-                self.config['RSS_READ_MORE_LINK'] = utils.TranslatableSetting('RSS_READ_MORE_LINK', config['READ_MORE_LINK'], self.config['TRANSLATIONS'])
-
-        # Moot.it renamed themselves to muut.io
-        # TODO: remove on v8?
-        if self.config.get('COMMENT_SYSTEM') == 'moot':
-            utils.LOGGER.warn('The moot comment system has been renamed to muut by the upstream.  Setting COMMENT_SYSTEM to "muut".')
-            self.config['COMMENT_SYSTEM'] = 'muut'
-
-        # Detect manually added KaTeX CSS (#2715/#2717)
-        # TODO: remove on v8
-        if any('katex.min.css' in v for v in self.config['EXTRA_HEAD_DATA'].values.values()):
-            utils.LOGGER.warn("KaTeX CSS is now added by Nikola whenever needed (if your theme supports it). Please remove katex.min.css from EXTRA_HEAD_DATA in conf.py.")
-
         # Handle old plugin names (from before merging the taxonomy PR #2535)
         for old_plugin_name, new_plugin_names in TAXONOMY_COMPATIBILITY_PLUGIN_NAME_MAP.items():
             if old_plugin_name in self.config['DISABLED_PLUGINS']:
@@ -881,22 +793,6 @@ class Nikola(object):
         if self.config.get('PRETTY_URLS') and 'STRIP_INDEXES' not in config:
             self.config['STRIP_INDEXES'] = True
 
-        if 'LISTINGS_FOLDER' in config:
-            if 'LISTINGS_FOLDERS' not in config:
-                utils.LOGGER.warn("The LISTINGS_FOLDER option is deprecated, use LISTINGS_FOLDERS instead.")
-                self.config['LISTINGS_FOLDERS'] = {self.config['LISTINGS_FOLDER']: self.config['LISTINGS_FOLDER']}
-                utils.LOGGER.warn("LISTINGS_FOLDERS = {0}".format(self.config['LISTINGS_FOLDERS']))
-            else:
-                utils.LOGGER.warn("Both LISTINGS_FOLDER and LISTINGS_FOLDERS are specified, ignoring LISTINGS_FOLDER.")
-
-        if 'GALLERY_PATH' in config:
-            if 'GALLERY_FOLDERS' not in config:
-                utils.LOGGER.warn("The GALLERY_PATH option is deprecated, use GALLERY_FOLDERS instead.")
-                self.config['GALLERY_FOLDERS'] = {self.config['GALLERY_PATH']: self.config['GALLERY_PATH']}
-                utils.LOGGER.warn("GALLERY_FOLDERS = {0}".format(self.config['GALLERY_FOLDERS']))
-            else:
-                utils.LOGGER.warn("Both GALLERY_PATH and GALLERY_FOLDERS are specified, ignoring GALLERY_PATH.")
-
         if not self.config.get('COPY_SOURCES'):
             self.config['SHOW_SOURCELINK'] = False
 
@@ -930,42 +826,6 @@ class Nikola(object):
             utils.LOGGER.error("Your BASE_URL or SITE_URL contains an IDN expressed in Unicode.  Please convert it to Punycode.")
             utils.LOGGER.error("Punycode of {}: {}".format(_bnl, _bnl.encode('idna')))
             sys.exit(1)
-
-        # TODO: remove in v8
-        if not isinstance(self.config['DEPLOY_COMMANDS'], dict):
-            utils.LOGGER.warn("A single list as DEPLOY_COMMANDS is deprecated.  DEPLOY_COMMANDS should be a dict, with deploy preset names as keys and lists of commands as values.")
-            utils.LOGGER.warn("The key `default` is used by `nikola deploy`:")
-            self.config['DEPLOY_COMMANDS'] = {'default': self.config['DEPLOY_COMMANDS']}
-            utils.LOGGER.warn("DEPLOY_COMMANDS = {0}".format(self.config['DEPLOY_COMMANDS']))
-            utils.LOGGER.info("(The above can be used with `nikola deploy` or `nikola deploy default`.  Multiple presets are accepted.)")
-
-        # TODO: remove and change default in v8
-        if 'BLOG_TITLE' in config and 'WRITE_TAG_CLOUD' not in config:
-            # BLOG_TITLE is a hack, otherwise the warning would be displayed
-            # when conf.py does not exist
-            utils.LOGGER.warn("WRITE_TAG_CLOUD is not set in your config.  Defaulting to True (== writing tag_cloud_data.json).")
-            utils.LOGGER.warn("Please explicitly add the setting to your conf.py with the desired value, as the setting will default to False in the future.")
-
-        # Rename stories to pages (#1891, #2518)
-        # TODO: remove in v8
-        if 'COMMENTS_IN_STORIES' in config:
-            utils.LOGGER.warn('The COMMENTS_IN_STORIES option is deprecated, use COMMENTS_IN_PAGES instead.')
-            self.config['COMMENTS_IN_PAGES'] = config['COMMENTS_IN_STORIES']
-        if 'STORY_INDEX' in config:
-            utils.LOGGER.warn('The STORY_INDEX option is deprecated, use PAGE_INDEX instead.')
-            self.config['PAGE_INDEX'] = config['STORY_INDEX']
-
-        if 'POSTS_SECTION_ARE_INDEXES' in config:
-            utils.LOGGER.warn('The POSTS_SECTION_ARE_INDEXES option is deprecated, use POSTS_SECTIONS_ARE_INDEXES instead.')
-            self.config['POSTS_SECTIONS_ARE_INDEXES'] = config['POSTS_SECTION_ARE_INDEXES']
-
-        # TODO: remove in v8, or earlier
-        if ('THEME_REVEAL_CONFIG_SUBTHEME' in config or 'THEME_REVEAL_CONFIG_TRANSITION' in config or
-                (self.config['THEME'] in ('reveal', 'reveal-jinja') and
-                 ('subtheme' not in config['GLOBAL_CONTEXT'] or 'transition' not in config['GLOBAL_CONTEXT']))):
-            utils.LOGGER.warn('The THEME_REVEAL_CONFIG_* settings are deprecated. Use `subtheme` and `transition` in GLOBAL_CONTEXT instead.')
-            self._GLOBAL_CONTEXT['subtheme'] = config.get('THEME_REVEAL_CONFIG_SUBTHEME', 'sky')
-            self._GLOBAL_CONTEXT['transition'] = config.get('THEME_REVEAL_CONFIG_TRANSITION', 'cube')
 
         # The pelican metadata format requires a markdown extension
         if config.get('METADATA_FORMAT', 'nikola').lower() == 'pelican':
@@ -1259,10 +1119,6 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['front_index_header'] = self.config.get('FRONT_INDEX_HEADER')
         self._GLOBAL_CONTEXT['color_hsl_adjust_hex'] = utils.color_hsl_adjust_hex
         self._GLOBAL_CONTEXT['colorize_str_from_base_color'] = utils.colorize_str_from_base_color
-
-        # TODO: remove in v8
-        self._GLOBAL_CONTEXT['blog_desc'] = self.config.get('BLOG_DESCRIPTION')
-
         self._GLOBAL_CONTEXT['blog_url'] = self.config.get('SITE_URL')
         self._GLOBAL_CONTEXT['template_hooks'] = self.template_hooks
         self._GLOBAL_CONTEXT['body_end'] = self.config.get('BODY_END')
@@ -1730,16 +1586,15 @@ class Nikola(object):
             return
         self.shortcode_registry[name] = f
 
-    # XXX in v8, get rid of with_dependencies
-    def apply_shortcodes(self, data, filename=None, lang=None, with_dependencies=False, extra_context=None):
+    def apply_shortcodes(self, data, filename=None, lang=None, extra_context=None):
         """Apply shortcodes from the registry on data."""
         if extra_context is None:
             extra_context = {}
         if lang is None:
             lang = utils.LocaleBorg().current_lang
-        return shortcodes.apply_shortcodes(data, self.shortcode_registry, self, filename, lang=lang, with_dependencies=with_dependencies, extra_context=extra_context)
+        return shortcodes.apply_shortcodes(data, self.shortcode_registry, self, filename, lang=lang, extra_context=extra_context)
 
-    def apply_shortcodes_uuid(self, data, _shortcodes, filename=None, lang=None, with_dependencies=False, extra_context=None):
+    def apply_shortcodes_uuid(self, data, _shortcodes, filename=None, lang=None, extra_context=None):
         """Apply shortcodes from the registry on data."""
         if lang is None:
             lang = utils.LocaleBorg().current_lang
@@ -1747,7 +1602,7 @@ class Nikola(object):
             extra_context = {}
         deps = []
         for k, v in _shortcodes.items():
-            replacement, _deps = shortcodes.apply_shortcodes(v, self.shortcode_registry, self, filename, lang=lang, with_dependencies=with_dependencies, extra_context=extra_context)
+            replacement, _deps = shortcodes.apply_shortcodes(v, self.shortcode_registry, self, filename, lang=lang, extra_context=extra_context)
             data = data.replace(k, replacement)
             deps.extend(_deps)
         return data, deps

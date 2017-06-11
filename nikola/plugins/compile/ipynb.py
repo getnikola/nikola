@@ -83,13 +83,6 @@ class CompileIPynb(PageCompiler):
         output = self._compile_string(nbformat.reads(new_data, current_nbformat))
         return self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, with_dependencies=True, extra_context=dict(post=post))
 
-    # TODO remove in v8
-    def compile_html_string(self, source, is_two_file=True):
-        """Export notebooks as HTML strings."""
-        with io.open(source, "r", encoding="utf8") as in_file:
-            nb_json = nbformat.read(in_file, current_nbformat)
-        return self._compile_string(nb_json)
-
     def compile(self, source, dest, is_two_file=False, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))

@@ -307,8 +307,7 @@ def _split_shortcodes(data):
     return result
 
 
-# FIXME: in v8, get rid of with_dependencies
-def apply_shortcodes(data, registry, site=None, filename=None, raise_exceptions=False, lang=None, with_dependencies=False, extra_context={}):
+def apply_shortcodes(data, registry, site=None, filename=None, raise_exceptions=False, lang=None, extra_context={}):
     """Apply Hugo-style shortcodes on data.
 
     {{% name parameters %}} will end up calling the registered "name" function with the given parameters.
@@ -376,9 +375,7 @@ def apply_shortcodes(data, registry, site=None, filename=None, raise_exceptions=
                     res = ('', [])
                 result.append(res[0])
                 dependencies += res[1]
-        if with_dependencies:
-            return empty_string.join(result), dependencies
-        return empty_string.join(result)
+        return empty_string.join(result), dependencies
     except ParsingError as e:
         if raise_exceptions:
             # Throw up

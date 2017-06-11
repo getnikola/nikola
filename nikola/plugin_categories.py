@@ -315,11 +315,6 @@ class PageCompiler(BasePlugin):
         # This function used to have some different APIs in different places.
         raise NotImplementedError()
 
-    # TODO remove in v8
-    def compile_html(self, source, dest, is_two_file=True):
-        """Compile the source, save it on dest (DEPRECATED)."""
-        raise NotImplementedError()
-
     def create_post(self, path, content=None, onefile=False, is_page=False, **kw):
         """Create post file with optional metadata."""
         raise NotImplementedError()
