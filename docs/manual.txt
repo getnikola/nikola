@@ -136,7 +136,7 @@ Obsolescence
     You may say those are long term issues, or that they won't matter for years. Well,
     I believe things should work forever, or as close to it as we can make them.
     Nikola's static output and its input files will work as long as you can install
-    a Python 2.7/3.3 or newer under Linux, Windows, or OS X and can find a server
+    Python 3.3 or newer under Linux, Windows, or OS X and can find a server
     that sends files over HTTP. That's probably 10 or 15 years at least.
 
     Also, static sites are easily handled by the Internet Archive.

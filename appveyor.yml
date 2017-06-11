@@ -2,7 +2,6 @@
 build: false
 environment:
   matrix:
-    - PYTHON: "C:/Python27"
     - PYTHON: "C:/Python36"
 init:
   - "ECHO %PYTHON%"

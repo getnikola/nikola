@@ -26,11 +26,7 @@ class PyTest(TestCommand):
 with open('requirements.txt', 'r') as fh:
     dependencies = [l.strip() for l in fh]
 
-extras = {
-    ':python_version >= "3.4"': ['doit>=0.28.0'],
-    ':python_version == "3.3"': ['doit>=0.30.1'],
-    ':python_version == "2.7"': ['doit>=0.28.0,<=0.29.0'],
-}
+extras = {}
 
 with open('requirements-extras.txt', 'r') as fh:
     extras['extras'] = [l.strip() for l in fh][1:]
@@ -41,8 +37,8 @@ with open('requirements-tests.txt', 'r') as fh:
     extras['tests'] = [l.strip() for l in fh][1:]
 
 # ########## platform specific stuff #############
-if sys.version_info[0] == 2 and sys.version_info[1] < 7:
-    raise Exception('Python 2 version < 2.7 is not supported')
+if sys.version_info[0] == 2:
+    raise Exception('Python 2 is not supported')
 elif sys.version_info[0] == 3 and sys.version_info[1] < 3:
     raise Exception('Python 3 version < 3.3 is not supported')
 
@@ -138,7 +134,6 @@ setup(name='Nikola',
                    'Operating System :: POSIX',
                    'Operating System :: Unix',
                    'Programming Language :: Python',
-                   'Programming Language :: Python :: 2.7',
                    'Programming Language :: Python :: 3.3',
                    'Programming Language :: Python :: 3.4',
                    'Programming Language :: Python :: 3.5',

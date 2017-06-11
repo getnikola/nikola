@@ -549,14 +549,7 @@ class CommandImportWordpress(Command, ImportMixin):
                     # that the export should give you the power to insert
                     # your blogging into another site or system its not.
                     # Why don't they just use JSON?
-                    if sys.version_info[0] == 2:
-                        try:
-                            metadata = phpserialize.loads(utils.sys_encode(meta_value.text))
-                        except ValueError:
-                            # local encoding might be wrong sometimes
-                            metadata = phpserialize.loads(meta_value.text.encode('utf-8'))
-                    else:
-                        metadata = phpserialize.loads(meta_value.text.encode('utf-8'))
+                    metadata = phpserialize.loads(meta_value.text.encode('utf-8'))
 
                     meta_key = b'image_meta'
                     size_key = b'sizes'

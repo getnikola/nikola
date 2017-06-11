@@ -179,12 +179,8 @@ class TestCalendarRelated(unittest.TestCase):
         Yes, both in windows and linuxTravis, py 26, 27, 33
         """
         import calendar
-        if sys.version_info[0] == 3:  # Python 3
-            with calendar.different_locale(loc_11):
-                s = calendar.month_name[1]
-        else:  # Python 2
-            with calendar.TimeEncoding(loc_11):
-                s = calendar.month_name[1]
+        with calendar.different_locale(loc_11):
+            s = calendar.month_name[1]
         self.assertTrue(type(s) == str)
 
 

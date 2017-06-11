@@ -20,11 +20,6 @@ def arg(*args, **kwargs):
     kwargs.pop('site')
     data = kwargs.pop('data')
     kwargs.pop('lang')
-    # TODO hack for Python 2.7 -- remove when possible
-    if sys.version_info[0] == 2:
-        args = tuple(i.encode('utf-8') for i in args)
-        kwargs = {k.encode('utf-8'): v.encode('utf-8')
-                  for k, v in kwargs.items()}
     return "arg {0}/{1}/{2}".format(args, sorted(kwargs.items()), data)
 
 
@@ -178,9 +173,6 @@ class TestErrors(BaseTestCase):
 def test_extract_shortcodes(input, expected, monkeypatch):
 
     i = iter('SC%d' % i for i in range(1, 100))
-    if sys.version_info[0] < 3:
-        monkeypatch.setattr(shortcodes, '_new_sc_id', i.next)
-    else:
-        monkeypatch.setattr(shortcodes, '_new_sc_id', i.__next__)
+    monkeypatch.setattr(shortcodes, '_new_sc_id', i.__next__)
     extracted = shortcodes.extract_shortcodes(input)
     assert extracted == expected

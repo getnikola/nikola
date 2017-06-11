@@ -918,18 +918,11 @@ class Nikola(object):
         })
         self.plugin_manager.getPluginLocator().setPluginInfoExtension('plugin')
         extra_plugins_dirs = self.config['EXTRA_PLUGINS_DIRS']
-        if sys.version_info[0] == 3:
-            self._plugin_places = [
-                resource_filename('nikola', 'plugins'),
-                os.path.expanduser('~/.nikola/plugins'),
-                os.path.join(os.getcwd(), 'plugins'),
-            ] + [path for path in extra_plugins_dirs if path]
-        else:
-            self._plugin_places = [
-                resource_filename('nikola', utils.sys_encode('plugins')),
-                os.path.join(os.getcwd(), utils.sys_encode('plugins')),
-                os.path.expanduser('~/.nikola/plugins'),
-            ] + [utils.sys_encode(path) for path in extra_plugins_dirs if path]
+        self._plugin_places = [
+            resource_filename('nikola', 'plugins'),
+            os.path.expanduser('~/.nikola/plugins'),
+            os.path.join(os.getcwd(), 'plugins'),
+        ] + [path for path in extra_plugins_dirs if path]
 
         compilers = defaultdict(set)
         # Also add aliases for combinations with TRANSLATIONS_PATTERN
@@ -2615,8 +2608,8 @@ def sanitized_locales(locale_fallback, locale_default, locales, translations):
         the sanitized locale_default if it was explicitly set
         sanitized guesses compatible with v 6.0.4 if locale_default was None
 
-    NOTE: never use locale.getlocale() , it can return values that
-    locale.setlocale will not accept in Windows XP, 7 and pythons 2.6, 2.7, 3.3
+    NOTE: never use locale.getlocale(), it can return values that
+    locale.setlocale will not accept in Windows.
     Examples: "Spanish", "French" can't do the full circle set / get / set
     """
     if sys.platform != 'win32':

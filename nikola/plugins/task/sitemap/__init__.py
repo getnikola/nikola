@@ -227,12 +227,8 @@ class Sitemap(LateTask):
             for rule in kw["robots_exclusions"]:
                 robot = robotparser.RobotFileParser()
                 robot.parse(["User-Agent: *", "Disallow: {0}".format(rule)])
-                if sys.version_info[0] == 3:
-                    if not robot.can_fetch("*", '/' + path):
-                        return False  # not robot food
-                else:
-                    if not robot.can_fetch("*", ('/' + path).encode('utf-8')):
-                        return False  # not robot food
+                if not robot.can_fetch("*", '/' + path):
+                    return False  # not robot food
             return True
 
         def write_sitemap():

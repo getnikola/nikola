@@ -11,7 +11,6 @@ addons:
     - language-pack-en-base
     - language-pack-pl-base
 python:
-- '2.7'
 - '3.3'
 - '3.4'
 - '3.5'

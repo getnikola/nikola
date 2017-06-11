@@ -72,6 +72,7 @@ except ImportError:
 
 from blinker import signal
 from collections import defaultdict, Callable, OrderedDict
+from imp import reload as _reload
 from logbook.compat import redirect_logging
 from logbook.more import ExceptionHandler, ColorizedStderrHandler
 from pygments.formatters import HtmlFormatter
@@ -109,18 +110,10 @@ from .hierarchy_utils import join_hierarchical_category_path, parse_escaped_hier
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
 
-if sys.version_info[0] == 3:
-    # Python 3
-    bytes_str = bytes
-    unicode_str = str
-    unichr = chr
-    raw_input = input
-    from imp import reload as _reload
-else:
-    bytes_str = str
-    unicode_str = unicode  # NOQA
-    _reload = reload  # NOQA
-    unichr = unichr
+# Aliases, previously for Python 2/3 compatibility.
+bytes_str = bytes
+unicode_str = str
+unichr = chr
 
 
 class ApplicationWarning(Exception):
@@ -1257,12 +1250,6 @@ class LocaleBorg(object):
             self.__set_locale(lang)
             s = calendar.month_name[month_no]
             self.__set_locale(old_lang)
-            if sys.version_info[0] == 2:
-                enc = self.encodings[lang]
-                if not enc:
-                    enc = 'UTF-8'
-
-                s = s.decode(enc)
             return s
 
     def formatted_date(self, date_format, date):
@@ -1381,10 +1368,7 @@ def get_root_dir():
     """Find root directory of nikola site by looking for conf.py."""
     root = os.getcwd()
 
-    if sys.version_info[0] == 2:
-        confname = b'conf.py'
-    else:
-        confname = 'conf.py'
+    confname = 'conf.py'
 
     while True:
         if os.path.exists(os.path.join(root, confname)):
@@ -1511,10 +1495,7 @@ def ask(query, default=None):
         default_q = ' [{0}]'.format(default)
     else:
         default_q = ''
-    if sys.version_info[0] == 3:
-        inp = raw_input("{query}{default_q}: ".format(query=query, default_q=default_q)).strip()
-    else:
-        inp = raw_input("{query}{default_q}: ".format(query=query, default_q=default_q).encode('utf-8')).strip()
+    inp = input("{query}{default_q}: ".format(query=query, default_q=default_q)).strip()
     if inp or default is None:
         return inp
     else:
@@ -1529,10 +1510,7 @@ def ask_yesno(query, default=None):
         default_q = ' [Y/n]'
     elif default is False:
         default_q = ' [y/N]'
-    if sys.version_info[0] == 3:
-        inp = raw_input("{query}{default_q} ".format(query=query, default_q=default_q)).strip()
-    else:
-        inp = raw_input("{query}{default_q} ".format(query=query, default_q=default_q).encode('utf-8')).strip()
+    inp = input("{query}{default_q} ".format(query=query, default_q=default_q)).strip()
     if inp:
         return inp.lower().startswith('y')
     elif default is not None:
@@ -1581,10 +1559,6 @@ class Commands(object):
             # cleanup: run is doit-only, init is useless in an existing site
             if k in ['run', 'init']:
                 continue
-            if sys.version_info[0] == 2:
-                k2 = bytes(k)
-            else:
-                k2 = k
 
             self._cmdnames.append(k)
 
@@ -1595,7 +1569,7 @@ class Commands(object):
                 # doit command: needs some help
                 opt = v(config=self._config, **self._doitargs).get_options()
             nc = type(
-                k2,
+                k,
                 (CommandWrapper,),
                 {
                     '__doc__': options2docstring(k, opt)
@@ -1761,14 +1735,7 @@ def colorize_str_from_base_color(string, base_color):
     lightness and saturation untouched using HUSL colorspace.
     """
     def hash_str(string, pos):
-        x = hashlib.md5(string.encode('utf-8')).digest()[pos]
-        try:
-            # Python 2: a string
-            # TODO: remove in v8
-            return ord(x)
-        except TypeError:
-            # Python 3: already an integer
-            return x
+        return hashlib.md5(string.encode('utf-8')).digest()[pos]
 
     def degreediff(dega, degb):
         return min(abs(dega - degb), abs((degb - dega) + 360))

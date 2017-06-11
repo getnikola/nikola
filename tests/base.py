@@ -189,16 +189,7 @@ class FakeSite(object):
         })
         self.shortcode_registry = {}
         self.plugin_manager.setPluginInfoExtension('plugin')
-        if sys.version_info[0] == 3:
-            places = [
-                os.path.join(
-                    os.path.dirname(nikola.utils.__file__),
-                    'plugins'), ]
-        else:
-            places = [
-                os.path.join(
-                    os.path.dirname(nikola.utils.__file__),
-                    nikola.utils.sys_encode('plugins')), ]
+        places = [os.path.join(os.path.dirname(nikola.utils.__file__), 'plugins')]
         self.plugin_manager.setPluginPlaces(places)
         self.plugin_manager.collectPlugins()
         self.compiler_extensions = self._activate_plugins_of_category(

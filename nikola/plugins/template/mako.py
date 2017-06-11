@@ -79,13 +79,6 @@ class MakoTemplates(TemplateSystem):
     def set_directories(self, directories, cache_folder):
         """Create a new template lookup with set directories."""
         cache_dir = os.path.join(cache_folder, '.mako.tmp')
-        # Workaround for a Mako bug, Issue #825
-        if sys.version_info[0] == 2:
-            try:
-                os.path.abspath(cache_dir).decode('ascii')
-            except UnicodeEncodeError:
-                cache_dir = tempfile.mkdtemp()
-                LOGGER.warning('Because of a Mako bug, setting cache_dir to {0}'.format(cache_dir))
         if os.path.exists(cache_dir):
             shutil.rmtree(cache_dir)
         self.directories = directories
