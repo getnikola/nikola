@@ -14,6 +14,8 @@ Features
 Bugfixes
 --------
 
+* Fix two grave bugs in TOML metadata
+* Require just one line break after TOML/YAML metadata
 * Add alt attribute to images in galleries in base theme (Part of issue #2777)
 * Support empty lines in YAML/TOML metadata (Part of issue #2801)
 * Tests run on macOS.
