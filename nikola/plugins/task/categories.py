@@ -193,7 +193,7 @@ link://category_rss/dogs => /categories/dogs.xml""",
 
     def get_other_language_variants(self, classification, lang, classifications_per_language):
         """Return a list of variants of the same category in other languages."""
-        return self.translation_manager.get_translations_as_list(classification, lang)
+        return self.translation_manager.get_translations_as_list(classification, lang, classifications_per_language)
 
     def postprocess_posts_per_classification(self, posts_per_classification_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
         """Rearrange, modify or otherwise use the list of posts per classification and per language."""

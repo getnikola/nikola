@@ -157,4 +157,4 @@ link://section_index_rss/cars => /cars/rss.xml""",
 
     def get_other_language_variants(self, classification, lang, classifications_per_language):
         """Return a list of variants of the same section in other languages."""
-        return self.translation_manager.get_translations_as_list(classification, lang)
+        return self.translation_manager.get_translations_as_list(classification, lang, classifications_per_language)

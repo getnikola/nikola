@@ -2002,8 +2002,11 @@ class ClassificationTranslationManager(object):
         else:
             return {other_lang: list(classifications) for other_lang, classifications in cldata.items()}
 
-    def get_translations_as_list(self, classification, lang):
-        """Get a list of pairs ``(other_lang, other_classification)`` which are translations of ``classification``."""
+    def get_translations_as_list(self, classification, lang, classifications_per_language):
+        """Get a list of pairs ``(other_lang, other_classification)`` which are translations of ``classification``.
+
+        Avoid classifications not in ``classifications_per_language``.
+        """
         clmap = self._data[lang]
         cldata = clmap.get(classification)
         if cldata is None:
@@ -2011,7 +2014,9 @@ class ClassificationTranslationManager(object):
         else:
             result = []
             for other_lang, classifications in cldata.items():
-                result.extend([(other_lang, other_classification) for other_classification in classifications])
+                for other_classification in classifications:
+                    if other_classification in classifications_per_language[other_lang]:
+                        result.append((other_lang, other_classification))
             return result
 
     def has_translations(self, classification, lang):
