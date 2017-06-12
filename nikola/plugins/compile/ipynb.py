@@ -49,7 +49,7 @@ class CompileIPynb(PageCompiler):
     """Compile IPynb into HTML."""
 
     name = "ipynb"
-    friendly_name = "Jupyter/IPython Notebook"
+    friendly_name = "Jupyter Notebook"
     demote_headers = True
     default_kernel = 'python3'
 
@@ -118,7 +118,7 @@ class CompileIPynb(PageCompiler):
         self._req_missing_ipynb()
         content = kw.pop('content', None)
         onefile = kw.pop('onefile', False)
-        kernel = kw.pop('ipython_kernel', None)
+        kernel = kw.pop('jupyter_kernel', None)
         # is_page is not needed to create the file
         kw.pop('is_page', False)
 
@@ -135,27 +135,23 @@ class CompileIPynb(PageCompiler):
             nb = nbformat.v4.new_notebook()
             nb["cells"] = [nbformat.v4.new_markdown_cell(content)]
 
-            if kernelspec is not None:
-                if kernel is None:
-                    kernel = self.default_kernel
-                    self.logger.notice('No kernel specified, assuming "{0}".'.format(kernel))
+            if kernel is None:
+                kernel = self.default_kernel
+                self.logger.notice('No kernel specified, assuming "{0}".'.format(kernel))
 
-                IPYNB_KERNELS = {}
-                ksm = kernelspec.KernelSpecManager()
-                for k in ksm.find_kernel_specs():
-                    IPYNB_KERNELS[k] = ksm.get_kernel_spec(k).to_dict()
-                    IPYNB_KERNELS[k]['name'] = k
-                    del IPYNB_KERNELS[k]['argv']
+            IPYNB_KERNELS = {}
+            ksm = kernelspec.KernelSpecManager()
+            for k in ksm.find_kernel_specs():
+                IPYNB_KERNELS[k] = ksm.get_kernel_spec(k).to_dict()
+                IPYNB_KERNELS[k]['name'] = k
+                del IPYNB_KERNELS[k]['argv']
 
-                if kernel not in IPYNB_KERNELS:
-                    self.logger.error('Unknown kernel "{0}". Maybe you mispelled it?'.format(kernel))
-                    self.logger.info("Available kernels: {0}".format(", ".join(sorted(IPYNB_KERNELS))))
-                    raise Exception('Unknown kernel "{0}"'.format(kernel))
+            if kernel not in IPYNB_KERNELS:
+                self.logger.error('Unknown kernel "{0}". Maybe you mispelled it?'.format(kernel))
+                self.logger.info("Available kernels: {0}".format(", ".join(sorted(IPYNB_KERNELS))))
+                raise Exception('Unknown kernel "{0}"'.format(kernel))
 
-                nb["metadata"]["kernelspec"] = IPYNB_KERNELS[kernel]
-            else:
-                # Older IPython versions don’t need kernelspecs.
-                pass
+            nb["metadata"]["kernelspec"] = IPYNB_KERNELS[kernel]
 
         if onefile:
             nb["metadata"]["nikola"] = metadata
@@ -170,11 +166,7 @@ def get_default_jupyter_config():
     Return dictionary from configuration json files.
     """
     config = {}
-    try:
-        from jupyter_core.paths import jupyter_config_path
-    except ImportError:
-        # jupyter not installed, must be using IPython
-        return config
+    from jupyter_core.paths import jupyter_config_path
 
     for parent in jupyter_config_path():
         try:

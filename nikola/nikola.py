@@ -998,8 +998,8 @@ class Nikola(object):
                 self.plugin_manager._candidates = self._filter_duplicate_plugins(to_add)
                 self.plugin_manager.loadPlugins()
 
-        # IPython theme configuration.  If a website has ipynb enabled in post_pages
-        # we should enable the IPython CSS (leaving that up to the theme itself).
+        # Jupyter theme configuration.  If a website has ipynb enabled in post_pages
+        # we should enable the Jupyter CSS (leaving that up to the theme itself).
         if 'needs_ipython_css' not in self._GLOBAL_CONTEXT:
             self._GLOBAL_CONTEXT['needs_ipython_css'] = 'ipynb' in self.config['COMPILERS']
 

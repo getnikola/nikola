@@ -77,7 +77,7 @@ Name                                Type                                Descript
 ``meta_generator_tag``              bool                                ``META_GENERATOR_TAG`` setting
 ``momentjs_locales``                defaultdict<str, str>               dictionary of available Moment.js locales
 ``navigation_links``                TranslatableSetting                 ``NAVIGATION_LINKS`` setting
-``needs_ipython_css``               bool                                whether or not IPython CSS is needed by this site
+``needs_ipython_css``               bool                                whether or not Jupyter CSS is needed by this site
 ``posts_sections``                  bool                                ``POSTS_SECTIONS`` setting
 ``posts_section_are_indexes``       bool                                ``POSTS_SECTIONS_ARE_INDEXES`` setting
 ``posts_sections_are_indexes``      bool                                ``POSTS_SECTIONS_ARE_INDEXES`` setting

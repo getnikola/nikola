@@ -397,10 +397,10 @@ class CommandNewPost(Command):
         metadata.update(self.site.config['ADDITIONAL_METADATA'])
         data.update(metadata)
 
-        # ipynb plugin needs the ipython kernel info. We get the kernel name
+        # ipynb plugin needs the Jupyter kernel info. We get the kernel name
         # from the content_subformat and pass it to the compiler in the metadata
         if content_format == "ipynb" and content_subformat is not None:
-            metadata["ipython_kernel"] = content_subformat
+            metadata["jupyter_kernel"] = content_subformat
 
         # Override onefile if not really supported.
         if not compiler_plugin.supports_onefile and onefile:

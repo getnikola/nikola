@@ -200,7 +200,7 @@ what color scheme the syntax highlighter uses. You can use your own ``assets/css
 don’t like the provided ones.
 
 Nikola **requires** ``assets/css/rst.css`` and ``assets/css/code.css`` to function properly.
-We will also add themes for IPython Notebook (``assets/css/ipython.min.css``
+We will also add themes for Jupyter (``assets/css/ipython.min.css``
 and ``assets/css/nikola_ipython.css``) into the template; note that they are
 activated only if you configured your ``POSTS``/``PAGES`` with ipynb support.
 

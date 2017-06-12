@@ -227,7 +227,7 @@ easier to keep it in a single location.
 The contents of your post have to be written (by default) in `reStructuredText <http://docutils.sf.net>`__
 but you can use a lot of different markups using the ``-f`` option.
 
-Currently, Nikola supports reStructuredText, Markdown, Jupyter (IPython) Notebooks, HTML as input,
+Currently, Nikola supports reStructuredText, Markdown, Jupyter Notebooks, HTML as input,
 can also use Pandoc for conversion, and has support for BBCode, CreoleWiki, txt2tags, Textile
 and more via plugins — for more details, read the `input format documentation
 <#multiple-input-formats>`__.
@@ -1032,7 +1032,7 @@ Nikola supports multiple input formats.  Out of the box, we have compilers avail
 
 * reStructuredText (default and pre-configured)
 * `Markdown`_
-* `Jupyter/IPython Notebook`_
+* `Jupyter Notebook`_
 * `HTML`_
 * `PHP`_
 * anything `Pandoc`_ supports (including Textile, DocBook, LaTeX, MediaWiki,
@@ -1090,12 +1090,12 @@ config option:
 Nikola comes with some Markdown Extensions built-in and enabled by default,
 namely a gist directive, a podcast directive, and ``~~strikethrough~~`` support.
 
-Jupyter/IPython Notebook
-````````````````````````
+Jupyter Notebook
+````````````````
 
-To use Jupyter Notebooks (previously known as IPython Notebooks) as posts/pages,
-make sure ``ipynb`` is in your ``COMPILERS`` and that the ``.ipynb`` extension
-is defined in ``POSTS`` and ``PAGES``.
+To use Jupyter Notebooks as posts/pages, make sure ``ipynb`` is in your
+``COMPILERS`` and that the ``.ipynb`` extension is defined in ``POSTS`` and
+``PAGES``.
 
 The ``-f`` argument to ``new_post`` should be used in the ``ipynb@KERNEL`` format.
 It defaults to Python in the version used by Nikola if not specified.
