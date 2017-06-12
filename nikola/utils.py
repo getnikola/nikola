@@ -1051,8 +1051,8 @@ def get_asset_path(path, themes, files_folders={'files': ''}, output_dir='output
     If it's not provided by either, it will be chacked in output, where
     it may have been created by another plugin.
 
-    >>> print(get_asset_path('assets/css/rst.css', get_theme_chain('bootstrap3', ['themes'])))
-    /.../nikola/data/themes/base/assets/css/rst.css
+    >>> print(get_asset_path('assets/css/nikola_rst.css', get_theme_chain('bootstrap3', ['themes'])))
+    /.../nikola/data/themes/base/assets/css/nikola_rst.css
 
     >>> print(get_asset_path('assets/css/theme.css', get_theme_chain('bootstrap3', ['themes'])))
     /.../nikola/data/themes/bootstrap3/assets/css/theme.css

@@ -301,9 +301,9 @@ def test_get_metadata_from_file():
 
 
 def test_get_asset_path():
-    assert get_asset_path('assets/css/rst.css',
+    assert get_asset_path('assets/css/nikola_rst.css',
                           get_theme_chain('bootstrap3', ['themes'])).replace(
-        '\\', '/').endswith('nikola/data/themes/base/assets/css/rst.css')
+        '\\', '/').endswith('nikola/data/themes/base/assets/css/nikola_rst.css')
     assert get_asset_path('assets/css/theme.css',
                           get_theme_chain('bootstrap3', ['themes'])).replace(
         '\\', '/').endswith(

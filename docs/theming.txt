@@ -78,7 +78,7 @@ bundles
 
     .. code:: text
 
-        assets/css/all.css=bootstrap.css,rst.css,code.css,colorbox.css,custom.css
+        assets/css/all.css=bootstrap.css,html4css1.css,nikola_rst.css,code.css,colorbox.css,custom.css
 
     This creates a file called "assets/css/all.css" in your output that is the
     combination of all the other file paths, relative to the output file.
