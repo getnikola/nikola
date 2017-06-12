@@ -103,7 +103,7 @@ class CompileHtml(PageCompiler):
             metadata['title'] = title_tag.text
         meta_tags = doc.findall('*//meta')
         for tag in meta_tags:
-            k = tag.get('name').lower()
+            k = tag.get('name', '').lower()
             if not k:
                 continue
             elif k == 'keywords':
