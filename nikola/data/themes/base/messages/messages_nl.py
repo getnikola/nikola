@@ -8,7 +8,7 @@ MESSAGES = {
     "(active)": "(actief)",
     "Also available in:": "Ook beschikbaar in:",
     "Archive": "Archief",
-    "Atom feed": "",
+    "Atom feed": "Atom-feed",
     "Authors": "Auteurs",
     "Categories": "Categorieën",
     "Comments": "Commentaar",

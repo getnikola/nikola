@@ -3,7 +3,7 @@
 .. date: 2017-04-13 12:00:00
 .. author: The Nikola Team
 
-:Version: 7.8.7
+:Version: 7.8.8
 :Author: Chris Warrick <chris@getnikola.com>
 
 Variables available in templates are listed below.

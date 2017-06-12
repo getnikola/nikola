@@ -26,7 +26,10 @@
         <script src="/assets/js/baguetteBox.min.js"></script>
     {% endif %}
     {% block extra_js %}{% endblock %}
-    <script>baguetteBox.run('a.reference');</script>
+    <script>baguetteBox.run('a.reference', {
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});</script>
     {{ body_end }}
     {{ template_hooks['body_end']() }}
 </body>

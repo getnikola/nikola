@@ -8,7 +8,7 @@ MESSAGES = {
     "(active)": "(aktiivinen)",
     "Also available in:": "Saatavilla myös:",
     "Archive": "Arkisto",
-    "Atom feed": "",
+    "Atom feed": "Atom-syöte",
     "Authors": "Kirjoittajat",
     "Categories": "Kategoriat",
     "Comments": "Kommentit",

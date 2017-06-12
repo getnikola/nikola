@@ -1,5 +1,11 @@
-New in master
+New in v7.8.8
 =============
+
+This release fixes two grave bugs in TOML metadata support (sorry!).
+The built-in themes have also been cleaned up and include less unused
+assets. In addition, taxonomies now support translations. HTML meta
+tags are also possible metadata sources. The default metadata format
+to generate can now be changed.
 
 Features
 --------
