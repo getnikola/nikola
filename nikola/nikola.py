@@ -588,7 +588,7 @@ class Nikola(object):
             'SITE_URL': 'https://example.com/',
             'PAGE_INDEX': False,
             'SECTION_PATH': '',
-            'STRIP_INDEXES': False,
+            'STRIP_INDEXES': True,
             'SITEMAP_INCLUDE_FILELESS_DIRS': True,
             'TAG_PATH': 'categories',
             'TAG_PAGES_ARE_INDEXES': False,

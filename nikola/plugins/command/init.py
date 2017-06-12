@@ -55,7 +55,7 @@ SAMPLE_CONF = {
     'BLOG_EMAIL': "joe@demo.site",
     'BLOG_DESCRIPTION': "This is a demo site for Nikola.",
     'PRETTY_URLS': True,
-    'STRIP_INDEXES': False,
+    'STRIP_INDEXES': True,
     'DEFAULT_LANG': "en",
     'TRANSLATIONS': """{
     DEFAULT_LANG: "",
@@ -324,7 +324,6 @@ class CommandInit(Command):
 
         def prettyhandler(default, toconf):
             SAMPLE_CONF['PRETTY_URLS'] = ask_yesno('Enable pretty URLs (/page/ instead of /page.html) that don\'t need web server configuration?', default=True)
-            SAMPLE_CONF['STRIP_INDEXES'] = SAMPLE_CONF['PRETTY_URLS']
 
         def lhandler(default, toconf, show_header=True):
             if show_header:
