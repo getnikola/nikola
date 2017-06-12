@@ -17,7 +17,7 @@ create themes. Since I **suck** at designing websites, I asked for opinions on t
 and got some feedback. Since this is **Not So Hard™**, I will try to make time to port a few
 and see what happens.
 
-If you are looking for a reference, check out `Theming reference <theming.html>`_ and `Template variables <https://getnikola.com/template-variables.html>`_.
+If you are looking for a reference, check out :doc:`Theming reference <theming>` and `Template variables <https://getnikola.com/template-variables.html>`_.
 
 Today’s theme is `Lanyon <https://github.com/poole/lanyon>`__ which is written by `@mdo <https://twitter.com/mdo>`__
 and released under a MIT license, which is liberal enough.

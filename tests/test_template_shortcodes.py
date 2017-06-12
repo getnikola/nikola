@@ -43,7 +43,7 @@ kwarg2: {{ kwarg2 }}
         fakesite._make_renderfunc('Something completely different')
 
     res = fakesite.apply_shortcodes(
-        '{{% test1 kwarg1=spamm arg1 kwarg2=foo,bar arg2 %}}')
+        '{{% test1 kwarg1=spamm arg1 kwarg2=foo,bar arg2 %}}')[0]
 
     assert res.strip() == """
 arg1: arg1
@@ -56,31 +56,25 @@ def test_onearg(fakesite):
     fakesite.shortcode_registry['test1'] = \
         fakesite._make_renderfunc('arg={{ _args[0] }}')
 
-    assert fakesite.apply_shortcodes('{{% test1 onearg %}}') == 'arg=onearg'
+    assert fakesite.apply_shortcodes('{{% test1 onearg %}}')[0] == 'arg=onearg'
     assert fakesite.apply_shortcodes(
-        '{{% test1 "one two" %}}') == 'arg=one two'
+        '{{% test1 "one two" %}}')[0] == 'arg=one two'
 
 
 def test_kwarg(fakesite):
     fakesite.shortcode_registry['test1'] = \
         fakesite._make_renderfunc('foo={{ foo }}')
 
-    res = fakesite.apply_shortcodes('{{% test1 foo=bar %}}')
-    assert res == 'foo=bar'
-    res = fakesite.apply_shortcodes('{{% test1 foo="bar baz" %}}')
-    assert res == 'foo=bar baz'
-    res = fakesite.apply_shortcodes('{{% test1 foo="bar baz" spamm=ham %}}')
-    assert res == 'foo=bar baz'
+    assert fakesite.apply_shortcodes('{{% test1 foo=bar %}}')[0] == 'foo=bar'
+    assert fakesite.apply_shortcodes('{{% test1 foo="bar baz" %}}')[0] == 'foo=bar baz'
+    assert fakesite.apply_shortcodes('{{% test1 foo="bar baz" spamm=ham %}}')[0] == 'foo=bar baz'
 
 
 def test_data(fakesite):
     fakesite.shortcode_registry['test1'] = \
         fakesite._make_renderfunc('data={{ data }}')
 
-    res = fakesite.apply_shortcodes('{{% test1 %}}spamm spamm{{% /test1 %}}')
-    assert res == 'data=spamm spamm'
-    res = fakesite.apply_shortcodes('{{% test1 spamm %}}')
-    assert res == 'data='
+    assert fakesite.apply_shortcodes('{{% test1 %}}spamm spamm{{% /test1 %}}')[0] == 'data=spamm spamm'
+    assert fakesite.apply_shortcodes('{{% test1 spamm %}}')[0] == 'data='
     # surprise!
-    res = fakesite.apply_shortcodes('{{% test1 data=dummy %}}')
-    assert res == 'data='
+    assert fakesite.apply_shortcodes('{{% test1 data=dummy %}}')[0] == 'data='

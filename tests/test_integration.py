@@ -117,7 +117,7 @@ class DemoBuildTest(EmptyBuildTest):
         with io.open(sitemap_path, "r", encoding="utf8") as inf:
             sitemap_data = inf.read()
         self.assertTrue(
-            '<loc>https://example.com/index.html</loc>'
+            '<loc>https://example.com/</loc>'
             in sitemap_data)
 
     def test_avoid_double_slash_in_rss(self):
@@ -164,8 +164,8 @@ class FuturePostTest(EmptyBuildTest):
         """ Ensure that the future post is not present in the index and sitemap."""
         index_path = os.path.join(self.target_dir, "output", "index.html")
         sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
-        foo_path = os.path.join(self.target_dir, "output", "posts", "foo.html")
-        bar_path = os.path.join(self.target_dir, "output", "posts", "bar.html")
+        foo_path = os.path.join(self.target_dir, "output", "posts", "foo", "index.html")
+        bar_path = os.path.join(self.target_dir, "output", "posts", "bar", "index.html")
         self.assertTrue(os.path.isfile(index_path))
         self.assertTrue(os.path.isfile(foo_path))
         self.assertTrue(os.path.isfile(bar_path))
@@ -173,10 +173,10 @@ class FuturePostTest(EmptyBuildTest):
             index_data = inf.read()
         with io.open(sitemap_path, "r", encoding="utf8") as inf:
             sitemap_data = inf.read()
-        self.assertTrue('foo.html' in index_data)
-        self.assertFalse('bar.html' in index_data)
-        self.assertTrue('foo.html' in sitemap_data)
-        self.assertFalse('bar.html' in sitemap_data)
+        self.assertTrue('foo/' in index_data)
+        self.assertFalse('bar/' in index_data)
+        self.assertTrue('foo/' in sitemap_data)
+        self.assertFalse('bar/' in sitemap_data)
 
         # Run deploy command to see if future post is deleted
         with cd(self.target_dir):
@@ -200,9 +200,9 @@ class TranslatedBuildTest(EmptyBuildTest):
 
     def test_translated_titles(self):
         """Check that translated title is picked up."""
-        en_file = os.path.join(self.target_dir, "output", "pages", "1.html")
+        en_file = os.path.join(self.target_dir, "output", "pages", "1", "index.html")
         pl_file = os.path.join(self.target_dir, "output",
-                               self.ol, "pages", "1.html")
+                               self.ol, "pages", "1", "index.html")
         # Files should be created
         self.assertTrue(os.path.isfile(en_file))
         self.assertTrue(os.path.isfile(pl_file))
@@ -299,7 +299,7 @@ class RelativeLinkTest(DemoBuildTest):
             sitemap_data = inf.read()
         self.assertFalse('<loc>https://example.com/</loc>' in sitemap_data)
         self.assertTrue(
-            '<loc>https://example.com/foo/bar/index.html</loc>' in
+            '<loc>https://example.com/foo/bar/</loc>' in
             sitemap_data)
 
 
@@ -341,7 +341,7 @@ class TestCheckAbsoluteSubFolder(TestCheck):
         with io.open(sitemap_path, "r", encoding="utf8") as inf:
             sitemap_data = inf.read()
         self.assertTrue(
-            '<loc>https://example.com/foo/index.html</loc>'
+            '<loc>https://example.com/foo/</loc>'
             in sitemap_data)
 
 
@@ -402,6 +402,7 @@ class RelativeLinkTest2(DemoBuildTest):
                                 '("pages/*.rst", "", "page.tmpl"),')
             data = data.replace('# INDEX_PATH = ""',
                                 'INDEX_PATH = "blog"')
+            data += "\nPRETTY_URLS = False\nSTRIP_INDEXES = False"
         with io.open(conf_path, "w+", encoding="utf8") as outf:
             outf.write(data)
             outf.flush()

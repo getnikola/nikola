@@ -19,7 +19,7 @@ Theming Nikola
 .. class:: lead
 
 This document is a reference about themes. If you want a tutorial, please read
-`Creating a Theme <creating-a-theme.html>`_. If you’re looking for a ready-made
+:doc:`Creating a Theme <creating-a-theme>`. If you’re looking for a ready-made
 theme for your site, check out the `Themes Index <https://themes.getnikola.com/>`_.
 
 The Structure

@@ -1408,7 +1408,7 @@ CSS tweaking
     for minimal disruption of the provided CSS files.
 
     If you feel tempted to touch other files in assets, you probably will be better off
-    with a `custom theme <theming.html>`__.
+    with a :doc:`custom theme <theming>`.
 
     If you want to use LESS_ or Sass_ for your custom CSS, or the theme you use
     contains LESS or Sass code that you want to override, you will need to install
@@ -1422,7 +1422,7 @@ CSS tweaking
 
 Template tweaking and creating themes
     If you really want to change the pages radically, you will want to do a
-    `custom theme <theming.html>`__.
+    :doc:`custom theme <theming>`.
 
 Navigation Links
     The ``NAVIGATION_LINKS`` option lets you define what links go in a sidebar or menu
