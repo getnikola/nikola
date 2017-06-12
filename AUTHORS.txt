@@ -48,6 +48,7 @@
 * `Grzegorz Śliwiński <https://github.com/fizyk>`_
 * `Guillermo O. Freschi <https://github.com/Tordek>`_
 * `h4ckninja <https://github.com/h4ckninja>`_
+* `Guilhem Bonnefille <https://github.com/guyou>`_
 * `Hardening <https://github.com/hardening>`_
 * `Hong Xu <https://www.topbug.net>`_
 * `Ivan Teoh <https://github.com/ivanteoh>`_

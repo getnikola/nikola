@@ -1082,7 +1082,7 @@ def get_metadata_from_meta_file(path, config=None, lang=None):
         if newstylemeta:
             # New-style metadata is basically the same as reading metadata from
             # a 1-file post.
-            return get_metadata_from_file(path, config, lang), newstylemeta
+            return get_metadata_from_file(meta_path, config, lang), newstylemeta
         else:
             if not _UPGRADE_METADATA_ADVERTISED:
                 LOGGER.warn("Some posts on your site have old-style metadata. You should upgrade them to the new format, with support for extra fields.")
