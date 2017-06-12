@@ -29,7 +29,6 @@
 import io
 import json
 import os
-import sys
 
 try:
     from nbconvert.exporters import HTMLExporter

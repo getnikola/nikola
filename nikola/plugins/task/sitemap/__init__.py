@@ -30,7 +30,6 @@ import io
 import datetime
 import dateutil.tz
 import os
-import sys
 try:
     from urlparse import urljoin, urlparse
     import robotparser as robotparser

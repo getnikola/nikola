@@ -2606,6 +2606,7 @@ def sanitized_locales(locale_fallback, locale_default, locales, translations):
     NOTE: never use locale.getlocale(), it can return values that
     locale.setlocale will not accept in Windows.
     Examples: "Spanish", "French" can't do the full circle set / get / set
+
     """
     if sys.platform != 'win32':
         workaround_empty_LC_ALL_posix()

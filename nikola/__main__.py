@@ -80,14 +80,12 @@ def main(args=None):
     args = [sys_decode(arg) for arg in args]
 
     conf_filename = 'conf.py'
-    conf_filename_bytes = b'conf.py'
     conf_filename_changed = False
     for index, arg in enumerate(args):
         if arg[:7] == '--conf=':
             del args[index]
             del oargs[index]
             conf_filename = arg[7:]
-            conf_filename_bytes = sys_encode(arg[7:])
             conf_filename_changed = True
             break
 

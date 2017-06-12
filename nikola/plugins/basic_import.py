@@ -30,7 +30,6 @@ import io
 import csv
 import datetime
 import os
-import sys
 from pkg_resources import resource_filename
 
 try:

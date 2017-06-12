@@ -24,8 +24,6 @@ always unquoted.
 
 """
 
-
-
 import os
 
 import io

@@ -7,7 +7,6 @@ u"""Test shortcodes."""
 import pytest
 from nikola import shortcodes
 from .base import FakeSite, BaseTestCase
-import sys
 
 
 def noargs(site, data='', lang=''):
@@ -169,8 +168,8 @@ class TestErrors(BaseTestCase):
      ('AAA{{% foo %}} BBB {{% bar %}} quux {{% /bar %}} CCC',
       (u'AAASC1 BBB SC2 CCC',
        {u'SC1': u'{{% foo %}}', u'SC2': u'{{% bar %}} quux {{% /bar %}}'})), ])
-def test_extract_shortcodes(input, expected, monkeypatch):
 
+def test_extract_shortcodes(input, expected, monkeypatch):
     i = iter('SC%d' % i for i in range(1, 100))
     monkeypatch.setattr(shortcodes, '_new_sc_id', i.__next__)
     extracted = shortcodes.extract_shortcodes(input)

@@ -29,8 +29,6 @@
 import io
 import os
 import shutil
-import sys
-import tempfile
 
 from mako import exceptions, util, lexer, parsetree
 from mako.lookup import TemplateLookup
