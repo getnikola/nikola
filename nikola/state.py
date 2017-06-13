@@ -83,5 +83,5 @@ class Persistor():
         dname = os.path.dirname(self._path)
         with tempfile.NamedTemporaryFile(dir=dname, delete=False, mode='w+', encoding='utf-8') as outf:
             tname = outf.name
-            json.dump(outf, self._local.data, sort_keys=True, indent=2)
+            json.dump(self._local.data, outf, sort_keys=True, indent=2)
         shutil.move(tname, self._path)
