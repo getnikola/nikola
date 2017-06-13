@@ -1291,8 +1291,7 @@ class ExtendedRSS2(rss.RSS2):
         """Publish a feed."""
         if self.xsl_stylesheet_href:
             handler.processingInstruction("xml-stylesheet", 'type="text/xsl" href="{0}" media="all"'.format(self.xsl_stylesheet_href))
-        # old-style class in py2
-        rss.RSS2.publish(self, handler)
+        super().publish(self, handler)
 
     def publish_extensions(self, handler):
         """Publish extensions."""
@@ -1895,10 +1894,7 @@ try:
     import html  # Python 3.4 and newer
     html_unescape = html.unescape
 except (AttributeError, ImportError):
-    try:
-        from HTMLParser import HTMLParser  # Python 2.7
-    except ImportError:
-        from html.parser import HTMLParser  # Python 3 (up to 3.4)
+    from html.parser import HTMLParser  # Python 3 (up to 3.4)
 
     def html_unescape(s):
         """Convert all named and numeric character references in the string s to the corresponding unicode characters."""

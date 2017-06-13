@@ -191,8 +191,7 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
         if self.quiet:
             return
         else:
-            # Old-style class in Python 2.7, cannot use super()
-            return SimpleHTTPRequestHandler.log_message(self, *args)
+            return super().log_message(self, *args)
 
     # NOTICE: this is a patched version of send_head() to disable all sorts of
     # caching.  `nikola serve` is a development server, hence caching should
