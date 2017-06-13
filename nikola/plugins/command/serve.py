@@ -191,7 +191,7 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
         if self.quiet:
             return
         else:
-            return super().log_message(self, *args)
+            return super().log_message(*args)
 
     # NOTICE: this is a patched version of send_head() to disable all sorts of
     # caching.  `nikola serve` is a development server, hence caching should
