@@ -214,7 +214,7 @@ COMPILERS = ${COMPILERS}
 
 # Use date-based path when creating posts?
 # Can be enabled on a per-post basis with `nikola new_post -d`.
-# The setting is ignored when creating pages (`-d` still works).
+# The setting is ignored when creating pages.
 # NEW_POST_DATE_PATH = False
 
 # What format to use when creating posts with date paths?
@@ -225,7 +225,6 @@ COMPILERS = ${COMPILERS}
 # untranslated posts.
 # If this is set to False, then posts that are not translated to a language
 # LANG will not be visible at all in the pages in that language.
-# Formerly known as HIDE_UNTRANSLATED_POSTS (inverse)
 # SHOW_UNTRANSLATED_POSTS = True
 
 # Nikola supports logo display.  If you have one, you can put the URL here.
@@ -1029,7 +1028,6 @@ MARKDOWN_EXTENSIONS = ['markdown.extensions.fenced_code', 'markdown.extensions.c
 # """
 
 # Show link to source for the posts?
-# Formerly known as HIDE_SOURCELINK (inverse)
 # SHOW_SOURCELINK = True
 # Copy the source files for your pages?
 # Setting it to False implies SHOW_SOURCELINK = False
