@@ -911,7 +911,6 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # http://mysite/foo/bar/index.html => http://mysite/foo/bar/
 # (Uses the INDEX_FILE setting, so if that is, say, default.html,
 # it will instead /foo/default.html => /foo)
-# (Note: This was briefly STRIP_INDEX_HTML in v 5.4.3 and 5.4.4)
 STRIP_INDEXES = ${STRIP_INDEXES}
 
 # Should the sitemap list directories which only include other directories
