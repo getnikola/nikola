@@ -145,13 +145,14 @@ class Sitemap(LateTask):
                 path = os.path.relpath(root, output)
                 # ignore the current directory.
                 if path == '.':
-                    path = ''
+                    path = syspath = ''
                 else:
+                    syspath = path + os.sep
                     path = path.replace(os.sep, '/') + '/'
                 lastmod = self.get_lastmod(root)
                 loc = urljoin(base_url, base_path + path)
                 if kw['index_file'] in files and kw['strip_indexes']:  # ignore folders when not stripping urls
-                    post = self.site.post_per_file.get(path + kw['index_file'])
+                    post = self.site.post_per_file.get(syspath + kw['index_file'])
                     if post and (post.is_draft or post.is_private or post.publish_later):
                         continue
                     alternates = []
@@ -180,11 +181,11 @@ class Sitemap(LateTask):
                         fh.close()
 
                         if path.endswith('.html') or path.endswith('.htm') or path.endswith('.php'):
-                            """ ignores "html" files without doctype """
+                            # Ignores "html" files without doctype
                             if b'<!doctype html' not in filehead.lower():
                                 continue
 
-                            """ ignores "html" files with noindex robot directives """
+                            # Ignores "html" files with noindex robot directives
                             robots_directives = [b'<meta content=noindex name=robots',
                                                  b'<meta content=none name=robots',
                                                  b'<meta name=robots content=noindex',
@@ -205,7 +206,7 @@ class Sitemap(LateTask):
                                 continue
                             else:
                                 continue  # ignores all XML files except those presumed to be RSS
-                        post = self.site.post_per_file.get(path)
+                        post = self.site.post_per_file.get(syspath)
                         if post and (post.is_draft or post.is_private or post.publish_later):
                             continue
                         path = path.replace(os.sep, '/')
