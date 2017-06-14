@@ -49,7 +49,7 @@ from .nikola import Nikola
 from .plugin_categories import Command
 from .utils import (LOGGER, STDERR_HANDLER, STRICT_HANDLER,
                     ColorfulStderrHandler, get_root_dir, req_missing,
-                    sys_decode, sys_encode)
+                    sys_decode)
 
 try:
     import readline  # NOQA
