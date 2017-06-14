@@ -29,7 +29,7 @@
 import os
 import sys
 
-__version__ = '7.8.8'
+__version__ = '8.0.0.dev0'
 DEBUG = bool(os.getenv('NIKOLA_DEBUG'))
 
 if sys.version_info[0] == 2:
