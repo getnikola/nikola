@@ -40,7 +40,7 @@ except ImportError:
     import urllib.robotparser as robotparser  # NOQA
 
 from nikola.plugin_categories import LateTask
-from nikola.utils import apply_filters, config_changed, encodelink
+from nikola.utils import apply_filters, config_changed, encodelink, get_asset_path
 
 
 urlset_header = """<?xml version="1.0" encoding="UTF-8"?>
@@ -117,6 +117,7 @@ class Sitemap(LateTask):
             "base_url": self.site.config["BASE_URL"],
             "site_url": self.site.config["SITE_URL"],
             "output_folder": self.site.config["OUTPUT_FOLDER"],
+            "files_folders": self.site.config['FILES_FOLDERS'],
             "strip_indexes": self.site.config["STRIP_INDEXES"],
             "index_file": self.site.config["INDEX_FILE"],
             "sitemap_include_fileless_dirs": self.site.config["SITEMAP_INCLUDE_FILELESS_DIRS"],
@@ -139,7 +140,7 @@ class Sitemap(LateTask):
         sitemapindex = {}
         urlset = {}
 
-        def scan_locs():
+        def scan_locs(robots_rules):
             """Scan site locations."""
             for root, dirs, files in os.walk(output, followlinks=True):
                 if not dirs and not files and not kw['sitemap_include_fileless_dirs']:
@@ -173,8 +174,12 @@ class Sitemap(LateTask):
                         if path.endswith(kw['index_file']) and kw['strip_indexes']:
                             # ignore index files when stripping urls
                             continue
-                        if not robot_fetch(path):
-                            continue
+                        if robots_rules:
+                            abspath = '/' + path
+                            if sys.version_info[0] == 2:
+                                abspath = abspath.encode('utf-8')
+                            if not robots_rules.can_fetch('*', abspath):
+                                continue
 
                         # read in binary mode to make ancient files work
                         fh = open(real_path, 'rb')
@@ -222,18 +227,29 @@ class Sitemap(LateTask):
                                 alternates.append(alternates_format.format(lang, alt_url))
                         urlset[loc] = loc_format.format(encodelink(loc), lastmod, '\n'.join(alternates))
 
-        def robot_fetch(path):
-            """Check if robots can fetch a file."""
-            for rule in kw["robots_exclusions"]:
+        def parse_robotstxt(path):
+            robot = robotparser.RobotFileParser()
+            fh = io.open(path, 'r', encoding='utf-8-sig')
+            rules = fh.readlines()
+            if sys.version_info[0] == 2:
+                rules = [ line.encode('utf-8') for line in rules ]
+            fh.close()
+            robot.parse(rules)
+            return robot
+
+        def parse_robots_exclusions(exclusions):
+            """Parse rules to check fetchable."""
+            rules = []
+            for rule in exclusions:
+                rules.append('Disallow: {0}'.format(rule))
+            if len(rules):
                 robot = robotparser.RobotFileParser()
-                robot.parse(["User-Agent: *", "Disallow: {0}".format(rule)])
-                if sys.version_info[0] == 3:
-                    if not robot.can_fetch("*", '/' + path):
-                        return False  # not robot food
-                else:
-                    if not robot.can_fetch("*", ('/' + path).encode('utf-8')):
-                        return False  # not robot food
-            return True
+                rules = ['User-Agent: *'] + rules
+                if sys.version_info[0] == 2:
+                    rules = [ line.encode('utf-8') for line in rules ]
+                robot.parse(rules)
+                return robot
+            return None
 
         def write_sitemap():
             """Write sitemap to file."""
@@ -261,7 +277,12 @@ class Sitemap(LateTask):
             Other tasks can depend on this output, instead of having
             to scan locations.
             """
-            scan_locs()
+            robotstxt = get_asset_path("robots.txt", [], files_folders=kw["files_folders"], output_dir=False)
+            if robotstxt:
+                robots_rules = parse_robotstxt(robotstxt)
+            else:
+                robots_rules = parse_robots_exclusions(kw['robots_exclusions'])
+            scan_locs(robots_rules)
 
             # Generate a list of file dependencies for the actual generation
             # task, so rebuilds are triggered.  (Issue #1032)
@@ -281,6 +302,9 @@ class Sitemap(LateTask):
                     file_dep.append(p)
                 if os.path.isdir(p) and os.path.exists(os.path.join(p, 'index.html')):
                     file_dep.append(p + 'index.html')
+
+            if robotstxt:
+                file_dep.append(os.path.join(output, 'robots.txt'))
 
             return {'file_dep': file_dep}
 
