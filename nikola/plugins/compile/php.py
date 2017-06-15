@@ -52,7 +52,7 @@ class CompilePhp(PageCompiler):
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
         """Compile PHP into HTML strings."""
-        return data
+        return data, []
 
     def create_post(self, path, **kw):
         """Create a new post."""
