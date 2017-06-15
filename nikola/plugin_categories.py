@@ -301,10 +301,7 @@ class PageCompiler(BasePlugin):
 
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""
-        # For backwards compatibility, call `compile_html`
-        # If you are implementing a compiler, please implement `compile` and
-        # ignore `compile_html`
-        self.compile_html(source, dest, is_two_file)
+        raise NotImplementedError()
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML strings (with shortcode support).
