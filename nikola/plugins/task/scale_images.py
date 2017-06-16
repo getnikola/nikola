@@ -40,7 +40,7 @@ class ScaleImage(Task, ImageProcessor):
 
     def set_site(self, site):
         """Set Nikola site."""
-        self.logger = utils.get_logger('scale_images', utils.STDERR_HANDLER)
+        self.logger = utils.get_logger('scale_images')
         return super(ScaleImage, self).set_site(site)
 
     def process_tree(self, src, dst):

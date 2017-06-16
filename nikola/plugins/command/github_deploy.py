@@ -32,7 +32,7 @@ from textwrap import dedent
 
 from nikola.plugin_categories import Command
 from nikola.plugins.command.check import real_scan_files
-from nikola.utils import get_logger, req_missing, clean_before_deployment, STDERR_HANDLER
+from nikola.utils import get_logger, req_missing, clean_before_deployment
 from nikola.__main__ import main
 from nikola import __version__
 
@@ -82,7 +82,7 @@ class CommandGitHubDeploy(Command):
 
     def _execute(self, options, args):
         """Run the deployment."""
-        self.logger = get_logger(CommandGitHubDeploy.name, STDERR_HANDLER)
+        self.logger = get_logger(CommandGitHubDeploy.name)
 
         # Check if ghp-import is installed
         check_ghp_import_installed()

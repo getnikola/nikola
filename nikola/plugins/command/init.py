@@ -42,11 +42,11 @@ import tarfile
 import nikola
 from nikola.nikola import DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_FEED_READ_MORE_LINK, LEGAL_VALUES, urlsplit, urlunsplit
 from nikola.plugin_categories import Command
-from nikola.utils import ask, ask_yesno, get_logger, makedirs, STDERR_HANDLER, load_messages
+from nikola.utils import ask, ask_yesno, get_logger, makedirs, load_messages
 from nikola.packages.tzlocal import get_localzone
 
 
-LOGGER = get_logger('init', STDERR_HANDLER)
+LOGGER = get_logger('init')
 
 SAMPLE_CONF = {
     'BLOG_AUTHOR': "Your Name",
