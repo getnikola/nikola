@@ -258,6 +258,8 @@ class RenderTaxonomies(Task):
             context["posts"] = filtered_posts
         if "pagekind" not in context:
             context["pagekind"] = ["list", "tag_page"]
+        if not (taxonomy.generate_atom_feeds_for_post_lists and self.site.config['GENERATE_ATOM']):
+            context["generate_atom"] = False
         task = self.site.generic_post_list_renderer(lang, filtered_posts, output_name, template_name, kw['filters'], context)
         task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.plugins.task.taxonomies:list')]
         task['basename'] = str(self.name)
