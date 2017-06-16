@@ -26,7 +26,6 @@
 
 """The Post class."""
 
-from __future__ import unicode_literals, print_function, absolute_import
 
 import io
 from collections import defaultdict
@@ -251,13 +250,6 @@ class Post(object):
                 is_draft = True
                 LOGGER.debug('The post "{0}" is a draft.'.format(self.source_path))
                 self._tags[lang].remove('draft')
-
-            # TODO: remove in v8
-            if 'retired' in self._tags[lang]:
-                is_private = True
-                LOGGER.warning('The "retired" tag in post "{0}" is now deprecated and will be removed in v8.  Use "private" instead.'.format(self.source_path))
-                self._tags[lang].remove('retired')
-            # end remove in v8
 
             if 'private' in self._tags[lang]:
                 is_private = True

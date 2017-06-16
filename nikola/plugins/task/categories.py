@@ -26,7 +26,6 @@
 
 """Render the category pages and feeds."""
 
-from __future__ import unicode_literals
 
 from nikola.plugin_categories import Taxonomy
 from nikola import utils, hierarchy_utils
@@ -103,9 +102,6 @@ link://category_rss/dogs => /categories/dogs.xml""",
         """Return a path for the list of all classifications."""
         if self.site.config['CATEGORIES_INDEX_PATH'](lang):
             path = self.site.config['CATEGORIES_INDEX_PATH'](lang)
-            if path.endswith('/index'):  # TODO: remove in v8
-                utils.LOGGER.warn("CATEGORIES_INDEX_PATH for language {0} is missing a .html extension. Please update your configuration!".format(lang))
-                path += '.html'
             return [_f for _f in [path] if _f], 'never'
         else:
             return [_f for _f in [self.site.config['CATEGORY_PATH'](lang)] if _f], 'always'
@@ -118,9 +114,6 @@ link://category_rss/dogs => /categories/dogs.xml""",
 
     def slugify_category_name(self, path, lang):
         """Slugify a category name."""
-        if lang is None:  # TODO: remove in v8
-            utils.LOGGER.warn("ClassifyCategories.slugify_category_name() called without language!")
-            lang = ''
         if self.site.config['CATEGORY_OUTPUT_FLAT_HIERARCHY']:
             path = path[-1:]  # only the leaf
         result = [self.slugify_tag_name(part, lang) for part in path]

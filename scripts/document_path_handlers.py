@@ -1,6 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-from __future__ import print_function, unicode_literals
 from nikola import nikola
 n = nikola.Nikola()
 n.init_plugins()

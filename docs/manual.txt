@@ -78,7 +78,7 @@ Nikola can't do:
 * Twitter
 * Facebook
 * An Issue tracker
-* Anything with forms, really (except for `comments <#comments-and-annotations>`_!)
+* Anything with forms, really (except for `comments`_!)
 
 Keep in mind that "static" doesn't mean **boring**. You can have animations, slides
 or whatever fancy CSS3/HTML5 thingie you like. It only means all that HTML is
@@ -136,7 +136,7 @@ Obsolescence
     You may say those are long term issues, or that they won't matter for years. Well,
     I believe things should work forever, or as close to it as we can make them.
     Nikola's static output and its input files will work as long as you can install
-    a Python 2.7/3.3 or newer under Linux, Windows, or OS X and can find a server
+    Python 3.3 or newer under Linux, Windows, or OS X and can find a server
     that sends files over HTTP. That's probably 10 or 15 years at least.
 
     Also, static sites are easily handled by the Internet Archive.
@@ -227,7 +227,7 @@ easier to keep it in a single location.
 The contents of your post have to be written (by default) in `reStructuredText <http://docutils.sf.net>`__
 but you can use a lot of different markups using the ``-f`` option.
 
-Currently, Nikola supports reStructuredText, Markdown, Jupyter (IPython) Notebooks, HTML as input,
+Currently, Nikola supports reStructuredText, Markdown, Jupyter Notebooks, HTML as input,
 can also use Pandoc for conversion, and has support for BBCode, CreoleWiki, txt2tags, Textile
 and more via plugins — for more details, read the `input format documentation
 <#multiple-input-formats>`__.
@@ -325,9 +325,6 @@ Extra
 author
     Author of the post, will be used in the RSS feed and possibly in the post
     display (theme-dependent)
-
-annotations / noannotations
-    Override the value of the ``ANNOTATIONS`` option for this specific post or page.
 
 enclosure
     Add an enclosure to this post when it's used in RSS. See `more information about enclosures <http://en.wikipedia.org/wiki/RSS_enclosure>`__
@@ -1035,7 +1032,7 @@ Nikola supports multiple input formats.  Out of the box, we have compilers avail
 
 * reStructuredText (default and pre-configured)
 * `Markdown`_
-* `Jupyter/IPython Notebook`_
+* `Jupyter Notebook`_
 * `HTML`_
 * `PHP`_
 * anything `Pandoc`_ supports (including Textile, DocBook, LaTeX, MediaWiki,
@@ -1093,12 +1090,12 @@ config option:
 Nikola comes with some Markdown Extensions built-in and enabled by default,
 namely a gist directive, a podcast directive, and ``~~strikethrough~~`` support.
 
-Jupyter/IPython Notebook
-````````````````````````
+Jupyter Notebook
+````````````````
 
-To use Jupyter Notebooks (previously known as IPython Notebooks) as posts/pages,
-make sure ``ipynb`` is in your ``COMPILERS`` and that the ``.ipynb`` extension
-is defined in ``POSTS`` and ``PAGES``.
+To use Jupyter Notebooks as posts/pages, make sure ``ipynb`` is in your
+``COMPILERS`` and that the ``.ipynb`` extension is defined in ``POSTS`` and
+``PAGES``.
 
 The ``-f`` argument to ``new_post`` should be used in the ``ipynb@KERNEL`` format.
 It defaults to Python in the version used by Nikola if not specified.
@@ -1411,7 +1408,7 @@ CSS tweaking
     for minimal disruption of the provided CSS files.
 
     If you feel tempted to touch other files in assets, you probably will be better off
-    with a `custom theme <theming.html>`__.
+    with a :doc:`custom theme <theming>`.
 
     If you want to use LESS_ or Sass_ for your custom CSS, or the theme you use
     contains LESS or Sass code that you want to override, you will need to install
@@ -1425,7 +1422,7 @@ CSS tweaking
 
 Template tweaking and creating themes
     If you really want to change the pages radically, you will want to do a
-    `custom theme <theming.html>`__.
+    :doc:`custom theme <theming>`.
 
 Navigation Links
     The ``NAVIGATION_LINKS`` option lets you define what links go in a sidebar or menu
@@ -1718,8 +1715,8 @@ GitLab also offers rebuild automation if you want to use Nikola with GitLab
 Pages. Check out the example `Nikola site on GitLab
 <https://gitlab.com/pages/nikola>`_.
 
-Comments and Annotations
-------------------------
+Comments
+--------
 
 While Nikola creates static sites, there is a minimum level of user interaction you
 are probably expecting: comments.
@@ -1798,18 +1795,6 @@ You can disable comments for a post by adding a "nocomments" metadata field to i
 
     You need jQuery, but not because Facebook wants it (see Issue
     #639).
-
-An alternative or complement to comments are annotations. Nikola integrates
-the annotation service provided by `AnnotateIt. <http://annotateit.org/>`_
-To use it, set the ``ANNOTATIONS`` option to True. This is specially useful
-if you want feedback on specific parts of your writing.
-
-You can enable or disable annotations for specific posts or pages using the
-``annotations`` and ``noannotations`` metadata.
-
-Annotations require jQuery and are therefore not supported in the base theme.
-You can check bootstrap theme's ``base.html`` for details on how to handle them in
-custom themes.
 
 Images and Galleries
 --------------------

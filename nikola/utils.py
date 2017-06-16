@@ -26,7 +26,6 @@
 
 """Utility functions."""
 
-from __future__ import print_function, unicode_literals, absolute_import
 import calendar
 import configparser
 import datetime
@@ -72,6 +71,7 @@ except ImportError:
 
 from blinker import signal
 from collections import defaultdict, Callable, OrderedDict
+from imp import reload as _reload
 from logbook.compat import redirect_logging
 from logbook.more import ExceptionHandler, ColorizedStderrHandler
 from pygments.formatters import HtmlFormatter
@@ -109,18 +109,10 @@ from .hierarchy_utils import join_hierarchical_category_path, parse_escaped_hier
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
 
-if sys.version_info[0] == 3:
-    # Python 3
-    bytes_str = bytes
-    unicode_str = str
-    unichr = chr
-    raw_input = input
-    from imp import reload as _reload
-else:
-    bytes_str = str
-    unicode_str = unicode  # NOQA
-    _reload = reload  # NOQA
-    unichr = unichr
+# Aliases, previously for Python 2/3 compatibility.
+bytes_str = bytes
+unicode_str = str
+unichr = chr
 
 
 class ApplicationWarning(Exception):
@@ -833,8 +825,6 @@ def slugify(value, lang=None, force=False):
     >>> print(slugify('foo bar', lang='en'))
     foo-bar
     """
-    if lang is None:  # TODO: remove in v8
-        LOGGER.warn("slugify() called without language!")
     if not isinstance(value, unicode_str):
         raise ValueError("Not a unicode object: {0}".format(value))
     if USE_SLUGIFY or force:
@@ -865,8 +855,6 @@ def unslugify(value, lang=None, discard_numbers=True):
     If discard_numbers is True, numbers right at the beginning of input
     will be removed.
     """
-    if lang is None:  # TODO: remove in v8
-        LOGGER.warn("unslugify() called without language!")
     if discard_numbers:
         value = re.sub('^[0-9]+', '', value)
     value = re.sub('([_\-\.])', ' ', value)
@@ -1063,8 +1051,8 @@ def get_asset_path(path, themes, files_folders={'files': ''}, output_dir='output
     If it's not provided by either, it will be chacked in output, where
     it may have been created by another plugin.
 
-    >>> print(get_asset_path('assets/css/rst.css', get_theme_chain('bootstrap3', ['themes'])))
-    /.../nikola/data/themes/base/assets/css/rst.css
+    >>> print(get_asset_path('assets/css/nikola_rst.css', get_theme_chain('bootstrap3', ['themes'])))
+    /.../nikola/data/themes/base/assets/css/nikola_rst.css
 
     >>> print(get_asset_path('assets/css/theme.css', get_theme_chain('bootstrap3', ['themes'])))
     /.../nikola/data/themes/bootstrap3/assets/css/theme.css
@@ -1261,12 +1249,6 @@ class LocaleBorg(object):
             self.__set_locale(lang)
             s = calendar.month_name[month_no]
             self.__set_locale(old_lang)
-            if sys.version_info[0] == 2:
-                enc = self.encodings[lang]
-                if not enc:
-                    enc = 'UTF-8'
-
-                s = s.decode(enc)
             return s
 
     def formatted_date(self, date_format, date):
@@ -1309,8 +1291,7 @@ class ExtendedRSS2(rss.RSS2):
         """Publish a feed."""
         if self.xsl_stylesheet_href:
             handler.processingInstruction("xml-stylesheet", 'type="text/xsl" href="{0}" media="all"'.format(self.xsl_stylesheet_href))
-        # old-style class in py2
-        rss.RSS2.publish(self, handler)
+        super().publish(handler)
 
     def publish_extensions(self, handler):
         """Publish extensions."""
@@ -1385,10 +1366,7 @@ def get_root_dir():
     """Find root directory of nikola site by looking for conf.py."""
     root = os.getcwd()
 
-    if sys.version_info[0] == 2:
-        confname = b'conf.py'
-    else:
-        confname = 'conf.py'
+    confname = 'conf.py'
 
     while True:
         if os.path.exists(os.path.join(root, confname)):
@@ -1515,10 +1493,7 @@ def ask(query, default=None):
         default_q = ' [{0}]'.format(default)
     else:
         default_q = ''
-    if sys.version_info[0] == 3:
-        inp = raw_input("{query}{default_q}: ".format(query=query, default_q=default_q)).strip()
-    else:
-        inp = raw_input("{query}{default_q}: ".format(query=query, default_q=default_q).encode('utf-8')).strip()
+    inp = input("{query}{default_q}: ".format(query=query, default_q=default_q)).strip()
     if inp or default is None:
         return inp
     else:
@@ -1533,10 +1508,7 @@ def ask_yesno(query, default=None):
         default_q = ' [Y/n]'
     elif default is False:
         default_q = ' [y/N]'
-    if sys.version_info[0] == 3:
-        inp = raw_input("{query}{default_q} ".format(query=query, default_q=default_q)).strip()
-    else:
-        inp = raw_input("{query}{default_q} ".format(query=query, default_q=default_q).encode('utf-8')).strip()
+    inp = input("{query}{default_q} ".format(query=query, default_q=default_q)).strip()
     if inp:
         return inp.lower().startswith('y')
     elif default is not None:
@@ -1585,10 +1557,6 @@ class Commands(object):
             # cleanup: run is doit-only, init is useless in an existing site
             if k in ['run', 'init']:
                 continue
-            if sys.version_info[0] == 2:
-                k2 = bytes(k)
-            else:
-                k2 = k
 
             self._cmdnames.append(k)
 
@@ -1599,7 +1567,7 @@ class Commands(object):
                 # doit command: needs some help
                 opt = v(config=self._config, **self._doitargs).get_options()
             nc = type(
-                k2,
+                k,
                 (CommandWrapper,),
                 {
                     '__doc__': options2docstring(k, opt)
@@ -1765,14 +1733,7 @@ def colorize_str_from_base_color(string, base_color):
     lightness and saturation untouched using HUSL colorspace.
     """
     def hash_str(string, pos):
-        x = hashlib.md5(string.encode('utf-8')).digest()[pos]
-        try:
-            # Python 2: a string
-            # TODO: remove in v8
-            return ord(x)
-        except TypeError:
-            # Python 3: already an integer
-            return x
+        return hashlib.md5(string.encode('utf-8')).digest()[pos]
 
     def degreediff(dega, degb):
         return min(abs(dega - degb), abs((degb - dega) + 360))
@@ -1933,10 +1894,7 @@ try:
     import html  # Python 3.4 and newer
     html_unescape = html.unescape
 except (AttributeError, ImportError):
-    try:
-        from HTMLParser import HTMLParser  # Python 2.7
-    except ImportError:
-        from html.parser import HTMLParser  # Python 3 (up to 3.4)
+    from html.parser import HTMLParser  # Python 3.4 and older
 
     def html_unescape(s):
         """Convert all named and numeric character references in the string s to the corresponding unicode characters."""

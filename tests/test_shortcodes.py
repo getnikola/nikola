@@ -3,12 +3,10 @@
 
 u"""Test shortcodes."""
 
-from __future__ import unicode_literals
 
 import pytest
 from nikola import shortcodes
 from .base import FakeSite, BaseTestCase
-import sys
 
 
 def noargs(site, data='', lang=''):
@@ -20,11 +18,6 @@ def arg(*args, **kwargs):
     kwargs.pop('site')
     data = kwargs.pop('data')
     kwargs.pop('lang')
-    # TODO hack for Python 2.7 -- remove when possible
-    if sys.version_info[0] == 2:
-        args = tuple(i.encode('utf-8') for i in args)
-        kwargs = {k.encode('utf-8'): v.encode('utf-8')
-                  for k, v in kwargs.items()}
     return "arg {0}/{1}/{2}".format(args, sorted(kwargs.items()), data)
 
 
@@ -38,43 +31,43 @@ def fakesite():
 
 def test_noargs(fakesite):
     assert shortcodes.apply_shortcodes(
-        'test({{% noargs %}})', fakesite.shortcode_registry) == 'test(noargs  success!)'
+        'test({{% noargs %}})', fakesite.shortcode_registry)[0] == 'test(noargs  success!)'
     assert shortcodes.apply_shortcodes(
         'test({{% noargs %}}\\hello world/{{% /noargs %}})', fakesite.
-        shortcode_registry) == 'test(noargs \\hello world/ success!)'
+        shortcode_registry)[0] == 'test(noargs \\hello world/ success!)'
 
 
 def test_arg_pos(fakesite):
     assert shortcodes.apply_shortcodes(
-        'test({{% arg 1 %}})', fakesite.shortcode_registry) == "test(arg ('1',)/[]/)"
+        'test({{% arg 1 %}})', fakesite.shortcode_registry)[0] == "test(arg ('1',)/[]/)"
     assert shortcodes.apply_shortcodes(
-        'test({{% arg 1 2aa %}})', fakesite.shortcode_registry) == "test(arg ('1', '2aa')/[]/)"
+        'test({{% arg 1 2aa %}})', fakesite.shortcode_registry)[0] == "test(arg ('1', '2aa')/[]/)"
     assert shortcodes.apply_shortcodes(
-        'test({{% arg "hello world" %}})', fakesite.shortcode_registry) == "test(arg ('hello world',)/[]/)"
+        'test({{% arg "hello world" %}})', fakesite.shortcode_registry)[0] == "test(arg ('hello world',)/[]/)"
     assert shortcodes.apply_shortcodes(
-        'test({{% arg back\ slash arg2 %}})', fakesite.shortcode_registry) == "test(arg ('back slash', 'arg2')/[]/)"
+        'test({{% arg back\ slash arg2 %}})', fakesite.shortcode_registry)[0] == "test(arg ('back slash', 'arg2')/[]/)"
     assert shortcodes.apply_shortcodes(
-        'test({{% arg "%}}" %}})', fakesite.shortcode_registry) == "test(arg ('%}}',)/[]/)"
+        'test({{% arg "%}}" %}})', fakesite.shortcode_registry)[0] == "test(arg ('%}}',)/[]/)"
 
 
 def test_arg_keyword(fakesite):
     assert shortcodes.apply_shortcodes(
-        'test({{% arg 1a=2b %}})', fakesite.shortcode_registry) == "test(arg ()/[('1a', '2b')]/)"
+        'test({{% arg 1a=2b %}})', fakesite.shortcode_registry)[0] == "test(arg ()/[('1a', '2b')]/)"
     assert shortcodes.apply_shortcodes(
-        'test({{% arg 1a="2b 3c" 4d=5f %}})', fakesite.shortcode_registry) == "test(arg ()/[('1a', '2b 3c'), ('4d', '5f')]/)"
+        'test({{% arg 1a="2b 3c" 4d=5f %}})', fakesite.shortcode_registry)[0] == "test(arg ()/[('1a', '2b 3c'), ('4d', '5f')]/)"
     assert shortcodes.apply_shortcodes('test({{% arg 1a="2b 3c" 4d=5f back=slash\ slash %}})',
-                                       fakesite.shortcode_registry) == "test(arg ()/[('1a', '2b 3c'), ('4d', '5f'), ('back', 'slash slash')]/)"
+                                       fakesite.shortcode_registry)[0] == "test(arg ()/[('1a', '2b 3c'), ('4d', '5f'), ('back', 'slash slash')]/)"
 
 
 def test_data(fakesite):
     assert shortcodes.apply_shortcodes(
-        'test({{% arg 123 %}}Hello!{{% /arg %}})', fakesite.shortcode_registry) == "test(arg ('123',)/[]/Hello!)"
+        'test({{% arg 123 %}}Hello!{{% /arg %}})', fakesite.shortcode_registry)[0] == "test(arg ('123',)/[]/Hello!)"
     assert shortcodes.apply_shortcodes('test({{% arg 123 456 foo=bar %}}Hello world!{{% /arg %}})',
-                                       fakesite.shortcode_registry) == "test(arg ('123', '456')/[('foo', 'bar')]/Hello world!)"
+                                       fakesite.shortcode_registry)[0] == "test(arg ('123', '456')/[('foo', 'bar')]/Hello world!)"
     assert shortcodes.apply_shortcodes('test({{% arg 123 456 foo=bar baz="quotes rock." %}}Hello test suite!{{% /arg %}})',
-                                       fakesite.shortcode_registry) == "test(arg ('123', '456')/[('baz', 'quotes rock.'), ('foo', 'bar')]/Hello test suite!)"
+                                       fakesite.shortcode_registry)[0] == "test(arg ('123', '456')/[('baz', 'quotes rock.'), ('foo', 'bar')]/Hello test suite!)"
     assert shortcodes.apply_shortcodes('test({{% arg "123 foo" foobar foo=bar baz="quotes rock." %}}Hello test suite!!{{% /arg %}})',
-                                       fakesite.shortcode_registry) == "test(arg ('123 foo', 'foobar')/[('baz', 'quotes rock.'), ('foo', 'bar')]/Hello test suite!!)"
+                                       fakesite.shortcode_registry)[0] == "test(arg ('123 foo', 'foobar')/[('baz', 'quotes rock.'), ('foo', 'bar')]/Hello test suite!!)"
 
 
 class TestErrors(BaseTestCase):
@@ -176,11 +169,7 @@ class TestErrors(BaseTestCase):
       (u'AAASC1 BBB SC2 CCC',
        {u'SC1': u'{{% foo %}}', u'SC2': u'{{% bar %}} quux {{% /bar %}}'})), ])
 def test_extract_shortcodes(input, expected, monkeypatch):
-
     i = iter('SC%d' % i for i in range(1, 100))
-    if sys.version_info[0] < 3:
-        monkeypatch.setattr(shortcodes, '_new_sc_id', i.next)
-    else:
-        monkeypatch.setattr(shortcodes, '_new_sc_id', i.__next__)
+    monkeypatch.setattr(shortcodes, '_new_sc_id', i.__next__)
     extracted = shortcodes.extract_shortcodes(input)
     assert extracted == expected

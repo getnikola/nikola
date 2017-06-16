@@ -29,7 +29,6 @@
 You will need, of course, to install pandoc
 """
 
-from __future__ import unicode_literals
 
 import io
 import os

@@ -26,7 +26,6 @@
 
 """Create a new site."""
 
-from __future__ import print_function, unicode_literals
 import os
 import shutil
 import io
@@ -41,7 +40,7 @@ from pkg_resources import resource_filename
 import tarfile
 
 import nikola
-from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN, DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_FEED_READ_MORE_LINK, LEGAL_VALUES, urlsplit, urlunsplit
+from nikola.nikola import DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_FEED_READ_MORE_LINK, LEGAL_VALUES, urlsplit, urlunsplit
 from nikola.plugin_categories import Command
 from nikola.utils import ask, ask_yesno, get_logger, makedirs, STDERR_HANDLER, load_messages
 from nikola.packages.tzlocal import get_localzone
@@ -55,8 +54,8 @@ SAMPLE_CONF = {
     'SITE_URL': "https://example.com/",
     'BLOG_EMAIL': "joe@demo.site",
     'BLOG_DESCRIPTION': "This is a demo site for Nikola.",
-    'PRETTY_URLS': False,
-    'STRIP_INDEXES': False,
+    'PRETTY_URLS': True,
+    'STRIP_INDEXES': True,
     'DEFAULT_LANG': "en",
     'TRANSLATIONS': """{
     DEFAULT_LANG: "",
@@ -69,7 +68,6 @@ SAMPLE_CONF = {
     'COMMENT_SYSTEM_ID': 'nikolademo',
     'CATEGORY_ALLOW_HIERARCHIES': False,
     'CATEGORY_OUTPUT_FLAT_HIERARCHY': False,
-    'TRANSLATIONS_PATTERN': DEFAULT_TRANSLATIONS_PATTERN,
     'INDEX_READ_MORE_LINK': DEFAULT_INDEX_READ_MORE_LINK,
     'FEED_READ_MORE_LINK': DEFAULT_FEED_READ_MORE_LINK,
     'POSTS': """(
@@ -326,7 +324,6 @@ class CommandInit(Command):
 
         def prettyhandler(default, toconf):
             SAMPLE_CONF['PRETTY_URLS'] = ask_yesno('Enable pretty URLs (/page/ instead of /page.html) that don\'t need web server configuration?', default=True)
-            SAMPLE_CONF['STRIP_INDEXES'] = SAMPLE_CONF['PRETTY_URLS']
 
         def lhandler(default, toconf, show_header=True):
             if show_header:

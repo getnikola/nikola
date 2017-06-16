@@ -26,11 +26,9 @@
 
 """Page compiler plugin for nbconvert."""
 
-from __future__ import unicode_literals, print_function
 import io
 import json
 import os
-import sys
 
 try:
     from nbconvert.exporters import HTMLExporter
@@ -51,9 +49,9 @@ class CompileIPynb(PageCompiler):
     """Compile IPynb into HTML."""
 
     name = "ipynb"
-    friendly_name = "Jupyter/IPython Notebook"
+    friendly_name = "Jupyter Notebook"
     demote_headers = True
-    default_kernel = 'python2' if sys.version_info[0] == 2 else 'python3'
+    default_kernel = 'python3'
 
     def set_site(self, site):
         """Set Nikola site."""
@@ -81,14 +79,7 @@ class CompileIPynb(PageCompiler):
         """Compile notebooks into HTML strings."""
         new_data, shortcodes = sc.extract_shortcodes(data)
         output = self._compile_string(nbformat.reads(new_data, current_nbformat))
-        return self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, with_dependencies=True, extra_context=dict(post=post))
-
-    # TODO remove in v8
-    def compile_html_string(self, source, is_two_file=True):
-        """Export notebooks as HTML strings."""
-        with io.open(source, "r", encoding="utf8") as in_file:
-            nb_json = nbformat.read(in_file, current_nbformat)
-        return self._compile_string(nb_json)
+        return self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, extra_context={'post': post})
 
     def compile(self, source, dest, is_two_file=False, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""
@@ -127,7 +118,7 @@ class CompileIPynb(PageCompiler):
         self._req_missing_ipynb()
         content = kw.pop('content', None)
         onefile = kw.pop('onefile', False)
-        kernel = kw.pop('ipython_kernel', None)
+        kernel = kw.pop('jupyter_kernel', None)
         # is_page is not needed to create the file
         kw.pop('is_page', False)
 
@@ -144,27 +135,23 @@ class CompileIPynb(PageCompiler):
             nb = nbformat.v4.new_notebook()
             nb["cells"] = [nbformat.v4.new_markdown_cell(content)]
 
-            if kernelspec is not None:
-                if kernel is None:
-                    kernel = self.default_kernel
-                    self.logger.notice('No kernel specified, assuming "{0}".'.format(kernel))
+            if kernel is None:
+                kernel = self.default_kernel
+                self.logger.notice('No kernel specified, assuming "{0}".'.format(kernel))
 
-                IPYNB_KERNELS = {}
-                ksm = kernelspec.KernelSpecManager()
-                for k in ksm.find_kernel_specs():
-                    IPYNB_KERNELS[k] = ksm.get_kernel_spec(k).to_dict()
-                    IPYNB_KERNELS[k]['name'] = k
-                    del IPYNB_KERNELS[k]['argv']
+            IPYNB_KERNELS = {}
+            ksm = kernelspec.KernelSpecManager()
+            for k in ksm.find_kernel_specs():
+                IPYNB_KERNELS[k] = ksm.get_kernel_spec(k).to_dict()
+                IPYNB_KERNELS[k]['name'] = k
+                del IPYNB_KERNELS[k]['argv']
 
-                if kernel not in IPYNB_KERNELS:
-                    self.logger.error('Unknown kernel "{0}". Maybe you mispelled it?'.format(kernel))
-                    self.logger.info("Available kernels: {0}".format(", ".join(sorted(IPYNB_KERNELS))))
-                    raise Exception('Unknown kernel "{0}"'.format(kernel))
+            if kernel not in IPYNB_KERNELS:
+                self.logger.error('Unknown kernel "{0}". Maybe you mispelled it?'.format(kernel))
+                self.logger.info("Available kernels: {0}".format(", ".join(sorted(IPYNB_KERNELS))))
+                raise Exception('Unknown kernel "{0}"'.format(kernel))
 
-                nb["metadata"]["kernelspec"] = IPYNB_KERNELS[kernel]
-            else:
-                # Older IPython versions don’t need kernelspecs.
-                pass
+            nb["metadata"]["kernelspec"] = IPYNB_KERNELS[kernel]
 
         if onefile:
             nb["metadata"]["nikola"] = metadata
@@ -179,11 +166,7 @@ def get_default_jupyter_config():
     Return dictionary from configuration json files.
     """
     config = {}
-    try:
-        from jupyter_core.paths import jupyter_config_path
-    except ImportError:
-        # jupyter not installed, must be using IPython
-        return config
+    from jupyter_core.paths import jupyter_config_path
 
     for parent in jupyter_config_path():
         try:

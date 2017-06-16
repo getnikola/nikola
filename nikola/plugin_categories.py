@@ -26,7 +26,6 @@
 
 """Nikola plugin categories."""
 
-from __future__ import absolute_import
 import sys
 import os
 import re
@@ -302,10 +301,7 @@ class PageCompiler(BasePlugin):
 
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""
-        # For backwards compatibility, call `compile_html`
-        # If you are implementing a compiler, please implement `compile` and
-        # ignore `compile_html`
-        self.compile_html(source, dest, is_two_file)
+        raise NotImplementedError()
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML strings (with shortcode support).
@@ -313,11 +309,6 @@ class PageCompiler(BasePlugin):
         Returns a tuple of at least two elements: HTML string [0] and shortcode dependencies [last].
         """
         # This function used to have some different APIs in different places.
-        raise NotImplementedError()
-
-    # TODO remove in v8
-    def compile_html(self, source, dest, is_two_file=True):
-        """Compile the source, save it on dest (DEPRECATED)."""
         raise NotImplementedError()
 
     def create_post(self, path, content=None, onefile=False, is_page=False, **kw):

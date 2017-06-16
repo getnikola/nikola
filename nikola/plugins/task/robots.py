@@ -26,7 +26,6 @@
 
 """Generate a robots.txt file."""
 
-from __future__ import print_function, absolute_import, unicode_literals
 import io
 import os
 try:

@@ -26,7 +26,6 @@
 
 """Render the taxonomy overviews, classification pages and feeds."""
 
-from __future__ import unicode_literals
 import blinker
 import functools
 import natsort

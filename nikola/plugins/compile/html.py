@@ -26,7 +26,6 @@
 
 """Page compiler plugin for HTML source files."""
 
-from __future__ import unicode_literals
 
 import io
 import os
@@ -49,7 +48,7 @@ class CompileHtml(PageCompiler):
         if not is_two_file:
             _, data = self.split_metadata(data)
         new_data, shortcodes = sc.extract_shortcodes(data)
-        return self.site.apply_shortcodes_uuid(new_data, shortcodes, filename=source_path, with_dependencies=True, extra_context=dict(post=post))
+        return self.site.apply_shortcodes_uuid(new_data, shortcodes, filename=source_path, extra_context={'post': post})
 
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""

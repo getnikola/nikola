@@ -26,7 +26,6 @@
 
 """Import a WordPress dump."""
 
-from __future__ import unicode_literals, print_function
 import os
 import re
 import sys
@@ -57,7 +56,6 @@ from nikola.plugin_categories import Command
 from nikola import utils, hierarchy_utils
 from nikola.utils import req_missing, unicode_str
 from nikola.plugins.basic_import import ImportMixin, links
-from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN
 from nikola.plugins.command.init import SAMPLE_CONF, prepare_config, format_default_translations_config
 
 LOGGER = utils.get_logger('import_wordpress', utils.STDERR_HANDLER)
@@ -451,7 +449,6 @@ class CommandImportWordpress(Command, ImportMixin):
         context = SAMPLE_CONF.copy()
         self.lang = get_text_tag(channel, 'language', 'en')[:2]
         context['DEFAULT_LANG'] = self.lang
-        context['TRANSLATIONS_PATTERN'] = DEFAULT_TRANSLATIONS_PATTERN
         context['BLOG_TITLE'] = get_text_tag(channel, 'title',
                                              'PUT TITLE HERE')
         context['BLOG_DESCRIPTION'] = get_text_tag(
@@ -549,14 +546,7 @@ class CommandImportWordpress(Command, ImportMixin):
                     # that the export should give you the power to insert
                     # your blogging into another site or system its not.
                     # Why don't they just use JSON?
-                    if sys.version_info[0] == 2:
-                        try:
-                            metadata = phpserialize.loads(utils.sys_encode(meta_value.text))
-                        except ValueError:
-                            # local encoding might be wrong sometimes
-                            metadata = phpserialize.loads(meta_value.text.encode('utf-8'))
-                    else:
-                        metadata = phpserialize.loads(meta_value.text.encode('utf-8'))
+                    metadata = phpserialize.loads(meta_value.text.encode('utf-8'))
 
                     meta_key = b'image_meta'
                     size_key = b'sizes'

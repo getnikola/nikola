@@ -1,3 +1,25 @@
+New in master
+=============
+
+Features
+--------
+
+* Use ``PRETTY_URLS`` by default on all sites (Issue #1838)
+
+Bugfixes
+--------
+* Use Jupyter name more consistently in docs
+* Support CODE_COLOR_SCHEME in Jupyter notebooks (Issue #2093)
+
+
+Removed features
+----------------
+* Drop Python 2 support
+* Remove ``nikola install_theme`` — use ``nikola theme`` instead
+* Drop insecure post encryption feature
+* Stop supporting all deprecated config options
+* Drop annotations support (annotateit.org closed down in March 2017)
+
 New in v7.8.8
 =============
 

@@ -26,7 +26,6 @@
 
 """Given a swatch name from bootswatch.com and a parent theme, creates a custom theme."""
 
-from __future__ import print_function
 import os
 import requests
 
