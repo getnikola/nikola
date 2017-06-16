@@ -51,6 +51,17 @@ class RenderTaxonomies(Task):
         context, kw = taxonomy.provide_overview_context_and_uptodate(lang)
 
         context = copy(context)
+        context["kind"] = "{}_index".format(taxonomy.classification_name)
+        sorted_links = []
+        sorted_links_all = []
+        for other_lang in sorted(self.site.config['TRANSLATIONS'].keys()):
+            sorted_links_all.append((other_lang, None, None))
+            if other_lang != lang:
+                sorted_links.append((other_lang, None, None))
+        context['has_other_languages'] = True
+        context['other_languages'] = sorted_links
+        context['all_languages'] = sorted_links_all
+
         kw = copy(kw)
         kw["messages"] = self.site.MESSAGES
         kw["translations"] = self.site.config['TRANSLATIONS']
