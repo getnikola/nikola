@@ -42,7 +42,7 @@ lang="{{ lang }}">
     {% if meta_generator_tag %}
         <meta name="generator" content="Nikola (getnikola.com)">
     {% endif %}
-    {{ feeds_translations.head(classification=None, kind=kind, other=False) }}
+    {{ feeds_translations.head(classification=None, kind='index', other=False) }}
     <link rel="canonical" href="{{ abs_link(permalink) }}">
 
     {% if favicons %}
@@ -101,7 +101,7 @@ lang="{{ lang }}">
 
 {#  This function is deprecated; use feed_helper directly. #}
 {% macro html_feedlinks() %}
-    {{ feeds_translations.head(classification=None, kind=kind, other=False) }}
+    {{ feeds_translations.head(classification=None, kind='index', other=False) }}
 {% endmacro %}
 
 {% macro html_translations() %}
