@@ -180,7 +180,7 @@ class Archive(Taxonomy):
             "title": title,
             "pagekind": [page_kind, "archive_page"],
             "create_archive_navigation": self.site.config["CREATE_ARCHIVE_NAVIGATION"],
-            "archive_name": classification if classification else None
+            "archive_name": classification
         }
 
         # Generate links for hierarchies
