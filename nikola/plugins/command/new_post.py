@@ -41,8 +41,8 @@ from nikola.plugin_categories import Command
 from nikola import utils
 
 COMPILERS_DOC_LINK = 'https://getnikola.com/handbook.html#configuring-other-input-formats'
-POSTLOGGER = utils.get_logger('new_post', utils.STDERR_HANDLER)
-PAGELOGGER = utils.get_logger('new_page', utils.STDERR_HANDLER)
+POSTLOGGER = utils.get_logger('new_post')
+PAGELOGGER = utils.get_logger('new_page')
 LOGGER = POSTLOGGER
 
 

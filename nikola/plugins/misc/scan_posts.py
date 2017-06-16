@@ -34,7 +34,7 @@ from nikola.plugin_categories import PostScanner
 from nikola import utils
 from nikola.post import Post
 
-LOGGER = utils.get_logger('scan_posts', utils.STDERR_HANDLER)
+LOGGER = utils.get_logger('scan_posts')
 
 
 class ScanPosts(PostScanner):

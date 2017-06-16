@@ -32,7 +32,7 @@ import requests
 from nikola.plugin_categories import Command
 from nikola import utils
 
-LOGGER = utils.get_logger('bootswatch_theme', utils.STDERR_HANDLER)
+LOGGER = utils.get_logger('bootswatch_theme')
 
 
 def _check_for_theme(theme, themes):

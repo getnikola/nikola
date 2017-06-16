@@ -61,7 +61,7 @@ except ImportError:
     PatternMatchingEventHandler = object
 
 from nikola.plugin_categories import Command
-from nikola.utils import dns_sd, req_missing, get_logger, get_theme_path, STDERR_HANDLER
+from nikola.utils import dns_sd, req_missing, get_logger, get_theme_path
 LRJS_PATH = os.path.join(os.path.dirname(__file__), 'livereload.js')
 error_signal = signal('error')
 refresh_signal = signal('refresh')
@@ -129,7 +129,7 @@ class CommandAuto(Command):
 
     def _execute(self, options, args):
         """Start the watcher."""
-        self.logger = get_logger('auto', STDERR_HANDLER)
+        self.logger = get_logger('auto')
         LRSocket.logger = self.logger
 
         if WebSocket is object and watchdog is None:

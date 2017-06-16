@@ -46,7 +46,6 @@ from nikola.utils import (
     get_logger,
     makedirs,
     write_metadata,
-    STDERR_HANDLER,
     LocaleBorg,
     map_metadata
 )
@@ -186,7 +185,7 @@ class CompileRest(PageCompiler):
             self.config_dependencies.append(plugin_info.name)
             plugin_info.plugin_object.short_help = plugin_info.description
 
-        self.logger = get_logger('compile_rest', STDERR_HANDLER)
+        self.logger = get_logger('compile_rest')
         if not site.debug:
             self.logger.level = 4
 

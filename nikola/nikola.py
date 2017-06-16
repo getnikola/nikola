@@ -616,7 +616,6 @@ class Nikola(object):
             'DEPLOY_FUTURE': False,
             'SCHEDULE_ALL': False,
             'SCHEDULE_RULE': '',
-            'LOGGING_HANDLERS': {'stderr': {'loglevel': 'WARNING', 'bubble': True}},
             'DEMOTE_HEADERS': 1,
             'GITHUB_SOURCE_BRANCH': 'master',
             'GITHUB_DEPLOY_BRANCH': 'gh-pages',

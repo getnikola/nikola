@@ -42,7 +42,7 @@ except ImportError:
 
 from nikola import shortcodes as sc
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs, req_missing, get_logger, STDERR_HANDLER, LocaleBorg
+from nikola.utils import makedirs, req_missing, get_logger, LocaleBorg
 
 
 class CompileIPynb(PageCompiler):
@@ -55,7 +55,7 @@ class CompileIPynb(PageCompiler):
 
     def set_site(self, site):
         """Set Nikola site."""
-        self.logger = get_logger('compile_ipynb', STDERR_HANDLER)
+        self.logger = get_logger('compile_ipynb')
         super(CompileIPynb, self).set_site(site)
 
     def _compile_string(self, nb_json):

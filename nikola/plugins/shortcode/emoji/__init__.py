@@ -12,7 +12,7 @@ from nikola import utils
 
 TABLE = {}
 
-LOGGER = utils.get_logger('scan_posts', utils.STDERR_HANDLER)
+LOGGER = utils.get_logger('scan_posts')
 
 
 def _populate():
