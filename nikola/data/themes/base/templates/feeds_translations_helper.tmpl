@@ -1,91 +1,97 @@
 ## -*- coding: utf-8 -*-
 
-## Handles both feeds and translations
-<%def name="head(classification=None)">
-    % if rss_link:
+<%def name="_append_language(language)">${ " (" + language + ")" if len(translations) > 1 else "" }</%def>
+<%def name="_append_name(name, kind)">${ (" (" + name + ")" if name and kind != "archive" and kind != "author" else "") | h }</%def>
+<%def name="_append_name_language_proper(language, kind, name)">${ (" (" + name + ", " + language + ")" if name and kind != "archive" and kind != "author" else " (" + language + ")") | h }</%def>
+<%def name="_append_name_language(language, kind, name=None)">${ _append_name_language_proper(language, kind, name) if len(translations) > 1 else _append_name(name, kind) }</%def>
+
+<%def name="_head_rss(classification=None, kind='index', rss_override=True)">
+    % if rss_link and rss_override:
         ${rss_link}
     % endif
-    % if len(translations) > 1:
-        % for language in sorted(translations):
-            % if classification:
-                % if generate_atom:
-                    <link rel="alternate" type="application/atom+xml" title="Atom for ${kind} ${classification|h} (${language})" hreflang="${language}" href="${_link(kind + "_atom", classification, language)}">
-                % endif
-                % if generate_rss and not rss_link:
-                    <link rel="alternate" type="application/rss+xml" title="RSS for ${kind} ${classification|h} (${language})" hreflang="${language}" href="${_link(kind + "_rss", classification, language)}">
-                % endif
-            % else:
-                % if generate_atom:
-                    <link rel="alternate" type="application/atom+xml" title="Atom (${language})" hreflang="${language}" href="${_link("index_atom", None, language)}">
-                % endif
-                % if generate_rss and not rss_link:
-                    <link rel="alternate" type="application/rss+xml" title="RSS (${language})" hreflang="${language}" href="${_link("rss", None, language)}">
-                % endif
-            % endif
-        % endfor
-    % else:
-        % if classification:
-            % if generate_atom:
-                <link rel="alternate" type="application/atom+xml" title="Atom for ${kind} ${classification|h}" href="${_link(kind + "_atom", classification)}">
-            % endif
-            % if generate_rss and not rss_link:
-                <link rel="alternate" type="application/rss+xml" title="RSS for ${kind} ${classification|h}" href="${_link(kind + "_rss", classification)}">
-            % endif
+    % if generate_rss and not (rss_link and rss_override) and kind != 'archive':
+        % if len(translations) > 1 and has_other_languages and classification and kind != 'index':
+            % for language, classification, name in all_languages:
+                <link rel="alternate" type="application/rss+xml" title="RSS for ${kind} ${name|h} (${language})" hreflang="${language}" href="${_link(kind + "_rss", classification, language)}">
+            % endfor
         % else:
-            % if generate_atom:
-                <link rel="alternate" type="application/atom+xml" title="Atom" href="${_link("index_atom", None)}">
-            % endif
-            % if generate_rss and not rss_link:
-                <link rel="alternate" type="application/rss+xml" title="RSS" href="${_link("rss", None)}">
-            % endif
+            % for language in sorted(translations):
+                % if classification and kind != 'index':
+                    <link rel="alternate" type="application/rss+xml" title="RSS for ${kind} ${classification|h}${_append_language(language)}" hreflang="${language}" href="${_link(kind + "_rss", classification, language)}">
+                % else:
+                    <link rel="alternate" type="application/rss+xml" title="RSS${_append_language(language)}" hreflang="${language}" href="${_link("index_rss", None, language)}">
+                % endif
+            % endfor
         % endif
     % endif
-    % if has_other_languages and other_languages:
+</%def>
+
+<%def name="_head_atom(classification=None, kind='index')">
+    % if generate_atom:
+        % if len(translations) > 1 and has_other_languages and classification and kind != 'index':
+            % for language, classification, name in all_languages:
+                <link rel="alternate" type="application/atom+xml" title="Atom for ${kind} ${name|h} (${language})" hreflang="${language}" href="${_link(kind + "_atom", classification, language)}">
+            % endfor
+        % else:
+            % for language in sorted(translations):
+                % if classification and kind != 'index':
+                    <link rel="alternate" type="application/atom+xml" title="Atom for ${kind} ${classification|h}${_append_language(language)}" hreflang="${language}" href="${_link(kind + "_atom", classification, language)}">
+                % else:
+                    <link rel="alternate" type="application/atom+xml" title="Atom${_append_language(language)}" hreflang="${language}" href="${_link("index_atom", None, language)}">
+                % endif
+            % endfor
+        % endif
+    % endif
+</%def>
+
+## Handles both feeds and translations
+<%def name="head(classification=None, kind='index', feeds=True, other=True, rss_override=True)">
+    % if feeds:
+        ${_head_rss(classification, 'index' if (kind == 'archive' and rss_override) else kind, rss_override)}
+        ${_head_atom(classification, kind)}
+    % endif
+    % if other and has_other_languages and other_languages:
         % for language, classification, _ in other_languages:
             <link rel="alternate" hreflang="${language}" href="${_link(kind, classification, language)}">
         % endfor
     % endif
 </%def>
 
-<%def name="feed_link(classification)">
-    % if len(translations) > 1:
-        % for language in sorted(translations):
-            % if generate_atom or generate_rss:
+<%def name="feed_link(classification, kind)">
+    % if generate_atom or generate_rss:
+        % if len(translations) > 1 and has_other_languages and kind != 'index':
+            % for language, classification, name in all_languages:
                 <p class="feedlink">
                     % if generate_atom:
-                        <a href="${_link(kind + "_atom", classification, language)}" hreflang="${language}" type="application/atom+xml">${messages('Atom feed', language)} (${language})</a>
+                        <a href="${_link(kind + "_atom", classification, language)}" hreflang="${language}" type="application/atom+xml">${messages('Atom feed', language)} ${_append_name_language(language, kind, name)}</a>
                     % endif
-                    % if generate_rss:
-                        <a href="${_link(kind + "_rss", classification, language)}" hreflang="${language}" type="application/rss+xml">${messages('RSS feed', language)} (${language})</a>
+                    % if generate_rss and kind != 'archive':
+                        <a href="${_link(kind + "_rss", classification, language)}" hreflang="${language}" type="application/rss+xml">${messages('RSS feed', language)} ${_append_name_language(language, kind, name)}</a>
                     % endif
                 </p>
-            % endif
-        % endfor
-    % else:
-        % if generate_atom or generate_rss:
-            <p class="feedlink">
-                % if generate_atom:
-                    <a href="${_link(kind + "_atom", classification)}" type="application/atom+xml">${messages('Atom feed')}</a>
-                % endif
-                % if generate_rss:
-                    <a href="${_link(kind + "_rss", classification)}" type="application/rss+xml">${messages('RSS feed')}</a>
-                % endif
-            </p>
+            % endfor
+        % else:
+            % for language in sorted(translations):
+                <p class="feedlink">
+                    % if generate_atom:
+                        <a href="${_link(kind + "_atom", classification, language)}" hreflang="${language}" type="application/atom+xml">${messages('Atom feed', language)}$_append_language(language)}</a>
+                    % endif
+                    % if generate_rss and kind != 'archive':
+                        <a href="${_link(kind + "_rss", classification, language)}" hreflang="${language}" type="application/rss+xml">${messages('RSS feed', language)}$_append_language(language)}</a>
+                    % endif
+                </p>
+            % endfor
         % endif
     % endif
 </%def>
 
-<%def name="translation_link()">
-    %if has_other_languages and other_languages:
+<%def name="translation_link(kind)">
+    % if has_other_languages and other_languages:
         <div class="translationslist translations">
             <h3 class="translationslist-intro">${messages("Also available in:")}</h3>
-        %for language, classification, name in other_languages:
-            <p><a href="${_link(kind, classification, language)}" hreflang="${language}" rel="alternate">${messages("LANGUAGE", language)}
-            %if kind != 'archive':
-                (${name|h})
-            %endif
-            </a></p>
-        %endfor
+        % for language, classification, name in other_languages:
+            <p><a href="${_link(kind, classification, language)}" hreflang="${language}" rel="alternate">${messages("LANGUAGE", language)} ${_append_name(name, kind)}</a></p>
+        % endfor
         </div>
-    %endif
+    % endif
 </%def>

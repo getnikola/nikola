@@ -3,7 +3,6 @@
 <%namespace name="feeds_translations" file="feeds_translations_helper.tmpl" import="*"/>
 
 <%block name="content_header">
-    ${parent.content_header()}
     <header>
         <h1>${title|h}</h1>
         %if description:
@@ -17,10 +16,14 @@
             %endfor
         </ul>
         %endif
+        <div class="metadata">
+            ${feeds_translations.feed_link(tag, kind)}
+            ${feeds_translations.translation_link(kind)}
+        </div>
     </header>
 </%block>
 
 <%block name="extra_head">
     ${parent.extra_head()}
-    ${feeds_translations.head(tag)}
+    ${feeds_translations.head(tag, kind, rss_override=False)}
 </%block>
