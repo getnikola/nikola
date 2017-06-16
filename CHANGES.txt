@@ -5,8 +5,6 @@ Features
 --------
 
 * Use ``PRETTY_URLS`` by default on all sites (Issue #1838)
-* `also_create_classifications_from_other_languages` is deprecated
-  and no longer used by standard taxonomies (Issue #2785)
 * Feed link generation is completely refactored (PR #2844)
 
 
@@ -25,6 +23,9 @@ Removed features
 * Drop insecure post encryption feature
 * Stop supporting all deprecated config options
 * Drop annotations support (annotateit.org closed down in March 2017)
+* `also_create_classifications_from_other_languages` was removed
+  (Issue #2785)
+
 
 New in v7.8.8
 =============

@@ -161,7 +161,7 @@ class TaxonomiesClassifier(SignalHandler):
                 if not taxonomy.is_enabled(lang):
                     continue
                 for tlang in site.config['TRANSLATIONS'].keys():
-                    if lang != tlang and not taxonomy.also_create_classifications_from_other_languages:
+                    if lang != tlang:
                         continue
                     for classification, posts in site.posts_per_classification[taxonomy.classification_name][tlang].items():
                         # Obtain path as tuple

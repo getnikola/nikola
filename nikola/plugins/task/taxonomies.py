@@ -425,7 +425,7 @@ class RenderTaxonomies(Task):
             for lang in self.site.config["TRANSLATIONS"]:
                 classifications = {}
                 for tlang, posts_per_classification in self.site.posts_per_classification[taxonomy.classification_name].items():
-                    if lang != tlang and not taxonomy.also_create_classifications_from_other_languages:
+                    if lang != tlang:
                         continue
                     classifications.update(posts_per_classification)
                 result = {}

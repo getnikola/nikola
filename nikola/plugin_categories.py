@@ -593,13 +593,6 @@ class Taxonomy(BasePlugin):
         Whether post lists resp. indexes should be created for empty
         classifications.
 
-    also_create_classifications_from_other_languages = False:
-        Whether to include all classifications for all languages in every
-        language, or only the classifications for one language in its language's
-        pages.
-
-        WARNING: This is deprecated and will be removed eventually.
-
     add_other_languages_variable = False:
         In case this is `True`, each classification page will get a list
         of triples `(other_lang, other_classification, title)` of classifications
@@ -636,7 +629,6 @@ class Taxonomy(BasePlugin):
     apply_to_pages = False
     minimum_post_count_per_classification_in_overview = 1
     omit_empty_classifications = False
-    also_create_classifications_from_other_languages = False  # deprecated
     add_other_languages_variable = False
     path_handler_docstrings = {
         'taxonomy_index': '',
@@ -781,8 +773,7 @@ class Taxonomy(BasePlugin):
         the second will be put into the uptodate list of all generated tasks.
 
         For hierarchical taxonomies, node is the `hierarchy_utils.TreeNode` element
-        corresponding to the classification. Note that `node` can still be `None`
-        if `also_create_classifications_from_other_languages` is `True`.
+        corresponding to the classification.
 
         Context must contain `title`, which should be something like 'Posts about <classification>'.
         """

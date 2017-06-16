@@ -52,7 +52,6 @@ class ClassifyCategories(Taxonomy):
     apply_to_pages = False
     minimum_post_count_per_classification_in_overview = 1
     omit_empty_classifications = True
-    also_create_classifications_from_other_languages = False
     add_other_languages_variable = True
     path_handler_docstrings = {
         'category_index': """A link to the category index.

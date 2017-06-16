@@ -48,7 +48,6 @@ class PageIndex(Taxonomy):
     apply_to_posts = False
     apply_to_pages = True
     omit_empty_classifications = True
-    also_create_classifications_from_other_languages = False
     path_handler_docstrings = {
         'page_index_folder_index': None,
         'page_index_folder': None,
