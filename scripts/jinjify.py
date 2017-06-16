@@ -99,7 +99,7 @@ def jinjify(in_theme, out_theme):
 
 
 def error(msg):
-    print(colorama.Fore.RED + "ERROR:" + msg)
+    print(colorama.Fore.RED + "ERROR:" + msg + colorama.Fore.RESET)
 
 
 def mako2jinja(input_file):
