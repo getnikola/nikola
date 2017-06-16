@@ -4,7 +4,7 @@
 <%namespace name="feeds_translations" file="feeds_translations_helper.tmpl" import="*"/>
 
 <%block name="extra_head">
-    ${feeds_translations.head(kind=kind, rss_override=False)}
+    ${feeds_translations.head(kind=kind, rss_override=False, has_no_feeds=has_no_feeds)}
 </%block>
 
 <%block name="content">

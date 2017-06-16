@@ -95,6 +95,9 @@ class PageIndex(Taxonomy):
         context = {
             "title": self.site.config['BLOG_TITLE'](lang),
             "pagekind": ["list", "front_page", "page_index"] if dirname == '' else ["list", "page_index"],
+            "kind": "page_index_folder",
+            "classification": dirname,
+            "has_no_feeds": True,
         }
         kw.update(context)
         return context, kw

@@ -45,8 +45,8 @@
 </%def>
 
 ## Handles both feeds and translations
-<%def name="head(classification=None, kind='index', feeds=True, other=True, rss_override=True)">
-    % if feeds:
+<%def name="head(classification=None, kind='index', feeds=True, other=True, rss_override=True, has_no_feeds=False)">
+    % if feeds and not has_no_feeds:
         ${_head_rss(classification, 'index' if (kind == 'archive' and rss_override) else kind, rss_override)}
         ${_head_atom(classification, kind)}
     % endif
