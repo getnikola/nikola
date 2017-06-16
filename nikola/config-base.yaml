@@ -266,7 +266,7 @@ ONE_FILE_POSTS: true
 
 # Use date-based path when creating posts?
 # Can be enabled on a per-post basis with `nikola new_post -d`.
-# The setting is ignored when creating pages (`-d` still works).
+# The setting is ignored when creating pages.
 NEW_POST_DATE_PATH: false
 
 # What format to use when creating posts with date paths?
@@ -278,7 +278,6 @@ NEW_POST_DATE_PATH_FORMAT: '%Y/%m/%d'
 # If SHOW_UNTRANSLATED_POSTS is set to False, then posts that are not
 # translated to a language LANG will not be visible at all in the pages
 # in that language.
-# Formerly known as HIDE_UNTRANSLATED_POSTS (inverse)
 SHOW_UNTRANSLATED_POSTS: True
 
 # Nikola supports logo display.  If you have one, you can put the URL here.
@@ -291,8 +290,7 @@ LOGO_URL: ''
 SHOW_BLOG_TITLE: True
 
 # Writes tag cloud data in form of tag_cloud_data.json.
-# Warning: this option will change its default value to False in v8!
-WRITE_TAG_CLOUD: True
+WRITE_TAG_CLOUD: False
 
 # Generate pages for each section. The site must have at least two sections
 # for this option to take effect. It wouldn't build for just one section.
@@ -684,20 +682,6 @@ GZIP_COMMAND: null
 # return partial content of another representation for these resources. Do not
 # use this feature if you do not understand what this means.
 
-# Compiler to process LESS files.
-LESS_COMPILER: 'lessc'
-
-# A list of options to pass to the LESS compiler.
-# Final command is: LESS_COMPILER LESS_OPTIONS file.less
-# LESS_OPTIONS = []
-
-# Compiler to process Sass files.
-SASS_COMPILER: 'sass'
-
-# A list of options to pass to the Sass compiler.
-# Final command is: SASS_COMPILER SASS_OPTIONS file.s(a|c)ss
-SASS_OPTIONS: []
-
 # #############################################################################
 # Image Gallery Options
 # #############################################################################
@@ -937,13 +921,6 @@ COMMENT_SYSTEM: "disqus"
 # is in the manual.
 COMMENT_SYSTEM_ID: "nikolademo"
 
-# Enable annotations using annotateit.org?
-# If set to False, you can still enable them for individual posts and pages
-# setting the "annotations" metadata.
-# If set to True, you can disable them for individual posts and pages using
-# the "noannotations" metadata.
-ANNOTATIONS: False
-
 # Create index.html for page folders?
 # WARNING: if a page would conflict with the index file (usually
 #          caused by setting slug to `index`), the PAGE_INDEX
@@ -963,7 +940,6 @@ INDEX_FILE: "index.html"
 # http://mysite/foo/bar/index.html => http://mysite/foo/bar/
 # (Uses the INDEX_FILE setting, so if that is, say, default.html,
 # it will instead /foo/default.html => /foo)
-# (Note: This was briefly STRIP_INDEX_HTML in v 5.4.3 and 5.4.4)
 STRIP_INDEXES: false
 
 # Should the sitemap list directories which only include other directories
@@ -1082,7 +1058,6 @@ PANDOC_OPTIONS: []
 SOCIAL_BUTTONS_CODE: ""
 
 # Show link to source for the posts?
-# Formerly known as HIDE_SOURCELINK (inverse)
 SHOW_SOURCELINK: true
 # Copy the source files for your pages?
 # Setting it to False implies SHOW_SOURCELINK = False
