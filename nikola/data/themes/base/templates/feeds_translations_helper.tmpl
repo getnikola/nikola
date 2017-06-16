@@ -74,10 +74,10 @@
             % for language in sorted(translations):
                 <p class="feedlink">
                     % if generate_atom:
-                        <a href="${_link(kind + "_atom", classification, language)}" hreflang="${language}" type="application/atom+xml">${messages('Atom feed', language)}$_append_language(language)}</a>
+                        <a href="${_link(kind + "_atom", classification, language)}" hreflang="${language}" type="application/atom+xml">${messages('Atom feed', language)}${_append_language(language)}</a>
                     % endif
                     % if generate_rss and kind != 'archive':
-                        <a href="${_link(kind + "_rss", classification, language)}" hreflang="${language}" type="application/rss+xml">${messages('RSS feed', language)}$_append_language(language)}</a>
+                        <a href="${_link(kind + "_rss", classification, language)}" hreflang="${language}" type="application/rss+xml">${messages('RSS feed', language)}${_append_language(language)}</a>
                     % endif
                 </p>
             % endfor
