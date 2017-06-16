@@ -5,6 +5,18 @@
 {% macro _append_name_language_proper(language, kind, name) %}{{  (" (" + name + ", " + language + ")" if name and kind != "archive" and kind != "author" else " (" + language + ")") | h  }}{% endmacro %}
 {% macro _append_name_language(language, kind, name=None) %}{{  _append_name_language_proper(language, kind, name) if translations|length > 1 else _append_name(name, kind)  }}{% endmacro %}
 
+{% macro _head_feed_link(link_type, link_name, link_postfix, classification, kind, language) %}
+    <link rel="alternate" type="{{ link_type }}" title="{{ link_name|e }}{{ _append_language(language) }}" hreflang="{{ language }}" href="{{ _link(kind + '_' + link_postfix, classification, language) }}">
+{% endmacro %}
+
+{% macro _html_feed_link(link_type, link_name, link_postfix, classification, kind, language, name=None) %}
+    <a href="{{ _link(kind + '_' + link_postfix, classification, language) }}" hreflang="{{ language }}" type="{{ link_type }}">{{ messages(link_name, language) }} {{ _append_name_language(language, kind, name) }}</a>
+{% endmacro %}
+
+{% macro _html_translation_link(classification, kind, language, name=None) %}
+    <a href="{{ _link(kind, classification, language) }}" hreflang="{{ language }}" rel="alternate">{{ messages("LANGUAGE", language) }}{{ _append_name(name, kind) }}</a>
+{% endmacro %}
+
 {% macro _head_rss(classification=None, kind='index', rss_override=True) %}
     {% if rss_link and rss_override %}
         {{ rss_link }}
@@ -17,9 +29,9 @@
         {% else %}
             {% for language in translations|sort %}
                 {% if classification and kind != 'index' %}
-                    <link rel="alternate" type="application/rss+xml" title="RSS for {{ kind }} {{ classification|e }}{{ _append_language(language) }}" hreflang="{{ language }}" href="{{ _link(kind + "_rss", classification, language) }}">
+                    {{ _head_feed_link('application/rss+xml', 'RSS for ' + kind + ' ' + classification, 'rss', classification, kind, language) }}
                 {% else %}
-                    <link rel="alternate" type="application/rss+xml" title="RSS{{ _append_language(language) }}" hreflang="{{ language }}" href="{{ _link("index_rss", None, language) }}">
+                    {{ _head_feed_link('application/rss+xml', 'RSS', 'rss', classification, 'index', language) }}
                 {% endif %}
             {% endfor %}
         {% endif %}
@@ -35,9 +47,9 @@
         {% else %}
             {% for language in translations|sort %}
                 {% if classification and kind != 'index' %}
-                    <link rel="alternate" type="application/atom+xml" title="Atom for {{ kind }} {{ classification|e }}{{ _append_language(language) }}" hreflang="{{ language }}" href="{{ _link(kind + "_atom", classification, language) }}">
+                    {{ _head_feed_link('application/atom+xml', 'Atom for ' + kind + ' ' + classification, 'atom', classification, kind, language) }}
                 {% else %}
-                    <link rel="alternate" type="application/atom+xml" title="Atom{{ _append_language(language) }}" hreflang="{{ language }}" href="{{ _link("index_atom", None, language) }}">
+                    {{ _head_feed_link('application/atom+xml', 'Atom', 'atom', classification, 'index', language) }}
                 {% endif %}
             {% endfor %}
         {% endif %}
@@ -63,10 +75,10 @@
             {% for language, classification, name in all_languages %}
                 <p class="feedlink">
                     {% if generate_atom %}
-                        <a href="{{ _link(kind + "_atom", classification, language) }}" hreflang="{{ language }}" type="application/atom+xml">{{ messages('Atom feed', language) }} {{ _append_name_language(language, kind, name) }}</a>
+                        {{ _html_feed_link('application/atom+xml', 'Atom feed', 'atom', classification, kind, language, name) }}
                     {% endif %}
                     {% if generate_rss and kind != 'archive' %}
-                        <a href="{{ _link(kind + "_rss", classification, language) }}" hreflang="{{ language }}" type="application/rss+xml">{{ messages('RSS feed', language) }} {{ _append_name_language(language, kind, name) }}</a>
+                        {{ _html_feed_link('application/rss+xml', 'RSS feed', 'rss', classification, kind, language, name) }}
                     {% endif %}
                 </p>
             {% endfor %}
@@ -74,10 +86,10 @@
             {% for language in translations|sort %}
                 <p class="feedlink">
                     {% if generate_atom %}
-                        <a href="{{ _link(kind + "_atom", classification, language) }}" hreflang="{{ language }}" type="application/atom+xml">{{ messages('Atom feed', language) }}{{ _append_language(language) }}</a>
+                        {{ _html_feed_link('application/atom+xml', 'Atom feed', 'atom', classification, kind, language) }}
                     {% endif %}
                     {% if generate_rss and kind != 'archive' %}
-                        <a href="{{ _link(kind + "_rss", classification, language) }}" hreflang="{{ language }}" type="application/rss+xml">{{ messages('RSS feed', language) }}{{ _append_language(language) }}</a>
+                        {{ _html_feed_link('application/rss+xml', 'RSS feed', 'rss', classification, kind, language) }}
                     {% endif %}
                 </p>
             {% endfor %}
@@ -90,7 +102,7 @@
         <div class="translationslist translations">
             <h3 class="translationslist-intro">{{ messages("Also available in:") }}</h3>
         {% for language, classification, name in other_languages %}
-            <p><a href="{{ _link(kind, classification, language) }}" hreflang="{{ language }}" rel="alternate">{{ messages("LANGUAGE", language) }} {{ _append_name(name, kind) }}</a></p>
+            <p>{{ _html_translation_link(classification, kind, language, name) }}</p>
         {% endfor %}
         </div>
     {% endif %}
