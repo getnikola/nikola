@@ -253,7 +253,7 @@ class RenderTaxonomies(Task):
         context["lang"] = lang
         # list.tmpl expects a different format than list_post.tmpl (Issue #2701)
         if template_name == 'list.tmpl':
-            context["items"] = [(post.title(), post.permalink(), None) for post in filtered_posts]
+            context["items"] = [(post.title(lang), post.permalink(lang), None) for post in filtered_posts]
         else:
             context["posts"] = filtered_posts
         if "pagekind" not in context:
