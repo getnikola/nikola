@@ -147,8 +147,6 @@ link://tag_rss/cats => /tags/cats.xml""",
             "pagekind": ["tag_page", "index" if self.show_list_as_index else "list"],
             "tag": classification,
         }
-        if self.show_list_as_index:
-            context["rss_link"] = """<link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for tag {0} ({1})" href="{2}">""".format(classification, lang, self.site.link("tag_rss", classification, lang))
         kw.update(context)
         return context, kw
 

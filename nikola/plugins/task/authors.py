@@ -132,10 +132,6 @@ link://author_rss/joe => /authors/joe.xml""",
             "description": descriptions[lang][classification] if lang in descriptions and classification in descriptions[lang] else None,
             "pagekind": ["index" if self.show_list_as_index else "list", "author_page"],
         }
-        if self.site.config["GENERATE_RSS"]:
-            rss_link = ("""<link rel="alternate" type="application/rss+xml" title="RSS for author {0} ({1})" href="{2}">""".format(
-                classification, lang, self.site.link('author_rss', classification, lang)))
-            context['rss_link'] = rss_link
         kw.update(context)
         return context, kw
 

@@ -179,8 +179,6 @@ link://category_rss/dogs => /categories/dogs.xml""",
             "category_path": cat_path,
             "subcategories": subcats,
         }
-        if self.show_list_as_index:
-            context["rss_link"] = """<link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for tag {0} ({1})" href="{2}">""".format(friendly_name, lang, self.site.link("category_rss", classification, lang))
         kw.update(context)
         return context, kw
 
