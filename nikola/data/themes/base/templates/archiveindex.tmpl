@@ -1,18 +1,14 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="index.tmpl"/>
 <%namespace name="archive_nav" file="archive_navigation_helper.tmpl" import="*"/>
+<%namespace name="feeds_translations" file="feeds_translations_helper.tmpl" import="*"/>
 
 <%block name="extra_head">
     ${parent.extra_head()}
-    %if len(translations) > 1 and generate_atom:
-        %for language in sorted(translations):
-            <link rel="alternate" type="application/atom+xml" title="Atom for the ${archive_name} archive (${language})" href="${_link("archive_atom", archive_name, language)}">
-        %endfor
-    %elif generate_atom:
-        <link rel="alternate" type="application/atom+xml" title="Atom for the ${archive_name} archive" href="${_link("archive_atom", archive_name)}">
-    %endif
+    ${feeds_translations.head(archive_name)}
 </%block>
 
 <%block name="content_header">
     ${archive_nav.archive_navigation()}
+    ${parent.content_header()}
 </%block>

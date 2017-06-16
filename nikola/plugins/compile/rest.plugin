@@ -6,7 +6,7 @@ module = rest
 author = Roberto Alsina
 version = 1.0
 website = https://getnikola.com/
-description = Compile reSt into HTML
+description = Compile reST into HTML
 
 [Nikola]
 PluginCategory = Compiler

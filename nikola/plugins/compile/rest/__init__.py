@@ -26,7 +26,6 @@
 
 """reStructuredText compiler for Nikola."""
 
-from __future__ import unicode_literals
 import io
 import os
 
@@ -48,7 +47,8 @@ from nikola.utils import (
     makedirs,
     write_metadata,
     STDERR_HANDLER,
-    LocaleBorg
+    LocaleBorg,
+    map_metadata
 )
 
 
@@ -89,6 +89,13 @@ class CompileRest(PageCompiler):
                 name = name.lower()
 
                 meta[name] = value
+
+        # Put 'authors' meta field contents in 'author', too
+        if 'authors' in meta and 'author' not in meta:
+            meta['author'] = '; '.join(meta['authors'])
+
+        # Map metadata from other platforms to names Nikola expects (Issue #2817)
+        map_metadata(meta, 'rest_docinfo', self.site.config)
         return meta
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
@@ -125,13 +132,8 @@ class CompileRest(PageCompiler):
             # Original issue: empty files.  `output` became a bytestring.
             output = output.decode('utf-8')
 
-        output, shortcode_deps = self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, with_dependencies=True, extra_context=dict(post=post))
+        output, shortcode_deps = self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, extra_context={'post': post})
         return output, error_level, deps, shortcode_deps
-
-    # TODO remove in v8
-    def compile_html_string(self, data, source_path=None, is_two_file=True):
-        """Compile reST into HTML strings."""
-        return self.compile_string(data, source_path, is_two_file)
 
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""
@@ -169,7 +171,10 @@ class CompileRest(PageCompiler):
             content += '\n'
         with io.open(path, "w+", encoding="utf8") as fd:
             if onefile:
-                fd.write(write_metadata(metadata))
+                _format = self.site.config.get('METADATA_FORMAT', 'nikola').lower()
+                if _format == 'pelican':
+                    _format = 'pelican_rest'
+                fd.write(write_metadata(metadata, _format))
                 fd.write('\n')
             fd.write(content)
 

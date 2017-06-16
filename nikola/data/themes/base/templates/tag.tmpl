@@ -1,15 +1,10 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="list_post.tmpl"/>
+<%namespace name="feeds_translations" file="feeds_translations_helper.tmpl" import="*"/>
 
 <%block name="extra_head">
     ${parent.extra_head()}
-    %if len(translations) > 1 and generate_rss:
-        %for language in sorted(translations):
-            <link rel="alternate" type="application/rss+xml" title="RSS for ${kind} ${tag|h} (${language})" href="${_link(kind + "_rss", tag, language)}">
-        %endfor
-    %elif generate_rss:
-        <link rel="alternate" type="application/rss+xml" title="RSS for ${kind} ${tag|h}" href="${_link(kind + "_rss", tag)}">
-    %endif
+    ${feeds_translations.head(tag)}
 </%block>
 
 
@@ -18,7 +13,7 @@
     <header>
         <h1>${title|h}</h1>
         %if description:
-        <p>${description}</p>
+            <p>${description}</p>
         %endif
         %if subcategories:
         ${messages('Subcategories:')}
@@ -29,23 +24,16 @@
         </ul>
         %endif
         <div class="metadata">
-            %if len(translations) > 1 and generate_rss:
-                %for language in sorted(translations):
-                <p class="feedlink">
-                    <a href="${_link(kind + "_rss", tag, language)}" hreflang="${language}" type="application/rss+xml">${messages('RSS feed', language)} (${language})</a>&nbsp;
-                </p>
-                %endfor
-            %elif generate_rss:
-                <p class="feedlink"><a href="${_link(kind + "_rss", tag)}" type="application/rss+xml">${messages('RSS feed')}</a></p>
-            %endif
+            ${feeds_translations.feed_link(tag)}
         </div>
+        ${feeds_translations.translation_link()}
     </header>
     %if posts:
-    <ul class="postlist">
-    % for post in posts:
-        <li><time class="listdate" datetime="${post.formatted_date('webiso')}" title="${post.formatted_date(date_format)|h}">${post.formatted_date(date_format)|h}</time> <a href="${post.permalink()}" class="listtitle">${post.title()|h}<a></li>
-    % endfor
-    </ul>
+        <ul class="postlist">
+        % for post in posts:
+            <li><time class="listdate" datetime="${post.formatted_date('webiso')}" title="${post.formatted_date(date_format)|h}">${post.formatted_date(date_format)|h}</time> <a href="${post.permalink()}" class="listtitle">${post.title()|h}<a></li>
+        % endfor
+        </ul>
     %endif
 </article>
 </%block>

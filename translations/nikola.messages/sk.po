@@ -7,7 +7,9 @@
 # Translators:
 # Translators:
 # Translators:
+# Chris Warrick <kwpolska@gmail.com>, 2017
 # bs_ <info@pwn.sk>, 2014
+# misolietavec <Michal.Kaukic@fri.uniza.sk>, 2017
 # Michal Kaukic <misolietavec@gmail.com>, 2015
 # Michal Petrucha <michal.petrucha@ksp.sk>, 2014
 msgid ""
@@ -15,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2017-01-07 11:37+0000\n"
+"PO-Revision-Date: 2017-06-12 12:50+0000\n"
 "Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
 "Language-Team: Slovak (http://www.transifex.com/ralsina/nikola/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -134,34 +136,37 @@ msgid "Write your page here."
 msgstr "Tu napíšte svoju stránku."
 
 msgid "Uncategorized"
-msgstr ""
+msgstr "Nekategorizované"
 
 #. Used for feeds of any format
 msgid "Updates"
-msgstr ""
+msgstr "Aktualizácie"
 
 msgid "Authors"
-msgstr ""
+msgstr "Autori"
 
 msgid "Posts by %s"
-msgstr ""
+msgstr "Príspevky od %s"
 
 msgid "Toggle navigation"
-msgstr ""
+msgstr "Prepnúť navigáciu"
 
 #. Used to format months per year
 msgid "{month} {year}"
-msgstr ""
+msgstr "{month} {year}"
 
 #. Used to format a date
 msgid "{month} {day}, {year}"
-msgstr ""
+msgstr "{day}. {monts} {year}"
 
 msgid "Previous"
-msgstr ""
+msgstr "Predchádzajúci"
 
 msgid "Up"
-msgstr ""
+msgstr "Dohora"
 
 msgid "Next"
-msgstr ""
+msgstr "Nasledujúci"
+
+msgid "Atom feed"
+msgstr "Atom kanál"

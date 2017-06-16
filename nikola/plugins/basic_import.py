@@ -26,12 +26,10 @@
 
 """Mixin for importer plugins."""
 
-from __future__ import unicode_literals, print_function
 import io
 import csv
 import datetime
 import os
-import sys
 from pkg_resources import resource_filename
 
 try:
@@ -174,7 +172,7 @@ class ImportMixin(object):
     def write_urlmap_csv(output_file, url_map):
         """Write urlmap to csv file."""
         utils.makedirs(os.path.dirname(output_file))
-        fmode = 'wb+' if sys.version_info[0] == 2 else 'w+'
+        fmode = 'w+'
         with io.open(output_file, fmode) as fd:
             csv_writer = csv.writer(fd)
             for item in url_map.items():

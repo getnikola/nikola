@@ -24,12 +24,7 @@ always unquoted.
 
 """
 
-
-from __future__ import unicode_literals, absolute_import
-
 import os
-import sys
-
 
 import io
 try:
@@ -40,7 +35,6 @@ import tempfile
 
 import docutils
 from lxml import html
-import pytest
 import unittest
 
 import nikola.plugins.compile.rest

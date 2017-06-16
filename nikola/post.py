@@ -26,7 +26,6 @@
 
 """The Post class."""
 
-from __future__ import unicode_literals, print_function, absolute_import
 
 import io
 from collections import defaultdict
@@ -75,6 +74,7 @@ from .utils import (
     demote_headers,
     get_translation_candidate,
     unslugify,
+    map_metadata
 )
 
 __all__ = ('Post',)
@@ -238,21 +238,18 @@ class Post(object):
         is_private = False
         self._tags = {}
         for lang in self.translated_to:
+            if isinstance(self.meta[lang]['tags'], (list, tuple, set)):
+                _tag_list = self.meta[lang]['tags']
+            else:
+                _tag_list = self.meta[lang]['tags'].split(',')
             self._tags[lang] = natsort.natsorted(
-                list(set([x.strip() for x in self.meta[lang]['tags'].split(',')])),
+                list(set([x.strip() for x in _tag_list])),
                 alg=natsort.ns.F | natsort.ns.IC)
             self._tags[lang] = [t for t in self._tags[lang] if t]
             if 'draft' in [_.lower() for _ in self._tags[lang]]:
                 is_draft = True
                 LOGGER.debug('The post "{0}" is a draft.'.format(self.source_path))
                 self._tags[lang].remove('draft')
-
-            # TODO: remove in v8
-            if 'retired' in self._tags[lang]:
-                is_private = True
-                LOGGER.warning('The "retired" tag in post "{0}" is now deprecated and will be removed in v8.  Use "private" instead.'.format(self.source_path))
-                self._tags[lang].remove('retired')
-            # end remove in v8
 
             if 'private' in self._tags[lang]:
                 is_private = True
@@ -989,7 +986,7 @@ def get_metadata_from_file(source_path, config=None, lang=None):
             source_path += '.' + lang
         with io.open(source_path, "r", encoding="utf-8-sig") as meta_file:
             meta_data = [x.strip() for x in meta_file.readlines()]
-        return _get_metadata_from_file(meta_data)
+        return _get_metadata_from_file(meta_data, config)
     except (UnicodeDecodeError, UnicodeEncodeError):
         msg = 'Error reading {0}: Nikola only supports UTF-8 files'.format(source_path)
         LOGGER.error(msg)
@@ -1005,7 +1002,7 @@ re_rst_title = re.compile(r'^([{0}]{{4,}})'.format(re.escape(
     string.punctuation)))
 
 
-def _get_metadata_from_file(meta_data):
+def _get_metadata_from_file(meta_data, config=None):
     """Extract metadata from a post's source file."""
     meta = {}
     if not meta_data:
@@ -1026,6 +1023,8 @@ def _get_metadata_from_file(meta_data):
         for k in meta:
             if meta[k] is None:
                 meta[k] = ''
+        # Map metadata from other platforms to names Nikola expects (Issue #2817)
+        map_metadata(meta, 'yaml', config)
         return meta
 
     # If 1st line is '+++', then it's TOML metadata
@@ -1034,7 +1033,9 @@ def _get_metadata_from_file(meta_data):
             utils.req_missing('toml', 'use TOML metadata', optional=True)
             raise ValueError('Error parsing metadata')
         idx = meta_data.index('+++', 1)
-        meta = toml.load('\n'.join(meta_data[1:idx]))
+        meta = toml.loads('\n'.join(meta_data[1:idx]))
+        # Map metadata from other platforms to names Nikola expects (Issue #2817)
+        map_metadata(meta, 'toml', config)
         return meta
 
     # First, get metadata from the beginning of the file,
@@ -1117,8 +1118,8 @@ def get_meta(post, file_metadata_regexp=None, unslugify_titles=False, lang=None)
 
     If ``file_metadata_regexp`` is given it will be tried to read
     metadata from the filename.
-    If ``unslugify_titles`` is True, the extracted title (if any) will be unslugified, as is done in galleries.
-    If any metadata is then found inside the file the metadata from the
+    If ``unslugify_titles`` is True, the extracted title (if any) will be unslugified, as is
+    done in galleries. If any metadata is then found inside the file the metadata from the
     file will override previous findings.
     """
     meta = defaultdict(lambda: '')
@@ -1192,7 +1193,8 @@ def hyphenate(dom, _lang):
                 skippable_nodes = ['kbd', 'code', 'samp', 'mark', 'math', 'data', 'ruby', 'svg']
                 if node.getchildren():
                     for child in node.getchildren():
-                        if child.tag in skippable_nodes or (child.tag == 'span' and 'math' in child.get('class', [])):
+                        if child.tag in skippable_nodes or (child.tag == 'span' and 'math'
+                                                            in child.get('class', [])):
                             skip_node = True
                 elif 'math' in node.get('class', []):
                     skip_node = True

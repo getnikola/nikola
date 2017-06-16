@@ -75,6 +75,7 @@ flowr(document.querySelectorAll("#gallery_container")[0], {
             img.setAttribute('src', params.itemData.url_thumb);
             img.setAttribute('width', params.width);
             img.setAttribute('height', params.height);
+            img.setAttribute('alt', params.itemData.title);
             img.style.maxWidth = '100%';
             link = document.createElement("a");
             link.setAttribute('href', params.itemData.url);
@@ -96,7 +97,9 @@ flowr(document.querySelectorAll("#gallery_container")[0], {
             }
         }
     });
-    baguetteBox.run('#gallery_container');
+    baguetteBox.run('#gallery_container', {
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
 </script>
 </%block>
-

@@ -8,13 +8,13 @@
 # Translators:
 # Translators:
 # seanpue <a@seanpue.com>, 2016
-# jasdeep <jsbhangra@gmail.com>, 2015
+# jasdeep <jsbhangra@gmail.com>, 2015,2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2017-01-07 11:37+0000\n"
+"PO-Revision-Date: 2017-06-12 12:47+0000\n"
 "Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
 "Language-Team: Panjabi (Punjabi) (http://www.transifex.com/ralsina/nikola/language/pa/)\n"
 "MIME-Version: 1.0\n"
@@ -146,21 +146,24 @@ msgid "Posts by %s"
 msgstr "%s ਦੀ ਲਿਖਤਾਂ"
 
 msgid "Toggle navigation"
-msgstr ""
+msgstr "ਨੈਵੀਗੇਸ਼ਨ ਬਦਲੋ "
 
 #. Used to format months per year
 msgid "{month} {year}"
-msgstr ""
+msgstr "{ਮਹੀਨਾ} {ਸਾਲ}"
 
 #. Used to format a date
 msgid "{month} {day}, {year}"
-msgstr ""
+msgstr "{ਮਹੀਨਾ} {ਦਿਨ}, {ਸਾਲ} "
 
 msgid "Previous"
-msgstr ""
+msgstr "ਪਿੱਛੇ "
 
 msgid "Up"
-msgstr ""
+msgstr "ਉੱਤੇ "
 
 msgid "Next"
+msgstr "ਅੱਗੇ "
+
+msgid "Atom feed"
 msgstr ""

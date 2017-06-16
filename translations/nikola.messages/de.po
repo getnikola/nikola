@@ -8,8 +8,9 @@
 # Translators:
 # Translators:
 # amokleben <wenso@gmx.de>, 2013
-# Chris Warrick <kwpolska@gmail.com>, 2013-2014
+# Chris Warrick <kwpolska@gmail.com>, 2013-2014,2017
 # Felix Fontein <felix@fontein.de>, 2015-2016
+# Jürgen Schwarze <juergen.schwarze.70@gmail.com>, 2017
 # Chris Warrick <kwpolska@gmail.com>, 2013
 # Chris Warrick <kwpolska@gmail.com>, 2013
 # Martin Bless <martin.bless@gmail.com>, 2014
@@ -24,7 +25,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2017-01-07 11:37+0000\n"
+"PO-Revision-Date: 2017-06-12 12:51+0000\n"
 "Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/ralsina/nikola/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -167,10 +168,13 @@ msgid "{month} {day}, {year}"
 msgstr "{day}. {month} {year}"
 
 msgid "Previous"
-msgstr ""
+msgstr "Vorheriger Eintrag"
 
 msgid "Up"
-msgstr ""
+msgstr "Nach oben"
 
 msgid "Next"
-msgstr ""
+msgstr "Nächster Eintrag"
+
+msgid "Atom feed"
+msgstr "Atom-Feed"

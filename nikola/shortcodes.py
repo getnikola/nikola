@@ -26,7 +26,6 @@
 
 """Support for Hugo-style shortcodes."""
 
-from __future__ import unicode_literals
 
 import uuid
 
@@ -307,8 +306,7 @@ def _split_shortcodes(data):
     return result
 
 
-# FIXME: in v8, get rid of with_dependencies
-def apply_shortcodes(data, registry, site=None, filename=None, raise_exceptions=False, lang=None, with_dependencies=False, extra_context={}):
+def apply_shortcodes(data, registry, site=None, filename=None, raise_exceptions=False, lang=None, extra_context=None):
     """Apply Hugo-style shortcodes on data.
 
     {{% name parameters %}} will end up calling the registered "name" function with the given parameters.
@@ -325,7 +323,9 @@ def apply_shortcodes(data, registry, site=None, filename=None, raise_exceptions=
     >>> print(apply_shortcodes('==> {{% foo bar=baz %}}some data{{% /foo %}} <==', {'foo': lambda *a, **k: k['bar']+k['data']}))
     ==> bazsome data <==
     """
-    empty_string = data[:0]  # same string type as data; to make Python 2 happy
+    if extra_context is None:
+        extra_context = {}
+    empty_string = ''
     try:
         # Split input data into text, shortcodes and shortcode endings
         sc_data = _split_shortcodes(data)
@@ -376,9 +376,7 @@ def apply_shortcodes(data, registry, site=None, filename=None, raise_exceptions=
                     res = ('', [])
                 result.append(res[0])
                 dependencies += res[1]
-        if with_dependencies:
-            return empty_string.join(result), dependencies
-        return empty_string.join(result)
+        return empty_string.join(result), dependencies
     except ParsingError as e:
         if raise_exceptions:
             # Throw up

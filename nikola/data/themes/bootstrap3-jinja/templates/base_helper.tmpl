@@ -1,6 +1,7 @@
 {#  -*- coding: utf-8 -*- #}
 
 {% import 'annotation_helper.tmpl' as notes with context %}
+{% import 'feeds_translations_helper.tmpl' as feeds_translations with context %}
 {% macro html_headstart() %}
 <!DOCTYPE html>
 <html
@@ -44,7 +45,7 @@ lang="{{ lang }}">
     {% if meta_generator_tag %}
     <meta name="generator" content="Nikola (getnikola.com)">
     {% endif %}
-    {{ html_feedlinks() }}
+    {{ feeds_translations.head() }}
     <link rel="canonical" href="{{ abs_link(permalink) }}">
 
     {% if favicons %}
@@ -116,7 +117,8 @@ lang="{{ lang }}">
         {% else %}
             <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
         {% endif %}
-        <link href="/assets/css/rst.css" rel="stylesheet" type="text/css">
+        <link href="/assets/css/html4css1.css" rel="stylesheet" type="text/css">
+        <link href="/assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/code.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/colorbox.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/theme.css" rel="stylesheet" type="text/css">
@@ -127,11 +129,6 @@ lang="{{ lang }}">
     {% if needs_ipython_css %}
         <link href="/assets/css/ipython.min.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/nikola_ipython.css" rel="stylesheet" type="text/css">
-    {% endif %}
-    {% if annotations and post and not post.meta('noannotations') %}
-        {{ notes.css() }}
-    {% elif not annotations and post and post.meta('annotations') %}
-        {{ notes.css() }}
     {% endif %}
 {% endmacro %}
 
@@ -159,26 +156,7 @@ lang="{{ lang }}">
 {% endmacro %}
 
 {% macro html_feedlinks() %}
-    {% if rss_link %}
-        {{ rss_link }}
-    {% elif generate_rss %}
-        {% if translations|length > 1 %}
-            {% for language in translations|sort %}
-                <link rel="alternate" type="application/rss+xml" title="RSS ({{ language }})" href="{{ _link('rss', None, language) }}">
-            {% endfor %}
-        {% else %}
-            <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ _link('rss', None) }}">
-        {% endif %}
-    {% endif %}
-    {% if generate_atom %}
-        {% if translations|length > 1 %}
-            {% for language in translations|sort %}
-                <link rel="alternate" type="application/atom+xml" title="Atom ({{ language }})" href="{{ _link('index_atom', None, language) }}">
-            {% endfor %}
-        {% else %}
-            <link rel="alternate" type="application/atom+xml" title="Atom" href="{{ _link('index_atom', None) }}">
-        {% endif %}
-    {% endif %}
+    {{ feeds_translations.head() }}
 {% endmacro %}
 
 {% macro html_translations() %}

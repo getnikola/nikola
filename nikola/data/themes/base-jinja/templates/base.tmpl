@@ -2,8 +2,8 @@
 {% import 'base_helper.tmpl' as base with context %}
 {% import 'base_header.tmpl' as header with context %}
 {% import 'base_footer.tmpl' as footer with context %}
-{% import 'annotation_helper.tmpl' as annotations with context %}
 {{ set_locale(lang) }}
+{#  <html> tag is included by base.html_headstart #}
 {{ base.html_headstart() }}
 {% block extra_head %}
 {#  Leave this block alone. #}
@@ -11,7 +11,7 @@
 {{ template_hooks['extra_head']() }}
 </head>
 <body>
-<a href="#content" class="sr-only sr-only-focusable">{{ messages("Skip to main content") }}</a>
+    <a href="#content" class="sr-only sr-only-focusable">{{ messages("Skip to main content") }}</a>
     <div id="container">
          {{ header.html_header() }}
          <main id="content">
@@ -26,7 +26,10 @@
         <script src="/assets/js/baguetteBox.min.js"></script>
     {% endif %}
     {% block extra_js %}{% endblock %}
-    <script>baguetteBox.run('a.reference');</script>
+    <script>baguetteBox.run('a.reference', {
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});</script>
     {{ body_end }}
     {{ template_hooks['body_end']() }}
 </body>

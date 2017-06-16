@@ -83,11 +83,6 @@
     </script>
     <!-- end fancy dates -->
     {% block extra_js %}{% endblock %}
-    {% if annotations and post and not post.meta('noannotations') %}
-        {{ notes.code() }}
-    {% elif not annotations and post and post.meta('annotations') %}
-        {{ notes.code() }}
-    {% endif %}
 {{ body_end }}
 {{ template_hooks['body_end']() }}
 </body>

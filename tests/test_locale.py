@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
-import os
 import sys
 
 
@@ -33,6 +31,9 @@ class TestHarcodedFallbacks(unittest.TestCase):
         # keep in sync with nikola.valid_locale_fallback
         if sys.platform == 'win32':
             self.assertTrue(nikola.nikola.is_valid_locale(str('English')))
+            self.assertTrue(nikola.nikola.is_valid_locale(str('C')))
+        elif sys.platform == 'darwin':
+            self.assertTrue(nikola.nikola.is_valid_locale(str('en_US.UTF-8')))
             self.assertTrue(nikola.nikola.is_valid_locale(str('C')))
         else:
             # the 1st is desired in Travis, not a problem if fails in user host
@@ -177,12 +178,8 @@ class TestCalendarRelated(unittest.TestCase):
         Yes, both in windows and linuxTravis, py 26, 27, 33
         """
         import calendar
-        if sys.version_info[0] == 3:  # Python 3
-            with calendar.different_locale(loc_11):
-                s = calendar.month_name[1]
-        else:  # Python 2
-            with calendar.TimeEncoding(loc_11):
-                s = calendar.month_name[1]
+        with calendar.different_locale(loc_11):
+            s = calendar.month_name[1]
         self.assertTrue(type(s) == str)
 
 
@@ -215,7 +212,8 @@ class TestLocaleBorg(unittest.TestCase):
         lang_11, loc_11 = LocaleSupportInTesting.langlocales['default']
         nikola.utils.LocaleBorg.reset()
         self.assertRaises(Exception, nikola.utils.LocaleBorg)
-        self.assertRaises(Exception, nikola.utils.LocaleBorg.set_locale, lang_11)
+        self.assertRaises(
+            Exception, nikola.utils.LocaleBorg.set_locale, lang_11)
 
     def test_set_locale_raises_on_invalid_lang(self):
         lang_11, loc_11 = LocaleSupportInTesting.langlocales['default']
@@ -235,10 +233,15 @@ class TestTestPreconditions(unittest.TestCase):
        instaled or environmet variables NIKOLA_LOCALE_DEFAULT  or
        NIKOLA_LOCALE_OTHER with bad values.
     """
+
     def test_langlocale_default_availability(self):
         msg = "META ERROR: The pair lang, locale : {0} {1} is invalid"
-        self.assertTrue(nikola.nikola.is_valid_locale(loc_11), msg.format(lang_11, loc_11))
+        self.assertTrue(
+            nikola.nikola.is_valid_locale(loc_11),
+            msg.format(lang_11, loc_11))
 
     def test_langlocale_other_availability(self):
         msg = "META ERROR: The pair lang, locale : {0} {1} is invalid"
-        self.assertTrue(nikola.nikola.is_valid_locale(loc_22), msg.format(lang_22, loc_22))
+        self.assertTrue(
+            nikola.nikola.is_valid_locale(loc_22),
+            msg.format(lang_22, loc_22))

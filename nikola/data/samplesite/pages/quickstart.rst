@@ -1,9 +1,9 @@
 .. title: A reStructuredText Primer
 .. slug: quickstart
 .. date: 2012-03-30 23:00:00 UTC-03:00
-.. tags: 
-.. link: 
-.. description: 
+.. tags:
+.. link:
+.. description:
 
 A ReStructuredText Primer
 =========================
@@ -23,7 +23,7 @@ reference.  If these links don't work, please refer to the `master
 quick reference`_ document.
 
 __
-.. _Quick reStructuredText: quickref.html
+.. _Quick reStructuredText: ../quickref/
 .. _master quick reference:
    http://docutils.sourceforge.net/docs/user/rst/quickref.html
 
@@ -65,7 +65,7 @@ Results in:
 
   This is another one.
 
-__ quickref.html#paragraphs
+__ ../quickref/#paragraphs
 
 
 Text styles
@@ -73,7 +73,7 @@ Text styles
 
 (quickref__)
 
-__ quickref.html#inline-markup
+__ ../quickref/#inline-markup
 
 Inside paragraphs and other bodies of text, you may additionally mark
 text for *italics* with "``*italics*``" or **bold** with
@@ -95,7 +95,7 @@ by enclosing it in double back-quotes (inline literals), like this::
 
     ``*``
 
-__ quickref.html#escaping
+__ ../quickref/#escaping
 
 .. Tip:: Think of inline markup as a form of (parentheses) and use it
    the same way: immediately before and after the text being marked
@@ -119,7 +119,7 @@ Lists must always start a new paragraph -- that is, they must appear
 after a blank line.
 
 **enumerated** lists (numbers, letters or roman numerals; quickref__)
-  __ quickref.html#enumerated-lists
+  __ ../quickref/#enumerated-lists
 
   Start a line off with a number or letter followed by a period ".",
   right bracket ")" or surrounded by brackets "( )" -- whatever you're
@@ -170,7 +170,7 @@ after a blank line.
   1) and again
 
 **bulleted** lists (quickref__)
-  __ quickref.html#bullet-lists
+  __ ../quickref/#bullet-lists
 
   Just like enumerated lists, start the line off with a bullet point
   character - either "-", "+" or "*"::
@@ -194,7 +194,7 @@ after a blank line.
     - another item
 
 **definition** lists (quickref__)
-  __ quickref.html#definition-lists
+  __ ../quickref/#definition-lists
 
   Unlike the other two, the definition lists consist of a term, and
   the definition of that term.  The format of a definition list is::
@@ -222,7 +222,7 @@ Preformatting (code samples)
 ----------------------------
 (quickref__)
 
-__ quickref.html#literal-blocks
+__ ../quickref/#literal-blocks
 
 To just include a chunk of preformatted, never-to-be-fiddled-with
 text, finish the prior paragraph with "``::``".  The preformatted
@@ -270,7 +270,7 @@ Sections
 
 (quickref__)
 
-__ quickref.html#section-structure
+__ ../quickref/#section-structure
 
 To break longer text up into sections, you use **section headers**.
 These are a single line of text (one or more words) with adornment: an
@@ -364,7 +364,7 @@ Images
 
 (quickref__)
 
-__ quickref.html#directives
+__ ../quickref/#directives
 
 To include an image in your document, you use the the ``image`` directive__.
 For example::

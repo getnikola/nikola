@@ -26,7 +26,6 @@
 
 """Print Nikola version."""
 
-from __future__ import print_function
 
 import lxml
 import requests

@@ -1,13 +1,8 @@
 {#  -*- coding: utf-8 -*- #}
 {% extends 'index.tmpl' %}
+{% import 'feeds_translations_helper.tmpl' as feeds_translations with context %}
 
 {% block extra_head %}
     {{ super() }}
-    {% if translations|length > 1 and generate_atom %}
-        {% for language in translations|sort %}
-            <link rel="alternate" type="application/atom+xml" title="Atom for the {{ author|e }} section ({{ language }})" href="{{ _link(kind + "_atom", author, language) }}">
-        {% endfor %}
-    {% elif generate_atom %}
-        <link rel="alternate" type="application/atom+xml" title="Atom for the {{ author|e }} section" href="{{ _link("author" + "_atom", author) }}">
-    {% endif %}
+    {{ feeds_translations.head(author) }}
 {% endblock %}

@@ -7,7 +7,6 @@ package directory.
 After that it will do create a new site with the import_wordpress
 command and use that newly created site to make a build.
 """
-from __future__ import unicode_literals, print_function
 
 import os
 import shutil
@@ -38,6 +37,7 @@ def main(import_directory=None):
         import_directory), "The directory %s should be existing."
     os.chdir(import_directory)
     os.system('nikola build')
+
 
 if __name__ == '__main__':
     main()

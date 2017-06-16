@@ -7,8 +7,9 @@
 # Translators:
 # Translators:
 # Translators:
+# Alvarez Alejandro <eliluminado00@gmail.com>, 2017
 # Ángel García Cuartero, 2014-2015
-# Chris Warrick <kwpolska@gmail.com>, 2015
+# Chris Warrick <kwpolska@gmail.com>, 2015,2017
 # Joaquín Tita <carpincho@gmail.com>, 2014
 # Juan José Conti <jjconti@gmail.com>, 2015
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
@@ -18,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2017-01-07 11:37+0000\n"
+"PO-Revision-Date: 2017-06-12 12:50+0000\n"
 "Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/ralsina/nikola/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -154,17 +155,20 @@ msgstr "Mostrar navegación"
 
 #. Used to format months per year
 msgid "{month} {year}"
-msgstr ""
+msgstr "{month} {year}"
 
 #. Used to format a date
 msgid "{month} {day}, {year}"
-msgstr ""
+msgstr "{month} {day}, {year}"
 
 msgid "Previous"
-msgstr ""
+msgstr "Anterior"
 
 msgid "Up"
-msgstr ""
+msgstr "Arriba"
 
 msgid "Next"
-msgstr ""
+msgstr "Siguiente"
+
+msgid "Atom feed"
+msgstr "Canal Atom"

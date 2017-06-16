@@ -26,7 +26,6 @@
 
 """The main Nikola site object."""
 
-from __future__ import print_function, unicode_literals
 import io
 from collections import defaultdict
 from copy import copy
@@ -61,7 +60,7 @@ from blinker import signal
 
 from .post import Post  # NOQA
 from .state import Persistor
-from . import DEBUG, utils, shortcodes
+from . import DEBUG, filters, utils, hierarchy_utils, shortcodes
 from .plugin_categories import (
     Command,
     LateTask,
@@ -87,9 +86,6 @@ else:
 # Default "Read more..." link
 DEFAULT_INDEX_READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
 DEFAULT_FEED_READ_MORE_LINK = '<p><a href="{link}">{read_more}…</a> ({min_remaining_read})</p>'
-
-# Default pattern for translation files' names
-DEFAULT_TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
 
 
 config_changed = utils.config_changed
@@ -355,7 +351,8 @@ LEGAL_VALUES = {
         'sv': 'sv',
         'zh_cn': 'zh_cn',
         'zh_tw': 'zh_tw'
-    }
+    },
+    "METADATA_MAPPING": ["yaml", "toml", "rest_docinfo", "markdown_metadata"],
 }
 
 # Mapping old pre-taxonomy plugin names to new post-taxonomy plugin names
@@ -414,8 +411,8 @@ class Nikola(object):
         self._template_system = None
         self._THEMES = None
         self._MESSAGES = None
+        self.filters = {}
         self.debug = DEBUG
-        self.loghandlers = utils.STDERR_HANDLER  # TODO remove on v8
         self.colorful = config.pop('__colorful__', False)
         self.invariant = config.pop('__invariant__', False)
         self.quiet = config.pop('__quiet__', False)
@@ -441,7 +438,6 @@ class Nikola(object):
 
         # This is the default config
         self.config = {
-            'ANNOTATIONS': False,
             'ARCHIVE_PATH': "",
             'ARCHIVE_FILENAME': "archive.html",
             'ARCHIVES_ARE_INDEXES': False,
@@ -462,6 +458,8 @@ class Nikola(object):
             'CATEGORY_PREFIX': 'cat_',
             'CATEGORY_ALLOW_HIERARCHIES': False,
             'CATEGORY_OUTPUT_FLAT_HIERARCHY': False,
+            'CATEGORY_TRANSLATIONS': [],
+            'CATEGORY_TRANSLATIONS_ADD_DEFAULTS': False,
             'CODE_COLOR_SCHEME': 'default',
             'COMMENT_SYSTEM': 'disqus',
             'COMMENTS_IN_GALLERIES': False,
@@ -534,16 +532,16 @@ class Nikola(object):
             'INDEX_PATH': '',
             'IPYNB_CONFIG': {},
             'KATEX_AUTO_RENDER': '',
-            'LESS_COMPILER': 'lessc',
-            'LESS_OPTIONS': [],
             'LICENSE': '',
             'LINK_CHECK_WHITELIST': [],
             'LISTINGS_FOLDERS': {'listings': 'listings'},
             'LOGO_URL': '',
             'NAVIGATION_LINKS': {},
-            'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite'],  # FIXME: Add 'extras' in v8
+            'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite', 'extra'],
             'MAX_IMAGE_SIZE': 1280,
             'MATHJAX_CONFIG': '',
+            'METADATA_FORMAT': 'nikola',
+            'METADATA_MAPPING': {},
             'NEW_POST_DATE_PATH': False,
             'NEW_POST_DATE_PATH_FORMAT': '%Y/%m/%d',
             'OLD_THEME_SUPPORT': True,
@@ -556,11 +554,12 @@ class Nikola(object):
             'POSTS_SECTION_FROM_META': False,
             'POSTS_SECTION_NAME': "",
             'POSTS_SECTION_TITLE': "{name}",
+            'POSTS_SECTION_TRANSLATIONS': [],
+            'POSTS_SECTION_TRANSLATIONS_ADD_DEFAULTS': False,
             'PRESERVE_EXIF_DATA': False,
-            # TODO: change in v8
-            'PAGES': (("stories/*.txt", "stories", "story.tmpl"),),
+            'PAGES': (("pages/*.txt", "pages", "page.tmpl"),),
             'PANDOC_OPTIONS': [],
-            'PRETTY_URLS': False,
+            'PRETTY_URLS': True,
             'FUTURE_IS_NOW': False,
             'INDEX_READ_MORE_LINK': DEFAULT_INDEX_READ_MORE_LINK,
             'REDIRECTIONS': [],
@@ -574,8 +573,6 @@ class Nikola(object):
             'GENERATE_RSS': True,
             'RSS_LINK': None,
             'RSS_PATH': '',
-            'SASS_COMPILER': 'sass',
-            'SASS_OPTIONS': [],
             'SEARCH_FORM': '',
             'SHOW_BLOG_TITLE': True,
             'SHOW_INDEX_PAGE_NAVIGATION': False,
@@ -587,18 +584,21 @@ class Nikola(object):
             'SITE_URL': 'https://example.com/',
             'PAGE_INDEX': False,
             'SECTION_PATH': '',
-            'STRIP_INDEXES': False,
+            'STRIP_INDEXES': True,
             'SITEMAP_INCLUDE_FILELESS_DIRS': True,
             'TAG_PATH': 'categories',
             'TAG_PAGES_ARE_INDEXES': False,
             'TAG_PAGES_DESCRIPTIONS': {},
             'TAG_PAGES_TITLES': {},
+            'TAG_TRANSLATIONS': [],
+            'TAG_TRANSLATIONS_ADD_DEFAULTS': False,
             'TAGS_INDEX_PATH': '',
             'TAGLIST_MINIMUM_POSTS': 1,
             'TEMPLATE_FILTERS': {},
             'THEME': 'bootstrap3',
             'THEME_COLOR': '#5670d4',  # light "corporate blue"
             'THUMBNAIL_SIZE': 180,
+            'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}',
             'UNSLUGIFY_TITLES': False,  # WARNING: conf.py.in overrides this with True for backwards compatibility
             'URL_TYPE': 'rel_path',
             'USE_BASE_TAG': False,
@@ -611,7 +611,7 @@ class Nikola(object):
             'USE_OPEN_GRAPH': True,
             'USE_SLUGIFY': True,
             'TIMEZONE': 'UTC',
-            'WRITE_TAG_CLOUD': True,
+            'WRITE_TAG_CLOUD': False,
             'DEPLOY_DRAFTS': True,
             'DEPLOY_FUTURE': False,
             'SCHEDULE_ALL': False,
@@ -687,7 +687,6 @@ class Nikola(object):
 
         self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
                                              'blog_title',
-                                             'blog_desc',  # TODO: remove in v8
                                              'blog_description',
                                              'license',
                                              'content_footer',
@@ -752,91 +751,6 @@ class Nikola(object):
         for i1, i2, i3 in self.config['PAGES']:
             self.config['post_pages'].append([i1, i2, i3, False])
 
-        # RSS_TEASERS has been replaced with FEED_TEASERS
-        # TODO: remove on v8
-        if 'RSS_TEASERS' in config:
-            utils.LOGGER.warn('The RSS_TEASERS option is deprecated, use FEED_TEASERS instead.')
-            if 'FEED_TEASERS' in config:
-                utils.LOGGER.warn('FEED_TEASERS conflicts with RSS_TEASERS, ignoring RSS_TEASERS.')
-            self.config['FEED_TEASERS'] = config['RSS_TEASERS']
-
-        # RSS_PLAIN has been replaced with FEED_PLAIN
-        # TODO: remove on v8
-        if 'RSS_PLAIN' in config:
-            utils.LOGGER.warn('The RSS_PLAIN option is deprecated, use FEED_PLAIN instead.')
-            if 'FEED_PLAIN' in config:
-                utils.LOGGER.warn('FEED_PLIN conflicts with RSS_PLAIN, ignoring RSS_PLAIN.')
-            self.config['FEED_PLAIN'] = config['RSS_PLAIN']
-
-        # RSS_LINKS_APPEND_QUERY has been replaced with FEED_LINKS_APPEND_QUERY
-        # TODO: remove on v8
-        if 'RSS_LINKS_APPEND_QUERY' in config:
-            utils.LOGGER.warn('The RSS_LINKS_APPEND_QUERY option is deprecated, use FEED_LINKS_APPEND_QUERY instead.')
-            if 'FEED_LINKS_APPEND_QUERY' in config:
-                utils.LOGGER.warn('FEED_LINKS_APPEND_QUERY conflicts with RSS_LINKS_APPEND_QUERY, ignoring RSS_LINKS_APPEND_QUERY.')
-            self.config['FEED_LINKS_APPEND_QUERY'] = config['RSS_LINKS_APPEND_QUERY']
-
-        # RSS_READ_MORE_LINK has been replaced with FEED_READ_MORE_LINK
-        # TODO: remove on v8
-        if 'RSS_READ_MORE_LINK' in config:
-            utils.LOGGER.warn('The RSS_READ_MORE_LINK option is deprecated, use FEED_READ_MORE_LINK instead.')
-            if 'FEED_READ_MORE_LINK' in config:
-                utils.LOGGER.warn('FEED_READ_MORE_LINK conflicts with RSS_READ_MORE_LINK, ignoring RSS_READ_MORE_LINK')
-            self.config['FEED_READ_MORE_LINK'] = utils.TranslatableSetting('FEED_READ_MORE_LINK', config['RSS_READ_MORE_LINK'], self.config['TRANSLATIONS'])
-
-        # DEFAULT_TRANSLATIONS_PATTERN was changed from "p.e.l" to "p.l.e"
-        # TODO: remove on v8
-        if 'TRANSLATIONS_PATTERN' not in self.config:
-            if len(self.config.get('TRANSLATIONS', {})) > 1:
-                utils.LOGGER.warn('You do not have a TRANSLATIONS_PATTERN set in your config, yet you have multiple languages.')
-                utils.LOGGER.warn('Setting TRANSLATIONS_PATTERN to the pre-v6 default ("{path}.{ext}.{lang}").')
-                utils.LOGGER.warn('Please add the proper pattern to your conf.py.  (The new default in v7 is "{0}".)'.format(DEFAULT_TRANSLATIONS_PATTERN))
-                self.config['TRANSLATIONS_PATTERN'] = "{path}.{ext}.{lang}"
-            else:
-                # use v7 default there
-                self.config['TRANSLATIONS_PATTERN'] = DEFAULT_TRANSLATIONS_PATTERN
-
-        # HIDE_SOURCELINK has been replaced with the inverted SHOW_SOURCELINK
-        # TODO: remove on v8
-        if 'HIDE_SOURCELINK' in config:
-            utils.LOGGER.warn('The HIDE_SOURCELINK option is deprecated, use SHOW_SOURCELINK instead.')
-            if 'SHOW_SOURCELINK' in config:
-                utils.LOGGER.warn('HIDE_SOURCELINK conflicts with SHOW_SOURCELINK, ignoring HIDE_SOURCELINK.')
-            self.config['SHOW_SOURCELINK'] = not config['HIDE_SOURCELINK']
-
-        # HIDE_UNTRANSLATED_POSTS has been replaced with the inverted SHOW_UNTRANSLATED_POSTS
-        # TODO: remove on v8
-        if 'HIDE_UNTRANSLATED_POSTS' in config:
-            utils.LOGGER.warn('The HIDE_UNTRANSLATED_POSTS option is deprecated, use SHOW_UNTRANSLATED_POSTS instead.')
-            if 'SHOW_UNTRANSLATED_POSTS' in config:
-                utils.LOGGER.warn('HIDE_UNTRANSLATED_POSTS conflicts with SHOW_UNTRANSLATED_POSTS, ignoring HIDE_UNTRANSLATED_POSTS.')
-            self.config['SHOW_UNTRANSLATED_POSTS'] = not config['HIDE_UNTRANSLATED_POSTS']
-
-        # READ_MORE_LINK has been split into INDEX_READ_MORE_LINK and RSS_READ_MORE_LINK
-        # TODO: remove on v8
-        if 'READ_MORE_LINK' in config:
-            utils.LOGGER.warn('The READ_MORE_LINK option is deprecated, use INDEX_READ_MORE_LINK and RSS_READ_MORE_LINK instead.')
-            if 'INDEX_READ_MORE_LINK' in config:
-                utils.LOGGER.warn('READ_MORE_LINK conflicts with INDEX_READ_MORE_LINK, ignoring READ_MORE_LINK.')
-            else:
-                self.config['INDEX_READ_MORE_LINK'] = utils.TranslatableSetting('INDEX_READ_MORE_LINK', config['READ_MORE_LINK'], self.config['TRANSLATIONS'])
-
-            if 'RSS_READ_MORE_LINK' in config:
-                utils.LOGGER.warn('READ_MORE_LINK conflicts with RSS_READ_MORE_LINK, ignoring READ_MORE_LINK.')
-            else:
-                self.config['RSS_READ_MORE_LINK'] = utils.TranslatableSetting('RSS_READ_MORE_LINK', config['READ_MORE_LINK'], self.config['TRANSLATIONS'])
-
-        # Moot.it renamed themselves to muut.io
-        # TODO: remove on v8?
-        if self.config.get('COMMENT_SYSTEM') == 'moot':
-            utils.LOGGER.warn('The moot comment system has been renamed to muut by the upstream.  Setting COMMENT_SYSTEM to "muut".')
-            self.config['COMMENT_SYSTEM'] = 'muut'
-
-        # Detect manually added KaTeX CSS (#2715/#2717)
-        # TODO: remove on v8
-        if any('katex.min.css' in v for v in self.config['EXTRA_HEAD_DATA'].values.values()):
-            utils.LOGGER.warn("KaTeX CSS is now added by Nikola whenever needed (if your theme supports it). Please remove katex.min.css from EXTRA_HEAD_DATA in conf.py.")
-
         # Handle old plugin names (from before merging the taxonomy PR #2535)
         for old_plugin_name, new_plugin_names in TAXONOMY_COMPATIBILITY_PLUGIN_NAME_MAP.items():
             if old_plugin_name in self.config['DISABLED_PLUGINS']:
@@ -870,22 +784,6 @@ class Nikola(object):
         # PRETTY_URLS defaults to enabling STRIP_INDEXES unless explicitly disabled
         if self.config.get('PRETTY_URLS') and 'STRIP_INDEXES' not in config:
             self.config['STRIP_INDEXES'] = True
-
-        if 'LISTINGS_FOLDER' in config:
-            if 'LISTINGS_FOLDERS' not in config:
-                utils.LOGGER.warn("The LISTINGS_FOLDER option is deprecated, use LISTINGS_FOLDERS instead.")
-                self.config['LISTINGS_FOLDERS'] = {self.config['LISTINGS_FOLDER']: self.config['LISTINGS_FOLDER']}
-                utils.LOGGER.warn("LISTINGS_FOLDERS = {0}".format(self.config['LISTINGS_FOLDERS']))
-            else:
-                utils.LOGGER.warn("Both LISTINGS_FOLDER and LISTINGS_FOLDERS are specified, ignoring LISTINGS_FOLDER.")
-
-        if 'GALLERY_PATH' in config:
-            if 'GALLERY_FOLDERS' not in config:
-                utils.LOGGER.warn("The GALLERY_PATH option is deprecated, use GALLERY_FOLDERS instead.")
-                self.config['GALLERY_FOLDERS'] = {self.config['GALLERY_PATH']: self.config['GALLERY_PATH']}
-                utils.LOGGER.warn("GALLERY_FOLDERS = {0}".format(self.config['GALLERY_FOLDERS']))
-            else:
-                utils.LOGGER.warn("Both GALLERY_PATH and GALLERY_FOLDERS are specified, ignoring GALLERY_PATH.")
 
         if not self.config.get('COPY_SOURCES'):
             self.config['SHOW_SOURCELINK'] = False
@@ -921,52 +819,13 @@ class Nikola(object):
             utils.LOGGER.error("Punycode of {}: {}".format(_bnl, _bnl.encode('idna')))
             sys.exit(1)
 
-        # TODO: remove in v8
-        if not isinstance(self.config['DEPLOY_COMMANDS'], dict):
-            utils.LOGGER.warn("A single list as DEPLOY_COMMANDS is deprecated.  DEPLOY_COMMANDS should be a dict, with deploy preset names as keys and lists of commands as values.")
-            utils.LOGGER.warn("The key `default` is used by `nikola deploy`:")
-            self.config['DEPLOY_COMMANDS'] = {'default': self.config['DEPLOY_COMMANDS']}
-            utils.LOGGER.warn("DEPLOY_COMMANDS = {0}".format(self.config['DEPLOY_COMMANDS']))
-            utils.LOGGER.info("(The above can be used with `nikola deploy` or `nikola deploy default`.  Multiple presets are accepted.)")
-
-        # TODO: remove and change default in v8
-        if 'BLOG_TITLE' in config and 'WRITE_TAG_CLOUD' not in config:
-            # BLOG_TITLE is a hack, otherwise the warning would be displayed
-            # when conf.py does not exist
-            utils.LOGGER.warn("WRITE_TAG_CLOUD is not set in your config.  Defaulting to True (== writing tag_cloud_data.json).")
-            utils.LOGGER.warn("Please explicitly add the setting to your conf.py with the desired value, as the setting will default to False in the future.")
-
-        # Rename stories to pages (#1891, #2518)
-        # TODO: remove in v8
-        if 'COMMENTS_IN_STORIES' in config:
-            utils.LOGGER.warn('The COMMENTS_IN_STORIES option is deprecated, use COMMENTS_IN_PAGES instead.')
-            self.config['COMMENTS_IN_PAGES'] = config['COMMENTS_IN_STORIES']
-        if 'STORY_INDEX' in config:
-            utils.LOGGER.warn('The STORY_INDEX option is deprecated, use PAGE_INDEX instead.')
-            self.config['PAGE_INDEX'] = config['STORY_INDEX']
-
-        if 'POSTS_SECTION_ARE_INDEXES' in config:
-            utils.LOGGER.warn('The POSTS_SECTION_ARE_INDEXES option is deprecated, use POSTS_SECTIONS_ARE_INDEXES instead.')
-            self.config['POSTS_SECTIONS_ARE_INDEXES'] = config['POSTS_SECTION_ARE_INDEXES']
-
-        # TODO: remove in v8, or earlier
-        if ('THEME_REVEAL_CONFIG_SUBTHEME' in config or 'THEME_REVEAL_CONFIG_TRANSITION' in config or
-                (self.config['THEME'] in ('reveal', 'reveal-jinja') and
-                 ('subtheme' not in config['GLOBAL_CONTEXT'] or 'transition' not in config['GLOBAL_CONTEXT']))):
-            utils.LOGGER.warn('The THEME_REVEAL_CONFIG_* settings are deprecated. Use `subtheme` and `transition` in GLOBAL_CONTEXT instead.')
-            self._GLOBAL_CONTEXT['subtheme'] = config.get('THEME_REVEAL_CONFIG_SUBTHEME', 'sky')
-            self._GLOBAL_CONTEXT['transition'] = config.get('THEME_REVEAL_CONFIG_TRANSITION', 'cube')
-
-        # Configure filters
-        for actions in self.config['FILTERS'].values():
-            for i, f in enumerate(actions):
-                if hasattr(f, 'configuration_variables'):
-                    args = {}
-                    for arg, config in f.configuration_variables.items():
-                        if config in self.config:
-                            args[arg] = self.config[config]
-                    if args:
-                        actions[i] = functools.partial(f, **args)
+        # The pelican metadata format requires a markdown extension
+        if config.get('METADATA_FORMAT', 'nikola').lower() == 'pelican':
+            if 'markdown.extensions.meta' not in config.get('MARKDOWN_EXTENSIONS', []) \
+                    and 'markdown' in self.config['COMPILERS']:
+                utils.LOGGER.warn(
+                    'To use the pelican metadata format you need to add '
+                    '"markdown.extensions.meta" to your MARKDOWN_EXTENSIONS setting.')
 
         # We use one global tzinfo object all over Nikola.
         try:
@@ -983,6 +842,15 @@ class Nikola(object):
 
         # Get search path for themes
         self.themes_dirs = ['themes'] + self.config['EXTRA_THEMES_DIRS']
+
+        # Register default filters
+        filter_name_format = 'filters.{0}'
+        for filter_name, filter_definition in filters.__dict__.items():
+            # Ignore objects whose name starts with an underscore, or which are not callable
+            if filter_name.startswith('_') or not callable(filter_definition):
+                continue
+            # Register all other objects as filters
+            self.register_filter(filter_name_format.format(filter_name), filter_definition)
 
         self._set_global_context_from_config()
         # Read data files only if a site exists (Issue #2708)
@@ -1042,18 +910,11 @@ class Nikola(object):
         })
         self.plugin_manager.getPluginLocator().setPluginInfoExtension('plugin')
         extra_plugins_dirs = self.config['EXTRA_PLUGINS_DIRS']
-        if sys.version_info[0] == 3:
-            self._plugin_places = [
-                resource_filename('nikola', 'plugins'),
-                os.path.expanduser('~/.nikola/plugins'),
-                os.path.join(os.getcwd(), 'plugins'),
-            ] + [path for path in extra_plugins_dirs if path]
-        else:
-            self._plugin_places = [
-                resource_filename('nikola', utils.sys_encode('plugins')),
-                os.path.join(os.getcwd(), utils.sys_encode('plugins')),
-                os.path.expanduser('~/.nikola/plugins'),
-            ] + [utils.sys_encode(path) for path in extra_plugins_dirs if path]
+        self._plugin_places = [
+            resource_filename('nikola', 'plugins'),
+            os.path.expanduser('~/.nikola/plugins'),
+            os.path.join(os.getcwd(), 'plugins'),
+        ] + [path for path in extra_plugins_dirs if path]
 
         compilers = defaultdict(set)
         # Also add aliases for combinations with TRANSLATIONS_PATTERN
@@ -1133,8 +994,8 @@ class Nikola(object):
                 self.plugin_manager._candidates = self._filter_duplicate_plugins(to_add)
                 self.plugin_manager.loadPlugins()
 
-        # IPython theme configuration.  If a website has ipynb enabled in post_pages
-        # we should enable the IPython CSS (leaving that up to the theme itself).
+        # Jupyter theme configuration.  If a website has ipynb enabled in post_pages
+        # we should enable the Jupyter CSS (leaving that up to the theme itself).
         if 'needs_ipython_css' not in self._GLOBAL_CONTEXT:
             self._GLOBAL_CONTEXT['needs_ipython_css'] = 'ipynb' in self.config['COMPILERS']
 
@@ -1183,8 +1044,28 @@ class Nikola(object):
             self.compilers[plugin_info.name] = \
                 plugin_info.plugin_object
 
+        # Load config plugins and register templated shortcodes
         self._activate_plugins_of_category("ConfigPlugin")
         self._register_templated_shortcodes()
+
+        # Check with registered filters and configure filters
+        for actions in self.config['FILTERS'].values():
+            for i, f in enumerate(actions):
+                if isinstance(f, str):
+                    # Check whether this denotes a registered filter
+                    _f = self.filters.get(f)
+                    if _f is not None:
+                        f = _f
+                        actions[i] = f
+                if hasattr(f, 'configuration_variables'):
+                    args = {}
+                    for arg, config in f.configuration_variables.items():
+                        if config in self.config:
+                            args[arg] = self.config[config]
+                    if args:
+                        actions[i] = functools.partial(f, **args)
+
+        # Signal that we are configured
         signal('configured').send(self)
 
     def _set_global_context_from_config(self):
@@ -1205,7 +1086,6 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['exists'] = self.file_exists
         self._GLOBAL_CONTEXT['SLUG_AUTHOR_PATH'] = self.config['SLUG_AUTHOR_PATH']
         self._GLOBAL_CONTEXT['SLUG_TAG_PATH'] = self.config['SLUG_TAG_PATH']
-        self._GLOBAL_CONTEXT['annotations'] = self.config['ANNOTATIONS']
         self._GLOBAL_CONTEXT['index_display_post_count'] = self.config[
             'INDEX_DISPLAY_POST_COUNT']
         self._GLOBAL_CONTEXT['index_file'] = self.config['INDEX_FILE']
@@ -1223,10 +1103,6 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['front_index_header'] = self.config.get('FRONT_INDEX_HEADER')
         self._GLOBAL_CONTEXT['color_hsl_adjust_hex'] = utils.color_hsl_adjust_hex
         self._GLOBAL_CONTEXT['colorize_str_from_base_color'] = utils.colorize_str_from_base_color
-
-        # TODO: remove in v8
-        self._GLOBAL_CONTEXT['blog_desc'] = self.config.get('BLOG_DESCRIPTION')
-
         self._GLOBAL_CONTEXT['blog_url'] = self.config.get('SITE_URL')
         self._GLOBAL_CONTEXT['template_hooks'] = self.template_hooks
         self._GLOBAL_CONTEXT['body_end'] = self.config.get('BODY_END')
@@ -1694,16 +1570,15 @@ class Nikola(object):
             return
         self.shortcode_registry[name] = f
 
-    # XXX in v8, get rid of with_dependencies
-    def apply_shortcodes(self, data, filename=None, lang=None, with_dependencies=False, extra_context=None):
+    def apply_shortcodes(self, data, filename=None, lang=None, extra_context=None):
         """Apply shortcodes from the registry on data."""
         if extra_context is None:
             extra_context = {}
         if lang is None:
             lang = utils.LocaleBorg().current_lang
-        return shortcodes.apply_shortcodes(data, self.shortcode_registry, self, filename, lang=lang, with_dependencies=with_dependencies, extra_context=extra_context)
+        return shortcodes.apply_shortcodes(data, self.shortcode_registry, self, filename, lang=lang, extra_context=extra_context)
 
-    def apply_shortcodes_uuid(self, data, _shortcodes, filename=None, lang=None, with_dependencies=False, extra_context=None):
+    def apply_shortcodes_uuid(self, data, _shortcodes, filename=None, lang=None, extra_context=None):
         """Apply shortcodes from the registry on data."""
         if lang is None:
             lang = utils.LocaleBorg().current_lang
@@ -1711,7 +1586,7 @@ class Nikola(object):
             extra_context = {}
         deps = []
         for k, v in _shortcodes.items():
-            replacement, _deps = shortcodes.apply_shortcodes(v, self.shortcode_registry, self, filename, lang=lang, with_dependencies=with_dependencies, extra_context=extra_context)
+            replacement, _deps = shortcodes.apply_shortcodes(v, self.shortcode_registry, self, filename, lang=lang, extra_context=extra_context)
             data = data.replace(k, replacement)
             deps.extend(_deps)
         return data, deps
@@ -1982,6 +1857,17 @@ class Nikola(object):
         url = utils.encodelink(url)
         return url
 
+    def register_filter(self, filter_name, filter_definition):
+        """Register a filter.
+
+        filter_name should be a name not confusable with an actual
+        executable. filter_definition should be a callable accepting
+        one argument (the filename).
+        """
+        if filter_name in self.filters:
+            utils.LOGGER.warn('''The filter "{0}" is defined more than once.'''.format(filter_name))
+        self.filters[filter_name] = filter_definition
+
     def file_exists(self, path, not_empty=False):
         """Check if the file exists. If not_empty is True, it also must not be empty."""
         exists = os.path.exists(path)
@@ -2038,7 +1924,7 @@ class Nikola(object):
         """Parse a category name into a hierarchy."""
         if self.config['CATEGORY_ALLOW_HIERARCHIES']:
             try:
-                return utils.parse_escaped_hierarchical_category_name(category_name)
+                return hierarchy_utils.parse_escaped_hierarchical_category_name(category_name)
             except Exception as e:
                 utils.LOGGER.error(str(e))
                 sys.exit(1)
@@ -2048,7 +1934,7 @@ class Nikola(object):
     def category_path_to_category_name(self, category_path):
         """Translate a category path to a category name."""
         if self.config['CATEGORY_ALLOW_HIERARCHIES']:
-            return utils.join_hierarchical_category_path(category_path)
+            return hierarchy_utils.join_hierarchical_category_path(category_path)
         else:
             return ''.join(category_path)
 
@@ -2073,7 +1959,7 @@ class Nikola(object):
             """Create category hierarchy."""
             result = []
             for name, children in cat_hierarchy.items():
-                node = utils.TreeNode(name, parent)
+                node = hierarchy_utils.TreeNode(name, parent)
                 node.children = create_hierarchy(children, node)
                 node.category_path = [pn.name for pn in node.get_path()]
                 node.category_name = self.category_path_to_category_name(node.category_path)
@@ -2084,7 +1970,7 @@ class Nikola(object):
 
         root_list = create_hierarchy(self.category_hierarchy)
         # Next, flatten the hierarchy
-        self.category_hierarchy = utils.flatten_tree_structure(root_list)
+        self.category_hierarchy = hierarchy_utils.flatten_tree_structure(root_list)
 
     @staticmethod
     def sort_posts_chronologically(posts, lang=None):
@@ -2330,6 +2216,8 @@ class Nikola(object):
         context["nextlink"] = None
         if extra_context:
             context.update(extra_context)
+        if 'has_other_languages' not in context:
+            context['has_other_languages'] = False
 
         post_deps_dict = {}
         post_deps_dict["posts"] = [(p.meta[lang]['title'], p.permalink(lang)) for p in posts]
@@ -2579,6 +2467,8 @@ class Nikola(object):
             context = context_source.copy()
             if 'pagekind' not in context:
                 context['pagekind'] = ['index']
+            if 'has_other_languages' not in context:
+                context['has_other_languages'] = False
             ipages_i = displayed_page_numbers[i]
             if kw["indexes_pages"]:
                 indexes_pages = kw["indexes_pages"] % ipages_i
@@ -2709,9 +2599,10 @@ def sanitized_locales(locale_fallback, locale_default, locales, translations):
         the sanitized locale_default if it was explicitly set
         sanitized guesses compatible with v 6.0.4 if locale_default was None
 
-    NOTE: never use locale.getlocale() , it can return values that
-    locale.setlocale will not accept in Windows XP, 7 and pythons 2.6, 2.7, 3.3
+    NOTE: never use locale.getlocale(), it can return values that
+    locale.setlocale will not accept in Windows.
     Examples: "Spanish", "French" can't do the full circle set / get / set
+
     """
     if sys.platform != 'win32':
         workaround_empty_LC_ALL_posix()

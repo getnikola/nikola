@@ -4,12 +4,96 @@ New in master
 Features
 --------
 
+* Use ``PRETTY_URLS`` by default on all sites (Issue #1838)
+
+Bugfixes
+--------
+* Use Jupyter name more consistently in docs
+* Support CODE_COLOR_SCHEME in Jupyter notebooks (Issue #2093)
+
+
+Removed features
+----------------
+* Drop Python 2 support
+* Remove ``nikola install_theme`` — use ``nikola theme`` instead
+* Drop insecure post encryption feature
+* Stop supporting all deprecated config options
+* Drop annotations support (annotateit.org closed down in March 2017)
+
+New in v7.8.8
+=============
+
+This release fixes two grave bugs in TOML metadata support (sorry!).
+The built-in themes have also been cleaned up and include less unused
+assets. In addition, taxonomies now support translations. HTML meta
+tags are also possible metadata sources. The default metadata format
+to generate can now be changed.
+
+Features
+--------
+
+* Providing infrastructure for taxonomies for classification pages to
+  link to related classifications in other languages
+* Added alternate links (visible and header) for archives and authors
+  (Issue #993)
+* Added options to add alternative links (visible and header) for
+  tags, sections and categories.
+* New METADATA_FORMAT option to choose preferred metadata format
+  (Nikola/YAML/TOML/Pelican) (Part of Issue #2801)
+* Extract metadata from HTML meta and title tags like Pelican (Issue #1923)
+* Update assets in the ``base`` and ``base-jinja`` themes and clean
+  up code (Issue #2744)
+* Show captions in the base theme gallery (Part of issue #2777)
+
+Bugfixes
+--------
+
+* Fix two grave bugs in TOML metadata
+* Require just one line break after TOML/YAML metadata
+* Add alt attribute to images in galleries in base theme (Part of issue #2777)
+* Support empty lines in YAML/TOML metadata (Part of issue #2801)
+* Tests run on macOS.
+
+New in v7.8.7
+=============
+
+In an effort to improve interoperability with other static site
+generators, make importing data easier, and help with world
+domination, Nikola v7.8.7 ships with support for the following
+metadata formats:
+
+* reST-style comments (``.. name: value`` — default format)
+* Two-file format (reST-style comments or 7-line)
+* Jupyter Notebook metadata
+* YAML, between ``---`` (Jekyll, Hugo)
+* TOML, between ``+++`` (Hugo)
+* reST docinfo (Pelican)
+* Markdown metadata extension (Pelican)
+
+In addition, Markdown is now enabled and required by default.
+More details: <https://getnikola.com/handbook.html#metadata-formats>
+
+The release also fixes two important bugs, one that crashes when
+trying to detect locale in some edge cases, and another which made
+some themes quietly leak template files.  If you’re using a
+Jinja2-based theme that does not have its own ``parent`` file, please
+force a rebuild (``nikola build -a``).
+
+Features
+--------
+
+* Enable markdown by default (part of Issue #2809)
+* Allowing to register filters from plugins, and allowing to specify default
+  filters as strings of the form ``filters.<name>`` (part of Issue #2475)
 * Support ignoring assets via ``ignore_assets`` theme meta field
   (Issue #2812)
 * Ignore unused Colorbox locales (Issue #2812)
+* Accept tag metadata as lists for YAML/TOML (Issue #2801)
+* Support for mapping metadata from other formats to Nikola names
+  using the ``METADATA_MAPPING`` setting (Issue #2817)
 * Support for reStructured text docinfo metadata with
-  USE_REST_DOCINFO_METADATA option, defaulting to False (Issue #1923)
-* New HIDE_REST_DOCINFO option, defaulting to False.
+  ``USE_REST_DOCINFO_METADATA`` option, defaulting to False (Issue #1923)
+* New ``HIDE_REST_DOCINFO`` option, defaulting to False.
 * Support for Markdown Metadata for Pelican compatibility by adding
   ``'markdown.extensions.meta'`` to ``MARKDOWN_EXTENSIONS`` (Issue #1923)
 * Support for YAML and TOML metadata (Issue #2801)
@@ -17,6 +101,7 @@ Features
 Bugfixes
 --------
 
+* Use inheritance tree when looking for theme engine (Issue #2816)
 * Fix unbound variable error in locale guessing (Issue #2806)
 
 New in v7.8.6

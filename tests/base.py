@@ -21,7 +21,6 @@ import logbook
 
 import nikola.utils
 import nikola.shortcodes
-nikola.utils.LOGGER.handlers.append(logbook.TestHandler())
 
 from yapsy.PluginManager import PluginManager
 from nikola.plugin_categories import (
@@ -35,8 +34,10 @@ from nikola.plugin_categories import (
     MarkdownExtension,
     RestExtension
 )
+nikola.utils.LOGGER.handlers.append(logbook.TestHandler())
 
 BaseTestCase = unittest.TestCase
+
 
 @contextmanager
 def cd(path):
@@ -78,9 +79,14 @@ class LocaleSupportInTesting(object):
             return
         defaults = {
             'posix': {
-                # non-windows defaults, must be two locales suported by .travis.yml
+                # non-windows/non-osx defaults, must be two locales suported by .travis.yml
                 'default': ("en", str("en_US.utf8")),
                 'other': ("pl", str("pl_PL.utf8")),
+            },
+            'osx': {
+                # osx defaults
+                'default': ("en", str("en_US.UTF-8")),
+                'other': ("pl", str("pl_PL.UTF-8")),
             },
             'windows': {
                 # windows defaults
@@ -88,7 +94,11 @@ class LocaleSupportInTesting(object):
                 'other': ("pl", str("Polish")),
             },
         }
-        os_id = 'windows' if sys.platform == 'win32' else 'posix'
+        platforms = {
+            'win32': 'windows',
+            'darwin': 'osx',
+        }
+        os_id = platforms.get(sys.platform, 'posix')
         langlocales = {}
         for suffix in ['other', 'default']:
             try:
@@ -177,20 +187,13 @@ class FakeSite(object):
             "MarkdownExtension": MarkdownExtension,
             "RestExtension": RestExtension
         })
-        self.loghandlers = nikola.utils.STDERR_HANDLER  # TODO remove on v8
         self.shortcode_registry = {}
         self.plugin_manager.setPluginInfoExtension('plugin')
-        if sys.version_info[0] == 3:
-            places = [
-                os.path.join(os.path.dirname(nikola.utils.__file__), 'plugins'),
-            ]
-        else:
-            places = [
-                os.path.join(os.path.dirname(nikola.utils.__file__), nikola.utils.sys_encode('plugins')),
-            ]
+        places = [os.path.join(os.path.dirname(nikola.utils.__file__), 'plugins')]
         self.plugin_manager.setPluginPlaces(places)
         self.plugin_manager.collectPlugins()
-        self.compiler_extensions = self._activate_plugins_of_category("CompilerExtension")
+        self.compiler_extensions = self._activate_plugins_of_category(
+            "CompilerExtension")
 
         self.timeline = [
             FakePost(title='Fake post',
@@ -209,7 +212,8 @@ class FakeSite(object):
         plugins = []
         for plugin_info in self.plugin_manager.getPluginsOfCategory(category):
             if plugin_info.name in self.config.get('DISABLED_PLUGINS'):
-                self.plugin_manager.removePluginFromCategory(plugin_info, category)
+                self.plugin_manager.removePluginFromCategory(
+                    plugin_info, category)
             else:
                 self.plugin_manager.activatePluginByName(plugin_info.name)
                 plugin_info.plugin_object.set_site(self)
@@ -229,8 +233,10 @@ class FakeSite(object):
 
     def apply_shortcodes(self, data, *a, **kw):
         """Apply shortcodes from the registry on data."""
-        return nikola.shortcodes.apply_shortcodes(data, self.shortcode_registry, **kw)
+        return nikola.shortcodes.apply_shortcodes(
+            data, self.shortcode_registry, **kw)
 
     def apply_shortcodes_uuid(self, data, shortcodes, *a, **kw):
         """Apply shortcodes from the registry on data."""
-        return nikola.shortcodes.apply_shortcodes(data, self.shortcode_registry, **kw)
+        return nikola.shortcodes.apply_shortcodes(
+            data, self.shortcode_registry, **kw)

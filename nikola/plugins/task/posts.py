@@ -30,7 +30,7 @@ from copy import copy
 import os
 
 from nikola.plugin_categories import Task
-from nikola import filters, utils
+from nikola import utils
 
 
 def update_deps(post, lang, task):
@@ -108,12 +108,9 @@ class RenderPosts(Task):
                 for i, f in enumerate(ff):
                     if not f:
                         continue
-                    if f.startswith('filters.'):  # A function from the filters module
-                        f = f[8:]
-                        try:
-                            flist.append(getattr(filters, f))
-                        except AttributeError:
-                            pass
+                    _f = self.site.filters.get(f)
+                    if _f is not None:  # A registered filter
+                        flist.append(_f)
                     else:
                         flist.append(f)
                 yield utils.apply_filters(task, {os.path.splitext(dest)[-1]: flist})

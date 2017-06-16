@@ -26,7 +26,6 @@
 
 """Check the generated site."""
 
-from __future__ import print_function
 from collections import defaultdict
 import os
 import re
@@ -324,7 +323,7 @@ class CommandCheck(Command):
                         target_filename = os.path.abspath(
                             os.path.join(self.site.config['OUTPUT_FOLDER'], unquote(target.lstrip('/'))))
                     else:  # Relative path
-                        unquoted_target = unquote(target).encode('utf-8') if sys.version_info.major >= 3 else unquote(target).decode('utf-8')
+                        unquoted_target = unquote(target).encode('utf-8')
                         target_filename = os.path.abspath(
                             os.path.join(os.path.dirname(filename).encode('utf-8'), unquoted_target))
 

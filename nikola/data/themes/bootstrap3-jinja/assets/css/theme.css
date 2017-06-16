@@ -118,25 +118,28 @@ article.post-micro {
 }
 
 .metadata p:before,
-.postlist .listdate:after {
+.postlist .listdate:after,
+.translationslist p:before {
     content: " — ";
 }
 
-.metadata p:first-of-type:before {
+.metadata p:first-of-type:before,
+.translationslist p:first-of-type:before {
     content: "";
 }
 
-.metadata p {
+.metadata p,
+.translationslist p {
     display: inline;
 }
 
-.posttranslations h3 {
+.posttranslations h3, .translationslist h3 {
     display: inline;
     font-size: 1em;
     font-weight: bold;
 }
 
-.posttranslations h3:last-child {
+.posttranslations h3:last-child, .translationslist h3:last-child {
     display: none;
 }
 

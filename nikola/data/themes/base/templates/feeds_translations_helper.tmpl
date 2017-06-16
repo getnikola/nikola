@@ -1,0 +1,91 @@
+## -*- coding: utf-8 -*-
+
+## Handles both feeds and translations
+<%def name="head(classification=None)">
+    % if rss_link:
+        ${rss_link}
+    % endif
+    % if len(translations) > 1:
+        % for language in sorted(translations):
+            % if classification:
+                % if generate_atom:
+                    <link rel="alternate" type="application/atom+xml" title="Atom for ${kind} ${classification|h} (${language})" href="${_link(kind + "_atom", classification, language)}">
+                % endif
+                % if generate_rss and not rss_link:
+                    <link rel="alternate" type="application/rss+xml" title="RSS for ${kind} ${classification|h} (${language})" href="${_link(kind + "_rss", classification, language)}">
+                % endif
+            % else:
+                % if generate_atom:
+                    <link rel="alternate" type="application/atom+xml" title="Atom (${language})" href="${_link("index_atom", None, language)}">
+                % endif
+                % if generate_rss and not rss_link:
+                    <link rel="alternate" type="application/rss+xml" title="RSS (${language})" href="${_link("rss", None, language)}">
+                % endif
+            % endif
+        % endfor
+    % else:
+        % if classification:
+            % if generate_atom:
+                <link rel="alternate" type="application/atom+xml" title="Atom for ${kind} ${classification|h}" href="${_link(kind + "_atom", classification)}">
+            % endif
+            % if generate_rss and not rss_link:
+                <link rel="alternate" type="application/rss+xml" title="RSS for ${kind} ${classification|h}" href="${_link(kind + "_rss", classification)}">
+            % endif
+        % else:
+            % if generate_atom:
+                <link rel="alternate" type="application/atom+xml" title="Atom" href="${_link("index_atom", None)}">
+            % endif
+            % if generate_rss and not rss_link:
+                <link rel="alternate" type="application/rss+xml" title="RSS" href="${_link("rss", None)}">
+            % endif
+        % endif
+    % endif
+    % if has_other_languages and other_languages:
+        % for language, classification, _ in other_languages:
+            <link rel="alternate" hreflang="${language}" href="${_link(kind, classification, language)}">
+        % endfor
+    % endif
+</%def>
+
+<%def name="feed_link(classification)">
+    % if len(translations) > 1:
+        % for language in sorted(translations):
+            % if generate_atom or generate_rss:
+                <p class="feedlink">
+                    % if generate_atom:
+                        <a href="${_link(kind + "_atom", classification, language)}" hreflang="${language}" type="application/atom+xml">${messages('Atom feed', language)} (${language})</a>
+                    % endif
+                    % if generate_rss:
+                        <a href="${_link(kind + "_rss", classification, language)}" hreflang="${language}" type="application/rss+xml">${messages('RSS feed', language)} (${language})</a>
+                    % endif
+                </p>
+            % endif
+        % endfor
+    % else:
+        % if generate_atom or generate_rss:
+            <p class="feedlink">
+                % if generate_atom:
+                    <a href="${_link(kind + "_atom", classification)}" type="application/atom+xml">${messages('Atom feed')}</a>
+                % endif
+                % if generate_rss:
+                    <a href="${_link(kind + "_rss", classification)}" type="application/rss+xml">${messages('RSS feed')}</a>
+                % endif
+            </p>
+        % endif
+    % endif
+</%def>
+
+<%def name="translation_link()">
+    %if has_other_languages and other_languages:
+        <div class="translationslist translations">
+            <h3 class="translationslist-intro">${messages("Also available in:")}</h3>
+        %for language, classification, name in other_languages:
+            <p><a href="${_link(kind, classification, language)}" rel="alternate">${messages("LANGUAGE", language)}
+            %if kind != 'archive':
+                (${name|h})
+            %endif
+            </a></p>
+        %endfor
+        </div>
+    %endif
+</%def>

@@ -1,7 +1,9 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="index.tmpl"/>
+<%namespace name="feeds_translations" file="feeds_translations_helper.tmpl" import="*"/>
 
 <%block name="content_header">
+    ${parent.content_header()}
     <header>
         <h1>${title|h}</h1>
         %if description:
@@ -20,11 +22,5 @@
 
 <%block name="extra_head">
     ${parent.extra_head()}
-    %if len(translations) > 1 and generate_atom:
-        %for language in sorted(translations):
-            <link rel="alternate" type="application/atom+xml" title="Atom for the ${tag|h} section (${language})" href="${_link(kind + "_atom", tag, language)}">
-        %endfor
-    %elif generate_atom:
-        <link rel="alternate" type="application/atom+xml" title="Atom for the ${tag|h} section" href="${_link("tag" + "_atom", tag)}">
-    %endif
+    ${feeds_translations.head(tag)}
 </%block>

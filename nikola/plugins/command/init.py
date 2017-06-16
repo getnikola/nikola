@@ -26,7 +26,6 @@
 
 """Create a new site."""
 
-from __future__ import print_function, unicode_literals
 import os
 import shutil
 import io
@@ -41,7 +40,7 @@ from pkg_resources import resource_filename
 import tarfile
 
 import nikola
-from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN, DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_FEED_READ_MORE_LINK, LEGAL_VALUES, urlsplit, urlunsplit
+from nikola.nikola import DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_FEED_READ_MORE_LINK, LEGAL_VALUES, urlsplit, urlunsplit
 from nikola.plugin_categories import Command
 from nikola.utils import ask, ask_yesno, get_logger, makedirs, STDERR_HANDLER, load_messages
 from nikola.packages.tzlocal import get_localzone
@@ -55,8 +54,8 @@ SAMPLE_CONF = {
     'SITE_URL': "https://example.com/",
     'BLOG_EMAIL': "joe@demo.site",
     'BLOG_DESCRIPTION': "This is a demo site for Nikola.",
-    'PRETTY_URLS': False,
-    'STRIP_INDEXES': False,
+    'PRETTY_URLS': True,
+    'STRIP_INDEXES': True,
     'DEFAULT_LANG': "en",
     'TRANSLATIONS': """{
     DEFAULT_LANG: "",
@@ -69,16 +68,17 @@ SAMPLE_CONF = {
     'COMMENT_SYSTEM_ID': 'nikolademo',
     'CATEGORY_ALLOW_HIERARCHIES': False,
     'CATEGORY_OUTPUT_FLAT_HIERARCHY': False,
-    'TRANSLATIONS_PATTERN': DEFAULT_TRANSLATIONS_PATTERN,
     'INDEX_READ_MORE_LINK': DEFAULT_INDEX_READ_MORE_LINK,
     'FEED_READ_MORE_LINK': DEFAULT_FEED_READ_MORE_LINK,
     'POSTS': """(
     ("posts/*.rst", "posts", "post.tmpl"),
+    ("posts/*.md", "posts", "post.tmpl"),
     ("posts/*.txt", "posts", "post.tmpl"),
     ("posts/*.html", "posts", "post.tmpl"),
 )""",
     'PAGES': """(
     ("pages/*.rst", "pages", "page.tmpl"),
+    ("pages/*.md", "pages", "page.tmpl"),
     ("pages/*.txt", "pages", "page.tmpl"),
     ("pages/*.html", "pages", "page.tmpl"),
 )""",
@@ -108,6 +108,7 @@ SAMPLE_CONF = {
     ),
 }""",
     'REDIRECTIONS': [],
+    '_METADATA_MAPPING_FORMATS': ', '.join(LEGAL_VALUES['METADATA_MAPPING'])
 }
 
 
@@ -212,7 +213,7 @@ def prepare_config(config):
     """Parse sample config with JSON."""
     p = config.copy()
     p.update({k: json.dumps(v, ensure_ascii=False) for k, v in p.items()
-             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS', '_SUPPORTED_LANGUAGES', '_SUPPORTED_COMMENT_SYSTEMS', 'INDEX_READ_MORE_LINK', 'FEED_READ_MORE_LINK')})
+             if k not in ('POSTS', 'PAGES', 'COMPILERS', 'TRANSLATIONS', 'NAVIGATION_LINKS', '_SUPPORTED_LANGUAGES', '_SUPPORTED_COMMENT_SYSTEMS', 'INDEX_READ_MORE_LINK', 'FEED_READ_MORE_LINK', '_METADATA_MAPPING_FORMATS')})
     # READ_MORE_LINKs require some special treatment.
     p['INDEX_READ_MORE_LINK'] = "'" + p['INDEX_READ_MORE_LINK'].replace("'", "\\'") + "'"
     p['FEED_READ_MORE_LINK'] = "'" + p['FEED_READ_MORE_LINK'].replace("'", "\\'") + "'"
@@ -323,7 +324,6 @@ class CommandInit(Command):
 
         def prettyhandler(default, toconf):
             SAMPLE_CONF['PRETTY_URLS'] = ask_yesno('Enable pretty URLs (/page/ instead of /page.html) that don\'t need web server configuration?', default=True)
-            SAMPLE_CONF['STRIP_INDEXES'] = SAMPLE_CONF['PRETTY_URLS']
 
         def lhandler(default, toconf, show_header=True):
             if show_header:

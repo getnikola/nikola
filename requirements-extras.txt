@@ -1,5 +1,4 @@
 -r requirements.txt
-Markdown>=2.4.0
 Jinja2>=2.7.2
 husl>=4.0.2
 pyphen>=0.9.1

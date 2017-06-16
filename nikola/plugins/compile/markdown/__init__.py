@@ -26,7 +26,6 @@
 
 """Page compiler plugin for Markdown."""
 
-from __future__ import unicode_literals
 
 import io
 import os
@@ -42,7 +41,7 @@ except ImportError:
 
 from nikola import shortcodes as sc
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs, req_missing, write_metadata, LocaleBorg
+from nikola.utils import makedirs, req_missing, write_metadata, LocaleBorg, map_metadata
 
 
 class ThreadLocalMarkdown(threading.local):
@@ -101,7 +100,7 @@ class CompileMarkdown(PageCompiler):
             _, data = self.split_metadata(data)
         new_data, shortcodes = sc.extract_shortcodes(data)
         output, _ = self.converter.convert(new_data)
-        output, shortcode_deps = self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, with_dependencies=True, extra_context=dict(post=post))
+        output, shortcode_deps = self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, extra_context={'post': post})
         return output, shortcode_deps
 
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):
@@ -137,9 +136,13 @@ class CompileMarkdown(PageCompiler):
             content += '\n'
         with io.open(path, "w+", encoding="utf8") as fd:
             if onefile:
-                fd.write('<!-- \n')
-                fd.write(write_metadata(metadata))
-                fd.write('-->\n\n')
+                _format = self.site.config.get('METADATA_FORMAT', 'nikola').lower()
+                if _format == 'pelican':
+                    _format = 'pelican_md'
+                data = write_metadata(metadata, _format)
+                if _format == 'nikola':
+                    data = '<!--\n' + data + '-->\n\n'
+                fd.write(data)
             fd.write(content)
 
     def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
@@ -152,5 +155,14 @@ class CompileMarkdown(PageCompiler):
             lang = LocaleBorg().current_lang
         source = post.translated_source_path(lang)
         with io.open(source, 'r', encoding='utf-8') as inf:
-            _, meta = self.converter.convert(inf.read())
+            # Note: markdown meta returns lowercase keys
+            data = inf.read()
+            # If the metadata starts with "---" it's actually YAML and
+            # we should not let markdown parse it, because it will do
+            # bad things like setting empty tags to "''"
+            if data.startswith('---\n'):
+                return {}
+            _, meta = self.converter.convert(data)
+        # Map metadata from other platforms to names Nikola expects (Issue #2817)
+        map_metadata(meta, 'markdown_metadata', self.site.config)
         return meta

@@ -3,7 +3,7 @@
 .. date: 2017-04-13 12:00:00
 .. author: The Nikola Team
 
-:Version: 7.8.6
+:Version: 7.8.8
 :Author: Chris Warrick <chris@getnikola.com>
 
 Variables available in templates are listed below.
@@ -39,7 +39,6 @@ Name                                Type                                Descript
 ==================================  ==================================  ================================================================================
 ``_link``                           function                            ``Nikola.link`` function
 ``abs_link``                        function                            ``Nikola.abs_link`` function
-``annotations``                     bool                                ``ANNOTATIONS`` setting
 ``author_pages_generated``          bool                                False
 ``blog_author``                     TranslatableSetting<str>            ``BLOG_AUTHOR`` setting
 ``blog_description``                TranslatableSetting<str>            ``BLOG_DESCRIPTION`` setting
@@ -78,7 +77,7 @@ Name                                Type                                Descript
 ``meta_generator_tag``              bool                                ``META_GENERATOR_TAG`` setting
 ``momentjs_locales``                defaultdict<str, str>               dictionary of available Moment.js locales
 ``navigation_links``                TranslatableSetting                 ``NAVIGATION_LINKS`` setting
-``needs_ipython_css``               bool                                whether or not IPython CSS is needed by this site
+``needs_ipython_css``               bool                                whether or not Jupyter CSS is needed by this site
 ``posts_sections``                  bool                                ``POSTS_SECTIONS`` setting
 ``posts_section_are_indexes``       bool                                ``POSTS_SECTIONS_ARE_INDEXES`` setting
 ``posts_sections_are_indexes``      bool                                ``POSTS_SECTIONS_ARE_INDEXES`` setting
@@ -247,26 +246,31 @@ Classification pages (lists)
 
 .. class:: table table-bordered table-striped
 
-==============  ==============  ===========================================================
-Name            Type            Description
-==============  ==============  ===========================================================
-``items``       list?           List of items for ``list.tmpl`` *(title, permalink, None)*
-``posts``       list<Post>?     List of items for other templates
-``kind``        str             The classification name
-``permalink``   str             Permanent link to page
-==============  ==============  ===========================================================
+===================  ==============  =============================================================
+Name                 Type            Description
+===================  ==============  =============================================================
+``kind``             str             The classification name
+``items``            list?           List of items for ``list.tmpl`` *(title, permalink, None)*
+``posts``            list<Post>?     List of items for other templates
+``kind``             str             The classification name
+``permalink``        str             Permanent link to page
+``other_languages``  list<tuple>     List of triples ``(other_lang, other_classification, title)``
+===================  ==============  =============================================================
+
+Index-style classification pages have ``kind`` in addtion to the usual index variables.
 
 Subclassification page
 ~~~~~~~~~~~~~~~~~~~~~~
 
 .. class:: table table-bordered table-striped
 
-==============  ======  =======================
-Name            Type    Description
-==============  ======  =======================
-``items``       list?   List of items
-``permalink``   str     Permanent link to page
-==============  ======  =======================
+===================  ===========  =============================================================
+Name                 Type         Description
+===================  ===========  =============================================================
+``items``            list?        List of items
+``permalink``        str          Permanent link to page
+``other_languages``  list<tuple>  List of triples ``(other_lang, other_classification, title)``
+===================  ===========  =============================================================
 
 Hierarchical lists
 ~~~~~~~~~~~~~~~~~~
@@ -298,10 +302,11 @@ The archive navigation variables are available only if ``create_archive_navigati
 
 .. class:: table table-bordered table-striped
 
-==============================  ==============  ===============================================
+==============================  ==============  ========================================================================
 Name                            Type            Description
-==============================  ==============  ===============================================
-``archive_name``                str?            Name of the archive
+==============================  ==============  ========================================================================
+``kind``                        str             Always ``"archive"``
+``archive_name``                str?            Name of the archive (only if using indexes)
 ``create_archive_navigation``   bool            ``CREATE_ARCHIVE_NAVIGATION`` setting
 ``has_archive_navigation``      bool            Whether or not archive navigation is available
 ``up_archive``                  str?            Link to the archive one level up
@@ -311,7 +316,8 @@ Name                            Type            Description
 ``next_archive``                str?            Link to the next archive
 ``next_archive_name``           str?            Name of the next archive
 ``archive_nodelevel``           int?            Level of the archive
-==============================  ==============  ===============================================
+``other_languages``             list            List of tuples ``(lang, path, name)`` of same archive in other languages
+==============================  ==============  ========================================================================
 
 
 Variables available in author pages
@@ -319,12 +325,14 @@ Variables available in author pages
 
 .. class:: table table-bordered table-striped
 
-==============  ======  ============================
-Name            Type    Description
-==============  ======  ============================
-``author``      str     Author name
-``rss_link``    str     Link to RSS (HTML fragment)
-==============  ======  ============================
+===================  ===========  =========================================================================
+Name                 Type         Description
+===================  ===========  =========================================================================
+``kind``             str          Always ``"author"``
+``author``           str          Author name
+``rss_link``         str          Link to RSS (HTML fragment)
+``other_languages``  list<tuple>  List of tuples ``(lang, author, name)`` of same author in other languages
+===================  ===========  =========================================================================
 
 
 Variables available in category pages
@@ -332,16 +340,17 @@ Variables available in category pages
 
 .. class:: table table-bordered table-striped
 
-==================  ==========  =====================================================
-Name                Type        Description
-==================  ==========  =====================================================
-``kind``            str         Always ``"category"``
-``category``        str         Category name
-``category_path``   list<str>   Category hierarchy
-``rss_link``        str?        Link to RSS (HTML fragment, only if using indexes)
-``subcategories``   list        List of subcategories (contains *name, link* tuples)
-``tag``             str         Friendly category name
-==================  ==========  =====================================================
+===================  ===========  =============================================================================
+Name                 Type         Description
+===================  ===========  =============================================================================
+``kind``             str          Always ``"category"``
+``category``         str          Category name
+``category_path``    list<str>    Category hierarchy
+``rss_link``         str?         Link to RSS (HTML fragment, only if using indexes)
+``subcategories``    list         List of subcategories (contains *name, link* tuples)
+``tag``              str          Friendly category name
+``other_languages``  list<tuple>  List of tuples ``(lang, category, name)`` of same category in other languages
+===================  ===========  =============================================================================
 
 Variables available in galleries
 --------------------------------
@@ -382,23 +391,26 @@ Variables available in sections
 
 .. class:: table table-bordered table-striped
 
-===========  =====  ========================
-Name         Type   Description
-===========  =====  ========================
-``section``  str    Section name (internal)
-===========  =====  ========================
+===================  ===========  ===========================================================================
+Name                 Type         Description
+===================  ===========  ===========================================================================
+``section``          str          Section name (internal)
+``kind``             str          Always ``"section"``
+``other_languages``  list<tuple>  List of tuples ``(lang, section, name)`` of same section in other languages
+===================  ===========  ===========================================================================
 
 Variables available in tag pages
 --------------------------------
 
 .. class:: table table-bordered table-striped
 
-=========  =====  =================
-Name       Type   Description
-=========  =====  =================
-``kind``   str    Always ``"tag"``
-``tag``    str    Tag name
-=========  =====  =================
+===================  ===========  ===================================================================
+Name                 Type         Description
+===================  ===========  ===================================================================
+``kind``             str          Always ``"tag"``
+``tag``              str          Tag name
+``other_languages``  list<tuple>  List of tuples ``(lang, tag, name)`` of same tag in other languages
+===================  ===========  ===================================================================
 
 Variables available in the “Tags and categories” page (``tags.tmpl``)
 ---------------------------------------------------------------------

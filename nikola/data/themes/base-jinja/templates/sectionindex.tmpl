@@ -1,21 +1,18 @@
 {#  -*- coding: utf-8 -*- #}
 {% extends 'index.tmpl' %}
+{% import 'feeds_translations_helper.tmpl' as feeds_translations with context %}
 
 {% block extra_head %}
     {{ super() }}
-    {% if generate_atom %}
-        <link rel="alternate" type="application/atom+xml" title="Atom for the {{ posts[0].section_name()|e }} section" href="{{ _link('section_index_atom', posts[0].section_slug()) }}">
-    {% endif %}
+    {{ feeds_translations.head(section) }}
 {% endblock %}
 
 {% block content %}
 <div class="sectionindex">
     <header>
-        <h2><a href="{{ _link('section_index', posts[0].section_slug()) }}">{{ title|e }}</a></h2>
-        {% if generate_atom %}
-            <p class="feedlink"><a href="{{ _link('section_index_atom', posts[0].section_slug()) }}" type="application/atom+xml">{{ messages('Updates') }}</a></p>
-        {% endif %}
-    </header>    
+        <h2><a href="{{ _link('section_index', section) }}">{{ title|e }}</a></h2>
+        {{ feeds_translations.feed_link(section) }}
+    </header>
     {{ super() }}
 </div>
 {% endblock %}

@@ -7,10 +7,10 @@
 # Translators:
 # Translators:
 # Translators:
-# Chris Warrick <kwpolska@gmail.com>, 2013
+# Chris Warrick <kwpolska@gmail.com>, 2013,2017
 # IGARASHI Masanao <syoux2@gmail.com>, 2015
 # Chris Warrick <kwpolska@gmail.com>, 2013
-# Mika Kobayashi, 2014-2015
+# Mika Kobayashi, 2014-2015,2017
 # Yasuhiko Shiga <4wordextinguisher@gmail.com>, 2013
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2017-01-07 11:37+0000\n"
+"PO-Revision-Date: 2017-06-12 12:51+0000\n"
 "Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
 "Language-Team: Japanese (http://www.transifex.com/ralsina/nikola/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -152,21 +152,24 @@ msgid "Posts by %s"
 msgstr "%sの文書一覧"
 
 msgid "Toggle navigation"
-msgstr ""
+msgstr "ナビゲーションを隠す"
 
 #. Used to format months per year
 msgid "{month} {year}"
-msgstr ""
+msgstr "{月} {年}"
 
 #. Used to format a date
 msgid "{month} {day}, {year}"
-msgstr ""
+msgstr "{月} {日}, {年}"
 
 msgid "Previous"
-msgstr ""
+msgstr "前"
 
 msgid "Up"
-msgstr ""
+msgstr "上"
 
 msgid "Next"
-msgstr ""
+msgstr "次"
+
+msgid "Atom feed"
+msgstr "Atomフィード"

@@ -26,7 +26,6 @@
 
 """The default post scanner."""
 
-from __future__ import unicode_literals, print_function
 import glob
 import os
 import sys

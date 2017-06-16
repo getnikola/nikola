@@ -9,11 +9,15 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "baguettebox.js": "~1.8",
     "bootstrap": "~3.3.7",
+    "html5shiv": "^3.7.3",
     "jquery": "<2.0.0",
     "jquery-colorbox": "~1",
-    "moment": "~2",
     "livereload-js": "~2",
-    "baguettebox.js": "~1.8"
+    "moment": "~2"
+  },
+  "devDependencies": {
+    "html5shiv": "^3.7.3"
   }
 }

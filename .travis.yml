@@ -1,7 +1,9 @@
 before_install:
 - pip install --upgrade pip wheel
 language: python
-cache: apt
+cache:
+- apt
+- pip
 sudo: false
 addons:
   apt:
@@ -9,13 +11,22 @@ addons:
     - language-pack-en-base
     - language-pack-pl-base
 python:
-- '2.7'
 - '3.3'
 - '3.4'
 - '3.5'
 - '3.6'
 matrix:
   include:
+  - os: osx
+    language: generic
+    env: NMODE=nikola OS=macOS
+    python: '3.6'
+    before_install:
+    - brew install python3
+    - pip3 install virtualenv
+    - python3 -m virtualenv nikola-tests-venv
+    - source nikola-tests-venv/bin/activate
+    - pip install --upgrade pip wheel
   - python: '3.6'
     env: NMODE=flake8
 env:
@@ -34,7 +45,7 @@ script:
 - if [[ $NMODE == 'nikola' ]]; then nikola help; fi
 - if [[ $NMODE == 'nikola' ]]; then scripts/baseline.sh check; fi
 - if [[ $NMODE == 'nikola' ]]; then scripts/codacy_coverage.sh; fi
-- if [[ $NMODE == 'flake8' ]]; then flake8 nikola/; fi
+- if [[ $NMODE == 'flake8' ]]; then flake8 nikola/ tests/; fi
 - if [[ $NMODE == 'flake8' ]]; then pydocstyle --count --match-dir='(?!^\\.)(?!data).*' nikola/; fi
 after_success:
 notifications:

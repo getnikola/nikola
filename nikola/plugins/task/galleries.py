@@ -26,7 +26,6 @@
 
 """Render image galleries."""
 
-from __future__ import unicode_literals
 import datetime
 import glob
 import io

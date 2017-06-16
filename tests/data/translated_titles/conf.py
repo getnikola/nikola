@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
 import time
 
 # !! This is the configuration of Nikola. !!#
@@ -428,13 +427,6 @@ COMMENT_SYSTEM = "disqus"
 # "nikolademo" which is a test account for Disqus. More information
 # is in the manual.
 COMMENT_SYSTEM_ID = "nikolademo"
-
-# Enable annotations using annotateit.org?
-# If set to False, you can still enable them for individual posts and pages
-# setting the "annotations" metadata.
-# If set to True, you can disable them for individual posts and pages using
-# the "noannotations" metadata.
-# ANNOTATIONS = False
 
 # Create index.html for page folders?
 # PAGE_INDEX = False

@@ -26,7 +26,6 @@
 
 """List all orphans."""
 
-from __future__ import print_function
 import os
 
 from nikola.plugin_categories import Command

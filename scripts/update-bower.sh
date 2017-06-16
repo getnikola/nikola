@@ -5,13 +5,13 @@ bower update
 
 # Link bootstrap3 theme to bootstrap
 pushd nikola/data/themes/bootstrap3/assets/js/
-ln -sf ../../../../../../bower_components/bootstrap/dist/js/*js .
+ln -sf ../../../../../../bower_components/bootstrap/dist/js/*.min.js .
 rm npm.js
 git add .
 popd
 
 pushd nikola/data/themes/bootstrap3/assets/css/
-ln -sf ../../../../../../bower_components/bootstrap/dist/css/* .
+ln -sf ../../../../../../bower_components/bootstrap/dist/css/*.min.css .
 git add .
 popd
 
@@ -22,11 +22,11 @@ popd
 
 # Link baguettebox.js to base theme
 pushd nikola/data/themes/base/assets/js
-ln -sf ../../../../../../bower_components/baguettebox.js/dist/*js .
+ln -sf ../../../../../../bower_components/baguettebox.js/dist/*.min.js .
 git add .
 popd
 pushd nikola/data/themes/base/assets/css
-ln -sf ../../../../../../bower_components/baguettebox.js/dist/*css .
+ln -sf ../../../../../../bower_components/baguettebox.js/dist/*.min.css .
 git add .
 popd
 
@@ -38,15 +38,15 @@ popd
 
 # Link jQuery to bootstrap theme
 pushd nikola/data/themes/bootstrap3/assets/js
-ln -sf ../../../../../../bower_components/jquery/dist/* .
+ln -sf ../../../../../../bower_components/jquery/dist/*min* .
 git add .
 popd
 
 
 # Link colorbox into bootstrap theme
 pushd nikola/data/themes/bootstrap3/assets/js
-ln -sf ../../../../../../bower_components/jquery-colorbox/jquery.colorbox.js .
-git add jquery.colorbox.js
+ln -sf ../../../../../../bower_components/jquery-colorbox/jquery.colorbox-min.js .
+git add jquery.colorbox-min.js
 popd
 
 pushd nikola/data/themes/bootstrap3/assets/js/colorbox-i18n

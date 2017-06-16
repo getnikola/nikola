@@ -1,15 +1,10 @@
 {#  -*- coding: utf-8 -*- #}
 {% extends 'list_post.tmpl' %}
+{% import 'feeds_translations_helper.tmpl' as feeds_translations with context %}
 
 {% block extra_head %}
     {{ super() }}
-    {% if translations|length > 1 and generate_rss %}
-        {% for language in translations|sort %}
-            <link rel="alternate" type="application/rss+xml" title="RSS for {{ kind }} {{ author|e }} ({{ language }})" href="{{ _link(kind + "_rss", author, language) }}">
-        {% endfor %}
-    {% elif generate_rss %}
-        <link rel="alternate" type="application/rss+xml" title="RSS for {{ kind }} {{ author|e }}" href="{{ _link(kind + "_rss", author) }}">
-    {% endif %}
+    {{ feeds_translations.head(author) }}
 {% endblock %}
 
 
@@ -18,26 +13,18 @@
     <header>
         <h1>{{ title|e }}</h1>
         {% if description %}
-        <p>{{ description }}</p>
+            <p>{{ description }}</p>
         {% endif %}
         <div class="metadata">
-            {% if translations|length > 1 and generate_rss %}
-                {% for language in translations|sort %}
-                <p class="feedlink">
-                    <a href="{{ _link(kind + "_rss", author, language) }}" hreflang="{{ language }}" type="application/rss+xml">{{ messages('RSS feed', language) }} ({{ language }})</a>&nbsp;
-                </p>
-                {% endfor %}
-            {% elif generate_rss %}
-                <p class="feedlink"><a href="{{ _link(kind + "_rss", author) }}" type="application/rss+xml">{{ messages('RSS feed') }}</a></p>
-            {% endif %}
+            {{ feeds_translations.feed_link(author) }}
         </div>
     </header>
     {% if posts %}
-    <ul class="postlist">
-    {% for post in posts %}
-        <li><time class="listdate" datetime="{{ post.formatted_date('webiso') }}" title="{{ post.formatted_date(date_format)|e }}">{{ post.formatted_date(date_format)|e }}</time> <a href="{{ post.permalink() }}" class="listtitle">{{ post.title()|e }}</a></li>
-    {% endfor %}
-    </ul>
+        <ul class="postlist">
+            {% for post in posts %}
+                <li><time class="listdate" datetime="{{ post.formatted_date('webiso') }}" title="{{ post.formatted_date(date_format)|e }}">{{ post.formatted_date(date_format)|e }}</time> <a href="{{ post.permalink() }}" class="listtitle">{{ post.title()|e }}</a></li>
+            {% endfor %}
+        </ul>
     {% endif %}
 </article>
 {% endblock %}

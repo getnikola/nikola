@@ -26,7 +26,6 @@
 
 """Display site status."""
 
-from __future__ import print_function
 import os
 from datetime import datetime
 from dateutil.tz import gettz, tzlocal

@@ -26,7 +26,6 @@
 
 """Start test server."""
 
-from __future__ import print_function
 import os
 import sys
 import re
@@ -192,8 +191,7 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
         if self.quiet:
             return
         else:
-            # Old-style class in Python 2.7, cannot use super()
-            return SimpleHTTPRequestHandler.log_message(self, *args)
+            return super().log_message(*args)
 
     # NOTICE: this is a patched version of send_head() to disable all sorts of
     # caching.  `nikola serve` is a development server, hence caching should
