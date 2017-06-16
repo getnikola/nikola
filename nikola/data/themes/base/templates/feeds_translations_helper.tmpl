@@ -9,17 +9,17 @@
         % for language in sorted(translations):
             % if classification:
                 % if generate_atom:
-                    <link rel="alternate" type="application/atom+xml" title="Atom for ${kind} ${classification|h} (${language})" href="${_link(kind + "_atom", classification, language)}">
+                    <link rel="alternate" type="application/atom+xml" title="Atom for ${kind} ${classification|h} (${language})" hreflang="${language}" href="${_link(kind + "_atom", classification, language)}">
                 % endif
                 % if generate_rss and not rss_link:
-                    <link rel="alternate" type="application/rss+xml" title="RSS for ${kind} ${classification|h} (${language})" href="${_link(kind + "_rss", classification, language)}">
+                    <link rel="alternate" type="application/rss+xml" title="RSS for ${kind} ${classification|h} (${language})" hreflang="${language}" href="${_link(kind + "_rss", classification, language)}">
                 % endif
             % else:
                 % if generate_atom:
-                    <link rel="alternate" type="application/atom+xml" title="Atom (${language})" href="${_link("index_atom", None, language)}">
+                    <link rel="alternate" type="application/atom+xml" title="Atom (${language})" hreflang="${language}" href="${_link("index_atom", None, language)}">
                 % endif
                 % if generate_rss and not rss_link:
-                    <link rel="alternate" type="application/rss+xml" title="RSS (${language})" href="${_link("rss", None, language)}">
+                    <link rel="alternate" type="application/rss+xml" title="RSS (${language})" hreflang="${language}" href="${_link("rss", None, language)}">
                 % endif
             % endif
         % endfor
@@ -80,7 +80,7 @@
         <div class="translationslist translations">
             <h3 class="translationslist-intro">${messages("Also available in:")}</h3>
         %for language, classification, name in other_languages:
-            <p><a href="${_link(kind, classification, language)}" rel="alternate">${messages("LANGUAGE", language)}
+            <p><a href="${_link(kind, classification, language)}" hreflang="${language}" rel="alternate">${messages("LANGUAGE", language)}
             %if kind != 'archive':
                 (${name|h})
             %endif
