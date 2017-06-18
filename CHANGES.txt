@@ -8,12 +8,16 @@ Features
 
 Bugfixes
 --------
+
+* Less cryptic error when guessing format from extension in ``new_post``
+  fails
 * Use Jupyter name more consistently in docs
 * Support CODE_COLOR_SCHEME in Jupyter notebooks (Issue #2093)
 
 
 Removed features
 ----------------
+
 * Drop Python 2 support
 * Remove ``nikola install_theme`` — use ``nikola theme`` instead
 * Drop insecure post encryption feature
