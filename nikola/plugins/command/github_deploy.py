@@ -147,7 +147,14 @@ class CommandGitHubDeploy(Command):
                 else:
                     self.logger.notice('Nothing to commit to source branch.')
 
-            source_commit = uni_check_output(['git', 'rev-parse', source])
+            try:
+                source_commit = uni_check_output(['git', 'rev-parse', source])
+            except subprocess.CalledProcessError:
+                try:
+                    source_commit = uni_check_output(['git', 'rev-parse', 'HEAD'])
+                except subprocess.CalledProcessError:
+                    source_commit = '?'
+
             commit_message = (
                 '{0}\n\n'
                 'Source commit: {1}'
