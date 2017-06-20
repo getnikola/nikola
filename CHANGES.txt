@@ -1,6 +1,7 @@
 New in v7-maintenance
 =====================
 
+* Restore missing unminified assets
 * Make failures to get source commit hash non-fatal in
   ``github_deploy`` (Issue #2847)
 * Fix a bug in HTML meta parsing that crashed on ``<meta>`` tags
