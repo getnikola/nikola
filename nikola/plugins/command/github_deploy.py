@@ -62,11 +62,9 @@ class CommandGitHubDeploy(Command):
     doc_purpose = 'deploy the site to GitHub Pages'
     doc_description = dedent(
         """\
-        This command can be used to deploy your site to GitHub Pages.
+        This command can be used to deploy your site to GitHub Pages. It uses ghp-import to do this task. It also optionally commits to the source branch.
 
-        It uses ghp-import to do this task.
-
-        """
+        Configuration help: https://getnikola.com/handbook.html#deploying-to-github"""
     )
     cmd_options = [
         {
