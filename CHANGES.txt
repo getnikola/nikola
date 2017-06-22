@@ -9,6 +9,7 @@ Features
 Bugfixes
 --------
 
+* Fix crash when compiling empty ``.html`` posts (Issue #2851)
 * Make failures to get source commit hash non-fatal in
   ``github_deploy`` (Issue #2847)
 * Less cryptic error when guessing format from extension in ``new_post``

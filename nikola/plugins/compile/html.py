@@ -96,7 +96,14 @@ class CompileHtml(PageCompiler):
             data = inf.read()
 
         metadata = {}
-        doc = lxml.html.document_fromstring(data)
+        try:
+            doc = lxml.html.document_fromstring(data)
+        except lxml.etree.ParserError as e:
+            # Issue #374 -> #2851
+            if str(e) == "Document is empty":
+                return {}
+            # let other errors raise
+            raise
         title_tag = doc.find('*//title')
         if title_tag is not None:
             metadata['title'] = title_tag.text
