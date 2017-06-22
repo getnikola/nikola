@@ -52,7 +52,6 @@ class ClassifyCategories(Taxonomy):
     apply_to_pages = False
     minimum_post_count_per_classification_in_overview = 1
     omit_empty_classifications = True
-    also_create_classifications_from_other_languages = True
     add_other_languages_variable = True
     path_handler_docstrings = {
         'category_index': """A link to the category index.
@@ -179,8 +178,6 @@ link://category_rss/dogs => /categories/dogs.xml""",
             "category_path": cat_path,
             "subcategories": subcats,
         }
-        if self.show_list_as_index:
-            context["rss_link"] = """<link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for tag {0} ({1})" href="{2}">""".format(friendly_name, lang, self.site.link("category_rss", classification, lang))
         kw.update(context)
         return context, kw
 

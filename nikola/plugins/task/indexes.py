@@ -45,7 +45,6 @@ class Indexes(Taxonomy):
     apply_to_posts = True
     apply_to_pages = False
     omit_empty_classifications = False
-    also_create_classifications_from_other_languages = False
     path_handler_docstrings = {
         'index_index': False,
         'index': """Link to a numbered index.

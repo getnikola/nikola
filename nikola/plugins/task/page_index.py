@@ -48,7 +48,6 @@ class PageIndex(Taxonomy):
     apply_to_posts = False
     apply_to_pages = True
     omit_empty_classifications = True
-    also_create_classifications_from_other_languages = False
     path_handler_docstrings = {
         'page_index_folder_index': None,
         'page_index_folder': None,
@@ -95,6 +94,9 @@ class PageIndex(Taxonomy):
         context = {
             "title": self.site.config['BLOG_TITLE'](lang),
             "pagekind": ["list", "front_page", "page_index"] if dirname == '' else ["list", "page_index"],
+            "kind": "page_index_folder",
+            "classification": dirname,
+            "has_no_feeds": True,
         }
         kw.update(context)
         return context, kw

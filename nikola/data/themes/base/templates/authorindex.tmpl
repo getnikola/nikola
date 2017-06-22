@@ -2,7 +2,20 @@
 <%inherit file="index.tmpl"/>
 <%namespace name="feeds_translations" file="feeds_translations_helper.tmpl" import="*"/>
 
+<%block name="content_header">
+    <header>
+        <h1>${title|h}</h1>
+        %if description:
+        <p>${description}</p>
+        %endif
+        <div class="metadata">
+            ${feeds_translations.feed_link(author, kind)}
+            ${feeds_translations.translation_link(kind)}
+        </div>
+    </header>
+</%block>
+
 <%block name="extra_head">
     ${parent.extra_head()}
-    ${feeds_translations.head(author)}
+    ${feeds_translations.head(author, kind, rss_override=False)}
 </%block>

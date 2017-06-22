@@ -4,14 +4,17 @@
 
 <%block name="extra_head">
     ${parent.extra_head()}
-    ${feeds_translations.head(section)}
+    ${feeds_translations.head(section, kind, rss_override=False)}
 </%block>
 
 <%block name="content">
 <div class="sectionindex">
     <header>
         <h2><a href="${_link('section_index', section)}">${title|h}</a></h2>
-        ${feeds_translations.feed_link(section)}
+        <div class="metadata">
+            ${feeds_translations.feed_link(section, kind)}
+            ${feeds_translations.translation_link(kind)}
+        </div>
     </header>
     ${parent.content()}
 </div>

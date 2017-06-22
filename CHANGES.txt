@@ -5,6 +5,7 @@ Features
 --------
 
 * Use ``PRETTY_URLS`` by default on all sites (Issue #1838)
+* Feed link generation is completely refactored (Issue #2844)
 
 Bugfixes
 --------
@@ -16,7 +17,7 @@ Bugfixes
   fails
 * Use Jupyter name more consistently in docs
 * Support CODE_COLOR_SCHEME in Jupyter notebooks (Issue #2093)
-
+* Language was not passed to title and link generation for page indexes
 
 Removed features
 ----------------
@@ -26,6 +27,8 @@ Removed features
 * Drop insecure post encryption feature
 * Stop supporting all deprecated config options
 * Drop annotations support (annotateit.org closed down in March 2017)
+* Remove taxonomy option ``also_create_classifications_from_other_languages``
+  (Issue #2785)
 
 New in v7.8.8
 =============
