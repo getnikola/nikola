@@ -87,11 +87,11 @@ except ImportError:
     Extension = Pattern = object
 
 from nikola.plugin_categories import MarkdownExtension
-from nikola.utils import get_logger, STDERR_HANDLER
+from nikola.utils import get_logger
 
 import requests
 
-LOGGER = get_logger('compile_markdown.mdx_gist', STDERR_HANDLER)
+LOGGER = get_logger('compile_markdown.mdx_gist')
 
 GIST_JS_URL = "https://gist.github.com/{0}.js"
 GIST_FILE_JS_URL = "https://gist.github.com/{0}.js?file={1}"

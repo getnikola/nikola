@@ -32,7 +32,7 @@ from textwrap import dedent
 
 from nikola.plugin_categories import Command
 from nikola.plugins.command.check import real_scan_files
-from nikola.utils import get_logger, req_missing, clean_before_deployment, STDERR_HANDLER
+from nikola.utils import get_logger, req_missing, clean_before_deployment
 from nikola.__main__ import main
 from nikola import __version__
 
@@ -62,11 +62,9 @@ class CommandGitHubDeploy(Command):
     doc_purpose = 'deploy the site to GitHub Pages'
     doc_description = dedent(
         """\
-        This command can be used to deploy your site to GitHub Pages.
+        This command can be used to deploy your site to GitHub Pages. It uses ghp-import to do this task. It also optionally commits to the source branch.
 
-        It uses ghp-import to do this task.
-
-        """
+        Configuration help: https://getnikola.com/handbook.html#deploying-to-github"""
     )
     cmd_options = [
         {
@@ -82,7 +80,7 @@ class CommandGitHubDeploy(Command):
 
     def _execute(self, options, args):
         """Run the deployment."""
-        self.logger = get_logger(CommandGitHubDeploy.name, STDERR_HANDLER)
+        self.logger = get_logger(CommandGitHubDeploy.name)
 
         # Check if ghp-import is installed
         check_ghp_import_installed()
@@ -146,7 +144,14 @@ class CommandGitHubDeploy(Command):
                 else:
                     self.logger.notice('Nothing to commit to source branch.')
 
-            source_commit = uni_check_output(['git', 'rev-parse', source])
+            try:
+                source_commit = uni_check_output(['git', 'rev-parse', source])
+            except subprocess.CalledProcessError:
+                try:
+                    source_commit = uni_check_output(['git', 'rev-parse', 'HEAD'])
+                except subprocess.CalledProcessError:
+                    source_commit = '?'
+
             commit_message = (
                 '{0}\n\n'
                 'Source commit: {1}'

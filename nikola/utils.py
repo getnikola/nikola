@@ -129,14 +129,10 @@ class ColorfulStderrHandler(ColorizedStderrHandler):
         return self._colorful
 
 
-def get_logger(name, handlers):
+def get_logger(name, handlers=None):
     """Get a logger with handlers attached."""
     l = logbook.Logger(name)
-    for h in handlers:
-        if isinstance(h, list):
-            l.handlers += h
-        else:
-            l.handlers.append(h)
+    l.handlers += STDERR_HANDLER
     return l
 
 
@@ -146,7 +142,7 @@ STDERR_HANDLER = [ColorfulStderrHandler(
 )]
 
 
-LOGGER = get_logger('Nikola', STDERR_HANDLER)
+LOGGER = get_logger('Nikola')
 STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')
 
 USE_SLUGIFY = True
@@ -165,7 +161,7 @@ def showwarning(message, category, filename, lineno, file=None, line=None):
         n = category.__name__
     except AttributeError:
         n = str(category)
-    get_logger(n, STDERR_HANDLER).warn('{0}:{1}: {2}'.format(filename, lineno, message))
+    get_logger(n).warn('{0}:{1}: {2}'.format(filename, lineno, message))
 
 
 warnings.showwarning = showwarning

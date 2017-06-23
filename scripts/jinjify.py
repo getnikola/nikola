@@ -99,7 +99,7 @@ def jinjify(in_theme, out_theme):
 
 
 def error(msg):
-    print(colorama.Fore.RED + "ERROR:" + msg)
+    print(colorama.Fore.RED + "ERROR:" + msg + colorama.Fore.RESET)
 
 
 def mako2jinja(input_file):
@@ -108,7 +108,7 @@ def mako2jinja(input_file):
 
     # TODO: OMG, this code is so horrible. Look at it; just look at it:
 
-    macro_start = re.compile(r'(.*)<%.*def name="(.*?)".*>(.*)', re.IGNORECASE)
+    macro_start = re.compile(r'(.*)<%\s*def name="([^"]*?)"\s*>(.*)', re.IGNORECASE)
     macro_end = re.compile(r'(.*)</%def>(.*)', re.IGNORECASE)
 
     if_start = re.compile(r'(.*)% *if (.*):(.*)', re.IGNORECASE)
@@ -158,6 +158,14 @@ def mako2jinja(input_file):
         if m_func_len:
             line = func_len.sub(r'\1|length', line)
 
+        # Macro start/end
+        m_macro_start = macro_start.search(line)
+        if m_macro_start:
+            line = m_macro_start.expand(r'\1{% macro \2 %}\3') + '\n'
+        m_macro_end = macro_end.search(line)
+        if m_macro_end:
+            line = m_macro_end.expand(r'\1{% endmacro %}\2') + '\n'
+
         # Process line for single 'whole line' replacements
         m_macro_start = macro_start.search(line)
         m_macro_end = macro_end.search(line)
@@ -177,11 +185,6 @@ def mako2jinja(input_file):
 
         if m_comment_single_line:
             output += m_comment_single_line.expand(r'{# \1 #}') + '\n'
-
-        elif m_macro_start:
-            output += m_macro_start.expand(r'\1{% macro \2 %}\3') + '\n'
-        elif m_macro_end:
-            output += m_macro_end.expand(r'\1{% endmacro %}\1') + '\n'
 
         elif m_if_start:
             output += m_if_start.expand(r'\1{% if \2 %}\3') + '\n'

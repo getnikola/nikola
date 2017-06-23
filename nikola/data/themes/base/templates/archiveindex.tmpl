@@ -5,10 +5,16 @@
 
 <%block name="extra_head">
     ${parent.extra_head()}
-    ${feeds_translations.head(archive_name)}
+    ${feeds_translations.head(archive_name, kind, rss_override=False)}
 </%block>
 
 <%block name="content_header">
-    ${archive_nav.archive_navigation()}
-    ${parent.content_header()}
+    <header>
+        <h1>${title|h}</h1>
+        ${archive_nav.archive_navigation()}
+        <div class="metadata">
+            ${feeds_translations.feed_link(archive, kind)}
+            ${feeds_translations.translation_link(kind)}
+        </div>
+    </header>
 </%block>

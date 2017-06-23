@@ -41,8 +41,8 @@ from nikola.plugin_categories import Command
 from nikola import utils
 
 COMPILERS_DOC_LINK = 'https://getnikola.com/handbook.html#configuring-other-input-formats'
-POSTLOGGER = utils.get_logger('new_post', utils.STDERR_HANDLER)
-PAGELOGGER = utils.get_logger('new_page', utils.STDERR_HANDLER)
+POSTLOGGER = utils.get_logger('new_post')
+PAGELOGGER = utils.get_logger('new_page')
 LOGGER = POSTLOGGER
 
 
@@ -271,6 +271,9 @@ class CommandNewPost(Command):
             for compiler, extensions in self.site.config['COMPILERS'].items():
                 if extension in extensions:
                     content_format = compiler
+            if not content_format:
+                LOGGER.error("Unknown {0} extension {1}, maybe you need to install a plugin or enable an existing one?".format(content_type, extension))
+            return
 
         elif not content_format and import_file:
             # content_format not specified. If import_file was given, use
@@ -279,6 +282,9 @@ class CommandNewPost(Command):
             for compiler, extensions in self.site.config['COMPILERS'].items():
                 if extension in extensions:
                     content_format = compiler
+            if not content_format:
+                LOGGER.error("Unknown {0} extension {1}, maybe you need to install a plugin or enable an existing one?".format(content_type, extension))
+            return
 
         elif not content_format:  # Issue #400
             content_format = get_default_compiler(

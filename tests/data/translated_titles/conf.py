@@ -719,21 +719,6 @@ COMMENT_SYSTEM_ID = "nikolademo"
 # (defaults to 1.)
 # DEMOTE_HEADERS = 1
 
-# You can configure the logging handlers installed as plugins or change the
-# log level of the default stdout handler.
-LOGGING_HANDLERS = {
-    'stderr': {'loglevel': 'WARNING', 'bubble': True},
-    # 'smtp': {
-    #     'from_addr': 'test-errors@example.com',
-    #     'recipients': ('test@example.com'),
-    #     'credentials':('testusername', 'password'),
-    #     'server_addr': ('127.0.0.1', 25),
-    #     'secure': (),
-    #     'level': 'DEBUG',
-    #     'bubble': True
-    # }
-}
-
 # Templates will use those filters, along with the defaults.
 # Consult your engine's documentation on filters if you need help defining
 # those.

@@ -3,10 +3,8 @@
 <%namespace name="feeds_translations" file="feeds_translations_helper.tmpl" import="*"/>
 
 <%block name="extra_head">
-    ${parent.extra_head()}
-    ${feeds_translations.head(tag)}
+    ${feeds_translations.head(tag, kind, rss_override=False)}
 </%block>
-
 
 <%block name="content">
 <article class="tagpage">
@@ -24,9 +22,9 @@
         </ul>
         %endif
         <div class="metadata">
-            ${feeds_translations.feed_link(tag)}
+            ${feeds_translations.feed_link(tag, kind=kind)}
         </div>
-        ${feeds_translations.translation_link()}
+        ${feeds_translations.translation_link(kind)}
     </header>
     %if posts:
         <ul class="postlist">

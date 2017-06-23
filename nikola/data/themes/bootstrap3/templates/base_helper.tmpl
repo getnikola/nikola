@@ -45,7 +45,7 @@ lang="${lang}">
     % if meta_generator_tag:
     <meta name="generator" content="Nikola (getnikola.com)">
     % endif
-    ${feeds_translations.head()}
+    ${feeds_translations.head(classification=None, kind='index', other=False)}
     <link rel="canonical" href="${abs_link(permalink)}">
 
     %if favicons:
@@ -156,7 +156,7 @@ lang="${lang}">
 </%def>
 
 <%def name="html_feedlinks()">
-    ${feeds_translations.head()}
+    ${feeds_translations.head(classification=None, kind='index', other=False)}
 </%def>
 
 <%def name="html_translations()">

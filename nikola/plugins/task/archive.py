@@ -52,7 +52,6 @@ class Archive(Taxonomy):
     apply_to_pages = False
     minimum_post_count_per_classification_in_overview = 1
     omit_empty_classifications = False
-    also_create_classifications_from_other_languages = False
     add_other_languages_variable = True
     path_handler_docstrings = {
         'archive_index': False,
@@ -181,7 +180,7 @@ class Archive(Taxonomy):
             "title": title,
             "pagekind": [page_kind, "archive_page"],
             "create_archive_navigation": self.site.config["CREATE_ARCHIVE_NAVIGATION"],
-            "archive_name": classification if classification else None
+            "archive_name": classification
         }
 
         # Generate links for hierarchies

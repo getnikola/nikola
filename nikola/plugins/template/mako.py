@@ -36,9 +36,9 @@ from mako.template import Template
 from markupsafe import Markup  # It's ok, Mako requires it
 
 from nikola.plugin_categories import TemplateSystem
-from nikola.utils import makedirs, get_logger, STDERR_HANDLER
+from nikola.utils import makedirs, get_logger
 
-LOGGER = get_logger('mako', STDERR_HANDLER)
+LOGGER = get_logger('mako')
 
 
 class MakoTemplates(TemplateSystem):

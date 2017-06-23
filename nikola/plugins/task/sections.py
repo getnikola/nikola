@@ -45,7 +45,6 @@ class ClassifySections(Taxonomy):
     apply_to_posts = True
     apply_to_pages = False
     omit_empty_classifications = True
-    also_create_classifications_from_other_languages = False
     add_other_languages_variable = True
     path_handler_docstrings = {
         'section_index_index': False,

@@ -41,7 +41,7 @@ from pkg_resources import resource_filename
 from nikola.plugin_categories import Command
 from nikola import utils
 
-LOGGER = utils.get_logger('theme', utils.STDERR_HANDLER)
+LOGGER = utils.get_logger('theme')
 
 
 class CommandTheme(Command):

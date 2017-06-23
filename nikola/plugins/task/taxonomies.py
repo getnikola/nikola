@@ -51,6 +51,17 @@ class RenderTaxonomies(Task):
         context, kw = taxonomy.provide_overview_context_and_uptodate(lang)
 
         context = copy(context)
+        context["kind"] = "{}_index".format(taxonomy.classification_name)
+        sorted_links = []
+        sorted_links_all = []
+        for other_lang in sorted(self.site.config['TRANSLATIONS'].keys()):
+            sorted_links_all.append((other_lang, None, None))
+            if other_lang != lang:
+                sorted_links.append((other_lang, None, None))
+        context['has_other_languages'] = True
+        context['other_languages'] = sorted_links
+        context['all_languages'] = sorted_links_all
+
         kw = copy(kw)
         kw["messages"] = self.site.MESSAGES
         kw["translations"] = self.site.config['TRANSLATIONS']
@@ -253,11 +264,13 @@ class RenderTaxonomies(Task):
         context["lang"] = lang
         # list.tmpl expects a different format than list_post.tmpl (Issue #2701)
         if template_name == 'list.tmpl':
-            context["items"] = [(post.title(), post.permalink(), None) for post in filtered_posts]
+            context["items"] = [(post.title(lang), post.permalink(lang), None) for post in filtered_posts]
         else:
             context["posts"] = filtered_posts
         if "pagekind" not in context:
             context["pagekind"] = ["list", "tag_page"]
+        if not (taxonomy.generate_atom_feeds_for_post_lists and self.site.config['GENERATE_ATOM']):
+            context["generate_atom"] = False
         task = self.site.generic_post_list_renderer(lang, filtered_posts, output_name, template_name, kw['filters'], context)
         task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.plugins.task.taxonomies:list')]
         task['basename'] = str(self.name)
@@ -412,7 +425,7 @@ class RenderTaxonomies(Task):
             for lang in self.site.config["TRANSLATIONS"]:
                 classifications = {}
                 for tlang, posts_per_classification in self.site.posts_per_classification[taxonomy.classification_name].items():
-                    if lang != tlang and not taxonomy.also_create_classifications_from_other_languages:
+                    if lang != tlang:
                         continue
                     classifications.update(posts_per_classification)
                 result = {}

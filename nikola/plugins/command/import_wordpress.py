@@ -58,7 +58,7 @@ from nikola.utils import req_missing, unicode_str
 from nikola.plugins.basic_import import ImportMixin, links
 from nikola.plugins.command.init import SAMPLE_CONF, prepare_config, format_default_translations_config
 
-LOGGER = utils.get_logger('import_wordpress', utils.STDERR_HANDLER)
+LOGGER = utils.get_logger('import_wordpress')
 
 
 def install_plugin(site, plugin_name, output_dir=None, show_install_notes=False):

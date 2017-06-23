@@ -1,10 +1,18 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="base.tmpl"/>
+<%namespace name="feeds_translations" file="feeds_translations_helper.tmpl" import="*"/>
+
+<%block name="extra_head">
+    ${feeds_translations.head(kind=kind, feeds=False)}
+</%block>
 
 <%block name="content">
 <article class="tagindex">
     <header>
         <h1>${title|h}</h1>
+        <div class="metadata">
+            ${feeds_translations.translation_link(kind)}
+        </div>
     </header>
     % if cat_items:
         % if items:
