@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Add support for extended metadata in galleries
 * Use ``PRETTY_URLS`` by default on all sites (Issue #1838)
 * Feed link generation is completely refactored (Issue #2844)
 
@@ -29,6 +30,7 @@ Removed features
 * Drop annotations support (annotateit.org closed down in March 2017)
 * Remove taxonomy option ``also_create_classifications_from_other_languages``
   (Issue #2785)
+>>>>>>> master
 
 New in v7.8.8
 =============

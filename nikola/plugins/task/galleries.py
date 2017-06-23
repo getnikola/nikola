@@ -50,6 +50,7 @@ from nikola.plugin_categories import Task
 from nikola import utils
 from nikola.image_processing import ImageProcessor
 from nikola.post import Post
+from nikola.post import get_metadata_from_meta_file
 
 _image_size_cache = {}
 
@@ -231,13 +232,24 @@ class Galleries(Task, ImageProcessor):
 
                 image_name_list = [os.path.basename(p) for p in image_list]
 
+                img_metadata = []
+                # FIXME for readability, invert if and for-loop
                 if self.kw['use_filename_as_title']:
-                    img_titles = []
                     for fn in image_name_list:
                         name_without_ext = os.path.splitext(os.path.basename(fn))[0]
-                        img_titles.append(utils.unslugify(name_without_ext, lang))
+                        metadata = dict()
+                        metadata['title'] = utils.unslugify(name_without_ext, lang)
+                        img_metadata.append(metadata)
                 else:
-                    img_titles = [''] * len(image_name_list)
+                    for fn in image_name_list:
+                        metadata = dict()
+                        metadata['title'] = ''
+                        img_metadata.append(metadata)
+
+                for idx, fn in enumerate(image_name_list):
+                    metadata, *_ = get_metadata_from_meta_file(os.path.join(gallery, fn))
+                    if metadata is not None:
+                        img_metadata[idx].update(metadata)
 
                 thumbs = ['.thumbnail'.join(os.path.splitext(p)) for p in image_list]
                 thumbs = [os.path.join(self.kw['output_folder'], output_folder, os.path.relpath(t, input_folder)) for t in thumbs]
@@ -299,7 +311,7 @@ class Galleries(Task, ImageProcessor):
                             dst,
                             context.copy(),
                             dest_img_list,
-                            img_titles,
+                            img_metadata,
                             thumbs,
                             file_dep))],
                     'clean': True,
@@ -326,7 +338,7 @@ class Galleries(Task, ImageProcessor):
                             (self.gallery_rss, (
                                 image_list,
                                 dst_img_list,
-                                img_titles,
+                                img_metadata,
                                 lang,
                                 self.site.link("gallery_rss", gallery, lang),
                                 rss_dst,
@@ -544,7 +556,7 @@ class Galleries(Task, ImageProcessor):
             output_name,
             context,
             img_list,
-            img_titles,
+            img_metadata,
             thumbs,
             file_dep):
         """Build the gallery index."""
@@ -556,7 +568,7 @@ class Galleries(Task, ImageProcessor):
             url = '/'.join(os.path.relpath(p, os.path.dirname(output_name) + os.sep).split(os.sep))
             return url
 
-        all_data = list(zip(img_list, thumbs, img_titles))
+        all_data = list(zip(img_list, thumbs, img_metadata))
 
         if self.kw['sort_by_date']:
             all_data.sort(key=lambda a: self.image_date(a[0]))
@@ -564,12 +576,12 @@ class Galleries(Task, ImageProcessor):
             all_data.sort(key=lambda a: a[0])
 
         if all_data:
-            img_list, thumbs, img_titles = zip(*all_data)
+            img_list, thumbs, img_metadata = zip(*all_data)
         else:
-            img_list, thumbs, img_titles = [], [], []
+            img_list, thumbs, img_metadata = [], [], []
 
         photo_array = []
-        for img, thumb, title in zip(img_list, thumbs, img_titles):
+        for img, thumb, metadata in zip(img_list, thumbs, img_metadata):
             w, h = _image_size_cache.get(thumb, (None, None))
             if w is None:
                 if os.path.splitext(thumb)[1] in ['.svg', '.svgz']:
@@ -579,20 +591,20 @@ class Galleries(Task, ImageProcessor):
                     w, h = im.size
                     _image_size_cache[thumb] = w, h
             # Thumbs are files in output, we need URLs
-            photo_array.append({
+            metadata.update({
                 'url': url_from_path(img),
                 'url_thumb': url_from_path(thumb),
-                'title': title,
                 'size': {
                     'w': w,
                     'h': h
                 },
             })
+            photo_array.append(metadata)
         context['photo_array'] = photo_array
         context['photo_array_json'] = json.dumps(photo_array, sort_keys=True)
         self.site.render_template(template_name, output_name, context)
 
-    def gallery_rss(self, img_list, dest_img_list, img_titles, lang, permalink, output_path, title):
+    def gallery_rss(self, img_list, dest_img_list, img_metadata, lang, permalink, output_path, title):
         """Create a RSS showing the latest images in the gallery.
 
         This doesn't use generic_rss_renderer because it
@@ -601,7 +613,7 @@ class Galleries(Task, ImageProcessor):
         def make_url(url):
             return urljoin(self.site.config['BASE_URL'], url.lstrip('/'))
 
-        all_data = list(zip(img_list, dest_img_list, img_titles))
+        all_data = list(zip(img_list, dest_img_list, img_metadata))
 
         if self.kw['sort_by_date']:
             all_data.sort(key=lambda a: self.image_date(a[0]))
@@ -609,17 +621,17 @@ class Galleries(Task, ImageProcessor):
             all_data.sort(key=lambda a: a[0])
 
         if all_data:
-            img_list, dest_img_list, img_titles = zip(*all_data)
+            img_list, dest_img_list, img_metadata = zip(*all_data)
         else:
-            img_list, dest_img_list, img_titles = [], [], []
+            img_list, dest_img_list, img_metadata = [], [], []
 
         items = []
-        for img, srcimg, title in list(zip(dest_img_list, img_list, img_titles))[:self.kw["feed_length"]]:
+        for img, srcimg, metadata in list(zip(dest_img_list, img_list, img_metadata))[:self.kw["feed_length"]]:
             img_size = os.stat(
                 os.path.join(
                     self.site.config['OUTPUT_FOLDER'], img)).st_size
             args = {
-                'title': title,
+                'title': metadata['title'],
                 'link': make_url(img),
                 'guid': rss.Guid(img, False),
                 'pubDate': self.image_date(srcimg),
@@ -629,10 +641,14 @@ class Galleries(Task, ImageProcessor):
                     mimetypes.guess_type(img)[0]
                 ),
             }
+            if 'description' in metadata:
+                # Pass the standard description field
+                args['description'] = metadata['description']
             items.append(rss.RSSItem(**args))
         rss_obj = rss.RSS2(
             title=title,
             link=make_url(permalink),
+            # TODO metadata.description
             description='',
             lastBuildDate=datetime.datetime.utcnow(),
             items=items,
