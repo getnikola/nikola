@@ -1,6 +1,11 @@
 New in master
 =============
 
+Deletions
+---------
+
+* Removed old 7-line metadata format (Issue #2839)
+
 Features
 --------
 
