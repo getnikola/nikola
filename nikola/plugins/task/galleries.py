@@ -247,8 +247,8 @@ class Galleries(Task, ImageProcessor):
                         img_metadata.append(metadata)
 
                 for idx, fn in enumerate(image_name_list):
-                    metadata, newstyle = get_metadata_from_meta_file(os.path.join(gallery,fn))
-                    if metadata != None:
+                    metadata, *_ = get_metadata_from_meta_file(os.path.join(gallery, fn))
+                    if metadata is not None:
                         img_metadata[idx].update(metadata)
 
                 thumbs = ['.thumbnail'.join(os.path.splitext(p)) for p in image_list]
