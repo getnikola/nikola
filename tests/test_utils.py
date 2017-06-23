@@ -31,7 +31,7 @@ class GetMetaTest(unittest.TestCase):
         post.metadata_path = 'file_with_metadata.meta'
 
         with mock.patch('nikola.post.io.open', opener_mock, create=True):
-            meta, nsm = get_meta(post)
+            meta = get_meta(post)
 
         self.assertEqual('Nikola needs more tests!', meta['title'])
         self.assertEqual('write-tests-now', meta['slug'])
@@ -39,7 +39,6 @@ class GetMetaTest(unittest.TestCase):
         self.assertFalse('tags' in meta)
         self.assertFalse('link' in meta)
         self.assertFalse('description' in meta)
-        self.assertTrue(nsm)
 
     def test_get_title_from_fname(self):
         file_metadata = ".. slug: write-tests-now\n"\
@@ -55,7 +54,7 @@ class GetMetaTest(unittest.TestCase):
         post.metadata_path = 'file_with_metadata.meta'
 
         with mock.patch('nikola.post.io.open', opener_mock, create=True):
-            meta, nsm = get_meta(post, 'file_with_metadata')
+            meta = get_meta(post, 'file_with_metadata')
 
         self.assertEqual('file_with_metadata', meta['title'])
         self.assertEqual('write-tests-now', meta['slug'])
@@ -63,7 +62,6 @@ class GetMetaTest(unittest.TestCase):
         self.assertFalse('tags' in meta)
         self.assertFalse('link' in meta)
         self.assertFalse('description' in meta)
-        self.assertTrue(nsm)
 
     def test_use_filename_as_slug_fallback(self):
         file_metadata = ".. title: Nikola needs more tests!\n"\
@@ -80,23 +78,22 @@ class GetMetaTest(unittest.TestCase):
         post.metadata_path = 'Slugify this.meta'
 
         with mock.patch('nikola.post.io.open', opener_mock, create=True):
-            meta, nsm = get_meta(post, 'Slugify this')
+            meta = get_meta(post, 'Slugify this')
         self.assertEqual('Nikola needs more tests!', meta['title'])
         self.assertEqual('slugify-this', meta['slug'])
         self.assertEqual('2012/09/15 19:52:05', meta['date'])
         self.assertFalse('tags' in meta)
         self.assertFalse('link' in meta)
         self.assertFalse('description' in meta)
-        self.assertTrue(nsm)
 
     def test_extracting_metadata_from_filename(self):
         post = dummy()
         post.source_path = '2013-01-23-the_slug-dubdubtitle.md'
         post.metadata_path = '2013-01-23-the_slug-dubdubtitle.meta'
         with mock.patch('nikola.post.io.open', create=True):
-            meta, _ = get_meta(
+            meta = get_meta(
                 post,
-                '(?P<date>\d{4}-\d{2}-\d{2})-(?P<slug>.*)-(?P<title>.*)\.md')
+                r'(?P<date>\d{4}-\d{2}-\d{2})-(?P<slug>.*)-(?P<title>.*)\.md')
 
         self.assertEqual('dubdubtitle', meta['title'])
         self.assertEqual('the_slug', meta['slug'])
@@ -107,7 +104,7 @@ class GetMetaTest(unittest.TestCase):
         post.source_path = 'some/path/the_slug.md'
         post.metadata_path = 'some/path/the_slug.meta'
         with mock.patch('nikola.post.io.open', create=True):
-            meta, _ = get_meta(post)
+            meta = get_meta(post)
 
         self.assertEqual('the_slug', meta['slug'])
 
