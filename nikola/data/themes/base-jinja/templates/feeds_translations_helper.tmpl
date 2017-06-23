@@ -1,90 +1,123 @@
 {#  -*- coding: utf-8 -*- #}
 
-{#  Handles both feeds and translations #}
-{% macro head(classification=None) %}
-    {% if rss_link %}
-        {{ rss_link }}
-    {% endif %}
+{% macro _head_feed_link(link_type, link_name, link_postfix, classification, kind, language) %}
     {% if translations|length > 1 %}
-        {% for language in translations|sort %}
-            {% if classification %}
-                {% if generate_atom %}
-                    <link rel="alternate" type="application/atom+xml" title="Atom for {{ kind }} {{ classification|e }} ({{ language }})" href="{{ _link(kind + "_atom", classification, language) }}">
-                {% endif %}
-                {% if generate_rss and not rss_link %}
-                    <link rel="alternate" type="application/rss+xml" title="RSS for {{ kind }} {{ classification|e }} ({{ language }})" href="{{ _link(kind + "_rss", classification, language) }}">
-                {% endif %}
-            {% else %}
-                {% if generate_atom %}
-                    <link rel="alternate" type="application/atom+xml" title="Atom ({{ language }})" href="{{ _link("index_atom", None, language) }}">
-                {% endif %}
-                {% if generate_rss and not rss_link %}
-                    <link rel="alternate" type="application/rss+xml" title="RSS ({{ language }})" href="{{ _link("rss", None, language) }}">
-                {% endif %}
-            {% endif %}
-        {% endfor %}
+        <link rel="alternate" type="{{ link_type }}" title="{{ link_name|e }} ({{ language }})" hreflang="{{ language }}" href="{{ _link(kind + '_' + link_postfix, classification, language) }}">
     {% else %}
-        {% if classification %}
-            {% if generate_atom %}
-                <link rel="alternate" type="application/atom+xml" title="Atom for {{ kind }} {{ classification|e }}" href="{{ _link(kind + "_atom", classification) }}">
-            {% endif %}
-            {% if generate_rss and not rss_link %}
-                <link rel="alternate" type="application/rss+xml" title="RSS for {{ kind }} {{ classification|e }}" href="{{ _link(kind + "_rss", classification) }}">
-            {% endif %}
+        <link rel="alternate" type="{{ link_type }}" title="{{ link_name|e }}" hreflang="{{ language }}" href="{{ _link(kind + '_' + link_postfix, classification, language) }}">
+    {% endif %}
+{% endmacro %}
+
+{% macro _html_feed_link(link_type, link_name, link_postfix, classification, kind, language, name=None) %}
+    {% if translations|length > 1 %}
+        {% if name and kind != "archive" and kind != "author" %}
+            <a href="{{ _link(kind + '_' + link_postfix, classification, language) }}" hreflang="{{ language }}" type="{{ link_type }}">{{ messages(link_name, language) }} ({{ name|e }}, {{ language }})</a>
         {% else %}
-            {% if generate_atom %}
-                <link rel="alternate" type="application/atom+xml" title="Atom" href="{{ _link("index_atom", None) }}">
-            {% endif %}
-            {% if generate_rss and not rss_link %}
-                <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ _link("rss", None) }}">
-            {% endif %}
+            <a href="{{ _link(kind + '_' + link_postfix, classification, language) }}" hreflang="{{ language }}" type="{{ link_type }}">{{ messages(link_name, language) }} ({{ language }})</a>
+        {% endif %}
+    {% else %}
+        {% if name and kind != "archive" and kind != "author" %}
+            <a href="{{ _link(kind + '_' + link_postfix, classification, language) }}" hreflang="{{ language }}" type="{{ link_type }}">{{ messages(link_name, language) }} ({{ name|e }})</a>
+        {% else %}
+            <a href="{{ _link(kind + '_' + link_postfix, classification, language) }}" hreflang="{{ language }}" type="{{ link_type }}">{{ messages(link_name, language) }}</a>
         {% endif %}
     {% endif %}
-    {% if has_other_languages and other_languages %}
+{% endmacro %}
+
+{% macro _html_translation_link(classification, kind, language, name=None) %}
+    {% if name and kind != "archive" and kind != "author" %}
+        <a href="{{ _link(kind, classification, language) }}" hreflang="{{ language }}" rel="alternate">{{ messages("LANGUAGE", language) }} ({{ name|e }})</a>
+    {% else %}
+        <a href="{{ _link(kind, classification, language) }}" hreflang="{{ language }}" rel="alternate">{{ messages("LANGUAGE", language) }}</a>
+    {% endif %}
+{% endmacro %}
+
+{% macro _head_rss(classification=None, kind='index', rss_override=True) %}
+    {% if rss_link and rss_override %}
+        {{ rss_link }}
+    {% endif %}
+    {% if generate_rss and not (rss_link and rss_override) and kind != 'archive' %}
+        {% if translations|length > 1 and has_other_languages and classification and kind != 'index' %}
+            {% for language, classification, name in all_languages %}
+                <link rel="alternate" type="application/rss+xml" title="RSS for {{ kind }} {{ name|e }} ({{ language }})" hreflang="{{ language }}" href="{{ _link(kind + "_rss", classification, language) }}">
+            {% endfor %}
+        {% else %}
+            {% for language in translations|sort %}
+                {% if (classification or classification == '') and kind != 'index' %}
+                    {{ _head_feed_link('application/rss+xml', 'RSS for ' + kind + ' ' + classification, 'rss', classification, kind, language) }}
+                {% else %}
+                    {{ _head_feed_link('application/rss+xml', 'RSS', 'rss', classification, 'index', language) }}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+{% endmacro %}
+
+{% macro _head_atom(classification=None, kind='index') %}
+    {% if generate_atom %}
+        {% if translations|length > 1 and has_other_languages and classification and kind != 'index' %}
+            {% for language, classification, name in all_languages %}
+                <link rel="alternate" type="application/atom+xml" title="Atom for {{ kind }} {{ name|e }} ({{ language }})" hreflang="{{ language }}" href="{{ _link(kind + "_atom", classification, language) }}">
+            {% endfor %}
+        {% else %}
+            {% for language in translations|sort %}
+                {% if (classification or classification == '') and kind != 'index' %}
+                    {{ _head_feed_link('application/atom+xml', 'Atom for ' + kind + ' ' + classification, 'atom', classification, kind, language) }}
+                {% else %}
+                    {{ _head_feed_link('application/atom+xml', 'Atom', 'atom', classification, 'index', language) }}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+{% endmacro %}
+
+{#  Handles both feeds and translations #}
+{% macro head(classification=None, kind='index', feeds=True, other=True, rss_override=True, has_no_feeds=False) %}
+    {% if feeds and not has_no_feeds %}
+        {{ _head_rss(classification, 'index' if (kind == 'archive' and rss_override) else kind, rss_override) }}
+        {{ _head_atom(classification, kind) }}
+    {% endif %}
+    {% if other and has_other_languages and other_languages %}
         {% for language, classification, _ in other_languages %}
             <link rel="alternate" hreflang="{{ language }}" href="{{ _link(kind, classification, language) }}">
         {% endfor %}
     {% endif %}
 {% endmacro %}
 
-{% macro feed_link(classification) %}
-    {% if translations|length > 1 %}
-        {% for language in translations|sort %}
-            {% if generate_atom or generate_rss %}
+{% macro feed_link(classification, kind) %}
+    {% if generate_atom or generate_rss %}
+        {% if translations|length > 1 and has_other_languages and kind != 'index' %}
+            {% for language, classification, name in all_languages %}
                 <p class="feedlink">
                     {% if generate_atom %}
-                        <a href="{{ _link(kind + "_atom", classification, language) }}" hreflang="{{ language }}" type="application/atom+xml">{{ messages('Atom feed', language) }} ({{ language }})</a>
+                        {{ _html_feed_link('application/atom+xml', 'Atom feed', 'atom', classification, kind, language, name) }}
                     {% endif %}
-                    {% if generate_rss %}
-                        <a href="{{ _link(kind + "_rss", classification, language) }}" hreflang="{{ language }}" type="application/rss+xml">{{ messages('RSS feed', language) }} ({{ language }})</a>
+                    {% if generate_rss and kind != 'archive' %}
+                        {{ _html_feed_link('application/rss+xml', 'RSS feed', 'rss', classification, kind, language, name) }}
                     {% endif %}
                 </p>
-            {% endif %}
-        {% endfor %}
-    {% else %}
-        {% if generate_atom or generate_rss %}
-            <p class="feedlink">
-                {% if generate_atom %}
-                    <a href="{{ _link(kind + "_atom", classification) }}" type="application/atom+xml">{{ messages('Atom feed') }}</a>
-                {% endif %}
-                {% if generate_rss %}
-                    <a href="{{ _link(kind + "_rss", classification) }}" type="application/rss+xml">{{ messages('RSS feed') }}</a>
-                {% endif %}
-            </p>
+            {% endfor %}
+        {% else %}
+            {% for language in translations|sort %}
+                <p class="feedlink">
+                    {% if generate_atom %}
+                        {{ _html_feed_link('application/atom+xml', 'Atom feed', 'atom', classification, kind, language) }}
+                    {% endif %}
+                    {% if generate_rss and kind != 'archive' %}
+                        {{ _html_feed_link('application/rss+xml', 'RSS feed', 'rss', classification, kind, language) }}
+                    {% endif %}
+                </p>
+            {% endfor %}
         {% endif %}
     {% endif %}
 {% endmacro %}
 
-{% macro translation_link() %}
+{% macro translation_link(kind) %}
     {% if has_other_languages and other_languages %}
         <div class="translationslist translations">
             <h3 class="translationslist-intro">{{ messages("Also available in:") }}</h3>
         {% for language, classification, name in other_languages %}
-            <p><a href="{{ _link(kind, classification, language) }}" rel="alternate">{{ messages("LANGUAGE", language) }}
-            {% if kind != 'archive' %}
-                ({{ name|e }})
-            {% endif %}
-            </a></p>
+            <p>{{ _html_translation_link(classification, kind, language, name) }}</p>
         {% endfor %}
         </div>
     {% endif %}

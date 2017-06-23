@@ -26,7 +26,6 @@
 
 """Manage plugins."""
 
-from __future__ import print_function
 import io
 import os
 import sys
@@ -42,7 +41,7 @@ from pygments.formatters import TerminalFormatter
 from nikola.plugin_categories import Command
 from nikola import utils
 
-LOGGER = utils.get_logger('plugin', utils.STDERR_HANDLER)
+LOGGER = utils.get_logger('plugin')
 
 
 class CommandPlugin(Command):

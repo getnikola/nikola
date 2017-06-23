@@ -28,7 +28,6 @@
 """Define and register a listing directive using the existing CodeBlock."""
 
 
-from __future__ import unicode_literals
 import io
 import os
 import uuid

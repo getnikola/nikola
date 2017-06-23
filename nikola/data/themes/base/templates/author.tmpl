@@ -3,10 +3,8 @@
 <%namespace name="feeds_translations" file="feeds_translations_helper.tmpl" import="*"/>
 
 <%block name="extra_head">
-    ${parent.extra_head()}
-    ${feeds_translations.head(author)}
+    ${feeds_translations.head(author, kind, rss_override=False)}
 </%block>
-
 
 <%block name="content">
 <article class="authorpage">
@@ -16,7 +14,7 @@
             <p>${description}</p>
         %endif
         <div class="metadata">
-            ${feeds_translations.feed_link(author)}
+            ${feeds_translations.feed_link(author, kind)}
         </div>
     </header>
     %if posts:

@@ -16,7 +16,7 @@
 
 <%block name="content">
 <%block name="content_header">
-    ${feeds_translations.translation_link()}
+    ${feeds_translations.translation_link(kind)}
 </%block>
 % if 'main_index' in pagekind:
     ${front_index_header}

@@ -5,7 +5,32 @@ Features
 --------
 
 * Add support for extended metadata in galleries
+* Use ``PRETTY_URLS`` by default on all sites (Issue #1838)
+* Feed link generation is completely refactored (Issue #2844)
 
+Bugfixes
+--------
+
+* Fix crash when compiling empty ``.html`` posts (Issue #2851)
+* Make failures to get source commit hash non-fatal in
+  ``github_deploy`` (Issue #2847)
+* Less cryptic error when guessing format from extension in ``new_post``
+  fails
+* Use Jupyter name more consistently in docs
+* Support CODE_COLOR_SCHEME in Jupyter notebooks (Issue #2093)
+* Language was not passed to title and link generation for page indexes
+
+Removed features
+----------------
+
+* Drop Python 2 support
+* Remove ``nikola install_theme`` — use ``nikola theme`` instead
+* Drop insecure post encryption feature
+* Stop supporting all deprecated config options
+* Drop annotations support (annotateit.org closed down in March 2017)
+* Remove taxonomy option ``also_create_classifications_from_other_languages``
+  (Issue #2785)
+>>>>>>> master
 
 New in v7.8.8
 =============

@@ -26,7 +26,6 @@
 
 """Render the blog's main index."""
 
-from __future__ import unicode_literals
 
 from nikola.plugin_categories import Taxonomy
 
@@ -46,7 +45,6 @@ class Indexes(Taxonomy):
     apply_to_posts = True
     apply_to_pages = False
     omit_empty_classifications = False
-    also_create_classifications_from_other_languages = False
     path_handler_docstrings = {
         'index_index': False,
         'index': """Link to a numbered index.

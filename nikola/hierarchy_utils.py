@@ -26,7 +26,6 @@
 
 """Hierarchy utility functions."""
 
-from __future__ import print_function, unicode_literals, absolute_import
 import natsort
 
 __all__ = ('TreeNode', 'clone_treenode', 'flatten_tree_structure',

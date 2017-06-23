@@ -26,14 +26,12 @@
 
 """Automatic rebuilds for Nikola."""
 
-from __future__ import print_function
 
 import json
 import mimetypes
 import os
 import re
 import subprocess
-import sys
 import time
 try:
     from urlparse import urlparse
@@ -63,7 +61,7 @@ except ImportError:
     PatternMatchingEventHandler = object
 
 from nikola.plugin_categories import Command
-from nikola.utils import dns_sd, req_missing, get_logger, get_theme_path, STDERR_HANDLER
+from nikola.utils import dns_sd, req_missing, get_logger, get_theme_path
 LRJS_PATH = os.path.join(os.path.dirname(__file__), 'livereload.js')
 error_signal = signal('error')
 refresh_signal = signal('refresh')
@@ -131,7 +129,7 @@ class CommandAuto(Command):
 
     def _execute(self, options, args):
         """Start the watcher."""
-        self.logger = get_logger('auto', STDERR_HANDLER)
+        self.logger = get_logger('auto')
         LRSocket.logger = self.logger
 
         if WebSocket is object and watchdog is None:
@@ -451,16 +449,11 @@ try:
     # Monkeypatch to hide Broken Pipe Errors
     f = WebSocketWSGIHandler.finish_response
 
-    if sys.version_info[0] == 3:
-        EX = BrokenPipeError  # NOQA
-    else:
-        EX = IOError
-
     def finish_response(self):
         """Monkeypatched finish_response that ignores broken pipes."""
         try:
             f(self)
-        except EX:  # Client closed the connection, not a real error
+        except BrokenPipeError:  # Client closed the connection, not a real error
             pass
 
     WebSocketWSGIHandler.finish_response = finish_response

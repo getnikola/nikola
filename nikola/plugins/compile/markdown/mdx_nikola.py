@@ -30,7 +30,6 @@
 - Strikethrough inline patterns.
 """
 
-from __future__ import unicode_literals
 import re
 try:
     from markdown.postprocessors import Postprocessor

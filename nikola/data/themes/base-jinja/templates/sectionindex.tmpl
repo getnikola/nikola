@@ -4,14 +4,17 @@
 
 {% block extra_head %}
     {{ super() }}
-    {{ feeds_translations.head(section) }}
+    {{ feeds_translations.head(section, kind, rss_override=False) }}
 {% endblock %}
 
 {% block content %}
 <div class="sectionindex">
     <header>
         <h2><a href="{{ _link('section_index', section) }}">{{ title|e }}</a></h2>
-        {{ feeds_translations.feed_link(section) }}
+        <div class="metadata">
+            {{ feeds_translations.feed_link(section, kind) }}
+            {{ feeds_translations.translation_link(kind) }}
+        </div>
     </header>
     {{ super() }}
 </div>

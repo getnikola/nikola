@@ -1,3 +1,4 @@
+doit>=0.30.1
 Pygments>=1.6
 Pillow>=2.4.0
 python-dateutil>=2.4.0

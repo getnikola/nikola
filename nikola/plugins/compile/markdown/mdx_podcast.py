@@ -36,7 +36,6 @@ Basic Example:
 <p><audio controls=""><source src="https://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3" type="audio/mpeg"></source></audio></p>
 """
 
-from __future__ import print_function, unicode_literals
 from nikola.plugin_categories import MarkdownExtension
 try:
     from markdown.extensions import Extension

@@ -7,7 +7,6 @@ package directory.
 After that it will do create a new site with the import_wordpress
 command and use that newly created site to make a build.
 """
-from __future__ import unicode_literals, print_function
 
 import os
 import shutil

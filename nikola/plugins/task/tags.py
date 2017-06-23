@@ -26,7 +26,6 @@
 
 """Render the tag pages and feeds."""
 
-from __future__ import unicode_literals
 
 from nikola.plugin_categories import Taxonomy
 from nikola import utils
@@ -49,7 +48,6 @@ class ClassifyTags(Taxonomy):
     apply_to_posts = True
     apply_to_pages = False
     omit_empty_classifications = True
-    also_create_classifications_from_other_languages = True
     add_other_languages_variable = True
     path_handler_docstrings = {
         'tag_index': """A link to the tag index.
@@ -96,9 +94,6 @@ link://tag_rss/cats => /tags/cats.xml""",
 
     def slugify_tag_name(self, name, lang):
         """Slugify a tag name."""
-        if lang is None:  # TODO: remove in v8
-            utils.LOGGER.warn("ClassifyTags.slugify_tag_name() called without language!")
-            lang = ''
         if self.site.config['SLUG_TAG_PATH']:
             name = utils.slugify(name, lang)
         return name
@@ -107,9 +102,6 @@ link://tag_rss/cats => /tags/cats.xml""",
         """Return a path for the list of all classifications."""
         if self.site.config['TAGS_INDEX_PATH'](lang):
             path = self.site.config['TAGS_INDEX_PATH'](lang)
-            if path.endswith('/index'):  # TODO: remove in v8
-                utils.LOGGER.warn("TAGS_INDEX_PATH for language {0} is missing a .html extension. Please update your configuration!".format(lang))
-                path += '.html'
             return [_f for _f in [path] if _f], 'never'
         else:
             return [_f for _f in [self.site.config['TAG_PATH'](lang)] if _f], 'always'
@@ -154,8 +146,6 @@ link://tag_rss/cats => /tags/cats.xml""",
             "pagekind": ["tag_page", "index" if self.show_list_as_index else "list"],
             "tag": classification,
         }
-        if self.show_list_as_index:
-            context["rss_link"] = """<link rel="alternate" type="application/rss+xml" type="application/rss+xml" title="RSS for tag {0} ({1})" href="{2}">""".format(classification, lang, self.site.link("tag_rss", classification, lang))
         kw.update(context)
         return context, kw
 

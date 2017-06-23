@@ -3,7 +3,6 @@
 {% import 'feeds_translations_helper.tmpl' as feeds_translations with context %}
 
 {% block content_header %}
-    {{ parent.content_header() }}
     <header>
         <h1>{{ title|e }}</h1>
         {% if description %}
@@ -17,10 +16,14 @@
             {% endfor %}
         </ul>
         {% endif %}
+        <div class="metadata">
+            {{ feeds_translations.feed_link(tag, kind) }}
+            {{ feeds_translations.translation_link(kind) }}
+        </div>
     </header>
 {% endblock %}
 
 {% block extra_head %}
     {{ super() }}
-    {{ feeds_translations.head(tag) }}
+    {{ feeds_translations.head(tag, kind, rss_override=False) }}
 {% endblock %}

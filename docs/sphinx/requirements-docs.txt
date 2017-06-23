@@ -1,3 +1,2 @@
 -r ../../requirements-extras.txt
-doit
 pyparsing>=2.0.2

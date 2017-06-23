@@ -19,7 +19,7 @@ Theming Nikola
 .. class:: lead
 
 This document is a reference about themes. If you want a tutorial, please read
-`Creating a Theme <creating-a-theme.html>`_. If you’re looking for a ready-made
+:doc:`Creating a Theme <creating-a-theme>`. If you’re looking for a ready-made
 theme for your site, check out the `Themes Index <https://themes.getnikola.com/>`_.
 
 The Structure
@@ -78,7 +78,7 @@ bundles
 
     .. code:: text
 
-        assets/css/all.css=bootstrap.css,rst.css,code.css,colorbox.css,custom.css
+        assets/css/all.css=bootstrap.css,html4css1.css,nikola_rst.css,code.css,colorbox.css,custom.css
 
     This creates a file called "assets/css/all.css" in your output that is the
     combination of all the other file paths, relative to the output file.
@@ -194,9 +194,6 @@ These are the templates that come with the included themes:
 ``index.tmpl``
     Template used to render the multipost indexes. The posts are in a ``posts`` variable.
     Some functionality is in the ``index_helper.tmpl`` helper template.
-
-``annotation_helper.tmpl`` (internal)
-    Code for the optional annotations feature.
 
 ``archive_navigation_helper.tmpl``
     Code that implements archive navigation (previous/up/next). Included by

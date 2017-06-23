@@ -26,7 +26,6 @@
 
 """Render image galleries."""
 
-from __future__ import unicode_literals
 import datetime
 import glob
 import io
@@ -68,7 +67,7 @@ class Galleries(Task, ImageProcessor):
         site.register_path_handler('gallery_global', self.gallery_global_path)
         site.register_path_handler('gallery_rss', self.gallery_rss_path)
 
-        self.logger = utils.get_logger('render_galleries', utils.STDERR_HANDLER)
+        self.logger = utils.get_logger('render_galleries')
 
         self.kw = {
             'thumbnail_size': site.config['THUMBNAIL_SIZE'],

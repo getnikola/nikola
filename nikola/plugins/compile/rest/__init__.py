@@ -26,7 +26,6 @@
 
 """reStructuredText compiler for Nikola."""
 
-from __future__ import unicode_literals
 import io
 import os
 
@@ -47,7 +46,6 @@ from nikola.utils import (
     get_logger,
     makedirs,
     write_metadata,
-    STDERR_HANDLER,
     LocaleBorg,
     map_metadata
 )
@@ -133,13 +131,8 @@ class CompileRest(PageCompiler):
             # Original issue: empty files.  `output` became a bytestring.
             output = output.decode('utf-8')
 
-        output, shortcode_deps = self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, with_dependencies=True, extra_context=dict(post=post))
+        output, shortcode_deps = self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, extra_context={'post': post})
         return output, error_level, deps, shortcode_deps
-
-    # TODO remove in v8
-    def compile_html_string(self, data, source_path=None, is_two_file=True):
-        """Compile reST into HTML strings."""
-        return self.compile_string(data, source_path, is_two_file)
 
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""
@@ -192,7 +185,7 @@ class CompileRest(PageCompiler):
             self.config_dependencies.append(plugin_info.name)
             plugin_info.plugin_object.short_help = plugin_info.description
 
-        self.logger = get_logger('compile_rest', STDERR_HANDLER)
+        self.logger = get_logger('compile_rest')
         if not site.debug:
             self.logger.level = 4
 

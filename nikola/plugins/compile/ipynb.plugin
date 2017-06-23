@@ -6,8 +6,8 @@ module = ipynb
 author = Damian Avila, Chris Warrick and others
 version = 2.0.0
 website = http://www.damian.oquanta.info/
-description = Compile IPython notebooks into Nikola posts
+description = Compile Jupyter notebooks into Nikola posts
 
 [Nikola]
 PluginCategory = Compiler
-friendlyname = Jupyter/IPython Notebook
+friendlyname = Jupyter Notebook

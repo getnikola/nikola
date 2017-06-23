@@ -26,7 +26,6 @@
 
 """Render the author pages and feeds."""
 
-from __future__ import unicode_literals
 
 from nikola.plugin_categories import Taxonomy
 from nikola import utils
@@ -47,7 +46,6 @@ class ClassifyAuthors(Taxonomy):
     apply_to_pages = False
     minimum_post_count_per_classification_in_overview = 1
     omit_empty_classifications = False
-    also_create_classifications_from_other_languages = False
     add_other_languages_variable = True
     path_handler_docstrings = {
         'author_index': """ Link to the authors index.
@@ -133,10 +131,6 @@ link://author_rss/joe => /authors/joe.xml""",
             "description": descriptions[lang][classification] if lang in descriptions and classification in descriptions[lang] else None,
             "pagekind": ["index" if self.show_list_as_index else "list", "author_page"],
         }
-        if self.site.config["GENERATE_RSS"]:
-            rss_link = ("""<link rel="alternate" type="application/rss+xml" title="RSS for author {0} ({1})" href="{2}">""".format(
-                classification, lang, self.site.link('author_rss', classification, lang)))
-            context['rss_link'] = rss_link
         kw.update(context)
         return context, kw
 

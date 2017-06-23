@@ -26,7 +26,6 @@
 
 """Nikola plugin categories."""
 
-from __future__ import absolute_import
 import sys
 import os
 import re
@@ -302,10 +301,7 @@ class PageCompiler(BasePlugin):
 
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""
-        # For backwards compatibility, call `compile_html`
-        # If you are implementing a compiler, please implement `compile` and
-        # ignore `compile_html`
-        self.compile_html(source, dest, is_two_file)
+        raise NotImplementedError()
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML strings (with shortcode support).
@@ -313,11 +309,6 @@ class PageCompiler(BasePlugin):
         Returns a tuple of at least two elements: HTML string [0] and shortcode dependencies [last].
         """
         # This function used to have some different APIs in different places.
-        raise NotImplementedError()
-
-    # TODO remove in v8
-    def compile_html(self, source, dest, is_two_file=True):
-        """Compile the source, save it on dest (DEPRECATED)."""
         raise NotImplementedError()
 
     def create_post(self, path, content=None, onefile=False, is_page=False, **kw):
@@ -602,11 +593,6 @@ class Taxonomy(BasePlugin):
         Whether post lists resp. indexes should be created for empty
         classifications.
 
-    also_create_classifications_from_other_languages = True:
-        Whether to include all classifications for all languages in every
-        language, or only the classifications for one language in its language's
-        pages.
-
     add_other_languages_variable = False:
         In case this is `True`, each classification page will get a list
         of triples `(other_lang, other_classification, title)` of classifications
@@ -643,7 +629,6 @@ class Taxonomy(BasePlugin):
     apply_to_pages = False
     minimum_post_count_per_classification_in_overview = 1
     omit_empty_classifications = False
-    also_create_classifications_from_other_languages = True
     add_other_languages_variable = False
     path_handler_docstrings = {
         'taxonomy_index': '',
@@ -788,8 +773,7 @@ class Taxonomy(BasePlugin):
         the second will be put into the uptodate list of all generated tasks.
 
         For hierarchical taxonomies, node is the `hierarchy_utils.TreeNode` element
-        corresponding to the classification. Note that `node` can still be `None`
-        if `also_create_classifications_from_other_languages` is `True`.
+        corresponding to the classification.
 
         Context must contain `title`, which should be something like 'Posts about <classification>'.
         """

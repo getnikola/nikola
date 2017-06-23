@@ -26,8 +26,6 @@
 
 """The main function of Nikola."""
 
-from __future__ import print_function, unicode_literals
-
 import os
 import shutil
 import sys
@@ -51,7 +49,7 @@ from .nikola import Nikola
 from .plugin_categories import Command
 from .utils import (LOGGER, STDERR_HANDLER, STRICT_HANDLER,
                     ColorfulStderrHandler, get_root_dir, req_missing,
-                    sys_decode, sys_encode)
+                    sys_decode)
 
 try:
     import readline  # NOQA
@@ -59,10 +57,7 @@ except ImportError:
     pass  # This is only so raw_input/input does nicer things if it's available
 
 
-if sys.version_info[0] == 3:
-    import importlib.machinery
-else:
-    import imp
+import importlib.machinery
 
 config = {}
 
@@ -85,14 +80,12 @@ def main(args=None):
     args = [sys_decode(arg) for arg in args]
 
     conf_filename = 'conf.py'
-    conf_filename_bytes = b'conf.py'
     conf_filename_changed = False
     for index, arg in enumerate(args):
         if arg[:7] == '--conf=':
             del args[index]
             del oargs[index]
             conf_filename = arg[7:]
-            conf_filename_bytes = sys_encode(arg[7:])
             conf_filename_changed = True
             break
 
@@ -129,11 +122,8 @@ def main(args=None):
 
     sys.path.append('')
     try:
-        if sys.version_info[0] == 3:
-            loader = importlib.machinery.SourceFileLoader("conf", conf_filename)
-            conf = loader.load_module()
-        else:
-            conf = imp.load_source("conf", conf_filename_bytes)
+        loader = importlib.machinery.SourceFileLoader("conf", conf_filename)
+        conf = loader.load_module()
         config = conf.__dict__
     except Exception:
         if os.path.exists(conf_filename):

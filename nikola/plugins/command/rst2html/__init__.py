@@ -26,7 +26,6 @@
 
 """Compile reStructuredText to HTML, using Nikola architecture."""
 
-from __future__ import unicode_literals, print_function
 
 import io
 import lxml.html
@@ -54,7 +53,7 @@ class CommandRst2Html(Command):
             data = in_file.read()
             output, error_level, deps, shortcode_deps = compiler.compile_string(data, source, True)
 
-        rstcss_path = resource_filename('nikola', 'data/themes/base/assets/css/rst.css')
+        rstcss_path = resource_filename('nikola', 'data/themes/base/assets/css/html4css1.css')
         with io.open(rstcss_path, "r", encoding="utf8") as fh:
             rstcss = fh.read()
 

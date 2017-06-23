@@ -26,14 +26,13 @@
 
 """Given a swatch name from bootswatch.com and a parent theme, creates a custom theme."""
 
-from __future__ import print_function
 import os
 import requests
 
 from nikola.plugin_categories import Command
 from nikola import utils
 
-LOGGER = utils.get_logger('bootswatch_theme', utils.STDERR_HANDLER)
+LOGGER = utils.get_logger('bootswatch_theme')
 
 
 def _check_for_theme(theme, themes):
