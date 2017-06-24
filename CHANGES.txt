@@ -1,11 +1,6 @@
 New in master
 =============
 
-Deletions
----------
-
-* Removed old 7-line metadata format (Issue #2839)
-
 Features
 --------
 
@@ -34,6 +29,7 @@ Removed features
 * Drop annotations support (annotateit.org closed down in March 2017)
 * Remove taxonomy option ``also_create_classifications_from_other_languages``
   (Issue #2785)
+* Removed old 7-line metadata format (Issue #2839)
 
 New in v7.8.8
 =============

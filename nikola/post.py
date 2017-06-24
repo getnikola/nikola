@@ -80,7 +80,6 @@ from .utils import (
 __all__ = ('Post',)
 
 TEASER_REGEXP = re.compile('<!--\s*TEASER_END(:(.+))?\s*-->', re.IGNORECASE)
-_UPGRADE_METADATA_ADVERTISED = False
 
 
 class Post(object):
@@ -1051,7 +1050,6 @@ def _get_metadata_from_file(meta_data, config=None):
 
 def get_metadata_from_meta_file(path, config=None, lang=None):
     """Take a post path, and gets data from a matching .meta file."""
-    global _UPGRADE_METADATA_ADVERTISED
     meta_path = os.path.splitext(path)[0] + '.meta'
     if lang and config:
         meta_path = get_translation_candidate(config, meta_path, lang)
