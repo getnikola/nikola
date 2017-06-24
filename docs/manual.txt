@@ -449,16 +449,6 @@ Meta information can also be specified in separate ``.meta`` files. Those suppor
     .. slug: how-to-make-money
     .. date: 2012-09-15 19:52:05 UTC
 
-There is also an older version of the format. It uses the 7 base fields, in order, without names and custom meta:
-
-.. code:: text
-
-    How to make money
-    how-to-make-money
-    2012-09-15 19:52:05 UTC
-
-The support for this older format is kept only for backwards compatibility and will be removed in a future version. You can use `a converter plugin <https://plugins.getnikola.com/v7/upgrade_metadata/>`_ if you’re still using that format.
-
 Jupyter Notebook metadata
 `````````````````````````
 
