@@ -1,6 +1,11 @@
 New in master
 =============
 
+Deletions
+---------
+
+* Removed the slides directive for docutils, it will now be a separate plugin.
+
 Features
 --------
 

@@ -80,7 +80,7 @@ Nikola can't do:
 * An Issue tracker
 * Anything with forms, really (except for `comments`_!)
 
-Keep in mind that "static" doesn't mean **boring**. You can have animations, slides
+Keep in mind that "static" doesn't mean **boring**. You can have animations
 or whatever fancy CSS3/HTML5 thingie you like. It only means all that HTML is
 generated already before being uploaded. On the other hand, Nikola sites will
 tend to be content-heavy. What Nikola is good at is at putting what you write
@@ -189,7 +189,6 @@ Nikola provides the following features:
 * Easy-to-create image galleries
 * Image thumbnail generation
 * Support for displaying source code listings
-* Image slideshows
 * Custom search
 * Asset (CSS/JS) bundling
 * gzip compression (for sending via your web server)
@@ -2480,21 +2479,6 @@ least this basic HTML:
 .. code:: html
 
    <a class="image-reference" href="images/tesla.jpg"><img src="images/tesla.thumbnail.jpg"></a>
-
-Slideshows
-~~~~~~~~~~
-
-To create an image slideshow, you can use the ``slides`` directive. For example:
-
-.. code:: restructuredtext
-
-    .. slides::
-
-       /galleries/demo/tesla_conducts_lg.jpg
-       /galleries/demo/tesla_lightning2_lg.jpg
-       /galleries/demo/tesla4_lg.jpg
-       /galleries/demo/tesla_lightning1_lg.jpg
-       /galleries/demo/tesla_tower1_lg.jpg
 
 Chart
 ~~~~~
