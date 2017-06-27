@@ -143,6 +143,7 @@ setup(name='Nikola',
       extras_require=extras,
       tests_require=['pytest'],
       include_package_data=True,
+      python_requires='>=3.3',
       cmdclass={'install': nikola_install, 'test': PyTest},
       data_files=[
               ('share/doc/nikola', [
