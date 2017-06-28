@@ -22,6 +22,7 @@ Bugfixes
 Removed features
 ----------------
 
+* Removed the slides directive for docutils, it will now be a separate plugin.
 * Drop Python 2 support
 * Remove ``nikola install_theme`` — use ``nikola theme`` instead
 * Drop insecure post encryption feature
