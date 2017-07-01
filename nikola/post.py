@@ -937,19 +937,8 @@ class Post(object):
 # Code that fetches metadata from different places
 
 
-def re_meta(line, match=None):
-    """Find metadata using regular expressions."""
-    if match:
-        reStr = re.compile('^\.\. {0}: (.*)'.format(re.escape(match)))
-    else:
-        reStr = re.compile('^\.\. (.*?): (.*)')
-    result = reStr.findall(line.strip())
-    if match and result:
-        return (match, result[0])
-    elif not match and result:
-        return (result[0][0], result[0][1].strip())
-    else:
-        return (None,)
+# For backwards compatibility
+re_meta = utils.re_meta
 
 
 def _get_metadata_from_filename_by_regex(filename, metadata_regexp, unslugify_titles, lang):
@@ -982,8 +971,8 @@ def get_metadata_from_file(source_path, config=None, lang=None):
         elif lang:
             source_path += '.' + lang
         with io.open(source_path, "r", encoding="utf-8-sig") as meta_file:
-            meta_data = [x.strip() for x in meta_file.readlines()]
-        return _get_metadata_from_file(meta_data, config)
+            file_lines = [x.strip() for x in meta_file.readlines()]
+        return _get_metadata_from_file(file_lines, config)
     except (UnicodeDecodeError, UnicodeEncodeError):
         msg = 'Error reading {0}: Nikola only supports UTF-8 files'.format(source_path)
         LOGGER.error(msg)
@@ -999,52 +988,12 @@ re_rst_title = re.compile(r'^([{0}]{{4,}})'.format(re.escape(
     string.punctuation)))
 
 
-def _get_metadata_from_file(meta_data, config=None):
+def _get_metadata_from_file(file_lines, config=None):
     """Extract metadata from a post's source file."""
-    meta = {}
-    if not meta_data:
-        return meta
-
-    # Skip up to one empty line at the beginning (for txt2tags)
-    if not meta_data[0]:
-        meta_data = meta_data[1:]
-
-    # If 1st line is '---', then it's YAML metadata
-    if meta_data[0] == '---':
-        if yaml is None:
-            utils.req_missing('pyyaml', 'use YAML metadata', optional=True)
-            raise ValueError('Error parsing metadata')
-        idx = meta_data.index('---', 1)
-        meta = yaml.safe_load('\n'.join(meta_data[1:idx]))
-        # We expect empty metadata to be '', not None
-        for k in meta:
-            if meta[k] is None:
-                meta[k] = ''
+    meta, metadata_type = utils.extract_metadata(file_lines)
+    if metadata_type in ('toml', 'yaml'):
         # Map metadata from other platforms to names Nikola expects (Issue #2817)
-        map_metadata(meta, 'yaml', config)
-        return meta
-
-    # If 1st line is '+++', then it's TOML metadata
-    if meta_data[0] == '+++':
-        if toml is None:
-            utils.req_missing('toml', 'use TOML metadata', optional=True)
-            raise ValueError('Error parsing metadata')
-        idx = meta_data.index('+++', 1)
-        meta = toml.loads('\n'.join(meta_data[1:idx]))
-        # Map metadata from other platforms to names Nikola expects (Issue #2817)
-        map_metadata(meta, 'toml', config)
-        return meta
-
-    # First, get metadata from the beginning of the file,
-    # up to first empty line
-
-    for i, line in enumerate(meta_data):
-        if not line:
-            break
-        match = re_meta(line)
-        if match[0]:
-            meta[match[0]] = match[1]
-
+        map_metadata(meta, metadata_type, config)
     return meta
 
 
