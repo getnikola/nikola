@@ -2096,7 +2096,7 @@ def extract_metadata(file_lines):
     # First, get metadata from the beginning of the file,
     # up to first empty line
 
-    for i, line in enumerate(file_lines):
+    for line in file_lines:
         if not line:
             break
         match = re_meta(line)
