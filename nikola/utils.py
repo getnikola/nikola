@@ -2053,10 +2053,10 @@ def re_meta(line, match=None):
 def extract_metadata(file_lines):
     """Extract metadata from the lines of a file.
 
-    Returns a pair ``(meta, type)``, where ``meta`` is the
-    metadata dictionary and ``type`` the metadata format.
+    Returns a pair ``(meta, metadata_type)``, where ``meta`` is the
+    metadata dictionary and ``metadata_type`` the metadata format.
 
-    Valid values for ``type`` are:
+    Valid values for ``metadata_type`` are:
     * ``'none'``: no metadata was found (file was empty)
     * ``'yaml'``: metadata in YAML format
     * ``'toml'``: metadata in TOML format
@@ -2112,11 +2112,11 @@ def split_metadata(data):
     This splits in the first empty line that is NOT at the beginning
     of the document, or after YAML/TOML metadata without an empty line.
 
-    Returns a tuple ``(meta, content, type)`` where ``meta`` and
-    ``content`` are parts of ``data``, and ``type`` is the metadata
+    Returns a tuple ``(meta, content, metadata_type)`` where ``meta`` and
+    ``content`` are parts of ``data``, and ``metadata_type`` is the metadata
     format.
 
-    Valid values for ``type`` are:
+    Valid values for ``metadata_type`` are:
     * ``'none'``: no metadata was found (file was empty)
     * ``'yaml'``: metadata in YAML format
     * ``'toml'``: metadata in TOML format
@@ -2125,14 +2125,14 @@ def split_metadata(data):
     """
     if data.startswith('---'):  # YAML metadata
         split_result = re.split('(\n---\n|\r\n---\r\n)', data.lstrip(), maxsplit=1)
-        type = 'yaml'
+        metadata_type = 'yaml'
     elif data.startswith('+++'):  # TOML metadata
         split_result = re.split('(\n\\+\\+\\+\n|\r\n\\+\\+\\+\r\n)', data.lstrip(), maxsplit=1)
-        type = 'toml'
+        metadata_type = 'toml'
     else:
         split_result = re.split('(\n\n|\r\n\r\n)', data.lstrip(), maxsplit=1)
-        type = 'nikola'
+        metadata_type = 'nikola'
     if len(split_result) == 1:
         return '', split_result[0], 'none'
     # ['metadata', '\n\n', 'post content']
-    return split_result[0], split_result[-1], type
+    return split_result[0], split_result[-1], metadata_type

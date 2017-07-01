@@ -990,11 +990,11 @@ re_rst_title = re.compile(r'^([{0}]{{4,}})'.format(re.escape(
 
 def _get_metadata_from_file(file_lines, config=None):
     """Extract metadata from a post's source file."""
-    meta, type = utils.extract_metadata(file_lines)
-    if type == 'yaml':
+    meta, metadata_type = utils.extract_metadata(file_lines)
+    if metadata_type == 'yaml':
         # Map metadata from other platforms to names Nikola expects (Issue #2817)
         map_metadata(meta, 'yaml', config)
-    if type == 'toml':
+    if metadata_type == 'toml':
         # Map metadata from other platforms to names Nikola expects (Issue #2817)
         map_metadata(meta, 'toml', config)
     return meta
