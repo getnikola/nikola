@@ -2045,9 +2045,9 @@ def re_meta(line, match=None):
     if match and result:
         return (match, result[0])
     elif not match and result:
-        return (result[0][0], result[0][1].strip())
+        return result[0][0], result[0][1].strip()
     else:
-        return (None,)
+        return None, None
 
 
 def extract_metadata(file_lines):
