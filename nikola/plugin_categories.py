@@ -28,13 +28,12 @@
 
 import sys
 import os
-import re
 import io
 
 from yapsy.IPlugin import IPlugin
 from doit.cmd_base import Command as DoitCommand
 
-from .utils import LOGGER, first_line
+from .utils import LOGGER, first_line, split_metadata
 
 __all__ = (
     'Command',
@@ -329,16 +328,8 @@ class PageCompiler(BasePlugin):
         This splits in the first empty line that is NOT at the beginning
         of the document, or after YAML/TOML metadata without an empty line.
         """
-        if data.startswith('---'):  # YAML metadata
-            split_result = re.split('(\n---\n|\r\n---\r\n)', data.lstrip(), maxsplit=1)
-        elif data.startswith('+++'):  # TOML metadata
-            split_result = re.split('(\n\\+\\+\\+\n|\r\n\\+\\+\\+\r\n)', data.lstrip(), maxsplit=1)
-        else:
-            split_result = re.split('(\n\n|\r\n\r\n)', data.lstrip(), maxsplit=1)
-        if len(split_result) == 1:
-            return '', split_result[0]
-        # ['metadata', '\n\n', 'post content']
-        return split_result[0], split_result[-1]
+        meta, content, _ = split_metadata(data)
+        return meta, content
 
     def get_compiler_extensions(self):
         """Activate all the compiler extension plugins for a given compiler and return them."""

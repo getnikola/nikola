@@ -97,7 +97,7 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real',
            'adjust_name_for_index_path', 'adjust_name_for_index_link',
            'NikolaPygmentsHTML', 'create_redirect', 'clean_before_deployment',
            'sort_posts', 'indent', 'load_data', 'html_unescape', 'rss_writer',
-           'map_metadata',
+           'map_metadata', 're_meta', 'extract_metadata', 'split_metadata',
            # Deprecated, moved to hierarchy_utils:
            'TreeNode', 'clone_treenode', 'flatten_tree_structure',
            'sort_classifications', 'join_hierarchical_category_path',
@@ -2028,3 +2028,106 @@ class ClassificationTranslationManager(object):
         args = {'translation_manager': self, 'site': site,
                 'posts_per_classification_per_language': posts_per_classification_per_language}
         signal('{}_translations_config'.format(basename.lower())).send(args)
+
+
+def re_meta(line, match=None):
+    """Find metadata using regular expressions."""
+    if match:
+        reStr = re.compile('^\.\. {0}: (.*)'.format(re.escape(match)))
+    else:
+        reStr = re.compile('^\.\. (.*?): (.*)')
+    result = reStr.findall(line.strip())
+    if match and result:
+        return (match, result[0])
+    elif not match and result:
+        return (result[0][0], result[0][1].strip())
+    else:
+        return (None,)
+
+
+def extract_metadata(file_lines):
+    """Extract metadata from the lines of a file.
+
+    Returns a pair ``(meta, type)``, where ``meta`` is the
+    metadata dictionary and ``type`` the metadata format.
+
+    Valid values for ``type`` are:
+    * ``'none'``: no metadata was found (file was empty)
+    * ``'yaml'``: metadata in YAML format
+    * ``'toml'``: metadata in TOML format
+    * ``'rest'``: metadata in reST format (the standard Nikola
+                  reST-like metadata format)
+    """
+    meta = {}
+    if not file_lines:
+        return meta, 'none'
+
+    # Skip up to one empty line at the beginning (for txt2tags)
+    if not file_lines[0]:
+        file_lines = file_lines[1:]
+
+    # If 1st line is '---', then it's YAML metadata
+    if file_lines[0] == '---':
+        if yaml is None:
+            req_missing('pyyaml', 'use YAML metadata', optional=True)
+            raise ValueError('Error parsing metadata')
+        idx = file_lines.index('---', 1)
+        meta = yaml.safe_load('\n'.join(file_lines[1:idx]))
+        # We expect empty metadata to be '', not None
+        for k in meta:
+            if meta[k] is None:
+                meta[k] = ''
+        return meta, 'yaml'
+
+    # If 1st line is '+++', then it's TOML metadata
+    if file_lines[0] == '+++':
+        if toml is None:
+            req_missing('toml', 'use TOML metadata', optional=True)
+            raise ValueError('Error parsing metadata')
+        idx = file_lines.index('+++', 1)
+        meta = toml.loads('\n'.join(file_lines[1:idx]))
+        return meta, 'toml'
+
+    # First, get metadata from the beginning of the file,
+    # up to first empty line
+
+    for i, line in enumerate(file_lines):
+        if not line:
+            break
+        match = re_meta(line)
+        if match[0]:
+            meta[match[0]] = match[1]
+
+    return meta, 'nikola'
+
+
+def split_metadata(self, data):
+    """Split data from metadata in the raw post content.
+
+    This splits in the first empty line that is NOT at the beginning
+    of the document, or after YAML/TOML metadata without an empty line.
+
+    Returns a tuple ``(meta, content, type)`` where ``meta`` and
+    ``content`` are parts of ``data``, and ``type`` is the metadata
+    format.
+
+    Valid values for ``type`` are:
+    * ``'none'``: no metadata was found (file was empty)
+    * ``'yaml'``: metadata in YAML format
+    * ``'toml'``: metadata in TOML format
+    * ``'rest'``: metadata in reST format (the standard Nikola
+                  reST-like metadata format)
+    """
+    if data.startswith('---'):  # YAML metadata
+        split_result = re.split('(\n---\n|\r\n---\r\n)', data.lstrip(), maxsplit=1)
+        type = 'yaml'
+    elif data.startswith('+++'):  # TOML metadata
+        split_result = re.split('(\n\\+\\+\\+\n|\r\n\\+\\+\\+\r\n)', data.lstrip(), maxsplit=1)
+        type = 'toml'
+    else:
+        split_result = re.split('(\n\n|\r\n\r\n)', data.lstrip(), maxsplit=1)
+        type = 'nikola'
+    if len(split_result) == 1:
+        return '', split_result[0], 'none'
+    # ['metadata', '\n\n', 'post content']
+    return split_result[0], split_result[-1], type
