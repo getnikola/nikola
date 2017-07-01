@@ -2106,7 +2106,7 @@ def extract_metadata(file_lines):
     return meta, 'nikola'
 
 
-def split_metadata(self, data):
+def split_metadata(data):
     """Split data from metadata in the raw post content.
 
     This splits in the first empty line that is NOT at the beginning
