@@ -2030,12 +2030,17 @@ class ClassificationTranslationManager(object):
         signal('{}_translations_config'.format(basename.lower())).send(args)
 
 
+# Moved to global variable to avoid recompilation
+# of regex every time re_meta() is called.
+_DEFAULT_REST_METADATA_PARSING = re.compile('^\.\. (.*?): (.*)')
+
+
 def re_meta(line, match=None):
     """Find metadata using regular expressions."""
     if match:
         reStr = re.compile('^\.\. {0}: (.*)'.format(re.escape(match)))
     else:
-        reStr = re.compile('^\.\. (.*?): (.*)')
+        reStr = _DEFAULT_REST_METADATA_PARSING
     result = reStr.findall(line.strip())
     if match and result:
         return (match, result[0])
