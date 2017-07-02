@@ -52,6 +52,7 @@ class CompileIPynb(PageCompiler):
     friendly_name = "Jupyter Notebook"
     demote_headers = True
     default_kernel = 'python3'
+    supports_metadata = True
 
     def set_site(self, site):
         """Set Nikola site."""
@@ -97,10 +98,10 @@ class CompileIPynb(PageCompiler):
         else:
             post._depfile[dest] += shortcode_deps
 
-    def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
+    def read_metadata(self, post, lang=None):
         """Read metadata directly from ipynb file.
 
-        As ipynb file support arbitrary metadata as json, the metadata used by Nikola
+        As ipynb files support arbitrary metadata as json, the metadata used by Nikola
         will be assume to be in the 'nikola' subfield.
         """
         self._req_missing_ipynb()

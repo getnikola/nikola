@@ -74,6 +74,7 @@ class CompileMarkdown(PageCompiler):
     friendly_name = "Markdown"
     demote_headers = True
     site = None
+    supports_metadata = False
 
     def set_site(self, site):
         """Set Nikola site."""
@@ -90,7 +91,7 @@ class CompileMarkdown(PageCompiler):
         extensions.extend(site_extensions)
         if Markdown is not None:
             self.converter = ThreadLocalMarkdown(extensions)
-        self.support_metadata = 'markdown.extensions.meta' in extensions
+        self.supports_metadata = 'markdown.extensions.meta' in extensions
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
         """Compile Markdown into HTML strings."""
@@ -145,9 +146,9 @@ class CompileMarkdown(PageCompiler):
                 fd.write(data)
             fd.write(content)
 
-    def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
+    def read_metadata(self, post, lang=None):
         """Read the metadata from a post, and return a metadata dict."""
-        if not self.support_metadata:
+        if not self.supports_metadata:
             return {}
         if Markdown is None:
             req_missing(['markdown'], 'build this site (compile Markdown)')

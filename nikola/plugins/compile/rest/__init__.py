@@ -40,6 +40,7 @@ import docutils.parsers.rst.directives
 from docutils.parsers.rst import roles
 
 from nikola.nikola import LEGAL_VALUES
+from nikola.metadata_extractors import MetaCondition
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import (
     unicode_str,
@@ -58,11 +59,11 @@ class CompileRest(PageCompiler):
     friendly_name = "reStructuredText"
     demote_headers = True
     logger = None
+    supports_metadata = True
+    metadata_conditions = [(MetaCondition.setting_bool, "USE_REST_DOCINFO_METADATA")]
 
-    def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
+    def read_metadata(self, post, lang=None):
         """Read the metadata from a post, and return a metadata dict."""
-        if not self.site.config.get('USE_REST_DOCINFO_METADATA'):
-            return {}
         if lang is None:
             lang = LocaleBorg().current_lang
         source_path = post.translated_source_path(lang)

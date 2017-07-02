@@ -255,6 +255,8 @@ class PageCompiler(BasePlugin):
     demote_headers = False
     supports_onefile = True
     use_dep_file = True  # If set to false, the .dep file is never written and not automatically added as a target
+    supports_metadata = False
+    metadata_conditions = []
     default_metadata = {
         'title': '',
         'slug': '',
@@ -318,7 +320,7 @@ class PageCompiler(BasePlugin):
         """Return the preferred extension for the output of this compiler."""
         return ".html"
 
-    def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
+    def read_metadata(self, post, lang=None):
         """Read the metadata from a post, and return a metadata dict."""
         return {}
 
@@ -370,6 +372,51 @@ class MarkdownExtension(CompilerExtension):
 
     name = "dummy_markdown_extension"
     compiler_name = "markdown"
+
+
+class MetadataExtractor(BasePlugin):
+    """Plugins that can extract meta information from post files."""
+
+    # Where to get metadata from. (MetaSource)
+    source = None
+    # List of tuples (MetaCondition, arg) with conditions used to select this extractor
+    conditions = []
+    # Regular expression used for splitting metadata, or None if not applicable
+    split_metadata_re = None
+    # List of tuples (import name, pip name, friendly name) of Python packages required for this extractor
+    requirements = []
+    # Priority of extractor (MetaPriority)
+    priority = None
+    # Name of map to use
+    map_from = None
+
+    def _extract_metadata_from_text(self, source_text: str) -> dict:
+        """Extract metadata from text."""
+        raise NotImplementedError()
+
+    def _split_metadata_from_text(self, source_text: str) -> (str, str):
+        """Split text into metadata (str) and content"""
+        if self.split_metadata_re is None:
+            return source_text
+        else:
+            split_result = self.split_metadata_re.split(source_text.lstrip(), maxsplit=1)
+            if len(split_result) == 1:
+                return '', split_result[0]
+            else:
+                # Necessary?
+                return split_result[0], split_result[-1]
+
+    def extract_text(self, source_text: str) -> dict:
+        """Split file, return metadata and the content."""
+        # TODO: avoid splitting?
+        split = self._split_metadata_from_text(source_text)
+        meta = self._extract_metadata_from_text(split[0])
+        return meta
+
+    def extract_filename(self, filename: str, lang: str) -> dict:
+        """Extract metadata from filename."""
+        return {}
+
 
 
 class SignalHandler(BasePlugin):
