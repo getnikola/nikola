@@ -503,6 +503,7 @@ class Nikola(object):
             'FAVICONS': (),
             'FEED_LENGTH': 10,
             'FILE_METADATA_REGEXP': None,
+            'FILE_METADATA_UNSLUGIFY_TITLES': True,
             'ADDITIONAL_METADATA': {},
             'FILES_FOLDERS': {'files': ''},
             'FILTERS': {},
@@ -600,7 +601,6 @@ class Nikola(object):
             'THEME_COLOR': '#5670d4',  # light "corporate blue"
             'THUMBNAIL_SIZE': 180,
             'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}',
-            'UNSLUGIFY_TITLES': False,  # WARNING: conf.py.in overrides this with True for backwards compatibility
             'URL_TYPE': 'rel_path',
             'USE_BASE_TAG': False,
             'USE_BUNDLES': True,
@@ -727,6 +727,12 @@ class Nikola(object):
         # Setting PRESERVE_EXIF_DATA with an empty EXIF_WHITELIST implies 'keep everything'
         if self.config['PRESERVE_EXIF_DATA'] and not self.config['EXIF_WHITELIST']:
             utils.LOGGER.warn('You are setting PRESERVE_EXIF_DATA and not EXIF_WHITELIST so EXIF data is not really kept.')
+
+        # TODO: should we keep backwards compat here?
+        if 'UNSLUGIFY_TITLES' in self.config:
+            utils.LOGGER.warn('The UNSLUGIFY_TITLES setting was renamed to FILE_METADATA_UNSLUGIFY_TITLES.')
+            self.config['FILE_METADATA_UNSLUGIFY_TITLES'] = self.config['UNSLUGIFY_TITLES']
+
 
         # Handle CONTENT_FOOTER and RSS_COPYRIGHT* properly.
         # We provide the arguments to format in CONTENT_FOOTER_FORMATS and RSS_COPYRIGHT_FORMATS.

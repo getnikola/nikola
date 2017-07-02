@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Renamed ``UNSLUGIFY_TITLES`` → ``FILE_METADATA_UNSLUGIFY_TITLES`` (Issue #2840)
 * Add ``NIKOLA_SHOW_TRACEBACKS`` environment variable that shows
   full tracebacks instead of one-line summaries
 * Use ``PRETTY_URLS`` by default on all sites (Issue #1838)
