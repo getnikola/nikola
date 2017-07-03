@@ -273,7 +273,7 @@ class CommandNewPost(Command):
                     content_format = compiler
             if not content_format:
                 LOGGER.error("Unknown {0} extension {1}, maybe you need to install a plugin or enable an existing one?".format(content_type, extension))
-            return
+                return
 
         elif not content_format and import_file:
             # content_format not specified. If import_file was given, use
@@ -284,7 +284,7 @@ class CommandNewPost(Command):
                     content_format = compiler
             if not content_format:
                 LOGGER.error("Unknown {0} extension {1}, maybe you need to install a plugin or enable an existing one?".format(content_type, extension))
-            return
+                return
 
         elif not content_format:  # Issue #400
             content_format = get_default_compiler(
