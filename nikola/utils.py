@@ -57,7 +57,7 @@ except ImportError:
 import warnings
 import PyRSS2Gen as rss
 try:
-    import pytoml as toml
+    import toml
 except ImportError:
     toml = None
 try:
