@@ -42,6 +42,8 @@ class CompileHtml(PageCompiler):
 
     name = "html"
     friendly_name = "HTML"
+    supports_metadata = True
+
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
         """Compile HTML into HTML strings, with shortcode support."""

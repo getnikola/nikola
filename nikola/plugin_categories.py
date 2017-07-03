@@ -331,7 +331,8 @@ class PageCompiler(BasePlugin):
         of the document, or after YAML/TOML metadata without an empty line.
         """
         # TODO Do this depending on post object
-        return '!m!', '!!' + data
+        import nikola.metadata_extractors
+        return '!m!', nikola.metadata_extractors.DEFAULT_EXTRACTOR._split_metadata_from_text(data)[1]
 
     def get_compiler_extensions(self):
         """Activate all the compiler extension plugins for a given compiler and return them."""
