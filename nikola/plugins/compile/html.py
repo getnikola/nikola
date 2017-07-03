@@ -48,7 +48,7 @@ class CompileHtml(PageCompiler):
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
         """Compile HTML into HTML strings, with shortcode support."""
         if not is_two_file:
-            _, data = self.split_metadata(data)
+            _, data = self.split_metadata(data, post, lang)
         new_data, shortcodes = sc.extract_shortcodes(data)
         return self.site.apply_shortcodes_uuid(new_data, shortcodes, filename=source_path, extra_context={'post': post})
 

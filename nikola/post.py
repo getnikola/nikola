@@ -161,12 +161,12 @@ class Post(object):
             if os.path.isfile(get_translation_candidate(self.config, self.source_path, lang)):
                 self.translated_to.add(lang)
 
-        default_metadata, default_used_extractors = get_meta(self, lang=None)
+        default_metadata, default_used_extractor = get_meta(self, lang=None)
 
         self.meta = Functionary(lambda: None, self.default_lang)
-        self.used_extractors = Functionary(lambda: None, self.default_lang)
+        self.used_extractor = Functionary(lambda: None, self.default_lang)
         self.meta[self.default_lang] = default_metadata
-        self.used_extractors[self.default_lang] = default_used_extractors
+        self.used_extractor[self.default_lang] = default_used_extractor
 
         for lang in self.translations:
             if lang != self.default_lang:
@@ -175,7 +175,7 @@ class Post(object):
                 _meta, _extractors = get_meta(self, lang)
                 meta.update(_meta)
                 self.meta[lang] = meta
-                self.used_extractors[lang] = _extractors
+                self.used_extractor[lang] = _extractors
 
         if not self.is_translation_available(self.default_lang):
             # Special case! (Issue #373)
@@ -954,7 +954,7 @@ def get_metadata_from_file(source_path, post, config, lang, metadata_extractors_
             source_text = meta_file.read()
 
         meta = {}
-        used_extractors = []
+        used_extractor = None
         for priority in metadata_extractors.MetaPriority:
             found_in_priority = False
             for extractor in metadata_extractors_by['priority'].get(priority, []):
@@ -964,21 +964,22 @@ def get_metadata_from_file(source_path, post, config, lang, metadata_extractors_
                 new_meta = extractor.extract_text(source_text)
                 if new_meta:
                     found_in_priority = True
-                    used_extractors.append(extractor)
+                    used_extractor = extractor
                     # Map metadata from other platforms to names Nikola expects (Issue #2817)
                     map_metadata(new_meta, extractor.map_from, config)
 
                     meta.update(new_meta)
+                    break
 
             if found_in_priority:
                 break
-        return meta, used_extractors
+        return meta, used_extractor
     except (UnicodeDecodeError, UnicodeEncodeError):
         msg = 'Error reading {0}: Nikola only supports UTF-8 files'.format(source_path)
         LOGGER.error(msg)
         raise ValueError(msg)
     except Exception:  # The file may not exist, for multilingual sites
-        return {}, []
+        return {}, None
 
 
 def get_metadata_from_meta_file(path, post, config, lang, metadata_extractors_by=None):
@@ -1002,7 +1003,7 @@ def get_metadata_from_meta_file(path, post, config, lang, metadata_extractors_by
 def get_meta(post, lang):
     """Get post meta from compiler or source file."""
     meta = defaultdict(lambda: '')
-    used_extractors = []
+    used_extractor = None
 
     config = getattr(post, 'config', None)
     metadata_extractors_by = getattr(post, 'metadata_extractors_by', {})
@@ -1019,12 +1020,13 @@ def get_meta(post, lang):
     if (getattr(post, 'compiler', None) and post.compiler.supports_metadata and
             metadata_extractors.check_conditions(post, post.source_path, post.compiler.metadata_conditions, config, None)):
         compiler_meta = post.compiler.read_metadata(post, lang=lang)
+        used_extractor = post.compiler
         meta.update(compiler_meta)
 
     if not post.is_two_file and not compiler_meta:
         # Meta file has precedence over file, which can contain garbage.
         # Moreover, we should not read the file if we have compiler meta.
-        new_meta, used_extractors = get_metadata_from_file(post.source_path, post, config, lang, metadata_extractors_by)
+        new_meta, used_extractor = get_metadata_from_file(post.source_path, post, config, lang, metadata_extractors_by)
         meta.update(new_meta)
 
     # Filename-based metadata extractors (fallback only)
@@ -1047,7 +1049,7 @@ def get_meta(post, lang):
             meta['title'] = os.path.splitext(
                 os.path.basename(post.source_path))[0]
 
-    return meta, used_extractors
+    return meta, used_extractor
 
 
 def hyphenate(dom, _lang):

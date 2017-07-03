@@ -98,7 +98,7 @@ class CompileMarkdown(PageCompiler):
         if Markdown is None:
             req_missing(['markdown'], 'build this site (compile Markdown)')
         if not is_two_file:
-            _, data = self.split_metadata(data)
+            _, data = self.split_metadata(data, post, lang)
         new_data, shortcodes = sc.extract_shortcodes(data)
         output, _ = self.converter.convert(new_data)
         output, shortcode_deps = self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, extra_context={'post': post})

@@ -87,8 +87,12 @@ def check_requirements(extractor: MetadataExtractor):
         try:
             __import__(import_name)
         except ImportError:
-            req_missing([pip_name], "use {0} metadata" + friendly_name, python=True, optional=False)
+            req_missing([pip_name], "use {0} metadata".format(friendly_name), python=True, optional=False)
 
+
+def is_extractor(extractor):
+    """Check if a given class is an extractor."""
+    return isinstance(extractor, MetadataExtractor)
 
 class NikolaMetadata(MetadataExtractor):
     """Extractor for Nikola-style metadata."""

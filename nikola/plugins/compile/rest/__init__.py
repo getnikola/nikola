@@ -105,7 +105,7 @@ class CompileRest(PageCompiler):
         # 7 with default metadata, could be more or less depending on the post).
         add_ln = 0
         if not is_two_file:
-            m_data, data = self.split_metadata(data)
+            m_data, data = self.split_metadata(data, post, lang)
             add_ln = len(m_data.splitlines()) + 1
 
         default_template_path = os.path.join(os.path.dirname(__file__), 'template.txt')

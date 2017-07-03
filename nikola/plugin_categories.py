@@ -324,15 +324,18 @@ class PageCompiler(BasePlugin):
         """Read the metadata from a post, and return a metadata dict."""
         return {}
 
-    def split_metadata(self, data):
-        """Split data from metadata in the raw post content.
-
-        This splits in the first empty line that is NOT at the beginning
-        of the document, or after YAML/TOML metadata without an empty line.
-        """
-        # TODO Do this depending on post object
+    def split_metadata(self, data, post=None, lang=None):
+        """Split data from metadata in the raw post content."""
         import nikola.metadata_extractors
-        return '!m!', nikola.metadata_extractors.DEFAULT_EXTRACTOR._split_metadata_from_text(data)[1]
+        if lang and post:
+            extractor = post.used_extractor[lang]
+        else:
+            extractor = nikola.metadata_extractors.DEFAULT_EXTRACTOR
+
+        if nikola.metadata_extractors.is_extractor(extractor):
+            return extractor.split_metadata_from_text(data)
+        else:
+            return data, data
 
     def get_compiler_extensions(self):
         """Activate all the compiler extension plugins for a given compiler and return them."""
@@ -397,7 +400,7 @@ class MetadataExtractor(BasePlugin):
         """Extract metadata from text."""
         raise NotImplementedError()
 
-    def _split_metadata_from_text(self, source_text: str) -> (str, str):
+    def split_metadata_from_text(self, source_text: str) -> (str, str):
         """Split text into metadata (str) and content."""
         if self.split_metadata_re is None:
             return source_text
@@ -412,7 +415,7 @@ class MetadataExtractor(BasePlugin):
     def extract_text(self, source_text: str) -> dict:
         """Split file, return metadata and the content."""
         # TODO: avoid splitting?
-        split = self._split_metadata_from_text(source_text)
+        split = self.split_metadata_from_text(source_text)
         meta = self._extract_metadata_from_text(split[0])
         return meta
 
