@@ -34,9 +34,12 @@ from nikola.utils import unslugify, req_missing
 
 __all__ = ('MetaCondition', 'MetaPriority', 'MetaSource', 'check_conditions')
 me_defaults = ('NikolaMetadata', 'YAMLMetadata', 'TOMLMetadata', 'FilenameRegexMetadata')
+DEFAULT_EXTRACTOR = None
+
 
 class MetaCondition(Enum):
     """Conditions for extracting metadata."""
+
     setting_bool = 1
     extension = 2
     compiler = 3
@@ -48,6 +51,7 @@ class MetaPriority(Enum):
     """Priority of metadata.
 
     An extractor is used if and only if the higher-priority extractors returned nothing."""
+
     compiler = 1
     specialized = 2
     normal = 3
@@ -55,7 +59,8 @@ class MetaPriority(Enum):
 
 
 class MetaSource(Enum):
-    """"Source of metadata."""
+    """Source of metadata."""
+
     text = 1
     filename = 2
     post = 3
@@ -88,6 +93,7 @@ def check_requirements(extractor: MetadataExtractor):
 
 class NikolaMetadata(MetadataExtractor):
     """Extractor for Nikola-style metadata."""
+
     name = 'nikola'  # TODO: needed?
     source = MetaSource.text
     split_metadata_re = re.compile('\n\n')
@@ -102,8 +108,10 @@ class NikolaMetadata(MetadataExtractor):
                 outdict[match.group(1)] = match.group(2)
         return outdict
 
+
 class YAMLMetadata(MetadataExtractor):
     """Extractor for YAML metadata."""
+
     name = 'yaml'
     source = MetaSource.text
     conditions = ((MetaCondition.first_line, '---'),)
@@ -124,6 +132,7 @@ class YAMLMetadata(MetadataExtractor):
 
 class TOMLMetadata(MetadataExtractor):
     """Extractor for TOML metadata."""
+
     name = 'toml'
     source = MetaSource.text
     conditions = ((MetaCondition.first_line, '+++'),)
@@ -138,6 +147,8 @@ class TOMLMetadata(MetadataExtractor):
 
 
 class FilenameRegexMetadata(MetadataExtractor):
+    """Extractor for filename metadata."""
+
     name = 'filename_regex'
     source = MetaSource.filename
     priority = MetaPriority.fallback

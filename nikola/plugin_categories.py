@@ -330,6 +330,7 @@ class PageCompiler(BasePlugin):
         This splits in the first empty line that is NOT at the beginning
         of the document, or after YAML/TOML metadata without an empty line.
         """
+        # Do this depending on post object
         meta, content, _ = split_metadata(data)
         return meta, content
 
@@ -395,7 +396,7 @@ class MetadataExtractor(BasePlugin):
         raise NotImplementedError()
 
     def _split_metadata_from_text(self, source_text: str) -> (str, str):
-        """Split text into metadata (str) and content"""
+        """Split text into metadata (str) and content."""
         if self.split_metadata_re is None:
             return source_text
         else:
@@ -416,7 +417,6 @@ class MetadataExtractor(BasePlugin):
     def extract_filename(self, filename: str, lang: str) -> dict:
         """Extract metadata from filename."""
         return {}
-
 
 
 class SignalHandler(BasePlugin):

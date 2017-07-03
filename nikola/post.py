@@ -34,7 +34,6 @@ import hashlib
 import json
 import os
 import re
-import string
 try:
     from urlparse import urljoin
 except ImportError:
@@ -73,7 +72,6 @@ from .utils import (
     unicode_str,
     demote_headers,
     get_translation_candidate,
-    unslugify,
     map_metadata
 )
 from nikola import metadata_extractors
