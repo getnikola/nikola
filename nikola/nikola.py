@@ -79,7 +79,7 @@ from .plugin_categories import (
     Taxonomy,
 )
 from . import metadata_extractors
-from .metadata_extractors import MetaSource, MetaPriority
+from .metadata_extractors import MetaSource, MetaPriority, default_metadata_extractors_by
 
 if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
@@ -427,18 +427,7 @@ class Nikola(object):
         self.injected_deps = defaultdict(list)
         self.shortcode_registry = {}
         self.metadata_extractors_all = []
-        self.metadata_extractors_by = {
-            'priority': {
-                MetaPriority.specialized: [],
-                MetaPriority.normal: [],
-                MetaPriority.fallback: [],
-            },
-            'source': {
-                MetaSource.text: [],
-                MetaSource.filename: [],
-            },
-            'name': {}
-        }
+        self.metadata_extractors_by = default_metadata_extractors_by()
 
         self.rst_transforms = []
         self.template_hooks = {

@@ -65,7 +65,7 @@ class MetaSource(Enum):
     filename = 2
 
 
-def check_conditions(post, filename: str, conditions: list, config: dict, source_text: str):
+def check_conditions(post, filename: str, conditions: list, config: dict, source_text: str) -> bool:
     """Check the conditions for a metadata extractor."""
     for ct, arg in conditions:
         if any((
@@ -90,9 +90,25 @@ def check_requirements(extractor: MetadataExtractor):
             req_missing([pip_name], "use {0} metadata".format(friendly_name), python=True, optional=False)
 
 
-def is_extractor(extractor):
+def is_extractor(extractor) -> bool:
     """Check if a given class is an extractor."""
     return isinstance(extractor, MetadataExtractor)
+
+def default_metadata_extractors_by() -> dict:
+    """Return the default metadata_extractors_by dictionary."""
+    return {
+        'priority': {
+            MetaPriority.specialized: [],
+            MetaPriority.normal: [],
+            MetaPriority.fallback: [],
+        },
+        'source': {
+            MetaSource.text: [],
+            MetaSource.filename: [],
+        },
+        'name': {}
+    }
+
 
 class NikolaMetadata(MetadataExtractor):
     """Extractor for Nikola-style metadata."""

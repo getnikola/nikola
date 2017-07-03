@@ -326,13 +326,13 @@ class PageCompiler(BasePlugin):
 
     def split_metadata(self, data, post=None, lang=None):
         """Split data from metadata in the raw post content."""
-        import nikola.metadata_extractors
         if lang and post:
             extractor = post.used_extractor[lang]
         else:
+            import nikola.metadata_extractors
             extractor = nikola.metadata_extractors.DEFAULT_EXTRACTOR
 
-        if nikola.metadata_extractors.is_extractor(extractor):
+        if isinstance(extractor, MetadataExtractor):
             return extractor.split_metadata_from_text(data)
         else:
             return data, data

@@ -995,7 +995,7 @@ def get_metadata_from_meta_file(path, post, config, lang, metadata_extractors_by
         # Metadata file doesn't exist, but not default language,
         # So, if default language metadata exists, return that.
         # This makes the 2-file format detection more reliable (Issue #525)
-        return get_metadata_from_meta_file(meta_path, post, config, None, metadata_extractors_by)[0]
+        return get_metadata_from_meta_file(meta_path, post, config, None, metadata_extractors_by)
     else:  # No 2-file metadata
         return {}
 
@@ -1006,7 +1006,7 @@ def get_meta(post, lang):
     used_extractor = None
 
     config = getattr(post, 'config', None)
-    metadata_extractors_by = getattr(post, 'metadata_extractors_by', {})
+    metadata_extractors_by = getattr(post, 'metadata_extractors_by', metadata_extractors.default_metadata_extractors_by())
 
     # If meta file exists, use it
     meta.update(get_metadata_from_meta_file(post.metadata_path, post, config, lang, metadata_extractors_by))
