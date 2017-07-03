@@ -972,7 +972,6 @@ def get_metadata_from_file(source_path, post, config, lang, metadata_extractors_
 
             if found_in_priority:
                 break
-
         return meta, used_extractors
     except (UnicodeDecodeError, UnicodeEncodeError):
         msg = 'Error reading {0}: Nikola only supports UTF-8 files'.format(source_path)
@@ -990,13 +989,12 @@ def get_metadata_from_meta_file(path, post, config, lang, metadata_extractors_by
     elif lang:
         meta_path += '.' + lang
     if os.path.isfile(meta_path):
-        return get_metadata_from_file(path, post, config, lang, metadata_extractors_by)[0]
-
+        return get_metadata_from_file(meta_path, post, config, lang, metadata_extractors_by)[0]
     elif lang:
         # Metadata file doesn't exist, but not default language,
         # So, if default language metadata exists, return that.
         # This makes the 2-file format detection more reliable (Issue #525)
-        return get_metadata_from_meta_file(path, post, config, None, metadata_extractors_by)[0]
+        return get_metadata_from_meta_file(meta_path, post, config, None, metadata_extractors_by)[0]
     else:  # No 2-file metadata
         return {}
 

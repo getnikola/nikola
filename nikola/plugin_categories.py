@@ -404,7 +404,7 @@ class MetadataExtractor(BasePlugin):
         else:
             split_result = self.split_metadata_re.split(source_text.lstrip(), maxsplit=1)
             if len(split_result) == 1:
-                return '', split_result[0]
+                return split_result[0], split_result[0]
             else:
                 # Necessary?
                 return split_result[0], split_result[-1]
