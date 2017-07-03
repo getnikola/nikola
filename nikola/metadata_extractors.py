@@ -42,9 +42,10 @@ class MetaCondition(Enum):
     """Conditions for extracting metadata."""
 
     config_bool = 1
-    extension = 2
-    compiler = 3
-    first_line = 4
+    config_present = 2
+    extension = 3
+    compiler = 4
+    first_line = 5
     never = -1
 
 
@@ -69,7 +70,8 @@ def check_conditions(post, filename: str, conditions: list, config: dict, source
     """Check the conditions for a metadata extractor."""
     for ct, arg in conditions:
         if any((
-            ct == MetaCondition.config_bool and not config[arg],
+            ct == MetaCondition.config_bool and (arg not in config or (arg in config and not config[arg])),
+            ct == MetaCondition.config_present and arg not in config,
             ct == MetaCondition.extension and not filename.endswith(arg),
             ct == MetaCondition.compiler and post.compiler.name != arg,
             ct == MetaCondition.never
