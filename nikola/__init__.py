@@ -31,6 +31,7 @@ import sys
 
 __version__ = '8.0.0.dev0'
 DEBUG = bool(os.getenv('NIKOLA_DEBUG'))
+SHOW_TRACEBACKS = bool(os.getenv('NIKOLA_SHOW_TRACEBACKS'))
 
 if sys.version_info[0] == 2:
     raise Exception("Nikola does not support Python 2.")

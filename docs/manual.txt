@@ -2862,7 +2862,8 @@ stderr.  Thus, you must use the different call.  (Alternatively, you could run
 with ``nikola build -v 2``, which disables the redirections.)
 
 To show more logging messages, as well as full tracebacks, you need to set an
-environment variable: ``NIKOLA_DEBUG=1``
+environment variable: ``NIKOLA_DEBUG=1``. If you want to only see tracebacks,
+set ``NIKOLA_SHOW_TRACEBACKS=1``.
 
 Shell Tab Completion
 ~~~~~~~~~~~~~~~~~~~~

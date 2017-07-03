@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Add ``NIKOLA_SHOW_TRACEBACKS`` environment variable that shows
+  full tracebacks instead of one-line summaries
 * Use ``PRETTY_URLS`` by default on all sites (Issue #1838)
 * Feed link generation is completely refactored (Issue #2844)
 * Added ``extract_metadata`` and ``split_metadata`` to the

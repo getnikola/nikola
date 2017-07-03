@@ -60,7 +60,7 @@ from blinker import signal
 
 from .post import Post  # NOQA
 from .state import Persistor
-from . import DEBUG, filters, utils, hierarchy_utils, shortcodes
+from . import DEBUG, SHOW_TRACEBACKS, filters, utils, hierarchy_utils, shortcodes
 from .plugin_categories import (
     Command,
     LateTask,
@@ -413,6 +413,7 @@ class Nikola(object):
         self._MESSAGES = None
         self.filters = {}
         self.debug = DEBUG
+        self.show_tracebacks = SHOW_TRACEBACKS
         self.colorful = config.pop('__colorful__', False)
         self.invariant = config.pop('__invariant__', False)
         self.quiet = config.pop('__quiet__', False)
