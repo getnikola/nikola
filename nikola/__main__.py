@@ -280,7 +280,7 @@ class NikolaTaskLoader(TaskLoader):
             signal('initialized').send(self.nikola)
         except Exception:
             LOGGER.error('Error loading tasks. An unhandled exception occurred.')
-            if self.nikola.debug:
+            if self.nikola.debug or self.nikola.show_tracebacks:
                 raise
             _print_exception()
             sys.exit(3)
@@ -369,7 +369,7 @@ class DoitNikola(DoitMain):
             return super(DoitNikola, self).run(cmd_args)
         except Exception:
             LOGGER.error('An unhandled exception occurred.')
-            if self.nikola.debug:
+            if self.nikola.debug or self.nikola.show_tracebacks:
                 raise
             _print_exception()
             return 1
@@ -412,7 +412,7 @@ def _print_exception():
     """Print an exception in a friendlier, shorter style."""
     etype, evalue, _ = sys.exc_info()
     LOGGER.error(''.join(traceback.format_exception(etype, evalue, None, limit=0, chain=False)).strip())
-    LOGGER.notice("To see more details, run Nikola in debug mode (set environment variable NIKOLA_DEBUG=1)")
+    LOGGER.notice("To see more details, run Nikola in debug mode (set environment variable NIKOLA_DEBUG=1) or use NIKOLA_SHOW_TRACEBACKS=1")
 
 
 if __name__ == "__main__":
