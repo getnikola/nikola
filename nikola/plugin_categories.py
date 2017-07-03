@@ -33,7 +33,7 @@ import io
 from yapsy.IPlugin import IPlugin
 from doit.cmd_base import Command as DoitCommand
 
-from .utils import LOGGER, first_line, split_metadata
+from .utils import LOGGER, first_line
 
 __all__ = (
     'Command',
@@ -330,9 +330,8 @@ class PageCompiler(BasePlugin):
         This splits in the first empty line that is NOT at the beginning
         of the document, or after YAML/TOML metadata without an empty line.
         """
-        # Do this depending on post object
-        meta, content, _ = split_metadata(data)
-        return meta, content
+        # TODO Do this depending on post object
+        return '!m!', '!!' + data
 
     def get_compiler_extensions(self):
         """Activate all the compiler extension plugins for a given compiler and return them."""
@@ -378,6 +377,8 @@ class MarkdownExtension(CompilerExtension):
 class MetadataExtractor(BasePlugin):
     """Plugins that can extract meta information from post files."""
 
+    # Name of the extractor.
+    name = "unknown"
     # Where to get metadata from. (MetaSource)
     source = None
     # List of tuples (MetaCondition, arg) with conditions used to select this extractor

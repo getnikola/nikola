@@ -78,6 +78,8 @@ from .plugin_categories import (
     PostScanner,
     Taxonomy,
 )
+from . import metadata_extractors
+from .metadata_extractors import MetaSource, MetaPriority
 
 if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
@@ -424,6 +426,19 @@ class Nikola(object):
         self.configured = bool(config)
         self.injected_deps = defaultdict(list)
         self.shortcode_registry = {}
+        self.metadata_extractors_all = []
+        self.metadata_extractors_by = {
+            'priority': {
+                MetaPriority.specialized: [],
+                MetaPriority.normal: [],
+                MetaPriority.fallback: [],
+            },
+            'source': {
+                MetaSource.text: [],
+                MetaSource.filename: [],
+            },
+            'name': {}
+        }
 
         self.rst_transforms = []
         self.template_hooks = {
@@ -825,6 +840,16 @@ class Nikola(object):
             utils.LOGGER.error("Punycode of {}: {}".format(_bnl, _bnl.encode('idna')))
             sys.exit(1)
 
+        # Load built-in metadata extractors
+        for i in metadata_extractors.me_defaults:
+            inst = getattr(metadata_extractors, i)()
+            inst.site = self
+            self._add_metadata_extractor(inst)
+        if metadata_extractors.DEFAULT_EXTRACTOR is None:
+            utils.LOGGER.error("Could not find default meta extractor ({})".format(
+                metadata_extractors.DEFAULT_EXTRACTOR_NAME))
+            sys.exit(1)
+
         # The pelican metadata format requires a markdown extension
         if config.get('METADATA_FORMAT', 'nikola').lower() == 'pelican':
             if 'markdown.extensions.meta' not in config.get('MARKDOWN_EXTENSIONS', []) \
@@ -1006,6 +1031,10 @@ class Nikola(object):
         if 'needs_ipython_css' not in self._GLOBAL_CONTEXT:
             self._GLOBAL_CONTEXT['needs_ipython_css'] = 'ipynb' in self.config['COMPILERS']
 
+        # Activate metadata extractors and prepare them for use
+        for p in self._activate_plugins_of_category("MetadataExtractor"):
+            self._add_metadata_extractor(p.plugin_object)
+
         self._activate_plugins_of_category("Taxonomy")
         self.taxonomy_plugins = {}
         for taxonomy in [p.plugin_object for p in self.plugin_manager.getPluginsOfCategory('Taxonomy')]:
@@ -1184,6 +1213,15 @@ class Nikola(object):
             plugin_info.plugin_object.set_site(self)
             plugins.append(plugin_info)
         return plugins
+
+    def _add_metadata_extractor(self, extractor: MetadataExtractor):
+        """Add a metadata extractor to the site."""
+        if extractor.name == metadata_extractors.DEFAULT_EXTRACTOR_NAME:
+            metadata_extractors.DEFAULT_EXTRACTOR = extractor
+        self.metadata_extractors_all.append(extractor)
+        self.metadata_extractors_by['priority'][extractor.priority].append(extractor)
+        self.metadata_extractors_by['source'][extractor.source].append(extractor)
+        self.metadata_extractors_by['name'][extractor.name] = extractor
 
     def _get_themes(self):
         if self._THEMES is None:

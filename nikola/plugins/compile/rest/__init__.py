@@ -60,7 +60,7 @@ class CompileRest(PageCompiler):
     demote_headers = True
     logger = None
     supports_metadata = True
-    metadata_conditions = [(MetaCondition.setting_bool, "USE_REST_DOCINFO_METADATA")]
+    metadata_conditions = [(MetaCondition.config_bool, "USE_REST_DOCINFO_METADATA")]
 
     def read_metadata(self, post, lang=None):
         """Read the metadata from a post, and return a metadata dict."""

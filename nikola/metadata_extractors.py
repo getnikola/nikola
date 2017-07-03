@@ -34,13 +34,14 @@ from nikola.utils import unslugify, req_missing
 
 __all__ = ('MetaCondition', 'MetaPriority', 'MetaSource', 'check_conditions')
 me_defaults = ('NikolaMetadata', 'YAMLMetadata', 'TOMLMetadata', 'FilenameRegexMetadata')
+DEFAULT_EXTRACTOR_NAME = 'nikola'
 DEFAULT_EXTRACTOR = None
 
 
 class MetaCondition(Enum):
     """Conditions for extracting metadata."""
 
-    setting_bool = 1
+    config_bool = 1
     extension = 2
     compiler = 3
     first_line = 4
@@ -52,10 +53,9 @@ class MetaPriority(Enum):
 
     An extractor is used if and only if the higher-priority extractors returned nothing."""
 
-    compiler = 1
-    specialized = 2
-    normal = 3
-    fallback = 4
+    specialized = 1
+    normal = 2
+    fallback = 3
 
 
 class MetaSource(Enum):
@@ -63,14 +63,13 @@ class MetaSource(Enum):
 
     text = 1
     filename = 2
-    post = 3
 
 
 def check_conditions(post, filename: str, conditions: list, config: dict, source_text: str):
     """Check the conditions for a metadata extractor."""
     for ct, arg in conditions:
         if any((
-            ct == MetaCondition.setting_bool and not config[arg],
+            ct == MetaCondition.config_bool and not config[arg],
             ct == MetaCondition.extension and not filename.endswith(arg),
             ct == MetaCondition.compiler and post.compiler.name != arg,
             ct == MetaCondition.never
@@ -94,8 +93,9 @@ def check_requirements(extractor: MetadataExtractor):
 class NikolaMetadata(MetadataExtractor):
     """Extractor for Nikola-style metadata."""
 
-    name = 'nikola'  # TODO: needed?
+    name = 'nikola'
     source = MetaSource.text
+    priority = MetaPriority.normal
     split_metadata_re = re.compile('\n\n')
     nikola_re = re.compile('^\.\. (.*?): (.*)')
 
@@ -152,6 +152,7 @@ class FilenameRegexMetadata(MetadataExtractor):
     name = 'filename_regex'
     source = MetaSource.filename
     priority = MetaPriority.fallback
+    conditions = [(MetaCondition.config_bool, 'FILE_METADATA_REGEXP')]
 
     def extract_filename(self, filename: str, lang: str) -> dict:
         """Try to read the metadata from the filename based on the given re.

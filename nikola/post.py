@@ -943,7 +943,7 @@ class Post(object):
             return ext
 
 
-def get_metadata_from_file(source_path, post=None, config=None, lang=None, metadata_extractors_by=None):
+def get_metadata_from_file(source_path, post, config, lang, metadata_extractors_by):
     """Extract metadata from the file itself, by parsing contents."""
     try:
         if lang and config:
@@ -979,10 +979,10 @@ def get_metadata_from_file(source_path, post=None, config=None, lang=None, metad
         LOGGER.error(msg)
         raise ValueError(msg)
     except Exception:  # The file may not exist, for multilingual sites
-        return {}
+        return {}, []
 
 
-def get_metadata_from_meta_file(path, post=None, config=None, lang=None, metadata_extractors_by=None):
+def get_metadata_from_meta_file(path, post, config, lang, metadata_extractors_by=None):
     """Take a post path, and gets data from a matching .meta file."""
     meta_path = os.path.splitext(path)[0] + '.meta'
     if lang and config:
@@ -1001,7 +1001,7 @@ def get_metadata_from_meta_file(path, post=None, config=None, lang=None, metadat
         return {}
 
 
-def get_meta(post, lang=None):
+def get_meta(post, lang):
     """Get post meta from compiler or source file."""
     meta = defaultdict(lambda: '')
     used_extractors = []
@@ -1010,7 +1010,7 @@ def get_meta(post, lang=None):
     metadata_extractors_by = getattr(post, 'metadata_extractors_by', {})
 
     # If meta file exists, use it
-    meta.update(get_metadata_from_meta_file(post.metadata_path, config, lang, metadata_extractors_by))
+    meta.update(get_metadata_from_meta_file(post.metadata_path, post, config, lang, metadata_extractors_by))
 
     if not meta:
         post.is_two_file = False
@@ -1026,7 +1026,7 @@ def get_meta(post, lang=None):
     if not post.is_two_file and not compiler_meta:
         # Meta file has precedence over file, which can contain garbage.
         # Moreover, we should not read the file if we have compiler meta.
-        new_meta, used_extractors = get_metadata_from_file(post.source_path, config, lang, metadata_extractors_by)
+        new_meta, used_extractors = get_metadata_from_file(post.source_path, post, config, lang, metadata_extractors_by)
         meta.update(new_meta)
 
     # Filename-based metadata extractors (fallback only)
