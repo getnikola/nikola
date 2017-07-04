@@ -60,6 +60,9 @@ configuration file:
     # And to avoid a conflict because blogs try to generate /index.html
     INDEX_PATH = "blog"
 
+    # Or you can disable blog indexes altogether:
+    # DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED = True
+
 
 And now we are ready to create our first page:
 
