@@ -54,9 +54,10 @@ class MetaPriority(Enum):
 
     An extractor is used if and only if the higher-priority extractors returned nothing."""
 
-    specialized = 1
-    normal = 2
-    fallback = 3
+    override = 1
+    specialized = 2
+    normal = 3
+    fallback = 4
 
 
 class MetaSource(Enum):
@@ -99,18 +100,18 @@ def is_extractor(extractor) -> bool:
 
 def default_metadata_extractors_by() -> dict:
     """Return the default metadata_extractors_by dictionary."""
-    return {
-        'priority': {
-            MetaPriority.specialized: [],
-            MetaPriority.normal: [],
-            MetaPriority.fallback: [],
-        },
-        'source': {
-            MetaSource.text: [],
-            MetaSource.filename: [],
-        },
+    d = {
+        'priority': {},
+        'source': {},
         'name': {}
     }
+
+    for i in MetaPriority:
+        d['priority'][i] = []
+    for i in MetaSource:
+        d['source'][i] = []
+
+    return d
 
 
 class NikolaMetadata(MetadataExtractor):
@@ -123,7 +124,6 @@ class NikolaMetadata(MetadataExtractor):
     nikola_re = re.compile('^\s*\.\. (.*?): (.*)')
 
     def _extract_metadata_from_text(self, source_text: str) -> dict:
-        # TODO: what was `match` for in old re_meta thing for?
         outdict = {}
         for line in source_text.split('\n'):
             match = self.nikola_re.match(line)

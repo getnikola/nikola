@@ -381,19 +381,19 @@ class MarkdownExtension(CompilerExtension):
 class MetadataExtractor(BasePlugin):
     """Plugins that can extract meta information from post files."""
 
-    # Name of the extractor.
+    # Name of the extractor. (required)
     name = "unknown"
-    # Where to get metadata from. (MetaSource)
+    # Where to get metadata from. (MetaSource; required)
     source = None
-    # List of tuples (MetaCondition, arg) with conditions used to select this extractor
-    conditions = []
-    # Regular expression used for splitting metadata, or None if not applicable
-    split_metadata_re = None
-    # List of tuples (import name, pip name, friendly name) of Python packages required for this extractor
-    requirements = []
-    # Priority of extractor (MetaPriority)
+    # Priority of extractor. (MetaPriority; required)
     priority = None
-    # Name of map to use
+    # List of tuples (MetaCondition, arg) with conditions used to select this extractor.
+    conditions = []
+    # Regular expression used for splitting metadata, or None if not applicable.
+    split_metadata_re = None
+    # List of tuples (import name, pip name, friendly name) of Python packages required for this extractor.
+    requirements = []
+    # Name of METADATA_MAPPING to use, if any.
     map_from = None
 
     def _extract_metadata_from_text(self, source_text: str) -> dict:
@@ -414,7 +414,6 @@ class MetadataExtractor(BasePlugin):
 
     def extract_text(self, source_text: str) -> dict:
         """Split file, return metadata and the content."""
-        # TODO: avoid splitting?
         split = self.split_metadata_from_text(source_text)
         meta = self._extract_metadata_from_text(split[0])
         return meta
