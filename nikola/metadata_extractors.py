@@ -96,6 +96,7 @@ def is_extractor(extractor) -> bool:
     """Check if a given class is an extractor."""
     return isinstance(extractor, MetadataExtractor)
 
+
 def default_metadata_extractors_by() -> dict:
     """Return the default metadata_extractors_by dictionary."""
     return {
@@ -119,7 +120,7 @@ class NikolaMetadata(MetadataExtractor):
     source = MetaSource.text
     priority = MetaPriority.normal
     split_metadata_re = re.compile('\n\n')
-    nikola_re = re.compile('^\.\. (.*?): (.*)')
+    nikola_re = re.compile('^\s*\.\. (.*?): (.*)')
 
     def _extract_metadata_from_text(self, source_text: str) -> dict:
         # TODO: what was `match` for in old re_meta thing for?
