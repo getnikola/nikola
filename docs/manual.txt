@@ -408,7 +408,7 @@ Current Nikola versions experimentally supports other metadata formats that make
 other static site generators. The currently supported metadata formats are:
 
 * reST-style comments (``.. name: value`` — default format)
-* Two-file format (reST-style comments or 7-line)
+* Two-file format (reST-style, YAML, TOML)
 * Jupyter Notebook metadata
 * YAML, between ``---`` (Jekyll, Hugo)
 * TOML, between ``+++`` (Hugo)
@@ -421,7 +421,7 @@ You can add arbitrary meta fields in any format.
 When you create new posts, by default the metadata will be created as reST style comments.
 If you prefer a different format, you can set the ``METADATA_FORMAT`` to one of these values:
 
-* ``"Nikola"``: reST comments wrapped in a comment if needed (default)
+* ``"Nikola"``: reST comments, wrapped in a HTML comment if needed (default)
 * ``"YAML"``: YAML wrapped in "---"
 * ``"TOML"``: TOML wrapped in "+++"
 * ``"Pelican"``: Native markdown metadata or reST docinfo fields. Nikola style for other formats.
@@ -447,6 +447,8 @@ Meta information can also be specified in separate ``.meta`` files. Those suppor
     .. title: How to make money
     .. slug: how-to-make-money
     .. date: 2012-09-15 19:52:05 UTC
+
+You can also use YAML or TOML metadata inside those (with the appropriate markers).
 
 Jupyter Notebook metadata
 `````````````````````````
