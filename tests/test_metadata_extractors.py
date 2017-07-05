@@ -5,7 +5,6 @@ import mock
 import os
 import pytest
 from .base import FakeSite
-from nikola.utils import LocaleBorg
 from nikola.metadata_extractors import default_metadata_extractors_by, load_defaults
 from nikola.post import get_meta
 from nikola.plugins.compile.rest import CompileRest
@@ -135,8 +134,9 @@ def test_compiler_metadata(metadata_extractors_by, compiler_data):
 
     class FakeBorg():
         current_lang = 'en'
-        def __call__(self): return self
 
+        def __call__(self):
+            return self
 
     with mock.patch('nikola.plugins.compile.' + compiler_lc + '.LocaleBorg', FakeBorg):
         meta, extractor = get_meta(post, None)
