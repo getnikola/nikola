@@ -137,13 +137,7 @@ class CompileMarkdown(PageCompiler):
             content += '\n'
         with io.open(path, "w+", encoding="utf8") as fd:
             if onefile:
-                _format = self.site.config.get('METADATA_FORMAT', 'nikola').lower()
-                if _format == 'pelican':
-                    _format = 'pelican_md'
-                data = write_metadata(metadata, _format)
-                if _format == 'nikola':
-                    data = '<!--\n' + data + '-->\n\n'
-                fd.write(data)
+                fd.write(write_metadata(metadata, comment_wrap=True, site=self.site, compiler=self))
             fd.write(content)
 
     def read_metadata(self, post, lang=None):

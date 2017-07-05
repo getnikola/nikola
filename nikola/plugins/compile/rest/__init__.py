@@ -171,11 +171,7 @@ class CompileRest(PageCompiler):
             content += '\n'
         with io.open(path, "w+", encoding="utf8") as fd:
             if onefile:
-                _format = self.site.config.get('METADATA_FORMAT', 'nikola').lower()
-                if _format == 'pelican':
-                    _format = 'pelican_rest'
-                fd.write(write_metadata(metadata, _format))
-                fd.write('\n')
+                fd.write(write_metadata(metadata, comment_wrap=False, site=self.site, compiler=self))
             fd.write(content)
 
     def set_site(self, site):

@@ -206,7 +206,7 @@ COMPILERS = ${COMPILERS}
 # ONE_FILE_POSTS = True
 
 # Preferred metadata format for new posts
-# "Nikola": reST comments wrapped in a comment if needed (default)
+# "Nikola": reST comments, wrapped in a comment if needed (default)
 # "YAML": YAML wrapped in "---"
 # "TOML": TOML wrapped in "+++"
 # "Pelican": Native markdown metadata or reST docinfo fields. Nikola style for other formats.

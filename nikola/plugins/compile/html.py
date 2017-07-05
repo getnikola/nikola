@@ -82,9 +82,7 @@ class CompileHtml(PageCompiler):
             content += '\n'
         with io.open(path, "w+", encoding="utf8") as fd:
             if onefile:
-                fd.write('<!--\n')
-                fd.write(write_metadata(metadata))
-                fd.write('-->\n\n')
+                fd.write(write_metadata(metadata, comment_wrap=True, site=self.site, compiler=self))
             fd.write(content)
 
     def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):

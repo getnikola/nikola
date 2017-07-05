@@ -27,10 +27,11 @@
 """Default metadata extractors and helper functions."""
 
 import re
+import natsort
 
 from enum import Enum
 from nikola.plugin_categories import MetadataExtractor
-from nikola.utils import unslugify, req_missing
+from nikola.utils import unslugify
 
 __all__ = ('MetaCondition', 'MetaPriority', 'MetaSource', 'check_conditions')
 _default_extractors = []
@@ -83,15 +84,6 @@ def check_conditions(post, filename: str, conditions: list, config: dict, source
             if not source_text or not source_text.startswith(arg + '\n'):
                 return False
     return True
-
-
-def check_requirements(extractor: MetadataExtractor):
-    """Check if requirements for an extractor are passed. This is called if conditions are met."""
-    for import_name, pip_name, friendly_name in extractor.requirements:
-        try:
-            __import__(import_name)
-        except ImportError:
-            req_missing([pip_name], "use {0} metadata".format(friendly_name), python=True, optional=False)
 
 
 def classify_extractor(extractor: MetadataExtractor, metadata_extractors_by: dict):
@@ -147,6 +139,7 @@ class NikolaMetadata(MetadataExtractor):
     name = 'nikola'
     source = MetaSource.text
     priority = MetaPriority.normal
+    supports_write = True
     split_metadata_re = re.compile('\n\n')
     nikola_re = re.compile('^\s*\.\. (.*?): (.*)')
 
@@ -158,6 +151,27 @@ class NikolaMetadata(MetadataExtractor):
                 outdict[match.group(1)] = match.group(2)
         return outdict
 
+    def write_metadata(self, metadata: dict, comment_wrap=False) -> str:
+        """Write metadata in this extractor’s format."""
+        order = ('title', 'slug', 'date', 'tags', 'category', 'link', 'description', 'type')
+        f = '.. {0}: {1}'
+        meta = []
+        for k in order:
+            try:
+                meta.append(f.format(k, metadata.pop(k)))
+            except KeyError:
+                pass
+        # Leftover metadata (user-specified/non-default).
+        for k in natsort.natsorted(list(metadata.keys()), alg=natsort.ns.F | natsort.ns.IC):
+            meta.append(f.format(k, metadata[k]))
+        data = '\n'.join(meta)
+        if comment_wrap is True:
+            comment_wrap = ('<!--', '-->')
+        if comment_wrap:
+            return '\n'.join((comment_wrap[0], data, comment_wrap[1], '', ''))
+        else:
+            return data + '\n\n'
+
 
 @_register_default
 class YAMLMetadata(MetadataExtractor):
@@ -167,6 +181,7 @@ class YAMLMetadata(MetadataExtractor):
     source = MetaSource.text
     conditions = ((MetaCondition.first_line, '---'),)
     requirements = [('yaml', 'PyYAML', 'YAML')]
+    supports_write = True
     split_metadata_re = re.compile('\n---\n')
     map_from = 'yaml'
     priority = MetaPriority.specialized
@@ -180,6 +195,11 @@ class YAMLMetadata(MetadataExtractor):
                 meta[k] = ''
         return meta
 
+    def write_metadata(self, metadata: dict, comment_wrap=False) -> str:
+        """Write metadata in this extractor’s format."""
+        import yaml
+        return '\n'.join(('---', yaml.safe_dump(metadata, default_flow_style=False).strip(), '---', ''))
+
 
 @_register_default
 class TOMLMetadata(MetadataExtractor):
@@ -189,6 +209,7 @@ class TOMLMetadata(MetadataExtractor):
     source = MetaSource.text
     conditions = ((MetaCondition.first_line, '+++'),)
     requirements = [('toml', 'toml', 'TOML')]
+    supports_write = True
     split_metadata_re = re.compile('\n\\+\\+\\+\n')
     map_from = 'toml'
     priority = MetaPriority.specialized
@@ -196,6 +217,11 @@ class TOMLMetadata(MetadataExtractor):
     def _extract_metadata_from_text(self, source_text: str) -> dict:
         import toml
         return toml.loads(source_text[4:])
+
+    def write_metadata(self, metadata: dict, comment_wrap=False) -> str:
+        """Write metadata in this extractor’s format."""
+        import toml
+        return '\n'.join(('+++', toml.dumps(metadata).strip(), '+++', ''))
 
 
 @_register_default

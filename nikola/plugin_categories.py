@@ -33,7 +33,7 @@ import io
 from yapsy.IPlugin import IPlugin
 from doit.cmd_base import Command as DoitCommand
 
-from .utils import LOGGER, first_line
+from .utils import LOGGER, first_line, req_missing
 
 __all__ = (
     'Command',
@@ -41,6 +41,7 @@ __all__ = (
     'PageCompiler',
     'RestExtension',
     'MarkdownExtension',
+    'MetadataExtractor',
     'Task',
     'TaskMultiplier',
     'TemplateSystem',
@@ -395,13 +396,15 @@ class MetadataExtractor(BasePlugin):
     requirements = []
     # Name of METADATA_MAPPING to use, if any.
     map_from = None
+    # Whether or not the extractor supports writing metadata.
+    supports_write = False
 
     def _extract_metadata_from_text(self, source_text: str) -> dict:
         """Extract metadata from text."""
         raise NotImplementedError()
 
     def split_metadata_from_text(self, source_text: str) -> (str, str):
-        """Split text into metadata (str) and content."""
+        """Split text into metadata and content (both strings)."""
         if self.split_metadata_re is None:
             return source_text
         else:
@@ -421,6 +424,21 @@ class MetadataExtractor(BasePlugin):
     def extract_filename(self, filename: str, lang: str) -> dict:
         """Extract metadata from filename."""
         return {}
+
+    def write_metadata(self, metadata: dict, comment_wrap=False) -> str:
+        """Write metadata in this extractor’s format.
+
+        comment_wrap is either True, False, or a 2-tuple of comments to use for wrapping, if necessary.
+        If set to True, defaulting to  ``('<!--', '-->')`` is recommended."""
+        raise NotImplementedError()
+
+    def check_requirements(self):
+        """Check if requirements for an extractor are satisfied."""
+        for import_name, pip_name, friendly_name in self.requirements:
+            try:
+                __import__(import_name)
+            except ImportError:
+                req_missing([pip_name], "use {0} metadata".format(friendly_name), python=True, optional=False)
 
 
 class SignalHandler(BasePlugin):

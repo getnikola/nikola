@@ -960,7 +960,7 @@ def get_metadata_from_file(source_path, post, config, lang, metadata_extractors_
             for extractor in metadata_extractors_by['priority'].get(priority, []):
                 if not metadata_extractors.check_conditions(post, source_path, extractor.conditions, config, source_text):
                     continue
-                metadata_extractors.check_requirements(extractor)
+                extractor.check_requirements()
                 new_meta = extractor.extract_text(source_text)
                 if new_meta:
                     found_in_priority = True

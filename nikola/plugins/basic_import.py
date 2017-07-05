@@ -166,7 +166,7 @@ class ImportMixin(object):
         with io.open(filename, "w+", encoding="utf8") as fd:
             data = {'title': title, 'slug': slug, 'date': post_date, 'tags': ','.join(tags), 'description': description}
             data.update(kwargs)
-            fd.write(utils.write_metadata(data))
+            fd.write(utils.write_metadata(data, metadata_format='nikola', comment_wrap=False))
 
     @staticmethod
     def write_urlmap_csv(output_file, url_map):
