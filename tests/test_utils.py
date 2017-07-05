@@ -19,11 +19,7 @@ class dummy(object):
               'DEFAULT_LANG': 'en'}
 
     def __init__(self):
-        for i in metadata_extractors.me_defaults:
-            inst = getattr(metadata_extractors, i)()
-            inst.site = self
-            self.metadata_extractors_by['priority'][inst.priority].append(inst)
-            self.metadata_extractors_by['source'][inst.source].append(inst)
+        metadata_extractors.load_defaults(self, self.metadata_extractors_by)
 
 
 class GetMetaTest(unittest.TestCase):

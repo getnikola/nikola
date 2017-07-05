@@ -426,7 +426,6 @@ class Nikola(object):
         self.configured = bool(config)
         self.injected_deps = defaultdict(list)
         self.shortcode_registry = {}
-        self.metadata_extractors_all = []
         self.metadata_extractors_by = default_metadata_extractors_by()
 
         self.rst_transforms = []
@@ -830,10 +829,7 @@ class Nikola(object):
             sys.exit(1)
 
         # Load built-in metadata extractors
-        for i in metadata_extractors.me_defaults:
-            inst = getattr(metadata_extractors, i)()
-            inst.site = self
-            self._add_metadata_extractor(inst)
+        metadata_extractors.load_defaults(self, self.metadata_extractors_by)
         if metadata_extractors.DEFAULT_EXTRACTOR is None:
             utils.LOGGER.error("Could not find default meta extractor ({})".format(
                 metadata_extractors.DEFAULT_EXTRACTOR_NAME))
@@ -1022,7 +1018,7 @@ class Nikola(object):
 
         # Activate metadata extractors and prepare them for use
         for p in self._activate_plugins_of_category("MetadataExtractor"):
-            self._add_metadata_extractor(p.plugin_object)
+            metadata_extractors.classify_extractor(p.plugin_object, self.metadata_extractors_by)
 
         self._activate_plugins_of_category("Taxonomy")
         self.taxonomy_plugins = {}
@@ -1202,15 +1198,6 @@ class Nikola(object):
             plugin_info.plugin_object.set_site(self)
             plugins.append(plugin_info)
         return plugins
-
-    def _add_metadata_extractor(self, extractor: MetadataExtractor):
-        """Add a metadata extractor to the site."""
-        if extractor.name == metadata_extractors.DEFAULT_EXTRACTOR_NAME:
-            metadata_extractors.DEFAULT_EXTRACTOR = extractor
-        self.metadata_extractors_all.append(extractor)
-        self.metadata_extractors_by['priority'][extractor.priority].append(extractor)
-        self.metadata_extractors_by['source'][extractor.source].append(extractor)
-        self.metadata_extractors_by['name'][extractor.name] = extractor
 
     def _get_themes(self):
         if self._THEMES is None:

@@ -33,7 +33,7 @@ from nikola.plugin_categories import MetadataExtractor
 from nikola.utils import unslugify, req_missing
 
 __all__ = ('MetaCondition', 'MetaPriority', 'MetaSource', 'check_conditions')
-me_defaults = ('NikolaMetadata', 'YAMLMetadata', 'TOMLMetadata', 'FilenameRegexMetadata')
+_default_extractors = []
 DEFAULT_EXTRACTOR_NAME = 'nikola'
 DEFAULT_EXTRACTOR = None
 
@@ -94,6 +94,24 @@ def check_requirements(extractor: MetadataExtractor):
             req_missing([pip_name], "use {0} metadata".format(friendly_name), python=True, optional=False)
 
 
+def classify_extractor(extractor: MetadataExtractor, metadata_extractors_by: dict):
+    """Classify an extractor and add it to the metadata_extractors_by dict."""
+    global DEFAULT_EXTRACTOR
+    if extractor.name == DEFAULT_EXTRACTOR_NAME:
+        DEFAULT_EXTRACTOR = extractor
+    metadata_extractors_by['priority'][extractor.priority].append(extractor)
+    metadata_extractors_by['source'][extractor.source].append(extractor)
+    metadata_extractors_by['name'][extractor.name] = extractor
+    metadata_extractors_by['all'].append(extractor)
+
+
+def load_defaults(site: 'nikola.nikola.Nikola', metadata_extractors_by: dict):
+    """Load default metadata extractors."""
+    for extractor in _default_extractors:
+        extractor.site = site
+        classify_extractor(extractor, metadata_extractors_by)
+
+
 def is_extractor(extractor) -> bool:
     """Check if a given class is an extractor."""
     return isinstance(extractor, MetadataExtractor)
@@ -104,7 +122,8 @@ def default_metadata_extractors_by() -> dict:
     d = {
         'priority': {},
         'source': {},
-        'name': {}
+        'name': {},
+        'all': []
     }
 
     for i in MetaPriority:
@@ -115,6 +134,13 @@ def default_metadata_extractors_by() -> dict:
     return d
 
 
+def _register_default(extractor: MetadataExtractor) -> MetadataExtractor:
+    """Register a default extractor."""
+    _default_extractors.append(extractor())
+    return extractor
+
+
+@_register_default
 class NikolaMetadata(MetadataExtractor):
     """Extractor for Nikola-style metadata."""
 
@@ -133,6 +159,7 @@ class NikolaMetadata(MetadataExtractor):
         return outdict
 
 
+@_register_default
 class YAMLMetadata(MetadataExtractor):
     """Extractor for YAML metadata."""
 
@@ -154,6 +181,7 @@ class YAMLMetadata(MetadataExtractor):
         return meta
 
 
+@_register_default
 class TOMLMetadata(MetadataExtractor):
     """Extractor for TOML metadata."""
 
@@ -170,6 +198,7 @@ class TOMLMetadata(MetadataExtractor):
         return toml.loads(source_text[4:])
 
 
+@_register_default
 class FilenameRegexMetadata(MetadataExtractor):
     """Extractor for filename metadata."""
 
