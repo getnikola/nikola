@@ -52,7 +52,8 @@ class MetaCondition(Enum):
 class MetaPriority(Enum):
     """Priority of metadata.
 
-    An extractor is used if and only if the higher-priority extractors returned nothing."""
+    An extractor is used if and only if the higher-priority extractors returned nothing.
+    """
 
     override = 1
     specialized = 2

@@ -79,7 +79,7 @@ from .plugin_categories import (
     Taxonomy,
 )
 from . import metadata_extractors
-from .metadata_extractors import MetaSource, MetaPriority, default_metadata_extractors_by
+from .metadata_extractors import default_metadata_extractors_by
 
 if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
