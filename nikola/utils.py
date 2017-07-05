@@ -1441,7 +1441,6 @@ def write_metadata(data, metadata_format=None, comment_wrap=False, site=None, co
 
     Recommended usage: pass `site`, `comment_wrap`, and optionally `compiler`. Other options are for backwards compatibility.
     """
-
     # API compatibility
     if metadata_format is None:
         metadata_format = site.config.get('METADATA_FORMAT', 'nikola').lower()

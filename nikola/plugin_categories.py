@@ -428,8 +428,11 @@ class MetadataExtractor(BasePlugin):
     def write_metadata(self, metadata: dict, comment_wrap=False) -> str:
         """Write metadata in this extractor’s format.
 
-        comment_wrap is either True, False, or a 2-tuple of comments to use for wrapping, if necessary.
-        If set to True, defaulting to  ``('<!--', '-->')`` is recommended."""
+        ``comment_wrap`` is either True, False, or a 2-tuple of comments to use for wrapping, if necessary.
+        If it’s set to True, defaulting to  ``('<!--', '-->')`` is recommended.
+
+        This function should insert comment markers (if applicable) and must insert trailing newlines.
+        """
         raise NotImplementedError()
 
     def check_requirements(self):
