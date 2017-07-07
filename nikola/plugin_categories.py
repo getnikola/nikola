@@ -410,10 +410,9 @@ class MetadataExtractor(BasePlugin):
         else:
             split_result = self.split_metadata_re.split(source_text.lstrip(), maxsplit=1)
             if len(split_result) == 1:
-                return split_result[0], split_result[0]
+                return source_text, source_text
             else:
-                # Necessary?
-                return split_result[0], split_result[-1]
+                return split_result
 
     def extract_text(self, source_text: str) -> dict:
         """Extract metadata from text (also calls ``split_metadata_from_text``)."""
