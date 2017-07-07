@@ -732,7 +732,6 @@ class Nikola(object):
         if self.config['PRESERVE_EXIF_DATA'] and not self.config['EXIF_WHITELIST']:
             utils.LOGGER.warn('You are setting PRESERVE_EXIF_DATA and not EXIF_WHITELIST so EXIF data is not really kept.')
 
-        # TODO: should we keep backwards compat here?
         if 'UNSLUGIFY_TITLES' in self.config:
             utils.LOGGER.warn('The UNSLUGIFY_TITLES setting was renamed to FILE_METADATA_UNSLUGIFY_TITLES.')
             self.config['FILE_METADATA_UNSLUGIFY_TITLES'] = self.config['UNSLUGIFY_TITLES']
