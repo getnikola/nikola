@@ -73,7 +73,7 @@ def check_conditions(post, filename: str, conditions: list, config: dict, source
     """Check the conditions for a metadata extractor."""
     for ct, arg in conditions:
         if any((
-            ct == MetaCondition.config_bool and (arg not in config or (arg in config and not config[arg])),
+            ct == MetaCondition.config_bool and not config.get(arg, False),
             ct == MetaCondition.config_present and arg not in config,
             ct == MetaCondition.extension and not filename.endswith(arg),
             ct == MetaCondition.compiler and post.compiler.name != arg,
@@ -141,9 +141,10 @@ class NikolaMetadata(MetadataExtractor):
     priority = MetaPriority.normal
     supports_write = True
     split_metadata_re = re.compile('\n\n')
-    nikola_re = re.compile('^\s*\.\. (.*?): (.*)')
+    nikola_re = re.compile(r'^\s*\.\. (.*?): (.*)')
 
     def _extract_metadata_from_text(self, source_text: str) -> dict:
+        """Extract metadata from text."""
         outdict = {}
         for line in source_text.split('\n'):
             match = self.nikola_re.match(line)
@@ -153,6 +154,7 @@ class NikolaMetadata(MetadataExtractor):
 
     def write_metadata(self, metadata: dict, comment_wrap=False) -> str:
         """Write metadata in this extractor’s format."""
+        metadata = metadata.copy()
         order = ('title', 'slug', 'date', 'tags', 'category', 'link', 'description', 'type')
         f = '.. {0}: {1}'
         meta = []
@@ -187,6 +189,7 @@ class YAMLMetadata(MetadataExtractor):
     priority = MetaPriority.specialized
 
     def _extract_metadata_from_text(self, source_text: str) -> dict:
+        """Extract metadata from text."""
         import yaml
         meta = yaml.safe_load(source_text[4:])
         # We expect empty metadata to be '', not None
@@ -215,6 +218,7 @@ class TOMLMetadata(MetadataExtractor):
     priority = MetaPriority.specialized
 
     def _extract_metadata_from_text(self, source_text: str) -> dict:
+        """Extract metadata from text."""
         import toml
         return toml.loads(source_text[4:])
 

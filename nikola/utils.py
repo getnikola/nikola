@@ -1442,8 +1442,11 @@ def write_metadata(data, metadata_format=None, comment_wrap=False, site=None, co
     Recommended usage: pass `site`, `comment_wrap`, and optionally `compiler`. Other options are for backwards compatibility.
     """
     # API compatibility
-    if metadata_format is None:
+    if metadata_format is None and site is not None:
         metadata_format = site.config.get('METADATA_FORMAT', 'nikola').lower()
+    if metadata_format is None:
+        metadata_format = 'nikola'
+
     if site is None:
         import nikola.metadata_extractors
         metadata_extractors_by = nikola.metadata_extractors.default_metadata_extractors_by()
@@ -1465,12 +1468,10 @@ def write_metadata(data, metadata_format=None, comment_wrap=False, site=None, co
     if extractor and extractor.supports_write:
         extractor.check_requirements()
         return extractor.write_metadata(data, comment_wrap)
-    elif metadata_format is None:
-        pass  # Quiet fallback to Nikola
     else:
         LOGGER.warn('Writing METADATA_FORMAT %s is not supported, using "nikola" format', metadata_format)
 
-    if metadata_format not in ('rest_docinfo', 'markdown_meta'):
+    if metadata_format not in ('nikola', 'rest_docinfo', 'markdown_meta'):
         LOGGER.warn('Unknown METADATA_FORMAT %s, using "nikola" format', metadata_format)
 
     if metadata_format == 'rest_docinfo':

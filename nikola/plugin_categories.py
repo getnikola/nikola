@@ -406,7 +406,7 @@ class MetadataExtractor(BasePlugin):
     def split_metadata_from_text(self, source_text: str) -> (str, str):
         """Split text into metadata and content (both strings)."""
         if self.split_metadata_re is None:
-            return source_text
+            return source_text, source_text
         else:
             split_result = self.split_metadata_re.split(source_text.lstrip(), maxsplit=1)
             if len(split_result) == 1:
@@ -416,7 +416,7 @@ class MetadataExtractor(BasePlugin):
                 return split_result[0], split_result[-1]
 
     def extract_text(self, source_text: str) -> dict:
-        """Split file, return metadata and the content."""
+        """Extract metadata from text (also calls ``split_metadata_from_text``)."""
         split = self.split_metadata_from_text(source_text)
         meta = self._extract_metadata_from_text(split[0])
         return meta

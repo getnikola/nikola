@@ -1006,7 +1006,9 @@ def get_meta(post, lang):
     used_extractor = None
 
     config = getattr(post, 'config', None)
-    metadata_extractors_by = getattr(post, 'metadata_extractors_by', metadata_extractors.default_metadata_extractors_by())
+    metadata_extractors_by = getattr(post, 'metadata_extractors_by')
+    if metadata_extractors_by is None:
+        metadata_extractors_by = metadata_extractors.default_metadata_extractors_by()
 
     # If meta file exists, use it
     meta.update(get_metadata_from_meta_file(post.metadata_path, post, config, lang, metadata_extractors_by))
