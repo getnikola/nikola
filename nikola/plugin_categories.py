@@ -404,7 +404,11 @@ class MetadataExtractor(BasePlugin):
         raise NotImplementedError()
 
     def split_metadata_from_text(self, source_text: str) -> (str, str):
-        """Split text into metadata and content (both strings)."""
+        """Split text into metadata and content (both strings).
+
+        If splitting fails (there is no match), return source_text as both metadata and content.
+        (This behavior is required for 2-file posts.)
+        """
         if self.split_metadata_re is None:
             return source_text, source_text
         else:
