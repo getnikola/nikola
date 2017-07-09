@@ -74,6 +74,7 @@ class CompileMarkdown(PageCompiler):
     friendly_name = "Markdown"
     demote_headers = True
     site = None
+    supports_metadata = False
 
     def set_site(self, site):
         """Set Nikola site."""
@@ -90,14 +91,14 @@ class CompileMarkdown(PageCompiler):
         extensions.extend(site_extensions)
         if Markdown is not None:
             self.converter = ThreadLocalMarkdown(extensions)
-        self.support_metadata = 'markdown.extensions.meta' in extensions
+        self.supports_metadata = 'markdown.extensions.meta' in extensions
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
         """Compile Markdown into HTML strings."""
         if Markdown is None:
             req_missing(['markdown'], 'build this site (compile Markdown)')
         if not is_two_file:
-            _, data = self.split_metadata(data)
+            _, data = self.split_metadata(data, post, lang)
         new_data, shortcodes = sc.extract_shortcodes(data)
         output, _ = self.converter.convert(new_data)
         output, shortcode_deps = self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, extra_context={'post': post})
@@ -136,18 +137,12 @@ class CompileMarkdown(PageCompiler):
             content += '\n'
         with io.open(path, "w+", encoding="utf8") as fd:
             if onefile:
-                _format = self.site.config.get('METADATA_FORMAT', 'nikola').lower()
-                if _format == 'pelican':
-                    _format = 'pelican_md'
-                data = write_metadata(metadata, _format)
-                if _format == 'nikola':
-                    data = '<!--\n' + data + '-->\n\n'
-                fd.write(data)
+                fd.write(write_metadata(metadata, comment_wrap=True, site=self.site, compiler=self))
             fd.write(content)
 
-    def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
+    def read_metadata(self, post, lang=None):
         """Read the metadata from a post, and return a metadata dict."""
-        if not self.support_metadata:
+        if not self.supports_metadata:
             return {}
         if Markdown is None:
             req_missing(['markdown'], 'build this site (compile Markdown)')

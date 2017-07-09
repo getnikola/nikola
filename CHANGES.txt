@@ -4,13 +4,14 @@ New in master
 Features
 --------
 
+* Add support for ``MetadataExtractor`` plugins that allow custom,
+  extensible metadata extraction from posts (Issue #2830)
+* Support YAML and TOML metadata in 2-file posts (via Issue #2830)
+* Renamed ``UNSLUGIFY_TITLES`` → ``FILE_METADATA_UNSLUGIFY_TITLES`` (Issue #2840)
 * Add ``NIKOLA_SHOW_TRACEBACKS`` environment variable that shows
   full tracebacks instead of one-line summaries
 * Use ``PRETTY_URLS`` by default on all sites (Issue #1838)
 * Feed link generation is completely refactored (Issue #2844)
-* Added ``extract_metadata`` and ``split_metadata`` to the
-  ``utils`` module, which are used by the metadata extraction
-  facilities in the ``post`` module.
 
 Bugfixes
 --------

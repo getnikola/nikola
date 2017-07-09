@@ -33,7 +33,7 @@ import io
 from yapsy.IPlugin import IPlugin
 from doit.cmd_base import Command as DoitCommand
 
-from .utils import LOGGER, first_line, split_metadata
+from .utils import LOGGER, first_line, req_missing
 
 __all__ = (
     'Command',
@@ -41,6 +41,7 @@ __all__ = (
     'PageCompiler',
     'RestExtension',
     'MarkdownExtension',
+    'MetadataExtractor',
     'Task',
     'TaskMultiplier',
     'TemplateSystem',
@@ -255,6 +256,8 @@ class PageCompiler(BasePlugin):
     demote_headers = False
     supports_onefile = True
     use_dep_file = True  # If set to false, the .dep file is never written and not automatically added as a target
+    supports_metadata = False
+    metadata_conditions = []
     default_metadata = {
         'title': '',
         'slug': '',
@@ -318,18 +321,22 @@ class PageCompiler(BasePlugin):
         """Return the preferred extension for the output of this compiler."""
         return ".html"
 
-    def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
+    def read_metadata(self, post, lang=None):
         """Read the metadata from a post, and return a metadata dict."""
         return {}
 
-    def split_metadata(self, data):
-        """Split data from metadata in the raw post content.
+    def split_metadata(self, data, post=None, lang=None):
+        """Split data from metadata in the raw post content."""
+        if lang and post:
+            extractor = post.used_extractor[lang]
+        else:
+            import nikola.metadata_extractors
+            extractor = nikola.metadata_extractors.DEFAULT_EXTRACTOR
 
-        This splits in the first empty line that is NOT at the beginning
-        of the document, or after YAML/TOML metadata without an empty line.
-        """
-        meta, content, _ = split_metadata(data)
-        return meta, content
+        if isinstance(extractor, MetadataExtractor):
+            return extractor.split_metadata_from_text(data)
+        else:
+            return data, data
 
     def get_compiler_extensions(self):
         """Activate all the compiler extension plugins for a given compiler and return them."""
@@ -370,6 +377,74 @@ class MarkdownExtension(CompilerExtension):
 
     name = "dummy_markdown_extension"
     compiler_name = "markdown"
+
+
+class MetadataExtractor(BasePlugin):
+    """Plugins that can extract meta information from post files."""
+
+    # Name of the extractor. (required)
+    name = "unknown"
+    # Where to get metadata from. (MetaSource; required)
+    source = None
+    # Priority of extractor. (MetaPriority; required)
+    priority = None
+    # List of tuples (MetaCondition, arg) with conditions used to select this extractor.
+    conditions = []
+    # Regular expression used for splitting metadata, or None if not applicable.
+    split_metadata_re = None
+    # List of tuples (import name, pip name, friendly name) of Python packages required for this extractor.
+    requirements = []
+    # Name of METADATA_MAPPING to use, if any.
+    map_from = None
+    # Whether or not the extractor supports writing metadata.
+    supports_write = False
+
+    def _extract_metadata_from_text(self, source_text: str) -> dict:
+        """Extract metadata from text."""
+        raise NotImplementedError()
+
+    def split_metadata_from_text(self, source_text: str) -> (str, str):
+        """Split text into metadata and content (both strings).
+
+        If splitting fails (there is no match), return source_text as both metadata and content.
+        (This behavior is required for 2-file posts.)
+        """
+        if self.split_metadata_re is None:
+            return source_text, source_text
+        else:
+            split_result = self.split_metadata_re.split(source_text.lstrip(), maxsplit=1)
+            if len(split_result) == 1:
+                return source_text, source_text
+            else:
+                return split_result
+
+    def extract_text(self, source_text: str) -> dict:
+        """Extract metadata from text (also calls ``split_metadata_from_text``)."""
+        split = self.split_metadata_from_text(source_text)
+        meta = self._extract_metadata_from_text(split[0])
+        return meta
+
+    def extract_filename(self, filename: str, lang: str) -> dict:
+        """Extract metadata from filename."""
+        return {}
+
+    def write_metadata(self, metadata: dict, comment_wrap=False) -> str:
+        """Write metadata in this extractor’s format.
+
+        ``comment_wrap`` is either True, False, or a 2-tuple of comments to use for wrapping, if necessary.
+        If it’s set to True, defaulting to  ``('<!--', '-->')`` is recommended.
+
+        This function should insert comment markers (if applicable) and must insert trailing newlines.
+        """
+        raise NotImplementedError()
+
+    def check_requirements(self):
+        """Check if requirements for an extractor are satisfied."""
+        for import_name, pip_name, friendly_name in self.requirements:
+            try:
+                __import__(import_name)
+            except ImportError:
+                req_missing([pip_name], "use {0} metadata".format(friendly_name), python=True, optional=False)
 
 
 class SignalHandler(BasePlugin):

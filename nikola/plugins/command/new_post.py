@@ -434,7 +434,7 @@ class CommandNewPost(Command):
 
         if not onefile:  # write metadata file
             with io.open(meta_path, "w+", encoding="utf8") as fd:
-                fd.write(utils.write_metadata(data))
+                fd.write(utils.write_metadata(data, comment_wrap=False, site=self.site))
             LOGGER.info("Your {0}'s metadata is at: {1}".format(content_type, meta_path))
             event['meta_path'] = meta_path
         LOGGER.info("Your {0}'s text is at: {1}".format(content_type, txt_path))

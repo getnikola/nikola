@@ -68,6 +68,7 @@ from .plugin_categories import (
     CompilerExtension,
     MarkdownExtension,
     RestExtension,
+    MetadataExtractor,
     ShortcodePlugin,
     Task,
     TaskMultiplier,
@@ -77,6 +78,8 @@ from .plugin_categories import (
     PostScanner,
     Taxonomy,
 )
+from . import metadata_extractors
+from .metadata_extractors import default_metadata_extractors_by
 
 if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
@@ -423,6 +426,7 @@ class Nikola(object):
         self.configured = bool(config)
         self.injected_deps = defaultdict(list)
         self.shortcode_registry = {}
+        self.metadata_extractors_by = default_metadata_extractors_by()
 
         self.rst_transforms = []
         self.template_hooks = {
@@ -503,6 +507,7 @@ class Nikola(object):
             'FAVICONS': (),
             'FEED_LENGTH': 10,
             'FILE_METADATA_REGEXP': None,
+            'FILE_METADATA_UNSLUGIFY_TITLES': True,
             'ADDITIONAL_METADATA': {},
             'FILES_FOLDERS': {'files': ''},
             'FILTERS': {},
@@ -600,7 +605,6 @@ class Nikola(object):
             'THEME_COLOR': '#5670d4',  # light "corporate blue"
             'THUMBNAIL_SIZE': 180,
             'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}',
-            'UNSLUGIFY_TITLES': False,  # WARNING: conf.py.in overrides this with True for backwards compatibility
             'URL_TYPE': 'rel_path',
             'USE_BASE_TAG': False,
             'USE_BUNDLES': True,
@@ -728,6 +732,10 @@ class Nikola(object):
         if self.config['PRESERVE_EXIF_DATA'] and not self.config['EXIF_WHITELIST']:
             utils.LOGGER.warn('You are setting PRESERVE_EXIF_DATA and not EXIF_WHITELIST so EXIF data is not really kept.')
 
+        if 'UNSLUGIFY_TITLES' in self.config:
+            utils.LOGGER.warn('The UNSLUGIFY_TITLES setting was renamed to FILE_METADATA_UNSLUGIFY_TITLES.')
+            self.config['FILE_METADATA_UNSLUGIFY_TITLES'] = self.config['UNSLUGIFY_TITLES']
+
         # Handle CONTENT_FOOTER and RSS_COPYRIGHT* properly.
         # We provide the arguments to format in CONTENT_FOOTER_FORMATS and RSS_COPYRIGHT_FORMATS.
         self.config['CONTENT_FOOTER'].langformat(self.config['CONTENT_FOOTER_FORMATS'])
@@ -819,6 +827,13 @@ class Nikola(object):
             utils.LOGGER.error("Punycode of {}: {}".format(_bnl, _bnl.encode('idna')))
             sys.exit(1)
 
+        # Load built-in metadata extractors
+        metadata_extractors.load_defaults(self, self.metadata_extractors_by)
+        if metadata_extractors.DEFAULT_EXTRACTOR is None:
+            utils.LOGGER.error("Could not find default meta extractor ({})".format(
+                metadata_extractors.DEFAULT_EXTRACTOR_NAME))
+            sys.exit(1)
+
         # The pelican metadata format requires a markdown extension
         if config.get('METADATA_FORMAT', 'nikola').lower() == 'pelican':
             if 'markdown.extensions.meta' not in config.get('MARKDOWN_EXTENSIONS', []) \
@@ -902,6 +917,7 @@ class Nikola(object):
             "CompilerExtension": CompilerExtension,
             "MarkdownExtension": MarkdownExtension,
             "RestExtension": RestExtension,
+            "MetadataExtractor": MetadataExtractor,
             "ShortcodePlugin": ShortcodePlugin,
             "SignalHandler": SignalHandler,
             "ConfigPlugin": ConfigPlugin,
@@ -998,6 +1014,10 @@ class Nikola(object):
         # we should enable the Jupyter CSS (leaving that up to the theme itself).
         if 'needs_ipython_css' not in self._GLOBAL_CONTEXT:
             self._GLOBAL_CONTEXT['needs_ipython_css'] = 'ipynb' in self.config['COMPILERS']
+
+        # Activate metadata extractors and prepare them for use
+        for p in self._activate_plugins_of_category("MetadataExtractor"):
+            metadata_extractors.classify_extractor(p.plugin_object, self.metadata_extractors_by)
 
         self._activate_plugins_of_category("Taxonomy")
         self.taxonomy_plugins = {}

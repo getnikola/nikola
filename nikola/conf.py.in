@@ -206,7 +206,7 @@ COMPILERS = ${COMPILERS}
 # ONE_FILE_POSTS = True
 
 # Preferred metadata format for new posts
-# "Nikola": reST comments wrapped in a comment if needed (default)
+# "Nikola": reST comments, wrapped in a HTML comment if needed (default)
 # "YAML": YAML wrapped in "---"
 # "TOML": TOML wrapped in "+++"
 # "Pelican": Native markdown metadata or reST docinfo fields. Nikola style for other formats.
@@ -1149,6 +1149,9 @@ MARKDOWN_EXTENSIONS = ['markdown.extensions.fenced_code', 'markdown.extensions.c
 # (Note the '.*\/' in the beginning -- matches source paths relative to conf.py)
 # FILE_METADATA_REGEXP = None
 
+# Should titles fetched from file metadata be unslugified (made prettier?)
+# FILE_METADATA_UNSLUGIFY_TITLES = True
+
 # If enabled, extract metadata from docinfo fields in reST documents
 # USE_REST_DOCINFO_METADATA = False
 
@@ -1165,10 +1168,6 @@ MARKDOWN_EXTENSIONS = ['markdown.extensions.fenced_code', 'markdown.extensions.c
 #     "markdown_metadata": {"summary": "description", "modified": "updated"}
 # }
 # Other examples: https://getnikola.com/handbook.html#mapping-metadata-from-other-formats
-
-# If you hate "Filenames with Capital Letters and Spaces.md", you should
-# set this to true.
-UNSLUGIFY_TITLES = True
 
 # Additional metadata that is added to a post when creating a new_post
 # ADDITIONAL_METADATA = {}

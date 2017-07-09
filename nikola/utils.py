@@ -34,7 +34,6 @@ import hashlib
 import io
 import locale
 import logging
-import natsort
 import operator
 import os
 import re
@@ -97,7 +96,7 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real',
            'adjust_name_for_index_path', 'adjust_name_for_index_link',
            'NikolaPygmentsHTML', 'create_redirect', 'clean_before_deployment',
            'sort_posts', 'indent', 'load_data', 'html_unescape', 'rss_writer',
-           'map_metadata', 're_meta', 'extract_metadata', 'split_metadata',
+           'map_metadata',
            # Deprecated, moved to hierarchy_utils:
            'TreeNode', 'clone_treenode', 'flatten_tree_structure',
            'sort_classifications', 'join_hierarchical_category_path',
@@ -1437,23 +1436,45 @@ def get_translation_candidate(config, path, lang):
             return config['TRANSLATIONS_PATTERN'].format(path=p, ext=e, lang=lang)
 
 
-def write_metadata(data, _format='nikola'):
-    """Write metadata."""
-    _format = _format.lower()
-    if _format not in ['nikola', 'yaml', 'toml', 'pelican_rest', 'pelican_md']:
-        LOGGER.warn('Unknown METADATA_FORMAT %s, using "nikola" format', _format)
+def write_metadata(data, metadata_format=None, comment_wrap=False, site=None, compiler=None):
+    """Write metadata.
 
-    if _format == 'yaml':
-        if yaml is None:
-            req_missing('pyyaml', 'use YAML metadata', optional=False)
-        return '\n'.join(('---', yaml.safe_dump(data, default_flow_style=False).strip(), '---', '', ''))
+    Recommended usage: pass `site`, `comment_wrap`, and optionally `compiler`. Other options are for backwards compatibility.
+    """
+    # API compatibility
+    if metadata_format is None and site is not None:
+        metadata_format = site.config.get('METADATA_FORMAT', 'nikola').lower()
+    if metadata_format is None:
+        metadata_format = 'nikola'
 
-    elif _format == 'toml':
-        if toml is None:
-            req_missing('toml', 'use TOML metadata', optional=False)
-        return '\n'.join(('+++', toml.dumps(data).strip(), '+++', '', ''))
+    if site is None:
+        import nikola.metadata_extractors
+        metadata_extractors_by = nikola.metadata_extractors.default_metadata_extractors_by()
+        nikola.metadata_extractors.load_defaults(site, metadata_extractors_by)
+    else:
+        metadata_extractors_by = site.metadata_extractors_by
 
-    elif _format == 'pelican_rest':
+    # Pelican is mapped to rest_docinfo, markdown_meta, or nikola.
+    if metadata_format == 'pelican':
+        if compiler and compiler.name == 'rest':
+            metadata_format = 'rest_docinfo'
+        elif compiler and compiler.name == 'markdown':
+            metadata_format = 'markdown_meta'
+        else:
+            # Quiet fallback.
+            metadata_format = 'nikola'
+
+    extractor = metadata_extractors_by['name'].get(metadata_format)
+    if extractor and extractor.supports_write:
+        extractor.check_requirements()
+        return extractor.write_metadata(data, comment_wrap)
+    else:
+        LOGGER.warn('Writing METADATA_FORMAT %s is not supported, using "nikola" format', metadata_format)
+
+    if metadata_format not in ('nikola', 'rest_docinfo', 'markdown_meta'):
+        LOGGER.warn('Unknown METADATA_FORMAT %s, using "nikola" format', metadata_format)
+
+    if metadata_format == 'rest_docinfo':
         title = data.pop('title')
         results = [
             '=' * len(title),
@@ -1462,25 +1483,12 @@ def write_metadata(data, _format='nikola'):
             ''
         ] + [':{0}: {1}'.format(k, v) for k, v in data.items() if v] + ['']
         return '\n'.join(results)
-
-    elif _format == 'pelican_md':
+    elif metadata_format == 'markdown_meta':
         results = ['{0}: {1}'.format(k, v) for k, v in data.items() if v] + ['', '']
         return '\n'.join(results)
-
     else:  # Nikola, default
-        order = ('title', 'slug', 'date', 'tags', 'category', 'link', 'description', 'type')
-        f = '.. {0}: {1}'
-        meta = []
-        for k in order:
-            try:
-                meta.append(f.format(k, data.pop(k)))
-            except KeyError:
-                pass
-        # Leftover metadata (user-specified/non-default).
-        for k in natsort.natsorted(list(data.keys()), alg=natsort.ns.F | natsort.ns.IC):
-            meta.append(f.format(k, data[k]))
-        meta.append('')
-        return '\n'.join(meta)
+        from nikola.metadata_extractors import DEFAULT_EXTRACTOR
+        return DEFAULT_EXTRACTOR.write_metadata(data, comment_wrap)
 
 
 def ask(query, default=None):
@@ -2028,111 +2036,3 @@ class ClassificationTranslationManager(object):
         args = {'translation_manager': self, 'site': site,
                 'posts_per_classification_per_language': posts_per_classification_per_language}
         signal('{}_translations_config'.format(basename.lower())).send(args)
-
-
-# Moved to global variable to avoid recompilation
-# of regex every time re_meta() is called.
-_DEFAULT_REST_METADATA_PARSING = re.compile('^\.\. (.*?): (.*)')
-
-
-def re_meta(line, match=None):
-    """Find metadata using regular expressions."""
-    if match:
-        reStr = re.compile('^\.\. {0}: (.*)'.format(re.escape(match)))
-    else:
-        reStr = _DEFAULT_REST_METADATA_PARSING
-    result = reStr.findall(line.strip())
-    if match and result:
-        return (match, result[0])
-    elif not match and result:
-        return result[0][0], result[0][1].strip()
-    else:
-        return None, None
-
-
-def extract_metadata(file_lines):
-    """Extract metadata from the lines of a file.
-
-    Returns a pair ``(meta, metadata_type)``, where ``meta`` is the
-    metadata dictionary and ``metadata_type`` the metadata format.
-
-    Valid values for ``metadata_type`` are:
-    * ``'none'``: no metadata was found (file was empty)
-    * ``'yaml'``: metadata in YAML format
-    * ``'toml'``: metadata in TOML format
-    * ``'rest'``: metadata in reST format (the standard Nikola
-                  reST-like metadata format)
-    """
-    meta = {}
-    if not file_lines:
-        return meta, 'none'
-
-    # Skip up to one empty line at the beginning (for txt2tags)
-    if not file_lines[0]:
-        file_lines = file_lines[1:]
-
-    # If 1st line is '---', then it's YAML metadata
-    if file_lines[0] == '---':
-        if yaml is None:
-            req_missing('pyyaml', 'use YAML metadata', optional=True)
-            raise ValueError('Error parsing metadata')
-        idx = file_lines.index('---', 1)
-        meta = yaml.safe_load('\n'.join(file_lines[1:idx]))
-        # We expect empty metadata to be '', not None
-        for k in meta:
-            if meta[k] is None:
-                meta[k] = ''
-        return meta, 'yaml'
-
-    # If 1st line is '+++', then it's TOML metadata
-    if file_lines[0] == '+++':
-        if toml is None:
-            req_missing('toml', 'use TOML metadata', optional=True)
-            raise ValueError('Error parsing metadata')
-        idx = file_lines.index('+++', 1)
-        meta = toml.loads('\n'.join(file_lines[1:idx]))
-        return meta, 'toml'
-
-    # First, get metadata from the beginning of the file,
-    # up to first empty line
-
-    for line in file_lines:
-        if not line:
-            break
-        match = re_meta(line)
-        if match[0]:
-            meta[match[0]] = match[1]
-
-    return meta, 'nikola'
-
-
-def split_metadata(data):
-    """Split data from metadata in the raw post content.
-
-    This splits in the first empty line that is NOT at the beginning
-    of the document, or after YAML/TOML metadata without an empty line.
-
-    Returns a tuple ``(meta, content, metadata_type)`` where ``meta`` and
-    ``content`` are parts of ``data``, and ``metadata_type`` is the metadata
-    format.
-
-    Valid values for ``metadata_type`` are:
-    * ``'none'``: no metadata was found (file was empty)
-    * ``'yaml'``: metadata in YAML format
-    * ``'toml'``: metadata in TOML format
-    * ``'rest'``: metadata in reST format (the standard Nikola
-                  reST-like metadata format)
-    """
-    if data.startswith('---'):  # YAML metadata
-        split_result = re.split('(\n---\n|\r\n---\r\n)', data.lstrip(), maxsplit=1)
-        metadata_type = 'yaml'
-    elif data.startswith('+++'):  # TOML metadata
-        split_result = re.split('(\n\\+\\+\\+\n|\r\n\\+\\+\\+\r\n)', data.lstrip(), maxsplit=1)
-        metadata_type = 'toml'
-    else:
-        split_result = re.split('(\n\n|\r\n\r\n)', data.lstrip(), maxsplit=1)
-        metadata_type = 'nikola'
-    if len(split_result) == 1:
-        return '', split_result[0], 'none'
-    # ['metadata', '\n\n', 'post content']
-    return split_result[0], split_result[-1], metadata_type

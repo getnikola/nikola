@@ -40,6 +40,7 @@ import docutils.parsers.rst.directives
 from docutils.parsers.rst import roles
 
 from nikola.nikola import LEGAL_VALUES
+from nikola.metadata_extractors import MetaCondition
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import (
     unicode_str,
@@ -58,11 +59,11 @@ class CompileRest(PageCompiler):
     friendly_name = "reStructuredText"
     demote_headers = True
     logger = None
+    supports_metadata = True
+    metadata_conditions = [(MetaCondition.config_bool, "USE_REST_DOCINFO_METADATA")]
 
-    def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
+    def read_metadata(self, post, lang=None):
         """Read the metadata from a post, and return a metadata dict."""
-        if not self.site.config.get('USE_REST_DOCINFO_METADATA'):
-            return {}
         if lang is None:
             lang = LocaleBorg().current_lang
         source_path = post.translated_source_path(lang)
@@ -104,7 +105,7 @@ class CompileRest(PageCompiler):
         # 7 with default metadata, could be more or less depending on the post).
         add_ln = 0
         if not is_two_file:
-            m_data, data = self.split_metadata(data)
+            m_data, data = self.split_metadata(data, post, lang)
             add_ln = len(m_data.splitlines()) + 1
 
         default_template_path = os.path.join(os.path.dirname(__file__), 'template.txt')
@@ -170,11 +171,7 @@ class CompileRest(PageCompiler):
             content += '\n'
         with io.open(path, "w+", encoding="utf8") as fd:
             if onefile:
-                _format = self.site.config.get('METADATA_FORMAT', 'nikola').lower()
-                if _format == 'pelican':
-                    _format = 'pelican_rest'
-                fd.write(write_metadata(metadata, _format))
-                fd.write('\n')
+                fd.write(write_metadata(metadata, comment_wrap=False, site=self.site, compiler=self))
             fd.write(content)
 
     def set_site(self, site):

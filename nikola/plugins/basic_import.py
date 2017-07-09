@@ -156,8 +156,7 @@ class ImportMixin(object):
             onefile=True,
             **headers)
 
-    @staticmethod
-    def write_metadata(filename, title, slug, post_date, description, tags, **kwargs):
+    def write_metadata(self, filename, title, slug, post_date, description, tags, **kwargs):
         """Write metadata to meta file."""
         if not description:
             description = ""
@@ -166,7 +165,7 @@ class ImportMixin(object):
         with io.open(filename, "w+", encoding="utf8") as fd:
             data = {'title': title, 'slug': slug, 'date': post_date, 'tags': ','.join(tags), 'description': description}
             data.update(kwargs)
-            fd.write(utils.write_metadata(data))
+            fd.write(utils.write_metadata(data, site=self.site, comment_wrap=False))
 
     @staticmethod
     def write_urlmap_csv(output_file, url_map):

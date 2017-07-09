@@ -409,7 +409,9 @@ class Galleries(Task, ImageProcessor):
                 False,
                 self.site.MESSAGES,
                 'story.tmpl',
-                self.site.get_compiler(index_path)
+                self.site.get_compiler(index_path),
+                None,
+                self.site.metadata_extractors_by
             )
             # If this did not exist, galleries without a title in the
             # index.txt file would be errorneously named `index`

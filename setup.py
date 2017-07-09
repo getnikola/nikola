@@ -24,7 +24,7 @@ class PyTest(TestCommand):
 with open('requirements.txt', 'r') as fh:
     dependencies = [l.strip() for l in fh]
 
-extras = {}
+extras = {':python_version == "3.3"': ['enum34']}
 
 with open('requirements-extras.txt', 'r') as fh:
     extras['extras'] = [l.strip() for l in fh][1:]

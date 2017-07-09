@@ -97,7 +97,8 @@ class ScanPosts(PostScanner):
                             self.site.MESSAGES,
                             template_name,
                             self.site.get_compiler(base_path),
-                            destination_base=destination_translatable
+                            destination_base=destination_translatable,
+                            metadata_extractors_by=self.site.metadata_extractors_by
                         )
                         timeline.append(post)
                     except Exception:

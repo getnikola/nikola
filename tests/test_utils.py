@@ -3,6 +3,7 @@ import unittest
 import mock
 import os
 import lxml.html
+from nikola import metadata_extractors
 from nikola.post import get_meta
 from nikola.utils import (
     demote_headers, TranslatableSetting, get_crumbs, TemplateHookRegistry,
@@ -12,6 +13,13 @@ from nikola.plugins.task.sitemap import get_base_path as sitemap_get_base_path
 
 class dummy(object):
     default_lang = 'en'
+    metadata_extractors_by = metadata_extractors.default_metadata_extractors_by()
+    config = {'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}',
+              'TRANSLATIONS': {'en': './'},
+              'DEFAULT_LANG': 'en'}
+
+    def __init__(self):
+        metadata_extractors.load_defaults(self, self.metadata_extractors_by)
 
 
 class GetMetaTest(unittest.TestCase):
@@ -21,7 +29,7 @@ class GetMetaTest(unittest.TestCase):
                         ".. date: 2012/09/15 19:52:05\n"\
                         ".. tags:\n"\
                         ".. link:\n"\
-                        ".. description:\n"\
+                        ".. description:\n\n"\
                         "Post content\n"
 
         opener_mock = mock.mock_open(read_data=file_metadata)
@@ -31,7 +39,7 @@ class GetMetaTest(unittest.TestCase):
         post.metadata_path = 'file_with_metadata.meta'
 
         with mock.patch('nikola.post.io.open', opener_mock, create=True):
-            meta = get_meta(post)
+            meta = get_meta(post, None)[0]
 
         self.assertEqual('Nikola needs more tests!', meta['title'])
         self.assertEqual('write-tests-now', meta['slug'])
@@ -54,7 +62,7 @@ class GetMetaTest(unittest.TestCase):
         post.metadata_path = 'file_with_metadata.meta'
 
         with mock.patch('nikola.post.io.open', opener_mock, create=True):
-            meta = get_meta(post, 'file_with_metadata')
+            meta = get_meta(post, None)[0]
 
         self.assertEqual('file_with_metadata', meta['title'])
         self.assertEqual('write-tests-now', meta['slug'])
@@ -78,7 +86,7 @@ class GetMetaTest(unittest.TestCase):
         post.metadata_path = 'Slugify this.meta'
 
         with mock.patch('nikola.post.io.open', opener_mock, create=True):
-            meta = get_meta(post, 'Slugify this')
+            meta = get_meta(post, None)[0]
         self.assertEqual('Nikola needs more tests!', meta['title'])
         self.assertEqual('slugify-this', meta['slug'])
         self.assertEqual('2012/09/15 19:52:05', meta['date'])
@@ -90,10 +98,10 @@ class GetMetaTest(unittest.TestCase):
         post = dummy()
         post.source_path = '2013-01-23-the_slug-dubdubtitle.md'
         post.metadata_path = '2013-01-23-the_slug-dubdubtitle.meta'
+        post.config['FILE_METADATA_REGEXP'] = r'(?P<date>\d{4}-\d{2}-\d{2})-(?P<slug>.*)-(?P<title>.*)\.md'
+        post.config['FILE_METADATA_UNSLUGIFY_TITLES'] = False
         with mock.patch('nikola.post.io.open', create=True):
-            meta = get_meta(
-                post,
-                r'(?P<date>\d{4}-\d{2}-\d{2})-(?P<slug>.*)-(?P<title>.*)\.md')
+            meta = get_meta(post, None)[0]
 
         self.assertEqual('dubdubtitle', meta['title'])
         self.assertEqual('the_slug', meta['slug'])
@@ -104,7 +112,7 @@ class GetMetaTest(unittest.TestCase):
         post.source_path = 'some/path/the_slug.md'
         post.metadata_path = 'some/path/the_slug.meta'
         with mock.patch('nikola.post.io.open', create=True):
-            meta = get_meta(post)
+            meta = get_meta(post, None)[0]
 
         self.assertEqual('the_slug', meta['slug'])
 
@@ -276,25 +284,11 @@ class TranslatableSettingsTest(unittest.TestCase):
         #          locale settings returned by LocaleBorg!  Use with care!
         S.lang = 'zz'
 
-        try:
-            u = unicode(S)
-        except NameError:  # Python 3
-            u = str(S)
-
+        u = str(S)
         cn = S()
 
         self.assertEqual(inp['zz'], u)
         self.assertEqual(inp['zz'], cn)
-
-
-def test_get_metadata_from_file():
-    # These were doctests and not running :-P
-    from nikola.post import _get_metadata_from_file
-    g = _get_metadata_from_file
-    assert list(g([]).values()) == []
-    assert str(g([".. title: FooBar"])["title"]) == 'FooBar'
-    assert 'title' not in g(["", "", ".. title: FooBar"])
-    assert 'title' in g(["", ".. title: FooBar"])
 
 
 def test_get_asset_path():
