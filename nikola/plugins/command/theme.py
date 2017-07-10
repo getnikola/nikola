@@ -90,8 +90,8 @@ class CommandTheme(Command):
             'long': 'url',
             'type': str,
             'help': "URL for the theme repository (default: "
-                    "https://themes.getnikola.com/v7/themes.json)",
-            'default': 'https://themes.getnikola.com/v7/themes.json'
+                    "https://themes.getnikola.com/v8/themes.json)",
+            'default': 'https://themes.getnikola.com/v8/themes.json'
         },
         {
             'name': 'getpath',
