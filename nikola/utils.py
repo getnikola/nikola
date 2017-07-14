@@ -1439,7 +1439,7 @@ def get_translation_candidate(config, path, lang):
 def write_metadata(data, metadata_format=None, comment_wrap=False, site=None, compiler=None):
     """Write metadata.
 
-    Recommended usage: pass `site`, `comment_wrap`, and optionally `compiler`. Other options are for backwards compatibility.
+    Recommended usage: pass `site`, `comment_wrap` (True, False, or a 2-tuple of start/end markers), and optionally `compiler`. Other options are for backwards compatibility.
     """
     # API compatibility
     if metadata_format is None and site is not None:
@@ -1464,24 +1464,24 @@ def write_metadata(data, metadata_format=None, comment_wrap=False, site=None, co
             # Quiet fallback.
             metadata_format = 'nikola'
 
+    default_meta = ('nikola', 'rest_docinfo', 'markdown_meta')
     extractor = metadata_extractors_by['name'].get(metadata_format)
     if extractor and extractor.supports_write:
         extractor.check_requirements()
         return extractor.write_metadata(data, comment_wrap)
-    else:
-        LOGGER.warn('Writing METADATA_FORMAT %s is not supported, using "nikola" format', metadata_format)
-
-    if metadata_format not in ('nikola', 'rest_docinfo', 'markdown_meta'):
-        LOGGER.warn('Unknown METADATA_FORMAT %s, using "nikola" format', metadata_format)
+    elif extractor and metadata_format not in default_meta:
+        LOGGER.warn('Writing METADATA_FORMAT {} is not supported, using "nikola" format'.format(metadata_format))
+    elif metadata_format not in default_meta:
+        LOGGER.warn('Unknown METADATA_FORMAT {}, using "nikola" format'.format(metadata_format))
 
     if metadata_format == 'rest_docinfo':
-        title = data.pop('title')
+        title = data['title']
         results = [
             '=' * len(title),
             title,
             '=' * len(title),
             ''
-        ] + [':{0}: {1}'.format(k, v) for k, v in data.items() if v] + ['']
+        ] + [':{0}: {1}'.format(k, v) for k, v in data.items() if v and k != 'title'] + ['']
         return '\n'.join(results)
     elif metadata_format == 'markdown_meta':
         results = ['{0}: {1}'.format(k, v) for k, v in data.items() if v] + ['', '']
