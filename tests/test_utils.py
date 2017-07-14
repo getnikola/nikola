@@ -434,11 +434,14 @@ Hello, world!
 
 :slug: hello-world
 """
-    assert write_metadata(data, 'markdown_meta') == """\
+    assert write_metadata(data, 'markdown_meta') in ("""\
 title: Hello, world!
 slug: hello-world
 
-"""
+""", """slug: hello-world
+title: Hello, world!
+
+""")
 
 
 def test_write_metadata_pelican_detection():
