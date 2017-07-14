@@ -5,7 +5,7 @@ import mock
 import os
 import pytest
 from .base import FakeSite
-from nikola.metadata_extractors import default_metadata_extractors_by, load_defaults
+from nikola.metadata_extractors import default_metadata_extractors_by, load_defaults, MetaCondition, check_conditions
 from nikola.post import get_meta
 from nikola.plugins.compile.rest import CompileRest
 from nikola.plugins.compile.markdown import CompileMarkdown
@@ -37,6 +37,10 @@ class FakePost():
 
     def translated_source_path(self, _):
         return self.source_path
+
+
+class dummy():
+    pass
 
 
 @pytest.mark.parametrize("meta_twofile", [(1, "onefile", "twofile"), (2, "twofile", "onefile")])
@@ -148,3 +152,47 @@ def test_compiler_metadata(metadata_extractors_by, compiler_data):
     assert 'compiler' in meta['tags']
     assert compiler_name in meta['tags']
     assert meta['date'] == '2017-07-01 00:00:00 UTC'
+
+
+def test_yaml_none_handling(metadata_extractors_by):
+    yaml_extractor = metadata_extractors_by['name']['yaml']
+    meta = yaml_extractor.extract_text("---\ntitle: foo\nslug: null")
+    assert meta['title'] == 'foo'
+    assert meta['slug'] == ''
+
+
+def test_check_conditions():
+    post = dummy()
+    post.compiler = dummy()
+    post.compiler.name = 'foo'
+    filename = 'foo.bar'
+    config = {'baz': True, 'quux': False}
+    assert check_conditions(post, filename, [
+        (MetaCondition.config_bool, 'baz'),
+        (MetaCondition.config_present, 'quux')
+    ], config, '')
+    assert not check_conditions(post, filename, [
+        (MetaCondition.config_bool, 'quux')
+    ], config, '')
+    assert not check_conditions(post, filename, [
+        (MetaCondition.config_present, 'foobar')
+    ], config, '')
+
+    assert check_conditions(post, filename, [
+        (MetaCondition.extension, 'bar')
+    ], config, '')
+    assert not check_conditions(post, filename, [
+        (MetaCondition.extension, 'baz')
+    ], config, '')
+
+    assert check_conditions(post, filename, [
+        (MetaCondition.compiler, 'foo')
+    ], config, '')
+    assert not check_conditions(post, filename, [
+        (MetaCondition.compiler, 'foobar')
+    ], config, '')
+
+    assert not check_conditions(post, filename, [
+        (MetaCondition.never, None),
+        (MetaCondition.config_present, 'bar')
+    ], config, '')

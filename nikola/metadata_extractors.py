@@ -104,7 +104,7 @@ def load_defaults(site: 'nikola.nikola.Nikola', metadata_extractors_by: dict):
         classify_extractor(extractor, metadata_extractors_by)
 
 
-def is_extractor(extractor) -> bool:
+def is_extractor(extractor) -> bool:  # pragma: no cover
     """Check if a given class is an extractor."""
     return isinstance(extractor, MetadataExtractor)
 
