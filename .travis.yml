@@ -4,6 +4,7 @@ language: python
 cache:
 - apt
 - pip
+dist: trusty
 sudo: false
 addons:
   apt:
