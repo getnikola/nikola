@@ -377,7 +377,7 @@ def test_write_metadata_with_formats():
     data = {'slug': 'hello-world', 'title': 'Hello, world!', 'b': '2', 'a': '1'}
     # Nikola: defaults first, then sorted alphabetically
     # YAML: all sorted alphabetically
-    # TOML: insertion order
+    # TOML: insertion order (py3.6), random (py3.5 or older)
     assert write_metadata(data, 'nikola') == """\
 .. title: Hello, world!
 .. slug: hello-world
@@ -393,14 +393,13 @@ slug: hello-world
 title: Hello, world!
 ---
 """
-    assert write_metadata(data, 'toml') == """\
-+++
-slug = "hello-world"
-title = "Hello, world!"
-b = "2"
-a = "1"
-+++
-"""
+    toml = write_metadata(data, 'toml')
+    assert toml.startswith('+++\n')
+    assert toml.endswith('+++\n')
+    assert 'slug = "hello-world"' in toml
+    assert 'title = "Hello, world!"' in toml
+    assert 'b = "2"' in toml
+    assert 'a = "1"' in toml
 
 
 def test_write_metadata_comment_wrap():
@@ -463,6 +462,7 @@ def test_write_metadata_from_site_and_fallbacks():
     assert write_metadata(data) == '.. title: xx\n\n'
     assert write_metadata(data, 'foo') == '.. title: xx\n\n'
     assert write_metadata(data, 'filename_regex') == '.. title: xx\n\n'
+
 
 if __name__ == '__main__':
     unittest.main()
