@@ -2,6 +2,7 @@ New in v7-maintenance
 =====================
 
 * Fix crash when compiling empty ``.html`` posts (Issue #2851)
+* Fixed dependency to "doit" for snap creation
 
 New in v7.8.9
 =============
