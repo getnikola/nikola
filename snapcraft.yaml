@@ -53,5 +53,5 @@ parts:
         build-packages: [libjpeg-dev]
         install: |
             find $SNAPCRAFT_PART_INSTALL -name '*.a' -exec rm {} \;
-            find $SNAPCRAFT_PART_INSTALL -name 'terminado' -type d -exec rm {} \;
-            find $SNAPCRAFT_PART_INSTALL -name 'tornado' -type d -exec rm {} \;
+            find $SNAPCRAFT_PART_INSTALL -name 'terminado' -type d -exec rm -rf {} \;
+            find $SNAPCRAFT_PART_INSTALL -name 'tornado' -type d -exec rm -rf {} \;
