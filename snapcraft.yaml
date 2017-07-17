@@ -52,6 +52,6 @@ parts:
             - ipykernel>=4.0.0
         build-packages: [libjpeg-dev]
         install: |
-            find $SNAPCRAFT_PART_INSTALL -name '*.a'|xargs -r rm
-            find $SNAPCRAFT_PART_INSTALL -name 'terminado' -type d|xargs -r rm -rf
-            find $SNAPCRAFT_PART_INSTALL -name 'tornado' -type d|xargs -r rm -rf
+            find $SNAPCRAFT_PART_INSTALL -name '*.a'  -print0 | xargs -0r rm
+            find $SNAPCRAFT_PART_INSTALL -name 'terminado' -type d -print0 | xargs -0r rm -rf
+            find $SNAPCRAFT_PART_INSTALL -name 'tornado' -type d -print0 | xargs -0r rm -rf
