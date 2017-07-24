@@ -76,7 +76,7 @@ def check_conditions(post, filename: str, conditions: list, config: dict, source
             ct == MetaCondition.config_bool and not config.get(arg, False),
             ct == MetaCondition.config_present and arg not in config,
             ct == MetaCondition.extension and not filename.endswith(arg),
-            ct == MetaCondition.compiler and post.compiler.name != arg,
+            ct == MetaCondition.compiler and (post is None or post.compiler.name != arg),
             ct == MetaCondition.never
         )):
             return False
