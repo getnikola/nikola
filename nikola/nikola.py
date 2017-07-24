@@ -1736,37 +1736,46 @@ class Nikola(object):
         * slug (name is the slug of a post or page)
         * filename (name is the source filename of a post/page, in DEFAULT_LANG, relative to conf.py)
 
-        The returned value is always a path relative to output, like
-        "categories/whatever.html"
+        The returned value is either a path relative to output, like "categories/whatever.html", or
+        an absolute URL ("https://getnikola.com/"), if path handler returns a string.
 
         If is_link is True, the path is absolute and uses "/" as separator
         (ex: "/archive/index.html").
         If is_link is False, the path is relative to output and uses the
         platform's separator.
         (ex: "archive\index.html")
+        If the registered path handler returns a string instead of path component list - it's
+        considered to be an absolute URL and returned as is.
+
         """
         if lang is None:
             lang = utils.LocaleBorg().current_lang
 
         try:
             path = self.path_handlers[kind](name, lang, **kwargs)
-            if path is None:
-                path = "#"
-            else:
-                path = [os.path.normpath(p) for p in path if p != '.']  # Fix Issue #1028
-            if is_link:
-                link = '/' + ('/'.join(path))
-                index_len = len(self.config['INDEX_FILE'])
-                if self.config['STRIP_INDEXES'] and \
-                        link[-(1 + index_len):] == '/' + self.config['INDEX_FILE']:
-                    return link[:-index_len]
-                else:
-                    return link
-            else:
-                return os.path.join(*path)
         except KeyError:
             utils.LOGGER.warn("Unknown path request of kind: {0}".format(kind))
             return ""
+
+        # If path handler returns a string we consider it to be an absolute URL not requiring any
+        # further processing, i.e 'https://getnikola.com/'. See Issue #2876.
+        if isinstance(path, str):
+            return path
+
+        if path is None:
+            path = "#"
+        else:
+            path = [os.path.normpath(p) for p in path if p != '.']  # Fix Issue #1028
+        if is_link:
+            link = '/' + ('/'.join(path))
+            index_len = len(self.config['INDEX_FILE'])
+            if self.config['STRIP_INDEXES'] and \
+                    link[-(1 + index_len):] == '/' + self.config['INDEX_FILE']:
+                return link[:-index_len]
+            else:
+                return link
+        else:
+            return os.path.join(*path)
 
     def post_path(self, name, lang):
         """Link to the destination of an element in the POSTS/PAGES settings.
