@@ -23,9 +23,6 @@ class Plugin(ShortcodePlugin):
     def set_site(self, site):
         """Set Nikola site."""
         self.site = site
-        # Even though listings don't use CodeBlock anymore, I am
-        # leaving these to make the code directive work with
-        # docutils < 0.9
         Plugin.folders = site.config['LISTINGS_FOLDERS']
         return super(Plugin, self).set_site(site)
 
