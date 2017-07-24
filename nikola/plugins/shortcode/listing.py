@@ -9,6 +9,11 @@ import pygments
 
 from nikola.plugin_categories import ShortcodePlugin
 
+try:
+    from urlparse import urlunsplit
+except ImportError:
+    from urllib.parse import urlunsplit  # NOQA
+
 
 class Plugin(ShortcodePlugin):
     """Plugin for listing shortcode."""
@@ -32,15 +37,25 @@ class Plugin(ShortcodePlugin):
             if fname.startswith(listings_folder):
                 fpath = os.path.join(fname)  # new syntax: specify folder name
             else:
-                fpath = os.path.join(listings_folder, fname)  # old syntax: don't specify folder name
+                # old syntax: don't specify folder name
+                fpath = os.path.join(listings_folder, fname)
         else:
-            fpath = os.path.join(fname)  # must be new syntax: specify folder name
+            # must be new syntax: specify folder name
+            fpath = os.path.join(fname)
         linenumbers = 'table' if linenumbers else False
-        deps = []
+        deps = [fpath]
         with open(fpath, 'r') as inf:
+            target = urlunsplit(
+                ("link", 'listing', fpath.replace('\\', '/'), '', ''))
+            src_target = urlunsplit(
+                ("link", 'listing_source', fpath.replace('\\', '/'), '', ''))
+            src_label = self.site.MESSAGES('Source')
+
             data = inf.read()
             lexer = pygments.lexers.get_lexer_by_name(language)
-            formatter = pygments.formatters.get_formatter_by_name('html', linenos=linenumbers)
-            output = pygments.highlight(data, lexer, formatter)
+            formatter = pygments.formatters.get_formatter_by_name(
+                'html', linenos=linenumbers)
+            output = '<a href="{1}">{0}</a>  <a href="{3}">({2})</a>' .format(
+                fname, target, src_label, src_target) + pygments.highlight(data, lexer, formatter)
 
         return output, deps

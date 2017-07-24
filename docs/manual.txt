@@ -1181,6 +1181,13 @@ doc
 
        {{% raw %}}Take a look at {{% doc %}}my other post <creating-a-theme>{{% /doc %}} about theme creating.{{% /raw %}}
 
+listing
+    Used to show a code listing. Example::
+
+        {{% raw %}}{{% listing hello.py python linenumbers=True%}}{{% /raw %}}
+
+    It takes a file name or path, an optional language to highlight, and a linenumbers option to enable/disable line numbers in the output.
+
 post-list
     Will show a list of posts, see the `Post List directive for details <#post-list>`__
 

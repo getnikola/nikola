@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New ``listings`` shortcode similar to the reStructuredText listings directive (Issue #2868)
 * Add support for ``MetadataExtractor`` plugins that allow custom,
   extensible metadata extraction from posts (Issue #2830)
 * Support YAML and TOML metadata in 2-file posts (via Issue #2830)
