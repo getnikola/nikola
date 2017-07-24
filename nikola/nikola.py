@@ -1750,23 +1750,23 @@ class Nikola(object):
 
         try:
             path = self.path_handlers[kind](name, lang, **kwargs)
-            if path is None:
-                path = "#"
-            else:
-                path = [os.path.normpath(p) for p in path if p != '.']  # Fix Issue #1028
-            if is_link:
-                link = '/' + ('/'.join(path))
-                index_len = len(self.config['INDEX_FILE'])
-                if self.config['STRIP_INDEXES'] and \
-                        link[-(1 + index_len):] == '/' + self.config['INDEX_FILE']:
-                    return link[:-index_len]
-                else:
-                    return link
-            else:
-                return os.path.join(*path)
         except KeyError:
             utils.LOGGER.warn("Unknown path request of kind: {0}".format(kind))
             return ""
+        if path is None:
+            path = "#"
+        else:
+            path = [os.path.normpath(p) for p in path if p != '.']  # Fix Issue #1028
+        if is_link:
+            link = '/' + ('/'.join(path))
+            index_len = len(self.config['INDEX_FILE'])
+            if self.config['STRIP_INDEXES'] and \
+                    link[-(1 + index_len):] == '/' + self.config['INDEX_FILE']:
+                return link[:-index_len]
+            else:
+                return link
+        else:
+            return os.path.join(*path)
 
     def post_path(self, name, lang):
         """Link to the destination of an element in the POSTS/PAGES settings.
