@@ -1736,14 +1736,17 @@ class Nikola(object):
         * slug (name is the slug of a post or page)
         * filename (name is the source filename of a post/page, in DEFAULT_LANG, relative to conf.py)
 
-        The returned value is always a path relative to output, like
-        "categories/whatever.html"
+        The returned value is either a path relative to output, like "categories/whatever.html", or
+        an absolute URL ("https://en.wikipedia.org/wiki/Nikola"), if path handler returns a string.
 
         If is_link is True, the path is absolute and uses "/" as separator
         (ex: "/archive/index.html").
         If is_link is False, the path is relative to output and uses the
         platform's separator.
         (ex: "archive\index.html")
+        If the registered path handler returns a string instead of path component list - it's
+        considered to be an absolute URL and returned as is.
+
         """
         if lang is None:
             lang = utils.LocaleBorg().current_lang
@@ -1753,6 +1756,12 @@ class Nikola(object):
         except KeyError:
             utils.LOGGER.warn("Unknown path request of kind: {0}".format(kind))
             return ""
+
+        # If path handler returns a string we consider it to be an absolute URL not requiring any
+        # further processing, i.e 'https://en.wikipedia.org/wiki/Nikola'. See Issue #2876.
+        if isinstance(path, str):
+            return path
+
         if path is None:
             path = "#"
         else:
