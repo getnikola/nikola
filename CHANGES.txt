@@ -4,6 +4,9 @@ New in master
 Features
 --------
 
+* Switch to reStructuredText’s new HTML 5 renderer (Issue #2874)
+* Deprecate ``html4css1.css`` in favor of ``rst_base.css`` (Issue
+  #2874)
 * Add support for ``MetadataExtractor`` plugins that allow custom,
   extensible metadata extraction from posts (Issue #2830)
 * Support YAML and TOML metadata in 2-file posts (via Issue #2830)

@@ -177,7 +177,7 @@ see something fairly similar:
     <meta name="viewport" content="width=device-width">
     <title>My Nikola Site | My Nikola Site</title>
 
-    <link href="assets/css/html4css1.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/rst_base.css" rel="stylesheet" type="text/css">
     <link href="assets/css/code.css" rel="stylesheet" type="text/css">
     <link href="assets/css/theme.css" rel="stylesheet" type="text/css">
 
@@ -200,7 +200,7 @@ in a particular way, using a setting called ``CODE_COLOR_SCHEME`` where you can 
 what color scheme the syntax highlighter uses. You can use your own ``assets/css/code.css`` if you
 don’t like the provided ones.
 
-Nikola **requires** ``assets/css/html4css1.css`` and ``assets/css/code.css`` to function properly.
+Nikola **requires** ``assets/css/rst_base.css`` and ``assets/css/code.css`` to function properly.
 We will also add themes for Jupyter (``assets/css/ipython.min.css``
 and ``assets/css/nikola_ipython.css``) into the template; note that they are
 activated only if you configured your ``POSTS``/``PAGES`` with ipynb support.
@@ -228,7 +228,7 @@ The part we want to change is this:
                 <link href="/assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
             %endif
         %else:
-            <link href="/assets/css/html4css1.css" rel="stylesheet" type="text/css">
+            <link href="/assets/css/rst_base.css" rel="stylesheet" type="text/css">
             <link href="/assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
             <link href="/assets/css/code.css" rel="stylesheet" type="text/css">
             <link href="/assets/css/theme.css" rel="stylesheet" type="text/css">
@@ -250,7 +250,7 @@ And we will change it so it uses the lanyon styles instead of theme.css (again, 
         %if use_bundles:
             <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
         %else:
-            <link href="/assets/css/html4css1.css" rel="stylesheet" type="text/css">
+            <link href="/assets/css/rst_base.css" rel="stylesheet" type="text/css">
             <link href="/assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
             <link href="/assets/css/poole.css" rel="stylesheet" type="text/css">
             <link href="/assets/css/lanyon.css" rel="stylesheet" type="text/css">
@@ -403,7 +403,7 @@ So, first, lets change that base template to be more lanyon-like:
    And that’s after I exposed the sidebar by clicking on an invisible widget!
 
 One problem, which causes that yellow color in the sidebar is a CSS conflict.
-We are loading ``html4css1.css`` which specifies
+We are loading ``rst_base.css`` which specifies
 the background color of ``div.sidebar`` which is more specific than
 ``lanyon.css``, which specifies for ``.sidebar`` alone.
 
@@ -507,7 +507,7 @@ and at the bottom a label for the sidebar toggle. Easy to do in ``base.tmpl``
 
    Getting there!
 
-The sidebar looks bad because of yet more CSS conflicts with ``html4css1.css``. By
+The sidebar looks bad because of yet more CSS conflicts with ``rst_base.css``. By
 adding some extra styling in ``lanyon.css``, it will look better.
 
 .. code:: css
@@ -817,7 +817,7 @@ which makes sites load faster. To do that, your theme needs a ``bundles`` file w
 
 For the Lanyon theme, it should be like this::
 
-    assets/css/all.css=html4css1.css,nikola_rst.css,code.css,poole.css,lanyon.css,custom.css
+    assets/css/all.css=rst_base.css,nikola_rst.css,code.css,poole.css,lanyon.css,custom.css
 
 **Note:** Some themes also support the ``USE_CDN`` option meaning that in some cases it will load one bundle with all CSS and in other will load some CSS files
 from a CDN and others from a bundle. This is complicated and probably not worth the effort.
