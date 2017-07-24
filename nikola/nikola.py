@@ -1737,7 +1737,7 @@ class Nikola(object):
         * filename (name is the source filename of a post/page, in DEFAULT_LANG, relative to conf.py)
 
         The returned value is either a path relative to output, like "categories/whatever.html", or
-        an absolute URL ("https://en.wikipedia.org/wiki/Nikola"), if path handler returns a string.
+        an absolute URL ("https://getnikola.com/"), if path handler returns a string.
 
         If is_link is True, the path is absolute and uses "/" as separator
         (ex: "/archive/index.html").
@@ -1758,7 +1758,7 @@ class Nikola(object):
             return ""
 
         # If path handler returns a string we consider it to be an absolute URL not requiring any
-        # further processing, i.e 'https://en.wikipedia.org/wiki/Nikola'. See Issue #2876.
+        # further processing, i.e 'https://getnikola.com/'. See Issue #2876.
         if isinstance(path, str):
             return path
 
