@@ -181,16 +181,17 @@ class CommandAuto(Command):
         else:
             loop = asyncio.get_event_loop()
 
-        handler = webapp.make_handler()
-        srv = loop.run_until_complete(loop.create_server(handler, host, port))
-
         # Server can be disabled (Issue #1883)
-        # TODO: Temporarily removed
-        # self.has_server = not options['no-server']
+        self.has_server = not options['no-server']
 
-        # Watch output folders and trigger reloads
+        if self.has_server:
+            handler = webapp.make_handler()
+            srv = loop.run_until_complete(loop.create_server(handler, host, port))
+
         self.wd_observer = Observer()
-        self.wd_observer.schedule(NikolaEventHandler(self.reload_page, loop), 'output/', recursive=True)
+        # Watch output folders and trigger reloads
+        if self.has_server:
+            self.wd_observer.schedule(NikolaEventHandler(self.reload_page, loop), 'output/', recursive=True)
 
         # Watch input folders and trigger rebuilds
         for p in watched:
@@ -201,10 +202,23 @@ class CommandAuto(Command):
         _conf_fn = os.path.abspath(self.site.configuration_filename or 'conf.py')
         _conf_dn = os.path.dirname(_conf_fn)
         self.wd_observer.schedule(ConfigEventHandler(_conf_fn, self.run_nikola_build, loop), _conf_dn, recursive=False)
+        self.wd_observer.start()
+
+        if not self.has_server:
+            self.logger.info("Watching...".format(host, port))
+            # Run the event loop forever (no server mode).
+            try:
+                loop.run_forever()
+            except KeyboardInterrupt:
+                pass
+            finally:
+                self.wd_observer.stop()
+                self.wd_observer.join()
+            loop.close()
+            return
 
         host, port = srv.sockets[0].getsockname()
 
-        self.wd_observer.start()
         self.logger.info("Serving HTTP on {0} port {1}...".format(host, port))
         if browser:
             if options['ipv6'] or '::' in host:
@@ -213,7 +227,6 @@ class CommandAuto(Command):
                 server_url = "http://{0}:{1}/".format(host, port)
 
             self.logger.info("Opening {0} in the default web browser...".format(server_url))
-            # Yes, this is a race condition
             webbrowser.open('http://{0}:{1}'.format(host, port))
 
         # Run the event loop forever and handle shutdowns.
@@ -431,7 +444,6 @@ class ConfigEventHandler(NikolaEventHandler):
     """A Nikola-specific handler for Watchdog that handles the config file (as a workaround)."""
     def __init__(self, configuration_filename, function, loop):
         """Initialize the handler."""
-        super().__init__(loop=loop)
         self.configuration_filename = configuration_filename
         self.function = function
 
