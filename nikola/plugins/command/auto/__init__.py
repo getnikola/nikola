@@ -37,13 +37,13 @@ try:
     import aiohttp
     from aiohttp import web
     from aiohttp.web_urldispatcher import StaticResource
-    from yarl import unquote as yarl_unquote
-    from aiohttp.web_exceptions import HTTPNotFound
+    from yarl import unquote
+    from aiohttp.web_exceptions import HTTPNotFound, HTTPForbidden
     from aiohttp.web_response import Response
     from aiohttp.web_fileresponse import FileResponse
 except ImportError:
-    asyncio = aiohttp = web = yarl_unquote = None
-    StaticResource = object
+    asyncio = aiohttp = web = unquote = None
+    StaticResource = HTTPNotFound = HTTPForbidden = Response = FileResponse = object
 
 try:
     from watchdog.observers import Observer
@@ -184,6 +184,9 @@ class CommandAuto(Command):
             asyncio.set_event_loop(loop)
         else:
             loop = asyncio.get_event_loop()
+
+        # Set debug setting
+        loop.set_debug(self.site.debug)
 
         # Server can be disabled (Issue #1883)
         self.has_server = not options['no-server']
@@ -397,12 +400,12 @@ class IndexHtmlStaticResource(StaticResource):
     @asyncio.coroutine
     def _handle(self, request):
         """Handle incoming requests (pass to handle_file)."""
-        filename = yarl_unquote(request.match_info['filename'])
+        filename = unquote(request.match_info['filename'])
         ret = yield from self.handle_file(request, filename)
         return ret
 
     @asyncio.coroutine
-    def handle_file(self, request, filename):
+    def handle_file(self, request, filename, from_index=None):
         """Handle file requests."""
         try:
             filepath = self._directory.joinpath(filename).resolve()
@@ -419,9 +422,9 @@ class IndexHtmlStaticResource(StaticResource):
         # on opening a dir, load it's contents if allowed
         if filepath.is_dir():
             if filename.endswith('/') or not filename:
-                ret = yield from self.handle_file(request, filename + 'index.html')
+                ret = yield from self.handle_file(request, filename + 'index.html', from_index=filename)
             else:
-                ret = yield from self.handle_file(request, filename + '/index.html')
+                ret = yield from self.handle_file(request, filename + '/index.html', from_index=filename)
         elif filepath.is_file():
             ct, encoding = mimetypes.guess_type(str(filepath))
             encoding = encoding or 'utf-8'
@@ -432,6 +435,13 @@ class IndexHtmlStaticResource(StaticResource):
                     ret = Response(text=text, content_type=ct, charset=encoding)
             else:
                 ret = FileResponse(filepath, chunk_size=self._chunk_size)
+        elif from_index:
+            filepath = self._directory.joinpath(from_index).resolve()
+            try:
+                return Response(text=self._directory_as_html(filepath),
+                                content_type="text/html")
+            except PermissionError:
+                raise HTTPForbidden
         else:
             raise HTTPNotFound
 
