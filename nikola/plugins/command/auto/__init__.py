@@ -223,7 +223,7 @@ class CommandAuto(Command):
         except KeyboardInterrupt:
             pass
         finally:
-            self.logger.info("Server is shutting down, please wait...")
+            self.logger.info("Server is shutting down.")
             if self.dns_sd:
                 self.dns_sd.Reset()
             srv.close()
@@ -234,7 +234,6 @@ class CommandAuto(Command):
             self.wd_observer.stop()
             self.wd_observer.join()
         loop.close()
-        self.logger.info("Goodbye.")
 
     @asyncio.coroutine
     def run_nikola_build(self, event):
@@ -319,7 +318,6 @@ class CommandAuto(Command):
             else:
                 self.logger.warn("Received unknown message: {0}".format(msg))
 
-
         self.sockets.remove(ws)
         self.logger.debug("WebSocket connection closed: {0}".format(ws))
 
@@ -327,6 +325,7 @@ class CommandAuto(Command):
 
     @asyncio.coroutine
     def send_to_websockets(self, message):
+        """Send a message to all open WebSockets."""
         to_delete = []
         for ws in self.sockets:
             if ws.closed:
@@ -353,18 +352,21 @@ class IndexHtmlStaticResource(StaticResource):
     snippet = "</head>"
 
     def __init__(self, modify_html=True, snippet="</head>", *args, **kwargs):
+        """Initialize a resource."""
         self.modify_html = modify_html
         self.snippet = snippet
         super().__init__(*args, **kwargs)
 
     @asyncio.coroutine
     def _handle(self, request):
+        """Handle incoming requests (pass to handle_file)."""
         filename = yarl_unquote(request.match_info['filename'])
         ret = yield from self.handle_file(request, filename)
         return ret
 
     @asyncio.coroutine
     def handle_file(self, request, filename):
+        """Handle file requests."""
         try:
             filepath = self._directory.joinpath(filename).resolve()
             if not self._follow_symlinks:
@@ -401,44 +403,40 @@ class IndexHtmlStaticResource(StaticResource):
         """Apply some transforms to HTML content."""
         # Inject livereload.js
         text = text.replace('</head>', self.snippet, 1)
+        # Disable <base> tag
         text = re.sub(r'<base\s([^>]*)>', '<!--base \g<1>-->', text, flags=re.IGNORECASE)
         return text
 
-# Based on code from the 'hachiko' library by John Biesnecker
-# https://github.com/biesnecker/hachiko
-class AIOEventHandler(object):
-    """An asyncio-compatible event handler."""
 
-    def __init__(self, loop):
+# Based on code from the 'hachiko' library by John Biesnecker — thanks!
+# https://github.com/biesnecker/hachiko
+class NikolaEventHandler:
+    """A Nikola-specific event handler for Watchdog. Based on code from hachiko."""
+    def __init__(self, function, loop):
+        """Initialize the handler."""
+        self.function = function
         self.loop = loop
 
     @asyncio.coroutine
     def on_any_event(self, event):
-        pass
+        """Handle all file events."""
+        yield from self.function(event)
 
     def dispatch(self, event):
+        """Dispatch events to handler."""
         self.loop.call_soon_threadsafe(asyncio.async, self.on_any_event(event))
 
 
-class NikolaEventHandler(AIOEventHandler):
-    """A Nikola-specific event handler for Watchdog."""
-    def __init__(self, function, loop):
-        super().__init__(loop=loop)
-        self.function = function
-
-    @asyncio.coroutine
-    def on_any_event(self, event):
-        yield from self.function(event)
-
-
-class ConfigEventHandler(AIOEventHandler):
+class ConfigEventHandler(NikolaEventHandler):
     """A Nikola-specific handler for Watchdog that handles the config file (as a workaround)."""
     def __init__(self, configuration_filename, function, loop):
+        """Initialize the handler."""
         super().__init__(loop=loop)
         self.configuration_filename = configuration_filename
         self.function = function
 
     @asyncio.coroutine
     def on_any_event(self, event):
+        """Handle file events if they concern the configuration file."""
         if event._src_path == self.configuration_filename:
             yield from self.function(event)
