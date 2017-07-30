@@ -281,6 +281,7 @@ class CommandAuto(Command):
 
     @asyncio.coroutine
     def run_rebuild_queue(self):
+        """Run rebuilds from a queue (Nikola can only build in a single instance)."""
         while True:
             date, event_path = yield from self.rebuild_queue.get()
             if date is None:
