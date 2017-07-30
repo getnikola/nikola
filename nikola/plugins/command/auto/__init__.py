@@ -27,6 +27,7 @@
 """Automatic rebuilds for Nikola."""
 
 import mimetypes
+import datetime
 import re
 import os
 import sys
@@ -65,6 +66,7 @@ class CommandAuto(Command):
     has_server = True
     doc_purpose = "builds and serves a site; automatically detects site changes, rebuilds, and optionally refreshes a browser"
     dns_sd = None
+    delta_last_rebuild = datetime.timedelta(milliseconds=100)
 
     cmd_options = [
         {
@@ -112,6 +114,8 @@ class CommandAuto(Command):
         """Start the watcher."""
         self.logger = get_logger('auto')
         self.sockets = []
+        self.rebuild_queue = asyncio.Queue()
+        self.last_rebuild = datetime.datetime.now()
 
         if aiohttp is None and Observer is None:
             req_missing(['aiohttp', 'watchdog'], 'use the "auto" command')
@@ -208,6 +212,9 @@ class CommandAuto(Command):
             self.logger.info("Watching for changes...")
             # Run the event loop forever (no server mode).
             try:
+                # Run rebuild queue
+                loop.run_until_complete(self.run_rebuild_queue())
+
                 loop.run_forever()
             except KeyboardInterrupt:
                 pass
@@ -231,6 +238,9 @@ class CommandAuto(Command):
 
         # Run the event loop forever and handle shutdowns.
         try:
+            # Run rebuild queue
+            loop.run_until_complete(self.run_rebuild_queue())
+
             self.dns_sd = dns_sd(port, (options['ipv6'] or '::' in host))
             loop.run_forever()
         except KeyboardInterrupt:
@@ -240,6 +250,7 @@ class CommandAuto(Command):
             if self.dns_sd:
                 self.dns_sd.Reset()
             srv.close()
+            self.rebuild_queue.put((None, None))
             loop.run_until_complete(srv.wait_closed())
             loop.run_until_complete(webapp.shutdown())
             loop.run_until_complete(handler.shutdown(60.0))
@@ -262,18 +273,31 @@ class CommandAuto(Command):
                 event.is_directory):  # Skip on folders, these are usually duplicates
             return
 
-        self.logger.info('REBUILDING SITE (from {0})'.format(event_path))
-        # TODO: queuing
-        p = yield from asyncio.create_subprocess_exec(*self.nikola_cmd, stderr=subprocess.PIPE)
-        exit_code = yield from p.wait()
-        error = yield from p.stderr.read()
-        errord = error.decode('utf-8')
+        self.logger.debug('Queuing rebuild from {0}'.format(event_path))
+        yield from self.rebuild_queue.put((datetime.datetime.now(), event_path))
 
-        if exit_code != 0:
-            self.logger.error(errord)
-            yield from self.send_to_websockets({'command': 'alert', 'message': errord})
-        else:
-            self.logger.info("Rebuild successful\n" + errord)
+    @asyncio.coroutine
+    def run_rebuild_queue(self):
+        while True:
+            date, event_path = yield from self.rebuild_queue.get()
+            if date is None:
+                # Shutdown queue
+                return
+            if date < (self.last_rebuild + self.delta_last_rebuild):
+                self.logger.debug("Skipping rebuild from {0} (within delta)".format(event_path))
+                continue
+            self.last_rebuild = datetime.datetime.now()
+            self.logger.info('REBUILDING SITE (from {0})'.format(event_path))
+            p = yield from asyncio.create_subprocess_exec(*self.nikola_cmd, stderr=subprocess.PIPE)
+            exit_code = yield from p.wait()
+            error = yield from p.stderr.read()
+            errord = error.decode('utf-8')
+
+            if exit_code != 0:
+                self.logger.error(errord)
+                yield from self.send_to_websockets({'command': 'alert', 'message': errord})
+            else:
+                self.logger.info("Rebuild successful\n" + errord)
 
     @asyncio.coroutine
     def reload_page(self, event):
@@ -449,6 +473,7 @@ class ConfigEventHandler(NikolaEventHandler):
         """Initialize the handler."""
         self.configuration_filename = configuration_filename
         self.function = function
+        self.loop = loop
 
     @asyncio.coroutine
     def on_any_event(self, event):
