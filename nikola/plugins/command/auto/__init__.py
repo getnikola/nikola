@@ -32,8 +32,8 @@ import re
 import os
 import sys
 import subprocess
+import asyncio
 try:
-    import asyncio
     import aiohttp
     from aiohttp import web
     from aiohttp.web_urldispatcher import StaticResource
@@ -42,7 +42,7 @@ try:
     from aiohttp.web_response import Response
     from aiohttp.web_fileresponse import FileResponse
 except ImportError:
-    asyncio = aiohttp = web = unquote = None
+    aiohttp = web = unquote = None
     StaticResource = HTTPNotFound = HTTPForbidden = Response = FileResponse = object
 
 try:
@@ -430,6 +430,9 @@ class IndexHtmlStaticResource(StaticResource):
             ct, encoding = mimetypes.guess_type(str(filepath))
             encoding = encoding or 'utf-8'
             if ct == 'text/html' and self.modify_html:
+                if sys.version_info[0] == 3 and sys.version_info[1] == 4:
+                    # Python 3.4 does not accept pathlib.Path objects in calls to open()
+                    filepath = str(filepath)
                 with open(filepath, 'r', encoding=encoding) as fh:
                     text = fh.read()
                     text = self.transform_html(text)
