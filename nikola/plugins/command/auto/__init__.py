@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2017 Roberto Alsina and others.
+# Copyright © 2012-2017 Chris Warrick, Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -26,54 +26,35 @@
 
 """Automatic rebuilds for Nikola."""
 
-
-import json
 import mimetypes
-import os
 import re
+import os
+import sys
 import subprocess
-import time
 try:
-    from urlparse import urlparse
-    from urllib2 import unquote
+    import asyncio
+    import aiohttp
+    from aiohttp import web
+    from aiohttp.web_urldispatcher import StaticResource
+    from yarl import unquote as yarl_unquote
+    from aiohttp.web_exceptions import HTTPNotFound
+    from aiohttp.web_response import Response
+    from aiohttp.web_fileresponse import FileResponse
 except ImportError:
-    from urllib.parse import urlparse, unquote  # NOQA
-import webbrowser
-from wsgiref.simple_server import make_server
-import wsgiref.util
-import pkg_resources
+    asyncio = aiohttp = web = yarl_unquote = None
+    StaticResource = object
 
-from blinker import signal
 try:
-    from ws4py.websocket import WebSocket
-    from ws4py.server.wsgirefserver import WSGIServer, WebSocketWSGIRequestHandler, WebSocketWSGIHandler
-    from ws4py.server.wsgiutils import WebSocketWSGIApplication
-    from ws4py.messaging import TextMessage
-except ImportError:
-    WebSocket = object
-try:
-    import watchdog
     from watchdog.observers import Observer
-    from watchdog.events import FileSystemEventHandler, PatternMatchingEventHandler
 except ImportError:
-    watchdog = None
-    FileSystemEventHandler = object
-    PatternMatchingEventHandler = object
+    Observer = None
+
+import webbrowser
+import pkg_resources
 
 from nikola.plugin_categories import Command
 from nikola.utils import dns_sd, req_missing, get_logger, get_theme_path
 LRJS_PATH = os.path.join(os.path.dirname(__file__), 'livereload.js')
-error_signal = signal('error')
-refresh_signal = signal('refresh')
-
-ERROR_N = '''<html>
-<head>
-</head>
-<boody>
-ERROR {}
-</body>
-</html>
-'''
 
 
 class CommandAuto(Command):
@@ -130,21 +111,22 @@ class CommandAuto(Command):
     def _execute(self, options, args):
         """Start the watcher."""
         self.logger = get_logger('auto')
-        LRSocket.logger = self.logger
+        self.sockets = []
 
-        if WebSocket is object and watchdog is None:
-            req_missing(['ws4py', 'watchdog'], 'use the "auto" command')
-        elif WebSocket is object:
-            req_missing(['ws4py'], 'use the "auto" command')
-        elif watchdog is None:
+        if aiohttp is None and Observer is None:
+            req_missing(['aiohttp', 'watchdog'], 'use the "auto" command')
+        elif aiohttp is None:
+            req_missing(['aiohttp'], 'use the "auto" command')
+        elif Observer is None:
             req_missing(['watchdog'], 'use the "auto" command')
 
-        self.cmd_arguments = ['nikola', 'build']
+        self.nikola_cmd = [b'nikola', b'build']
         if self.site.configuration_filename != 'conf.py':
-            self.cmd_arguments.append('--conf=' + self.site.configuration_filename)
+            self.nikola_cmd.append(('--conf=' + self.site.configuration_filename).encode('utf-8'))
 
-        # Run an initial build so we are up-to-date
-        subprocess.call(self.cmd_arguments)
+        # Run an initial build so we are up-to-date (synchronously)
+        self.logger.info("Rebuilding the site...")
+        subprocess.call(self.nikola_cmd)
 
         port = options and options.get('port')
         self.snippet = '''<script>document.write('<script src="http://'
@@ -179,87 +161,83 @@ class CommandAuto(Command):
         if options['ipv6']:
             dhost = '::'
         else:
-            dhost = None
+            dhost = '0.0.0.0'
 
         host = options['address'].strip('[').strip(']') or dhost
 
-        # Server can be disabled (Issue #1883)
-        self.has_server = not options['no-server']
+        # Set up asyncio server
+        webapp = web.Application()
+        webapp.router.add_get('/livereload.js', self.serve_livereload_js)
+        webapp.router.add_get('/robots.txt', self.serve_robots_txt)
+        webapp.router.add_route('*', '/livereload', self.websocket_handler)
+        resource = IndexHtmlStaticResource(True, self.snippet, '', out_folder)
+        webapp.router.register_resource(resource)
 
-        # Instantiate global observer
-        observer = Observer()
-        if self.has_server:
-            # Watch output folders and trigger reloads
-            observer.schedule(OurWatchHandler(self.do_refresh), out_folder, recursive=True)
+        # Prepare asyncio event loop
+        # Required for subprocessing to work
+        if sys.platform == 'win32':
+            loop = asyncio.ProactorEventLoop()
+            asyncio.set_event_loop(loop)
+        else:
+            loop = asyncio.get_event_loop()
+
+        handler = webapp.make_handler()
+        srv = loop.run_until_complete(loop.create_server(handler, host, port))
+
+        # Server can be disabled (Issue #1883)
+        # TODO: Temporarily removed
+        # self.has_server = not options['no-server']
+
+        # Watch output folders and trigger reloads
+        self.wd_observer = Observer()
+        self.wd_observer.schedule(NikolaEventHandler(self.reload_page, loop), 'output/', recursive=True)
 
         # Watch input folders and trigger rebuilds
         for p in watched:
             if os.path.exists(p):
-                observer.schedule(OurWatchHandler(self.do_rebuild), p, recursive=True)
+                self.wd_observer.schedule(NikolaEventHandler(self.run_nikola_build, loop), p, recursive=True)
 
         # Watch config file (a bit of a hack, but we need a directory)
         _conf_fn = os.path.abspath(self.site.configuration_filename or 'conf.py')
         _conf_dn = os.path.dirname(_conf_fn)
-        observer.schedule(ConfigWatchHandler(_conf_fn, self.do_rebuild), _conf_dn, recursive=False)
+        self.wd_observer.schedule(ConfigEventHandler(_conf_fn, self.run_nikola_build, loop), _conf_dn, recursive=False)
 
+        host, port = srv.sockets[0].getsockname()
+
+        self.wd_observer.start()
+        self.logger.info("Serving HTTP on {0} port {1}...".format(host, port))
+        if browser:
+            if options['ipv6'] or '::' in host:
+                server_url = "http://[{0}]:{1}/".format(host, port)
+            else:
+                server_url = "http://{0}:{1}/".format(host, port)
+
+            self.logger.info("Opening {0} in the default web browser...".format(server_url))
+            # Yes, this is a race condition
+            webbrowser.open('http://{0}:{1}'.format(host, port))
+
+        # Run the event loop forever and handle shutdowns.
         try:
-            self.logger.info("Watching files for changes...")
-            observer.start()
+            self.dns_sd = dns_sd(port, (options['ipv6'] or '::' in host))
+            loop.run_forever()
         except KeyboardInterrupt:
             pass
+        finally:
+            self.logger.info("Server is shutting down, please wait...")
+            if self.dns_sd:
+                self.dns_sd.Reset()
+            srv.close()
+            loop.run_until_complete(srv.wait_closed())
+            loop.run_until_complete(webapp.shutdown())
+            loop.run_until_complete(handler.shutdown(60.0))
+            loop.run_until_complete(webapp.cleanup())
+            self.wd_observer.stop()
+            self.wd_observer.join()
+        loop.close()
+        self.logger.info("Goodbye.")
 
-        parent = self
-
-        class Mixed(WebSocketWSGIApplication):
-            """A class that supports WS and HTTP protocols on the same port."""
-
-            def __call__(self, environ, start_response):
-                if environ.get('HTTP_UPGRADE') is None:
-                    return parent.serve_static(environ, start_response)
-                return super(Mixed, self).__call__(environ, start_response)
-
-        if self.has_server:
-            ws = make_server(
-                host, port, server_class=WSGIServer,
-                handler_class=WebSocketWSGIRequestHandler,
-                app=Mixed(handler_cls=LRSocket)
-            )
-            ws.initialize_websockets_manager()
-            self.logger.info("Serving HTTP on {0} port {1}...".format(host, port))
-            if browser:
-                if options['ipv6'] or '::' in host:
-                    server_url = "http://[{0}]:{1}/".format(host, port)
-                else:
-                    server_url = "http://{0}:{1}/".format(host, port)
-
-                self.logger.info("Opening {0} in the default web browser...".format(server_url))
-                # Yes, this is racy
-                webbrowser.open('http://{0}:{1}'.format(host, port))
-
-            try:
-                self.dns_sd = dns_sd(port, (options['ipv6'] or '::' in host))
-                ws.serve_forever()
-            except KeyboardInterrupt:
-                self.logger.info("Server is shutting down.")
-                if self.dns_sd:
-                    self.dns_sd.Reset()
-                # This is a hack, but something is locking up in a futex
-                # and exit() doesn't work.
-                os.kill(os.getpid(), 15)
-        else:
-            # Workaround: can’t have nothing running (instant exit)
-            #    but also can’t join threads (no way to exit)
-            # The joys of threading.
-            try:
-                while True:
-                    time.sleep(1)
-            except KeyboardInterrupt:
-                self.logger.info("Shutting down.")
-                # This is a hack, but something is locking up in a futex
-                # and exit() doesn't work.
-                os.kill(os.getpid(), 15)
-
-    def do_rebuild(self, event):
+    @asyncio.coroutine
+    def run_nikola_build(self, event):
         """Rebuild the site."""
         # Move events have a dest_path, some editors like gedit use a
         # move on larger save operations for write protection
@@ -271,192 +249,196 @@ class CommandAuto(Command):
                 event_path.endswith(('.pyc', '.pyo', '.pyd', '_bak')) or
                 event.is_directory):  # Skip on folders, these are usually duplicates
             return
-        self.logger.info('REBUILDING SITE (from {0})'.format(event_path))
-        p = subprocess.Popen(self.cmd_arguments, stderr=subprocess.PIPE)
-        error = p.stderr.read()
-        errord = error.decode('utf-8')
-        if p.wait() != 0:
-            self.logger.error(errord)
-            error_signal.send(error=errord)
-        else:
-            print(errord)
 
-    def do_refresh(self, event):
-        """Refresh the page."""
+        self.logger.info('REBUILDING SITE (from {0})'.format(event_path))
+        # TODO: queuing
+        p = yield from asyncio.create_subprocess_exec(*self.nikola_cmd, stderr=subprocess.PIPE)
+        exit_code = yield from p.wait()
+        error = yield from p.stderr.read()
+        errord = error.decode('utf-8')
+
+        if exit_code != 0:
+            self.logger.error(errord)
+            yield from self.send_to_websockets({'command': 'alert', 'message': errord})
+        else:
+            self.logger.info("Rebuild successful\n" + errord)
+
+    @asyncio.coroutine
+    def reload_page(self, event):
+        """Reload the page."""
         # Move events have a dest_path, some editors like gedit use a
         # move on larger save operations for write protection
         event_path = event.dest_path if hasattr(event, 'dest_path') else event.src_path
         self.logger.info('REFRESHING: {0}'.format(event_path))
         p = os.path.relpath(event_path, os.path.abspath(self.site.config['OUTPUT_FOLDER']))
-        refresh_signal.send(path=p)
+        yield from self.send_to_websockets({'command': 'reload', 'path': p, 'liveCSS': True})
 
-    def serve_static(self, environ, start_response):
-        """Trivial static file server."""
-        uri = wsgiref.util.request_uri(environ)
-        p_uri = urlparse(uri)
-        f_path = os.path.join(self.site.config['OUTPUT_FOLDER'], *[unquote(x) for x in p_uri.path.split('/')])
+    @asyncio.coroutine
+    def serve_livereload_js(self, request):
+        """Handle requests to /livereload.js and serve the JS file."""
+        return FileResponse(LRJS_PATH)
 
-        # ‘Pretty’ URIs and root are assumed to be HTML
-        mimetype = 'text/html' if uri.endswith('/') else mimetypes.guess_type(p_uri.path)[0] or 'application/octet-stream'
+    @asyncio.coroutine
+    def serve_robots_txt(self, request):
+        """Handle requests to /robots.txt."""
+        return Response(body=b'User-Agent: *\nDisallow: /\n', content_type='text/plain', charset='utf-8')
 
-        if os.path.isdir(f_path):
-            if not p_uri.path.endswith('/'):  # Redirect to avoid breakage
-                start_response('301 Moved Permanently', [('Location', p_uri.path + '/')])
-                return []
-            f_path = os.path.join(f_path, self.site.config['INDEX_FILE'])
-            mimetype = 'text/html'
+    @asyncio.coroutine
+    def websocket_handler(self, request):
+        """Handle requests to /livereload and initiate WebSocket communication."""
+        ws = web.WebSocketResponse()
+        yield from ws.prepare(request)
+        self.sockets.append(ws)
 
-        if p_uri.path == '/robots.txt':
-            start_response('200 OK', [('Content-type', 'text/plain; charset=UTF-8')])
-            return ['User-Agent: *\nDisallow: /\n'.encode('utf-8')]
-        elif os.path.isfile(f_path):
-            with open(f_path, 'rb') as fd:
-                if mimetype.startswith('text/') or mimetype.endswith('+xml'):
-                    start_response('200 OK', [('Content-type', "{0}; charset=UTF-8".format(mimetype))])
+        while True:
+            msg = yield from ws.receive()
+
+            self.logger.debug("Received message: {0}".format(msg))
+            if msg.type == aiohttp.WSMsgType.TEXT:
+                message = msg.json()
+                if message['command'] == 'hello':
+                    response = {
+                        'command': 'hello',
+                        'protocols': [
+                            'http://livereload.com/protocols/official-7',
+                        ],
+                        'serverName': 'Nikola Auto (livereload)',
+                    }
+                    yield from ws.send_json(response)
+                elif message['command'] != 'info':
+                    self.logger.warn("Unknown command in message: {0}".format(message))
+            elif msg.type == aiohttp.WSMsgType.CLOSED:
+                break
+            elif msg.type == aiohttp.WSMsgType.CLOSE:
+                self.logger.debug("Closing WebSocket")
+                yield from ws.close()
+                break
+            elif msg.type == aiohttp.WSMsgType.ERROR:
+                self.logger.error('WebSocket connection closed with exception {0}'.format(ws.exception()))
+                break
+            else:
+                self.logger.warn("Received unknown message: {0}".format(msg))
+
+
+        self.sockets.remove(ws)
+        self.logger.debug("WebSocket connection closed: {0}".format(ws))
+
+        return ws
+
+    @asyncio.coroutine
+    def send_to_websockets(self, message):
+        to_delete = []
+        for ws in self.sockets:
+            if ws.closed:
+                to_delete.append(ws)
+                continue
+
+            try:
+                yield from ws.send_json(message)
+            except RuntimeError as e:
+                if 'closed' in e.args[0]:
+                    self.logger.warn("WebSocket {0} closed uncleanly".format(ws))
+                    to_delete.append(ws)
                 else:
-                    start_response('200 OK', [('Content-type', mimetype)])
-                return [self.file_filter(mimetype, fd.read())]
-        elif p_uri.path == '/livereload.js':
-            with open(LRJS_PATH, 'rb') as fd:
-                start_response('200 OK', [('Content-type', mimetype)])
-                return [self.file_filter(mimetype, fd.read())]
-        start_response('404 ERR', [])
-        return [self.file_filter('text/html', ERROR_N.format(404).format(uri).encode('utf-8'))]
+                    raise
 
-    def file_filter(self, mimetype, data):
-        """Apply necessary changes to document before serving."""
-        if mimetype == 'text/html':
-            data = data.decode('utf8')
-            data = self.remove_base_tag(data)
-            data = self.inject_js(data)
-            data = data.encode('utf8')
-        return data
-
-    def inject_js(self, data):
-        """Inject livereload.js."""
-        data = re.sub('</head>', self.snippet, data, 1, re.IGNORECASE)
-        return data
-
-    def remove_base_tag(self, data):
-        """Comment out any <base> to allow local resolution of relative URLs."""
-        data = re.sub(r'<base\s([^>]*)>', '<!--base \g<1>-->', data, flags=re.IGNORECASE)
-        return data
+        for ws in to_delete:
+            self.sockets.remove(ws)
 
 
-pending = []
+class IndexHtmlStaticResource(StaticResource):
+    """A StaticResource implementation that serves /index.html in directory roots."""
 
+    modify_html = True
+    snippet = "</head>"
 
-class LRSocket(WebSocket):
-    """Speak Livereload protocol."""
+    def __init__(self, modify_html=True, snippet="</head>", *args, **kwargs):
+        self.modify_html = modify_html
+        self.snippet = snippet
+        super().__init__(*args, **kwargs)
 
-    def __init__(self, *a, **kw):
-        """Initialize protocol handler."""
-        refresh_signal.connect(self.notify)
-        error_signal.connect(self.send_error)
-        super(LRSocket, self).__init__(*a, **kw)
+    @asyncio.coroutine
+    def _handle(self, request):
+        filename = yarl_unquote(request.match_info['filename'])
+        ret = yield from self.handle_file(request, filename)
+        return ret
 
-    def received_message(self, message):
-        """Handle received message."""
-        message = json.loads(message.data.decode('utf8'))
-        self.logger.info('<--- {0}'.format(message))
-        response = None
-        if message['command'] == 'hello':  # Handshake
-            response = {
-                'command': 'hello',
-                'protocols': [
-                    'http://livereload.com/protocols/official-7',
-                ],
-                'serverName': 'nikola-livereload',
-            }
-        elif message['command'] == 'info':  # Someone connected
-            self.logger.info('****** Browser connected: {0}'.format(message.get('url')))
-            self.logger.info('****** sending {0} pending messages'.format(len(pending)))
-            while pending:
-                msg = pending.pop()
-                self.logger.info('---> {0}'.format(msg.data))
-                self.send(msg, msg.is_binary)
+    @asyncio.coroutine
+    def handle_file(self, request, filename):
+        try:
+            filepath = self._directory.joinpath(filename).resolve()
+            if not self._follow_symlinks:
+                filepath.relative_to(self._directory)
+        except (ValueError, FileNotFoundError) as error:
+            # relatively safe
+            raise HTTPNotFound() from error
+        except Exception as error:
+            # perm error or other kind!
+            request.app.logger.exception(error)
+            raise HTTPNotFound() from error
+
+        # on opening a dir, load it's contents if allowed
+        if filepath.is_dir():
+            if filename.endswith('/') or not filename:
+                ret = yield from self.handle_file(request, filename + 'index.html')
+            else:
+                ret = yield from self.handle_file(request, filename + '/index.html')
+        elif filepath.is_file():
+            ct, encoding = mimetypes.guess_type(str(filepath))
+            if ct == 'text/html' and self.modify_html:
+                with open(filepath, 'r', encoding='utf-8') as fh:
+                    text = fh.read()
+                    text = self.transform_html(text)
+                    ret = Response(text=text, content_type=ct, charset='utf-8')
+            else:
+                ret = FileResponse(filepath, chunk_size=self._chunk_size)
         else:
-            response = {
-                'command': 'alert',
-                'message': 'HEY',
-            }
-        if response is not None:
-            response = json.dumps(response)
-            self.logger.info('---> {0}'.format(response))
-            response = TextMessage(response)
-            self.send(response, response.is_binary)
+            raise HTTPNotFound
 
-    def notify(self, sender, path):
-        """Send reload requests to the client."""
-        p = os.path.join('/', path)
-        message = {
-            'command': 'reload',
-            'liveCSS': True,
-            'path': p,
-        }
-        response = json.dumps(message)
-        self.logger.info('---> {0}'.format(p))
-        response = TextMessage(response)
-        if self.stream is None:  # No client connected or whatever
-            pending.append(response)
-        else:
-            self.send(response, response.is_binary)
+        return ret
 
-    def send_error(self, sender, error=None):
-        """Send reload requests to the client."""
-        if self.stream is None:  # No client connected or whatever
-            return
-        message = {
-            'command': 'alert',
-            'message': error,
-        }
-        response = json.dumps(message)
-        response = TextMessage(response)
-        if self.stream is None:  # No client connected or whatever
-            pending.append(response)
-        else:
-            self.send(response, response.is_binary)
+    def transform_html(self, text):
+        """Apply some transforms to HTML content."""
+        # Inject livereload.js
+        text = text.replace('</head>', self.snippet, 1)
+        text = re.sub(r'<base\s([^>]*)>', '<!--base \g<1>-->', text, flags=re.IGNORECASE)
+        return text
 
+# Based on code from the 'hachiko' library by John Biesnecker
+# https://github.com/biesnecker/hachiko
+class AIOEventHandler(object):
+    """An asyncio-compatible event handler."""
 
-class OurWatchHandler(FileSystemEventHandler):
-    """A Nikola-specific handler for Watchdog."""
+    def __init__(self, loop):
+        self.loop = loop
 
-    def __init__(self, function):
-        """Initialize the handler."""
-        self.function = function
-        super(OurWatchHandler, self).__init__()
-
+    @asyncio.coroutine
     def on_any_event(self, event):
-        """Call the provided function on any event."""
-        self.function(event)
+        pass
+
+    def dispatch(self, event):
+        self.loop.call_soon_threadsafe(asyncio.async, self.on_any_event(event))
 
 
-class ConfigWatchHandler(FileSystemEventHandler):
+class NikolaEventHandler(AIOEventHandler):
+    """A Nikola-specific event handler for Watchdog."""
+    def __init__(self, function, loop):
+        super().__init__(loop=loop)
+        self.function = function
+
+    @asyncio.coroutine
+    def on_any_event(self, event):
+        yield from self.function(event)
+
+
+class ConfigEventHandler(AIOEventHandler):
     """A Nikola-specific handler for Watchdog that handles the config file (as a workaround)."""
-
-    def __init__(self, configuration_filename, function):
-        """Initialize the handler."""
+    def __init__(self, configuration_filename, function, loop):
+        super().__init__(loop=loop)
         self.configuration_filename = configuration_filename
         self.function = function
 
+    @asyncio.coroutine
     def on_any_event(self, event):
-        """Call the provided function on any event."""
         if event._src_path == self.configuration_filename:
-            self.function(event)
-
-
-try:
-    # Monkeypatch to hide Broken Pipe Errors
-    f = WebSocketWSGIHandler.finish_response
-
-    def finish_response(self):
-        """Monkeypatched finish_response that ignores broken pipes."""
-        try:
-            f(self)
-        except BrokenPipeError:  # Client closed the connection, not a real error
-            pass
-
-    WebSocketWSGIHandler.finish_response = finish_response
-except NameError:
-    # In case there is no WebSocketWSGIHandler because of a failed import.
-    pass
+            yield from self.function(event)

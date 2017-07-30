@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Rewrite ``nikola auto`` with asyncio and aiohttp (Issue #2850)
 * New ``listings`` shortcode similar to the reStructuredText listings
   directive (Issue #2868)
 * Switch to reStructuredText’s new HTML 5 renderer (Issue #2874)
