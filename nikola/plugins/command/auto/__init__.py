@@ -426,6 +426,7 @@ class IndexHtmlStaticResource(StaticResource):
 # https://github.com/biesnecker/hachiko
 class NikolaEventHandler:
     """A Nikola-specific event handler for Watchdog. Based on code from hachiko."""
+
     def __init__(self, function, loop):
         """Initialize the handler."""
         self.function = function
@@ -443,6 +444,7 @@ class NikolaEventHandler:
 
 class ConfigEventHandler(NikolaEventHandler):
     """A Nikola-specific handler for Watchdog that handles the config file (as a workaround)."""
+
     def __init__(self, configuration_filename, function, loop):
         """Initialize the handler."""
         self.configuration_filename = configuration_filename
