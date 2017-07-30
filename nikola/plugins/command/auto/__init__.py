@@ -124,9 +124,9 @@ class CommandAuto(Command):
         elif Observer is None:
             req_missing(['watchdog'], 'use the "auto" command')
 
-        self.nikola_cmd = [b'nikola', b'build']
+        self.nikola_cmd = ['nikola', 'build']
         if self.site.configuration_filename != 'conf.py':
-            self.nikola_cmd.append(('--conf=' + self.site.configuration_filename).encode('utf-8'))
+            self.nikola_cmd.append('--conf=' + self.site.configuration_filename)
 
         # Run an initial build so we are up-to-date (synchronously)
         self.logger.info("Rebuilding the site...")
