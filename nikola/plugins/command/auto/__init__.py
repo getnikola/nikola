@@ -139,7 +139,7 @@ class CommandAuto(Command):
             + 'script>')</script>
         </head>'''.format(port)
 
-        # Do not duplicate entries -- otherwise, multiple rebuilds are triggered
+        # Deduplicate entries by using a set -- otherwise, multiple rebuilds are triggered
         watched = set([
             'templates/'
         ] + [get_theme_path(name) for name in self.site.THEMES])
