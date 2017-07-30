@@ -4,14 +4,16 @@ New in master
 Features
 --------
 
-* New ``listings`` shortcode similar to the reStructuredText listings directive (Issue #2868)
+* New ``listings`` shortcode similar to the reStructuredText listings
+  directive (Issue #2868)
 * Switch to reStructuredText’s new HTML 5 renderer (Issue #2874)
 * Deprecate ``html4css1.css`` in favor of ``rst_base.css`` (Issue
   #2874)
 * Add support for ``MetadataExtractor`` plugins that allow custom,
   extensible metadata extraction from posts (Issue #2830)
 * Support YAML and TOML metadata in 2-file posts (via Issue #2830)
-* Renamed ``UNSLUGIFY_TITLES`` → ``FILE_METADATA_UNSLUGIFY_TITLES`` (Issue #2840)
+* Renamed ``UNSLUGIFY_TITLES`` → ``FILE_METADATA_UNSLUGIFY_TITLES``
+  (Issue #2840)
 * Add ``NIKOLA_SHOW_TRACEBACKS`` environment variable that shows
   full tracebacks instead of one-line summaries
 * Use ``PRETTY_URLS`` by default on all sites (Issue #1838)
