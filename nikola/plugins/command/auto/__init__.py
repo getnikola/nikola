@@ -205,7 +205,7 @@ class CommandAuto(Command):
         self.wd_observer.start()
 
         if not self.has_server:
-            self.logger.info("Watching...".format(host, port))
+            self.logger.info("Watching for changes...")
             # Run the event loop forever (no server mode).
             try:
                 loop.run_forever()
@@ -400,11 +400,12 @@ class IndexHtmlStaticResource(StaticResource):
                 ret = yield from self.handle_file(request, filename + '/index.html')
         elif filepath.is_file():
             ct, encoding = mimetypes.guess_type(str(filepath))
+            encoding = encoding or 'utf-8'
             if ct == 'text/html' and self.modify_html:
-                with open(filepath, 'r', encoding='utf-8') as fh:
+                with open(filepath, 'r', encoding=encoding) as fh:
                     text = fh.read()
                     text = self.transform_html(text)
-                    ret = Response(text=text, content_type=ct, charset='utf-8')
+                    ret = Response(text=text, content_type=ct, charset=encoding)
             else:
                 ret = FileResponse(filepath, chunk_size=self._chunk_size)
         else:
