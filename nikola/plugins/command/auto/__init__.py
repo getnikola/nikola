@@ -429,8 +429,8 @@ class IndexHtmlStaticResource(StaticResource):
             ct, encoding = mimetypes.guess_type(str(filepath))
             encoding = encoding or 'utf-8'
             if ct == 'text/html' and self.modify_html:
-                if sys.version_info[0] == 3 and sys.version_info[1] == 4:
-                    # Python 3.4 does not accept pathlib.Path objects in calls to open()
+                if sys.version_info[0] == 3 and sys.version_info[1] <= 5:
+                    # Python 3.4 and 3.5 do not accept pathlib.Path objects in calls to open()
                     filepath = str(filepath)
                 with open(filepath, 'r', encoding=encoding) as fh:
                     text = fh.read()
