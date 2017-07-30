@@ -57,6 +57,9 @@ from nikola.plugin_categories import Command
 from nikola.utils import dns_sd, req_missing, get_logger, get_theme_path
 LRJS_PATH = os.path.join(os.path.dirname(__file__), 'livereload.js')
 
+if sys.platform == 'win32':
+    asyncio.set_event_loop(asyncio.ProactorEventLoop())
+
 
 class CommandAuto(Command):
     """Automatic rebuilds for Nikola."""
@@ -179,11 +182,7 @@ class CommandAuto(Command):
 
         # Prepare asyncio event loop
         # Required for subprocessing to work
-        if sys.platform == 'win32':
-            loop = asyncio.ProactorEventLoop()
-            asyncio.set_event_loop(loop)
-        else:
-            loop = asyncio.get_event_loop()
+        loop = asyncio.get_event_loop()
 
         # Set debug setting
         loop.set_debug(self.site.debug)
@@ -256,7 +255,7 @@ class CommandAuto(Command):
             self.rebuild_queue.put((None, None))
             loop.run_until_complete(srv.wait_closed())
             loop.run_until_complete(webapp.shutdown())
-            loop.run_until_complete(handler.shutdown(60.0))
+            loop.run_until_complete(handler.shutdown(5.0))
             loop.run_until_complete(webapp.cleanup())
             self.wd_observer.stop()
             self.wd_observer.join()
@@ -309,8 +308,8 @@ class CommandAuto(Command):
         # Move events have a dest_path, some editors like gedit use a
         # move on larger save operations for write protection
         event_path = event.dest_path if hasattr(event, 'dest_path') else event.src_path
-        self.logger.info('REFRESHING: {0}'.format(event_path))
-        p = os.path.relpath(event_path, os.path.abspath(self.site.config['OUTPUT_FOLDER']))
+        p = os.path.relpath(event_path, os.path.abspath(self.site.config['OUTPUT_FOLDER'])).replace(os.sep, '/')
+        self.logger.info('REFRESHING: {0}'.format(p))
         yield from self.send_to_websockets({'command': 'reload', 'path': p, 'liveCSS': True})
 
     @asyncio.coroutine
