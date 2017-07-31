@@ -127,7 +127,11 @@ class CommandAuto(Command):
         elif Observer is None:
             req_missing(['watchdog'], 'use the "auto" command')
 
-        self.nikola_cmd = ['nikola', 'build']
+        if sys.argv[0].endswith('__main__.py'):
+            self.nikola_cmd = [sys.executable, '-m', 'nikola', 'build']
+        else:
+            self.nikola_cmd = [sys.argv[0], 'build']
+
         if self.site.configuration_filename != 'conf.py':
             self.nikola_cmd.append('--conf=' + self.site.configuration_filename)
 
