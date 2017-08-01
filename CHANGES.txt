@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Rewrite ``nikola auto`` with asyncio and aiohttp (Issue #2850)
 * New ``listings`` shortcode similar to the reStructuredText listings
   directive (Issue #2868)
 * Switch to reStructuredText’s new HTML 5 renderer (Issue #2874)
@@ -36,7 +37,7 @@ Removed features
 ----------------
 
 * Removed the slides directive for docutils, it will now be a separate plugin.
-* Drop Python 2 support
+* Drop Python 2 and Python 3.3 support (oldest supported version is 3.4)
 * Remove ``nikola install_theme`` — use ``nikola theme`` instead
 * Drop insecure post encryption feature
 * Stop supporting all deprecated config options

@@ -5,26 +5,12 @@ import sys
 import shutil
 from setuptools import setup, find_packages
 from setuptools.command.install import install
-from setuptools.command.test import test as TestCommand
-
-
-class PyTest(TestCommand):
-    def finalize_options(self):
-        TestCommand.finalize_options(self)
-        self.test_args = []
-        self.test_suite = True
-
-    def run_tests(self):
-        # import here, cause outside the eggs aren't loaded
-        import pytest
-        errno = pytest.main(self.test_args)
-        sys.exit(errno)
 
 
 with open('requirements.txt', 'r') as fh:
     dependencies = [l.strip() for l in fh]
 
-extras = {':python_version == "3.3"': ['enum34']}
+extras = {}
 
 with open('requirements-extras.txt', 'r') as fh:
     extras['extras'] = [l.strip() for l in fh][1:]
@@ -37,8 +23,8 @@ with open('requirements-tests.txt', 'r') as fh:
 # ########## platform specific stuff #############
 if sys.version_info[0] == 2:
     raise Exception('Python 2 is not supported')
-elif sys.version_info[0] == 3 and sys.version_info[1] < 3:
-    raise Exception('Python 3 version < 3.3 is not supported')
+elif sys.version_info[0] == 3 and sys.version_info[1] < 4:
+    raise Exception('Python 3 version < 3.4 is not supported')
 
 ##################################################
 
@@ -144,7 +130,7 @@ setup(name='Nikola',
       tests_require=['pytest'],
       include_package_data=True,
       python_requires='>=3.3',
-      cmdclass={'install': nikola_install, 'test': PyTest},
+      cmdclass={'install': nikola_install},
       data_files=[
               ('share/doc/nikola', [
                'docs/manual.txt',
