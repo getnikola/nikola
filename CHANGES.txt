@@ -32,6 +32,7 @@ Bugfixes
 * Use Jupyter name more consistently in docs
 * Support CODE_COLOR_SCHEME in Jupyter notebooks (Issue #2093)
 * Language was not passed to title and link generation for page indexes
+* Addressed issue with snaps not allowing certain functions to work properly.
 
 Removed features
 ----------------

@@ -114,6 +114,7 @@
 * `Tolu Sonaike <https://github.com/tolusonaike>`_
 * `Troy Toman <https://github.com/troytoman>`_
 * `Udo Spallek <https://github.com/udono>`_
+* `Will DeBerry <https://github.com/willdeberry>`_
 * `Yamila Moreno <https://github.com/yamila-moreno>`_
 * `yarko <https://github.com/yarko>`_
 * `Yasuhiko Shiga <https://github.com/quoth>`_
