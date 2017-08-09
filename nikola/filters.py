@@ -156,7 +156,7 @@ def yui_compressor(infile, executable=None):
         try:
             subprocess.call('yuicompressor', stdout=open(os.devnull, 'w'), stderr=open(os.devnull, 'w'))
             yuicompressor = 'yuicompressor'
-        except:
+        except Exception:
             raise Exception("yui-compressor is not installed.")
             return False
 
@@ -394,7 +394,7 @@ def _normalize_html(data):
     """Pass HTML through LXML to clean it up, if possible."""
     try:
         data = lxml.html.tostring(lxml.html.fromstring(data), encoding='unicode')
-    except:
+    except Exception:
         pass
     return '<!DOCTYPE html>\n' + data
 
@@ -446,7 +446,7 @@ def add_header_permalinks(fname, xpath_list=None, file_blacklist=None):
             node.append(new_node)
 
     with io.open(fname, 'w', encoding='utf-8') as outf:
-        outf.write(lxml.html.tostring(doc, encoding="unicode"))
+        outf.write('<!DOCTYPE html>\n' + lxml.html.tostring(doc, encoding="unicode"))
 
 
 @_ConfigurableFilter(top_classes='DEDUPLICATE_IDS_TOP_CLASSES')
@@ -496,6 +496,6 @@ def deduplicate_ids(data, top_classes=None):
                     if hl.attrib['href'] == '#' + i:
                         hl.attrib['href'] = '#' + new_id
                         break
-        return lxml.html.tostring(doc, encoding='unicode')
+        return '<!DOCTYPE html>\n' + lxml.html.tostring(doc, encoding='unicode')
     else:
         return data

@@ -24,6 +24,8 @@ Features
 Bugfixes
 --------
 
+* Do not remove doctype if ``add_header_permalinks`` or
+  ``deduplicate_ids`` are used
 * Handle empty slug metadata (Issue #2887)
 * Fix crash when compiling empty ``.html`` posts (Issue #2851)
 * Make failures to get source commit hash non-fatal in
