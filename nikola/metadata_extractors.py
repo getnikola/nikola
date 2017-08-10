@@ -149,7 +149,9 @@ class NikolaMetadata(MetadataExtractor):
         for line in source_text.split('\n'):
             match = self.nikola_re.match(line)
             if match:
-                outdict[match.group(1)] = match.group(2)
+                k, v = match.group(1), match.group(2)
+                if v:
+                    outdict[k] = v
         return outdict
 
     def write_metadata(self, metadata: dict, comment_wrap=False) -> str:

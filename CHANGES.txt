@@ -24,6 +24,7 @@ Features
 Bugfixes
 --------
 
+* Handle empty slug metadata (Issue #2887)
 * Fix crash when compiling empty ``.html`` posts (Issue #2851)
 * Make failures to get source commit hash non-fatal in
   ``github_deploy`` (Issue #2847)
