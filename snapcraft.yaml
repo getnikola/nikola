@@ -2,7 +2,7 @@ name: nikola
 version: 8-dev
 summary: A static website generator
 description: A static website generator
-confinement: classic
+confinement: strict
 grade: stable
 
 apps:
