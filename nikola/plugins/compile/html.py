@@ -104,7 +104,7 @@ class CompileHtml(PageCompiler):
             # let other errors raise
             raise
         title_tag = doc.find('*//title')
-        if title_tag is not None:
+        if title_tag is not None and title_tag.text:
             metadata['title'] = title_tag.text
         meta_tags = doc.findall('*//meta')
         for tag in meta_tags:
@@ -113,6 +113,8 @@ class CompileHtml(PageCompiler):
                 continue
             elif k == 'keywords':
                 k = 'tags'
-            metadata[k] = tag.get('content', '')
+            content = tag.get('content')
+            if content:
+                metadata[k] = content
         map_metadata(metadata, 'html_metadata', self.site.config)
         return metadata

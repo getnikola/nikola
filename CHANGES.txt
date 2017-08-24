@@ -24,6 +24,7 @@ Features
 Bugfixes
 --------
 
+* Ignore empty tags in HTML metadata reader (Issue #2890)
 * Do not remove doctype if ``add_header_permalinks`` or
   ``deduplicate_ids`` are used
 * Handle empty slug metadata (Issue #2887)
