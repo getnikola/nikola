@@ -1,6 +1,7 @@
 New in v7-maintenance
 =====================
 
+* Ignore empty tags in HTML metadata reader (Issue #2890)
 * Fix crash when compiling empty ``.html`` posts (Issue #2851)
 
 New in v7.8.9
