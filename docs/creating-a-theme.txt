@@ -828,3 +828,5 @@ The End
 And that’s it, that’s a whole theme. Eventually, once people start using it, they will notice small broken details, which will need handling one at a time.
 
 This theme should be available in http://themes.getnikola.com/v7/lanyon/ and you can see it in action at https://themes.getnikola.com/v7/lanyon/demo/ .
+
+What if you want to extend other parts of the theme? Check out the :doc:`Theming reference <theming>`. You can also contribute your improvements to the `nikola-themes <https://github.com/getnikola/nikola>` repository on GitHub.

@@ -176,10 +176,35 @@ should learn one first. What engine is used by the theme is declared in the ``en
    you can install Beaker and `make templates be cached <http://docs.makotemplates.org/en/latest/caching.html>`__
 
 
-Both template engines have a nifty concept of template inheritance. That means that, a
+Both template engines have a nifty concept of template inheritance. That means that a
 template can inherit from another and only change small bits of the output. For example,
 ``base.tmpl`` defines the whole layout for a page but has only a placeholder for content
 so ``post.tmpl`` only define the content, and the layout is inherited from ``base.tmpl``.
+
+Another concept is theme inheritance. You do not need to duplicate all the
+default templates in your theme — you can just override the ones you want
+changed, and the rest will come from the parent theme. (Every theme needs a
+parent.)
+
+Apart from the `built-in templates`_ listed below, you can add other templates for specific
+pages, which the user can then use in his ``POSTS`` or ``PAGES`` option in
+``conf.py``.  Also, you can specify a custom template to be used by a post or
+page via the ``template`` metadata, and custom templates can be added in the
+``templates/`` folder of your site.
+
+If you want to modify (override) a built-in template, use ``nikola theme -c
+<name>.tmpl``.  This command will copy the specified template file to the
+``templates/`` directory of your currently used theme.
+
+Keep in mind that your theme is *yours*, so you can require whatever data you
+want (eg. you may depend on specific custom ``GLOBAL_CONTEXT`` variables, or
+post meta attributes). You don’t need to keep the same theme structure as the
+default themes do (although many of those names are hardcoded). Inheriting from
+at least ``base`` (or ``base-jinja``) is heavily recommended, but not strictly
+required (unless you want to share it on the Themes Index).
+
+Built-in templates
+------------------
 
 These are the templates that come with the included themes:
 
@@ -195,7 +220,7 @@ These are the templates that come with the included themes:
     Template used to render the multipost indexes. The posts are in a ``posts`` variable.
     Some functionality is in the ``index_helper.tmpl`` helper template.
 
-``archive_navigation_helper.tmpl``
+``archive_navigation_helper.tmpl`` (internal)
     Code that implements archive navigation (previous/up/next). Included by
     archive templates.
 
@@ -275,15 +300,6 @@ These are the templates that come with the included themes:
 
 ``tags.tmpl``
     Used to display the list of tags and categories.
-
-You can add other templates for specific pages, which the user can then use in his ``POSTS``
-or ``PAGES`` option in ``conf.py``. Also, keep in mind that your theme is
-*yours*, there is no reason why you would need to maintain the inheritance as
-it is, or not require whatever data you want (eg. you may depend on specific
-custom ``GLOBAL_CONTEXT`` variables, or post meta attributes)
-
-Also, you can specify a custom template to be used by a post or page via the ``template`` metadata,
-and custom templates can be added in the ``templates/`` folder of your site.
 
 Variables available in templates
 --------------------------------
