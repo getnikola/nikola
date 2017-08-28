@@ -24,9 +24,9 @@ After you have Nikola `installed <https://getnikola.com/getting-started.html>`_:
 Create an empty site (with a setup wizard):
     ``nikola init mysite``
 
-You can create a site with demo files in it with ``nikola init --demo mysite``
+    You can create a site with demo files in it with ``nikola init --demo mysite``
 
-The rest of these commands have to be executed inside the new ``mysite`` folder.
+    The rest of these commands have to be executed inside the new ``mysite`` folder.
 
 Create a post:
     ``nikola new_post``
