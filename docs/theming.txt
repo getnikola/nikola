@@ -143,7 +143,7 @@ The following keys are currently supported:
   * ``tags`` — optional list of tags (comma-separated) to describe the theme.
 
 * ``Family`` — contains information about other related themes. All values
-  optional.
+  optional. (Do not use unless you have related themes.)
 
   * ``family`` — the name of the main theme in a family, which is also used as
     the family name.
