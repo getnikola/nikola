@@ -18,6 +18,7 @@ dumb_replacements = [
     ["json.dumps(title)", "title|tojson"],
     ["{{ parent.extra_head() }}", "{{ super() }}"],
     ["{{ parent.content() }}", "{{ super() }}"],
+    ["{{ parent.content_header() }}", "{{ super() }}"],
     ["prefix='\\", "prefix='"],
     ["og: http://ogp.me/ns# \\", "og: http://ogp.me/ns#"],
     ["article: http://ogp.me/ns/article# \\", "article: http://ogp.me/ns/article#"],

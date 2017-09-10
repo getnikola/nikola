@@ -1,6 +1,7 @@
-New in v7-maintenance
-=====================
+New in v7.8.10
+==============
 
+* Fix crashes with Jinja2 themes and tag indexes (Issue #2900)
 * Ignore empty tags in HTML metadata reader (Issue #2890)
 * Fix crash when compiling empty ``.html`` posts (Issue #2851)
 
