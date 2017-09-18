@@ -24,6 +24,7 @@ Features
 Bugfixes
 --------
 
+* Do not strip trailing slash in ``slug`` magic links
 * Ignore empty tags in HTML metadata reader (Issue #2890)
 * Do not remove doctype if ``add_header_permalinks`` or
   ``deduplicate_ids`` are used

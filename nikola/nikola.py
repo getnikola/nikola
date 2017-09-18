@@ -1816,7 +1816,7 @@ class Nikola(object):
         else:
             if len(results) > 1:
                 utils.LOGGER.warning('Ambiguous path request for slug: {0}'.format(name))
-            return [_f for _f in results[0].permalink(lang).split('/') if _f]
+            return [_f for _f in results[0].permalink(lang).split('/')]
 
     def filename_path(self, name, lang):
         """Link to post or page by source filename.
