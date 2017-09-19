@@ -1237,11 +1237,11 @@ thumbnail
 
         {{% raw %}}{{% thumbnail url="/images/foo.png" %}}{{% /thumbnail %}}{{% /raw %}}
         {{% raw %}}{{% thumbnail url="/images/foo.png" alt="Foo Image" align="center" %}}{{% /thumbnail %}}{{% /raw %}}
-        {{% raw %}}{{% thumbnail url="/images/foo.png" %}}Image caption{{% /thumbnail %}}{{% /raw %}}
-        {{% raw %}}{{% thumbnail url="/images/foo.png" alt="Foo Image" align="right" %}}Right-aligned Foo Image caption{{% /thumbnail %}}{{% /raw %}}
+        {{% raw %}}{{% thumbnail url="/images/foo.png" %}}<p>Image caption</p>{{% /thumbnail %}}{{% /raw %}}
+        {{% raw %}}{{% thumbnail url="/images/foo.png" alt="Foo Image" align="right" %}}<p>Right-aligned Foo Image caption</p>{{% /thumbnail %}}{{% /raw %}}
 
 
-    Looks similar to the reST thumbnail directive.
+    Looks similar to the reST thumbnail directive. Caption should be a HTML fragment.
 
 Community shortcodes
 ~~~~~~~~~~~~~~~~~~~~
