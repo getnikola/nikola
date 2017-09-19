@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* New ``thumbnail`` shortcode similar to the reStructuredText
+  ``thumbnail`` directive (via Issue #2809)
 * Rewrite ``nikola auto`` with asyncio and aiohttp (Issue #2850)
 * New ``listings`` shortcode similar to the reStructuredText listings
   directive (Issue #2868)

@@ -1,0 +1,12 @@
+[Core]
+name = thumbnail
+module = thumbnail
+
+[Nikola]
+PluginCategory = Shortcode
+
+[Documentation]
+author = Chris Warrick
+version = 0.1
+website = https://getnikola.com/
+description = Thumbnail shortcode
