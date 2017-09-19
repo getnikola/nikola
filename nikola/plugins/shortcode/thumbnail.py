@@ -52,9 +52,9 @@ class ThumbnailShortcode(ShortcodePlugin):
         output += '></a>'
 
         if data and align:
-            output = '<div class="figure align-{0}">{1}{2}</div>'.format(align, output, data)
+            output = '<div class="figure align-{2}">{0}{1}</div>'.format(output, data, align)
         elif data:
-            output = '<div class="figure">{1}{2}</div>'.format(align, output, data)
+            output = '<div class="figure">{0}{1}</div>'.format(output, data)
 
 
         return output, []
