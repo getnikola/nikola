@@ -56,5 +56,4 @@ class ThumbnailShortcode(ShortcodePlugin):
         elif data:
             output = '<div class="figure">{0}{1}</div>'.format(output, data)
 
-
         return output, []
