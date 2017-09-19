@@ -1173,32 +1173,6 @@ Example of a paired shortcode (note that we don't have a highlight shortcode yet
 Built-in shortcodes
 ~~~~~~~~~~~~~~~~~~~
 
-doc
-    Will link to a document in the page, see `Doc role for details
-    <#doc>`__. Example:
-
-    .. code:: restructuredtext
-
-       {{% raw %}}Take a look at {{% doc %}}my other post <creating-a-theme>{{% /doc %}} about theme creating.{{% /raw %}}
-
-listing
-    Used to show a code listing. Example::
-
-        {{% raw %}}{{% listing hello.py python linenumbers=True%}}{{% /raw %}}
-
-    It takes a file name or path, an optional language to highlight, and a linenumbers option to enable/disable line numbers in the output.
-
-post-list
-    Will show a list of posts, see the `Post List directive for details <#post-list>`__
-
-media
-    Display media embedded from a URL, for example, this will embed a youtube video:
-
-    .. code:: text
-
-        {{% raw %}}{{% media url="https://www.youtube.com/watch?v=Nck6BZga7TQ" %}}{{% /raw %}}
-
-
 chart
     Create charts via PyGal. This is similar to the `chart directive <#chart>`__ except the syntax is adapted to
     shortcodes. This is an example:
@@ -1212,6 +1186,14 @@ chart
         'IE',      [85.8, 84.6, 84.7, 74.5, 66, 58.6]
         'Others',  [14.2, 15.4, 15.3, 8.9, 9, 10.4]
         {{% /chart %}}{{% /raw %}}
+
+doc
+    Will link to a document in the page, see `Doc role for details
+    <#doc>`__. Example:
+
+    .. code:: restructuredtext
+
+       {{% raw %}}Take a look at {{% doc %}}my other post <creating-a-theme>{{% /doc %}} about theme creating.{{% /raw %}}
 
 emoji
     Insert an emoji. For example:
@@ -1227,11 +1209,39 @@ gist
 
     {{% raw %}}{{% gist 2395294 %}} {{% /raw %}}
 
+listing
+    Used to show a code listing. Example::
+
+        {{% raw %}}{{% listing hello.py python linenumbers=True %}}{{% /raw %}}
+
+    It takes a file name or path, an optional language to highlight, and a linenumbers option to enable/disable line numbers in the output.
+
+media
+    Display media embedded from a URL, for example, this will embed a youtube video:
+
+    .. code:: text
+
+        {{% raw %}}{{% media url="https://www.youtube.com/watch?v=Nck6BZga7TQ" %}}{{% /raw %}}
+
+post-list
+    Will show a list of posts, see the `Post List directive for details <#post-list>`__
 
 raw
     Passes the content along, mostly used so I can write this damn section and you can see the shortcodes instead
     of them being munged into shortcode **output**. I can't show an example because Inception.
 
+thumbnail
+    Display image thumbnails, optionally with captions, alignment, and alt text. Examples:
+
+    .. code:: text
+
+        {{% raw %}}{{% thumbnail url="/images/foo.png" %}}{{% /thumbnail %}}{{% /raw %}}
+        {{% raw %}}{{% thumbnail url="/images/foo.png" alt="Foo Image" align="center" %}}{{% /thumbnail %}}{{% /raw %}}
+        {{% raw %}}{{% thumbnail url="/images/foo.png" %}}<p>Image caption</p>{{% /thumbnail %}}{{% /raw %}}
+        {{% raw %}}{{% thumbnail url="/images/foo.png" alt="Foo Image" align="right" %}}<p>Right-aligned Foo Image caption</p>{{% /thumbnail %}}{{% /raw %}}
+
+
+    Looks similar to the reST thumbnail directive. Caption should be a HTML fragment.
 
 Community shortcodes
 ~~~~~~~~~~~~~~~~~~~~
