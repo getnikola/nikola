@@ -36,7 +36,7 @@ class ThumbnailShortcode(ShortcodePlugin):
 
     name = "thumbnail"
 
-    def handler(self, uri, alt=None, align=None, target=None, site=None, data=None, lang=None, post=None):
+    def handler(self, uri, alt=None, align=None, title=None, imgclass=None, figclass=None, site=None, data=None, lang=None, post=None):
         """Create HTML for thumbnail."""
         if uri.endswith('.svg'):
             # the ? at the end makes docutil output an <img> instead of an object for the svg, which colorbox requires
@@ -44,16 +44,24 @@ class ThumbnailShortcode(ShortcodePlugin):
         else:
             src = '.thumbnail'.join(os.path.splitext(uri))
 
+
+        if imgclass is None:
+            imgclass = ''
+        if figclass is None:
+            figclass = ''
+
+        if align and data:
+            figclass += ' align-{0}'.format(align)
+        elif align:
+            imgclass += ' align-{0}'.format(align)
+
         output = '<a href="{0}" class="image-reference"><img src="{1}"'.format(uri, src)
-        if alt:
-            output += ' alt="{}"'.format(alt)
-        if align and not data:
-            output += ' class="align-{}"'.format(align)
+        for item, name in ((alt, 'alt'), (title, 'title'), (imgclass, 'class')):
+            if item:
+                output += ' {0}="{1}"'.format(name, item)
         output += '></a>'
 
-        if data and align:
-            output = '<div class="figure align-{2}">{0}{1}</div>'.format(output, data, align)
-        elif data:
-            output = '<div class="figure">{0}{1}</div>'.format(output, data)
+        if data:
+            output = '<div class="figure {0}">{1}{2}</div>'.format(figclass, output, data)
 
         return output, []

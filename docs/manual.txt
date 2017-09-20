@@ -1231,15 +1231,22 @@ raw
     of them being munged into shortcode **output**. I can't show an example because Inception.
 
 thumbnail
-    Display image thumbnails, optionally with captions, alignment, and alt text. Examples:
+    Display image thumbnails, with optional captions. Examples:
 
     .. code:: text
 
         {{% raw %}}{{% thumbnail "/images/foo.png" %}}{{% /thumbnail %}}{{% /raw %}}
         {{% raw %}}{{% thumbnail "/images/foo.png" alt="Foo Image" align="center" %}}{{% /thumbnail %}}{{% /raw %}}
-        {{% raw %}}{{% thumbnail "/images/foo.png" %}}<p>Image caption</p>{{% /thumbnail %}}{{% /raw %}}
-        {{% raw %}}{{% thumbnail "/images/foo.png" alt="Foo Image" align="right" %}}<p class="caption">Foo Image (right-aligned) caption</p>{{% /thumbnail %}}{{% /raw %}}
+        {{% raw %}}{{% thumbnail "/images/foo.png" imgclass="image-grayscale" figclass="figure-shadow" %}}<p>Image caption</p>{{% /thumbnail %}}{{% /raw %}}
+        {{% raw %}}{{% thumbnail "/images/foo.png" alt="Foo Image" title="Insert title-text joke here" align="right" %}}<p class="caption">Foo Image (right-aligned) caption</p>{{% /thumbnail %}}{{% /raw %}}
 
+    The following keyword arguments are supported:
+
+    * alt (alt text for image)
+    * align (image alignment, left/center/right)
+    * title (title text for image)
+    * imgclass (class for image)
+    * figclass (class for figure, used only if you provide a caption)
 
     Looks similar to the reST thumbnail directive. Caption should be a HTML fragment.
 
