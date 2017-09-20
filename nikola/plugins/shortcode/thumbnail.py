@@ -44,7 +44,6 @@ class ThumbnailShortcode(ShortcodePlugin):
         else:
             src = '.thumbnail'.join(os.path.splitext(uri))
 
-
         if imgclass is None:
             imgclass = ''
         if figclass is None:
