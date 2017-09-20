@@ -35,6 +35,14 @@ from doit.cmd_base import Command as DoitCommand
 
 from .utils import LOGGER, first_line, req_missing
 
+try:
+    import typing  # NOQA
+    if typing.TYPE_CHECKING:  # NOQA
+        import nikola  # NOQA
+        import nikola.post  # NOQA
+except ImportError:
+    pass
+
 __all__ = (
     'Command',
     'LateTask',
@@ -90,11 +98,11 @@ class BasePlugin(IPlugin):
 class PostScanner(BasePlugin):
     """The scan method of these plugins is called by Nikola.scan_posts."""
 
-    def scan(self):
+    def scan(self) -> 'typing.List[nikola.post.Post]':
         """Create a list of posts from some source. Returns a list of Post objects."""
         raise NotImplementedError()
 
-    def supported_extensions(self):
+    def supported_extensions(self) -> 'typing.Optional[typing.List]':
         """Return a list of supported file extensions, or None if such a list isn't known beforehand."""
         return None
 
@@ -122,7 +130,7 @@ class Command(BasePlugin, DoitCommand):
         DoitCommand.__init__(self, config, **kwargs)
         return self
 
-    def execute(self, options=None, args=None):
+    def execute(self, options=None, args=None) -> int:
         """Check if the command can run in the current environment, fail if needed, or call _execute."""
         options = options or {}
         args = args or []
@@ -132,7 +140,7 @@ class Command(BasePlugin, DoitCommand):
             return False
         return self._execute(options, args)
 
-    def _execute(self, options, args):
+    def _execute(self, options, args) -> int:
         """Do whatever this command does.
 
         @param options (dict) with values from cmd_options
@@ -171,11 +179,11 @@ class BaseTask(BasePlugin):
     # the others have to be specifie in the command line.
     is_default = True
 
-    def gen_tasks(self):
+    def gen_tasks(self) -> 'typing.List[dict]':
         """Generate tasks."""
         raise NotImplementedError()
 
-    def group_task(self):
+    def group_task(self) -> dict:
         """Return dict for group task."""
         return {
             'basename': self.name,
@@ -201,23 +209,23 @@ class TemplateSystem(BasePlugin):
 
     name = "dummy_templates"
 
-    def set_directories(self, directories, cache_folder):
+    def set_directories(self, directories: 'typing.List[str]', cache_folder: str):
         """Set the list of folders where templates are located and cache."""
         raise NotImplementedError()
 
-    def template_deps(self, template_name):
+    def template_deps(self, template_name: str):
         """Return filenames which are dependencies for a template."""
         raise NotImplementedError()
 
-    def get_deps(self, filename):
+    def get_deps(self, filename: str):
         """Return paths to dependencies for the template loaded from filename."""
         raise NotImplementedError()
 
-    def get_string_deps(self, text):
+    def get_string_deps(self, text: str):
         """Find dependencies for a template string."""
         raise NotImplementedError()
 
-    def render_template(self, template_name, output_name, context):
+    def render_template(self, template_name: str, output_name: str, context: 'typing.Dict[str, str]'):
         """Render template to a file using context.
 
         This must save the data to output_name *and* return it
@@ -225,15 +233,15 @@ class TemplateSystem(BasePlugin):
         """
         raise NotImplementedError()
 
-    def render_template_to_string(self, template, context):
+    def render_template_to_string(self, template: str, context: 'typing.Dict[str, str]') -> str:
         """Render template to a string using context."""
         raise NotImplementedError()
 
-    def inject_directory(self, directory):
+    def inject_directory(self, directory: str):
         """Inject the directory with the lowest priority in the template search mechanism."""
         raise NotImplementedError()
 
-    def get_template_path(self, template_name):
+    def get_template_path(self, template_name: str) -> str:
         """Get the path to a template or return None."""
         raise NotImplementedError()
 
@@ -243,7 +251,7 @@ class TaskMultiplier(BasePlugin):
 
     name = "dummy multiplier"
 
-    def process(self, task):
+    def process(self, task) -> list:
         """Examine task and create more tasks. Returns extra tasks only."""
         return []
 
@@ -270,11 +278,11 @@ class PageCompiler(BasePlugin):
     }
     config_dependencies = []
 
-    def get_dep_filename(self, post, lang):
+    def get_dep_filename(self, post: 'nikola.post.Post', lang: str) -> str:
         """Return the .dep file's name for the given post and language."""
         return post.translated_base_path(lang) + '.dep'
 
-    def _read_extra_deps(self, post, lang):
+    def _read_extra_deps(self, post: 'nikola.post.Post', lang: str) -> 'typing.List[str]':
         """Read contents of .dep file and return them as a list."""
         dep_path = self.get_dep_filename(post, lang)
         if os.path.isfile(dep_path):
@@ -283,9 +291,9 @@ class PageCompiler(BasePlugin):
                 return deps
         return []
 
-    def register_extra_dependencies(self, post):
+    def register_extra_dependencies(self, post: 'nikola.post.Post'):
         """Add dependency to post object to check .dep file."""
-        def create_lambda(lang):
+        def create_lambda(lang: str) -> 'typing.Callable':
             # We create a lambda like this so we can pass `lang` to it, because if we didn’t
             # add that function, `lang` would always be the last language in TRANSLATIONS.
             # (See http://docs.python-guide.org/en/latest/writing/gotchas/#late-binding-closures)
@@ -294,18 +302,18 @@ class PageCompiler(BasePlugin):
         for lang in self.site.config['TRANSLATIONS']:
             post.add_dependency(create_lambda(lang), 'fragment', lang=lang)
 
-    def get_extra_targets(self, post, lang, dest):
+    def get_extra_targets(self, post: 'nikola.post.Post', lang: str, dest: str) -> 'typing.List[str]':
         """Return a list of extra targets for the render_posts task when compiling the post for the specified language."""
         if self.use_dep_file:
             return [self.get_dep_filename(post, lang)]
         else:
             return []
 
-    def compile(self, source, dest, is_two_file=True, post=None, lang=None):
+    def compile(self, source: str, dest: str, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""
         raise NotImplementedError()
 
-    def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
+    def compile_string(self, data: str, source_path=None, is_two_file=True, post=None, lang=None) -> str:
         """Compile the source file into HTML strings (with shortcode support).
 
         Returns a tuple of at least two elements: HTML string [0] and shortcode dependencies [last].
@@ -313,19 +321,19 @@ class PageCompiler(BasePlugin):
         # This function used to have some different APIs in different places.
         raise NotImplementedError()
 
-    def create_post(self, path, content=None, onefile=False, is_page=False, **kw):
+    def create_post(self, path: str, content=None, onefile=False, is_page=False, **kw):
         """Create post file with optional metadata."""
         raise NotImplementedError()
 
-    def extension(self):
+    def extension(self) -> str:
         """Return the preferred extension for the output of this compiler."""
         return ".html"
 
-    def read_metadata(self, post, lang=None):
+    def read_metadata(self, post: 'nikola.post.Post', lang=None) -> 'typing.Dict[str, str]':
         """Read the metadata from a post, and return a metadata dict."""
         return {}
 
-    def split_metadata(self, data, post=None, lang=None):
+    def split_metadata(self, data: str, post=None, lang=None) -> (str, str):
         """Split data from metadata in the raw post content."""
         if lang and post:
             extractor = post.used_extractor[lang]
@@ -338,7 +346,7 @@ class PageCompiler(BasePlugin):
         else:
             return data, data
 
-    def get_compiler_extensions(self):
+    def get_compiler_extensions(self) -> list:
         """Activate all the compiler extension plugins for a given compiler and return them."""
         plugins = []
         for plugin_info in self.site.compiler_extensions:
@@ -399,36 +407,33 @@ class MetadataExtractor(BasePlugin):
     # Whether or not the extractor supports writing metadata.
     supports_write = False
 
-    def _extract_metadata_from_text(self, source_text: str) -> dict:
+    def _extract_metadata_from_text(self, source_text: str) -> 'typing.Dict[str, str]':
         """Extract metadata from text."""
         raise NotImplementedError()
 
     def split_metadata_from_text(self, source_text: str) -> (str, str):
-        """Split text into metadata and content (both strings).
-
-        If splitting fails (there is no match), return source_text as both metadata and content.
-        (This behavior is required for 2-file posts.)
-        """
+        """Split text into metadata and content (both strings)."""
         if self.split_metadata_re is None:
-            return source_text, source_text
+            return source_text
         else:
             split_result = self.split_metadata_re.split(source_text.lstrip(), maxsplit=1)
             if len(split_result) == 1:
-                return source_text, source_text
+                return split_result[0], split_result[0]
             else:
-                return split_result
+                # Necessary?
+                return split_result[0], split_result[-1]
 
-    def extract_text(self, source_text: str) -> dict:
-        """Extract metadata from text (also calls ``split_metadata_from_text``)."""
+    def extract_text(self, source_text: str) -> 'typing.Dict[str, str]':
+        """Split file, return metadata and the content."""
         split = self.split_metadata_from_text(source_text)
         meta = self._extract_metadata_from_text(split[0])
         return meta
 
-    def extract_filename(self, filename: str, lang: str) -> dict:
+    def extract_filename(self, filename: str, lang: str) -> 'typing.Dict[str, str]':
         """Extract metadata from filename."""
         return {}
 
-    def write_metadata(self, metadata: dict, comment_wrap=False) -> str:
+    def write_metadata(self, metadata: 'typing.Dict[str, str]', comment_wrap=False) -> str:
         """Write metadata in this extractor’s format.
 
         ``comment_wrap`` is either True, False, or a 2-tuple of comments to use for wrapping, if necessary.
@@ -502,7 +507,7 @@ class Importer(Command):
         """Import the data into Nikola."""
         raise NotImplementedError()
 
-    def generate_base_site(self, path):
+    def generate_base_site(self, path: str):
         """Create the base site."""
         raise NotImplementedError()
 
@@ -703,7 +708,7 @@ class Taxonomy(BasePlugin):
         'taxonomy_rss': '',
     }
 
-    def is_enabled(self, lang=None):
+    def is_enabled(self, lang=None) -> bool:
         """Return True if this taxonomy is enabled, or False otherwise.
 
         If lang is None, this determins whether the classification is
@@ -713,18 +718,18 @@ class Taxonomy(BasePlugin):
         """
         return True
 
-    def get_implicit_classifications(self, lang):
+    def get_implicit_classifications(self, lang: str) -> 'typing.List[str]':
         """Return a list of classification strings which should always appear in posts_per_classification."""
         return []
 
-    def classify(self, post, lang):
+    def classify(self, post: 'nikola.post.Post', lang: str) -> 'typing.Iterable[str]':
         """Classify the given post for the given language.
 
         Must return a list or tuple of strings.
         """
         raise NotImplementedError()
 
-    def sort_posts(self, posts, classification, lang):
+    def sort_posts(self, posts: 'typing.List[nikola.post.Post]', classification: str, lang: str):
         """Sort the given list of posts.
 
         Allows the plugin to order the posts per classification as it wants.
@@ -733,7 +738,7 @@ class Taxonomy(BasePlugin):
         """
         pass
 
-    def sort_classifications(self, classifications, lang, level=None):
+    def sort_classifications(self, classifications: 'typing.List[str]', lang: str, level=None):
         """Sort the given list of classification strings.
 
         Allows the plugin to order the classifications as it wants. The
@@ -746,7 +751,7 @@ class Taxonomy(BasePlugin):
         """
         pass
 
-    def get_classification_friendly_name(self, classification, lang, only_last_component=False):
+    def get_classification_friendly_name(self, classification: str, lang: str, only_last_component=False) -> str:
         """Extract a friendly name from the classification.
 
         The result of this function is usually displayed to the user, instead
@@ -758,7 +763,7 @@ class Taxonomy(BasePlugin):
         """
         raise NotImplementedError()
 
-    def get_overview_path(self, lang, dest_type='page'):
+    def get_overview_path(self, lang: str, dest_type='page') -> str:
         """Return path for classification overview.
 
         This path handler for the classification overview must return one or
@@ -779,7 +784,7 @@ class Taxonomy(BasePlugin):
         """
         raise NotImplementedError()
 
-    def get_path(self, classification, lang, dest_type='page'):
+    def get_path(self, classification: str, lang: str, dest_type='page') -> str:
         """Return path to the classification page.
 
         This path handler for the given classification must return one to
@@ -807,7 +812,7 @@ class Taxonomy(BasePlugin):
         """
         raise NotImplementedError()
 
-    def extract_hierarchy(self, classification):
+    def extract_hierarchy(self, classification: str) -> 'typing.List[str]':
         """Given a classification, return a list of parts in the hierarchy.
 
         For non-hierarchical taxonomies, it usually suffices to return
@@ -815,15 +820,15 @@ class Taxonomy(BasePlugin):
         """
         return [classification]
 
-    def recombine_classification_from_hierarchy(self, hierarchy):
+    def recombine_classification_from_hierarchy(self, hierarchy: 'typing.List[str]') -> str:
         """Given a list of parts in the hierarchy, return the classification string.
 
         For non-hierarchical taxonomies, it usually suffices to return hierarchy[0].
         """
         return hierarchy[0]
 
-    def provide_overview_context_and_uptodate(self, lang):
-        """Provide data for the context and the uptodate list for the classifiation overview.
+    def provide_overview_context_and_uptodate(self, lang: str) -> str:
+        """Provide data for the context and the uptodate list for the classification overview.
 
         Must return a tuple of two dicts. The first is merged into the page's context,
         the second will be put into the uptodate list of all generated tasks.
@@ -832,8 +837,8 @@ class Taxonomy(BasePlugin):
         """
         raise NotImplementedError()
 
-    def provide_context_and_uptodate(self, classification, lang, node=None):
-        """Provide data for the context and the uptodate list for the list of the given classifiation.
+    def provide_context_and_uptodate(self, classification: str, lang: str, node=None) -> 'typing.Tuple[typing.Dict]':
+        """Provide data for the context and the uptodate list for the list of the given classification.
 
         Must return a tuple of two dicts. The first is merged into the page's context,
         the second will be put into the uptodate list of all generated tasks.
@@ -845,15 +850,15 @@ class Taxonomy(BasePlugin):
         """
         raise NotImplementedError()
 
-    def should_generate_classification_page(self, classification, post_list, lang):
+    def should_generate_classification_page(self, classification: str, post_list: 'typing.List[nikola.post.Post]', lang: str) -> bool:
         """Only generates list of posts for classification if this function returns True."""
         return True
 
-    def should_generate_rss_for_classification_page(self, classification, post_list, lang):
+    def should_generate_rss_for_classification_page(self, classification: str, post_list: 'typing.List[nikola.post.Post]', lang: str) -> bool:
         """Only generates RSS feed for list of posts for classification if this function returns True."""
         return self.should_generate_classification_page(classification, post_list, lang)
 
-    def postprocess_posts_per_classification(self, posts_per_classification_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
+    def postprocess_posts_per_classification(self, posts_per_classification_per_language: 'typing.List[nikola.post.Post]', flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None) -> 'typing.List[nikola.post.Post]':
         """Rearrange, modify or otherwise use the list of posts per classification and per language.
 
         For compatibility reasons, the list could be stored somewhere else as well.
@@ -865,7 +870,7 @@ class Taxonomy(BasePlugin):
         """
         pass
 
-    def get_other_language_variants(self, classification, lang, classifications_per_language):
+    def get_other_language_variants(self, classification: str, lang: str, classifications_per_language: 'typing.List[str]') -> 'typing.List[str]':
         """Return a list of variants of the same classification in other languages.
 
         Given a `classification` in a language `lang`, return a list of pairs
