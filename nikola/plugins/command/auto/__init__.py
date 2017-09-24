@@ -158,6 +158,8 @@ class CommandAuto(Command):
             watched.add(item)
         for item in self.site.config['LISTINGS_FOLDERS']:
             watched.add(item)
+        for item in self.site.config['IMAGE_FOLDERS']:
+            watched.add(item)
         for item in self.site._plugin_places:
             watched.add(item)
         # Nikola itself (useful for developers)
