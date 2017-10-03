@@ -1244,6 +1244,7 @@ thumbnail
 
     * alt (alt text for image)
     * align (image alignment, left/center/right)
+    * linktitle (title text for the link, shown by e.g. colorbox)
     * title (title text for image)
     * imgclass (class for image)
     * figclass (class for figure, used only if you provide a caption)
