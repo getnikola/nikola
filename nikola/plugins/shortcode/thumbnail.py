@@ -36,7 +36,7 @@ class ThumbnailShortcode(ShortcodePlugin):
 
     name = "thumbnail"
 
-    def handler(self, uri, alt=None, align=None, title=None, imgclass=None, figclass=None, site=None, data=None, lang=None, post=None):
+    def handler(self, uri, alt=None, align=None, linktitle=None, title=None, imgclass=None, figclass=None, site=None, data=None, lang=None, post=None):
         """Create HTML for thumbnail."""
         if uri.endswith('.svg'):
             # the ? at the end makes docutil output an <img> instead of an object for the svg, which colorbox requires
@@ -54,7 +54,10 @@ class ThumbnailShortcode(ShortcodePlugin):
         elif align:
             imgclass += ' align-{0}'.format(align)
 
-        output = '<a href="{0}" class="image-reference"><img src="{1}"'.format(uri, src)
+        output = '<a href="{0}" class="image-reference"'.format(uri)
+        if linktitle:
+            output += ' title="{0}"'.format(linktitle)
+        output += '><img src="{0}"'.format(src)
         for item, name in ((alt, 'alt'), (title, 'title'), (imgclass, 'class')):
             if item:
                 output += ' {0}="{1}"'.format(name, item)
