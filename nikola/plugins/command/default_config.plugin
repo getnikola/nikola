@@ -1,0 +1,13 @@
+[Core]
+name = default_config
+module = default_config
+
+[Documentation]
+author = Roberto Alsina
+version = 1.0
+website = https://getnikola.com/
+description = Show the default configuration.
+
+[Nikola]
+PluginCategory = Command
+
