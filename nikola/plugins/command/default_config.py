@@ -30,11 +30,6 @@ from nikola.plugin_categories import Command
 from nikola.utils import get_logger
 import nikola.plugins.command.init
 
-try:
-    print(nikola.plugins.command.init.CommandInit.create_configuration_to_string())
-except:
-    print(nikola.plugins.command.init.CommandInit.create_configuration_to_string().encode('utf-8'))
-
 
 
 LOGGER = get_logger('default_config')
@@ -46,7 +41,7 @@ class CommandShowConfig(Command):
 
     doc_usage = ""
     needs_config = False
-    doc_purpose = "print the default Nikola configuration."
+    doc_purpose = "Print the default Nikola configuration."
     cmd_options = []
 
 
@@ -54,5 +49,5 @@ class CommandShowConfig(Command):
         """Show the default configuration."""
         try:
             print(nikola.plugins.command.init.CommandInit.create_configuration_to_string())
-        except:
+        except Exception:
             print(nikola.plugins.command.init.CommandInit.create_configuration_to_string().encode('utf-8'))
