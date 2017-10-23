@@ -1,9 +1,7 @@
 New in master
 =============
 
-Features
---------
-
+* New default-config command to generate a clean configuration.  
 * New ``thumbnail`` shortcode similar to the reStructuredText
   ``thumbnail`` directive (via Issue #2809)
 * Rewrite ``nikola auto`` with asyncio and aiohttp (Issue #2850)
