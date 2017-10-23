@@ -22,6 +22,7 @@ matrix:
     env: NMODE=nikola OS=macOS
     python: '3.6'
     before_install:
+    - brew update
     - brew install python3
     - pip3 install virtualenv
     - python3 -m virtualenv nikola-tests-venv
