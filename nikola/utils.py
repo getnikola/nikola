@@ -70,7 +70,7 @@ except ImportError:
 
 from blinker import signal
 from collections import defaultdict, Callable, OrderedDict
-from imp import reload as _reload
+from importlib import reload as _reload
 from logbook.compat import redirect_logging
 from logbook.more import ExceptionHandler, ColorizedStderrHandler
 from pygments.formatters import HtmlFormatter
