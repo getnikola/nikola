@@ -128,10 +128,10 @@ class Listings(Task):
                 with open(in_name, 'r') as fd:
                     try:
                         lexer = get_lexer_for_filename(in_name)
-                    except:
+                    except Exception:
                         try:
                             lexer = guess_lexer(fd.read())
-                        except:
+                        except Exception:
                             lexer = TextLexer()
                         fd.seek(0)
                     code = highlight(fd.read(), lexer, utils.NikolaPygmentsHTML(in_name))

@@ -98,7 +98,7 @@ Example:
             # Interpret argument as page number
             try:
                 page_number = int(classification)
-            except:
+            except ValueError:
                 pass
         return [self.site.config['INDEX_PATH'](lang)], 'always', page_number
 

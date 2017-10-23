@@ -101,7 +101,7 @@ class CommandDeploy(Command):
         for preset in presets:
             try:
                 self.site.config['DEPLOY_COMMANDS'][preset]
-            except:
+            except KeyError:
                 self.logger.error('No such preset: {0}'.format(preset))
                 return 255
 

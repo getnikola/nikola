@@ -243,20 +243,8 @@ class CommandPlugin(Command):
             utils.extract_all(zip_file, self.output_dir)
             dest_path = os.path.join(self.output_dir, name)
         else:
-            try:
-                plugin_path = utils.get_plugin_path(name)
-            except:
-                LOGGER.error("Can't find plugin " + name)
-                return 1
-
-            utils.makedirs(self.output_dir)
-            dest_path = os.path.join(self.output_dir, name)
-            if os.path.exists(dest_path):
-                LOGGER.error("{0} is already installed".format(name))
-                return 1
-
-            LOGGER.info('Copying {0} into plugins'.format(plugin_path))
-            shutil.copytree(plugin_path, dest_path)
+            LOGGER.error("Can't find plugin " + name)
+            return 1
 
         reqpath = os.path.join(dest_path, 'requirements.txt')
         if os.path.exists(reqpath):

@@ -38,7 +38,7 @@ from collections import defaultdict
 
 try:
     import html2text
-except:
+except ImportError:
     html2text = None
 
 try:
@@ -983,7 +983,7 @@ class CommandImportWordpress(Command, ImportMixin):
             for lang, content in content_translations.items():
                 try:
                     content, extension, rewrite_html = self.transform_content(content, post_format, attachments)
-                except:
+                except Exception:
                     LOGGER.error(('Cannot interpret post "{0}" (language {1}) with post ' +
                                   'format {2}!').format(os.path.join(out_folder, slug), lang, post_format))
                     return False

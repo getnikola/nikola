@@ -6,7 +6,7 @@ import sys
 # needed if @unittest.expectedFailure is used
 try:
     import unittest2 as unittest
-except:
+except Exception:
     import unittest
 
 import nikola.nikola

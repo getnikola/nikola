@@ -31,8 +31,8 @@ from nikola.utils import get_logger
 import nikola.plugins.command.init
 
 
-
 LOGGER = get_logger('default_config')
+
 
 class CommandShowConfig(Command):
     """Show the default configuration."""
@@ -44,8 +44,7 @@ class CommandShowConfig(Command):
     doc_purpose = "Print the default Nikola configuration."
     cmd_options = []
 
-
-    def _execute(self, options={}, args=None):
+    def _execute(self, options=None, args=None):
         """Show the default configuration."""
         try:
             print(nikola.plugins.command.init.CommandInit.create_configuration_to_string())

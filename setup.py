@@ -84,7 +84,7 @@ def remove_old_files(self):
     tree = os.path.join(self.install_lib, 'nikola')
     try:
         shutil.rmtree(tree, ignore_errors=True)
-    except:
+    except Exception:
         pass
 
 

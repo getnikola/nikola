@@ -691,7 +691,7 @@ class Post(object):
 
         try:
             data = lxml.html.tostring(document.body, encoding='unicode')
-        except:
+        except Exception:
             data = lxml.html.tostring(document, encoding='unicode')
 
         if teaser_only:

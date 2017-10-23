@@ -196,7 +196,7 @@ class CommandTheme(Command):
             try:
                 utils.get_theme_path_real(parent_name, self.site.themes_dirs)
                 break
-            except:  # Not available
+            except Exception:  # Not available
                 self.do_install(parent_name, data)
                 name = parent_name
         if installstatus:
