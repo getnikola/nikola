@@ -109,7 +109,7 @@ scripts/update-bower.sh
 status 'Updating symlinked list...'
 scripts/generate_symlinked_list.sh
 status 'Updating website (conf.py and docs)...'
-scripts/generate_conf.py > ../nikola-site/listings/conf.py
+python -m nikola default_config > ../nikola-site/listings/conf.py
 cp AUTHORS.txt CHANGES.txt ../nikola-site/stories
 cp docs/*.* ../nikola-site/stories
 sed 's/Nikola v[0-9\.A_Za-z-]\{1,\}/Nikola'" v$version/g" ../nikola-site/stories/conf.txt -i
