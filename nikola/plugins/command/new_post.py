@@ -449,7 +449,7 @@ class CommandNewPost(Command):
             if editor:
                 subprocess.call(to_run)
             else:
-                LOGGER.error('$EDITOR not set, cannot edit the post.  Please do it manually.')
+                LOGGER.error('$EDITOR environmental variable not set within the operating system. Edits for posts must be made manually.')
 
     def filter_post_pages(self, compiler, is_post):
         """Return the correct entry from post_pages.
