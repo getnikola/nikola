@@ -349,7 +349,8 @@ class CommandNewPost(Command):
                     author = author.decode('utf-8')
 
         # Calculate the date to use for the content
-        schedule = options['schedule'] or self.site.config['SCHEDULE_ALL']
+        # SCHEDULE_ALL is post-only (Issue #2921)
+        schedule = options['schedule'] or (self.site.config['SCHEDULE_ALL'] and is_post)
         rule = self.site.config['SCHEDULE_RULE']
         self.site.scan_posts()
         timeline = self.site.timeline

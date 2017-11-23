@@ -27,6 +27,7 @@ Features
 Bugfixes
 --------
 
+* Apply ``SCHEDULE_ALL`` to posts only (Issue #2921)
 * Restore version number to Bootswatch URLs (Issue #2916)
 * Do not strip trailing slash in ``slug`` magic links
 * Ignore empty tags in HTML metadata reader (Issue #2890)
