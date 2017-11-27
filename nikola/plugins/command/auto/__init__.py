@@ -277,6 +277,7 @@ class CommandAuto(Command):
         if (fname.endswith('~') or
                 fname.startswith('.') or
                 '__pycache__' in event_path or
+                '.git' in event_path or
                 event_path.endswith(('.pyc', '.pyo', '.pyd', '_bak')) or
                 event.is_directory):  # Skip on folders, these are usually duplicates
             return
