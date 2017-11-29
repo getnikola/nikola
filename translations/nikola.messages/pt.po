@@ -31,7 +31,7 @@ msgid "LANGUAGE"
 msgstr "Português"
 
 msgid "Tags"
-msgstr "Etiqueta"
+msgstr "Etiquetas"
 
 msgid "Categories"
 msgstr "Categorias"
@@ -66,7 +66,7 @@ msgid "Read in English"
 msgstr "Ler em português"
 
 msgid "Posts for year %s"
-msgstr "Textos publicados do ano %s"
+msgstr "Textos publicados no ano %s"
 
 msgid "Newer posts"
 msgstr "Textos publicados mais recentes"
@@ -132,20 +132,20 @@ msgid "Write your page here."
 msgstr "Escreva a sua página aqui."
 
 msgid "Uncategorized"
-msgstr ""
+msgstr "Sem Categoria"
 
 #. Used for feeds of any format
 msgid "Updates"
-msgstr ""
+msgstr "Actualizaçōes"
 
 msgid "Authors"
-msgstr ""
+msgstr "Autores"
 
 msgid "Posts by %s"
-msgstr ""
+msgstr "Texto por %s"
 
 msgid "Toggle navigation"
-msgstr ""
+msgstr "Alternar Navegação"
 
 #. Used to format months per year
 msgid "{month} {year}"
@@ -156,13 +156,13 @@ msgid "{month} {day}, {year}"
 msgstr ""
 
 msgid "Previous"
-msgstr ""
+msgstr "Anterior"
 
 msgid "Up"
-msgstr ""
+msgstr "Cima"
 
 msgid "Next"
-msgstr ""
+msgstr "Próximo"
 
 msgid "Atom feed"
-msgstr ""
+msgstr "Feed Atom"
