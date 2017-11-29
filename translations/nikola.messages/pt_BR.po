@@ -164,13 +164,13 @@ msgid "{month} {day}, {year}"
 msgstr ""
 
 msgid "Previous"
-msgstr ""
+msgstr "Anterior"
 
 msgid "Up"
-msgstr ""
+msgstr "Cima"
 
 msgid "Next"
-msgstr ""
+msgstr "Proximo"
 
 msgid "Atom feed"
-msgstr ""
+msgstr "Feed Atom"
