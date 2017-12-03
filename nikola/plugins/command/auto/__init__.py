@@ -30,6 +30,7 @@ import mimetypes
 import datetime
 import re
 import os
+import stat
 import sys
 import subprocess
 import asyncio
@@ -274,11 +275,11 @@ class CommandAuto(Command):
         # move on larger save operations for write protection
         event_path = event.dest_path if hasattr(event, 'dest_path') else event.src_path
         fname = os.path.basename(event_path)
-        if (fname.endswith('~') or
-                fname.startswith('.') or
+        is_hidden = os.stat('filename').st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN
+        has_hidden_component = any(p.startswith('.') for p in event_path.split(os.sep))
+        if (is_hidden or has_hidden_parent or
                 '__pycache__' in event_path or
-                '.git' in event_path or
-                event_path.endswith(('.pyc', '.pyo', '.pyd', '_bak')) or
+                event_path.endswith(('.pyc', '.pyo', '.pyd', '_bak', '~')) or
                 event.is_directory):  # Skip on folders, these are usually duplicates
             return
 
