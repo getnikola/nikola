@@ -94,10 +94,6 @@ lang="{{ lang }}">
             <script src="/assets/js/moment-with-locales.min.js"></script>
             <script src="/assets/js/fancydates.js"></script>
         {% endif %}
-        <script src="/assets/js/jquery.colorbox-min.js"></script>
-    {% endif %}
-    {% if colorbox_locales[lang] %}
-        <script src="/assets/js/colorbox-i18n/jquery.colorbox-{{ colorbox_locales[lang] }}.js"></script>
     {% endif %}
     {{ social_buttons_code }}
 {% endmacro %}
@@ -120,7 +116,6 @@ lang="{{ lang }}">
         <link href="/assets/css/rst_base.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/code.css" rel="stylesheet" type="text/css">
-        <link href="/assets/css/colorbox.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/theme.css" rel="stylesheet" type="text/css">
         {% if has_custom_css %}
             <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
