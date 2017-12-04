@@ -275,7 +275,7 @@ class CommandAuto(Command):
         # move on larger save operations for write protection
         event_path = event.dest_path if hasattr(event, 'dest_path') else event.src_path
         fname = os.path.basename(event_path)
-        is_hidden = os.stat('filename').st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN
+        is_hidden = os.stat(event_path).st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN
         has_hidden_component = any(p.startswith('.') for p in event_path.split(os.sep))
         if (is_hidden or has_hidden_component or
                 '__pycache__' in event_path or
