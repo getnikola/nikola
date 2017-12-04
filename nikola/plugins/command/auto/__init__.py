@@ -277,7 +277,7 @@ class CommandAuto(Command):
         fname = os.path.basename(event_path)
         is_hidden = os.stat('filename').st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN
         has_hidden_component = any(p.startswith('.') for p in event_path.split(os.sep))
-        if (is_hidden or has_hidden_parent or
+        if (is_hidden or has_hidden_component or
                 '__pycache__' in event_path or
                 event_path.endswith(('.pyc', '.pyo', '.pyd', '_bak', '~')) or
                 event.is_directory):  # Skip on folders, these are usually duplicates
