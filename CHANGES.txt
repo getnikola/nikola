@@ -27,6 +27,7 @@ Features
 Bugfixes
 --------
 
+* Specify UTF-8 input encoding for Mako as default (Issue #2930)
 * Don't trigger rebuilds in auto mode for files it's safe to ignore
   (Issue #2906)
 * Fix padding for Jupyter code blocks (Issue #2927)

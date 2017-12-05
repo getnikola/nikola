@@ -93,6 +93,7 @@ class MakoTemplates(TemplateSystem):
         self.lookup = TemplateLookup(
             directories=self.directories,
             module_directory=self.cache_dir,
+            input_encoding='utf-8',
             output_encoding='utf-8')
 
     def set_site(self, site):

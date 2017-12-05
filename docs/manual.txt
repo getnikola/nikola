@@ -1272,6 +1272,8 @@ If you use the shortcode as paired, then the contents between the paired tags
 will be available in the ``data`` variable. If you want to access the Nikola
 object, it will be available as ``site``. Use with care :-)
 
+.. note:: Template-based shortcodes use the same template engine as your site’s theme.
+
 See :doc:`extending` for detailed information.
 
 For example, if your ``shortcodes/foo.tmpl`` contains this:
