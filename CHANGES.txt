@@ -27,6 +27,8 @@ Features
 Bugfixes
 --------
 
+* Don't trigger rebuilds in auto mode for files it's safe to ignore
+  (Issue #2906)
 * Fix padding for Jupyter code blocks (Issue #2927)
 * Apply ``SCHEDULE_ALL`` to posts only (Issue #2921)
 * Restore version number to Bootswatch URLs (Issue #2916)
