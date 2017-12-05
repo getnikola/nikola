@@ -54,7 +54,7 @@ class MakoTemplates(TemplateSystem):
 
     def get_string_deps(self, text, filename=None):
         """Find dependencies for a template string."""
-        lex = lexer.Lexer(text=text, filename=filename)
+        lex = lexer.Lexer(text=text, filename=filename, input_encoding='utf-8')
         lex.parse()
 
         deps = []
