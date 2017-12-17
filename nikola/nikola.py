@@ -1422,11 +1422,11 @@ class Nikola(object):
                 if dst_url.query:
                     # If query strings are used in magic link, they will be
                     # passed to the path handler as keyword arguments (strings)
-                    link_kwargs = {k: v[-1] for k, v in parse_qs(dst_url.query).items()}
+                    link_kwargs = {unquote(k): unquote(v[-1]) for k, v in parse_qs(dst_url.query).items()}
                 else:
                     link_kwargs = {}
 
-                dst = self.link(dst_url.netloc, dst_url.path.lstrip('/'), lang, **link_kwargs)
+                dst = self.link(dst_url.netloc, unquote(dst_url.path.lstrip('/')), lang, **link_kwargs)
             # Assuming the site is served over one of these, and
             # since those are the only URLs we want to rewrite...
             else:

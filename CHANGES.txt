@@ -27,6 +27,7 @@ Features
 Bugfixes
 --------
 
+* Unquote paths given to ``link://`` magic URLs (Issue #2934)
 * Specify UTF-8 input encoding for Mako as default (Issue #2930)
 * Don't trigger rebuilds in auto mode for files it's safe to ignore
   (Issue #2906)
