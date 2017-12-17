@@ -212,7 +212,11 @@ Creating a Blog Post
    etc. Sure, you can just figure out the URLs for each thing and use that. Or you can use
    Nikola's special link URLs. Those are done using the syntax ``link://kind/name`` and
    a full list of the included ones is `here <link://slug/path-handlers>`__ (BTW, I linked
-   to that using ``link://slug/path-handlers``)
+   to that using ``link://slug/path-handlers``).
+
+   Note that magic links with spaces won’t work with some input formats (eg.
+   reST), so you should use slugs there (eg. ``link://tag/some-tag`` instead of
+   ``link://tag/Some Tag``)
 
 
 To create a new post, the easiest way is to run ``nikola new_post``. You  will

@@ -1426,6 +1426,7 @@ class Nikola(object):
                 else:
                     link_kwargs = {}
 
+                # unquote from issue #2934
                 dst = self.link(dst_url.netloc, unquote(dst_url.path.lstrip('/')), lang, **link_kwargs)
             # Assuming the site is served over one of these, and
             # since those are the only URLs we want to rewrite...
