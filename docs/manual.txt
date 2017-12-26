@@ -1248,7 +1248,7 @@ thumbnail
 
     * alt (alt text for image)
     * align (image alignment, left/center/right)
-    * linktitle (title text for the link, shown by e.g. colorbox)
+    * linktitle (title text for the link, shown by e.g. baguetteBox)
     * title (title text for image)
     * imgclass (class for image)
     * figclass (class for figure, used only if you provide a caption)
@@ -1825,14 +1825,14 @@ To create an image gallery, all you have to do is add a folder inside ``gallerie
 and put images there. Nikola will take care of creating thumbnails, index page, etc.
 
 If you click on images on a gallery, or on images with links in post, you will
-see a bigger image, thanks to the excellent `colorbox
-<http://www.jacklmoore.com/colorbox>`_.  If don’t want this behavior, add an
-``.islink`` class to your image or link. (The behavior is caused by
-``<a class="image-reference">`` if you need to use it outside of galleries and reST
+see a bigger image, thanks to the excellent `baguetteBox
+<https://feimosi.github.io/baguetteBox.js/>`_.  If don’t want this behavior, add an
+``.islink`` class to your link. (The behavior is caused by ``<a
+class="image-reference">`` if you need to use it outside of galleries and reST
 thumbnails.)
 
 The gallery pages are generated using the ``gallery.tmpl`` template, and you can
-customize it there (you could switch to another lightbox instead of colorbox, change
+customize it there (you could switch to another lightbox instead of baguetteBox, change
 its settings, change the layout, etc.).
 
 Images to be used in normal posts can be placed in the ``images`` folder. These
@@ -2493,7 +2493,7 @@ To include an image placed in the ``images`` folder (or other folders defined in
 
 The small thumbnail will be placed in the page, and it will be linked to the bigger
 version of the image when clicked, using
-`colorbox <http://www.jacklmoore.com/colorbox>`_ by default. All options supported by
+`baguetteBox <https://feimosi.github.io/baguetteBox.js/>`_ by default. All options supported by
 the reST `image <http://docutils.sourceforge.net/docs/ref/rst/directives.html#image>`_
 directive are supported (except ``target``). If a body element is provided, the
 thumbnail will mimic the behavior of the

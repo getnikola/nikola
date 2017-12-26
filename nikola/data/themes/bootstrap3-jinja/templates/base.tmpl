@@ -75,7 +75,11 @@
 </div>
 
 {{ base.late_load_js() }}
-    <script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
+    {% if use_cdn %}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.8.2/baguetteBox.min.js"></script>
+    {% else %}
+        <script src="/assets/js/baguetteBox.min.js"></script>
+    {% endif %}
     <!-- fancy dates -->
     <script>
     moment.locale("{{ momentjs_locales[lang] }}");
@@ -83,6 +87,16 @@
     </script>
     <!-- end fancy dates -->
     {% block extra_js %}{% endblock %}
+    <script>
+    baguetteBox.run('a.reference:not(.islink)', {
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    baguetteBox.run('img:not(.islink)', {
+        captions: function(element) {
+            return element.alt;
+    }});
+    </script>
 {{ body_end }}
 {{ template_hooks['body_end']() }}
 </body>

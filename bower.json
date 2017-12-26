@@ -13,7 +13,6 @@
     "bootstrap": "~3.3.7",
     "html5shiv": "^3.7.3",
     "jquery": "<2.0.0",
-    "jquery-colorbox": "~1",
     "livereload-js": "~2",
     "moment": "~2"
   },

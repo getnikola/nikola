@@ -96,7 +96,8 @@ $("#gallery_container").flowr({
             }
         }
     });
-$("a.image-reference").colorbox({rel:"gal", maxWidth:"100%",maxHeight:"100%",scalePhotos:true});
-$('a.image-reference[href="'+window.location.hash.substring(1,1000)+'"]').click();
-</script>
+    baguetteBox.run('#gallery_container', {
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});</script>
 </%block>

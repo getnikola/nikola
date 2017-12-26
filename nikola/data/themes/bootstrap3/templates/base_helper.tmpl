@@ -94,10 +94,6 @@ lang="${lang}">
             <script src="/assets/js/moment-with-locales.min.js"></script>
             <script src="/assets/js/fancydates.js"></script>
         %endif
-        <script src="/assets/js/jquery.colorbox-min.js"></script>
-    %endif
-    %if colorbox_locales[lang]:
-        <script src="/assets/js/colorbox-i18n/jquery.colorbox-${colorbox_locales[lang]}.js"></script>
     %endif
     ${social_buttons_code}
 </%def>
@@ -114,13 +110,14 @@ lang="${lang}">
     %else:
         %if use_cdn:
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.8.2/baguetteBox.min.css" rel="stylesheet" type="text/css">
         %else:
             <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
         %endif
+        <link href="/assets/css/baguetteBox.min.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/rst_base.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/nikola_rst.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/code.css" rel="stylesheet" type="text/css">
-        <link href="/assets/css/colorbox.css" rel="stylesheet" type="text/css">
         <link href="/assets/css/theme.css" rel="stylesheet" type="text/css">
         %if has_custom_css:
             <link href="/assets/css/custom.css" rel="stylesheet" type="text/css">
