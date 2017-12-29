@@ -1076,7 +1076,7 @@ def hyphenate(dom, _lang):
         for tag in ('p', 'li', 'span'):
             for node in dom.xpath("//%s[not(parent::pre)]" % tag):
                 skip_node = False
-                skippable_nodes = ['kbd', 'code', 'samp', 'mark', 'math', 'data', 'ruby', 'svg']
+                skippable_nodes = ['kbd', 'pre', 'code', 'samp', 'mark', 'math', 'data', 'ruby', 'svg']
                 if node.getchildren():
                     for child in node.getchildren():
                         if child.tag in skippable_nodes or (child.tag == 'span' and 'math'

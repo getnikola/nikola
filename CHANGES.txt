@@ -28,6 +28,7 @@ Features
 Bugfixes
 --------
 
+* Don’t run hyphenate on ``<pre>`` blocks (Issue #2939)
 * Make errors in reST display in logs again
 * Unquote paths given to ``link://`` magic URLs (Issue #2934)
 * Specify UTF-8 input encoding for Mako as default (Issue #2930)
