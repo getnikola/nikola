@@ -1,0 +1,167 @@
+# Messages in Nikola
+# Copyright (C) 2012-2016
+# This file is distributed under the same license as the Nikola package.
+# 
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Nikola\n"
+"Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
+"POT-Creation-Date: 2013-03-15 12:24-0300\n"
+"PO-Revision-Date: 2013-03-15 15:29+0000\n"
+"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"Language-Team: Breton (http://www.transifex.com/ralsina/nikola/language/br/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: br\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "More posts about %s"
+msgstr ""
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "LANGUAGE"
+msgstr ""
+
+msgid "Tags"
+msgstr ""
+
+msgid "Categories"
+msgstr ""
+
+msgid "Tags and Categories"
+msgstr ""
+
+msgid "Comments"
+msgstr ""
+
+msgid "Read more"
+msgstr ""
+
+msgid "Posts about %s"
+msgstr ""
+
+msgid "Next post"
+msgstr ""
+
+msgid "old posts, page %d"
+msgstr ""
+
+msgid "page %d"
+msgstr ""
+
+msgid "Source"
+msgstr ""
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "Read in English"
+msgstr ""
+
+msgid "Posts for year %s"
+msgstr ""
+
+msgid "Newer posts"
+msgstr ""
+
+msgid "Previous post"
+msgstr ""
+
+msgid "Also available in:"
+msgstr ""
+
+msgid "Languages:"
+msgstr ""
+
+msgid "Original site"
+msgstr ""
+
+msgid "Older posts"
+msgstr ""
+
+msgid "Archive"
+msgstr ""
+
+msgid "Publication date"
+msgstr ""
+
+msgid "Posted:"
+msgstr ""
+
+msgid "Posts for {month} {year}"
+msgstr ""
+
+msgid "Posts for {month} {day}, {year}"
+msgstr ""
+
+msgid "Nothing found."
+msgstr ""
+
+msgid "No posts found."
+msgstr ""
+
+msgid "RSS feed"
+msgstr ""
+
+msgid "%d min remaining to read"
+msgstr ""
+
+msgid "Skip to main content"
+msgstr ""
+
+msgid "Subcategories:"
+msgstr ""
+
+#. Used for active navigation links, for screen readers only
+msgid "(active)"
+msgstr ""
+
+#. Default content for a new post
+msgid "Write your post here."
+msgstr ""
+
+#. Default content for a new page
+msgid "Write your page here."
+msgstr ""
+
+msgid "Uncategorized"
+msgstr ""
+
+#. Used for feeds of any format
+msgid "Updates"
+msgstr ""
+
+msgid "Authors"
+msgstr ""
+
+msgid "Posts by %s"
+msgstr ""
+
+msgid "Toggle navigation"
+msgstr ""
+
+#. Used to format months per year
+msgid "{month} {year}"
+msgstr ""
+
+#. Used to format a date
+msgid "{month} {day}, {year}"
+msgstr ""
+
+msgid "Previous"
+msgstr ""
+
+msgid "Up"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "Atom feed"
+msgstr ""

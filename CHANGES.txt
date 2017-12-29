@@ -1,6 +1,7 @@
-New in v7-maintenance
-=====================
+New in v7.8.11
+==============
 
+* Make errors in reST display in logs again
 * Restore version number to Bootswatch URLs (Issue #2916)
 
 New in v7.8.10
