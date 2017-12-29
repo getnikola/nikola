@@ -180,7 +180,7 @@ def _gen_chart(chart_type, **_options):
     for k, v in _options.items():
         try:
             options[k] = literal_eval(v)
-        except:
+        except Exception:
             options[k] = v
     chart = pygal
     for o in chart_type.split('.'):

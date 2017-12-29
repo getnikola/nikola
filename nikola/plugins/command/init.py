@@ -380,7 +380,7 @@ class CommandInit(Command):
             while not answered:
                 try:
                     lz = get_localzone()
-                except:
+                except Exception:
                     lz = None
                 answer = ask('Time zone', lz if lz else "UTC")
                 tz = dateutil.tz.gettz(answer)

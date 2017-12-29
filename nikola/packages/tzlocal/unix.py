@@ -26,7 +26,7 @@ def _get_localzone():
         if tz:
             dateutil.tz.gettz(tz)
             return tz
-    except:
+    except Exception:
         pass
 
     try:
@@ -37,7 +37,7 @@ def _get_localzone():
         if tz:
             dateutil.tz.gettz(tz)
             return tz
-    except:
+    except Exception:
         return None
 
     # Now look for distribution specific configuration files
@@ -61,7 +61,7 @@ def _get_localzone():
                     if tz:
                         dateutil.tz.gettz(tz)
                         return tz
-                except:
+                except Exception:
                     pass
 
     # CentOS has a ZONE setting in /etc/sysconfig/clock,
@@ -96,7 +96,7 @@ def _get_localzone():
                     if tz:
                         dateutil.tz.gettz(tz)
                         return tz
-                except:
+                except Exception:
                     pass
 
     # Nikola cannot use this thing below...

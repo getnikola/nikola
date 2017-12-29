@@ -156,7 +156,7 @@ def yui_compressor(infile, executable=None):
         try:
             subprocess.call('yuicompressor', stdout=open(os.devnull, 'w'), stderr=open(os.devnull, 'w'))
             yuicompressor = 'yuicompressor'
-        except:
+        except Exception:
             raise Exception("yui-compressor is not installed.")
             return False
 
@@ -394,7 +394,7 @@ def _normalize_html(data):
     """Pass HTML through LXML to clean it up, if possible."""
     try:
         data = lxml.html.tostring(lxml.html.fromstring(data), encoding='unicode')
-    except:
+    except Exception:
         pass
     return '<!DOCTYPE html>\n' + data
 

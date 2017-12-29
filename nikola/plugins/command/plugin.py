@@ -246,7 +246,7 @@ class CommandPlugin(Command):
         else:
             try:
                 plugin_path = utils.get_plugin_path(name)
-            except:
+            except Exception:
                 LOGGER.error("Can't find plugin " + name)
                 return 1
 
