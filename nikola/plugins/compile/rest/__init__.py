@@ -28,6 +28,7 @@
 
 import io
 import os
+import logbook.base
 
 import docutils.core
 import docutils.nodes
@@ -184,7 +185,7 @@ class CompileRest(PageCompiler):
 
         self.logger = get_logger('compile_rest')
         if not site.debug:
-            self.logger.level = 4
+            self.logger.level = logbook.base.WARNING
 
 
 def get_observer(settings):
@@ -194,17 +195,23 @@ def get_observer(settings):
 
         Error code mapping:
 
-        +------+---------+------+----------+
-        | dNUM |   dNAME | lNUM |    lNAME |    d = docutils, l = logbook
-        +------+---------+------+----------+
-        |    0 |   DEBUG |    1 |    DEBUG |
-        |    1 |    INFO |    2 |     INFO |
-        |    2 | WARNING |    4 |  WARNING |
-        |    3 |   ERROR |    5 |    ERROR |
-        |    4 |  SEVERE |    6 | CRITICAL |
-        +------+---------+------+----------+
+        +----------+----------+
+        | docutils |  logbook |
+        +----------+----------+
+        |    DEBUG |    DEBUG |
+        |     INFO |     INFO |
+        |  WARNING |  WARNING |
+        |    ERROR |    ERROR |
+        |   SEVERE | CRITICAL |
+        +----------+----------+
         """
-        errormap = {0: 1, 1: 2, 2: 4, 3: 5, 4: 6}
+        errormap = {
+            docutils.utils.Reporter.DEBUG_LEVEL: logbook.base.DEBUG,
+            docutils.utils.Reporter.INFO_LEVEL: logbook.base.INFO,
+            docutils.utils.Reporter.WARNING_LEVEL: logbook.base.WARNING,
+            docutils.utils.Reporter.ERROR_LEVEL: logbook.base.ERROR,
+            docutils.utils.Reporter.SEVERE_LEVEL: logbook.base.CRITICAL
+        }
         text = docutils.nodes.Element.astext(msg)
         line = msg['line'] + settings['add_ln'] if 'line' in msg else 0
         out = '[{source}{colon}{line}] {text}'.format(
