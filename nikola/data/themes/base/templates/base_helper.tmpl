@@ -72,6 +72,19 @@ lang="${lang}">
 </%def>
 
 <%def name="late_load_js()">
+    % if use_bundles:
+        % if use_cdn:
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.8.2/baguetteBox.min.js"></script>
+        % else:
+            <script src="/assets/js/all-nocdn.js"></script>
+        % endif
+    % else:
+        % if use_cdn:
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.8.2/baguetteBox.min.js"></script>
+        % else:
+            <script src="/assets/js/baguetteBox.min.js"></script>
+        % endif
+    % endif
     ${social_buttons_code}
 </%def>
 
