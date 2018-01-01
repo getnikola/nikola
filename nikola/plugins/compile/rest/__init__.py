@@ -116,7 +116,9 @@ class CompileRest(PageCompiler):
             'stylesheet_path': None,
             'link_stylesheet': True,
             'syntax_highlight': 'short',
-            'math_output': 'mathjax',
+            # This path is not used by Nikola, but we need something to silence
+            # warnings about it from reST.
+            'math_output': 'mathjax /assets/js/mathjax.js',
             'template': default_template_path,
             'language_code': LEGAL_VALUES['DOCUTILS_LOCALES'].get(LocaleBorg().current_lang, 'en')
         }
@@ -213,7 +215,7 @@ def get_observer(settings):
             docutils.utils.Reporter.SEVERE_LEVEL: logbook.base.CRITICAL
         }
         text = docutils.nodes.Element.astext(msg)
-        line = msg['line'] + settings['add_ln'] if 'line' in msg else 0
+        line = msg['line'] + settings['add_ln'] if 'line' in msg else ''
         out = '[{source}{colon}{line}] {text}'.format(
             source=settings['source'], colon=(':' if line else ''),
             line=line, text=text)
