@@ -274,7 +274,11 @@ class CommandAuto(Command):
         # Move events have a dest_path, some editors like gedit use a
         # move on larger save operations for write protection
         event_path = event.dest_path if hasattr(event, 'dest_path') else event.src_path
-        is_hidden = os.stat(event_path).st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN
+        if sys.platform == 'win32':
+            # Windows hidden files support
+            is_hidden = os.stat(event_path).st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN
+        else:
+            is_hidden = False
         has_hidden_component = any(p.startswith('.') for p in event_path.split(os.sep))
         if (is_hidden or has_hidden_component or
                 '__pycache__' in event_path or
