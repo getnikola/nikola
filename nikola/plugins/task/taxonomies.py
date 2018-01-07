@@ -423,13 +423,8 @@ class RenderTaxonomies(Task):
         for taxonomy in self.site.taxonomy_plugins.values():
             plpl = {}
             for lang in self.site.config["TRANSLATIONS"]:
-                classifications = {}
-                for tlang, posts_per_classification in self.site.posts_per_classification[taxonomy.classification_name].items():
-                    if lang != tlang:
-                        continue
-                    classifications.update(posts_per_classification)
                 result = {}
-                for classification, posts in classifications.items():
+                for classification, posts in self.site.posts_per_classification[taxonomy.classification_name][lang].items():
                     # Filter list
                     filtered_posts = self._filter_list(posts, lang)
                     if len(filtered_posts) == 0 and taxonomy.omit_empty_classifications:
