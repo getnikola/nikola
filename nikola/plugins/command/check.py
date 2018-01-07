@@ -328,16 +328,32 @@ class CommandCheck(Command):
                             os.path.join(os.path.dirname(filename).encode('utf-8'), unquoted_target))
 
                 elif url_type in ('full_path', 'absolute'):
+                    relative = False
                     if url_type == 'absolute':
                         # convert to 'full_path' case, ie url relative to root
-                        url_rel_path = parsed.path[len(url_netloc_to_root):]
+                        if parsed.path.startswith(url_netloc_to_root):
+                            url_rel_path = parsed.path[len(url_netloc_to_root):]
+                        else:
+                            url_rel_path = parsed.path
+                            if not url_rel_path.startswith('/'):
+                                relative = True
                     else:
                         # convert to relative to base path
-                        url_rel_path = target[len(url_netloc_to_root):]
+                        if target.startswith(url_netloc_to_root):
+                            url_rel_path = target[len(url_netloc_to_root):]
+                        else:
+                            url_rel_path = target
+                            if not url_rel_path.startswith('/'):
+                                relative = True
                     if url_rel_path == '' or url_rel_path.endswith('/'):
                         url_rel_path = urljoin(url_rel_path, self.site.config['INDEX_FILE'])
-                    fs_rel_path = fs_relpath_from_url_path(url_rel_path)
-                    target_filename = os.path.join(self.site.config['OUTPUT_FOLDER'], fs_rel_path)
+                    if relative:
+                        unquoted_target = unquote(target).encode('utf-8')
+                        target_filename = os.path.abspath(
+                            os.path.join(os.path.dirname(filename).encode('utf-8'), unquoted_target))
+                    else:
+                        fs_rel_path = fs_relpath_from_url_path(url_rel_path)
+                        target_filename = os.path.join(self.site.config['OUTPUT_FOLDER'], fs_rel_path)
 
                 if any(re.search(x, target_filename) for x in self.whitelist):
                     continue
