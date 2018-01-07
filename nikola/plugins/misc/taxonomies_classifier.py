@@ -161,6 +161,11 @@ class TaxonomiesClassifier(SignalHandler):
                 if not taxonomy.is_enabled(lang):
                     continue
                 for classification, posts in site.posts_per_classification[taxonomy.classification_name][lang].items():
+                    # Do we actually generate this classification page?
+                    filtered_posts = [x for x in posts if self.site.config["SHOW_UNTRANSLATED_POSTS"] or x.is_translation_available(lang)]
+                    generate_list = taxonomy.should_generate_classification_page(classification, filtered_posts, lang)
+                    if not generate_list:
+                        continue
                     # Obtain path as tuple
                     path = site.path_handlers[taxonomy.classification_name](classification, lang)
                     # Check that path is OK
@@ -174,12 +179,12 @@ class TaxonomiesClassifier(SignalHandler):
                     if path in taxonomy_outputs[lang]:
                         other_classification_name, other_classification, other_posts = taxonomy_outputs[lang][path]
                         if other_classification_name == taxonomy.classification_name and other_classification == classification:
-                            taxonomy_outputs[lang][path][2].extend(posts)
+                            taxonomy_outputs[lang][path][2].extend(filtered_posts)
                         else:
                             utils.LOGGER.error('You have classifications that are too similar: {0} "{1}" and {2} "{3}" both result in output path {4} for language {5}.'.format(
                                 taxonomy.classification_name, classification, other_classification_name, other_classification, path, lang))
                             utils.LOGGER.error('{0} "{1}" is used in: {2}'.format(
-                                taxonomy.classification_name.title(), classification, ', '.join(sorted([p.source_path for p in posts]))))
+                                taxonomy.classification_name.title(), classification, ', '.join(sorted([p.source_path for p in filtered_posts]))))
                             utils.LOGGER.error('{0} "{1}" is used in: {2}'.format(
                                 other_classification_name.title(), other_classification, ', '.join(sorted([p.source_path for p in other_posts]))))
                             quit = True
