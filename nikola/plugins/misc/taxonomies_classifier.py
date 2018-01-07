@@ -160,34 +160,31 @@ class TaxonomiesClassifier(SignalHandler):
             for lang in site.config['TRANSLATIONS'].keys():
                 if not taxonomy.is_enabled(lang):
                     continue
-                for tlang in site.config['TRANSLATIONS'].keys():
-                    if lang != tlang:
-                        continue
-                    for classification, posts in site.posts_per_classification[taxonomy.classification_name][tlang].items():
-                        # Obtain path as tuple
-                        path = site.path_handlers[taxonomy.classification_name](classification, lang)
-                        # Check that path is OK
-                        for path_element in path:
-                            if len(path_element) == 0:
-                                utils.LOGGER.error("{0} {1} yields invalid path '{2}'!".format(taxonomy.classification_name.title(), classification, '/'.join(path)))
-                                quit = True
-                        # Combine path
-                        path = os.path.join(*[os.path.normpath(p) for p in path if p != '.'])
-                        # Determine collisions
-                        if path in taxonomy_outputs[lang]:
-                            other_classification_name, other_classification, other_posts = taxonomy_outputs[lang][path]
-                            if other_classification_name == taxonomy.classification_name and other_classification == classification:
-                                taxonomy_outputs[lang][path][2].extend(posts)
-                            else:
-                                utils.LOGGER.error('You have classifications that are too similar: {0} "{1}" and {2} "{3}" both result in output path {4} for language {5}.'.format(
-                                    taxonomy.classification_name, classification, other_classification_name, other_classification, path, lang))
-                                utils.LOGGER.error('{0} {1} is used in: {2}'.format(
-                                    taxonomy.classification_name.title(), classification, ', '.join(sorted([p.source_path for p in posts]))))
-                                utils.LOGGER.error('{0} {1} is used in: {2}'.format(
-                                    other_classification_name.title(), other_classification, ', '.join(sorted([p.source_path for p in other_posts]))))
-                                quit = True
+                for classification, posts in site.posts_per_classification[taxonomy.classification_name][lang].items():
+                    # Obtain path as tuple
+                    path = site.path_handlers[taxonomy.classification_name](classification, lang)
+                    # Check that path is OK
+                    for path_element in path:
+                        if len(path_element) == 0:
+                            utils.LOGGER.error("{0} {1} yields invalid path '{2}'!".format(taxonomy.classification_name.title(), classification, '/'.join(path)))
+                            quit = True
+                    # Combine path
+                    path = os.path.join(*[os.path.normpath(p) for p in path if p != '.'])
+                    # Determine collisions
+                    if path in taxonomy_outputs[lang]:
+                        other_classification_name, other_classification, other_posts = taxonomy_outputs[lang][path]
+                        if other_classification_name == taxonomy.classification_name and other_classification == classification:
+                            taxonomy_outputs[lang][path][2].extend(posts)
                         else:
-                            taxonomy_outputs[lang][path] = (taxonomy.classification_name, classification, list(posts))
+                            utils.LOGGER.error('You have classifications that are too similar: {0} "{1}" and {2} "{3}" both result in output path {4} for language {5}.'.format(
+                                taxonomy.classification_name, classification, other_classification_name, other_classification, path, lang))
+                            utils.LOGGER.error('{0} "{1}" is used in: {2}'.format(
+                                taxonomy.classification_name.title(), classification, ', '.join(sorted([p.source_path for p in posts]))))
+                            utils.LOGGER.error('{0} "{1}" is used in: {2}'.format(
+                                other_classification_name.title(), other_classification, ', '.join(sorted([p.source_path for p in other_posts]))))
+                            quit = True
+                    else:
+                        taxonomy_outputs[lang][path] = (taxonomy.classification_name, classification, list(posts))
         if quit:
             sys.exit(1)
         blinker.signal('taxonomies_classified').send(site)
