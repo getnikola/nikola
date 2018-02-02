@@ -13,6 +13,9 @@ from .base import FakeSite
 from PIL import Image, ImageDraw
 from nikola.plugins.task import scale_images
 
+# Import test:
+from nikola.plugins.task import galleries
+
 class TestCase(unittest.TestCase):
     def setUp(self):
         # These tests don't require valid profiles.  They need only to verify 

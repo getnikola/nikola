@@ -482,7 +482,7 @@ class Galleries(Task, ImageProcessor):
             'actions': [
                 (self.resize_image,
                     (img, thumb_path, self.kw['thumbnail_size'], True, self.kw['preserve_exif_data'],
-                     self.kw['exif_whitelist'], preserve_icc_profiles=self.kw['preserve_icc_profiles']))
+                     self.kw['exif_whitelist'], self.kw['preserve_icc_profiles']))
             ],
             'clean': True,
             'uptodate': [utils.config_changed({
@@ -498,7 +498,7 @@ class Galleries(Task, ImageProcessor):
             'actions': [
                 (self.resize_image,
                     (img, orig_dest_path, self.kw['max_image_size'], True, self.kw['preserve_exif_data'],
-                     self.kw['exif_whitelist'], preserve_icc_profiles=self.kw['preserve_icc_profiles']))
+                     self.kw['exif_whitelist'], self.kw['preserve_icc_profiles']))
             ],
             'clean': True,
             'uptodate': [utils.config_changed({
