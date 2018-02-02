@@ -75,6 +75,7 @@
 * `Michael McNeil Forbes <https://github.com/mforbes>`_
 * `Michal Petrucha <https://github.com/koniiiik>`_
 * `Miguel Ángel García <https://github.com/magmax>`_
+* `Mitch Chapman <https://github.com/mchapman87501>`_
 * `mrabbitt <https://github.com/mrabbitt>`_
 * `Neil MartinsenBurrell <https://github.com/neilmb>`_
 * `Niels Böhm <https://github.com/blubberdiblub>`_

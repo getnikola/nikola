@@ -1995,6 +1995,22 @@ listed there.
 There is a huge number of EXIF tags, described in `the standard <http://www.cipa.jp/std/documents/e/DC-008-2012_E.pdf>`__
 
 
+Handling ICC Profiles
+---------------------
+
+Your images may contain `ICC profiles. <https://en.wikipedia.org/wiki/ICC_profile>`__  These describe the color space in which the images were created or captured.
+
+Most desktop web browsers can use embedded ICC profiles to display images accurately.  As of early 2018 few mobile browsers consider ICC profiles when displaying images.  A notable exception is Safari on iOS.
+
+By default Nikola strips out ICC profiles when preparing images for your posts and galleries.  If you want Nikola to preserve ICC profiles, add this in your ``conf.py``:
+
+.. code:: python
+
+  PRESERVE_ICC_PROFILES = True
+
+You may wish to do this if, for example, your site contains JPEG images that use a wide-gamut profile such as "Display P3".
+
+
 Post Processing Filters
 -----------------------
 
