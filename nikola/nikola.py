@@ -563,6 +563,7 @@ class Nikola(object):
             'POSTS_SECTION_TRANSLATIONS': [],
             'POSTS_SECTION_TRANSLATIONS_ADD_DEFAULTS': False,
             'PRESERVE_EXIF_DATA': False,
+            'PRESERVE_ICC_PROFILES': False,
             'PAGES': (("pages/*.txt", "pages", "page.tmpl"),),
             'PANDOC_OPTIONS': [],
             'PRETTY_URLS': True,

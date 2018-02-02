@@ -91,7 +91,7 @@ class ImageProcessor(object):
 
         return exif or None
 
-    def resize_image(self, src, dst, max_size, bigger_panoramas=True, preserve_exif_data=False, exif_whitelist={}):
+    def resize_image(self, src, dst, max_size, bigger_panoramas=True, preserve_exif_data=False, exif_whitelist={}, preserve_icc_profiles=False):
         """Make a copy of the image in the requested size."""
         if not Image or os.path.splitext(src)[1] in ['.svg', '.svgz']:
             self.resize_svg(src, dst, max_size, bigger_panoramas)
@@ -131,7 +131,7 @@ class ImageProcessor(object):
             exif['0th'][piexif.ImageIFD.Orientation] = 1
 
         try:
-            icc_profile = im.info.get('icc_profile', None)
+            icc_profile = im.info.get('icc_profile') if preserve_icc_profiles else None
             im.thumbnail(size, Image.ANTIALIAS)
             if exif is not None and preserve_exif_data:
                 # Put right size in EXIF data

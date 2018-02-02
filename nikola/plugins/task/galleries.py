@@ -86,6 +86,7 @@ class Galleries(Task, ImageProcessor):
             'generate_rss': site.config['GENERATE_RSS'],
             'preserve_exif_data': site.config['PRESERVE_EXIF_DATA'],
             'exif_whitelist': site.config['EXIF_WHITELIST'],
+            'preserve_icc_profiles': site.config['PRESERVE_ICC_PROFILES'],
         }
 
         # Verify that no folder in GALLERY_FOLDERS appears twice
@@ -481,7 +482,7 @@ class Galleries(Task, ImageProcessor):
             'actions': [
                 (self.resize_image,
                     (img, thumb_path, self.kw['thumbnail_size'], True, self.kw['preserve_exif_data'],
-                     self.kw['exif_whitelist']))
+                     self.kw['exif_whitelist'], preserve_icc_profiles=self.kw['preserve_icc_profiles']))
             ],
             'clean': True,
             'uptodate': [utils.config_changed({
@@ -497,7 +498,7 @@ class Galleries(Task, ImageProcessor):
             'actions': [
                 (self.resize_image,
                     (img, orig_dest_path, self.kw['max_image_size'], True, self.kw['preserve_exif_data'],
-                     self.kw['exif_whitelist']))
+                     self.kw['exif_whitelist'], preserve_icc_profiles=self.kw['preserve_icc_profiles']))
             ],
             'clean': True,
             'uptodate': [utils.config_changed({

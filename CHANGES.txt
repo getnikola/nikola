@@ -3,7 +3,7 @@ New in master
 
 Features
 --------
-
+* New PRESERVE_ICC_PROFILES option to control whether ICC profiles are preserved when copying images.
 * Use baguetteJS in bootstrap theme (part of Issue #2777)
 * New default-config command to generate a clean configuration.
 * New ``thumbnail`` shortcode similar to the reStructuredText
