@@ -1,0 +1,14 @@
+{
+    "name": "Nikola",
+    "version": "0.1.0",
+    "description": "Nikola, a static site generator",
+    "repository": "https://github.com/getnikola/nikola",
+    "license": "MIT",
+    "dependencies": {
+        "baguettebox.js": "^1.10.0",
+        "bootstrap": "^3.3.7",
+        "jquery": "^1.12.4",
+        "livereload-js": "^2.3.0",
+        "moment": "^2.20.1"
+    }
+}
