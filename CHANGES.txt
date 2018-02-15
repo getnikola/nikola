@@ -28,6 +28,8 @@ Features
 Bugfixes
 --------
 
+* Properly handle ``SHOW_INDEX_PAGE_NAVIGATION`` with Jinja templates
+  (Issue #2960)
 * Prevent crashes due to Windows-specific code in ``auto`` running on
   all platforms (Issue #2940)
 * Don’t run hyphenate on ``<pre>`` blocks (Issue #2939)

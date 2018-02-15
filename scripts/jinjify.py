@@ -24,6 +24,7 @@ dumb_replacements = [
     ["fb: http://ogp.me/ns/fb# \\", "fb: http://ogp.me/ns/fb#"],
     ['dir="rtl" \\', 'dir="rtl"'],
     ['sorted(translations)', 'translations|sort'],
+    ['abs(i - current_page)', '(i - current_page)|abs'],
 ]
 
 dumber_replacements = [
