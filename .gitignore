@@ -19,7 +19,7 @@ output/
 .idea/
 .vscode/
 node_modules
-
+!npm_assets/node_modules
 # Created by https://www.gitignore.io/api/pydev,python,pycharm,vim
 
 ### PyCharm ###
