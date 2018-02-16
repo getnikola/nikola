@@ -104,8 +104,8 @@ status 'Updating path handler documentation...'
 scripts/document_path_handlers.py > docs/path_handlers.txt
 status 'Updating Jinja2 templates...'
 scripts/jinjify.py
-status 'Updating Bower...'
-scripts/update-bower.sh
+status 'Updating npm assets...'
+scripts/update-npm-assets.sh
 status 'Updating symlinked list...'
 scripts/generate_symlinked_list.sh
 status 'Updating website (conf.py and docs)...'
