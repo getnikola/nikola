@@ -1,0 +1,103 @@
+## -*- coding: utf-8 -*-
+<%inherit file="base.tmpl"/>
+<%namespace name="comments" file="comments_helper.tmpl"/>
+<%namespace name="ui" file="crumbs.tmpl" import="bar"/>
+<%block name="sourcelink"></%block>
+
+<%block name="content">
+    ${ui.bar(crumbs)}
+    %if title:
+    <h1>${title|h}</h1>
+    %endif
+    %if post:
+    <p>
+        ${post.text()}
+    </p>
+    %endif
+    %if folders:
+    <ul>
+    % for folder, ftitle in folders:
+        <li><a href="${folder}">📂&nbsp;${ftitle|h}</a></li>
+    % endfor
+    </ul>
+    %endif
+
+<div id="gallery_container"></div>
+%if photo_array:
+<noscript>
+<ul class="thumbnails">
+    %for image in photo_array:
+        <li><a href="${image['url']}" class="thumbnail image-reference" title="${image['title']|h}">
+            <img src="${image['url_thumb']}" alt="${image['title']|h}" /></a>
+    %endfor
+</ul>
+</noscript>
+%endif
+%if site_has_comments and enable_comments:
+${comments.comment_form(None, permalink, title)}
+%endif
+</%block>
+
+<%block name="extra_head">
+${parent.extra_head()}
+<link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
+<style type="text/css">
+    .image-block {
+        display: inline-block;
+    }
+    .flowr_row {
+        width: 100%;
+    }
+    </style>
+%if len(translations) > 1:
+    %for langname in translations.keys():
+         %if langname != lang:
+             <link rel="alternate" hreflang="${langname}" href="${_link('gallery', gallery_path, langname)}">
+         %endif
+    %endfor
+%endif
+</%block>
+
+
+<%block name="extra_js">
+<script src="/assets/js/flowr.js"></script>
+<script>
+jsonContent = ${photo_array_json};
+$("#gallery_container").flowr({
+        data : jsonContent,
+        height : ${thumbnail_size}*.6,
+        padding: 5,
+        rows: -1,
+        render : function(params) {
+            // Just return a div, string or a dom object, anything works fine
+            img = $("<img />").attr({
+                'src': params.itemData.url_thumb,
+                'width' : params.width,
+                'height' : params.height
+            }).css('max-width', '100%');
+            link = $( "<a></a>").attr({
+                'href': params.itemData.url,
+                'class': 'image-reference'
+            });
+            div = $("<div />").addClass('image-block').attr({
+                'title': params.itemData.title,
+                'data-toggle': "tooltip",
+            });
+            link.append(img);
+            div.append(link);
+            div.hover(div.tooltip());
+            return div;
+        },
+        itemWidth : function(data) { return data.size.w; },
+        itemHeight : function(data) { return data.size.h; },
+        complete : function(params) {
+            if( jsonContent.length > params.renderedItems ) {
+                nextRenderList = jsonContent.slice( params.renderedItems );
+            }
+        }
+    });
+    baguetteBox.run('#gallery_container', {
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});</script>
+</%block>

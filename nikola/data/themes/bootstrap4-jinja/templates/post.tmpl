@@ -1,0 +1,60 @@
+{#  -*- coding: utf-8 -*- #}
+{% import 'post_helper.tmpl' as helper with context %}
+{% import 'post_header.tmpl' as pheader with context %}
+{% import 'comments_helper.tmpl' as comments with context %}
+{% import 'math_helper.tmpl' as math with context %}
+{% extends 'base.tmpl' %}
+
+{% block extra_head %}
+    {{ super() }}
+    {% if post.meta('keywords') %}
+    <meta name="keywords" content="{{ post.meta('keywords')|e }}">
+    {% endif %}
+    {% if post.description() %}
+    <meta name="description" itemprop="description" content="{{ post.description()|e }}">
+    {% endif %}
+    <meta name="author" content="{{ post.author()|e }}">
+    {% if post.prev_post %}
+        <link rel="prev" href="{{ post.prev_post.permalink() }}" title="{{ post.prev_post.title()|e }}" type="text/html">
+    {% endif %}
+    {% if post.next_post %}
+        <link rel="next" href="{{ post.next_post.permalink() }}" title="{{ post.next_post.title()|e }}" type="text/html">
+    {% endif %}
+    {% if post.is_draft %}
+        <meta name="robots" content="noindex">
+    {% endif %}
+    {{ helper.open_graph_metadata(post) }}
+    {{ helper.twitter_card_information(post) }}
+    {{ helper.meta_translations(post) }}
+{% endblock %}
+
+{% block content %}
+<article class="post-{{ post.meta('type') }} h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article">
+    {{ pheader.html_post_header() }}
+    <div class="e-content entry-content" itemprop="articleBody text">
+    {{ post.text() }}
+    </div>
+    <aside class="postpromonav">
+    <nav>
+    {{ helper.html_tags(post) }}
+    {{ helper.html_pager(post) }}
+    </nav>
+    </aside>
+    {% if not post.meta('nocomments') and site_has_comments %}
+        <section class="comments hidden-print">
+        <h2>{{ messages("Comments") }}</h2>
+        {{ comments.comment_form(post.permalink(absolute=True), post.title(), post._base_path) }}
+        </section>
+    {% endif %}
+    {{ math.math_scripts_ifpost(post) }}
+</article>
+{{ comments.comment_link_script() }}
+{% endblock %}
+
+{% block sourcelink %}
+{% if show_sourcelink %}
+    <li class="nav-item">
+    <a href="{{ post.source_link() }}" id="sourcelink" class="nav-link">{{ messages("Source") }}</a>
+    </li>
+{% endif %}
+{% endblock %}

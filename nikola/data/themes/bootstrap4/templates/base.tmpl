@@ -1,0 +1,92 @@
+## -*- coding: utf-8 -*-
+<%namespace name="base" file="base_helper.tmpl" import="*" />
+<%namespace name="notes" file="annotation_helper.tmpl" import="*" />
+${set_locale(lang)}
+${base.html_headstart()}
+<%block name="extra_head">
+### Leave this block alone.
+</%block>
+${template_hooks['extra_head']()}
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">${messages("Skip to main content")}</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark static-top mb-4">
+    <div class="container"><!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="${abs_link(_link("root", None, lang))}">
+        %if logo_url:
+            <img src="${logo_url}" alt="${blog_title|h}" id="logo" class="d-inline-block align-top">
+        %endif
+
+        % if show_blog_title:
+            <span id="blog-title">${blog_title|h}</span>
+        % endif
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+                ${base.html_navigation_links()}
+                ${template_hooks['menu']()}
+            </ul>
+            %if search_form:
+                ${search_form}
+            %endif
+
+            <ul class="navbar-nav navbar-right">
+                <%block name="belowtitle">
+                %if len(translations) > 1:
+                    <li>${base.html_translations()}</li>
+                %endif
+                </%block>
+                % if show_sourcelink:
+                    <%block name="sourcelink"></%block>
+                %endif
+                ${template_hooks['menu_alt']()}
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container -->
+</nav>
+
+<!-- End of Menubar -->
+
+<div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        ${template_hooks['page_header']()}
+        <%block name="content"></%block>
+        <!--End of body content-->
+
+        <footer id="footer">
+            ${content_footer}
+            ${template_hooks['page_footer']()}
+        </footer>
+    </div>
+</div>
+
+${base.late_load_js()}
+    <!-- fancy dates -->
+    <script>
+    moment.locale("${momentjs_locales[lang]}");
+    fancydates(${date_fanciness}, ${js_date_format});
+    </script>
+    <!-- end fancy dates -->
+    <%block name="extra_js"></%block>
+    <script>
+    baguetteBox.run('a.reference:not(.islink)', {
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    baguetteBox.run('img:not(.islink)', {
+        captions: function(element) {
+            return element.alt;
+    }});
+    </script>
+${body_end}
+${template_hooks['body_end']()}
+</body>
+</html>

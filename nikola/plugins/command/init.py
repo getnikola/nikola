@@ -62,7 +62,7 @@ SAMPLE_CONF = {
     # Example for another language:
     # "es": "./es",
 }""",
-    'THEME': 'bootstrap3',
+    'THEME': 'bootblog4',
     'TIMEZONE': 'UTC',
     'COMMENT_SYSTEM': 'disqus',
     'COMMENT_SYSTEM_ID': 'nikolademo',

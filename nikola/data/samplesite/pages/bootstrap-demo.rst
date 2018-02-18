@@ -357,7 +357,7 @@
             </blockquote>
           </div>
           <div class="col-lg-6">
-            <blockquote class="pull-right">
+            <blockquote class="float-md-right">
               <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
               <small>Someone famous in <cite title="Source Title">Source Title</cite></small>
             </blockquote>

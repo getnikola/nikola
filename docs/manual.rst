@@ -11,7 +11,7 @@ The Nikola Handbook
 
 :Version: 7.8.8
 
-.. class:: alert alert-info pull-right
+.. class:: alert alert-info float-md-right
 
 .. contents::
 
@@ -1475,9 +1475,9 @@ Navigation Links
        1. Support for submenus is theme-dependent.  Only one level of
           submenus is supported.
 
-       2. Some themes, including the default Bootstrap 3 theme, may
-          present issues if the menu is too large.  (in ``bootstrap3``, the
-          navbar can grow too large and cover contents.)
+       2. Some themes, including the default Bootstrap theme, may
+          present issues if the menu is too large.  (in Bootstrap, the navbar
+          can grow too large and cover contents.)
 
        3. If you link to directories, make sure to follow ``STRIP_INDEXES``.  If
           it’s set to ``True``, end your links with a ``/``, otherwise end them

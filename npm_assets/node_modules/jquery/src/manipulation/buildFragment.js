@@ -1,36 +1,23 @@
 define( [
 	"../core",
-	"./var/rcheckableType",
+	"../core/toType",
 	"./var/rtagName",
 	"./var/rscriptType",
-	"./var/rleadingWhitespace",
-	"./createSafeFragment",
 	"./wrapMap",
 	"./getAll",
-	"./setGlobalEval",
-	"./support"
-], function( jQuery, rcheckableType, rtagName, rscriptType, rleadingWhitespace,
-	createSafeFragment, wrapMap, getAll, setGlobalEval, support ) {
+	"./setGlobalEval"
+], function( jQuery, toType, rtagName, rscriptType, wrapMap, getAll, setGlobalEval ) {
 
-var rhtml = /<|&#?\w+;/,
-	rtbody = /<tbody/i;
+"use strict";
 
-function fixDefaultChecked( elem ) {
-	if ( rcheckableType.test( elem.type ) ) {
-		elem.defaultChecked = elem.checked;
-	}
-}
+var rhtml = /<|&#?\w+;/;
 
 function buildFragment( elems, context, scripts, selection, ignored ) {
-	var j, elem, contains,
-		tmp, tag, tbody, wrap,
-		l = elems.length,
-
-		// Ensure a safe fragment
-		safe = createSafeFragment( context ),
-
+	var elem, tmp, tag, wrap, contains, j,
+		fragment = context.createDocumentFragment(),
 		nodes = [],
-		i = 0;
+		i = 0,
+		l = elems.length;
 
 	for ( ; i < l; i++ ) {
 		elem = elems[ i ];
@@ -38,7 +25,10 @@ function buildFragment( elems, context, scripts, selection, ignored ) {
 		if ( elem || elem === 0 ) {
 
 			// Add nodes directly
-			if ( jQuery.type( elem ) === "object" ) {
+			if ( toType( elem ) === "object" ) {
+
+				// Support: Android <=4.0 only, PhantomJS 1 only
+				// push.apply(_, arraylike) throws on ancient WebKit
 				jQuery.merge( nodes, elem.nodeType ? [ elem ] : elem );
 
 			// Convert non-html into a text node
@@ -47,12 +37,11 @@ function buildFragment( elems, context, scripts, selection, ignored ) {
 
 			// Convert html into DOM nodes
 			} else {
-				tmp = tmp || safe.appendChild( context.createElement( "div" ) );
+				tmp = tmp || fragment.appendChild( context.createElement( "div" ) );
 
 				// Deserialize a standard representation
 				tag = ( rtagName.exec( elem ) || [ "", "" ] )[ 1 ].toLowerCase();
 				wrap = wrapMap[ tag ] || wrapMap._default;
-
 				tmp.innerHTML = wrap[ 1 ] + jQuery.htmlPrefilter( elem ) + wrap[ 2 ];
 
 				// Descend through wrappers to the right content
@@ -61,59 +50,21 @@ function buildFragment( elems, context, scripts, selection, ignored ) {
 					tmp = tmp.lastChild;
 				}
 
-				// Manually add leading whitespace removed by IE
-				if ( !support.leadingWhitespace && rleadingWhitespace.test( elem ) ) {
-					nodes.push( context.createTextNode( rleadingWhitespace.exec( elem )[ 0 ] ) );
-				}
-
-				// Remove IE's autoinserted <tbody> from table fragments
-				if ( !support.tbody ) {
-
-					// String was a <table>, *may* have spurious <tbody>
-					elem = tag === "table" && !rtbody.test( elem ) ?
-						tmp.firstChild :
-
-						// String was a bare <thead> or <tfoot>
-						wrap[ 1 ] === "<table>" && !rtbody.test( elem ) ?
-							tmp :
-							0;
-
-					j = elem && elem.childNodes.length;
-					while ( j-- ) {
-						if ( jQuery.nodeName( ( tbody = elem.childNodes[ j ] ), "tbody" ) &&
-							!tbody.childNodes.length ) {
-
-							elem.removeChild( tbody );
-						}
-					}
-				}
-
+				// Support: Android <=4.0 only, PhantomJS 1 only
+				// push.apply(_, arraylike) throws on ancient WebKit
 				jQuery.merge( nodes, tmp.childNodes );
 
-				// Fix #12392 for WebKit and IE > 9
+				// Remember the top-level container
+				tmp = fragment.firstChild;
+
+				// Ensure the created nodes are orphaned (#12392)
 				tmp.textContent = "";
-
-				// Fix #12392 for oldIE
-				while ( tmp.firstChild ) {
-					tmp.removeChild( tmp.firstChild );
-				}
-
-				// Remember the top-level container for proper cleanup
-				tmp = safe.lastChild;
 			}
 		}
 	}
 
-	// Fix #11356: Clear elements from fragment
-	if ( tmp ) {
-		safe.removeChild( tmp );
-	}
-
-	// Reset defaultChecked for any radios and checkboxes
-	// about to be appended to the DOM in IE 6/7 (#8060)
-	if ( !support.appendChecked ) {
-		jQuery.grep( getAll( nodes, "input" ), fixDefaultChecked );
-	}
+	// Remove wrapper from fragment
+	fragment.textContent = "";
 
 	i = 0;
 	while ( ( elem = nodes[ i++ ] ) ) {
@@ -123,14 +74,13 @@ function buildFragment( elems, context, scripts, selection, ignored ) {
 			if ( ignored ) {
 				ignored.push( elem );
 			}
-
 			continue;
 		}
 
 		contains = jQuery.contains( elem.ownerDocument, elem );
 
 		// Append to fragment
-		tmp = getAll( safe.appendChild( elem ), "script" );
+		tmp = getAll( fragment.appendChild( elem ), "script" );
 
 		// Preserve script evaluation history
 		if ( contains ) {
@@ -148,9 +98,7 @@ function buildFragment( elems, context, scripts, selection, ignored ) {
 		}
 	}
 
-	tmp = null;
-
-	return safe;
+	return fragment;
 }
 
 return buildFragment;
