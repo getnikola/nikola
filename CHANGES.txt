@@ -64,12 +64,12 @@ Removed features
 ----------------
 
 * Removed the slides directive for docutils, it will now be a separate plugin.
-* Drop Python 2 and Python 3.3 support (oldest supported version is 3.4)
-* Remove ``nikola install_theme`` — use ``nikola theme`` instead
-* Drop insecure post encryption feature
-* Stop supporting all deprecated config options
-* Drop annotations support (annotateit.org closed down in March 2017)
-* Remove taxonomy option ``also_create_classifications_from_other_languages``
+* Dropped Python 2 and Python 3.3 support (oldest supported version is 3.4)
+* Removed ``nikola install_theme`` — use ``nikola theme`` instead
+* Droppped insecure post “encryption” feature
+* Stopped supporting all deprecated config options
+* Dropped annotations support (annotateit.org closed down in March 2017)
+* Removed taxonomy option ``also_create_classifications_from_other_languages``
   (Issue #2785)
 * Removed old 7-line metadata format (Issue #2839)
 
