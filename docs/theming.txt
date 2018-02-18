@@ -241,7 +241,7 @@ These are the templates that come with the included themes:
     It uses a bunch of helper templates, one for each supported comment system
     (all of which start with ``comments_helper``)
 
-``crumbs.tmpl``, ``slides.tmpl``, ``pagination_helper.tmpl``
+``crumbs.tmpl``, ``pagination_helper.tmpl``
     These templates help render specific UI items, and can be tweaked as needed.
 
 ``gallery.tmpl``
