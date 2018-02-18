@@ -1,0 +1,93 @@
+## -*- coding: utf-8 -*-
+<%namespace name="base" file="base_helper.tmpl" import="*" />
+<%namespace name="notes" file="annotation_helper.tmpl" import="*" />
+${set_locale(lang)}
+${base.html_headstart()}
+<%block name="extra_head">
+### Leave this block alone.
+</%block>
+${template_hooks['extra_head']()}
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">${messages("Skip to main content")}</a>
+
+<!-- Menubar -->
+
+
+<div class="container">
+      <header class="blog-header py-3">
+        <div class="row flex-nowrap justify-content-between align-items-center">
+        %if search_form:
+          <div class="col-4">
+            ${search_form}
+        </div>
+          <div class="col-4 text-center">
+      % else:
+          <div class="col-4 offset-4 text-center">
+        %endif
+            <a class="navbar-brand blog-header-logo text-dark" href="${abs_link(_link("root", None, lang))}">
+        %if logo_url:
+            <img src="${logo_url}" alt="${blog_title|h}" id="logo" class="d-inline-block align-top">
+        %endif
+
+        % if show_blog_title:
+            <span id="blog-title">${blog_title|h}</span>
+        % endif
+        </a>
+
+          </div>
+          <div class="col-4 d-flex justify-content-end align-items-center">
+                <%block name="belowtitle">
+                %if len(translations) > 1:
+                    ${base.html_translations()}
+                %endif
+                </%block>
+            <%block name="sourcelink"></%block>
+                ${template_hooks['menu_alt']()}
+          </div>
+        </div>
+      </header>
+
+      <div class="nav-scroller py-1 mb-2">
+        <nav class="nav d-flex justify-content-between">
+          ${base.html_navigation_links()}
+                ${template_hooks['menu']()}
+        </nav>
+      </div>
+
+<div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        ${template_hooks['page_header']()}
+        <%block name="content"></%block>
+        <!--End of body content-->
+
+        <footer id="footer">
+            ${content_footer}
+            ${template_hooks['page_footer']()}
+        </footer>
+    </div>
+</div>
+
+${base.late_load_js()}
+    <!-- fancy dates -->
+    <script>
+    moment.locale("${momentjs_locales[lang]}");
+    fancydates(${date_fanciness}, ${js_date_format});
+    </script>
+    <!-- end fancy dates -->
+    <%block name="extra_js"></%block>
+    <script>
+    baguetteBox.run('a.reference:not(.islink)', {
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    baguetteBox.run('img:not(.islink)', {
+        captions: function(element) {
+            return element.alt;
+    }});
+    </script>
+${body_end}
+${template_hooks['body_end']()}
+</body>
+</html>

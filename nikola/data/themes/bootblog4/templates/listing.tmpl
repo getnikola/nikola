@@ -1,0 +1,30 @@
+## -*- coding: utf-8 -*-
+<%inherit file="base.tmpl"/>
+<%namespace name="ui" file="crumbs.tmpl" import="bar"/>
+<%block name="content">
+${ui.bar(crumbs)}
+%if folders or files:
+<ul>
+% for name in folders:
+    <li><a href="${name|u}">📂&nbsp;${name|h}</a>
+% endfor
+% for name in files:
+    <li><a href="${name|u}.html">📄&nbsp;${name|h}</a>
+% endfor
+</ul>
+%endif
+% if code:
+<h1>${title}
+    % if source_link:
+        <small><a href="${source_link}">(${messages("Source")})</a></small>
+    % endif
+    </h1>
+    ${code}
+% endif
+</%block>
+
+<%block name="sourcelink">
+% if source_link:
+    <a href="${source_link}" id="sourcelink" class="p-2 text-muted">${messages("Source")}</a>
+% endif
+</%block>

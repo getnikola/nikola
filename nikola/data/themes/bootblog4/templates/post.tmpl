@@ -1,0 +1,58 @@
+## -*- coding: utf-8 -*-
+<%namespace name="helper" file="post_helper.tmpl"/>
+<%namespace name="pheader" file="post_header.tmpl"/>
+<%namespace name="comments" file="comments_helper.tmpl"/>
+<%namespace name="math" file="math_helper.tmpl"/>
+<%inherit file="base.tmpl"/>
+
+<%block name="extra_head">
+    ${parent.extra_head()}
+    % if post.meta('keywords'):
+    <meta name="keywords" content="${post.meta('keywords')|h}">
+    % endif
+    %if post.description():
+    <meta name="description" itemprop="description" content="${post.description()|h}">
+    %endif
+    <meta name="author" content="${post.author()|h}">
+    %if post.prev_post:
+        <link rel="prev" href="${post.prev_post.permalink()}" title="${post.prev_post.title()|h}" type="text/html">
+    %endif
+    %if post.next_post:
+        <link rel="next" href="${post.next_post.permalink()}" title="${post.next_post.title()|h}" type="text/html">
+    %endif
+    % if post.is_draft:
+        <meta name="robots" content="noindex">
+    % endif
+    ${helper.open_graph_metadata(post)}
+    ${helper.twitter_card_information(post)}
+    ${helper.meta_translations(post)}
+</%block>
+
+<%block name="content">
+<article class="post-${post.meta('type')} h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article">
+    ${pheader.html_post_header()}
+    <div class="e-content entry-content" itemprop="articleBody text">
+    ${post.text()}
+    </div>
+    <aside class="postpromonav">
+    <nav>
+    ${helper.html_tags(post)}
+    ${helper.html_pager(post)}
+    </nav>
+    </aside>
+    % if not post.meta('nocomments') and site_has_comments:
+        <section class="comments hidden-print">
+        <h2>${messages("Comments")}</h2>
+        ${comments.comment_form(post.permalink(absolute=True), post.title(), post._base_path)}
+        </section>
+    % endif
+    ${math.math_scripts_ifpost(post)}
+</article>
+${comments.comment_link_script()}
+</%block>
+
+<%block name="sourcelink">
+% if show_sourcelink:
+    <a href="${post.source_link()}" id="sourcelink" class="p-2 text-muted">${messages("Source")}</a>
+% endif
+</%block>
