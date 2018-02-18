@@ -1,19 +1,38 @@
 div.admonition, div.attention, div.caution, div.danger, div.error,
 div.hint, div.important, div.note, div.tip, div.warning, div.sidebar,
 div.system-message {
-/* stolen from Boostrap 3 (.panel .panel-default) */
-  margin-bottom: 20px;
+/* stolen from Boostrap 4 (.card) */
+  margin-bottom: 2rem;
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
   background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
-          box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
-  padding: 0 15px 15px 15px;
+  background-clip: border-box;
+  border: 1px solid rgba(0,0,0,.125);
+  border-radius: .25rem;
+  padding: 0;
 }
 
 div.attention, div.caution, div.danger, div.error, div.warning {
-  /* stolen from Boostrap 3 (.panel .panel-danger) */
-  border-color: #EBCCD1;
+  /* stolen from Boostrap 3 (.border-danger) */
+  border-color: #dc3545!important;
+}
+
+div.admonition p, div.hint p,
+div.important p, div.note p,
+div.tip p, div.sidebar p,
+div.attention p, div.caution p,
+div.danger p, div.error p,
+div.warning p, div.system-message p {
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
 
 div.admonition p.admonition-title, div.hint p.admonition-title,
@@ -22,27 +41,21 @@ div.tip p.admonition-title, div.sidebar p.sidebar-title,
 div.attention p.admonition-title, div.caution p.admonition-title,
 div.danger p.admonition-title, div.error p.admonition-title,
 div.warning p.admonition-title, div.system-message p.system-message-title {
-/* stolen from Boostrap 3 (.panel .panel-default .panel-heading) */
-  font-size: 16px;
-  color: #333;
-  background-color: #F5F5F5;
-  padding: 10px 15px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0);
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
-  color: #333;
-  background-color: #F5F5F5;
-  border-color: #DDD;
-  margin: 0 -15px 15px -15px;
+/* stolen from Boostrap 4 (.card .card-header) */
+  font-weight: 400;
+  font-size: 1.25rem;
+  padding: .75rem 1.25rem;
+  margin-bottom: 1rem;
+  background-color: rgba(0,0,0,.03);
+  border-bottom: 1px solid rgba(0,0,0,.125);
 }
 
 div.attention p.admonition-title, div.caution p.admonition-title,
 div.danger p.admonition-title, div.error p.admonition-title,
 div.warning p.admonition-title, div.system-message p.system-message-title {
-  /* stolen from Boostrap 3 (.panel .panel-danger) */
-  color: #A94442;
-  background-color: #F2DEDE;
-  border-color: #EBCCD1;
+  /* stolen from Boostrap 4 (.card .card-header .bg-danger) */
+  background-color: #dc3545;
+  color: white;
 }
 
 div.sidebar {
