@@ -1741,13 +1741,11 @@ Nikola supports several third party comment systems:
 * `IntenseDebate <http://www.intensedebate.com/>`_
 * `LiveFyre <http://www.livefyre.com/>`_
 * `Moot <http://moot.it>`_
-* `Google+ <http://plus.google.com>`_
 * `Facebook <http://facebook.com/>`_
 * `isso <http://posativ.org/isso/>`_
 
 By default it will use DISQUS, but you can change by setting ``COMMENT_SYSTEM``
-to one of "disqus", "intensedebate", "livefyre", "moot", "googleplus",
-"facebook" or "isso"
+to one of "disqus", "intensedebate", "livefyre", "moot", "facebook" or "isso"
 
 .. sidebar:: ``COMMENT_SYSTEM_ID``
 
@@ -1758,7 +1756,6 @@ to one of "disqus", "intensedebate", "livefyre", "moot", "googleplus",
    * In IntenseDebate it's the **IntenseDebate site acct**
    * In LiveFyre it's the **siteId**
    * In Moot it's your **username**
-   * For Google Plus, ``COMMENT_SYSTEM_ID`` need not be set. WARNING: this will not work correctly in the test server, needs to be deployed to a real server/URL.
    * For Facebook, you need to `create an app
      <https://developers.facebook.com/apps>`_ (turn off sandbox mode!)
      and get an **App ID**
