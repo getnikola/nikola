@@ -95,12 +95,11 @@ config_changed = utils.config_changed
 
 __all__ = ('Nikola',)
 
-# We store legal values for some setting here.  For internal use.
+# We store legal values for some settings here.  For internal use.
 LEGAL_VALUES = {
     'COMMENT_SYSTEM': [
         'disqus',
         'facebook',
-        'googleplus',
         'intensedebate',
         'isso',
         'livefyre',

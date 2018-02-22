@@ -63,6 +63,7 @@ Bugfixes
 Removed features
 ----------------
 
+* Removed ``googleplus`` comments (no longer supported) (Issue #635)
 * Removed the slides directive for docutils, it will now be a separate plugin.
 * Dropped Python 2 and Python 3.3 support (oldest supported version is 3.4)
 * Removed ``nikola install_theme`` — use ``nikola theme`` instead
