@@ -451,6 +451,7 @@ class Nikola(object):
             'AUTHORLIST_MINIMUM_POSTS': 1,
             'BLOG_AUTHOR': 'Default Author',
             'BLOG_TITLE': 'Default Title',
+            'BLOG_EMAIL': '',
             'BLOG_DESCRIPTION': 'Default Description',
             'BODY_END': "",
             'CACHE_FOLDER': 'cache',
@@ -1117,6 +1118,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['date_format'] = self.config.get('DATE_FORMAT')
         self._GLOBAL_CONTEXT['blog_author'] = self.config.get('BLOG_AUTHOR')
         self._GLOBAL_CONTEXT['blog_title'] = self.config.get('BLOG_TITLE')
+        self._GLOBAL_CONTEXT['blog_email'] = self.config.get('BLOG_EMAIL')
         self._GLOBAL_CONTEXT['show_blog_title'] = self.config.get('SHOW_BLOG_TITLE')
         self._GLOBAL_CONTEXT['logo_url'] = self.config.get('LOGO_URL')
         self._GLOBAL_CONTEXT['blog_description'] = self.config.get('BLOG_DESCRIPTION')

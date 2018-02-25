@@ -26,6 +26,8 @@ Features
 * Use ``PRETTY_URLS`` by default on all sites (Issue #1838)
 * Feed link generation is completely refactored (Issue #2844)
 * Let path handlers return absolute URLs (Issue #2876)
+* Add ``BLOG_EMAIL`` to global context to make it available for 
+  templates (Issue #2968)
 
 Bugfixes
 --------
