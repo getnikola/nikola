@@ -451,7 +451,7 @@ class Nikola(object):
             'AUTHORLIST_MINIMUM_POSTS': 1,
             'BLOG_AUTHOR': 'Default Author',
             'BLOG_TITLE': 'Default Title',
-            'BLOG_EMAIL': 'Default EMail',
+            'BLOG_EMAIL': '',
             'BLOG_DESCRIPTION': 'Default Description',
             'BODY_END': "",
             'CACHE_FOLDER': 'cache',
