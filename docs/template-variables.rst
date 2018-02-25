@@ -41,6 +41,7 @@ Name                                Type                                Descript
 ``abs_link``                        function                            ``Nikola.abs_link`` function
 ``author_pages_generated``          bool                                False
 ``blog_author``                     TranslatableSetting<str>            ``BLOG_AUTHOR`` setting
+``blog_email``                      TranslatableSetting<str>            ``BLOG_EMAIL`` setting
 ``blog_description``                TranslatableSetting<str>            ``BLOG_DESCRIPTION`` setting
 ``blog_title``                      TranslatableSetting<str>            ``BLOG_TITLE`` setting
 ``blog_url``                        str                                 ``SITE_URL`` setting

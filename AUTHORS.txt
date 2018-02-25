@@ -71,6 +71,7 @@
 * `Martin Wimpress <https://github.com/wimpr1m>`_
 * `Martín Gaitán <https://github.com/mgaitan>`_
 * `Matias Novoa <https://github.com/mattgaviota>`_
+* `Michael Brakemeier <https://github.com/michaelb42>`_
 * `Michael Joseph <https://github.com/michaeljoseph>`_
 * `Michael McNeil Forbes <https://github.com/mforbes>`_
 * `Michal Petrucha <https://github.com/koniiiik>`_
