@@ -657,7 +657,6 @@ class Nikola(object):
 
         self.TRANSLATABLE_SETTINGS = ('BLOG_AUTHOR',
                                       'BLOG_TITLE',
-                                      'BLOG_EMAIL',
                                       'BLOG_DESCRIPTION',
                                       'LICENSE',
                                       'CONTENT_FOOTER',
@@ -693,7 +692,6 @@ class Nikola(object):
 
         self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
                                              'blog_title',
-                                             'blog_email',
                                              'blog_description',
                                              'license',
                                              'content_footer',
