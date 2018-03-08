@@ -55,7 +55,7 @@ import webbrowser
 import pkg_resources
 
 from nikola.plugin_categories import Command
-from nikola.utils import dns_sd, req_missing, get_logger, get_theme_path
+from nikola.utils import dns_sd, req_missing, get_theme_path
 LRJS_PATH = os.path.join(os.path.dirname(__file__), 'livereload.js')
 
 if sys.platform == 'win32':
@@ -66,7 +66,6 @@ class CommandAuto(Command):
     """Automatic rebuilds for Nikola."""
 
     name = "auto"
-    logger = None
     has_server = True
     doc_purpose = "builds and serves a site; automatically detects site changes, rebuilds, and optionally refreshes a browser"
     dns_sd = None
@@ -116,7 +115,6 @@ class CommandAuto(Command):
 
     def _execute(self, options, args):
         """Start the watcher."""
-        self.logger = get_logger('auto')
         self.sockets = []
         self.rebuild_queue = asyncio.Queue()
         self.last_rebuild = datetime.datetime.now()

@@ -38,11 +38,6 @@ class ScaleImage(Task, ImageProcessor):
 
     name = "scale_images"
 
-    def set_site(self, site):
-        """Set Nikola site."""
-        self.logger = utils.get_logger('scale_images')
-        return super(ScaleImage, self).set_site(site)
-
     def process_tree(self, src, dst):
         """Process all images in a src tree and put the (possibly) rescaled images in the dst folder."""
         thumb_fmt = self.kw['image_thumbnail_format']

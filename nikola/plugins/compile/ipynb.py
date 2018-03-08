@@ -42,7 +42,7 @@ except ImportError:
 
 from nikola import shortcodes as sc
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs, req_missing, get_logger, LocaleBorg
+from nikola.utils import makedirs, req_missing, LocaleBorg
 
 
 class CompileIPynb(PageCompiler):
@@ -53,11 +53,6 @@ class CompileIPynb(PageCompiler):
     demote_headers = True
     default_kernel = 'python3'
     supports_metadata = True
-
-    def set_site(self, site):
-        """Set Nikola site."""
-        self.logger = get_logger('compile_ipynb')
-        super(CompileIPynb, self).set_site(site)
 
     def _compile_string(self, nb_json):
         """Export notebooks as HTML strings."""
