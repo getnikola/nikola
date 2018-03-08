@@ -45,7 +45,6 @@ from nikola.metadata_extractors import MetaCondition
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import (
     unicode_str,
-    get_logger,
     makedirs,
     write_metadata,
     LocaleBorg,
