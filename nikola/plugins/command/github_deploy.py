@@ -79,7 +79,6 @@ class CommandGitHubDeploy(Command):
 
     def _execute(self, options, args):
         """Run the deployment."""
-
         # Check if ghp-import is installed
         check_ghp_import_installed()
 

@@ -156,7 +156,6 @@ class CommandCheck(Command):
 
     def _execute(self, options, args):
         """Check the generated site."""
-
         if not options['links'] and not options['files'] and not options['clean']:
             print(self.help())
             return False
