@@ -26,14 +26,15 @@
 
 """Nikola plugin categories."""
 
-import sys
-import os
 import io
+import os
+import sys
 
-from yapsy.IPlugin import IPlugin
+import logbook
 from doit.cmd_base import Command as DoitCommand
+from yapsy.IPlugin import IPlugin
 
-from .utils import LOGGER, first_line, req_missing
+from .utils import LOGGER, first_line, get_logger, req_missing
 
 try:
     import typing  # NOQA
@@ -63,10 +64,15 @@ __all__ = (
 class BasePlugin(IPlugin):
     """Base plugin class."""
 
+    logger = None
+
     def set_site(self, site):
         """Set site, which is a Nikola instance."""
         self.site = site
         self.inject_templates()
+        self.logger = get_logger(self.name)
+        if not site.debug:
+            self.logger.level = logbook.base.WARNING
 
     def inject_templates(self):
         """Inject 'templates/<engine>' (if exists) very early in the theme chain."""
