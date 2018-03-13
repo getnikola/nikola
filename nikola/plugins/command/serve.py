@@ -46,7 +46,7 @@ except ImportError:
 
 
 from nikola.plugin_categories import Command
-from nikola.utils import dns_sd, get_logger
+from nikola.utils import dns_sd
 
 
 class IPv6Server(HTTPServer):
@@ -61,7 +61,6 @@ class CommandServe(Command):
     name = "serve"
     doc_usage = "[options]"
     doc_purpose = "start the test webserver"
-    logger = None
     dns_sd = None
 
     cmd_options = (
@@ -120,7 +119,6 @@ class CommandServe(Command):
 
     def _execute(self, options, args):
         """Start test server."""
-        self.logger = get_logger('serve')
         out_dir = self.site.config['OUTPUT_FOLDER']
         if not os.path.isdir(out_dir):
             self.logger.error("Missing '{0}' folder?".format(out_dir))

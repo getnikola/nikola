@@ -37,7 +37,7 @@ import time
 from blinker import signal
 
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger, clean_before_deployment
+from nikola.utils import clean_before_deployment
 
 
 class CommandDeploy(Command):
@@ -48,11 +48,9 @@ class CommandDeploy(Command):
     doc_usage = "[preset [preset...]]"
     doc_purpose = "deploy the site"
     doc_description = "Deploy the site by executing deploy commands from the presets listed on the command line.  If no presets are specified, `default` is executed."
-    logger = None
 
     def _execute(self, command, args):
         """Execute the deploy command."""
-        self.logger = get_logger('deploy')
         # Get last successful deploy date
         timestamp_path = os.path.join(self.site.config['CACHE_FOLDER'], 'lastdeploy')
 

@@ -62,11 +62,10 @@ class Galleries(Task, ImageProcessor):
 
     def set_site(self, site):
         """Set Nikola site."""
+        super(Galleries, self).set_site(site)
         site.register_path_handler('gallery', self.gallery_path)
         site.register_path_handler('gallery_global', self.gallery_global_path)
         site.register_path_handler('gallery_rss', self.gallery_rss_path)
-
-        self.logger = utils.get_logger('render_galleries')
 
         self.kw = {
             'thumbnail_size': site.config['THUMBNAIL_SIZE'],
@@ -103,8 +102,6 @@ class Galleries(Task, ImageProcessor):
         self.find_galleries()
         # Create self.gallery_links
         self.create_galleries_paths()
-
-        return super(Galleries, self).set_site(site)
 
     def _find_gallery_path(self, name):
         # The system using self.proper_gallery_links and self.improper_gallery_links

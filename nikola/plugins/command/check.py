@@ -43,7 +43,6 @@ import lxml.html
 import requests
 
 from nikola.plugin_categories import Command
-from nikola.utils import get_logger
 
 
 def _call_nikola_list(site, cache=None):
@@ -103,7 +102,6 @@ class CommandCheck(Command):
     """Check the generated site."""
 
     name = "check"
-    logger = None
 
     doc_usage = "[-v] (-l [--find-sources] [-r] | -f [--clean-files])"
     doc_purpose = "check links and files in the generated site"
@@ -158,8 +156,6 @@ class CommandCheck(Command):
 
     def _execute(self, options, args):
         """Check the generated site."""
-        self.logger = get_logger('check')
-
         if not options['links'] and not options['files'] and not options['clean']:
             print(self.help())
             return False

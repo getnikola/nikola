@@ -45,7 +45,6 @@ from nikola.metadata_extractors import MetaCondition
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import (
     unicode_str,
-    get_logger,
     makedirs,
     write_metadata,
     LocaleBorg,
@@ -184,10 +183,6 @@ class CompileRest(PageCompiler):
         for plugin_info in self.get_compiler_extensions():
             self.config_dependencies.append(plugin_info.name)
             plugin_info.plugin_object.short_help = plugin_info.description
-
-        self.logger = get_logger('compile_rest')
-        if not site.debug:
-            self.logger.level = logbook.base.WARNING
 
 
 def get_observer(settings):
