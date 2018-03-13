@@ -234,6 +234,7 @@ class Build(DoitRun):
 class Clean(DoitClean):
     """Clean site, including the cache directory."""
 
+    # The unseemly *a is because this API changed between doit 0.30.1 and 0.31
     def clean_tasks(self, tasks, dryrun, *a):
         """Clean tasks."""
         if not dryrun and config:
