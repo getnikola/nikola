@@ -1748,12 +1748,13 @@ Nikola supports several third party comment systems:
 * `DISQUS <http://disqus.com>`_
 * `IntenseDebate <http://www.intensedebate.com/>`_
 * `LiveFyre <http://www.livefyre.com/>`_
-* `Moot <http://moot.it>`_
+* `Muut (Formerly moot) <http://muut.com>`_
 * `Facebook <http://facebook.com/>`_
 * `isso <http://posativ.org/isso/>`_
+* `Commento <https://github.com/adtac/commento>`_
 
 By default it will use DISQUS, but you can change by setting ``COMMENT_SYSTEM``
-to one of "disqus", "intensedebate", "livefyre", "moot", "facebook" or "isso"
+to one of "disqus", "intensedebate", "livefyre", "moot", "facebook", "isso" or "commento"
 
 .. sidebar:: ``COMMENT_SYSTEM_ID``
 
@@ -1763,13 +1764,15 @@ to one of "disqus", "intensedebate", "livefyre", "moot", "facebook" or "isso"
    * For DISQUS it's called the **shortname**
    * In IntenseDebate it's the **IntenseDebate site acct**
    * In LiveFyre it's the **siteId**
-   * In Moot it's your **username**
+   * In Muut it's your **username**
    * For Facebook, you need to `create an app
      <https://developers.facebook.com/apps>`_ (turn off sandbox mode!)
      and get an **App ID**
    * For isso, it is the URL of isso (must be world-accessible, encoded with
      Punycode (if using Internationalized Domain Names) and **have a trailing slash**,
      default ``http://localhost:8080/``)
+   * For commento it's the URL of the commento instance as required by the ``serverUrl`` 
+     parameter in commento's documentation.
 
 To use comments in a visible site, you should register with the service and
 then set the ``COMMENT_SYSTEM_ID`` option.
