@@ -182,14 +182,14 @@ class Post(object):
             # Fill default_metadata with stuff from the other languages
             for lang in sorted(self.translated_to):
                 default_metadata.update(self.meta[lang])
-
         # Compose paths
         if self.folder_base is not None:
             # Use translatable destination folders
             self.folders = {}
             for lang in self.config['TRANSLATIONS'].keys():
-                self.folders[lang] = os.path.normpath(os.path.join(
-                    self.folder_base(lang), self.folder_relative))
+                if os.path.isabs(self.folder_base(lang)):  # Issue 2982
+                    self.folder_base[lang] = os.path.relpath(self.folder_base(lang), '/')
+                self.folders[lang] = os.path.normpath(os.path.join(self.folder_base(lang), self.folder_relative))
         else:
             # Old behavior (non-translatable destination path, normalized by scanner)
             self.folders = {lang: self.folder_relative for lang in self.config['TRANSLATIONS'].keys()}
