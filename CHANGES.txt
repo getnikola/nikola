@@ -32,6 +32,7 @@ Features
 Bugfixes
 --------
 
+* Handle '/' and other absolute paths better in POSTS / PAGES
 * Support KaTeX for reST display math (Issue #2888)
 * Use npm for asset management instead of bower, which was deprecated
   (Issue #2790)
