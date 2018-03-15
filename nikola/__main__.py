@@ -26,12 +26,14 @@
 
 """The main function of Nikola."""
 
+import importlib.machinery
 import os
 import shutil
 import sys
 import traceback
 from collections import defaultdict
 
+import yaml
 from blinker import signal
 from doit.cmd_auto import Auto as DoitAuto
 from doit.cmd_base import TaskLoader
@@ -57,7 +59,6 @@ except ImportError:
     pass  # This is only so raw_input/input does nicer things if it's available
 
 
-import importlib.machinery
 
 config = {}
 
@@ -128,6 +129,7 @@ def main(args=None):
             config = conf.__dict__.pop('yaml_config')
         config.update(conf.__dict__)
     except Exception:
+        # Try loading gustom config path
         if os.path.exists(conf_filename):
             msg = traceback.format_exc(0)
             LOGGER.error('"{0}" cannot be parsed.\n{1}'.format(conf_filename, msg))
@@ -135,7 +137,15 @@ def main(args=None):
         elif needs_config_file and conf_filename_changed:
             LOGGER.error('Cannot find configuration file "{0}".'.format(conf_filename))
             return 1
-        config = {}
+        else:  # Try loading conf.yaml only
+            try:
+                with open('conf.yaml') as inf:
+                    config = yaml.load(inf) or {'foo': 'bar'}
+                    conf_filename = 'conf.yaml'
+            except Exception:
+                LOGGER.error('Error parsing conf.yaml')
+                config = {}
+                raise
 
     if conf_filename_changed:
         LOGGER.info("Using config file '{0}'".format(conf_filename))
