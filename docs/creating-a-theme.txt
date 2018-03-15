@@ -1,3 +1,4 @@
+.. title: Creating a Theme
 .. slug: creating-a-theme
 .. date: 2015-05-28 18:46:48 UTC
 .. tags:
