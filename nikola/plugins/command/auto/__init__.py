@@ -38,12 +38,11 @@ try:
     import aiohttp
     from aiohttp import web
     from aiohttp.web_urldispatcher import StaticResource
-    from yarl import unquote
     from aiohttp.web_exceptions import HTTPNotFound, HTTPForbidden
     from aiohttp.web_response import Response
     from aiohttp.web_fileresponse import FileResponse
 except ImportError:
-    aiohttp = web = unquote = None
+    aiohttp = web = None
     StaticResource = HTTPNotFound = HTTPForbidden = Response = FileResponse = object
 
 try:
@@ -409,7 +408,7 @@ class IndexHtmlStaticResource(StaticResource):
     @asyncio.coroutine
     def _handle(self, request):
         """Handle incoming requests (pass to handle_file)."""
-        filename = unquote(request.match_info['filename'])
+        filename = request.match_info['filename']
         ret = yield from self.handle_file(request, filename)
         return ret
 
