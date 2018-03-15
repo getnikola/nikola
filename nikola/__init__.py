@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2017 Roberto Alsina and others.
+# Copyright © 2012-2018 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -31,6 +31,7 @@ import sys
 
 __version__ = '8.0.0.dev0'
 DEBUG = bool(os.getenv('NIKOLA_DEBUG'))
+SHOW_TRACEBACKS = bool(os.getenv('NIKOLA_SHOW_TRACEBACKS'))
 
 if sys.version_info[0] == 2:
     raise Exception("Nikola does not support Python 2.")

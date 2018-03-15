@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2017 Roberto Alsina and others.
+# Copyright © 2012-2018 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -273,7 +273,7 @@ class CommandNewPost(Command):
                     content_format = compiler
             if not content_format:
                 LOGGER.error("Unknown {0} extension {1}, maybe you need to install a plugin or enable an existing one?".format(content_type, extension))
-            return
+                return
 
         elif not content_format and import_file:
             # content_format not specified. If import_file was given, use
@@ -284,7 +284,7 @@ class CommandNewPost(Command):
                     content_format = compiler
             if not content_format:
                 LOGGER.error("Unknown {0} extension {1}, maybe you need to install a plugin or enable an existing one?".format(content_type, extension))
-            return
+                return
 
         elif not content_format:  # Issue #400
             content_format = get_default_compiler(
@@ -349,7 +349,8 @@ class CommandNewPost(Command):
                     author = author.decode('utf-8')
 
         # Calculate the date to use for the content
-        schedule = options['schedule'] or self.site.config['SCHEDULE_ALL']
+        # SCHEDULE_ALL is post-only (Issue #2921)
+        schedule = options['schedule'] or (self.site.config['SCHEDULE_ALL'] and is_post)
         rule = self.site.config['SCHEDULE_RULE']
         self.site.scan_posts()
         timeline = self.site.timeline
@@ -434,7 +435,7 @@ class CommandNewPost(Command):
 
         if not onefile:  # write metadata file
             with io.open(meta_path, "w+", encoding="utf8") as fd:
-                fd.write(utils.write_metadata(data))
+                fd.write(utils.write_metadata(data, comment_wrap=False, site=self.site))
             LOGGER.info("Your {0}'s metadata is at: {1}".format(content_type, meta_path))
             event['meta_path'] = meta_path
         LOGGER.info("Your {0}'s text is at: {1}".format(content_type, txt_path))
@@ -449,7 +450,7 @@ class CommandNewPost(Command):
             if editor:
                 subprocess.call(to_run)
             else:
-                LOGGER.error('$EDITOR not set, cannot edit the post.  Please do it manually.')
+                LOGGER.error('The $EDITOR environment variable is not set, cannot edit the post with \'-e\'.  Please edit the post manually.')
 
     def filter_post_pages(self, compiler, is_post):
         """Return the correct entry from post_pages.

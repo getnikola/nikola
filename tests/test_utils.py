@@ -3,15 +3,23 @@ import unittest
 import mock
 import os
 import lxml.html
+from nikola import metadata_extractors
 from nikola.post import get_meta
 from nikola.utils import (
     demote_headers, TranslatableSetting, get_crumbs, TemplateHookRegistry,
-    get_asset_path, get_theme_chain, get_translation_candidate)
+    get_asset_path, get_theme_chain, get_translation_candidate, write_metadata)
 from nikola.plugins.task.sitemap import get_base_path as sitemap_get_base_path
 
 
 class dummy(object):
     default_lang = 'en'
+    metadata_extractors_by = metadata_extractors.default_metadata_extractors_by()
+    config = {'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}',
+              'TRANSLATIONS': {'en': './'},
+              'DEFAULT_LANG': 'en'}
+
+    def __init__(self):
+        metadata_extractors.load_defaults(self, self.metadata_extractors_by)
 
 
 class GetMetaTest(unittest.TestCase):
@@ -21,7 +29,7 @@ class GetMetaTest(unittest.TestCase):
                         ".. date: 2012/09/15 19:52:05\n"\
                         ".. tags:\n"\
                         ".. link:\n"\
-                        ".. description:\n"\
+                        ".. description:\n\n"\
                         "Post content\n"
 
         opener_mock = mock.mock_open(read_data=file_metadata)
@@ -31,7 +39,7 @@ class GetMetaTest(unittest.TestCase):
         post.metadata_path = 'file_with_metadata.meta'
 
         with mock.patch('nikola.post.io.open', opener_mock, create=True):
-            meta, nsm = get_meta(post)
+            meta = get_meta(post, None)[0]
 
         self.assertEqual('Nikola needs more tests!', meta['title'])
         self.assertEqual('write-tests-now', meta['slug'])
@@ -39,7 +47,6 @@ class GetMetaTest(unittest.TestCase):
         self.assertFalse('tags' in meta)
         self.assertFalse('link' in meta)
         self.assertFalse('description' in meta)
-        self.assertTrue(nsm)
 
     def test_get_title_from_fname(self):
         file_metadata = ".. slug: write-tests-now\n"\
@@ -55,7 +62,7 @@ class GetMetaTest(unittest.TestCase):
         post.metadata_path = 'file_with_metadata.meta'
 
         with mock.patch('nikola.post.io.open', opener_mock, create=True):
-            meta, nsm = get_meta(post, 'file_with_metadata')
+            meta = get_meta(post, None)[0]
 
         self.assertEqual('file_with_metadata', meta['title'])
         self.assertEqual('write-tests-now', meta['slug'])
@@ -63,7 +70,6 @@ class GetMetaTest(unittest.TestCase):
         self.assertFalse('tags' in meta)
         self.assertFalse('link' in meta)
         self.assertFalse('description' in meta)
-        self.assertTrue(nsm)
 
     def test_use_filename_as_slug_fallback(self):
         file_metadata = ".. title: Nikola needs more tests!\n"\
@@ -80,34 +86,34 @@ class GetMetaTest(unittest.TestCase):
         post.metadata_path = 'Slugify this.meta'
 
         with mock.patch('nikola.post.io.open', opener_mock, create=True):
-            meta, nsm = get_meta(post, 'Slugify this')
+            meta = get_meta(post, None)[0]
         self.assertEqual('Nikola needs more tests!', meta['title'])
         self.assertEqual('slugify-this', meta['slug'])
         self.assertEqual('2012/09/15 19:52:05', meta['date'])
         self.assertFalse('tags' in meta)
         self.assertFalse('link' in meta)
         self.assertFalse('description' in meta)
-        self.assertTrue(nsm)
 
     def test_extracting_metadata_from_filename(self):
         post = dummy()
-        post.source_path = '2013-01-23-the_slug-dubdubtitle.md'
-        post.metadata_path = '2013-01-23-the_slug-dubdubtitle.meta'
-        with mock.patch('nikola.post.io.open', create=True):
-            meta, _ = get_meta(
-                post,
-                '(?P<date>\d{4}-\d{2}-\d{2})-(?P<slug>.*)-(?P<title>.*)\.md')
+        post.source_path = '2013-01-23-the_slug-dub_dub_title.md'
+        post.metadata_path = '2013-01-23-the_slug-dub_dub_title.meta'
+        post.config['FILE_METADATA_REGEXP'] = r'(?P<date>\d{4}-\d{2}-\d{2})-(?P<slug>.*)-(?P<title>.*)\.md'
+        for unslugify, title in ((True, 'Dub dub title'), (False, 'dub_dub_title')):
+            post.config['FILE_METADATA_UNSLUGIFY_TITLES'] = unslugify
+            with mock.patch('nikola.post.io.open', create=True):
+                meta = get_meta(post, None)[0]
 
-        self.assertEqual('dubdubtitle', meta['title'])
-        self.assertEqual('the_slug', meta['slug'])
-        self.assertEqual('2013-01-23', meta['date'])
+            self.assertEqual(title, meta['title'])
+            self.assertEqual('the_slug', meta['slug'])
+            self.assertEqual('2013-01-23', meta['date'])
 
     def test_get_meta_slug_only_from_filename(self):
         post = dummy()
         post.source_path = 'some/path/the_slug.md'
         post.metadata_path = 'some/path/the_slug.meta'
         with mock.patch('nikola.post.io.open', create=True):
-            meta, _ = get_meta(post)
+            meta = get_meta(post, None)[0]
 
         self.assertEqual('the_slug', meta['slug'])
 
@@ -279,25 +285,11 @@ class TranslatableSettingsTest(unittest.TestCase):
         #          locale settings returned by LocaleBorg!  Use with care!
         S.lang = 'zz'
 
-        try:
-            u = unicode(S)
-        except NameError:  # Python 3
-            u = str(S)
-
+        u = str(S)
         cn = S()
 
         self.assertEqual(inp['zz'], u)
         self.assertEqual(inp['zz'], cn)
-
-
-def test_get_metadata_from_file():
-    # These were doctests and not running :-P
-    from nikola.post import _get_metadata_from_file
-    g = _get_metadata_from_file
-    assert list(g([]).values()) == []
-    assert str(g([".. title: FooBar"])["title"]) == 'FooBar'
-    assert 'title' not in g(["", "", ".. title: FooBar"])
-    assert 'title' in g(["", ".. title: FooBar"])
 
 
 def test_get_asset_path():
@@ -379,6 +371,100 @@ def test_sitemap_get_base_path():
         'http://some.site/some/sub-path') == '/some/sub-path/'
     assert sitemap_get_base_path(
         'http://some.site/some/sub-path/') == '/some/sub-path/'
+
+
+def test_write_metadata_with_formats():
+    data = {'slug': 'hello-world', 'title': 'Hello, world!', 'b': '2', 'a': '1'}
+    # Nikola: defaults first, then sorted alphabetically
+    # YAML: all sorted alphabetically
+    # TOML: insertion order (py3.6), random (py3.5 or older)
+    assert write_metadata(data, 'nikola') == """\
+.. title: Hello, world!
+.. slug: hello-world
+.. a: 1
+.. b: 2
+
+"""
+    assert write_metadata(data, 'yaml') == """\
+---
+a: '1'
+b: '2'
+slug: hello-world
+title: Hello, world!
+---
+"""
+    toml = write_metadata(data, 'toml')
+    assert toml.startswith('+++\n')
+    assert toml.endswith('+++\n')
+    assert 'slug = "hello-world"' in toml
+    assert 'title = "Hello, world!"' in toml
+    assert 'b = "2"' in toml
+    assert 'a = "1"' in toml
+
+
+def test_write_metadata_comment_wrap():
+    data = {'title': 'Hello, world!', 'slug': 'hello-world'}
+    assert write_metadata(data, 'nikola') == """\
+.. title: Hello, world!
+.. slug: hello-world
+
+"""
+    assert write_metadata(data, 'nikola', True) == """\
+<!--
+.. title: Hello, world!
+.. slug: hello-world
+-->
+
+"""
+    assert write_metadata(data, 'nikola', ('111', '222')) == """\
+111
+.. title: Hello, world!
+.. slug: hello-world
+222
+
+"""
+
+
+def test_write_metadata_compiler():
+    data = {'title': 'Hello, world!', 'slug': 'hello-world'}
+    assert write_metadata(data, 'rest_docinfo') == """\
+=============
+Hello, world!
+=============
+
+:slug: hello-world
+"""
+    assert write_metadata(data, 'markdown_meta') in ("""\
+title: Hello, world!
+slug: hello-world
+
+""", """slug: hello-world
+title: Hello, world!
+
+""")
+
+
+def test_write_metadata_pelican_detection():
+    rest_fake, md_fake, html_fake = dummy(), dummy(), dummy()
+    rest_fake.name = 'rest'
+    md_fake.name = 'markdown'
+    html_fake.name = 'html'
+    data = {'title': 'xx'}
+
+    assert write_metadata(data, 'pelican', compiler=rest_fake) == '==\nxx\n==\n\n'
+    assert write_metadata(data, 'pelican', compiler=md_fake) == 'title: xx\n\n'
+    assert write_metadata(data, 'pelican', compiler=html_fake) == '.. title: xx\n\n'
+    assert write_metadata(data, 'pelican', compiler=None) == '.. title: xx\n\n'
+
+
+def test_write_metadata_from_site_and_fallbacks():
+    site = dummy()
+    site.config = {'METADATA_FORMAT': 'yaml'}
+    data = {'title': 'xx'}
+    assert write_metadata(data, site=site) == '---\ntitle: xx\n---\n'
+    assert write_metadata(data) == '.. title: xx\n\n'
+    assert write_metadata(data, 'foo') == '.. title: xx\n\n'
+    assert write_metadata(data, 'filename_regex') == '.. title: xx\n\n'
 
 
 if __name__ == '__main__':

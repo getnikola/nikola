@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2014-2017 Pelle Nilsson and others.
+# Copyright © 2014-2018 Pelle Nilsson and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -38,11 +38,6 @@ class ScaleImage(Task, ImageProcessor):
 
     name = "scale_images"
 
-    def set_site(self, site):
-        """Set Nikola site."""
-        self.logger = utils.get_logger('scale_images')
-        return super(ScaleImage, self).set_site(site)
-
     def process_tree(self, src, dst):
         """Process all images in a src tree and put the (possibly) rescaled images in the dst folder."""
         thumb_fmt = self.kw['image_thumbnail_format']
@@ -71,8 +66,8 @@ class ScaleImage(Task, ImageProcessor):
 
     def process_image(self, src, dst, thumb):
         """Resize an image."""
-        self.resize_image(src, dst, self.kw['max_image_size'], True, preserve_exif_data=self.kw['preserve_exif_data'], exif_whitelist=self.kw['exif_whitelist'])
-        self.resize_image(src, thumb, self.kw['image_thumbnail_size'], True, preserve_exif_data=self.kw['preserve_exif_data'], exif_whitelist=self.kw['exif_whitelist'])
+        self.resize_image(src, dst, self.kw['max_image_size'], True, preserve_exif_data=self.kw['preserve_exif_data'], exif_whitelist=self.kw['exif_whitelist'], preserve_icc_profiles=self.kw['preserve_icc_profiles'])
+        self.resize_image(src, thumb, self.kw['image_thumbnail_size'], True, preserve_exif_data=self.kw['preserve_exif_data'], exif_whitelist=self.kw['exif_whitelist'], preserve_icc_profiles=self.kw['preserve_icc_profiles'])
 
     def gen_tasks(self):
         """Copy static files into the output folder."""
@@ -85,6 +80,7 @@ class ScaleImage(Task, ImageProcessor):
             'filters': self.site.config['FILTERS'],
             'preserve_exif_data': self.site.config['PRESERVE_EXIF_DATA'],
             'exif_whitelist': self.site.config['EXIF_WHITELIST'],
+            'preserve_icc_profiles': self.site.config['PRESERVE_ICC_PROFILES'],
         }
 
         self.image_ext_list = self.image_ext_list_builtin

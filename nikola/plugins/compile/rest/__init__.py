@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2017 Roberto Alsina and others.
+# Copyright © 2012-2018 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -28,6 +28,7 @@
 
 import io
 import os
+import logbook.base
 
 import docutils.core
 import docutils.nodes
@@ -35,15 +36,15 @@ import docutils.transforms
 import docutils.utils
 import docutils.io
 import docutils.readers.standalone
-import docutils.writers.html4css1
+import docutils.writers.html5_polyglot
 import docutils.parsers.rst.directives
 from docutils.parsers.rst import roles
 
 from nikola.nikola import LEGAL_VALUES
+from nikola.metadata_extractors import MetaCondition
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import (
     unicode_str,
-    get_logger,
     makedirs,
     write_metadata,
     LocaleBorg,
@@ -58,11 +59,11 @@ class CompileRest(PageCompiler):
     friendly_name = "reStructuredText"
     demote_headers = True
     logger = None
+    supports_metadata = True
+    metadata_conditions = [(MetaCondition.config_bool, "USE_REST_DOCINFO_METADATA")]
 
-    def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
+    def read_metadata(self, post, lang=None):
         """Read the metadata from a post, and return a metadata dict."""
-        if not self.site.config.get('USE_REST_DOCINFO_METADATA'):
-            return {}
         if lang is None:
             lang = LocaleBorg().current_lang
         source_path = post.translated_source_path(lang)
@@ -104,7 +105,7 @@ class CompileRest(PageCompiler):
         # 7 with default metadata, could be more or less depending on the post).
         add_ln = 0
         if not is_two_file:
-            m_data, data = self.split_metadata(data)
+            m_data, data = self.split_metadata(data, post, lang)
             add_ln = len(m_data.splitlines()) + 1
 
         default_template_path = os.path.join(os.path.dirname(__file__), 'template.txt')
@@ -114,7 +115,9 @@ class CompileRest(PageCompiler):
             'stylesheet_path': None,
             'link_stylesheet': True,
             'syntax_highlight': 'short',
-            'math_output': 'mathjax',
+            # This path is not used by Nikola, but we need something to silence
+            # warnings about it from reST.
+            'math_output': 'mathjax /assets/js/mathjax.js',
             'template': default_template_path,
             'language_code': LEGAL_VALUES['DOCUTILS_LOCALES'].get(LocaleBorg().current_lang, 'en')
         }
@@ -170,11 +173,7 @@ class CompileRest(PageCompiler):
             content += '\n'
         with io.open(path, "w+", encoding="utf8") as fd:
             if onefile:
-                _format = self.site.config.get('METADATA_FORMAT', 'nikola').lower()
-                if _format == 'pelican':
-                    _format = 'pelican_rest'
-                fd.write(write_metadata(metadata, _format))
-                fd.write('\n')
+                fd.write(write_metadata(metadata, comment_wrap=False, site=self.site, compiler=self))
             fd.write(content)
 
     def set_site(self, site):
@@ -185,10 +184,6 @@ class CompileRest(PageCompiler):
             self.config_dependencies.append(plugin_info.name)
             plugin_info.plugin_object.short_help = plugin_info.description
 
-        self.logger = get_logger('compile_rest')
-        if not site.debug:
-            self.logger.level = 4
-
 
 def get_observer(settings):
     """Return an observer for the docutils Reporter."""
@@ -197,19 +192,25 @@ def get_observer(settings):
 
         Error code mapping:
 
-        +------+---------+------+----------+
-        | dNUM |   dNAME | lNUM |    lNAME |    d = docutils, l = logbook
-        +------+---------+------+----------+
-        |    0 |   DEBUG |    1 |    DEBUG |
-        |    1 |    INFO |    2 |     INFO |
-        |    2 | WARNING |    4 |  WARNING |
-        |    3 |   ERROR |    5 |    ERROR |
-        |    4 |  SEVERE |    6 | CRITICAL |
-        +------+---------+------+----------+
+        +----------+----------+
+        | docutils |  logbook |
+        +----------+----------+
+        |    DEBUG |    DEBUG |
+        |     INFO |     INFO |
+        |  WARNING |  WARNING |
+        |    ERROR |    ERROR |
+        |   SEVERE | CRITICAL |
+        +----------+----------+
         """
-        errormap = {0: 1, 1: 2, 2: 4, 3: 5, 4: 6}
+        errormap = {
+            docutils.utils.Reporter.DEBUG_LEVEL: logbook.base.DEBUG,
+            docutils.utils.Reporter.INFO_LEVEL: logbook.base.INFO,
+            docutils.utils.Reporter.WARNING_LEVEL: logbook.base.WARNING,
+            docutils.utils.Reporter.ERROR_LEVEL: logbook.base.ERROR,
+            docutils.utils.Reporter.SEVERE_LEVEL: logbook.base.CRITICAL
+        }
         text = docutils.nodes.Element.astext(msg)
-        line = msg['line'] + settings['add_ln'] if 'line' in msg else 0
+        line = msg['line'] + settings['add_ln'] if 'line' in msg else ''
         out = '[{source}{colon}{line}] {text}'.format(
             source=settings['source'], colon=(':' if line else ''),
             line=line, text=text)
@@ -288,9 +289,9 @@ def add_node(node, visit_function=None, depart_function=None):
     """
     docutils.nodes._add_node_class_names([node.__name__])
     if visit_function:
-        setattr(docutils.writers.html4css1.HTMLTranslator, 'visit_' + node.__name__, visit_function)
+        setattr(docutils.writers.html5_polyglot.HTMLTranslator, 'visit_' + node.__name__, visit_function)
     if depart_function:
-        setattr(docutils.writers.html4css1.HTMLTranslator, 'depart_' + node.__name__, depart_function)
+        setattr(docutils.writers.html5_polyglot.HTMLTranslator, 'depart_' + node.__name__, depart_function)
 
 
 def rst2html(source, source_path=None, source_class=docutils.io.StringInput,

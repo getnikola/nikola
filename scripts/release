@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 # The Release Script
 # Based on Python Project Template by Chris Warrick
-# Copyright © 2013-2017, Chris Warrick.
+# Copyright © 2013-2018, Chris Warrick.
 # All rights reserved.
 
 # Permission is hereby granted, free of charge, to any
@@ -104,12 +104,12 @@ status 'Updating path handler documentation...'
 scripts/document_path_handlers.py > docs/path_handlers.txt
 status 'Updating Jinja2 templates...'
 scripts/jinjify.py
-status 'Updating Bower...'
-scripts/update-bower.sh
+status 'Updating npm assets...'
+scripts/update-npm-assets.sh
 status 'Updating symlinked list...'
 scripts/generate_symlinked_list.sh
 status 'Updating website (conf.py and docs)...'
-scripts/generate_conf.py > ../nikola-site/listings/conf.py
+python -m nikola default_config > ../nikola-site/listings/conf.py
 cp AUTHORS.txt CHANGES.txt ../nikola-site/stories
 cp docs/*.* ../nikola-site/stories
 sed 's/Nikola v[0-9\.A_Za-z-]\{1,\}/Nikola'" v$version/g" ../nikola-site/stories/conf.txt -i

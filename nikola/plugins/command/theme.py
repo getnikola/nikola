@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2017 Roberto Alsina, Chris Warrick and others.
+# Copyright © 2012-2018 Roberto Alsina, Chris Warrick and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -90,8 +90,8 @@ class CommandTheme(Command):
             'long': 'url',
             'type': str,
             'help': "URL for the theme repository (default: "
-                    "https://themes.getnikola.com/v7/themes.json)",
-            'default': 'https://themes.getnikola.com/v7/themes.json'
+                    "https://themes.getnikola.com/v8/themes.json)",
+            'default': 'https://themes.getnikola.com/v8/themes.json'
         },
         {
             'name': 'getpath',
@@ -196,7 +196,7 @@ class CommandTheme(Command):
             try:
                 utils.get_theme_path_real(parent_name, self.site.themes_dirs)
                 break
-            except:  # Not available
+            except Exception:  # Not available
                 self.do_install(parent_name, data)
                 name = parent_name
         if installstatus:

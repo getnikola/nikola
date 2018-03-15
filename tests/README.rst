@@ -24,6 +24,7 @@ Tests (in alphabetical order)
 * ``test_rst_compiler`` exercises the reStructuredText compiler plugin of
   Nikola.
 * ``test_scheduling`` performs tests on post scheduling rules.
+* ``test_task_scale_images`` performs basic tests on the scale_images task plugin.
 * ``test_utils`` test various Nikola utilities.
 
 Requirements to run the tests

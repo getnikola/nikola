@@ -47,7 +47,7 @@ def task_locale():
                     if lang not in languages:
                         try:
                             locale.setlocale(locale.LC_ALL, str(line))
-                        except:
+                        except Exception:
                             continue
                         languages.add(lang)
                         locales.append((lang, line))

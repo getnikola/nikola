@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2017 Roberto Alsina and others.
+# Copyright © 2012-2018 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -128,10 +128,10 @@ class Listings(Task):
                 with open(in_name, 'r') as fd:
                     try:
                         lexer = get_lexer_for_filename(in_name)
-                    except:
+                    except Exception:
                         try:
                             lexer = guess_lexer(fd.read())
-                        except:
+                        except Exception:
                             lexer = TextLexer()
                         fd.seek(0)
                     code = highlight(fd.read(), lexer, utils.NikolaPygmentsHTML(in_name))

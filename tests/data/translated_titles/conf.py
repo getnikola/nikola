@@ -420,7 +420,7 @@ CONTENT_FOOTER_FORMATS = {
 
 # To use comments, you can choose between different third party comment
 # systems, one of "disqus", "livefyre", "intensedebate", "moot",
-#                 "googleplus", "facebook" or "isso"
+#                 "facebook" or "isso"
 COMMENT_SYSTEM = "disqus"
 # And you also need to add your COMMENT_SYSTEM_ID which
 # depends on what comment system you use. The default is

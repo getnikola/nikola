@@ -122,17 +122,6 @@ class MathTestCase(ReSTExtensionTestCase):
                                 text="\(e^{ix} = \cos x + i\sin x\)")
 
 
-class SlidesTestCase(ReSTExtensionTestCase):
-    """ Slides test case """
-
-    sample = '.. slides:: IMG.jpg\n'
-
-    def test_slides(self):
-        """ Test the slides js generation and img tag creation """
-        self.basic_test()
-        self.assertHTMLContains("img", attributes={"src": "IMG.jpg"})
-
-
 class SoundCloudTestCase(ReSTExtensionTestCase):
     """ SoundCloud test case """
 

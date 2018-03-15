@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2017 Roberto Alsina and others.
+# Copyright © 2012-2018 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -377,7 +377,7 @@ class CommandInit(Command):
             while not answered:
                 try:
                     lz = get_localzone()
-                except:
+                except Exception:
                     lz = None
                 answer = ask('Time zone', lz if lz else "UTC")
                 tz = dateutil.tz.gettz(answer)

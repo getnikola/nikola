@@ -40,12 +40,15 @@ div.text_cell_render {
 
 .rendered_html pre, .rendered_html code {
   background-color: #DDDDDD;
+  margin: 1em 0em;
+  font-size: 14px;
+}
+
+.rendered_html pre {
   padding-left: 0.5em;
   padding-right: 0.5em;
   padding-top: 0.05em;
   padding-bottom: 0.05em;
-  margin: 1em 0em;
-  font-size: 14px;
 }
 
 .page-content > .content p {

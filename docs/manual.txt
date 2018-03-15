@@ -24,9 +24,9 @@ After you have Nikola `installed <https://getnikola.com/getting-started.html>`_:
 Create an empty site (with a setup wizard):
     ``nikola init mysite``
 
-You can create a site with demo files in it with ``nikola init --demo mysite``
+    You can create a site with demo files in it with ``nikola init --demo mysite``
 
-The rest of these commands have to be executed inside the new ``mysite`` folder.
+    The rest of these commands have to be executed inside the new ``mysite`` folder.
 
 Create a post:
     ``nikola new_post``
@@ -80,7 +80,7 @@ Nikola can't do:
 * An Issue tracker
 * Anything with forms, really (except for `comments`_!)
 
-Keep in mind that "static" doesn't mean **boring**. You can have animations, slides
+Keep in mind that "static" doesn't mean **boring**. You can have animations
 or whatever fancy CSS3/HTML5 thingie you like. It only means all that HTML is
 generated already before being uploaded. On the other hand, Nikola sites will
 tend to be content-heavy. What Nikola is good at is at putting what you write
@@ -136,7 +136,7 @@ Obsolescence
     You may say those are long term issues, or that they won't matter for years. Well,
     I believe things should work forever, or as close to it as we can make them.
     Nikola's static output and its input files will work as long as you can install
-    Python 3.3 or newer under Linux, Windows, or OS X and can find a server
+    Python 3.4 or newer under Linux, Windows, or OS X and can find a server
     that sends files over HTTP. That's probably 10 or 15 years at least.
 
     Also, static sites are easily handled by the Internet Archive.
@@ -189,7 +189,6 @@ Nikola provides the following features:
 * Easy-to-create image galleries
 * Image thumbnail generation
 * Support for displaying source code listings
-* Image slideshows
 * Custom search
 * Asset (CSS/JS) bundling
 * gzip compression (for sending via your web server)
@@ -213,7 +212,11 @@ Creating a Blog Post
    etc. Sure, you can just figure out the URLs for each thing and use that. Or you can use
    Nikola's special link URLs. Those are done using the syntax ``link://kind/name`` and
    a full list of the included ones is `here <link://slug/path-handlers>`__ (BTW, I linked
-   to that using ``link://slug/path-handlers``)
+   to that using ``link://slug/path-handlers``).
+
+   Note that magic links with spaces won’t work with some input formats (eg.
+   reST), so you should use slugs there (eg. ``link://tag/some-tag`` instead of
+   ``link://tag/Some Tag``)
 
 
 To create a new post, the easiest way is to run ``nikola new_post``. You  will
@@ -353,14 +356,6 @@ hyphenate
 nocomments
     Set to "True" to disable comments. Example:
 
-password
-    The post will be encrypted and invisible until the reader enters the password.
-    Also, the post's source code will not be available.
-
-    WARNING: **DO NOT** use for real confidential data.  The algorithm used (RC4) is insecure.  The implementation may also be easily brute-forced.  Please consider using something else if you need *real* encryption!
-
-    More information: `Issue #1547 <https://github.com/getnikola/nikola/issues/1547>`_
-
 pretty_url
     Set to "False" to disable pretty URL for this page. Example:
 
@@ -376,6 +371,8 @@ previewimage
     The image can be of any size and dimension (services will crop and adapt)
     but should less than 1 MB and be larger than 300x300 (ideally 600x600).
 
+    Note that the default themes do not display this image.
+
 section
     Section for the post (instead of inferring from output path; requires
     ``POSTS_SECTION_FROM_META`` setting)
@@ -388,6 +385,12 @@ template
     .. code:: restructuredtext
 
        .. template: story.tmpl
+
+updated
+    The last time this post was updated, defaults to now. It is not displayed
+    by default in most themes, including the defaults — you can use
+    ``post.formatted_updated(date_format)`` (and perhaps check ``if post.updated
+    != post.date``) in your post template to show it.
 
 To add these metadata fields to all new posts by default, you can set the
 variable ``ADDITIONAL_METADATA`` in your configuration.  For example, you can
@@ -409,7 +412,7 @@ Current Nikola versions experimentally supports other metadata formats that make
 other static site generators. The currently supported metadata formats are:
 
 * reST-style comments (``.. name: value`` — default format)
-* Two-file format (reST-style comments or 7-line)
+* Two-file format (reST-style, YAML, TOML)
 * Jupyter Notebook metadata
 * YAML, between ``---`` (Jekyll, Hugo)
 * TOML, between ``+++`` (Hugo)
@@ -422,7 +425,7 @@ You can add arbitrary meta fields in any format.
 When you create new posts, by default the metadata will be created as reST style comments.
 If you prefer a different format, you can set the ``METADATA_FORMAT`` to one of these values:
 
-* ``"Nikola"``: reST comments wrapped in a comment if needed (default)
+* ``"Nikola"``: reST comments, wrapped in a HTML comment if needed (default)
 * ``"YAML"``: YAML wrapped in "---"
 * ``"TOML"``: TOML wrapped in "+++"
 * ``"Pelican"``: Native markdown metadata or reST docinfo fields. Nikola style for other formats.
@@ -449,15 +452,7 @@ Meta information can also be specified in separate ``.meta`` files. Those suppor
     .. slug: how-to-make-money
     .. date: 2012-09-15 19:52:05 UTC
 
-There is also an older version of the format. It uses the 7 base fields, in order, without names and custom meta:
-
-.. code:: text
-
-    How to make money
-    how-to-make-money
-    2012-09-15 19:52:05 UTC
-
-The support for this older format is kept only for backwards compatibility and will be removed in a future version. You can use `a converter plugin <https://plugins.getnikola.com/v7/upgrade_metadata/>`_ if you’re still using that format.
+You can also use YAML or TOML metadata inside those (with the appropriate markers).
 
 Jupyter Notebook metadata
 `````````````````````````
@@ -607,7 +602,7 @@ default set to:
 
     TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"
 
-.. note:: Considered languages
+.. admonition:: Considered languages
 
     Nikola will only look for translation of input files for languages
     specified in the TRANSLATIONS variable.
@@ -678,7 +673,7 @@ options. The exact mechanism is explained above the config options in the
         ("pages/*.html", "pages", "story.tmpl"),
     )
 
-.. note:: POSTS and PAGES are not flat!
+.. admonition:: POSTS and PAGES are not flat!
 
    Even if the syntax may suggest you can't, you can create any directory structure you want
    inside ``posts/`` or ``pages/`` and it will be reflected in the output. For example,
@@ -1164,7 +1159,7 @@ Example of a paired shortcode (note that we don't have a highlight shortcode yet
 
     {{% raw %}}{{% highlight python %}} A bunch of code here {{% /highlight %}}{{% /raw %}}
 
-.. note:: Shortcodes and reStructuredText
+.. admonition:: Shortcodes and reStructuredText
 
     In reStructuredText shortcodes may fail because docutils turns URL into links and everything breaks.
     For some shortcodes there are alternative docutils directives (example, you can use the media
@@ -1182,25 +1177,6 @@ Example of a paired shortcode (note that we don't have a highlight shortcode yet
 Built-in shortcodes
 ~~~~~~~~~~~~~~~~~~~
 
-doc
-    Will link to a document in the page, see `Doc role for details
-    <#doc>`__. Example:
-
-    .. code:: restructuredtext
-
-       {{% raw %}}Take a look at {{% doc %}}my other post <creating-a-theme>{{% /doc %}} about theme creating.{{% /raw %}}
-
-post-list
-    Will show a list of posts, see the `Post List directive for details <#post-list>`__
-
-media
-    Display media embedded from a URL, for example, this will embed a youtube video:
-
-    .. code:: text
-
-        {{% raw %}}{{% media url="https://www.youtube.com/watch?v=Nck6BZga7TQ" %}}{{% /raw %}}
-
-
 chart
     Create charts via PyGal. This is similar to the `chart directive <#chart>`__ except the syntax is adapted to
     shortcodes. This is an example:
@@ -1214,6 +1190,14 @@ chart
         'IE',      [85.8, 84.6, 84.7, 74.5, 66, 58.6]
         'Others',  [14.2, 15.4, 15.3, 8.9, 9, 10.4]
         {{% /chart %}}{{% /raw %}}
+
+doc
+    Will link to a document in the page, see `Doc role for details
+    <#doc>`__. Example:
+
+    .. code:: restructuredtext
+
+       {{% raw %}}Take a look at {{% doc %}}my other post <creating-a-theme>{{% /doc %}} about theme creating.{{% /raw %}}
 
 emoji
     Insert an emoji. For example:
@@ -1229,11 +1213,47 @@ gist
 
     {{% raw %}}{{% gist 2395294 %}} {{% /raw %}}
 
+listing
+    Used to show a code listing. Example::
+
+        {{% raw %}}{{% listing hello.py python linenumbers=True %}}{{% /raw %}}
+
+    It takes a file name or path, an optional language to highlight, and a linenumbers option to enable/disable line numbers in the output.
+
+media
+    Display media embedded from a URL, for example, this will embed a youtube video:
+
+    .. code:: text
+
+        {{% raw %}}{{% media url="https://www.youtube.com/watch?v=Nck6BZga7TQ" %}}{{% /raw %}}
+
+post-list
+    Will show a list of posts, see the `Post List directive for details <#post-list>`__
 
 raw
     Passes the content along, mostly used so I can write this damn section and you can see the shortcodes instead
     of them being munged into shortcode **output**. I can't show an example because Inception.
 
+thumbnail
+    Display image thumbnails, with optional captions. Examples:
+
+    .. code:: text
+
+        {{% raw %}}{{% thumbnail "/images/foo.png" %}}{{% /thumbnail %}}{{% /raw %}}
+        {{% raw %}}{{% thumbnail "/images/foo.png" alt="Foo Image" align="center" %}}{{% /thumbnail %}}{{% /raw %}}
+        {{% raw %}}{{% thumbnail "/images/foo.png" imgclass="image-grayscale" figclass="figure-shadow" %}}<p>Image caption</p>{{% /thumbnail %}}{{% /raw %}}
+        {{% raw %}}{{% thumbnail "/images/foo.png" alt="Foo Image" title="Insert title-text joke here" align="right" %}}<p class="caption">Foo Image (right-aligned) caption</p>{{% /thumbnail %}}{{% /raw %}}
+
+    The following keyword arguments are supported:
+
+    * alt (alt text for image)
+    * align (image alignment, left/center/right)
+    * linktitle (title text for the link, shown by e.g. baguetteBox)
+    * title (title text for image)
+    * imgclass (class for image)
+    * figclass (class for figure, used only if you provide a caption)
+
+    Looks similar to the reST thumbnail directive. Caption should be a HTML fragment.
 
 Community shortcodes
 ~~~~~~~~~~~~~~~~~~~~
@@ -1255,6 +1275,8 @@ via the ``data`` field in the metadata using ``post.data(key)``.
 If you use the shortcode as paired, then the contents between the paired tags
 will be available in the ``data`` variable. If you want to access the Nikola
 object, it will be available as ``site``. Use with care :-)
+
+.. note:: Template-based shortcodes use the same template engine as your site’s theme.
 
 See :doc:`extending` for detailed information.
 
@@ -1727,13 +1749,11 @@ Nikola supports several third party comment systems:
 * `IntenseDebate <http://www.intensedebate.com/>`_
 * `LiveFyre <http://www.livefyre.com/>`_
 * `Moot <http://moot.it>`_
-* `Google+ <http://plus.google.com>`_
 * `Facebook <http://facebook.com/>`_
 * `isso <http://posativ.org/isso/>`_
 
 By default it will use DISQUS, but you can change by setting ``COMMENT_SYSTEM``
-to one of "disqus", "intensedebate", "livefyre", "moot", "googleplus",
-"facebook" or "isso"
+to one of "disqus", "intensedebate", "livefyre", "moot", "facebook" or "isso"
 
 .. sidebar:: ``COMMENT_SYSTEM_ID``
 
@@ -1744,7 +1764,6 @@ to one of "disqus", "intensedebate", "livefyre", "moot", "googleplus",
    * In IntenseDebate it's the **IntenseDebate site acct**
    * In LiveFyre it's the **siteId**
    * In Moot it's your **username**
-   * For Google Plus, ``COMMENT_SYSTEM_ID`` need not be set. WARNING: this will not work correctly in the test server, needs to be deployed to a real server/URL.
    * For Facebook, you need to `create an app
      <https://developers.facebook.com/apps>`_ (turn off sandbox mode!)
      and get an **App ID**
@@ -1803,14 +1822,14 @@ To create an image gallery, all you have to do is add a folder inside ``gallerie
 and put images there. Nikola will take care of creating thumbnails, index page, etc.
 
 If you click on images on a gallery, or on images with links in post, you will
-see a bigger image, thanks to the excellent `colorbox
-<http://www.jacklmoore.com/colorbox>`_.  If don’t want this behavior, add an
-``.islink`` class to your image or link. (The behavior is caused by
-``<a class="image-reference">`` if you need to use it outside of galleries and reST
+see a bigger image, thanks to the excellent `baguetteBox
+<https://feimosi.github.io/baguetteBox.js/>`_.  If don’t want this behavior, add an
+``.islink`` class to your link. (The behavior is caused by ``<a
+class="image-reference">`` if you need to use it outside of galleries and reST
 thumbnails.)
 
 The gallery pages are generated using the ``gallery.tmpl`` template, and you can
-customize it there (you could switch to another lightbox instead of colorbox, change
+customize it there (you could switch to another lightbox instead of baguetteBox, change
 its settings, change the layout, etc.).
 
 Images to be used in normal posts can be placed in the ``images`` folder. These
@@ -1971,6 +1990,22 @@ Then, for the Interop IFD, we keep everything, and for the 0th IFD we only keep 
 listed there.
 
 There is a huge number of EXIF tags, described in `the standard <http://www.cipa.jp/std/documents/e/DC-008-2012_E.pdf>`__
+
+
+Handling ICC Profiles
+---------------------
+
+Your images may contain `ICC profiles. <https://en.wikipedia.org/wiki/ICC_profile>`__  These describe the color space in which the images were created or captured.
+
+Most desktop web browsers can use embedded ICC profiles to display images accurately.  As of early 2018 few mobile browsers consider ICC profiles when displaying images.  A notable exception is Safari on iOS.
+
+By default Nikola strips out ICC profiles when preparing images for your posts and galleries.  If you want Nikola to preserve ICC profiles, add this in your ``conf.py``:
+
+.. code:: python
+
+  PRESERVE_ICC_PROFILES = True
+
+You may wish to do this if, for example, your site contains JPEG images that use a wide-gamut profile such as "Display P3".
 
 
 Post Processing Filters
@@ -2471,7 +2506,7 @@ To include an image placed in the ``images`` folder (or other folders defined in
 
 The small thumbnail will be placed in the page, and it will be linked to the bigger
 version of the image when clicked, using
-`colorbox <http://www.jacklmoore.com/colorbox>`_ by default. All options supported by
+`baguetteBox <https://feimosi.github.io/baguetteBox.js/>`_ by default. All options supported by
 the reST `image <http://docutils.sourceforge.net/docs/ref/rst/directives.html#image>`_
 directive are supported (except ``target``). If a body element is provided, the
 thumbnail will mimic the behavior of the
@@ -2490,21 +2525,6 @@ least this basic HTML:
 .. code:: html
 
    <a class="image-reference" href="images/tesla.jpg"><img src="images/tesla.thumbnail.jpg"></a>
-
-Slideshows
-~~~~~~~~~~
-
-To create an image slideshow, you can use the ``slides`` directive. For example:
-
-.. code:: restructuredtext
-
-    .. slides::
-
-       /galleries/demo/tesla_conducts_lg.jpg
-       /galleries/demo/tesla_lightning2_lg.jpg
-       /galleries/demo/tesla4_lg.jpg
-       /galleries/demo/tesla_lightning1_lg.jpg
-       /galleries/demo/tesla_tower1_lg.jpg
 
 Chart
 ~~~~~
@@ -2888,7 +2908,8 @@ stderr.  Thus, you must use the different call.  (Alternatively, you could run
 with ``nikola build -v 2``, which disables the redirections.)
 
 To show more logging messages, as well as full tracebacks, you need to set an
-environment variable: ``NIKOLA_DEBUG=1``
+environment variable: ``NIKOLA_DEBUG=1``. If you want to only see tracebacks,
+set ``NIKOLA_SHOW_TRACEBACKS=1``.
 
 Shell Tab Completion
 ~~~~~~~~~~~~~~~~~~~~

@@ -5,20 +5,6 @@ import sys
 import shutil
 from setuptools import setup, find_packages
 from setuptools.command.install import install
-from setuptools.command.test import test as TestCommand
-
-
-class PyTest(TestCommand):
-    def finalize_options(self):
-        TestCommand.finalize_options(self)
-        self.test_args = []
-        self.test_suite = True
-
-    def run_tests(self):
-        # import here, cause outside the eggs aren't loaded
-        import pytest
-        errno = pytest.main(self.test_args)
-        sys.exit(errno)
 
 
 with open('requirements.txt', 'r') as fh:
@@ -37,8 +23,8 @@ with open('requirements-tests.txt', 'r') as fh:
 # ########## platform specific stuff #############
 if sys.version_info[0] == 2:
     raise Exception('Python 2 is not supported')
-elif sys.version_info[0] == 3 and sys.version_info[1] < 3:
-    raise Exception('Python 3 version < 3.3 is not supported')
+elif sys.version_info[0] == 3 and sys.version_info[1] < 4:
+    raise Exception('Python 3 version < 3.4 is not supported')
 
 ##################################################
 
@@ -98,7 +84,7 @@ def remove_old_files(self):
     tree = os.path.join(self.install_lib, 'nikola')
     try:
         shutil.rmtree(tree, ignore_errors=True)
-    except:
+    except Exception:
         pass
 
 
@@ -132,7 +118,6 @@ setup(name='Nikola',
                    'Operating System :: POSIX',
                    'Operating System :: Unix',
                    'Programming Language :: Python',
-                   'Programming Language :: Python :: 3.3',
                    'Programming Language :: Python :: 3.4',
                    'Programming Language :: Python :: 3.5',
                    'Programming Language :: Python :: 3.6',
@@ -143,7 +128,8 @@ setup(name='Nikola',
       extras_require=extras,
       tests_require=['pytest'],
       include_package_data=True,
-      cmdclass={'install': nikola_install, 'test': PyTest},
+      python_requires='>=3.4',
+      cmdclass={'install': nikola_install},
       data_files=[
               ('share/doc/nikola', [
                'docs/manual.txt',

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2017 Roberto Alsina and others.
+# Copyright © 2012-2018 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -60,7 +60,7 @@ from blinker import signal
 
 from .post import Post  # NOQA
 from .state import Persistor
-from . import DEBUG, filters, utils, hierarchy_utils, shortcodes
+from . import DEBUG, SHOW_TRACEBACKS, filters, utils, hierarchy_utils, shortcodes
 from .plugin_categories import (
     Command,
     LateTask,
@@ -68,6 +68,7 @@ from .plugin_categories import (
     CompilerExtension,
     MarkdownExtension,
     RestExtension,
+    MetadataExtractor,
     ShortcodePlugin,
     Task,
     TaskMultiplier,
@@ -77,6 +78,8 @@ from .plugin_categories import (
     PostScanner,
     Taxonomy,
 )
+from . import metadata_extractors
+from .metadata_extractors import default_metadata_extractors_by
 
 if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
@@ -92,12 +95,11 @@ config_changed = utils.config_changed
 
 __all__ = ('Nikola',)
 
-# We store legal values for some setting here.  For internal use.
+# We store legal values for some settings here.  For internal use.
 LEGAL_VALUES = {
     'COMMENT_SYSTEM': [
         'disqus',
         'facebook',
-        'googleplus',
         'intensedebate',
         'isso',
         'livefyre',
@@ -413,6 +415,7 @@ class Nikola(object):
         self._MESSAGES = None
         self.filters = {}
         self.debug = DEBUG
+        self.show_tracebacks = SHOW_TRACEBACKS
         self.colorful = config.pop('__colorful__', False)
         self.invariant = config.pop('__invariant__', False)
         self.quiet = config.pop('__quiet__', False)
@@ -422,6 +425,7 @@ class Nikola(object):
         self.configured = bool(config)
         self.injected_deps = defaultdict(list)
         self.shortcode_registry = {}
+        self.metadata_extractors_by = default_metadata_extractors_by()
 
         self.rst_transforms = []
         self.template_hooks = {
@@ -447,6 +451,7 @@ class Nikola(object):
             'AUTHORLIST_MINIMUM_POSTS': 1,
             'BLOG_AUTHOR': 'Default Author',
             'BLOG_TITLE': 'Default Title',
+            'BLOG_EMAIL': '',
             'BLOG_DESCRIPTION': 'Default Description',
             'BODY_END': "",
             'CACHE_FOLDER': 'cache',
@@ -502,6 +507,7 @@ class Nikola(object):
             'FAVICONS': (),
             'FEED_LENGTH': 10,
             'FILE_METADATA_REGEXP': None,
+            'FILE_METADATA_UNSLUGIFY_TITLES': True,
             'ADDITIONAL_METADATA': {},
             'FILES_FOLDERS': {'files': ''},
             'FILTERS': {},
@@ -557,6 +563,7 @@ class Nikola(object):
             'POSTS_SECTION_TRANSLATIONS': [],
             'POSTS_SECTION_TRANSLATIONS_ADD_DEFAULTS': False,
             'PRESERVE_EXIF_DATA': False,
+            'PRESERVE_ICC_PROFILES': False,
             'PAGES': (("pages/*.txt", "pages", "page.tmpl"),),
             'PANDOC_OPTIONS': [],
             'PRETTY_URLS': True,
@@ -599,7 +606,6 @@ class Nikola(object):
             'THEME_COLOR': '#5670d4',  # light "corporate blue"
             'THUMBNAIL_SIZE': 180,
             'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}',
-            'UNSLUGIFY_TITLES': False,  # WARNING: conf.py.in overrides this with True for backwards compatibility
             'URL_TYPE': 'rel_path',
             'USE_BASE_TAG': False,
             'USE_BUNDLES': True,
@@ -727,6 +733,10 @@ class Nikola(object):
         if self.config['PRESERVE_EXIF_DATA'] and not self.config['EXIF_WHITELIST']:
             utils.LOGGER.warn('You are setting PRESERVE_EXIF_DATA and not EXIF_WHITELIST so EXIF data is not really kept.')
 
+        if 'UNSLUGIFY_TITLES' in self.config:
+            utils.LOGGER.warn('The UNSLUGIFY_TITLES setting was renamed to FILE_METADATA_UNSLUGIFY_TITLES.')
+            self.config['FILE_METADATA_UNSLUGIFY_TITLES'] = self.config['UNSLUGIFY_TITLES']
+
         # Handle CONTENT_FOOTER and RSS_COPYRIGHT* properly.
         # We provide the arguments to format in CONTENT_FOOTER_FORMATS and RSS_COPYRIGHT_FORMATS.
         self.config['CONTENT_FOOTER'].langformat(self.config['CONTENT_FOOTER_FORMATS'])
@@ -818,6 +828,13 @@ class Nikola(object):
             utils.LOGGER.error("Punycode of {}: {}".format(_bnl, _bnl.encode('idna')))
             sys.exit(1)
 
+        # Load built-in metadata extractors
+        metadata_extractors.load_defaults(self, self.metadata_extractors_by)
+        if metadata_extractors.DEFAULT_EXTRACTOR is None:
+            utils.LOGGER.error("Could not find default meta extractor ({})".format(
+                metadata_extractors.DEFAULT_EXTRACTOR_NAME))
+            sys.exit(1)
+
         # The pelican metadata format requires a markdown extension
         if config.get('METADATA_FORMAT', 'nikola').lower() == 'pelican':
             if 'markdown.extensions.meta' not in config.get('MARKDOWN_EXTENSIONS', []) \
@@ -901,6 +918,7 @@ class Nikola(object):
             "CompilerExtension": CompilerExtension,
             "MarkdownExtension": MarkdownExtension,
             "RestExtension": RestExtension,
+            "MetadataExtractor": MetadataExtractor,
             "ShortcodePlugin": ShortcodePlugin,
             "SignalHandler": SignalHandler,
             "ConfigPlugin": ConfigPlugin,
@@ -997,6 +1015,10 @@ class Nikola(object):
         # we should enable the Jupyter CSS (leaving that up to the theme itself).
         if 'needs_ipython_css' not in self._GLOBAL_CONTEXT:
             self._GLOBAL_CONTEXT['needs_ipython_css'] = 'ipynb' in self.config['COMPILERS']
+
+        # Activate metadata extractors and prepare them for use
+        for p in self._activate_plugins_of_category("MetadataExtractor"):
+            metadata_extractors.classify_extractor(p.plugin_object, self.metadata_extractors_by)
 
         self._activate_plugins_of_category("Taxonomy")
         self.taxonomy_plugins = {}
@@ -1096,6 +1118,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['date_format'] = self.config.get('DATE_FORMAT')
         self._GLOBAL_CONTEXT['blog_author'] = self.config.get('BLOG_AUTHOR')
         self._GLOBAL_CONTEXT['blog_title'] = self.config.get('BLOG_TITLE')
+        self._GLOBAL_CONTEXT['blog_email'] = self.config.get('BLOG_EMAIL')
         self._GLOBAL_CONTEXT['show_blog_title'] = self.config.get('SHOW_BLOG_TITLE')
         self._GLOBAL_CONTEXT['logo_url'] = self.config.get('LOGO_URL')
         self._GLOBAL_CONTEXT['blog_description'] = self.config.get('BLOG_DESCRIPTION')
@@ -1401,11 +1424,12 @@ class Nikola(object):
                 if dst_url.query:
                     # If query strings are used in magic link, they will be
                     # passed to the path handler as keyword arguments (strings)
-                    link_kwargs = {k: v[-1] for k, v in parse_qs(dst_url.query).items()}
+                    link_kwargs = {unquote(k): unquote(v[-1]) for k, v in parse_qs(dst_url.query).items()}
                 else:
                     link_kwargs = {}
 
-                dst = self.link(dst_url.netloc, dst_url.path.lstrip('/'), lang, **link_kwargs)
+                # unquote from issue #2934
+                dst = self.link(dst_url.netloc, unquote(dst_url.path.lstrip('/')), lang, **link_kwargs)
             # Assuming the site is served over one of these, and
             # since those are the only URLs we want to rewrite...
             else:
@@ -1715,37 +1739,46 @@ class Nikola(object):
         * slug (name is the slug of a post or page)
         * filename (name is the source filename of a post/page, in DEFAULT_LANG, relative to conf.py)
 
-        The returned value is always a path relative to output, like
-        "categories/whatever.html"
+        The returned value is either a path relative to output, like "categories/whatever.html", or
+        an absolute URL ("https://getnikola.com/"), if path handler returns a string.
 
         If is_link is True, the path is absolute and uses "/" as separator
         (ex: "/archive/index.html").
         If is_link is False, the path is relative to output and uses the
         platform's separator.
         (ex: "archive\index.html")
+        If the registered path handler returns a string instead of path component list - it's
+        considered to be an absolute URL and returned as is.
+
         """
         if lang is None:
             lang = utils.LocaleBorg().current_lang
 
         try:
             path = self.path_handlers[kind](name, lang, **kwargs)
-            if path is None:
-                path = "#"
-            else:
-                path = [os.path.normpath(p) for p in path if p != '.']  # Fix Issue #1028
-            if is_link:
-                link = '/' + ('/'.join(path))
-                index_len = len(self.config['INDEX_FILE'])
-                if self.config['STRIP_INDEXES'] and \
-                        link[-(1 + index_len):] == '/' + self.config['INDEX_FILE']:
-                    return link[:-index_len]
-                else:
-                    return link
-            else:
-                return os.path.join(*path)
         except KeyError:
             utils.LOGGER.warn("Unknown path request of kind: {0}".format(kind))
             return ""
+
+        # If path handler returns a string we consider it to be an absolute URL not requiring any
+        # further processing, i.e 'https://getnikola.com/'. See Issue #2876.
+        if isinstance(path, str):
+            return path
+
+        if path is None:
+            path = "#"
+        else:
+            path = [os.path.normpath(p) for p in path if p != '.']  # Fix Issue #1028
+        if is_link:
+            link = '/' + ('/'.join(path))
+            index_len = len(self.config['INDEX_FILE'])
+            if self.config['STRIP_INDEXES'] and \
+                    link[-(1 + index_len):] == '/' + self.config['INDEX_FILE']:
+                return link[:-index_len]
+            else:
+                return link
+        else:
+            return os.path.join(*path)
 
     def post_path(self, name, lang):
         """Link to the destination of an element in the POSTS/PAGES settings.
@@ -1786,7 +1819,7 @@ class Nikola(object):
         else:
             if len(results) > 1:
                 utils.LOGGER.warning('Ambiguous path request for slug: {0}'.format(name))
-            return [_f for _f in results[0].permalink(lang).split('/') if _f]
+            return [_f for _f in results[0].permalink(lang).split('/')]
 
     def filename_path(self, name, lang):
         """Link to post or page by source filename.

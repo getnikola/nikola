@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2017 Roberto Alsina and others.
+# Copyright © 2012-2018 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -156,7 +156,7 @@ def yui_compressor(infile, executable=None):
         try:
             subprocess.call('yuicompressor', stdout=open(os.devnull, 'w'), stderr=open(os.devnull, 'w'))
             yuicompressor = 'yuicompressor'
-        except:
+        except Exception:
             raise Exception("yui-compressor is not installed.")
             return False
 
@@ -345,9 +345,9 @@ def php_template_injection(data):
 
 @apply_to_text_file
 def cssminify(data):
-    """Minify CSS using http://cssminifier.com/."""
+    """Minify CSS using https://cssminifier.com/."""
     try:
-        url = 'http://cssminifier.com/raw'
+        url = 'https://cssminifier.com/raw'
         _data = {'input': data}
         response = requests.post(url, data=_data)
         if response.status_code != 200:
@@ -361,9 +361,9 @@ def cssminify(data):
 
 @apply_to_text_file
 def jsminify(data):
-    """Minify JS using http://javascript-minifier.com/."""
+    """Minify JS using https://javascript-minifier.com/."""
     try:
-        url = 'http://javascript-minifier.com/raw'
+        url = 'https://javascript-minifier.com/raw'
         _data = {'input': data}
         response = requests.post(url, data=_data)
         if response.status_code != 200:
@@ -394,7 +394,7 @@ def _normalize_html(data):
     """Pass HTML through LXML to clean it up, if possible."""
     try:
         data = lxml.html.tostring(lxml.html.fromstring(data), encoding='unicode')
-    except:
+    except Exception:
         pass
     return '<!DOCTYPE html>\n' + data
 
@@ -446,7 +446,7 @@ def add_header_permalinks(fname, xpath_list=None, file_blacklist=None):
             node.append(new_node)
 
     with io.open(fname, 'w', encoding='utf-8') as outf:
-        outf.write(lxml.html.tostring(doc, encoding="unicode"))
+        outf.write('<!DOCTYPE html>\n' + lxml.html.tostring(doc, encoding="unicode"))
 
 
 @_ConfigurableFilter(top_classes='DEDUPLICATE_IDS_TOP_CLASSES')
@@ -496,6 +496,6 @@ def deduplicate_ids(data, top_classes=None):
                     if hl.attrib['href'] == '#' + i:
                         hl.attrib['href'] = '#' + new_id
                         break
-        return lxml.html.tostring(doc, encoding='unicode')
+        return '<!DOCTYPE html>\n' + lxml.html.tostring(doc, encoding='unicode')
     else:
         return data

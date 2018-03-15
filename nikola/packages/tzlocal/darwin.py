@@ -24,7 +24,7 @@ def _get_localzone():
         assert tzname
         dateutil.tz.gettz(tzname)
         return tzname
-    except:
+    except Exception:
         return None
 
 

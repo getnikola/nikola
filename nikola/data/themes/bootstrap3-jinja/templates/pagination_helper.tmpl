@@ -16,7 +16,7 @@
     {% endif %}
   {% endif %}
   {% for i, link in enumerate(page_links) %}
-    {% if abs(i - current_page) <= surrounding or i == 0 or i == page_links|length - 1 %}
+    {% if (i - current_page)|abs <= surrounding or i == 0 or i == page_links|length - 1 %}
       <li {{ ' class="active"' if i == current_page else '' }}><a href="{{ link }}">{{ i + 1 }}{{ ' <span class="sr-only">(current)</span>' if i == current_page else '' }}</a></li>
     {% elif i == current_page - surrounding - 1 or i == current_page + surrounding + 1 %}
       <li class="disabled"><a href="#" aria-label="…"><span aria-hidden="true">…</span></a></li>

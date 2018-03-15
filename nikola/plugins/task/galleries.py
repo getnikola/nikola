@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2017 Roberto Alsina and others.
+# Copyright © 2012-2018 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -62,11 +62,10 @@ class Galleries(Task, ImageProcessor):
 
     def set_site(self, site):
         """Set Nikola site."""
+        super(Galleries, self).set_site(site)
         site.register_path_handler('gallery', self.gallery_path)
         site.register_path_handler('gallery_global', self.gallery_global_path)
         site.register_path_handler('gallery_rss', self.gallery_rss_path)
-
-        self.logger = utils.get_logger('render_galleries')
 
         self.kw = {
             'thumbnail_size': site.config['THUMBNAIL_SIZE'],
@@ -86,6 +85,7 @@ class Galleries(Task, ImageProcessor):
             'generate_rss': site.config['GENERATE_RSS'],
             'preserve_exif_data': site.config['PRESERVE_EXIF_DATA'],
             'exif_whitelist': site.config['EXIF_WHITELIST'],
+            'preserve_icc_profiles': site.config['PRESERVE_ICC_PROFILES'],
         }
 
         # Verify that no folder in GALLERY_FOLDERS appears twice
@@ -102,8 +102,6 @@ class Galleries(Task, ImageProcessor):
         self.find_galleries()
         # Create self.gallery_links
         self.create_galleries_paths()
-
-        return super(Galleries, self).set_site(site)
 
     def _find_gallery_path(self, name):
         # The system using self.proper_gallery_links and self.improper_gallery_links
@@ -409,7 +407,9 @@ class Galleries(Task, ImageProcessor):
                 False,
                 self.site.MESSAGES,
                 'story.tmpl',
-                self.site.get_compiler(index_path)
+                self.site.get_compiler(index_path),
+                None,
+                self.site.metadata_extractors_by
             )
             # If this did not exist, galleries without a title in the
             # index.txt file would be errorneously named `index`
@@ -479,7 +479,7 @@ class Galleries(Task, ImageProcessor):
             'actions': [
                 (self.resize_image,
                     (img, thumb_path, self.kw['thumbnail_size'], True, self.kw['preserve_exif_data'],
-                     self.kw['exif_whitelist']))
+                     self.kw['exif_whitelist'], self.kw['preserve_icc_profiles']))
             ],
             'clean': True,
             'uptodate': [utils.config_changed({
@@ -495,7 +495,7 @@ class Galleries(Task, ImageProcessor):
             'actions': [
                 (self.resize_image,
                     (img, orig_dest_path, self.kw['max_image_size'], True, self.kw['preserve_exif_data'],
-                     self.kw['exif_whitelist']))
+                     self.kw['exif_whitelist'], self.kw['preserve_icc_profiles']))
             ],
             'clean': True,
             'uptodate': [utils.config_changed({

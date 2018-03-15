@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2017 Roberto Alsina and others.
+# Copyright © 2012-2018 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -82,13 +82,15 @@ class CommandBootswatchTheme(Command):
             LOGGER.error('The -s option is mandatory')
             return 1
         parent = options['parent']
-        version = ''
+        version = '3'
 
         # See if we need bootswatch for bootstrap v2 or v3
         themes = utils.get_theme_chain(parent, self.site.themes_dirs)
-        if not _check_for_theme('bootstrap3', themes) and not _check_for_theme('bootstrap3-jinja', themes):
+        if _check_for_theme('bootstrap', themes) or _check_for_theme('bootstrap-jinja', themes):
             version = '2'
-        elif not _check_for_theme('bootstrap', themes) and not _check_for_theme('bootstrap-jinja', themes):
+        elif _check_for_theme('bootstrap4', themes) or _check_for_theme('bootstrap4-jinja', themes):
+            version = '4'
+        elif not _check_for_theme('bootstrap3', themes) and not _check_for_theme('bootstrap3-jinja', themes):
             LOGGER.warn('"bootswatch_theme" only makes sense for themes that use bootstrap')
         elif _check_for_theme('bootstrap3-gradients', themes) or _check_for_theme('bootstrap3-gradients-jinja', themes):
             LOGGER.warn('"bootswatch_theme" doesn\'t work well with the bootstrap3-gradients family')

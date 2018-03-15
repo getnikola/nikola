@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2013-2017 Damián Avila, Chris Warrick and others.
+# Copyright © 2013-2018 Damián Avila, Chris Warrick and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -42,7 +42,7 @@ except ImportError:
 
 from nikola import shortcodes as sc
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs, req_missing, get_logger, LocaleBorg
+from nikola.utils import makedirs, req_missing, LocaleBorg
 
 
 class CompileIPynb(PageCompiler):
@@ -52,11 +52,7 @@ class CompileIPynb(PageCompiler):
     friendly_name = "Jupyter Notebook"
     demote_headers = True
     default_kernel = 'python3'
-
-    def set_site(self, site):
-        """Set Nikola site."""
-        self.logger = get_logger('compile_ipynb')
-        super(CompileIPynb, self).set_site(site)
+    supports_metadata = True
 
     def _compile_string(self, nb_json):
         """Export notebooks as HTML strings."""
@@ -97,10 +93,10 @@ class CompileIPynb(PageCompiler):
         else:
             post._depfile[dest] += shortcode_deps
 
-    def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
+    def read_metadata(self, post, lang=None):
         """Read metadata directly from ipynb file.
 
-        As ipynb file support arbitrary metadata as json, the metadata used by Nikola
+        As ipynb files support arbitrary metadata as json, the metadata used by Nikola
         will be assume to be in the 'nikola' subfield.
         """
         self._req_missing_ipynb()

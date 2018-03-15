@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2017 Roberto Alsina and others.
+# Copyright © 2012-2018 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -54,7 +54,7 @@ class MakoTemplates(TemplateSystem):
 
     def get_string_deps(self, text, filename=None):
         """Find dependencies for a template string."""
-        lex = lexer.Lexer(text=text, filename=filename)
+        lex = lexer.Lexer(text=text, filename=filename, input_encoding='utf-8')
         lex.parse()
 
         deps = []
@@ -93,6 +93,7 @@ class MakoTemplates(TemplateSystem):
         self.lookup = TemplateLookup(
             directories=self.directories,
             module_directory=self.cache_dir,
+            input_encoding='utf-8',
             output_encoding='utf-8')
 
     def set_site(self, site):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2017 Roberto Alsina and others.
+# Copyright © 2012-2018 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -84,8 +84,8 @@ class CommandPlugin(Command):
             'long': 'url',
             'type': str,
             'help': "URL for the plugin repository (default: "
-                    "https://plugins.getnikola.com/v7/plugins.json)",
-            'default': 'https://plugins.getnikola.com/v7/plugins.json'
+                    "https://plugins.getnikola.com/v8/plugins.json)",
+            'default': 'https://plugins.getnikola.com/v8/plugins.json'
         },
         {
             'name': 'user',
@@ -243,20 +243,8 @@ class CommandPlugin(Command):
             utils.extract_all(zip_file, self.output_dir)
             dest_path = os.path.join(self.output_dir, name)
         else:
-            try:
-                plugin_path = utils.get_plugin_path(name)
-            except:
-                LOGGER.error("Can't find plugin " + name)
-                return 1
-
-            utils.makedirs(self.output_dir)
-            dest_path = os.path.join(self.output_dir, name)
-            if os.path.exists(dest_path):
-                LOGGER.error("{0} is already installed".format(name))
-                return 1
-
-            LOGGER.info('Copying {0} into plugins'.format(plugin_path))
-            shutil.copytree(plugin_path, dest_path)
+            LOGGER.error("Can't find plugin " + name)
+            return 1
 
         reqpath = os.path.join(dest_path, 'requirements.txt')
         if os.path.exists(reqpath):

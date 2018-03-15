@@ -13,7 +13,16 @@
             </script>
         {% else %}
             <script>
-                renderMathInElement(document.body);
+                renderMathInElement(document.body,
+                    {
+                        delimiters: [
+                            {left: "$$", right: "$$", display: true},
+                            {left: "\\[", right: "\\]", display: true},
+                            {left: "\\begin{equation*}", right: "\\end{equation*}", display: true},
+                            {left: "\\(", right: "\\)", display: false}
+                        ]
+                    }
+                );
             </script>
         {% endif %}
     {% else %}

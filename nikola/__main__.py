@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2017 Roberto Alsina and others.
+# Copyright © 2012-2018 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -236,13 +236,14 @@ class Build(DoitRun):
 class Clean(DoitClean):
     """Clean site, including the cache directory."""
 
-    def clean_tasks(self, tasks, dryrun):
+    # The unseemly *a is because this API changed between doit 0.30.1 and 0.31
+    def clean_tasks(self, tasks, dryrun, *a):
         """Clean tasks."""
         if not dryrun and config:
             cache_folder = config.get('CACHE_FOLDER', 'cache')
             if os.path.exists(cache_folder):
                 shutil.rmtree(cache_folder)
-        return super(Clean, self).clean_tasks(tasks, dryrun)
+        return super(Clean, self).clean_tasks(tasks, dryrun, *a)
 
 
 # Nikola has its own "auto" commands that uses livereload.
@@ -282,7 +283,7 @@ class NikolaTaskLoader(TaskLoader):
             signal('initialized').send(self.nikola)
         except Exception:
             LOGGER.error('Error loading tasks. An unhandled exception occurred.')
-            if self.nikola.debug:
+            if self.nikola.debug or self.nikola.show_tracebacks:
                 raise
             _print_exception()
             sys.exit(3)
@@ -371,7 +372,7 @@ class DoitNikola(DoitMain):
             return super(DoitNikola, self).run(cmd_args)
         except Exception:
             LOGGER.error('An unhandled exception occurred.')
-            if self.nikola.debug:
+            if self.nikola.debug or self.nikola.show_tracebacks:
                 raise
             _print_exception()
             return 1
@@ -414,7 +415,7 @@ def _print_exception():
     """Print an exception in a friendlier, shorter style."""
     etype, evalue, _ = sys.exc_info()
     LOGGER.error(''.join(traceback.format_exception(etype, evalue, None, limit=0, chain=False)).strip())
-    LOGGER.notice("To see more details, run Nikola in debug mode (set environment variable NIKOLA_DEBUG=1)")
+    LOGGER.notice("To see more details, run Nikola in debug mode (set environment variable NIKOLA_DEBUG=1) or use NIKOLA_SHOW_TRACEBACKS=1")
 
 
 if __name__ == "__main__":

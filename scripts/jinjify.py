@@ -24,6 +24,7 @@ dumb_replacements = [
     ["fb: http://ogp.me/ns/fb# \\", "fb: http://ogp.me/ns/fb#"],
     ['dir="rtl" \\', 'dir="rtl"'],
     ['sorted(translations)', 'translations|sort'],
+    ['abs(i - current_page)', '(i - current_page)|abs'],
 ]
 
 dumber_replacements = [
@@ -41,7 +42,7 @@ def jinjify(in_theme, out_theme):
     out_templates_path = os.path.join(out_theme, "templates")
     try:
         os.makedirs(out_templates_path)
-    except:
+    except Exception:
         pass
     lookup = jinja2.Environment()
     lookup.filters['tojson'] = json.dumps

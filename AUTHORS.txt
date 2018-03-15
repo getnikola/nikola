@@ -71,10 +71,12 @@
 * `Martin Wimpress <https://github.com/wimpr1m>`_
 * `Martín Gaitán <https://github.com/mgaitan>`_
 * `Matias Novoa <https://github.com/mattgaviota>`_
+* `Michael Brakemeier <https://github.com/michaelb42>`_
 * `Michael Joseph <https://github.com/michaeljoseph>`_
 * `Michael McNeil Forbes <https://github.com/mforbes>`_
 * `Michal Petrucha <https://github.com/koniiiik>`_
 * `Miguel Ángel García <https://github.com/magmax>`_
+* `Mitch Chapman <https://github.com/mchapman87501>`_
 * `mrabbitt <https://github.com/mrabbitt>`_
 * `Neil MartinsenBurrell <https://github.com/neilmb>`_
 * `Niels Böhm <https://github.com/blubberdiblub>`_
@@ -114,6 +116,7 @@
 * `Tolu Sonaike <https://github.com/tolusonaike>`_
 * `Troy Toman <https://github.com/troytoman>`_
 * `Udo Spallek <https://github.com/udono>`_
+* `Will DeBerry <https://github.com/willdeberry>`_
 * `Yamila Moreno <https://github.com/yamila-moreno>`_
 * `yarko <https://github.com/yarko>`_
 * `Yasuhiko Shiga <https://github.com/quoth>`_

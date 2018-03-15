@@ -4,6 +4,7 @@ language: python
 cache:
 - apt
 - pip
+dist: trusty
 sudo: false
 addons:
   apt:
@@ -11,7 +12,6 @@ addons:
     - language-pack-en-base
     - language-pack-pl-base
 python:
-- '3.3'
 - '3.4'
 - '3.5'
 - '3.6'
@@ -22,7 +22,8 @@ matrix:
     env: NMODE=nikola OS=macOS
     python: '3.6'
     before_install:
-    - brew install python3
+    - brew update
+    - brew upgrade python
     - pip3 install virtualenv
     - python3 -m virtualenv nikola-tests-venv
     - source nikola-tests-venv/bin/activate
@@ -35,7 +36,6 @@ env:
   global:
     secure: GqUDW0j4Ay8pS9tS/g5JBYGtgBG0g0oD2g4X9JXgVchiFj3GIRL+dwiXpgx3LELy7nCWF3EzClFxxMdVqqxizQ/I8xqiA0XL/rf5z/y+9d9nmKOxV8SV73n0eCgsHWkbdSLJ6MKs6s0Trlz9jLu/P+Bhfu2ttqkOH8WttfEf3VE=
 install:
-- if [[ $NMODE == 'nikola' ]]; then scripts/getwheelhouse.sh $(scripts/getpyver.py short); fi
 - if [[ $NMODE == 'nikola' ]]; then pip install -r requirements-tests.txt; if [[ "$?" == '1' ]]; then cat /home/travis/.pip/pip.log; false; fi; fi
 - if [[ $NMODE == 'nikola' ]]; then pip install .; fi
 - if [[ $NMODE == 'flake8' ]]; then pip install flake8 pydocstyle; fi

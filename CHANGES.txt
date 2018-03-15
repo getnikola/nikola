@@ -4,12 +4,55 @@ New in master
 Features
 --------
 
+* New PRESERVE_ICC_PROFILES option to control whether ICC profiles are
+  preserved when copying images.
+* Use baguetteJS in bootstrap theme (part of Issue #2777)
+* New default-config command to generate a clean configuration.
+* New ``thumbnail`` shortcode similar to the reStructuredText
+  ``thumbnail`` directive (via Issue #2809)
+* Rewrite ``nikola auto`` with asyncio and aiohttp (Issue #2850)
+* New ``listings`` shortcode similar to the reStructuredText listings
+  directive (Issue #2868)
+* Switch to reStructuredText’s new HTML 5 renderer (Issue #2874)
+* Deprecate ``html4css1.css`` in favor of ``rst_base.css`` (Issue
+  #2874)
+* Add support for ``MetadataExtractor`` plugins that allow custom,
+  extensible metadata extraction from posts (Issue #2830)
+* Support YAML and TOML metadata in 2-file posts (via Issue #2830)
+* Renamed ``UNSLUGIFY_TITLES`` → ``FILE_METADATA_UNSLUGIFY_TITLES``
+  (Issue #2840)
+* Add ``NIKOLA_SHOW_TRACEBACKS`` environment variable that shows
+  full tracebacks instead of one-line summaries
 * Use ``PRETTY_URLS`` by default on all sites (Issue #1838)
 * Feed link generation is completely refactored (Issue #2844)
+* Let path handlers return absolute URLs (Issue #2876)
+* Add ``BLOG_EMAIL`` to global context to make it available for
+  templates (Issue #2968)
 
 Bugfixes
 --------
 
+* Support KaTeX for reST display math (Issue #2888)
+* Use npm for asset management instead of bower, which was deprecated
+  (Issue #2790)
+* Properly handle ``SHOW_INDEX_PAGE_NAVIGATION`` with Jinja templates
+  (Issue #2960)
+* Prevent crashes due to Windows-specific code in ``auto`` running on
+  all platforms (Issue #2940)
+* Don’t run hyphenate on ``<pre>`` blocks (Issue #2939)
+* Make errors in reST display in logs again
+* Unquote paths given to ``link://`` magic URLs (Issue #2934)
+* Specify UTF-8 input encoding for Mako as default (Issue #2930)
+* Don't trigger rebuilds in auto mode for files it's safe to ignore
+  (Issue #2906)
+* Fix padding for Jupyter code blocks (Issue #2927)
+* Apply ``SCHEDULE_ALL`` to posts only (Issue #2921)
+* Restore version number to Bootswatch URLs (Issue #2916)
+* Do not strip trailing slash in ``slug`` magic links
+* Ignore empty tags in HTML metadata reader (Issue #2890)
+* Do not remove doctype if ``add_header_permalinks`` or
+  ``deduplicate_ids`` are used
+* Handle empty slug metadata (Issue #2887)
 * Fix crash when compiling empty ``.html`` posts (Issue #2851)
 * Make failures to get source commit hash non-fatal in
   ``github_deploy`` (Issue #2847)
@@ -18,17 +61,21 @@ Bugfixes
 * Use Jupyter name more consistently in docs
 * Support CODE_COLOR_SCHEME in Jupyter notebooks (Issue #2093)
 * Language was not passed to title and link generation for page indexes
+* Addressed issue with snaps not allowing certain functions to work properly.
 
 Removed features
 ----------------
 
-* Drop Python 2 support
-* Remove ``nikola install_theme`` — use ``nikola theme`` instead
-* Drop insecure post encryption feature
-* Stop supporting all deprecated config options
-* Drop annotations support (annotateit.org closed down in March 2017)
-* Remove taxonomy option ``also_create_classifications_from_other_languages``
+* Removed ``googleplus`` comments (no longer supported) (Issue #635)
+* Removed the slides directive for docutils, it will now be a separate plugin.
+* Dropped Python 2 and Python 3.3 support (oldest supported version is 3.4)
+* Removed ``nikola install_theme`` — use ``nikola theme`` instead
+* Droppped insecure post “encryption” feature
+* Stopped supporting all deprecated config options
+* Dropped annotations support (annotateit.org closed down in March 2017)
+* Removed taxonomy option ``also_create_classifications_from_other_languages``
   (Issue #2785)
+* Removed old 7-line metadata format (Issue #2839)
 
 New in v7.8.8
 =============

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2017 Roberto Alsina and others.
+# Copyright © 2012-2018 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -42,11 +42,12 @@ class CompileHtml(PageCompiler):
 
     name = "html"
     friendly_name = "HTML"
+    supports_metadata = True
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
         """Compile HTML into HTML strings, with shortcode support."""
         if not is_two_file:
-            _, data = self.split_metadata(data)
+            _, data = self.split_metadata(data, post, lang)
         new_data, shortcodes = sc.extract_shortcodes(data)
         return self.site.apply_shortcodes_uuid(new_data, shortcodes, filename=source_path, extra_context={'post': post})
 
@@ -81,9 +82,7 @@ class CompileHtml(PageCompiler):
             content += '\n'
         with io.open(path, "w+", encoding="utf8") as fd:
             if onefile:
-                fd.write('<!--\n')
-                fd.write(write_metadata(metadata))
-                fd.write('-->\n\n')
+                fd.write(write_metadata(metadata, comment_wrap=True, site=self.site, compiler=self))
             fd.write(content)
 
     def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
@@ -105,7 +104,7 @@ class CompileHtml(PageCompiler):
             # let other errors raise
             raise
         title_tag = doc.find('*//title')
-        if title_tag is not None:
+        if title_tag is not None and title_tag.text:
             metadata['title'] = title_tag.text
         meta_tags = doc.findall('*//meta')
         for tag in meta_tags:
@@ -114,6 +113,8 @@ class CompileHtml(PageCompiler):
                 continue
             elif k == 'keywords':
                 k = 'tags'
-            metadata[k] = tag.get('content', '')
+            content = tag.get('content')
+            if content:
+                metadata[k] = content
         map_metadata(metadata, 'html_metadata', self.site.config)
         return metadata

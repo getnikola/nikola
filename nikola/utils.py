@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2017 Roberto Alsina and others.
+# Copyright © 2012-2018 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -34,7 +34,6 @@ import hashlib
 import io
 import locale
 import logging
-import natsort
 import operator
 import os
 import re
@@ -57,7 +56,7 @@ except ImportError:
 import warnings
 import PyRSS2Gen as rss
 try:
-    import pytoml as toml
+    import toml
 except ImportError:
     toml = None
 try:
@@ -71,7 +70,7 @@ except ImportError:
 
 from blinker import signal
 from collections import defaultdict, Callable, OrderedDict
-from imp import reload as _reload
+from importlib import reload as _reload
 from logbook.compat import redirect_logging
 from logbook.more import ExceptionHandler, ColorizedStderrHandler
 from pygments.formatters import HtmlFormatter
@@ -1437,50 +1436,59 @@ def get_translation_candidate(config, path, lang):
             return config['TRANSLATIONS_PATTERN'].format(path=p, ext=e, lang=lang)
 
 
-def write_metadata(data, _format='nikola'):
-    """Write metadata."""
-    _format = _format.lower()
-    if _format not in ['nikola', 'yaml', 'toml', 'pelican_rest', 'pelican_md']:
-        LOGGER.warn('Unknown METADATA_FORMAT %s, using "nikola" format', _format)
+def write_metadata(data, metadata_format=None, comment_wrap=False, site=None, compiler=None):
+    """Write metadata.
 
-    if _format == 'yaml':
-        if yaml is None:
-            req_missing('pyyaml', 'use YAML metadata', optional=False)
-        return '\n'.join(('---', yaml.safe_dump(data, default_flow_style=False).strip(), '---', '', ''))
+    Recommended usage: pass `site`, `comment_wrap` (True, False, or a 2-tuple of start/end markers), and optionally `compiler`. Other options are for backwards compatibility.
+    """
+    # API compatibility
+    if metadata_format is None and site is not None:
+        metadata_format = site.config.get('METADATA_FORMAT', 'nikola').lower()
+    if metadata_format is None:
+        metadata_format = 'nikola'
 
-    elif _format == 'toml':
-        if toml is None:
-            req_missing('toml', 'use TOML metadata', optional=False)
-        return '\n'.join(('+++', toml.dumps(data).strip(), '+++', '', ''))
+    if site is None:
+        import nikola.metadata_extractors
+        metadata_extractors_by = nikola.metadata_extractors.default_metadata_extractors_by()
+        nikola.metadata_extractors.load_defaults(site, metadata_extractors_by)
+    else:
+        metadata_extractors_by = site.metadata_extractors_by
 
-    elif _format == 'pelican_rest':
-        title = data.pop('title')
+    # Pelican is mapped to rest_docinfo, markdown_meta, or nikola.
+    if metadata_format == 'pelican':
+        if compiler and compiler.name == 'rest':
+            metadata_format = 'rest_docinfo'
+        elif compiler and compiler.name == 'markdown':
+            metadata_format = 'markdown_meta'
+        else:
+            # Quiet fallback.
+            metadata_format = 'nikola'
+
+    default_meta = ('nikola', 'rest_docinfo', 'markdown_meta')
+    extractor = metadata_extractors_by['name'].get(metadata_format)
+    if extractor and extractor.supports_write:
+        extractor.check_requirements()
+        return extractor.write_metadata(data, comment_wrap)
+    elif extractor and metadata_format not in default_meta:
+        LOGGER.warn('Writing METADATA_FORMAT {} is not supported, using "nikola" format'.format(metadata_format))
+    elif metadata_format not in default_meta:
+        LOGGER.warn('Unknown METADATA_FORMAT {}, using "nikola" format'.format(metadata_format))
+
+    if metadata_format == 'rest_docinfo':
+        title = data['title']
         results = [
             '=' * len(title),
             title,
             '=' * len(title),
             ''
-        ] + [':{0}: {1}'.format(k, v) for k, v in data.items() if v] + ['']
+        ] + [':{0}: {1}'.format(k, v) for k, v in data.items() if v and k != 'title'] + ['']
         return '\n'.join(results)
-
-    elif _format == 'pelican_md':
+    elif metadata_format == 'markdown_meta':
         results = ['{0}: {1}'.format(k, v) for k, v in data.items() if v] + ['', '']
         return '\n'.join(results)
-
     else:  # Nikola, default
-        order = ('title', 'slug', 'date', 'tags', 'category', 'link', 'description', 'type')
-        f = '.. {0}: {1}'
-        meta = []
-        for k in order:
-            try:
-                meta.append(f.format(k, data.pop(k)))
-            except KeyError:
-                pass
-        # Leftover metadata (user-specified/non-default).
-        for k in natsort.natsorted(list(data.keys()), alg=natsort.ns.F | natsort.ns.IC):
-            meta.append(f.format(k, data[k]))
-        meta.append('')
-        return '\n'.join(meta)
+        from nikola.metadata_extractors import DEFAULT_EXTRACTOR
+        return DEFAULT_EXTRACTOR.write_metadata(data, comment_wrap)
 
 
 def ask(query, default=None):

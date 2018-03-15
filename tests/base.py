@@ -167,6 +167,7 @@ class FakeSite(object):
     def __init__(self):
         self.template_system = self
         self.invariant = False
+        self.debug = True
         self.config = {
             'DISABLED_PLUGINS': [],
             'EXTRA_PLUGINS': [],

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2015-2017 Chris Warrick and others.
+# Copyright © 2015-2018 Chris Warrick and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -53,7 +53,7 @@ class CommandRst2Html(Command):
             data = in_file.read()
             output, error_level, deps, shortcode_deps = compiler.compile_string(data, source, True)
 
-        rstcss_path = resource_filename('nikola', 'data/themes/base/assets/css/html4css1.css')
+        rstcss_path = resource_filename('nikola', 'data/themes/base/assets/css/rst_base.css')
         with io.open(rstcss_path, "r", encoding="utf8") as fh:
             rstcss = fh.read()
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2017 Roberto Alsina and others.
+# Copyright © 2012-2018 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -34,7 +34,6 @@ import hashlib
 import json
 import os
 import re
-import string
 try:
     from urlparse import urljoin
 except ImportError:
@@ -73,14 +72,13 @@ from .utils import (
     unicode_str,
     demote_headers,
     get_translation_candidate,
-    unslugify,
     map_metadata
 )
+from nikola import metadata_extractors
 
 __all__ = ('Post',)
 
 TEASER_REGEXP = re.compile('<!--\s*TEASER_END(:(.+))?\s*-->', re.IGNORECASE)
-_UPGRADE_METADATA_ADVERTISED = False
 
 
 class Post(object):
@@ -95,7 +93,8 @@ class Post(object):
         messages,
         template_name,
         compiler,
-        destination_base=None
+        destination_base=None,
+        metadata_extractors_by=None
     ):
         """Initialize post.
 
@@ -108,6 +107,7 @@ class Post(object):
         """
         self.config = config
         self.compiler = compiler
+        self.compiler_contexts = {}
         self.compile_html = self.compiler.compile
         self.demote_headers = self.compiler.demote_headers and self.config['DEMOTE_HEADERS']
         tzinfo = self.config['__tzinfo__']
@@ -142,7 +142,6 @@ class Post(object):
         self.skip_untranslated = not self.config['SHOW_UNTRANSLATED_POSTS']
         self._template_name = template_name
         self.is_two_file = True
-        self.newstylemeta = True
         self._reading_time = None
         self._remaining_reading_time = None
         self._paragraph_count = None
@@ -152,25 +151,31 @@ class Post(object):
         self._dependency_uptodate_fragment = defaultdict(list)
         self._dependency_uptodate_page = defaultdict(list)
         self._depfile = defaultdict(list)
+        if metadata_extractors_by is None:
+            self.metadata_extractors_by = {'priority': {}, 'source': {}}
+        else:
+            self.metadata_extractors_by = metadata_extractors_by
 
         # Load internationalized metadata
         for lang in self.translations:
             if os.path.isfile(get_translation_candidate(self.config, self.source_path, lang)):
                 self.translated_to.add(lang)
 
-        default_metadata, self.newstylemeta = get_meta(self, self.config['FILE_METADATA_REGEXP'], self.config['UNSLUGIFY_TITLES'])
+        default_metadata, default_used_extractor = get_meta(self, lang=None)
 
         self.meta = Functionary(lambda: None, self.default_lang)
+        self.used_extractor = Functionary(lambda: None, self.default_lang)
         self.meta[self.default_lang] = default_metadata
+        self.used_extractor[self.default_lang] = default_used_extractor
 
         for lang in self.translations:
             if lang != self.default_lang:
                 meta = defaultdict(lambda: '')
                 meta.update(default_metadata)
-                _meta, _nsm = get_meta(self, self.config['FILE_METADATA_REGEXP'], self.config['UNSLUGIFY_TITLES'], lang)
-                self.newstylemeta = self.newstylemeta and _nsm
+                _meta, _extractors = get_meta(self, lang)
                 meta.update(_meta)
                 self.meta[lang] = meta
+                self.used_extractor[lang] = _extractors
 
         if not self.is_translation_available(self.default_lang):
             # Special case! (Issue #373)
@@ -686,7 +691,7 @@ class Post(object):
 
         try:
             data = lxml.html.tostring(document.body, encoding='unicode')
-        except:
+        except Exception:
             data = lxml.html.tostring(document, encoding='unicode')
 
         if teaser_only:
@@ -937,47 +942,8 @@ class Post(object):
         else:
             return ext
 
-# Code that fetches metadata from different places
 
-
-def re_meta(line, match=None):
-    """Find metadata using regular expressions."""
-    if match:
-        reStr = re.compile('^\.\. {0}: (.*)'.format(re.escape(match)))
-    else:
-        reStr = re.compile('^\.\. (.*?): (.*)')
-    result = reStr.findall(line.strip())
-    if match and result:
-        return (match, result[0])
-    elif not match and result:
-        return (result[0][0], result[0][1].strip())
-    else:
-        return (None,)
-
-
-def _get_metadata_from_filename_by_regex(filename, metadata_regexp, unslugify_titles, lang):
-    """Try to reed the metadata from the filename based on the given re.
-
-    This requires to use symbolic group names in the pattern.
-    The part to read the metadata from the filename based on a regular
-    expression is taken from Pelican - pelican/readers.py
-    """
-    match = re.match(metadata_regexp, filename)
-    meta = {}
-
-    if match:
-        # .items() for py3k compat.
-        for key, value in match.groupdict().items():
-            k = key.lower().strip()  # metadata must be lowercase
-            if k == 'title' and unslugify_titles:
-                meta[k] = unslugify(value, lang, discard_numbers=False)
-            else:
-                meta[k] = value
-
-    return meta
-
-
-def get_metadata_from_file(source_path, config=None, lang=None):
+def get_metadata_from_file(source_path, post, config, lang, metadata_extractors_by):
     """Extract metadata from the file itself, by parsing contents."""
     try:
         if lang and config:
@@ -985,176 +951,96 @@ def get_metadata_from_file(source_path, config=None, lang=None):
         elif lang:
             source_path += '.' + lang
         with io.open(source_path, "r", encoding="utf-8-sig") as meta_file:
-            meta_data = [x.strip() for x in meta_file.readlines()]
-        return _get_metadata_from_file(meta_data, config)
+            source_text = meta_file.read()
+
+        meta = {}
+        used_extractor = None
+        for priority in metadata_extractors.MetaPriority:
+            found_in_priority = False
+            for extractor in metadata_extractors_by['priority'].get(priority, []):
+                if not metadata_extractors.check_conditions(post, source_path, extractor.conditions, config, source_text):
+                    continue
+                extractor.check_requirements()
+                new_meta = extractor.extract_text(source_text)
+                if new_meta:
+                    found_in_priority = True
+                    used_extractor = extractor
+                    # Map metadata from other platforms to names Nikola expects (Issue #2817)
+                    map_metadata(new_meta, extractor.map_from, config)
+
+                    meta.update(new_meta)
+                    break
+
+            if found_in_priority:
+                break
+        return meta, used_extractor
     except (UnicodeDecodeError, UnicodeEncodeError):
         msg = 'Error reading {0}: Nikola only supports UTF-8 files'.format(source_path)
         LOGGER.error(msg)
         raise ValueError(msg)
     except Exception:  # The file may not exist, for multilingual sites
-        return {}
+        return {}, None
 
 
-re_md_title = re.compile(r'^{0}([^{0}].*)'.format(re.escape('#')))
-# Assuming rst titles are going to be at least 4 chars long
-# otherwise this detects things like ''' wich breaks other markups.
-re_rst_title = re.compile(r'^([{0}]{{4,}})'.format(re.escape(
-    string.punctuation)))
-
-
-def _get_metadata_from_file(meta_data, config=None):
-    """Extract metadata from a post's source file."""
-    meta = {}
-    if not meta_data:
-        return meta
-
-    # Skip up to one empty line at the beginning (for txt2tags)
-    if not meta_data[0]:
-        meta_data = meta_data[1:]
-
-    # If 1st line is '---', then it's YAML metadata
-    if meta_data[0] == '---':
-        if yaml is None:
-            utils.req_missing('pyyaml', 'use YAML metadata', optional=True)
-            raise ValueError('Error parsing metadata')
-        idx = meta_data.index('---', 1)
-        meta = yaml.safe_load('\n'.join(meta_data[1:idx]))
-        # We expect empty metadata to be '', not None
-        for k in meta:
-            if meta[k] is None:
-                meta[k] = ''
-        # Map metadata from other platforms to names Nikola expects (Issue #2817)
-        map_metadata(meta, 'yaml', config)
-        return meta
-
-    # If 1st line is '+++', then it's TOML metadata
-    if meta_data[0] == '+++':
-        if toml is None:
-            utils.req_missing('toml', 'use TOML metadata', optional=True)
-            raise ValueError('Error parsing metadata')
-        idx = meta_data.index('+++', 1)
-        meta = toml.loads('\n'.join(meta_data[1:idx]))
-        # Map metadata from other platforms to names Nikola expects (Issue #2817)
-        map_metadata(meta, 'toml', config)
-        return meta
-
-    # First, get metadata from the beginning of the file,
-    # up to first empty line
-
-    for i, line in enumerate(meta_data):
-        if not line:
-            break
-        match = re_meta(line)
-        if match[0]:
-            meta[match[0]] = match[1]
-
-    return meta
-
-
-def get_metadata_from_meta_file(path, config=None, lang=None):
+def get_metadata_from_meta_file(path, post, config, lang, metadata_extractors_by=None):
     """Take a post path, and gets data from a matching .meta file."""
-    global _UPGRADE_METADATA_ADVERTISED
     meta_path = os.path.splitext(path)[0] + '.meta'
     if lang and config:
         meta_path = get_translation_candidate(config, meta_path, lang)
     elif lang:
         meta_path += '.' + lang
     if os.path.isfile(meta_path):
-        with io.open(meta_path, "r", encoding="utf8") as meta_file:
-            meta_data = meta_file.readlines()
-
-        # Detect new-style metadata.
-        newstyleregexp = re.compile(r'\.\. .*?: .*')
-        newstylemeta = False
-        for l in meta_data:
-            if l.strip():
-                if re.match(newstyleregexp, l):
-                    newstylemeta = True
-
-        if newstylemeta:
-            # New-style metadata is basically the same as reading metadata from
-            # a 1-file post.
-            return get_metadata_from_file(path, config, lang), newstylemeta
-        else:
-            if not _UPGRADE_METADATA_ADVERTISED:
-                LOGGER.warn("Some posts on your site have old-style metadata. You should upgrade them to the new format, with support for extra fields.")
-                LOGGER.warn("Install the 'upgrade_metadata' plugin (with 'nikola plugin -i upgrade_metadata') and run 'nikola upgrade_metadata'.")
-                _UPGRADE_METADATA_ADVERTISED = True
-            while len(meta_data) < 7:
-                meta_data.append("")
-            (title, slug, date, tags, link, description, _type) = [
-                x.strip() for x in meta_data][:7]
-
-            meta = {}
-
-            if title:
-                meta['title'] = title
-            if slug:
-                meta['slug'] = slug
-            if date:
-                meta['date'] = date
-            if tags:
-                meta['tags'] = tags
-            if link:
-                meta['link'] = link
-            if description:
-                meta['description'] = description
-            if _type:
-                meta['type'] = _type
-
-            return meta, newstylemeta
-
+        return get_metadata_from_file(meta_path, post, config, lang, metadata_extractors_by)[0]
     elif lang:
         # Metadata file doesn't exist, but not default language,
         # So, if default language metadata exists, return that.
         # This makes the 2-file format detection more reliable (Issue #525)
-        return get_metadata_from_meta_file(path, config, lang=None)
-    else:
-        return {}, True
+        return get_metadata_from_meta_file(meta_path, post, config, None, metadata_extractors_by)
+    else:  # No 2-file metadata
+        return {}
 
 
-def get_meta(post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
-    """Get post's meta from source.
-
-    If ``file_metadata_regexp`` is given it will be tried to read
-    metadata from the filename.
-    If ``unslugify_titles`` is True, the extracted title (if any) will be unslugified, as is
-    done in galleries. If any metadata is then found inside the file the metadata from the
-    file will override previous findings.
-    """
+def get_meta(post, lang):
+    """Get post meta from compiler or source file."""
     meta = defaultdict(lambda: '')
+    used_extractor = None
 
-    try:
-        config = post.config
-    except AttributeError:
-        config = None
+    config = getattr(post, 'config', None)
+    metadata_extractors_by = getattr(post, 'metadata_extractors_by')
+    if metadata_extractors_by is None:
+        metadata_extractors_by = metadata_extractors.default_metadata_extractors_by()
 
-    _, newstylemeta = get_metadata_from_meta_file(post.metadata_path, config, lang)
-    meta.update(_)
+    # If meta file exists, use it
+    meta.update(get_metadata_from_meta_file(post.metadata_path, post, config, lang, metadata_extractors_by))
 
     if not meta:
         post.is_two_file = False
 
-    if file_metadata_regexp is not None:
-        meta.update(_get_metadata_from_filename_by_regex(post.source_path,
-                                                         file_metadata_regexp,
-                                                         unslugify_titles,
-                                                         post.default_lang))
-
+    # Fetch compiler metadata.
     compiler_meta = {}
 
-    if getattr(post, 'compiler', None):
-        compiler_meta = post.compiler.read_metadata(post, file_metadata_regexp, unslugify_titles, lang)
+    if (getattr(post, 'compiler', None) and post.compiler.supports_metadata and
+            metadata_extractors.check_conditions(post, post.source_path, post.compiler.metadata_conditions, config, None)):
+        compiler_meta = post.compiler.read_metadata(post, lang=lang)
+        used_extractor = post.compiler
         meta.update(compiler_meta)
 
     if not post.is_two_file and not compiler_meta:
         # Meta file has precedence over file, which can contain garbage.
-        # Moreover, we should not to talk to the file if we have compiler meta.
-        meta.update(get_metadata_from_file(post.source_path, config, lang))
+        # Moreover, we should not read the file if we have compiler meta.
+        new_meta, used_extractor = get_metadata_from_file(post.source_path, post, config, lang, metadata_extractors_by)
+        meta.update(new_meta)
+
+    # Filename-based metadata extractors (fallback only)
+    if not meta:
+        extractors = metadata_extractors_by['source'].get(metadata_extractors.MetaSource.filename, [])
+        for extractor in extractors:
+            if not metadata_extractors.check_conditions(post, post.source_path, extractor.conditions, config, None):
+                continue
+            meta.update(extractor.extract_filename(post.source_path, lang))
 
     if lang is None:
         # Only perform these checks for the default language
-
         if 'slug' not in meta:
             # If no slug is found in the metadata use the filename
             meta['slug'] = slugify(unicode_str(os.path.splitext(
@@ -1165,7 +1051,7 @@ def get_meta(post, file_metadata_regexp=None, unslugify_titles=False, lang=None)
             meta['title'] = os.path.splitext(
                 os.path.basename(post.source_path))[0]
 
-    return meta, newstylemeta
+    return meta, used_extractor
 
 
 def hyphenate(dom, _lang):
@@ -1190,7 +1076,7 @@ def hyphenate(dom, _lang):
         for tag in ('p', 'li', 'span'):
             for node in dom.xpath("//%s[not(parent::pre)]" % tag):
                 skip_node = False
-                skippable_nodes = ['kbd', 'code', 'samp', 'mark', 'math', 'data', 'ruby', 'svg']
+                skippable_nodes = ['kbd', 'pre', 'code', 'samp', 'mark', 'math', 'data', 'ruby', 'svg']
                 if node.getchildren():
                     for child in node.getchildren():
                         if child.tag in skippable_nodes or (child.tag == 'span' and 'math'

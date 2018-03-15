@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2017 Roberto Alsina and others.
+# Copyright © 2012-2018 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -180,7 +180,7 @@ def _gen_chart(chart_type, **_options):
     for k, v in _options.items():
         try:
             options[k] = literal_eval(v)
-        except:
+        except Exception:
             options[k] = v
     chart = pygal
     for o in chart_type.split('.'):
