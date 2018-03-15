@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Support for Commento comment system (Issue #2773)
 * New PRESERVE_ICC_PROFILES option to control whether ICC profiles are
   preserved when copying images.
 * Use baguetteJS in bootstrap theme (part of Issue #2777)
