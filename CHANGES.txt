@@ -7,7 +7,7 @@ Features
 * Support for Commento comment system (Issue #2773)
 * New PRESERVE_ICC_PROFILES option to control whether ICC profiles are
   preserved when copying images.
-* Use baguetteJS in bootstrap theme (part of Issue #2777)
+* Use baguetteBox in Bootstrap theme (part of Issue #2777)
 * New default-config command to generate a clean configuration.
 * New ``thumbnail`` shortcode similar to the reStructuredText
   ``thumbnail`` directive (via Issue #2809)
@@ -68,6 +68,7 @@ Bugfixes
 Removed features
 ----------------
 
+* Removed Colorbox (Issue #2777)
 * Removed ``googleplus`` comments (no longer supported) (Issue #635)
 * Removed the slides directive for docutils, it will now be a separate plugin.
 * Dropped Python 2 and Python 3.3 support (oldest supported version is 3.4)

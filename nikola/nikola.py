@@ -211,45 +211,6 @@ LEGAL_VALUES = {
         # This dict is currently empty.
     },
     'RTL_LANGUAGES': ('ar', 'fa', 'he', 'ur'),
-    'COLORBOX_LOCALES': defaultdict(
-        str,
-        ar='ar',
-        bg='bg',
-        ca='ca',
-        cs='cs',
-        cz='cs',
-        da='da',
-        de='de',
-        en='',
-        es='es',
-        et='et',
-        fa='fa',
-        fi='fi',
-        fr='fr',
-        he='he',
-        hr='hr',
-        hu='hu',
-        id='id',
-        it='it',
-        ja='ja',
-        ko='kr',  # kr is South Korea, ko is the Korean language
-        lt='lt',
-        nb='no',
-        nl='nl',
-        pl='pl',
-        pt='pt-BR',  # hope nobody will mind
-        pt_br='pt-BR',
-        ru='ru',
-        sk='sk',
-        sl='si',  # country code is si, language code is sl, colorbox is wrong
-        sr='sr',  # warning: this is Serbian in Latin alphabet
-        sr_latin='sr',
-        sv='sv',
-        tr='tr',
-        uk='uk',
-        zh_cn='zh-CN',
-        zh_tw='zh-TW'
-    ),
     'MOMENTJS_LOCALES': defaultdict(
         str,
         ar='ar',
@@ -1159,7 +1120,6 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['extra_head_data'] = self.config.get('EXTRA_HEAD_DATA')
         self._GLOBAL_CONTEXT['date_fanciness'] = self.config.get('DATE_FANCINESS')
         self._GLOBAL_CONTEXT['js_date_format'] = self.config.get('JS_DATE_FORMAT')
-        self._GLOBAL_CONTEXT['colorbox_locales'] = LEGAL_VALUES['COLORBOX_LOCALES']
         self._GLOBAL_CONTEXT['momentjs_locales'] = LEGAL_VALUES['MOMENTJS_LOCALES']
         self._GLOBAL_CONTEXT['hidden_tags'] = self.config.get('HIDDEN_TAGS')
         self._GLOBAL_CONTEXT['hidden_categories'] = self.config.get('HIDDEN_CATEGORIES')

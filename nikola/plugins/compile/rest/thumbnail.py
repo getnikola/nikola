@@ -69,7 +69,7 @@ class Thumbnail(Figure):
         """Run the thumbnail directive."""
         uri = directives.uri(self.arguments[0])
         if uri.endswith('.svg'):
-            # the ? at the end makes docutil output an <img> instead of an object for the svg, which colorbox requires
+            # the ? at the end makes docutil output an <img> instead of an object for the svg, which lightboxes may require
             self.arguments[0] = '.thumbnail'.join(os.path.splitext(uri)) + '?'
         else:
             self.arguments[0] = '.thumbnail'.join(os.path.splitext(uri))
