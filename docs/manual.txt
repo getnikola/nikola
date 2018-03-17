@@ -9,7 +9,7 @@
 The Nikola Handbook
 ===================
 
-:Version: 7.8.11
+:Version: 7.8.12
 
 .. class:: alert alert-info pull-right
 
@@ -24,9 +24,9 @@ After you have Nikola `installed <https://getnikola.com/getting-started.html>`_:
 Create an empty site (with a setup wizard):
     ``nikola init mysite``
 
-You can create a site with demo files in it with ``nikola init --demo mysite``
+    You can create a site with demo files in it with ``nikola init --demo mysite``
 
-The rest of these commands have to be executed inside the new ``mysite`` folder.
+    The rest of these commands have to be executed inside the new ``mysite`` folder.
 
 Create a post:
     ``nikola new_post``
@@ -78,9 +78,9 @@ Nikola can't do:
 * Twitter
 * Facebook
 * An Issue tracker
-* Anything with forms, really (except for `comments <#comments-and-annotations>`_!)
+* Anything with forms, really (except for `comments`_!)
 
-Keep in mind that "static" doesn't mean **boring**. You can have animations, slides
+Keep in mind that "static" doesn't mean **boring**. You can have animations
 or whatever fancy CSS3/HTML5 thingie you like. It only means all that HTML is
 generated already before being uploaded. On the other hand, Nikola sites will
 tend to be content-heavy. What Nikola is good at is at putting what you write
@@ -136,7 +136,7 @@ Obsolescence
     You may say those are long term issues, or that they won't matter for years. Well,
     I believe things should work forever, or as close to it as we can make them.
     Nikola's static output and its input files will work as long as you can install
-    a Python 2.7/3.3 or newer under Linux, Windows, or OS X and can find a server
+    Python 3.4 or newer under Linux, Windows, or OS X and can find a server
     that sends files over HTTP. That's probably 10 or 15 years at least.
 
     Also, static sites are easily handled by the Internet Archive.
@@ -227,7 +227,7 @@ easier to keep it in a single location.
 The contents of your post have to be written (by default) in `reStructuredText <http://docutils.sf.net>`__
 but you can use a lot of different markups using the ``-f`` option.
 
-Currently, Nikola supports reStructuredText, Markdown, Jupyter (IPython) Notebooks, HTML as input,
+Currently, Nikola supports reStructuredText, Markdown, Jupyter Notebooks, HTML as input,
 can also use Pandoc for conversion, and has support for BBCode, CreoleWiki, txt2tags, Textile
 and more via plugins — for more details, read the `input format documentation
 <#multiple-input-formats>`__.
@@ -379,6 +379,8 @@ previewimage
     The image can be of any size and dimension (services will crop and adapt)
     but should less than 1 MB and be larger than 300x300 (ideally 600x600).
 
+    Note that the default themes do not display this image.
+
 section
     Section for the post (instead of inferring from output path; requires
     ``POSTS_SECTION_FROM_META`` setting)
@@ -391,6 +393,12 @@ template
     .. code:: restructuredtext
 
        .. template: story.tmpl
+
+updated
+    The last time this post was updated, defaults to now. It is not displayed
+    by default in most themes, including the defaults — you can use
+    ``post.formatted_updated(date_format)`` (and perhaps check ``if post.updated
+    != post.date``) in your post template to show it.
 
 To add these metadata fields to all new posts by default, you can set the
 variable ``ADDITIONAL_METADATA`` in your configuration.  For example, you can
@@ -610,7 +618,7 @@ default set to:
 
     TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"
 
-.. note:: Considered languages
+.. admonition:: Considered languages
 
     Nikola will only look for translation of input files for languages
     specified in the TRANSLATIONS variable.
@@ -681,7 +689,7 @@ options. The exact mechanism is explained above the config options in the
         ("pages/*.html", "pages", "story.tmpl"),
     )
 
-.. note:: POSTS and PAGES are not flat!
+.. admonition:: POSTS and PAGES are not flat!
 
    Even if the syntax may suggest you can't, you can create any directory structure you want
    inside ``posts/`` or ``pages/`` and it will be reflected in the output. For example,
@@ -1035,7 +1043,7 @@ Nikola supports multiple input formats.  Out of the box, we have compilers avail
 
 * reStructuredText (default and pre-configured)
 * `Markdown`_
-* `Jupyter/IPython Notebook`_
+* `Jupyter Notebook`_
 * `HTML`_
 * `PHP`_
 * anything `Pandoc`_ supports (including Textile, DocBook, LaTeX, MediaWiki,
@@ -1093,12 +1101,12 @@ config option:
 Nikola comes with some Markdown Extensions built-in and enabled by default,
 namely a gist directive, a podcast directive, and ``~~strikethrough~~`` support.
 
-Jupyter/IPython Notebook
-````````````````````````
+Jupyter Notebook
+````````````````
 
-To use Jupyter Notebooks (previously known as IPython Notebooks) as posts/pages,
-make sure ``ipynb`` is in your ``COMPILERS`` and that the ``.ipynb`` extension
-is defined in ``POSTS`` and ``PAGES``.
+To use Jupyter Notebooks as posts/pages, make sure ``ipynb`` is in your
+``COMPILERS`` and that the ``.ipynb`` extension is defined in ``POSTS`` and
+``PAGES``.
 
 The ``-f`` argument to ``new_post`` should be used in the ``ipynb@KERNEL`` format.
 It defaults to Python in the version used by Nikola if not specified.
@@ -1167,7 +1175,7 @@ Example of a paired shortcode (note that we don't have a highlight shortcode yet
 
     {{% raw %}}{{% highlight python %}} A bunch of code here {{% /highlight %}}{{% /raw %}}
 
-.. note:: Shortcodes and reStructuredText
+.. admonition:: Shortcodes and reStructuredText
 
     In reStructuredText shortcodes may fail because docutils turns URL into links and everything breaks.
     For some shortcodes there are alternative docutils directives (example, you can use the media
@@ -1258,6 +1266,8 @@ via the ``data`` field in the metadata using ``post.data(key)``.
 If you use the shortcode as paired, then the contents between the paired tags
 will be available in the ``data`` variable. If you want to access the Nikola
 object, it will be available as ``site``. Use with care :-)
+
+.. note:: Template-based shortcodes use the same template engine as your site’s theme.
 
 See :doc:`extending` for detailed information.
 
@@ -1411,7 +1421,7 @@ CSS tweaking
     for minimal disruption of the provided CSS files.
 
     If you feel tempted to touch other files in assets, you probably will be better off
-    with a `custom theme <theming.html>`__.
+    with a :doc:`custom theme <theming>`.
 
     If you want to use LESS_ or Sass_ for your custom CSS, or the theme you use
     contains LESS or Sass code that you want to override, you will need to install
@@ -1425,7 +1435,7 @@ CSS tweaking
 
 Template tweaking and creating themes
     If you really want to change the pages radically, you will want to do a
-    `custom theme <theming.html>`__.
+    :doc:`custom theme <theming>`.
 
 Navigation Links
     The ``NAVIGATION_LINKS`` option lets you define what links go in a sidebar or menu
@@ -1718,8 +1728,8 @@ GitLab also offers rebuild automation if you want to use Nikola with GitLab
 Pages. Check out the example `Nikola site on GitLab
 <https://gitlab.com/pages/nikola>`_.
 
-Comments and Annotations
-------------------------
+Comments
+--------
 
 While Nikola creates static sites, there is a minimum level of user interaction you
 are probably expecting: comments.
@@ -1730,13 +1740,11 @@ Nikola supports several third party comment systems:
 * `IntenseDebate <http://www.intensedebate.com/>`_
 * `LiveFyre <http://www.livefyre.com/>`_
 * `Moot <http://moot.it>`_
-* `Google+ <http://plus.google.com>`_
 * `Facebook <http://facebook.com/>`_
 * `isso <http://posativ.org/isso/>`_
 
 By default it will use DISQUS, but you can change by setting ``COMMENT_SYSTEM``
-to one of "disqus", "intensedebate", "livefyre", "moot", "googleplus",
-"facebook" or "isso"
+to one of "disqus", "intensedebate", "livefyre", "moot", "facebook" or "isso"
 
 .. sidebar:: ``COMMENT_SYSTEM_ID``
 
@@ -1747,7 +1755,6 @@ to one of "disqus", "intensedebate", "livefyre", "moot", "googleplus",
    * In IntenseDebate it's the **IntenseDebate site acct**
    * In LiveFyre it's the **siteId**
    * In Moot it's your **username**
-   * For Google Plus, ``COMMENT_SYSTEM_ID`` need not be set. WARNING: this will not work correctly in the test server, needs to be deployed to a real server/URL.
    * For Facebook, you need to `create an app
      <https://developers.facebook.com/apps>`_ (turn off sandbox mode!)
      and get an **App ID**
@@ -2903,7 +2910,8 @@ stderr.  Thus, you must use the different call.  (Alternatively, you could run
 with ``nikola build -v 2``, which disables the redirections.)
 
 To show more logging messages, as well as full tracebacks, you need to set an
-environment variable: ``NIKOLA_DEBUG=1``
+environment variable: ``NIKOLA_DEBUG=1``. If you want to only see tracebacks,
+set ``NIKOLA_SHOW_TRACEBACKS=1``.
 
 Shell Tab Completion
 ~~~~~~~~~~~~~~~~~~~~
