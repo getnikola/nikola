@@ -92,20 +92,23 @@ class CompileMarkdown(PageCompiler):
         extensions.extend(site_extensions)
 
         site_extension_configs = self.site.config.get("MARKDOWN_EXTENSION_CONFIGS", {})
-        self.config_dependencies.append(json.dumps(site_extension_configs, sort_keys=True))
+        self.config_dependencies.append(json.dumps(site_extension_configs.values, sort_keys=True))
 
         if Markdown is not None:
-            self.converter = ThreadLocalMarkdown(extensions, site_extension_configs)
+            self.converters = {}
+            for lang in self.site.config['TRANSLATIONS']:
+                self.converters[lang] = ThreadLocalMarkdown(extensions, site_extension_configs[lang])
         self.supports_metadata = 'markdown.extensions.meta' in extensions
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
         """Compile Markdown into HTML strings."""
+        lang = lang or self.site.config.DEFAULT_LANGUAGE
         if Markdown is None:
             req_missing(['markdown'], 'build this site (compile Markdown)')
         if not is_two_file:
             _, data = self.split_metadata(data, post, lang)
         new_data, shortcodes = sc.extract_shortcodes(data)
-        output, _ = self.converter.convert(new_data)
+        output, _ = self.converters[lang].convert(new_data)
         output, shortcode_deps = self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, extra_context={'post': post})
         return output, shortcode_deps
 
@@ -147,6 +150,7 @@ class CompileMarkdown(PageCompiler):
 
     def read_metadata(self, post, lang=None):
         """Read the metadata from a post, and return a metadata dict."""
+        lang = lang or self.site.config['DEFAULT_LANGUAGE']
         if not self.supports_metadata:
             return {}
         if Markdown is None:
@@ -162,7 +166,7 @@ class CompileMarkdown(PageCompiler):
             # bad things like setting empty tags to "''"
             if data.startswith('---\n'):
                 return {}
-            _, meta = self.converter.convert(data)
+            _, meta = self.converters[lang].convert(data)
         # Map metadata from other platforms to names Nikola expects (Issue #2817)
         map_metadata(meta, 'markdown_metadata', self.site.config)
         return meta
