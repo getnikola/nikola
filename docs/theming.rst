@@ -36,8 +36,8 @@ assets
     references to them. The default subdirectories are ``css``, ``js``, ``xml``
     and ``fonts`` (Bootstrap).
 
-    The included themes use `Bootstrap <https://getbootstrap.com/>`_, `Colorbox
-    <http://www.jacklmoore.com/colorbox>`_, `Flowr.js
+    The included themes use `Bootstrap <https://getbootstrap.com/>`_,
+    `baguetteBox <https://feimosi.github.io/baguetteBox.js/>`_, `Flowr.js
     <https://github.com/kalyan02/flowr-js>`_ and `Moment.js
     <https://momentjs.com/>`_, so they are in assets, along with CSS files for
     syntax highlighting, reStructuredText and Jupyter, as well as a minified
@@ -78,7 +78,7 @@ bundles
 
     .. code:: text
 
-        assets/css/all.css=bootstrap.css,rst_base.css,nikola_rst.css,code.css,colorbox.css,custom.css
+        assets/css/all.css=bootstrap.min.css,rst_base.css,nikola_rst.css,code.css,baguetteBox.min.css,theme.css,custom.css
 
     This creates a file called "assets/css/all.css" in your output that is the
     combination of all the other file paths, relative to the output file.
@@ -158,9 +158,6 @@ The following keys are currently supported:
     defaults to False)
   * ``ignored_assets`` — comma-separated list of assets to ignore (relative to
     the ``assets/`` directory, eg. ``css/theme.css``)
-  * ``ignore_colorbox_i18n`` — prevent copying Colorbox locales. Accepted
-    values: ``all`` (all ignored), ``unused`` (used locales copied),
-    ``none`` (all copied)
 
 Templates
 ---------

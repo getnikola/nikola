@@ -46,7 +46,6 @@ Name                                Type                                Descript
 ``blog_title``                      TranslatableSetting<str>            ``BLOG_TITLE`` setting
 ``blog_url``                        str                                 ``SITE_URL`` setting
 ``body_end``                        TranslatableSetting<str>            ``BODY_END`` setting
-``colorbox_locales``                defaultdict<str, str>               dictionary of available Colorbox locales
 ``colorize_str_from_base_color``    function                            ``utils.colorize_str_from_base_color`` function
 ``color_hsl_adjust_hex``            function                            ``utils.color_hsl_adjust_hex`` function
 ``comment_system_id``               str                                 ``COMMENT_SYSTEM_ID`` setting
