@@ -4,7 +4,8 @@ New in master
 Features
 --------
 
-* Replace ``flowr.js`` with ``justified-layout`` by Flickr
+* Replace ``flowr.js`` with ``justified-layout.js`` by Flickr
+  (does not require jQuery!)
 * ``bootblog4`` is the new default theme (Issue #2964)
 * New ``bootstrap4`` and ``bootblog4`` themes (Issue #2964)
 * New Thai translation by Narumol Hankrotha and Jean Jordaan
