@@ -32,7 +32,6 @@ import os
 
 from nikola.plugin_categories import Task
 from nikola import utils
-from nikola.nikola import LEGAL_VALUES
 
 
 class CopyAssets(Task):
