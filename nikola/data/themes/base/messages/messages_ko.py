@@ -10,7 +10,7 @@ MESSAGES = {
     "Authors": "작성자",
     "Categories": "분류",
     "Comments": "댓글",
-    "LANGUAGE": "영어",
+    "LANGUAGE": "한국어",
     "Languages:": "언어:",
     "More posts about %s": "%s에 대한 또다른 포스트",
     "Newer posts": "최신 포스트",

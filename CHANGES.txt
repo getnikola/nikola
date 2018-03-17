@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New Thai translation by Narumol Hankrotha and Jean Jordaan
 * Support for Commento comment system (Issue #2773)
 * New PRESERVE_ICC_PROFILES option to control whether ICC profiles are
   preserved when copying images.

@@ -7,96 +7,92 @@
 # Translators:
 # Translators:
 # Translators:
-# darkwise <za3boud@yahoo.fr>, 2014
-# Mohammed Attia <skeuomorf@gmail.com>, 2014
-# Nasser Alshammari <designernasser@gmail.com>, 2018
-# darkwise <za3boud@yahoo.fr>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2018-01-08 13:30+0000\n"
-"Last-Translator: Nasser Alshammari <designernasser@gmail.com>\n"
-"Language-Team: Arabic (http://www.transifex.com/ralsina/nikola/language/ar/)\n"
+"PO-Revision-Date: 2013-03-15 15:29+0000\n"
+"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"Language-Team: Breton (http://www.transifex.com/ralsina/nikola/language/br/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Language: br\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "More posts about %s"
-msgstr "المزيد من المقالات حول %s"
+msgstr ""
 
 #. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "LANGUAGE"
-msgstr "العربيّة"
+msgstr ""
 
 msgid "Tags"
-msgstr "تصنيفات"
+msgstr ""
 
 msgid "Categories"
-msgstr "فئات"
+msgstr ""
 
 msgid "Tags and Categories"
-msgstr "تصنيفات و فئات"
+msgstr ""
 
 msgid "Comments"
-msgstr "التّعليقات"
+msgstr ""
 
 msgid "Read more"
-msgstr "قراءة المزيد"
+msgstr ""
 
 msgid "Posts about %s"
-msgstr "مقالات عن %s"
+msgstr ""
 
 msgid "Next post"
-msgstr "المقالة التالية"
+msgstr ""
 
 msgid "old posts, page %d"
-msgstr "مقالات قديمة, صفحة %d"
+msgstr ""
 
 msgid "page %d"
-msgstr "صفحة %d"
+msgstr ""
 
 msgid "Source"
-msgstr "المصدر"
+msgstr ""
 
 #. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "Read in English"
-msgstr "اقرأ بالعربية"
+msgstr ""
 
 msgid "Posts for year %s"
-msgstr "مقالات سنة %s"
+msgstr ""
 
 msgid "Newer posts"
-msgstr "مقالات أحدث"
+msgstr ""
 
 msgid "Previous post"
-msgstr "المقالة السابقة"
+msgstr ""
 
 msgid "Also available in:"
-msgstr "أيضا متوفر في:"
+msgstr ""
 
 msgid "Languages:"
-msgstr "اللغات"
+msgstr ""
 
 msgid "Original site"
-msgstr "الموقع الأصلي"
+msgstr ""
 
 msgid "Older posts"
-msgstr "مقالات أقدم"
+msgstr ""
 
 msgid "Archive"
-msgstr "الأرشيف"
+msgstr ""
 
 msgid "Publication date"
-msgstr "تاريخ النشر"
+msgstr ""
 
 msgid "Posted:"
-msgstr "نشر:"
+msgstr ""
 
 msgid "Posts for {month} {year}"
 msgstr ""
@@ -105,47 +101,47 @@ msgid "Posts for {month} {day}, {year}"
 msgstr ""
 
 msgid "Nothing found."
-msgstr "لم يوجد شيء."
+msgstr ""
 
 msgid "No posts found."
-msgstr "لم يوجد مقالات."
+msgstr ""
 
 msgid "RSS feed"
 msgstr ""
 
 msgid "%d min remaining to read"
-msgstr "%d دقائق متبقية للقراءة"
+msgstr ""
 
 msgid "Skip to main content"
-msgstr "انتقل إلى المحتوى الرئيسي"
+msgstr ""
 
 msgid "Subcategories:"
-msgstr "فئات فرعية"
+msgstr ""
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
-msgstr "(نشط)"
+msgstr ""
 
 #. Default content for a new post
 msgid "Write your post here."
-msgstr "أكتب مقالك هنا"
+msgstr ""
 
 #. Default content for a new page
 msgid "Write your page here."
-msgstr "أكتب صفحتك هنا "
+msgstr ""
 
 msgid "Uncategorized"
-msgstr "غير مصنف"
+msgstr ""
 
 #. Used for feeds of any format
 msgid "Updates"
-msgstr "التحديثات"
+msgstr ""
 
 msgid "Authors"
-msgstr "المؤلفون"
+msgstr ""
 
 msgid "Posts by %s"
-msgstr "مقالات بواسطة %s"
+msgstr ""
 
 msgid "Toggle navigation"
 msgstr ""
@@ -159,13 +155,13 @@ msgid "{month} {day}, {year}"
 msgstr ""
 
 msgid "Previous"
-msgstr "السابق"
+msgstr ""
 
 msgid "Up"
-msgstr "أعلى"
+msgstr ""
 
 msgid "Next"
-msgstr "التالي"
+msgstr ""
 
 msgid "Atom feed"
 msgstr ""
