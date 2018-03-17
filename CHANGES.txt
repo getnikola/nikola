@@ -36,6 +36,7 @@ Bugfixes
 
 * Handle '/' and other absolute paths better in POSTS / PAGES / TRANSLATIONS 
   (Issue #2982)
+* Fix loading non-default languages
 * Support KaTeX for reST display math (Issue #2888)
 * Use npm for asset management instead of bower, which was deprecated
   (Issue #2790)
