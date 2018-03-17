@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New MARKDOWN_EXTENSION_CONFIGS setting (Issue #2970)
 * New Thai translation by Narumol Hankrotha and Jean Jordaan
 * Support for Commento comment system (Issue #2773)
 * New PRESERVE_ICC_PROFILES option to control whether ICC profiles are

@@ -30,6 +30,7 @@
 import io
 import os
 import threading
+import json
 
 try:
     from markdown import Markdown
@@ -50,9 +51,9 @@ class ThreadLocalMarkdown(threading.local):
     See discussion in #2661.
     """
 
-    def __init__(self, extensions):
+    def __init__(self, extensions, extension_configs):
         """Create a Markdown instance."""
-        self.markdown = Markdown(extensions=extensions, output_format="html5")
+        self.markdown = Markdown(extensions=extensions, extension_configs=extension_configs, output_format="html5")
 
     def convert(self, data):
         """Convert data to HTML and reset internal state."""
@@ -89,8 +90,12 @@ class CompileMarkdown(PageCompiler):
         site_extensions = self.site.config.get("MARKDOWN_EXTENSIONS")
         self.config_dependencies.append(str(sorted(site_extensions)))
         extensions.extend(site_extensions)
+
+        site_extension_configs = self.site.config.get("MARKDOWN_EXTENSION_CONFIGS", {})
+        self.config_dependencies.append(json.dumps(site_extension_configs, sort_keys=True))
+
         if Markdown is not None:
-            self.converter = ThreadLocalMarkdown(extensions)
+            self.converter = ThreadLocalMarkdown(extensions, site_extension_configs)
         self.supports_metadata = 'markdown.extensions.meta' in extensions
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
