@@ -9,8 +9,10 @@
         "bootstrap": "^4.0.0",
         "html5shiv": "^3.7.3",
         "jquery": "^3.3.1",
+        "justified-layout": "^2.1.1",
         "livereload-js": "^2.3.0",
         "moment": "^2.20.1",
+        "npm": "^5.7.1",
         "popper.js": "^1.13.0"
     }
 }
