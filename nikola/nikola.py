@@ -617,6 +617,10 @@ class Nikola(object):
         # Translatability configuration.
         self.config['TRANSLATIONS'] = self.config.get('TRANSLATIONS',
                                                       {self.config['DEFAULT_LANG']: ''})
+        for k, v in self.config['TRANSLATIONS'].items():
+            if os.path.isabs(v):
+                self.config['TRANSLATIONS'][k] = os.path.relpath(v, '/')
+
         utils.TranslatableSetting.default_lang = self.config['DEFAULT_LANG']
 
         self.TRANSLATABLE_SETTINGS = ('BLOG_AUTHOR',
