@@ -86,7 +86,7 @@ status 'Replacing versions in files...'
 sed "s/version=.*/version='$version',/g" setup.py -i
 sed "s/version = .*/version = '$version'/g" docs/sphinx/conf.py -i
 sed "s/release = .*/release = '$version'/g" docs/sphinx/conf.py -i
-sed "s/:Version: .*/:Version: $version/g" docs/*.txt docs/*.rst -i
+sed "s/:Version: .*/:Version: $version/g" docs/*.rst -i
 sed "s/:Version: .*/:Version: Nikola $version/g" docs/man/nikola.rst -i
 sed "s/__version__ = .*/__version__ = '$version'/g" nikola/__init__.py -i
 sed "s/version: .*/version: $version/g" snapcraft.yaml -i
@@ -101,7 +101,7 @@ rst2man.py docs/man/nikola.rst > docs/man/nikola.1
 gzip -f docs/man/nikola.1
 
 status 'Updating path handler documentation...'
-scripts/document_path_handlers.py > docs/path_handlers.txt
+scripts/document_path_handlers.py > docs/path_handlers.rst
 status 'Updating Jinja2 templates...'
 scripts/jinjify.py
 status 'Updating npm assets...'
@@ -112,7 +112,7 @@ status 'Updating website (conf.py and docs)...'
 python -m nikola default_config > ../nikola-site/listings/conf.py
 cp AUTHORS.txt CHANGES.txt ../nikola-site/stories
 cp docs/*.* ../nikola-site/stories
-sed 's/Nikola v[0-9\.A_Za-z-]\{1,\}/Nikola'" v$version/g" ../nikola-site/stories/conf.txt -i
+sed 's/Nikola v[0-9\.A_Za-z-]\{1,\}/Nikola'" v$version/g" ../nikola-site/stories/conf.rst -i
 status 'Generating locales...'
 scripts/import_po.py
 status 'List of locales:'

@@ -132,9 +132,9 @@ setup(name='Nikola',
       cmdclass={'install': nikola_install},
       data_files=[
               ('share/doc/nikola', [
-               'docs/manual.txt',
-               'docs/theming.txt',
-               'docs/extending.txt']),
+               'docs/manual.rst',
+               'docs/theming.rst',
+               'docs/extending.rst']),
               ('share/man/man1', ['docs/man/nikola.1.gz']),
       ],
       entry_points={

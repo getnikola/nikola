@@ -1,1 +1,1 @@
-../../../../docs/creating-a-theme.txt
+../../../../docs/creating-a-theme.rst

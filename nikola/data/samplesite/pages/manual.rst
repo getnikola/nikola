@@ -1,1 +1,1 @@
-../../../../docs/manual.txt
+../../../../docs/manual.rst
