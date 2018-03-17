@@ -40,7 +40,7 @@ from pkg_resources import resource_filename
 import tarfile
 
 import nikola
-from nikola.nikola import DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_FEED_READ_MORE_LINK, LEGAL_VALUES, urlsplit, urlunsplit
+from nikola.nikola import LEGAL_VALUES, DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_FEED_READ_MORE_LINK, LEGAL_VALUES, urlsplit, urlunsplit
 from nikola.plugin_categories import Command
 from nikola.utils import ask, ask_yesno, get_logger, makedirs, load_messages
 from nikola.packages.tzlocal import get_localzone
@@ -62,7 +62,7 @@ SAMPLE_CONF = {
     # Example for another language:
     # "es": "./es",
 }""",
-    'THEME': 'bootblog4',
+    'THEME': LEGAL_VALUES['DEFAULT_THEME'],
     'TIMEZONE': 'UTC',
     'COMMENT_SYSTEM': 'disqus',
     'COMMENT_SYSTEM_ID': 'nikolademo',

@@ -97,6 +97,7 @@ __all__ = ('Nikola',)
 
 # We store legal values for some settings here.  For internal use.
 LEGAL_VALUES = {
+    'DEFAULT_THEME': 'bootblog4',
     'COMMENT_SYSTEM': [
         'disqus',
         'facebook',
@@ -566,7 +567,7 @@ class Nikola(object):
             'TAGS_INDEX_PATH': '',
             'TAGLIST_MINIMUM_POSTS': 1,
             'TEMPLATE_FILTERS': {},
-            'THEME': 'bootblog4',
+            'THEME': LEGAL_VALUES['DEFAULT_THEME'],
             'THEME_COLOR': '#5670d4',  # light "corporate blue"
             'THUMBNAIL_SIZE': 180,
             'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}',
@@ -1172,9 +1173,10 @@ class Nikola(object):
             try:
                 self._THEMES = utils.get_theme_chain(self.config['THEME'], self.themes_dirs)
             except Exception:
-                if self.config['THEME'] != 'bootblog4':
-                    utils.LOGGER.warn('''Cannot load theme "{0}", using 'bootblog4' instead.'''.format(self.config['THEME']))
-                    self.config['THEME'] = 'bootblog4'
+                if self.config['THEME'] != LEGAL_VALUES['DEFAULT_THEME']:
+                    utils.LOGGER.warn('''Cannot load theme "{0}", using '{1}' instead.'''.format(
+                        self.config['THEME'], LEGAL_VALUES['DEFAULT_THEME']))
+                    self.config['THEME'] = LEGAL_VALUES['DEFAULT_THEME']
                     return self._get_themes()
                 raise
             # Check consistency of USE_CDN and the current THEME (Issue #386)
