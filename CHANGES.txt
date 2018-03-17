@@ -87,6 +87,12 @@ Removed features
   (Issue #2785)
 * Removed old 7-line metadata format (Issue #2839)
 
+Other changes
+-------------
+
+* Rename ``crumbs.tmpl`` to ``ui_helper.tmpl`` and the breadcrumbs
+  function to ``breadcrumbs``
+
 New in v7.8.8
 =============
 

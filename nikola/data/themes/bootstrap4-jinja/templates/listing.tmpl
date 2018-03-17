@@ -1,8 +1,8 @@
 {#  -*- coding: utf-8 -*- #}
 {% extends 'base.tmpl' %}
-{% import 'crumbs.tmpl' as ui with context %}
+{% import 'ui_helper.tmpl' as ui with context %}
 {% block content %}
-{{ ui.bar(crumbs) }}
+{{ ui.breadcrumbs(crumbs) }}
 {% if folders or files %}
 <ul>
 {% for name in folders %}
@@ -24,9 +24,7 @@
 {% endblock %}
 
 {% block sourcelink %}
-{% if source_link %}
-    <li class="nav-item">
-    <a href="{{ source_link }}" id="sourcelink" class="nav-link">{{ messages("Source") }}</a>
-    </li>
+{% if show_sourcelink %}
+    {{ ui.show_sourcelink(source_link) }}
 {% endif %}
 {% endblock %}

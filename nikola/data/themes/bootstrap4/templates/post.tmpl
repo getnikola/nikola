@@ -3,6 +3,7 @@
 <%namespace name="pheader" file="post_header.tmpl"/>
 <%namespace name="comments" file="comments_helper.tmpl"/>
 <%namespace name="math" file="math_helper.tmpl"/>
+<%namespace name="ui" file="ui_helper.tmpl"/>
 <%inherit file="base.tmpl"/>
 
 <%block name="extra_head">
@@ -54,8 +55,6 @@ ${comments.comment_link_script()}
 
 <%block name="sourcelink">
 % if show_sourcelink:
-    <li class="nav-item">
-    <a href="${post.source_link()}" id="sourcelink" class="nav-link">${messages("Source")}</a>
-    </li>
+    ${ui.show_sourcelink(post.source_link())}
 % endif
 </%block>

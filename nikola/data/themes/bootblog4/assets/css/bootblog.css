@@ -105,14 +105,17 @@ h1, h2, h3, h4, h5, h6 {
 /*
  * Blog posts
  */
-.blog-post {
+article {
   margin-bottom: 4rem;
 }
-.blog-post-title {
+article:last-child {
+  margin-bottom: 0;
+}
+.entry-title {
   margin-bottom: .25rem;
   font-size: 2.5rem;
 }
-.blog-post-meta {
+article .metadata {
   margin-bottom: 1.25rem;
   color: #999;
 }
@@ -129,4 +132,21 @@ h1, h2, h3, h4, h5, h6 {
 }
 .blog-footer p:last-child {
   margin-bottom: 0;
+}
+
+@media (min-width: 576px) {
+  .nbb-navbar-toggler {
+    display: none;
+  }
+
+  .nbb-header {
+    -webkit-box-pack: justify!important;
+    -ms-flex-pack: justify!important;
+    justify-content: space-between!important;
+  }
+}
+
+.navbar-brand {
+    padding: 0;
+    white-space: initial;
 }

@@ -16,15 +16,14 @@ ${template_hooks['extra_head']()}
 
 <div class="container">
       <header class="blog-header py-3">
-        <div class="row flex-nowrap justify-content-between align-items-center">
-        %if search_form:
-          <div class="col-4">
+        <div class="row nbb-header align-items-center">
+          <div class="col-md-3 col-xs-2" style="padding: 0; width: auto;">
+            <button class="navbar-toggler navbar-light bg-light nbb-navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             ${search_form}
         </div>
-          <div class="col-4 text-center">
-      % else:
-          <div class="col-4 offset-4 text-center">
-        %endif
+          <div class="col-md-6 col-xs-10 text-center" style="width: auto;">
             <a class="navbar-brand blog-header-logo text-dark" href="${abs_link(_link("root", None, lang))}">
         %if logo_url:
             <img src="${logo_url}" alt="${blog_title|h}" id="logo" class="d-inline-block align-top">
@@ -34,26 +33,29 @@ ${template_hooks['extra_head']()}
             <span id="blog-title">${blog_title|h}</span>
         % endif
         </a>
-
           </div>
-          <div class="col-4 d-flex justify-content-end align-items-center">
+          <div class="col-md-3 d-flex justify-content-end align-items-center">
                 <%block name="belowtitle">
                 %if len(translations) > 1:
                     ${base.html_translations()}
                 %endif
                 </%block>
-            <%block name="sourcelink"></%block>
+                <div class="d-none d-md-inline"><%block name="sourcelink"></%block></div>
                 ${template_hooks['menu_alt']()}
           </div>
         </div>
-      </header>
 
-      <div class="nav-scroller py-1 mb-2">
-        <nav class="nav d-flex justify-content-between">
-          ${base.html_navigation_links()}
-                ${template_hooks['menu']()}
-        </nav>
-      </div>
+    <nav class="navbar navbar-expand-md navbar-light bg-white static-top">
+            <div class="collapse navbar-collapse" id="bs-navbar">
+                <ul class="navbar-nav nav-fill d-flex w-100">
+                    ${base.html_navigation_links()}
+                    ${template_hooks['menu']()}
+                </ul>
+            </div><!-- /.navbar-collapse -->
+    </nav>
+</header>
+
+
 
 <div class="container" id="content" role="main">
     <div class="body-content">

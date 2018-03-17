@@ -156,9 +156,10 @@ lang="${lang}">
             </div>
         % else:
             % if rel_link(permalink, url) == "#":
-                  <a class="p-2 text-white bg-secondary active" href="${url}">${text} <span class="sr-only">${messages("(active)", lang)}</span></a>
+                  ##<a class="p-2 text-white bg-secondary active" href="${url}">${text} <span class="sr-only">${messages("(active)", lang)}</span></a>
+                <li class="nav-item active"><a href="${permalink}" class="nav-link">${text} <span class="sr-only">${messages("(active)", lang)}</span></a>
             %else:
-                  <a class="p-2 text-secondary" href="${url}">${text}</a>
+                <li class="nav-item"><a href="${url}" class="nav-link">${text}</a>
             %endif
         % endif
     %endfor

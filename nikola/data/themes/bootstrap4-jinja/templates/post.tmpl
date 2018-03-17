@@ -3,6 +3,7 @@
 {% import 'post_header.tmpl' as pheader with context %}
 {% import 'comments_helper.tmpl' as comments with context %}
 {% import 'math_helper.tmpl' as math with context %}
+{% import 'ui_helper.tmpl' as ui with context %}
 {% extends 'base.tmpl' %}
 
 {% block extra_head %}
@@ -54,8 +55,6 @@
 
 {% block sourcelink %}
 {% if show_sourcelink %}
-    <li class="nav-item">
-    <a href="{{ post.source_link() }}" id="sourcelink" class="nav-link">{{ messages("Source") }}</a>
-    </li>
+    {{ ui.show_sourcelink(post.source_link()) }}
 {% endif %}
 {% endblock %}

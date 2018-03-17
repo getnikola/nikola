@@ -1,6 +1,5 @@
 ## -*- coding: utf-8 -*-
-
-<%def name="bar(crumbs)">
+<%def name="breadcrumbs(crumbs)">
 %if crumbs:
 <nav class="breadcrumbs">
 <ul class="breadcrumb">
@@ -16,4 +15,10 @@
 </ul>
 </nav>
 %endif
+</%def>
+
+<%def name="show_sourcelink(sourcelink_href)">
+    <li class="nav-item">
+    <a href="${sourcelink_href}" id="sourcelink" class="nav-link">${messages("Source")}</a>
+    </li>
 </%def>
