@@ -38,6 +38,8 @@ Features
 Bugfixes
 --------
 
+* Hide “Incomplete language” message for overrides of complete
+  languages
 * Handle '/' and other absolute paths better in POSTS / PAGES / TRANSLATIONS
   (Issue #2982)
 * Fix loading non-default languages

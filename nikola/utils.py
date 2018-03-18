@@ -676,7 +676,7 @@ def get_theme_chain(theme, themes_dirs):
     return themes
 
 
-language_incomplete_warned = []
+INCOMPLETE_LANGUAGES_WARNED = set()
 
 
 class LanguageNotFoundError(Exception):
@@ -702,6 +702,7 @@ def load_messages(themes, translations, default_lang, themes_dirs):
     oldpath = list(sys.path)
     found = {lang: False for lang in translations.keys()}
     last_exception = None
+    completion_status = {lang: False for lang in translations.keys()}
     for theme_name in themes[::-1]:
         msg_folder = os.path.join(get_theme_path(theme_name), 'messages')
         default_folder = os.path.join(get_theme_path_real('base', themes_dirs), 'messages')
@@ -717,12 +718,11 @@ def load_messages(themes, translations, default_lang, themes_dirs):
                 # If we don't do the reload, the module is cached
                 _reload(translation)
                 found[lang] = True
-                if sorted(translation.MESSAGES.keys()) !=\
-                        sorted(english.MESSAGES.keys()) and \
-                        lang not in language_incomplete_warned:
-                    language_incomplete_warned.append(lang)
-                    LOGGER.warn("Incomplete translation for language "
-                                "'{0}'.".format(lang))
+                if sorted(translation.MESSAGES.keys()) != sorted(english.MESSAGES.keys()):
+                    completion_status[lang] = completion_status[lang] or False
+                else:
+                    completion_status[lang] = True
+
                 messages[lang].update(english.MESSAGES)
                 for k, v in translation.MESSAGES.items():
                     if v:
@@ -732,8 +732,13 @@ def load_messages(themes, translations, default_lang, themes_dirs):
                 last_exception = orig
         del(english)
         sys.path = oldpath
+
     if not all(found.values()):
         raise LanguageNotFoundError(lang, last_exception)
+    for lang, status in completion_status.items():
+        if not status and lang not in INCOMPLETE_LANGUAGES_WARNED:
+            LOGGER.warn("Incomplete translation for language '{0}'.".format(lang))
+            INCOMPLETE_LANGUAGES_WARNED.add(lang)
 
     return messages
 
