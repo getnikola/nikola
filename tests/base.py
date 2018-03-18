@@ -175,6 +175,7 @@ class FakeSite(object):
             'MARKDOWN_EXTENSIONS': ['markdown.extensions.fenced_code', 'markdown.extensions.codehilite'],
             'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}',
             'LISTINGS_FOLDERS': {'listings': 'listings'},
+            'TRANSLATIONS': {'en': ''},
         }
         self.EXTRA_PLUGINS = self.config['EXTRA_PLUGINS']
         self.plugin_manager = PluginManager(categories_filter={

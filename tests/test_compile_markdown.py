@@ -23,7 +23,7 @@ class CompileMarkdownTests(BaseTestCase):
         with io.open(self.input_path, "w+", encoding="utf8") as input_file:
             input_file.write(input_string)
 
-        self.compiler.compile(self.input_path, self.output_path)
+        self.compiler.compile(self.input_path, self.output_path, lang='en')
 
         output_str = None
         with io.open(self.output_path, "r", encoding="utf8") as output_path:

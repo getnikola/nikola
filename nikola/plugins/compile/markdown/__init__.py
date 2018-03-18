@@ -92,17 +92,19 @@ class CompileMarkdown(PageCompiler):
         extensions.extend(site_extensions)
 
         site_extension_configs = self.site.config.get("MARKDOWN_EXTENSION_CONFIGS", {})
-        self.config_dependencies.append(json.dumps(site_extension_configs.values, sort_keys=True))
+        if site_extension_configs:
+            self.config_dependencies.append(json.dumps(site_extension_configs.values, sort_keys=True))
 
         if Markdown is not None:
             self.converters = {}
             for lang in self.site.config['TRANSLATIONS']:
-                self.converters[lang] = ThreadLocalMarkdown(extensions, site_extension_configs[lang])
+                self.converters[lang] = ThreadLocalMarkdown(extensions, site_extension_configs.get(lang, {}))
         self.supports_metadata = 'markdown.extensions.meta' in extensions
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
         """Compile Markdown into HTML strings."""
-        lang = lang or self.site.config.DEFAULT_LANGUAGE
+        if lang is None:
+            lang = LocaleBorg().current_lang
         if Markdown is None:
             req_missing(['markdown'], 'build this site (compile Markdown)')
         if not is_two_file:
