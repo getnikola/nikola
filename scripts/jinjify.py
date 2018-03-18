@@ -242,7 +242,8 @@ if __name__ == "__main__":
         print('Performing standard conversions:')
         for m, j in (
             ('nikola/data/themes/base', 'nikola/data/themes/base-jinja'),
-            ('nikola/data/themes/bootstrap4', 'nikola/data/themes/bootstrap4-jinja')
+            ('nikola/data/themes/bootstrap4', 'nikola/data/themes/bootstrap4-jinja'),
+            ('nikola/data/themes/bootblog4', 'nikola/data/themes/bootblog4-jinja'),
         ):
             print('    {0} -> {1}'.format(m, j))
             jinjify(m, j)
