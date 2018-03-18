@@ -700,35 +700,41 @@ def load_messages(themes, translations, default_lang, themes_dirs):
     """
     messages = Functionary(dict, default_lang)
     oldpath = list(sys.path)
+    found = {lang: False for lang in translations.keys()}
+    last_exception = None
     for theme_name in themes[::-1]:
         msg_folder = os.path.join(get_theme_path(theme_name), 'messages')
         default_folder = os.path.join(get_theme_path_real('base', themes_dirs), 'messages')
         sys.path.insert(0, default_folder)
         sys.path.insert(0, msg_folder)
 
-    english = __import__('messages_en')
-    # If we don't do the reload, the module is cached
-    _reload(english)
-    for lang in list(translations.keys()):
-        try:
-            translation = __import__('messages_' + lang)
-            # If we don't do the reload, the module is cached
-            _reload(translation)
-            if sorted(translation.MESSAGES.keys()) !=\
-                    sorted(english.MESSAGES.keys()) and \
-                    lang not in language_incomplete_warned:
-                language_incomplete_warned.append(lang)
-                LOGGER.warn("Incomplete translation for language "
-                            "'{0}'.".format(lang))
-            messages[lang].update(english.MESSAGES)
-            for k, v in translation.MESSAGES.items():
-                if v:
-                    messages[lang][k] = v
-            del(translation)
-        except ImportError as orig:
-            raise LanguageNotFoundError(lang, orig)
-    del(english)
-    sys.path = oldpath
+        english = __import__('messages_en')
+        # If we don't do the reload, the module is cached
+        _reload(english)
+        for lang in translations.keys():
+            try:
+                translation = __import__('messages_' + lang)
+                # If we don't do the reload, the module is cached
+                _reload(translation)
+                found[lang] = True
+                if sorted(translation.MESSAGES.keys()) !=\
+                        sorted(english.MESSAGES.keys()) and \
+                        lang not in language_incomplete_warned:
+                    language_incomplete_warned.append(lang)
+                    LOGGER.warn("Incomplete translation for language "
+                                "'{0}'.".format(lang))
+                messages[lang].update(english.MESSAGES)
+                for k, v in translation.MESSAGES.items():
+                    if v:
+                        messages[lang][k] = v
+                del(translation)
+            except ImportError as orig:
+                last_exception = orig
+        del(english)
+        sys.path = oldpath
+    if not all(found.values()):
+        raise LanguageNotFoundError(lang, last_exception)
+
     return messages
 
 
