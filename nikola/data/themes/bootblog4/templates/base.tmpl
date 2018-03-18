@@ -11,9 +11,7 @@ ${template_hooks['extra_head']()}
 <body>
 <a href="#content" class="sr-only sr-only-focusable">${messages("Skip to main content")}</a>
 
-<!-- Menubar -->
-
-
+<!-- Header and menu bar -->
 <div class="container">
       <header class="blog-header py-3">
         <div class="row nbb-header align-items-center">
@@ -44,18 +42,16 @@ ${template_hooks['extra_head']()}
                 ${template_hooks['menu_alt']()}
           </div>
         </div>
-
-    <nav class="navbar navbar-expand-md navbar-light bg-white static-top">
-            <div class="collapse navbar-collapse" id="bs-navbar">
-                <ul class="navbar-nav nav-fill d-flex w-100">
-                    ${base.html_navigation_links()}
-                    ${template_hooks['menu']()}
-                </ul>
-            </div><!-- /.navbar-collapse -->
-    </nav>
 </header>
 
-
+<nav class="navbar navbar-expand-md navbar-light bg-white static-top">
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav nav-fill d-flex w-100">
+                ${base.html_navigation_links()}
+                ${template_hooks['menu']()}
+            </ul>
+        </div><!-- /.navbar-collapse -->
+</nav>
 
 <div class="container" id="content" role="main">
     <div class="body-content">
