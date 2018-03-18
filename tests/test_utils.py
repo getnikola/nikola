@@ -294,20 +294,20 @@ class TranslatableSettingsTest(unittest.TestCase):
 
 def test_get_asset_path():
     assert get_asset_path('assets/css/nikola_rst.css',
-                          get_theme_chain('bootstrap3', ['themes'])).replace(
+                          get_theme_chain('bootstrap4', ['themes'])).replace(
         '\\', '/').endswith('nikola/data/themes/base/assets/css/nikola_rst.css')
     assert get_asset_path('assets/css/theme.css',
-                          get_theme_chain('bootstrap3', ['themes'])).replace(
+                          get_theme_chain('bootstrap4', ['themes'])).replace(
         '\\', '/').endswith(
-        'nikola/data/themes/bootstrap3/assets/css/theme.css')
+        'nikola/data/themes/bootstrap4/assets/css/theme.css')
     assert get_asset_path(
-        'nikola.py', get_theme_chain('bootstrap3', ['themes']),
+        'nikola.py', get_theme_chain('bootstrap4', ['themes']),
         {'nikola': ''}).replace(
         '\\', '/').endswith('nikola/nikola.py')
     assert get_asset_path('nikola.py', get_theme_chain(
-        'bootstrap3', ['themes']), {'nikola': 'nikola'}) is None
+        'bootstrap4', ['themes']), {'nikola': 'nikola'}) is None
     assert get_asset_path(
-        'nikola/nikola.py', get_theme_chain('bootstrap3', ['themes']),
+        'nikola/nikola.py', get_theme_chain('bootstrap4', ['themes']),
         {'nikola': 'nikola'}).replace(
         '\\', '/').endswith('nikola/nikola.py')
 

@@ -1,0 +1,60 @@
+## -*- coding: utf-8 -*-
+<%namespace name="helper" file="index_helper.tmpl"/>
+<%namespace name="math" file="math_helper.tmpl"/>
+<%namespace name="comments" file="comments_helper.tmpl"/>
+<%namespace name="pagination" file="pagination_helper.tmpl"/>
+<%namespace name="feeds_translations" file="feeds_translations_helper.tmpl" import="*"/>
+<%inherit file="base.tmpl"/>
+
+<%block name="extra_head">
+    ${parent.extra_head()}
+    % if posts and (permalink == '/' or permalink == '/' + index_file):
+        <link rel="prefetch" href="${posts[0].permalink()}" type="text/html">
+    % endif
+    ${math.math_styles_ifposts(posts)}
+</%block>
+
+<%block name="content">
+<%block name="content_header">
+    ${feeds_translations.translation_link(kind)}
+</%block>
+% if 'main_index' in pagekind:
+    ${front_index_header}
+% endif
+% if page_links:
+    ${pagination.page_navigation(current_page, page_links, prevlink, nextlink, prev_next_links_reversed)}
+% endif
+<div class="postindex">
+% for post in posts:
+    <article class="h-entry post-${post.meta('type')}">
+    <header>
+        <h1 class="p-name entry-title"><a href="${post.permalink()}" class="u-url">${post.title()|h}</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+            % if author_pages_generated:
+                <a href="${_link('author', post.author())}">${post.author()|h}</a>
+            % else:
+                ${post.author()|h}
+            % endif
+            </span></p>
+            <p class="dateline"><a href="${post.permalink()}" rel="bookmark"><time class="published dt-published" datetime="${post.formatted_date('webiso')}" title="${post.formatted_date(date_format)|h}">${post.formatted_date(date_format)|h}</time></a></p>
+            % if not post.meta('nocomments') and site_has_comments:
+                <p class="commentline">${comments.comment_link(post.permalink(), post._base_path)}
+            % endif
+        </div>
+    </header>
+    %if index_teasers:
+    <div class="p-summary entry-summary">
+    ${post.text(teaser_only=True)}
+    %else:
+    <div class="e-content entry-content">
+    ${post.text(teaser_only=False)}
+    %endif
+    </div>
+    </article>
+% endfor
+</div>
+${helper.html_pager()}
+${comments.comment_link_script()}
+${math.math_scripts_ifposts(posts)}
+</%block>

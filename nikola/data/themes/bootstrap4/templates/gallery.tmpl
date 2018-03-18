@@ -1,0 +1,104 @@
+## -*- coding: utf-8 -*-
+<%inherit file="base.tmpl"/>
+<%namespace name="comments" file="comments_helper.tmpl"/>
+<%namespace name="ui" file="ui_helper.tmpl"/>
+<%block name="sourcelink"></%block>
+
+<%block name="content">
+    ${ui.breadcrumbs(crumbs)}
+    %if title:
+    <h1>${title|h}</h1>
+    %endif
+    %if post:
+    <p>
+        ${post.text()}
+    </p>
+    %endif
+    %if folders:
+    <ul>
+    % for folder, ftitle in folders:
+        <li><a href="${folder}">📂&nbsp;${ftitle|h}</a></li>
+    % endfor
+    </ul>
+    %endif
+
+<div id="gallery_container"></div>
+%if photo_array:
+<noscript>
+<ul class="thumbnails">
+    %for image in photo_array:
+        <li><a href="${image['url']}" class="thumbnail image-reference" title="${image['title']|h}">
+            <img src="${image['url_thumb']}" alt="${image['title']|h}" /></a>
+    %endfor
+</ul>
+</noscript>
+%endif
+%if site_has_comments and enable_comments:
+${comments.comment_form(None, permalink, title)}
+%endif
+</%block>
+
+<%block name="extra_head">
+${parent.extra_head()}
+<link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
+<style type="text/css">
+    #gallery_container {
+        position: relative;
+    }
+    .image-block {
+        position: absolute;
+    }
+</style>
+%if len(translations) > 1:
+    %for langname in translations.keys():
+         %if langname != lang:
+             <link rel="alternate" hreflang="${langname}" href="${_link('gallery', gallery_path, langname)}">
+         %endif
+    %endfor
+%endif
+</%block>
+
+<%block name="extra_js">
+<script src="/assets/js/justified-layout.min.js"></script>
+<script>
+var jsonContent = ${photo_array_json};
+
+function renderGallery() {
+    var container = document.getElementById("gallery_container");
+    container.innerHTML = '';
+    var layoutGeometry = require('justified-layout')(jsonContent, {
+    "containerWidth": container.offsetWidth,
+    "targetRowHeight": ${thumbnail_size}*.6,
+    "boxSpacing": 5});
+    container.style.height = layoutGeometry.containerHeight + 'px';
+    var boxes = layoutGeometry.boxes;
+    for (var i = 0; i < boxes.length; i++) {
+        var img = document.createElement("img");
+        img.setAttribute('src', jsonContent[i].url_thumb);
+        img.setAttribute('alt', jsonContent[i].title);
+        img.style.width = boxes[i].width + 'px';
+        img.style.height = boxes[i].height + 'px';
+        link = document.createElement("a");
+        link.setAttribute('href', jsonContent[i].url);
+        link.setAttribute('class', 'image-reference');
+        div = document.createElement("div");
+        div.setAttribute('class', 'image-block');
+        div.setAttribute('title', jsonContent[i].title);
+        div.setAttribute('data-toggle', "tooltip")
+        div.style.width = boxes[i].width + 'px';
+        div.style.height = boxes[i].height + 'px';
+        div.style.top = boxes[i].top + 'px';
+        div.style.left = boxes[i].left + 'px';
+        link.append(img);
+        div.append(link);
+        container.append(div);
+    }
+    baguetteBox.run('#gallery_container', {
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+}
+renderGallery();
+window.addEventListener('resize', renderGallery);
+</script>
+</%block>

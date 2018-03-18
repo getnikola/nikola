@@ -69,8 +69,8 @@ class CommandBootswatchTheme(Command):
             'name': 'parent',
             'short': 'p',
             'long': 'parent',
-            'default': 'bootstrap3',
-            'help': 'Parent theme name (default: bootstrap3)',
+            'default': 'bootstrap4',
+            'help': 'Parent theme name (default: bootstrap4)',
         },
     ]
 
@@ -82,15 +82,17 @@ class CommandBootswatchTheme(Command):
             LOGGER.error('The -s option is mandatory')
             return 1
         parent = options['parent']
-        version = '3'
+        version = '4'
 
-        # See if we need bootswatch for bootstrap v2 or v3
+        # Check which Bootstrap version to use
         themes = utils.get_theme_chain(parent, self.site.themes_dirs)
         if _check_for_theme('bootstrap', themes) or _check_for_theme('bootstrap-jinja', themes):
             version = '2'
+        elif _check_for_theme('bootstrap3', themes) or _check_for_theme('bootstrap3-jinja', themes):
+            version = '3'
         elif _check_for_theme('bootstrap4', themes) or _check_for_theme('bootstrap4-jinja', themes):
             version = '4'
-        elif not _check_for_theme('bootstrap3', themes) and not _check_for_theme('bootstrap3-jinja', themes):
+        elif not _check_for_theme('bootstrap4', themes) and not _check_for_theme('bootstrap4-jinja', themes):
             LOGGER.warn('"bootswatch_theme" only makes sense for themes that use bootstrap')
         elif _check_for_theme('bootstrap3-gradients', themes) or _check_for_theme('bootstrap3-gradients-jinja', themes):
             LOGGER.warn('"bootswatch_theme" doesn\'t work well with the bootstrap3-gradients family')

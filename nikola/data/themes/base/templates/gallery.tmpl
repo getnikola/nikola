@@ -1,11 +1,11 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="base.tmpl"/>
 <%namespace name="comments" file="comments_helper.tmpl"/>
-<%namespace name="ui" file="crumbs.tmpl" import="bar"/>
+<%namespace name="ui" file="ui_helper.tmpl"/>
 <%block name="sourcelink"></%block>
 
 <%block name="content">
-    ${ui.bar(crumbs)}
+    ${ui.breadcrumbs(crumbs)}
     %if title:
     <h1>${title|h}</h1>
     %endif
@@ -43,13 +43,13 @@
 ${parent.extra_head()}
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
 <style type="text/css">
+    #gallery_container {
+        position: relative;
+    }
     .image-block {
-        display: inline-block;
+        position: absolute;
     }
-    .flowr_row {
-        width: 100%;
-    }
-    </style>
+</style>
 %if len(translations) > 1:
     %for langname in translations.keys():
          %if langname != lang:
@@ -61,45 +61,46 @@ ${parent.extra_head()}
 </%block>
 
 <%block name="extra_js">
-<script src="/assets/js/flowr.js"></script>
+<script src="/assets/js/justified-layout.min.js"></script>
 <script>
-jsonContent = ${photo_array_json};
-flowr(document.querySelectorAll("#gallery_container")[0], {
-        data : jsonContent,
-        height : ${thumbnail_size}*.6,
-        padding: 5,
-        rows: -1,
-        render : function(params) {
-            // Just return a div, string or a dom object, anything works fine
-            var img = document.createElement("img");
-            img.setAttribute('src', params.itemData.url_thumb);
-            img.setAttribute('width', params.width);
-            img.setAttribute('height', params.height);
-            img.setAttribute('alt', params.itemData.title);
-            img.style.maxWidth = '100%';
-            link = document.createElement("a");
-            link.setAttribute('href', params.itemData.url);
-            link.setAttribute('class', 'image-reference');
-            div = document.createElement("div");
-            div.setAttribute('class', 'image-block');
-            div.setAttribute('title', params.itemData.title);
-            div.setAttribute('data-toggle', "tooltip")
-            link.append(img);
-            div.append(link);
-            //div.hover(div.tooltip());
-            return div;
-        },
-        itemWidth : function(data) { return data.size.w; },
-        itemHeight : function(data) { return data.size.h; },
-        complete : function(params) {
-            if( jsonContent.length > params.renderedItems ) {
-                nextRenderList = jsonContent.slice( params.renderedItems );
-            }
-        }
-    });
+var jsonContent = ${photo_array_json};
+
+function renderGallery() {
+    var container = document.getElementById("gallery_container");
+    container.innerHTML = '';
+    var layoutGeometry = require('justified-layout')(jsonContent, {
+    "containerWidth": container.offsetWidth,
+    "targetRowHeight": ${thumbnail_size}*.6,
+    "boxSpacing": 5});
+    container.style.height = layoutGeometry.containerHeight + 'px';
+    var boxes = layoutGeometry.boxes;
+    for (var i = 0; i < boxes.length; i++) {
+        var img = document.createElement("img");
+        img.setAttribute('src', jsonContent[i].url_thumb);
+        img.setAttribute('alt', jsonContent[i].title);
+        img.style.width = boxes[i].width + 'px';
+        img.style.height = boxes[i].height + 'px';
+        link = document.createElement("a");
+        link.setAttribute('href', jsonContent[i].url);
+        link.setAttribute('class', 'image-reference');
+        div = document.createElement("div");
+        div.setAttribute('class', 'image-block');
+        div.setAttribute('title', jsonContent[i].title);
+        div.setAttribute('data-toggle', "tooltip")
+        div.style.width = boxes[i].width + 'px';
+        div.style.height = boxes[i].height + 'px';
+        div.style.top = boxes[i].top + 'px';
+        div.style.left = boxes[i].left + 'px';
+        link.append(img);
+        div.append(link);
+        container.append(div);
+    }
     baguetteBox.run('#gallery_container', {
         captions: function(element) {
             return element.getElementsByTagName('img')[0].alt;
     }});
+}
+renderGallery();
+window.addEventListener('resize', renderGallery);
 </script>
 </%block>

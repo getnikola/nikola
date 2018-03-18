@@ -97,6 +97,7 @@ __all__ = ('Nikola',)
 
 # We store legal values for some settings here.  For internal use.
 LEGAL_VALUES = {
+    'DEFAULT_THEME': 'bootblog4',
     'COMMENT_SYSTEM': [
         'disqus',
         'facebook',
@@ -566,7 +567,7 @@ class Nikola(object):
             'TAGS_INDEX_PATH': '',
             'TAGLIST_MINIMUM_POSTS': 1,
             'TEMPLATE_FILTERS': {},
-            'THEME': 'bootstrap3',
+            'THEME': LEGAL_VALUES['DEFAULT_THEME'],
             'THEME_COLOR': '#5670d4',  # light "corporate blue"
             'THUMBNAIL_SIZE': 180,
             'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}',
@@ -1172,16 +1173,17 @@ class Nikola(object):
             try:
                 self._THEMES = utils.get_theme_chain(self.config['THEME'], self.themes_dirs)
             except Exception:
-                if self.config['THEME'] != 'bootstrap3':
-                    utils.LOGGER.warn('''Cannot load theme "{0}", using 'bootstrap3' instead.'''.format(self.config['THEME']))
-                    self.config['THEME'] = 'bootstrap3'
+                if self.config['THEME'] != LEGAL_VALUES['DEFAULT_THEME']:
+                    utils.LOGGER.warn('''Cannot load theme "{0}", using '{1}' instead.'''.format(
+                        self.config['THEME'], LEGAL_VALUES['DEFAULT_THEME']))
+                    self.config['THEME'] = LEGAL_VALUES['DEFAULT_THEME']
                     return self._get_themes()
                 raise
             # Check consistency of USE_CDN and the current THEME (Issue #386)
             if self.config['USE_CDN'] and self.config['USE_CDN_WARNING']:
                 bootstrap_path = utils.get_asset_path(os.path.join(
                     'assets', 'css', 'bootstrap.min.css'), self._THEMES)
-                if bootstrap_path and bootstrap_path.split(os.sep)[-4] not in ['bootstrap', 'bootstrap3']:
+                if bootstrap_path and bootstrap_path.split(os.sep)[-4] not in ['bootstrap', 'bootstrap3', 'bootstrap4']:
                     utils.LOGGER.warn('The USE_CDN option may be incompatible with your theme, because it uses a hosted version of bootstrap.')
 
         return self._THEMES
