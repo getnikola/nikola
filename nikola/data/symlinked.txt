@@ -5,6 +5,7 @@ docs/sphinx/internals.rst
 docs/sphinx/manual.rst
 docs/sphinx/path_handlers.rst
 docs/sphinx/social_buttons.rst
+docs/sphinx/support.rst
 docs/sphinx/template-variables.rst
 docs/sphinx/theming.rst
 nikola/data/samplesite/pages/creating-a-theme.rst
@@ -19,6 +20,7 @@ nikola/data/themes/base/assets/css/baguetteBox.min.css
 nikola/data/themes/base/assets/js/baguetteBox.min.js
 nikola/data/themes/base/assets/js/html5.js
 nikola/data/themes/base/assets/js/html5shiv-printshiv.min.js
+nikola/data/themes/base/assets/js/justified-layout.min.js
 nikola/data/themes/base/assets/js/moment-with-locales.min.js
 nikola/data/themes/base/messages/messages_cz.py
 nikola/data/themes/bootstrap4-jinja/assets/css/bootstrap.min.css
