@@ -1,0 +1,38 @@
+## -*- coding: utf-8 -*-
+<%inherit file="base.tmpl"/>
+
+<%block name="content">
+<h1>${title|h}</h1>
+% if cat_items:
+    % if items:
+        <h2>${messages("Categories")}</h2>
+    % endif
+    % for text, full_name, path, link, indent_levels, indent_change_before, indent_change_after in cat_hierarchy:
+        % for i in range(indent_change_before):
+            <ul class="list-inline">
+        % endfor
+        <li class="list-inline-item"><a class="reference badge badge-secondary" href="${link}">${text|h}</a>
+        % if indent_change_after <= 0:
+            </li>
+        % endif
+        % for i in range(-indent_change_after):
+            </ul>
+            % if i + 1 < len(indent_levels):
+                </li>
+            % endif
+        % endfor
+    % endfor
+    % if items:
+        <h2>${messages("Tags")}</h2>
+    % endif
+%endif
+% if items:
+    <ul class="list-inline">
+    % for text, link in items:
+        % if text not in hidden_tags:
+            <li class="list-inline-item"><a class="reference badge badge-secondary" href="${link}">${text|h}</a></li>
+        % endif
+    % endfor
+    </ul>
+% endif
+</%block>

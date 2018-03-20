@@ -39,7 +39,7 @@ class ThumbnailShortcode(ShortcodePlugin):
     def handler(self, uri, alt=None, align=None, linktitle=None, title=None, imgclass=None, figclass=None, site=None, data=None, lang=None, post=None):
         """Create HTML for thumbnail."""
         if uri.endswith('.svg'):
-            # the ? at the end makes docutil output an <img> instead of an object for the svg, which colorbox requires
+            # the ? at the end makes docutil output an <img> instead of an object for the svg, which lightboxes may require
             src = '.thumbnail'.join(os.path.splitext(uri)) + '?'
         else:
             src = '.thumbnail'.join(os.path.splitext(uri))

@@ -97,6 +97,7 @@ __all__ = ('Nikola',)
 
 # We store legal values for some settings here.  For internal use.
 LEGAL_VALUES = {
+    'DEFAULT_THEME': 'bootblog4',
     'COMMENT_SYSTEM': [
         'disqus',
         'facebook',
@@ -147,6 +148,7 @@ LEGAL_VALUES = {
         'sr_latin': 'Serbian (Latin)',
         'sv': 'Swedish',
         'te': 'Telugu',
+        'th': 'Thai',
         ('tr', '!tr_TR'): 'Turkish',
         'ur': 'Urdu',
         'uk': 'Ukrainian',
@@ -196,6 +198,7 @@ LEGAL_VALUES = {
         "sr_latin": "Serbian (Latin)",
         "sv": "Swedish",
         "te": "Telugu",
+        "th": "Thai",
         "tr": "Turkish",
         "uk": "Ukrainian",
         "ur": "Urdu",
@@ -211,45 +214,6 @@ LEGAL_VALUES = {
         # This dict is currently empty.
     },
     'RTL_LANGUAGES': ('ar', 'fa', 'he', 'ur'),
-    'COLORBOX_LOCALES': defaultdict(
-        str,
-        ar='ar',
-        bg='bg',
-        ca='ca',
-        cs='cs',
-        cz='cs',
-        da='da',
-        de='de',
-        en='',
-        es='es',
-        et='et',
-        fa='fa',
-        fi='fi',
-        fr='fr',
-        he='he',
-        hr='hr',
-        hu='hu',
-        id='id',
-        it='it',
-        ja='ja',
-        ko='kr',  # kr is South Korea, ko is the Korean language
-        lt='lt',
-        nb='no',
-        nl='nl',
-        pl='pl',
-        pt='pt-BR',  # hope nobody will mind
-        pt_br='pt-BR',
-        ru='ru',
-        sk='sk',
-        sl='si',  # country code is si, language code is sl, colorbox is wrong
-        sr='sr',  # warning: this is Serbian in Latin alphabet
-        sr_latin='sr',
-        sv='sv',
-        tr='tr',
-        uk='uk',
-        zh_cn='zh-CN',
-        zh_tw='zh-TW'
-    ),
     'MOMENTJS_LOCALES': defaultdict(
         str,
         ar='ar',
@@ -296,6 +260,7 @@ LEGAL_VALUES = {
         sv='sv',
         te='te',
         tr='tr',
+        th='th',
         uk='uk',
         ur='ur',
         zh_cn='zh-cn',
@@ -602,7 +567,7 @@ class Nikola(object):
             'TAGS_INDEX_PATH': '',
             'TAGLIST_MINIMUM_POSTS': 1,
             'TEMPLATE_FILTERS': {},
-            'THEME': 'bootstrap3',
+            'THEME': LEGAL_VALUES['DEFAULT_THEME'],
             'THEME_COLOR': '#5670d4',  # light "corporate blue"
             'THUMBNAIL_SIZE': 180,
             'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}',
@@ -653,6 +618,10 @@ class Nikola(object):
         # Translatability configuration.
         self.config['TRANSLATIONS'] = self.config.get('TRANSLATIONS',
                                                       {self.config['DEFAULT_LANG']: ''})
+        for k, v in self.config['TRANSLATIONS'].items():
+            if os.path.isabs(v):
+                self.config['TRANSLATIONS'][k] = os.path.relpath(v, '/')
+
         utils.TranslatableSetting.default_lang = self.config['DEFAULT_LANG']
 
         self.TRANSLATABLE_SETTINGS = ('BLOG_AUTHOR',
@@ -1159,7 +1128,6 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['extra_head_data'] = self.config.get('EXTRA_HEAD_DATA')
         self._GLOBAL_CONTEXT['date_fanciness'] = self.config.get('DATE_FANCINESS')
         self._GLOBAL_CONTEXT['js_date_format'] = self.config.get('JS_DATE_FORMAT')
-        self._GLOBAL_CONTEXT['colorbox_locales'] = LEGAL_VALUES['COLORBOX_LOCALES']
         self._GLOBAL_CONTEXT['momentjs_locales'] = LEGAL_VALUES['MOMENTJS_LOCALES']
         self._GLOBAL_CONTEXT['hidden_tags'] = self.config.get('HIDDEN_TAGS')
         self._GLOBAL_CONTEXT['hidden_categories'] = self.config.get('HIDDEN_CATEGORIES')
@@ -1205,16 +1173,17 @@ class Nikola(object):
             try:
                 self._THEMES = utils.get_theme_chain(self.config['THEME'], self.themes_dirs)
             except Exception:
-                if self.config['THEME'] != 'bootstrap3':
-                    utils.LOGGER.warn('''Cannot load theme "{0}", using 'bootstrap3' instead.'''.format(self.config['THEME']))
-                    self.config['THEME'] = 'bootstrap3'
+                if self.config['THEME'] != LEGAL_VALUES['DEFAULT_THEME']:
+                    utils.LOGGER.warn('''Cannot load theme "{0}", using '{1}' instead.'''.format(
+                        self.config['THEME'], LEGAL_VALUES['DEFAULT_THEME']))
+                    self.config['THEME'] = LEGAL_VALUES['DEFAULT_THEME']
                     return self._get_themes()
                 raise
             # Check consistency of USE_CDN and the current THEME (Issue #386)
             if self.config['USE_CDN'] and self.config['USE_CDN_WARNING']:
                 bootstrap_path = utils.get_asset_path(os.path.join(
                     'assets', 'css', 'bootstrap.min.css'), self._THEMES)
-                if bootstrap_path and bootstrap_path.split(os.sep)[-4] not in ['bootstrap', 'bootstrap3']:
+                if bootstrap_path and bootstrap_path.split(os.sep)[-4] not in ['bootstrap', 'bootstrap3', 'bootstrap4']:
                     utils.LOGGER.warn('The USE_CDN option may be incompatible with your theme, because it uses a hosted version of bootstrap.')
 
         return self._THEMES

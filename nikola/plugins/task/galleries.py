@@ -587,6 +587,8 @@ class Galleries(Task, ImageProcessor):
                     'w': w,
                     'h': h
                 },
+                'width': w,
+                'height': h
             })
         context['photo_array'] = photo_array
         context['photo_array_json'] = json.dumps(photo_array, sort_keys=True)

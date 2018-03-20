@@ -4,10 +4,15 @@ New in master
 Features
 --------
 
+* Replace ``flowr.js`` with ``justified-layout.js`` by Flickr
+  (does not require jQuery!)
+* ``bootblog4`` is the new default theme (Issue #2964)
+* New ``bootstrap4`` and ``bootblog4`` themes (Issue #2964)
+* New Thai translation by Narumol Hankrotha and Jean Jordaan
 * Support for Commento comment system (Issue #2773)
 * New PRESERVE_ICC_PROFILES option to control whether ICC profiles are
   preserved when copying images.
-* Use baguetteJS in bootstrap theme (part of Issue #2777)
+* Use baguetteBox in Bootstrap theme (part of Issue #2777)
 * New default-config command to generate a clean configuration.
 * New ``thumbnail`` shortcode similar to the reStructuredText
   ``thumbnail`` directive (via Issue #2809)
@@ -33,7 +38,11 @@ Features
 Bugfixes
 --------
 
-* Handle '/' and other absolute paths better in POSTS / PAGES
+* Hide “Incomplete language” message for overrides of complete
+  languages
+* Handle '/' and other absolute paths better in POSTS / PAGES / TRANSLATIONS
+  (Issue #2982)
+* Fix loading non-default languages
 * Support KaTeX for reST display math (Issue #2888)
 * Use npm for asset management instead of bower, which was deprecated
   (Issue #2790)
@@ -68,6 +77,7 @@ Bugfixes
 Removed features
 ----------------
 
+* Removed Colorbox (Issue #2777)
 * Removed ``googleplus`` comments (no longer supported) (Issue #635)
 * Removed the slides directive for docutils, it will now be a separate plugin.
 * Dropped Python 2 and Python 3.3 support (oldest supported version is 3.4)
@@ -78,6 +88,12 @@ Removed features
 * Removed taxonomy option ``also_create_classifications_from_other_languages``
   (Issue #2785)
 * Removed old 7-line metadata format (Issue #2839)
+
+Other changes
+-------------
+
+* Rename ``crumbs.tmpl`` to ``ui_helper.tmpl`` and the breadcrumbs
+  function to ``breadcrumbs``
 
 New in v7.8.8
 =============

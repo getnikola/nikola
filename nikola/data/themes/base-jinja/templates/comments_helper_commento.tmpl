@@ -1,0 +1,19 @@
+{#  -*- coding: utf-8 -*- #}
+{% macro comment_form(url, title, identifier) %}
+    <div id="commento"></div>
+{% endmacro %}
+
+{% macro comment_link(link, identifier) %}
+{% endmacro %}
+
+
+{% macro comment_link_script() %}
+<script src="{{ comment_system_id }}/assets/js/commento.min.js"></script>
+<script>
+window.onload = function() {
+    Commento.init({
+        serverUrl: "{{ comment_system_id }}",
+    });
+}
+</script>
+{% endmacro %}

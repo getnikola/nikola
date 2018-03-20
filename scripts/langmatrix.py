@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """A matrix! Of languages!"""
 import nikola.nikola
-import os.path
-import glob
 
-keys = ['_WINDOWS_LOCALE_GUESSES', 'COLORBOX_LOCALES', 'MOMENTJS_LOCALES', 'PYPHEN_LOCALES', 'DOCUTILS_LOCALES']
-keys_short = ['language', 'windows', 'cbox', 'moment', 'pyphen', 'docutils']
+keys = ['_WINDOWS_LOCALE_GUESSES', 'MOMENTJS_LOCALES', 'PYPHEN_LOCALES', 'DOCUTILS_LOCALES']
+keys_short = ['language', 'windows', 'moment', 'pyphen', 'docutils']
 print('\t'.join(keys_short))
 
 for tr in nikola.nikola.LEGAL_VALUES['TRANSLATIONS']:

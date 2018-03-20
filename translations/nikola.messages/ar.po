@@ -9,14 +9,15 @@
 # Translators:
 # darkwise <za3boud@yahoo.fr>, 2014
 # Mohammed Attia <skeuomorf@gmail.com>, 2014
+# Nasser Alshammari <designernasser@gmail.com>, 2018
 # darkwise <za3boud@yahoo.fr>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2017-06-12 12:47+0000\n"
-"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"PO-Revision-Date: 2018-01-08 13:30+0000\n"
+"Last-Translator: Nasser Alshammari <designernasser@gmail.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/ralsina/nikola/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -113,38 +114,38 @@ msgid "RSS feed"
 msgstr ""
 
 msgid "%d min remaining to read"
-msgstr ""
+msgstr "%d دقائق متبقية للقراءة"
 
 msgid "Skip to main content"
 msgstr "انتقل إلى المحتوى الرئيسي"
 
 msgid "Subcategories:"
-msgstr ""
+msgstr "فئات فرعية"
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
-msgstr ""
+msgstr "(نشط)"
 
 #. Default content for a new post
 msgid "Write your post here."
-msgstr ""
+msgstr "أكتب مقالك هنا"
 
 #. Default content for a new page
 msgid "Write your page here."
-msgstr ""
+msgstr "أكتب صفحتك هنا "
 
 msgid "Uncategorized"
-msgstr ""
+msgstr "غير مصنف"
 
 #. Used for feeds of any format
 msgid "Updates"
-msgstr ""
+msgstr "التحديثات"
 
 msgid "Authors"
-msgstr ""
+msgstr "المؤلفون"
 
 msgid "Posts by %s"
-msgstr ""
+msgstr "مقالات بواسطة %s"
 
 msgid "Toggle navigation"
 msgstr ""
@@ -158,13 +159,13 @@ msgid "{month} {day}, {year}"
 msgstr ""
 
 msgid "Previous"
-msgstr ""
+msgstr "السابق"
 
 msgid "Up"
-msgstr ""
+msgstr "أعلى"
 
 msgid "Next"
-msgstr ""
+msgstr "التالي"
 
 msgid "Atom feed"
 msgstr ""

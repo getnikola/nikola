@@ -1,1 +1,1 @@
-../../../../docs/theming.txt
+../../../../docs/theming.rst
