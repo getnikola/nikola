@@ -83,13 +83,10 @@ ${base.late_load_js()}
     <!-- end fancy dates -->
     <%block name="extra_js"></%block>
     <script>
-    baguetteBox.run('a.reference:not(.islink)', {
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
         captions: function(element) {
             return element.getElementsByTagName('img')[0].alt;
-    }});
-    baguetteBox.run('img:not(.islink)', {
-        captions: function(element) {
-            return element.alt;
     }});
     </script>
 ${body_end}
