@@ -1,0 +1,170 @@
+# Messages in Nikola
+# Copyright (C) 2012-2016
+# This file is distributed under the same license as the Nikola package.
+# 
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+# Chris Warrick, 2018
+# molnly <hankrothan@gmail.com>, 2018
+# Jean Jordaan <jean.jordaan@gmail.com>, 2018
+msgid ""
+msgstr ""
+"Project-Id-Version: Nikola\n"
+"Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
+"POT-Creation-Date: 2013-03-15 12:24-0300\n"
+"PO-Revision-Date: 2018-03-17 13:22+0000\n"
+"Last-Translator: Jean Jordaan <jean.jordaan@gmail.com>\n"
+"Language-Team: Thai (http://www.transifex.com/ralsina/nikola/language/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "More posts about %s"
+msgstr "โพสต์เพิ่มเติมเกี่ยวกับ %s"
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "LANGUAGE"
+msgstr "ภาษาไทย"
+
+msgid "Tags"
+msgstr "แท็ก"
+
+msgid "Categories"
+msgstr "หมวดหมู่"
+
+msgid "Tags and Categories"
+msgstr "แท็กและหมวดหมู่"
+
+msgid "Comments"
+msgstr "ความคิดเห็น"
+
+msgid "Read more"
+msgstr "อ่านเพิ่มเติม"
+
+msgid "Posts about %s"
+msgstr "โพสต์เกี่ยวกับ %s"
+
+msgid "Next post"
+msgstr "โพสต์ถัดไป"
+
+msgid "old posts, page %d"
+msgstr "โพสต์เก่า, หน้า %d"
+
+msgid "page %d"
+msgstr "หน้า %d"
+
+msgid "Source"
+msgstr "แหล่งที่มา"
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "Read in English"
+msgstr "อ่านเป็นภาษาไทย"
+
+msgid "Posts for year %s"
+msgstr "โพสต์เมื่อปี  %s"
+
+msgid "Newer posts"
+msgstr "โพสต์มาใหม่"
+
+msgid "Previous post"
+msgstr "โพสต์ก่อนหน้า"
+
+msgid "Also available in:"
+msgstr "อีกทั้งยังมี:"
+
+msgid "Languages:"
+msgstr "ภาษา:"
+
+msgid "Original site"
+msgstr "เว็บไซต์ที่มา"
+
+msgid "Older posts"
+msgstr "โพสต์เก่า"
+
+msgid "Archive"
+msgstr "คลังโพสต์"
+
+msgid "Publication date"
+msgstr "วันที่ตีพิมพ์"
+
+msgid "Posted:"
+msgstr "โพสต์เมื่อ:"
+
+msgid "Posts for {month} {year}"
+msgstr "โพสต์เมื่อ  {month} {year}"
+
+msgid "Posts for {month} {day}, {year}"
+msgstr "โพสต์เมื่อ {month} {day}, {year}"
+
+msgid "Nothing found."
+msgstr "ไม่พบ"
+
+msgid "No posts found."
+msgstr "ไม่พบโพสต์."
+
+msgid "RSS feed"
+msgstr "ฟีด RSS"
+
+msgid "%d min remaining to read"
+msgstr "%d อย่างน้อยการอ่านคงเหลือ"
+
+msgid "Skip to main content"
+msgstr "ไปสู่หน้าหลัก"
+
+msgid "Subcategories:"
+msgstr "หมวดหมู่ย่อย:"
+
+#. Used for active navigation links, for screen readers only
+msgid "(active)"
+msgstr "(ใช้งาน)"
+
+#. Default content for a new post
+msgid "Write your post here."
+msgstr "เขียนโพสต์ที่นี่"
+
+#. Default content for a new page
+msgid "Write your page here."
+msgstr "เขียนเพจที่นี่"
+
+msgid "Uncategorized"
+msgstr "ไม่มีหมวดหมู่"
+
+#. Used for feeds of any format
+msgid "Updates"
+msgstr "อัพเดด"
+
+msgid "Authors"
+msgstr "ผู้เขียน"
+
+msgid "Posts by %s"
+msgstr "โพสต์โดย %s"
+
+msgid "Toggle navigation"
+msgstr "เมนูบาร์"
+
+#. Used to format months per year
+msgid "{month} {year}"
+msgstr "{month} {year}"
+
+#. Used to format a date
+msgid "{month} {day}, {year}"
+msgstr "{month} {day}, {year}"
+
+msgid "Previous"
+msgstr "ก่อนหน้า"
+
+msgid "Up"
+msgstr "กลับไป"
+
+msgid "Next"
+msgstr "ถัดไป"
+
+msgid "Atom feed"
+msgstr "ฟีด Atom"
