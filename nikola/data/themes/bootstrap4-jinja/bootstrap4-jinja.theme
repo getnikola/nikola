@@ -9,3 +9,4 @@ tags = bootstrap
 
 [Family]
 family = bootstrap4
+mako-version = bootstrap4

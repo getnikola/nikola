@@ -8,4 +8,5 @@ based_on = Bootstrap 4 <http://getbootstrap.com/>, Bootstrap 4 blog example <htt
 tags = bootstrap
 
 [Family]
-family = bootstrap4
+family = bootblog4
+jinja_version = bootblog4-jinja

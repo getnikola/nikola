@@ -9,3 +9,4 @@ tags = bootstrap
 
 [Family]
 family = bootstrap4
+jinja_version = bootstrap4-jinja
