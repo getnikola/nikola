@@ -18,6 +18,11 @@ module.exports = function(grunt) {
         },
         src: ['lib/startup.js'],
         dest: 'dist/livereload.js'
+      },
+
+      test: {
+        src: ['test/html/browserified/main.js'],
+        dest: 'test/html/browserified/bundle.js'
       }
     },
 
@@ -35,7 +40,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-mocha-test');
 
-  grunt.registerTask('build', ['coffee', 'browserify']);
+  grunt.registerTask('build', ['coffee', 'browserify:dist']);
   grunt.registerTask('test', ['mochaTest']);
   grunt.registerTask('default', ['build', 'test']);
 

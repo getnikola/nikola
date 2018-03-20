@@ -1,3 +1,12 @@
+New in v7.8.13
+==============
+
+* Add new Thai translation by Narumol Hankrotha and Jean Jordaan
+  (v8 backport)
+* Hide “Incomplete language” message for overrides of complete
+  languages
+* Restore ability to override messages partially
+
 New in v7.8.12
 ==============
 

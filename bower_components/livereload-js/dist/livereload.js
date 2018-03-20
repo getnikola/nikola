@@ -4,15 +4,17 @@
 
   _ref = require('./protocol'), Parser = _ref.Parser, PROTOCOL_6 = _ref.PROTOCOL_6, PROTOCOL_7 = _ref.PROTOCOL_7;
 
-  Version = '2.2.1';
+  Version = '2.2.2';
 
   exports.Connector = Connector = (function() {
     function Connector(options, WebSocket, Timer, handlers) {
+      var path;
       this.options = options;
       this.WebSocket = WebSocket;
       this.Timer = Timer;
       this.handlers = handlers;
-      this._uri = "ws://" + this.options.host + ":" + this.options.port + "/livereload";
+      path = this.options.path ? "" + this.options.path : "livereload";
+      this._uri = "ws" + (this.options.https ? "s" : "") + "://" + this.options.host + ":" + this.options.port + "/" + path;
       this._nextDelay = this.options.mindelay;
       this._connectionDesired = false;
       this.protocol = 0;
@@ -278,7 +280,8 @@
 
 },{}],4:[function(require,module,exports){
 (function() {
-  var Connector, LiveReload, Options, Reloader, Timer;
+  var Connector, LiveReload, Options, ProtocolError, Reloader, Timer,
+    __hasProp = {}.hasOwnProperty;
 
   Connector = require('./connector').Connector;
 
@@ -288,13 +291,19 @@
 
   Reloader = require('./reloader').Reloader;
 
+  ProtocolError = require('./protocol').ProtocolError;
+
   exports.LiveReload = LiveReload = (function() {
     function LiveReload(window) {
+      var k, v, _ref;
       this.window = window;
       this.listeners = {};
       this.plugins = [];
       this.pluginIdentifiers = {};
-      this.console = this.window.location.href.match(/LR-verbose/) && this.window.console && this.window.console.log && this.window.console.error ? this.window.console : {
+      this.console = this.window.console && this.window.console.log && this.window.console.error ? this.window.location.href.match(/LR-verbose/) ? this.window.console : {
+        log: function() {},
+        error: this.window.console.error.bind(this.window.console)
+      } : {
         log: function() {},
         error: function() {}
       };
@@ -302,9 +311,20 @@
         this.console.error("LiveReload disabled because the browser does not seem to support web sockets");
         return;
       }
-      if (!(this.options = Options.extract(this.window.document))) {
-        this.console.error("LiveReload disabled because it could not find its own <SCRIPT> tag");
-        return;
+      if ('LiveReloadOptions' in window) {
+        this.options = new Options();
+        _ref = window['LiveReloadOptions'];
+        for (k in _ref) {
+          if (!__hasProp.call(_ref, k)) continue;
+          v = _ref[k];
+          this.options.set(k, v);
+        }
+      } else {
+        this.options = Options.extract(this.window.document);
+        if (!this.options) {
+          this.console.error("LiveReload disabled because it could not find its own <SCRIPT> tag");
+          return;
+        }
       }
       this.reloader = new Reloader(this.window, this.console, Timer);
       this.connector = new Connector(this.options, this.WebSocket, Timer, {
@@ -372,6 +392,7 @@
           };
         })(this)
       });
+      this.initialized = true;
     }
 
     LiveReload.prototype.on = function(eventName, handler) {
@@ -383,11 +404,12 @@
     };
 
     LiveReload.prototype.performReload = function(message) {
-      var _ref, _ref1;
+      var _ref, _ref1, _ref2;
       this.log("LiveReload received reload request: " + (JSON.stringify(message, null, 2)));
       return this.reloader.reload(message.path, {
         liveCSS: (_ref = message.liveCSS) != null ? _ref : true,
         liveImg: (_ref1 = message.liveImg) != null ? _ref1 : true,
+        reloadMissingCSS: (_ref2 = message.reloadMissingCSS) != null ? _ref2 : true,
         originalPath: message.originalPath || '',
         overrideURL: message.overrideURL || '',
         serverURL: "http://" + this.options.host + ":" + this.options.port
@@ -400,6 +422,9 @@
 
     LiveReload.prototype.shutDown = function() {
       var _base;
+      if (!this.initialized) {
+        return;
+      }
       this.connector.disconnect();
       this.log("LiveReload disconnected.");
       return typeof (_base = this.listeners).shutdown === "function" ? _base.shutdown() : void 0;
@@ -411,6 +436,9 @@
 
     LiveReload.prototype.addPlugin = function(pluginClass) {
       var plugin;
+      if (!this.initialized) {
+        return;
+      }
       if (this.hasPlugin(pluginClass.identifier)) {
         return;
       }
@@ -433,6 +461,9 @@
 
     LiveReload.prototype.analyze = function() {
       var plugin, pluginData, pluginsData, _i, _len, _ref;
+      if (!this.initialized) {
+        return;
+      }
       if (!(this.connector.protocol >= 7)) {
         return;
       }
@@ -456,12 +487,13 @@
 
 }).call(this);
 
-},{"./connector":1,"./options":5,"./reloader":7,"./timer":9}],5:[function(require,module,exports){
+},{"./connector":1,"./options":5,"./protocol":6,"./reloader":7,"./timer":9}],5:[function(require,module,exports){
 (function() {
   var Options;
 
   exports.Options = Options = (function() {
     function Options() {
+      this.https = false;
       this.host = null;
       this.port = 35729;
       this.snipver = null;
@@ -493,6 +525,7 @@
       element = _ref[_i];
       if ((src = element.src) && (m = src.match(/^[^:]+:\/\/(.*)\/z?livereload\.js(?:\?(.*))?$/))) {
         options = new Options();
+        options.https = src.indexOf("https") === 0;
         if (mm = m[1].match(/^([^\/:]+)(?::(\d+))?$/)) {
           options.host = mm[1];
           if (mm[2]) {
@@ -618,14 +651,22 @@
   var IMAGE_STYLES, Reloader, numberOfMatchingSegments, pathFromUrl, pathsMatch, pickBestMatch, splitUrl;
 
   splitUrl = function(url) {
-    var hash, index, params;
+    var comboSign, hash, index, params;
     if ((index = url.indexOf('#')) >= 0) {
       hash = url.slice(index);
       url = url.slice(0, index);
     } else {
       hash = '';
     }
-    if ((index = url.indexOf('?')) >= 0) {
+    comboSign = url.indexOf('??');
+    if (comboSign >= 0) {
+      if (comboSign + 1 !== url.lastIndexOf('?')) {
+        index = url.lastIndexOf('?');
+      }
+    } else {
+      index = url.indexOf('?');
+    }
+    if (index >= 0) {
       params = url.slice(index);
       url = url.slice(0, index);
     } else {
@@ -733,24 +774,28 @@
           return;
         }
       }
-      if (options.liveCSS) {
-        if (path.match(/\.css$/i)) {
-          if (this.reloadStylesheet(path)) {
-            return;
-          }
-        }
-      }
-      if (options.liveImg) {
-        if (path.match(/\.(jpe?g|png|gif)$/i)) {
-          this.reloadImages(path);
+      if (options.liveCSS && path.match(/\.css(?:\.map)?$/i)) {
+        if (this.reloadStylesheet(path)) {
           return;
         }
+      }
+      if (options.liveImg && path.match(/\.(jpe?g|png|gif)$/i)) {
+        this.reloadImages(path);
+        return;
+      }
+      if (options.isChromeExtension) {
+        this.reloadChromeExtension();
+        return;
       }
       return this.reloadPage();
     };
 
     Reloader.prototype.reloadPage = function() {
       return this.window.document.location.reload();
+    };
+
+    Reloader.prototype.reloadChromeExtension = function() {
+      return this.window.chrome.runtime.reload();
     };
 
     Reloader.prototype.reloadImages = function(path) {
@@ -882,10 +927,14 @@
           this.reattachStylesheetLink(match.object);
         }
       } else {
-        this.console.log("LiveReload will reload all stylesheets because path '" + path + "' did not match any specific one");
-        for (_l = 0, _len3 = links.length; _l < _len3; _l++) {
-          link = links[_l];
-          this.reattachStylesheetLink(link);
+        if (this.options.reloadMissingCSS) {
+          this.console.log("LiveReload will reload all stylesheets because path '" + path + "' did not match any specific one. To disable this behavior, set 'options.reloadMissingCSS' to 'false'.");
+          for (_l = 0, _len3 = links.length; _l < _len3; _l++) {
+            link = links[_l];
+            this.reattachStylesheetLink(link);
+          }
+        } else {
+          this.console.log("LiveReload will not reload path '" + path + "' because the stylesheet was not found on the page and 'options.reloadMissingCSS' was set to 'false'.");
         }
       }
       return true;

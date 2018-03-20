@@ -1,6 +1,6 @@
 {
   "name": "livereload-js",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "main": "dist/livereload.js",
   "homepage": "http://livereload.com",
   "authors": [
