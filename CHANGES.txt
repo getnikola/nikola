@@ -38,7 +38,7 @@ Features
 Bugfixes
 --------
 
-* Fix w3c validation errors for itemscope entries in jinja themes
+* Fix w3c validation errors for itemscope entries in default themes
 * Hide “Incomplete language” message for overrides of complete
   languages
 * Handle '/' and other absolute paths better in POSTS / PAGES / TRANSLATIONS
