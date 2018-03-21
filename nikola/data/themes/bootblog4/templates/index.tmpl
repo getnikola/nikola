@@ -26,7 +26,7 @@
 % endif
 <div class="postindex">
 % for post in posts:
-    <article class="h-entry post-${post.meta('type')}">
+    <article class="h-entry post-${post.meta('type')}" itemscope="itemscope" itemtype="http://schema.org/Article">
     <header>
         <h1 class="p-name entry-title"><a href="${post.permalink()}" class="u-url">${post.title()|h}</a></h1>
         <div class="metadata">
