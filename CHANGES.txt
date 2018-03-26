@@ -38,6 +38,8 @@ Features
 Bugfixes
 --------
 
+* Handle trailing slash redirects with query strings correctly in
+  ``nikola serve`` (Issue #3000)
 * Fix w3c validation errors for itemscope entries in default themes
 * Hide “Incomplete language” message for overrides of complete
   languages
