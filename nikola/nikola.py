@@ -150,8 +150,8 @@ LEGAL_VALUES = {
         'te': 'Telugu',
         'th': 'Thai',
         ('tr', '!tr_TR'): 'Turkish',
-        'ur': 'Urdu',
         'uk': 'Ukrainian',
+        'ur': 'Urdu',
         'zh_cn': 'Chinese (Simplified)',
         'zh_tw': 'Chinese (Traditional)'
     },
