@@ -2,6 +2,7 @@ New in v7.8.14
 ==============
 
 * doit v0.31.0 compatibility (Issue #2980, #3004, v8 backport)
+
 New in v7.8.13
 ==============
 
