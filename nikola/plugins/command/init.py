@@ -37,7 +37,6 @@ import dateutil.tz
 import dateutil.zoneinfo
 from mako.template import Template
 from pkg_resources import resource_filename
-import tarfile
 
 import nikola
 from nikola.nikola import DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_FEED_READ_MORE_LINK, LEGAL_VALUES, urlsplit, urlunsplit
@@ -384,15 +383,15 @@ class CommandInit(Command):
 
                 if tz is None:
                     print("    WARNING: Time zone not found.  Searching list of time zones for a match.")
-                    zonesfile = tarfile.open(fileobj=dateutil.zoneinfo.getzoneinfofile_stream())
-                    zonenames = [zone for zone in zonesfile.getnames() if answer.lower() in zone.lower()]
-                    if len(zonenames) == 1:
-                        tz = dateutil.tz.gettz(zonenames[0])
-                        answer = zonenames[0]
+                    all_zones = dateutil.zoneinfo.get_zonefile_instance().zones
+                    matching_zones = [zone for zone in all_zones if answer.lower() in zone.lower()]
+                    if len(matching_zones) == 1:
+                        tz = dateutil.tz.gettz(matching_zones[0])
+                        answer = matching_zones[0]
                         print("    Picking '{0}'.".format(answer))
-                    elif len(zonenames) > 1:
+                    elif len(matching_zones) > 1:
                         print("    The following time zones match your query:")
-                        print('        ' + '\n        '.join(zonenames))
+                        print('        ' + '\n        '.join(matching_zones))
                         continue
 
                 if tz is not None:

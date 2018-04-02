@@ -38,6 +38,7 @@ Features
 Bugfixes
 --------
 
+* Use documented dateutil API for time zone list (Issue #3006)
 * Handle trailing slash redirects with query strings correctly in
   ``nikola serve`` (Issue #3000)
 * Fix w3c validation errors for itemscope entries in default themes
