@@ -509,6 +509,7 @@ class Nikola(object):
             'LOGO_URL': '',
             'NAVIGATION_LINKS': {},
             'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite', 'extra'],
+            'MARKDOWN_EXTENSION_CONFIGS': {},
             'MAX_IMAGE_SIZE': 1280,
             'MATHJAX_CONFIG': '',
             'METADATA_FORMAT': 'nikola',
@@ -657,6 +658,8 @@ class Nikola(object):
                                       'JS_DATE_FORMAT',
                                       'RSS_COPYRIGHT',
                                       'RSS_COPYRIGHT_PLAIN',
+                                      # Issue #2970
+                                      'MARKDOWN_EXTENSION_CONFIGS',
                                       )
 
         self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
