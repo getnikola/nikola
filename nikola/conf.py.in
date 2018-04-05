@@ -77,7 +77,7 @@ TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
 #          Only one level of submenus is supported.
 # WARNING: Some themes, including the default Bootstrap 3 theme,
 #          may present issues if the menu is too large.
-#          (in bootstrap3, the navbar can grow too large and cover contents.)
+#          (in Bootstrap, the navbar can grow too large and cover contents.)
 # WARNING: If you link to directories, make sure to follow
 #          ``STRIP_INDEXES``.  If it’s set to ``True``, end your links
 #          with a ``/``, otherwise end them with ``/index.html`` — or
@@ -162,7 +162,7 @@ TIMEZONE = ${TIMEZONE}
 # 1 = using JS_DATE_FORMAT and local user time (via moment.js)
 # 2 = using a string like “2 days ago”
 #
-# Your theme must support it, bootstrap and bootstrap3 already do.
+# Your theme must support it, Bootstrap already does.
 # DATE_FANCINESS = 0
 
 # While Nikola can select a sensible locale for each language,

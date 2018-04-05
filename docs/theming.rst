@@ -12,7 +12,7 @@ Theming Nikola
 :Version: 7.8.8
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
-.. class:: alert alert-info pull-right
+.. class:: alert alert-info float-md-right
 
 .. contents::
 
@@ -37,8 +37,8 @@ assets
     and ``fonts`` (Bootstrap).
 
     The included themes use `Bootstrap <https://getbootstrap.com/>`_,
-    `baguetteBox <https://feimosi.github.io/baguetteBox.js/>`_, `Flowr.js
-    <https://github.com/kalyan02/flowr-js>`_ and `Moment.js
+    `baguetteBox <https://feimosi.github.io/baguetteBox.js/>`_, `Justified Layout by Flickr
+    <http://flickr.github.io/justified-layout/>`_ and `Moment.js
     <https://momentjs.com/>`_, so they are in assets, along with CSS files for
     syntax highlighting, reStructuredText and Jupyter, as well as a minified
     copy of jQuery.
@@ -238,7 +238,7 @@ These are the templates that come with the included themes:
     It uses a bunch of helper templates, one for each supported comment system
     (all of which start with ``comments_helper``)
 
-``crumbs.tmpl``, ``pagination_helper.tmpl``
+``ui_helper.tmpl``, ``pagination_helper.tmpl``
     These templates help render specific UI items, and can be tweaked as needed.
 
 ``gallery.tmpl``
@@ -256,7 +256,8 @@ These are the templates that come with the included themes:
       + ``title``: The title of the image.
       + ``size``: A dict containing ``w`` and ``h``, the real size of the thumbnail.
 
-    * ``photo_array_json``: a JSON dump of photo_array, used in the bootstrap theme by flowr.js
+    * ``photo_array_json``: a JSON dump of photo_array, used by the
+      ``justified-layout`` script
 
 ``list.tmpl``
     Template used to display generic lists of links, which it gets in ``items``,

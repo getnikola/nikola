@@ -1,0 +1,12 @@
+[Theme]
+engine = mako
+parent = bootstrap4
+author = The Nikola Contributors
+author_url = https://getnikola.com/
+license = MIT
+based_on = Bootstrap 4 <http://getbootstrap.com/>, Bootstrap 4 blog example <http://getbootstrap.com/docs/4.0/examples/blog/>
+tags = bootstrap
+
+[Family]
+family = bootblog4
+jinja_version = bootblog4-jinja

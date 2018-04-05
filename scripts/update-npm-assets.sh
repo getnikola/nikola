@@ -5,29 +5,24 @@ cd npm_assets
 npm update
 cd ..
 
-# Link bootstrap3 theme to bootstrap
-pushd nikola/data/themes/bootstrap3/assets/js/
-ln -sf ../../../../../../npm_assets/node_modules/bootstrap/dist/js/*.min.js* .
+# Link bootstrap assets to bootstrap
+pushd nikola/data/themes/bootstrap4/assets/js
+ln -sf ../../../../../../npm_assets/node_modules/bootstrap/dist/js/bootstrap.min.js .
 git add .
 popd
 
-pushd nikola/data/themes/bootstrap3/assets/css/
-ln -sf ../../../../../../npm_assets/node_modules/bootstrap/dist/css/*.min.css* .
-git add .
-popd
-
-pushd nikola/data/themes/bootstrap3/assets/fonts/
-ln -sf ../../../../../../npm_assets/node_modules/bootstrap/dist/fonts/* .
+pushd nikola/data/themes/bootstrap4/assets/css
+ln -sf ../../../../../../npm_assets/node_modules/bootstrap/dist/css/bootstrap.min.css .
 git add .
 popd
 
 # Link baguettebox.js to base theme
 pushd nikola/data/themes/base/assets/js
-ln -sf ../../../../../../npm_assets/node_modules/baguettebox.js/dist/*.min.js .
+ln -sf ../../../../../../npm_assets/node_modules/baguettebox.js/dist/baguetteBox.min.js .
 git add .
 popd
 pushd nikola/data/themes/base/assets/css
-ln -sf ../../../../../../npm_assets/node_modules/baguettebox.js/dist/*.min.css .
+ln -sf ../../../../../../npm_assets/node_modules/baguettebox.js/dist/baguetteBox.min.css .
 git add .
 popd
 
@@ -40,13 +35,22 @@ git add moment-with-locales.min.js html5.js html5shiv-printshiv.min.js
 popd
 
 # Link jQuery to bootstrap theme
-pushd nikola/data/themes/bootstrap3/assets/js
-ln -sf ../../../../../../npm_assets/node_modules/jquery/dist/*min* .
+pushd nikola/data/themes/bootstrap4/assets/js
+ln -sf ../../../../../../npm_assets/node_modules/jquery/dist/jquery.min.js .
 git add .
 popd
+
+# Link Popper.js to bootstrap theme
+pushd nikola/data/themes/bootstrap4/assets/js
+ln -sf ../../../../../../npm_assets/node_modules/popper.js/dist/umd/popper.min.js .
+git add .
+popd
+
 
 pushd nikola/plugins/command/auto
 ln -sf ../../../../npm_assets/node_modules/livereload-js/dist/livereload.js .
 popd
 
 scripts/generate_symlinked_list.sh
+
+# vim:tw=0

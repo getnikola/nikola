@@ -1,16 +1,20 @@
 define( [
-	"../core"
-], function( jQuery ) {
+	"../core",
+	"../core/toType",
+	"../var/isFunction"
+], function( jQuery, toType, isFunction ) {
+
+"use strict";
 
 // Multifunctional method to get and set values of a collection
 // The value/s can optionally be executed if it's a function
 var access = function( elems, fn, key, value, chainable, emptyGet, raw ) {
 	var i = 0,
-		length = elems.length,
+		len = elems.length,
 		bulk = key == null;
 
 	// Sets many values
-	if ( jQuery.type( key ) === "object" ) {
+	if ( toType( key ) === "object" ) {
 		chainable = true;
 		for ( i in key ) {
 			access( elems, fn, i, key[ i ], true, emptyGet, raw );
@@ -20,7 +24,7 @@ var access = function( elems, fn, key, value, chainable, emptyGet, raw ) {
 	} else if ( value !== undefined ) {
 		chainable = true;
 
-		if ( !jQuery.isFunction( value ) ) {
+		if ( !isFunction( value ) ) {
 			raw = true;
 		}
 
@@ -41,23 +45,26 @@ var access = function( elems, fn, key, value, chainable, emptyGet, raw ) {
 		}
 
 		if ( fn ) {
-			for ( ; i < length; i++ ) {
+			for ( ; i < len; i++ ) {
 				fn(
-					elems[ i ],
-					key,
-					raw ? value : value.call( elems[ i ], i, fn( elems[ i ], key ) )
+					elems[ i ], key, raw ?
+					value :
+					value.call( elems[ i ], i, fn( elems[ i ], key ) )
 				);
 			}
 		}
 	}
 
-	return chainable ?
-		elems :
+	if ( chainable ) {
+		return elems;
+	}
 
-		// Gets
-		bulk ?
-			fn.call( elems ) :
-			length ? fn( elems[ 0 ], key ) : emptyGet;
+	// Gets
+	if ( bulk ) {
+		return fn.call( elems );
+	}
+
+	return len ? fn( elems[ 0 ], key ) : emptyGet;
 };
 
 return access;

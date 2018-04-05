@@ -36,7 +36,7 @@ env:
   global:
     secure: GqUDW0j4Ay8pS9tS/g5JBYGtgBG0g0oD2g4X9JXgVchiFj3GIRL+dwiXpgx3LELy7nCWF3EzClFxxMdVqqxizQ/I8xqiA0XL/rf5z/y+9d9nmKOxV8SV73n0eCgsHWkbdSLJ6MKs6s0Trlz9jLu/P+Bhfu2ttqkOH8WttfEf3VE=
 install:
-- if [[ $NMODE == 'nikola' ]]; then pip install -r requirements-tests.txt; if [[ "$?" == '1' ]]; then cat /home/travis/.pip/pip.log; false; fi; fi
+- if [[ $NMODE == 'nikola' ]]; then pip install -Ur requirements-tests.txt; if [[ "$?" == '1' ]]; then cat /home/travis/.pip/pip.log; false; fi; fi
 - if [[ $NMODE == 'nikola' ]]; then pip install .; fi
 - if [[ $NMODE == 'flake8' ]]; then pip install flake8 pydocstyle; fi
 script:

@@ -5,6 +5,10 @@ Features
 --------
 
 * New MARKDOWN_EXTENSION_CONFIGS setting (Issue #2970)
+* Replace ``flowr.js`` with ``justified-layout.js`` by Flickr
+  (does not require jQuery!)
+* ``bootblog4`` is the new default theme (Issue #2964)
+* New ``bootstrap4`` and ``bootblog4`` themes (Issue #2964)
 * New Thai translation by Narumol Hankrotha and Jean Jordaan
 * Support for Commento comment system (Issue #2773)
 * New PRESERVE_ICC_PROFILES option to control whether ICC profiles are
@@ -35,7 +39,13 @@ Features
 Bugfixes
 --------
 
-* Handle '/' and other absolute paths better in POSTS / PAGES / TRANSLATIONS 
+* Use documented dateutil API for time zone list (Issue #3006)
+* Handle trailing slash redirects with query strings correctly in
+  ``nikola serve`` (Issue #3000)
+* Fix w3c validation errors for itemscope entries in default themes
+* Hide “Incomplete language” message for overrides of complete
+  languages
+* Handle '/' and other absolute paths better in POSTS / PAGES / TRANSLATIONS
   (Issue #2982)
 * Fix loading non-default languages
 * Support KaTeX for reST display math (Issue #2888)
@@ -83,6 +93,12 @@ Removed features
 * Removed taxonomy option ``also_create_classifications_from_other_languages``
   (Issue #2785)
 * Removed old 7-line metadata format (Issue #2839)
+
+Other changes
+-------------
+
+* Rename ``crumbs.tmpl`` to ``ui_helper.tmpl`` and the breadcrumbs
+  function to ``breadcrumbs``
 
 New in v7.8.8
 =============
