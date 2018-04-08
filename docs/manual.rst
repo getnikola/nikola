@@ -737,7 +737,8 @@ Teasers
 You may not want to show the complete content of your posts either on your
 index page or in RSS feeds, but to display instead only the beginning of them.
 
-If it's the case, you only need to add a "magical comment" in your post.
+If it's the case, you only need to add a "magical comment" ``TEASER_END`` or
+``END_TEASER`` in your post.
 
 In reStructuredText:
 
@@ -771,7 +772,7 @@ compatible with both WordPress and Nikola posts:
 .. code:: python
 
     import re
-    TEASER_REGEXP = re.compile('<!--\s*(more|TEASER_END)(:(.+))?\s*-->', re.IGNORECASE)
+    TEASER_REGEXP = re.compile('<!--\s*(more|TEASER_END|END_TEASER)(:(.+))?\s*-->', re.IGNORECASE)
 
 Or you can completely customize the link using the ``READ_MORE_LINK`` option.
 
