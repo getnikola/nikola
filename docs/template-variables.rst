@@ -39,6 +39,7 @@ Name                                Type                                Descript
 ==================================  ==================================  ================================================================================
 ``_link``                           function                            ``Nikola.link`` function
 ``abs_link``                        function                            ``Nikola.abs_link`` function
+``atom_path``                       TranslatableSetting<str>            ``ATOM_PATH`` setting
 ``author_pages_generated``          bool                                False
 ``blog_author``                     TranslatableSetting<str>            ``BLOG_AUTHOR`` setting
 ``blog_email``                      str                                 ``BLOG_EMAIL`` setting

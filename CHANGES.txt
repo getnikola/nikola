@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New ATOM_PATH setting (Issue #2971)
 * Recognize both TEASER_END and (new) END_TEASER (Issue #3010)
 * New MARKDOWN_EXTENSION_CONFIGS setting (Issue #2970)
 * Replace ``flowr.js`` with ``justified-layout.js`` by Flickr

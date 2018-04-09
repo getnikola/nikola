@@ -546,6 +546,7 @@ class Nikola(object):
             'GENERATE_RSS': True,
             'RSS_LINK': None,
             'RSS_PATH': '',
+            'ATOM_PATH': '',
             'SEARCH_FORM': '',
             'SHOW_BLOG_TITLE': True,
             'SHOW_INDEX_PAGE_NAVIGATION': False,
@@ -612,6 +613,9 @@ class Nikola(object):
         self.config['__invariant__'] = self.invariant
         self.config['__quiet__'] = self.quiet
 
+        # Use ATOM_PATH when set
+        self.config['ATOM_PATH'] = self.config['ATOM_PATH'] or self.config['INDEX_PATH'] + '/index'
+
         # Make sure we have sane NAVIGATION_LINKS.
         if not self.config['NAVIGATION_LINKS']:
             self.config['NAVIGATION_LINKS'] = {self.config['DEFAULT_LANG']: ()}
@@ -653,6 +657,7 @@ class Nikola(object):
                                       'SECTION_PATH',
                                       'INDEX_PATH',
                                       'RSS_PATH',
+                                      'ATOM_PATH',
                                       'AUTHOR_PATH',
                                       'DATE_FORMAT',
                                       'JS_DATE_FORMAT',
@@ -1114,6 +1119,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['content_footer'] = self.config.get(
             'CONTENT_FOOTER')
         self._GLOBAL_CONTEXT['generate_atom'] = self.config.get('GENERATE_ATOM')
+        self._GLOBAL_CONTEXT['atom_path'] = self.config.get('ATOM_PATH')
         self._GLOBAL_CONTEXT['generate_rss'] = self.config.get('GENERATE_RSS')
         self._GLOBAL_CONTEXT['rss_path'] = self.config.get('RSS_PATH')
         self._GLOBAL_CONTEXT['rss_link'] = self.config.get('RSS_LINK')

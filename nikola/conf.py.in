@@ -520,6 +520,11 @@ USE_BASE_TAG = False
 # (translatable)
 # RSS_PATH = ""
 
+# Final location for the blog main Atom feed is:
+# output / TRANSLATION[lang] / ATOM_PATH / index.atom
+# (translatable)
+# ATOM_PATH = ""
+
 # Slug the Tag URL. Easier for users to type, special characters are
 # often removed or replaced as well.
 # SLUG_TAG_PATH = True
