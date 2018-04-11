@@ -239,17 +239,14 @@ class Galleries(Task, ImageProcessor):
                 if self.captions:
                     img_titles = []
                     for fn in image_name_list:
-                        # Do this in a try/except block because some files
-                        # might not be listed in the metadata
-                        try:
+                        if fn in self.captions:
                             img_titles.append(self.captions[fn])
-                        except KeyError as kee:
+                        else:
                             img_titles.append(fn)
                             self.logger.warn(
                                 "Image {0} found in gallery but not listed "
                                 "in {1}".format(
                                     fn, self.meta_path))
-
                 elif self.kw['use_filename_as_title']:
                     img_titles = []
                     for fn in image_name_list:
@@ -415,21 +412,21 @@ class Galleries(Task, ImageProcessor):
             }
 
     def find_metadata(self, gallery):
-        """
-        If there is an metadata file for the gallery, use that to determine
-        the order in which images shall be displayed in the gallery. The
-        metadata file is YAML-formatted, with field names of
+        """Search for a gallery metadata file. Updates self if found."""
+        # If there is an metadata file for the gallery, use that to determine
+        # the order in which images shall be displayed in the gallery. The
+        # metadata file is YAML-formatted, with field names of
         #
-        name:
-        caption:
-        order:
+        # name:
+        # caption:
+        # order:
         #
-        If order is specified, we use that directly, otherwise we depend on
-        how PyYAML returns the information - which may or may not be in the
-        same order as in the file itself. If no caption is specified, then we
-        use an empty string.
-        Returns a ordered list or None.
-        """
+        # If order is specified, we use that directly, otherwise we depend on
+        # how PyYAML returns the information - which may or may not be in the
+        # same order as in the file itself. If no caption is specified, then we
+        # use an empty string.
+        # Returns a ordered list or None.
+
         meta_path = os.path.join(gallery, "metadata.yml")
         order = []
         captions = {}
@@ -663,13 +660,18 @@ class Galleries(Task, ImageProcessor):
         photo_array = []
         if self.kw['sort_by_meta_file'] and context['order']:
             for entry in context['order']:
-                photo_array.append(pre_photo[entry])
+                photo_array.append(pre_photo.pop(entry))
+            # Do we have any orphan entries from metadata.yml?
+            if len(pre_photo) > 0:
+                for entry in pre_photo:
+                    photo_array.append(pre_photo[entry])
         else:
             for entry in pre_photo:
                 photo_array.append(pre_photo[entry])
 
         context['photo_array'] = photo_array
         context['photo_array_json'] = json.dumps(photo_array, sort_keys=True)
+
         self.site.render_template(template_name, output_name, context)
 
     def gallery_rss(self, img_list, dest_img_list, img_titles, lang, permalink, output_path, title):
