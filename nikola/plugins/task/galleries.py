@@ -32,6 +32,8 @@ import io
 import json
 import mimetypes
 import os
+import yaml
+
 try:
     from urlparse import urljoin
 except ImportError:
@@ -76,6 +78,7 @@ class Galleries(Task, ImageProcessor):
             'use_filename_as_title': site.config['USE_FILENAME_AS_TITLE'],
             'gallery_folders': site.config['GALLERY_FOLDERS'],
             'sort_by_date': site.config['GALLERY_SORT_BY_DATE'],
+            'sort_by_meta_file': site.config['GALLERY_SORT_BY_META_FILE'],
             'filters': site.config['FILTERS'],
             'translations': site.config['TRANSLATIONS'],
             'global_context': site.GLOBAL_CONTEXT,
@@ -191,6 +194,9 @@ class Galleries(Task, ImageProcessor):
             # Parse index into a post (with translations)
             post = self.parse_index(gallery, input_folder, output_folder)
 
+            # Do we have a metadata file?
+            self.find_metadata(gallery)
+
             # Create image list, filter exclusions
             image_list = self.get_image_list(gallery)
 
@@ -220,6 +226,7 @@ class Galleries(Task, ImageProcessor):
                     self.kw[k] = self.site.GLOBAL_CONTEXT[k](lang)
 
                 context = {}
+                context['order'] = self.order
                 context["lang"] = lang
                 if post:
                     context["title"] = post.title(lang)
@@ -229,7 +236,21 @@ class Galleries(Task, ImageProcessor):
 
                 image_name_list = [os.path.basename(p) for p in image_list]
 
-                if self.kw['use_filename_as_title']:
+                if self.captions:
+                    img_titles = []
+                    for fn in image_name_list:
+                        # Do this in a try/except block because some files
+                        # might not be listed in the metadata
+                        try:
+                            img_titles.append(self.captions[fn])
+                        except KeyError as kee:
+                            img_titles.append(fn)
+                            self.logger.warn(
+                                "Image {0} found in gallery but not listed "
+                                "in {1}".format(
+                                    fn, self.meta_path))
+
+                elif self.kw['use_filename_as_title']:
                     img_titles = []
                     for fn in image_name_list:
                         name_without_ext = os.path.splitext(os.path.basename(fn))[0]
@@ -392,6 +413,55 @@ class Galleries(Task, ImageProcessor):
                 'clean': True,
                 'uptodate': [utils.config_changed(self.kw.copy(), 'nikola.plugins.task.galleries:mkdir')],
             }
+
+    def find_metadata(self, gallery):
+        """
+        If there is an metadata file for the gallery, use that to determine
+        the order in which images shall be displayed in the gallery. The
+        metadata file is YAML-formatted, with field names of
+        #
+        name:
+        caption:
+        order:
+        #
+        If order is specified, we use that directly, otherwise we depend on
+        how PyYAML returns the information - which may or may not be in the
+        same order as in the file itself. If no caption is specified, then we
+        use an empty string.
+        Returns a ordered list or None.
+        """
+        meta_path = os.path.join(gallery, "metadata.yml")
+        order = []
+        captions = {}
+        if os.path.isfile(meta_path):
+            self.logger.debug("Using {0} for gallery {1}".format(
+                meta_path, gallery))
+            self.meta_path = meta_path
+            with open(meta_path, "r") as meta_file:
+                meta = yaml.safe_load_all(meta_file)
+                for img in meta:
+                    # load_all and safe_load_all both return None as their
+                    # final element, so skip it
+                    if not img:
+                        continue
+                    if 'name' in img.keys():
+                        imgkeys = img.keys()
+                        if 'caption' in imgkeys and img['caption']:
+                            captions[img['name']] = img['caption']
+                        else:
+                            captions[img['name']] = ""
+
+                        if 'order' in imgkeys and img['order']:
+                            order.insert(img['order'], img['name'])
+                        else:
+                            order.append(img['name'])
+                    else:
+                        self.logger.warn("no 'name:' for ({0}) in {1}".format(
+                            img, meta_path))
+        else:
+            order = None
+        self.order = order
+        self.captions = captions
 
     def parse_index(self, gallery, input_folder, output_folder):
         """Return a Post object if there is an index.txt."""
@@ -568,7 +638,7 @@ class Galleries(Task, ImageProcessor):
         else:
             img_list, thumbs, img_titles = [], [], []
 
-        photo_array = []
+        pre_photo = {}
         for img, thumb, title in zip(img_list, thumbs, img_titles):
             w, h = _image_size_cache.get(thumb, (None, None))
             if w is None:
@@ -579,7 +649,7 @@ class Galleries(Task, ImageProcessor):
                     w, h = im.size
                     _image_size_cache[thumb] = w, h
             # Thumbs are files in output, we need URLs
-            photo_array.append({
+            pre_photo[url_from_path(img)] = {
                 'url': url_from_path(img),
                 'url_thumb': url_from_path(thumb),
                 'title': title,
@@ -589,7 +659,15 @@ class Galleries(Task, ImageProcessor):
                 },
                 'width': w,
                 'height': h
-            })
+            }
+        photo_array = []
+        if self.kw['sort_by_meta_file'] and context['order']:
+            for entry in context['order']:
+                photo_array.append(pre_photo[entry])
+        else:
+            for entry in pre_photo:
+                photo_array.append(pre_photo[entry])
+
         context['photo_array'] = photo_array
         context['photo_array_json'] = json.dumps(photo_array, sort_keys=True)
         self.site.render_template(template_name, output_name, context)

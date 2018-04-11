@@ -667,6 +667,13 @@ GITHUB_COMMIT_SOURCE = True
 # If set to False, it will sort by filename instead. Defaults to True
 # GALLERY_SORT_BY_DATE = True
 
+# If set to true, then the user can provide an metadata file which contains
+# the order in which photos in a gallery should be presented. This file is
+# named metadata.yml, is YAML and must contain at least a 'name' field. Other
+# recognised field names are 'order' and 'caption'.
+# Defaults to True
+# GALLERY_SORT_BY_META_FILE = True
+
 # If set to True, EXIF data will be copied when an image is thumbnailed or
 # resized. (See also EXIF_WHITELIST)
 # PRESERVE_EXIF_DATA = False
