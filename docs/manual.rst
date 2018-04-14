@@ -1318,7 +1318,7 @@ In that case, the template engine used will be your theme's and the arguments yo
 as well as the global context from your ``conf.py``, are available to the template you
 are creating.
 
-You can use anything defined in your confguration's ``GLOBAL_CONTEXT`` as
+You can use anything defined in your configuration's ``GLOBAL_CONTEXT`` as
 variables in your shortcode template, with a caveat: Because of an unfortunate
 implementation detail (a name conflict), ``data`` is called ``global_data``
 when used in a shortcode.

@@ -526,7 +526,7 @@ Here's the relevant code from the tag plugin.
     # In set_site
     site.register_path_handler('tag_rss', self.tag_rss_path)
 
-    # And these always take name and lang as arguments and returl a list of
+    # And these always take name and lang as arguments and return a list of
     # path elements.
     def tag_rss_path(self, name, lang):
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang],
