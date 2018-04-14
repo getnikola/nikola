@@ -952,34 +952,35 @@ def get_metadata_from_file(source_path, post, config, lang, metadata_extractors_
             source_path += '.' + lang
         with io.open(source_path, "r", encoding="utf-8-sig") as meta_file:
             source_text = meta_file.read()
-
-        meta = {}
-        used_extractor = None
-        for priority in metadata_extractors.MetaPriority:
-            found_in_priority = False
-            for extractor in metadata_extractors_by['priority'].get(priority, []):
-                if not metadata_extractors.check_conditions(post, source_path, extractor.conditions, config, source_text):
-                    continue
-                extractor.check_requirements()
-                new_meta = extractor.extract_text(source_text)
-                if new_meta:
-                    found_in_priority = True
-                    used_extractor = extractor
-                    # Map metadata from other platforms to names Nikola expects (Issue #2817)
-                    map_metadata(new_meta, extractor.map_from, config)
-
-                    meta.update(new_meta)
-                    break
-
-            if found_in_priority:
-                break
-        return meta, used_extractor
     except (UnicodeDecodeError, UnicodeEncodeError):
         msg = 'Error reading {0}: Nikola only supports UTF-8 files'.format(source_path)
         LOGGER.error(msg)
         raise ValueError(msg)
     except Exception:  # The file may not exist, for multilingual sites
         return {}, None
+
+
+    meta = {}
+    used_extractor = None
+    for priority in metadata_extractors.MetaPriority:
+        found_in_priority = False
+        for extractor in metadata_extractors_by['priority'].get(priority, []):
+            if not metadata_extractors.check_conditions(post, source_path, extractor.conditions, config, source_text):
+                continue
+            extractor.check_requirements()
+            new_meta = extractor.extract_text(source_text)
+            if new_meta:
+                found_in_priority = True
+                used_extractor = extractor
+                # Map metadata from other platforms to names Nikola expects (Issue #2817)
+                map_metadata(new_meta, extractor.map_from, config)
+
+                meta.update(new_meta)
+                break
+
+        if found_in_priority:
+            break
+    return meta, used_extractor
 
 
 def get_metadata_from_meta_file(path, post, config, lang, metadata_extractors_by=None):

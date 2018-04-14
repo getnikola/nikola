@@ -40,6 +40,8 @@ Features
 Bugfixes
 --------
 
+* Don’t silence syntax errors and other exceptions that occur while
+  reading metadata
 * Use documented dateutil API for time zone list (Issue #3006)
 * Handle trailing slash redirects with query strings correctly in
   ``nikola serve`` (Issue #3000)

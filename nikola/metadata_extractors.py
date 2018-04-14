@@ -126,7 +126,7 @@ def default_metadata_extractors_by() -> dict:
     return d
 
 
-def _register_default(extractor: MetadataExtractor) -> MetadataExtractor:
+def _register_default(extractor: type) -> type:
     """Register a default extractor."""
     _default_extractors.append(extractor())
     return extractor
