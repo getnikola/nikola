@@ -239,6 +239,11 @@ class FilenameRegexMetadata(MetadataExtractor):
     priority = MetaPriority.fallback
     conditions = [(MetaCondition.config_bool, 'FILE_METADATA_REGEXP')]
 
+    def _extract_metadata_from_text(self, source_text: str) -> dict:
+        """Extract metadata from text."""
+        # This extractor does not use the source text, and as such, this method returns an empty dict.
+        return {}
+
     def extract_filename(self, filename: str, lang: str) -> dict:
         """Try to read the metadata from the filename based on the given re.
 
