@@ -26,8 +26,10 @@
 
 """Render pages into output."""
 
+import os
+
 from nikola.plugin_categories import Task
-from nikola.utils import config_changed
+from nikola.utils import config_changed, LOGGER
 
 
 class RenderPages(Task):
@@ -43,9 +45,17 @@ class RenderPages(Task):
             "filters": self.site.config["FILTERS"],
             "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
             "demote_headers": self.site.config['DEMOTE_HEADERS'],
+            "disable_indexes": self.site.config["DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED"],
         }
         self.site.scan_posts()
         yield self.group_task()
+        index_paths = {}
+        for lang in kw["translations"]:
+            index_paths[lang] = False
+            if not kw["disable_indexes"]:
+                index_paths[lang] = os.path.normpath(os.path.join(self.site.config['OUTPUT_FOLDER'],
+                                                     self.site.path('index', '', lang=lang)))
+
         for lang in kw["translations"]:
             for post in self.site.timeline:
                 if not kw["show_untranslated_posts"] and not post.is_translation_available(lang):
@@ -55,6 +65,11 @@ class RenderPages(Task):
                 else:
                     context = {'pagekind': ['story_page', 'page_page']}
                 for task in self.site.generic_page_renderer(lang, post, kw["filters"], context):
+                    if task['name'] == index_paths[lang]:
+                        # Issue 3022
+                        LOGGER.error("Post {0}’s output path ({1}) conflicts with the blog index ({2}). "
+                                     "Please change INDEX_PATH or disable index generation.".format(
+                            post, task['name'], index_paths[lang]))
                     task['uptodate'] = task['uptodate'] + [config_changed(kw, 'nikola.plugins.task.pages')]
                     task['basename'] = self.name
                     task['task_dep'] = ['render_posts']
