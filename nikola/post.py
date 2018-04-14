@@ -959,7 +959,6 @@ def get_metadata_from_file(source_path, post, config, lang, metadata_extractors_
     except Exception:  # The file may not exist, for multilingual sites
         return {}, None
 
-
     meta = {}
     used_extractor = None
     for priority in metadata_extractors.MetaPriority:
