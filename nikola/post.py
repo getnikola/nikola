@@ -972,6 +972,7 @@ def get_metadata_from_file(source_path, post, config, lang, metadata_extractors_
                 found_in_priority = True
                 used_extractor = extractor
                 # Map metadata from other platforms to names Nikola expects (Issue #2817)
+                # Map metadata values (Issue #3025)
                 map_metadata(new_meta, extractor.map_from, config)
 
                 meta.update(new_meta)

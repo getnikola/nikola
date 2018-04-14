@@ -1932,11 +1932,15 @@ def rss_writer(rss_obj, output_path):
 def map_metadata(meta, key, config):
     """Map metadata from other platforms to Nikola names.
 
-    This uses the METADATA_MAPPING setting (via ``config``) and modifies the dict in place.
+    This uses the METADATA_MAPPING and METADATA_VALUE_MAPPING settings (via ``config``) and modifies the dict in place.
     """
     for foreign, ours in config.get('METADATA_MAPPING', {}).get(key, {}).items():
         if foreign in meta:
             meta[ours] = meta[foreign]
+
+    for meta_key, hook in config.get('METADATA_VALUE_MAPPING', {}).get(key, {}).items():
+        if meta_key in meta:
+            meta[meta_key] = hook(meta[meta_key])
 
 
 class ClassificationTranslationManager(object):
