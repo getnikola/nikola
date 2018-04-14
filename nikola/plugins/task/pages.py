@@ -67,9 +67,10 @@ class RenderPages(Task):
                 for task in self.site.generic_page_renderer(lang, post, kw["filters"], context):
                     if task['name'] == index_paths[lang]:
                         # Issue 3022
-                        LOGGER.error("Post {0}’s output path ({1}) conflicts with the blog index ({2}). "
-                                     "Please change INDEX_PATH or disable index generation.".format(
-                            post, task['name'], index_paths[lang]))
+                        LOGGER.error(
+                            "Post {0!r}: output path ({1}) conflicts with the blog index ({2}). "
+                            "Please change INDEX_PATH or disable index generation.".format(
+                                post.source_path, task['name'], index_paths[lang]))
                     task['uptodate'] = task['uptodate'] + [config_changed(kw, 'nikola.plugins.task.pages')]
                     task['basename'] = self.name
                     task['task_dep'] = ['render_posts']
