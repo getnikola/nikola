@@ -186,7 +186,7 @@ class CommandCheck(Command):
         self.existing_targets.add(self.site.config['SITE_URL'])
         self.existing_targets.add(self.site.config['BASE_URL'])
         url_type = self.site.config['URL_TYPE']
-        feed_extension = self.site.config['FEED_EXTENSION']
+        atom_extension = self.site.config['ATOM_EXTENSION']
 
         deps = {}
         if find_sources:
@@ -220,7 +220,7 @@ class CommandCheck(Command):
                             extra_objs.append(lxml.etree.Element('img', src=srcset_item.strip().split(' ')[0]))
                 link_elements = list(d.iterlinks()) + list(extra_objs.iterlinks())
             # Extract links from XML formats to minimal HTML, allowing those to go through the link checks
-            elif feed_extension == filename[-len(feed_extension):]:
+            elif atom_extension == filename[-len(atom_extension):]:
                 d = lxml.etree.parse(filename)
                 link_elements = lxml.html.fromstring('<html/>')
                 for elm in d.findall('*//{http://www.w3.org/2005/Atom}link'):
@@ -376,7 +376,7 @@ class CommandCheck(Command):
         self.logger.debug("===============\n")
         self.logger.debug("{0} mode".format(self.site.config['URL_TYPE']))
         failure = False
-        feed_extension = self.site.config['FEED_EXTENSION']
+        atom_extension = self.site.config['ATOM_EXTENSION']
         # Maybe we should just examine all HTML files
         output_folder = self.site.config['OUTPUT_FOLDER']
 
@@ -388,7 +388,7 @@ class CommandCheck(Command):
                 if '.html' == fname[-5:]:
                     if self.analyze(fname, find_sources, check_remote):
                         failure = True
-                if feed_extension == fname[-len(feed_extension):]:
+                if atom_extension == fname[-len(atom_extension):]:
                     if self.analyze(fname, find_sources, False):
                         failure = True
                 if fname.endswith('sitemap.xml') or fname.endswith('sitemapindex.xml'):
