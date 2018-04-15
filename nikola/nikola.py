@@ -548,7 +548,7 @@ class Nikola(object):
             'RSS_EXTENSION': '.xml',
             'RSS_LINK': None,
             'RSS_PATH': '',
-            'RSS_PATH_FILENAME_BASE': 'rss',
+            'RSS_FILENAME_BASE': 'rss',
             'SEARCH_FORM': '',
             'SHOW_BLOG_TITLE': True,
             'SHOW_INDEX_PAGE_NAVIGATION': False,
@@ -656,7 +656,7 @@ class Nikola(object):
                                       'SECTION_PATH',
                                       'INDEX_PATH',
                                       'RSS_PATH',
-                                      'RSS_PATH_FILENAME_BASE',
+                                      'RSS_FILENAME_BASE',
                                       'AUTHOR_PATH',
                                       'DATE_FORMAT',
                                       'JS_DATE_FORMAT',
@@ -683,7 +683,7 @@ class Nikola(object):
                                              'posts_section_title',
                                              'front_index_header',
                                              'rss_path',
-                                             'rss_path_filename_base',
+                                             'rss_filename_base',
                                              )
         # WARNING: navigation_links SHOULD NOT be added to the list above.
         #          Themes ask for [lang] there and we should provide it.
@@ -1122,7 +1122,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['generate_atom'] = self.config.get('GENERATE_ATOM')
         self._GLOBAL_CONTEXT['generate_rss'] = self.config.get('GENERATE_RSS')
         self._GLOBAL_CONTEXT['rss_path'] = self.config.get('RSS_PATH')
-        self._GLOBAL_CONTEXT['rss_path_filename_base'] = self.config.get('RSS_PATH_FILENAME_BASE')
+        self._GLOBAL_CONTEXT['rss_filename_base'] = self.config.get('RSS_FILENAME_BASE')
         self._GLOBAL_CONTEXT['rss_link'] = self.config.get('RSS_LINK')
 
         self._GLOBAL_CONTEXT['navigation_links'] = self.config.get('NAVIGATION_LINKS')

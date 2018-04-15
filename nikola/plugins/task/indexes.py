@@ -93,7 +93,7 @@ Example:
         if dest_type == 'rss':
             return [
                 self.site.config['RSS_PATH'](lang),
-                self.site.config['RSS_PATH_FILENAME_BASE'](lang)
+                self.site.config['RSS_FILENAME_BASE'](lang)
             ], 'auto'
         # 'page' (index) or 'feed' (Atom)
         page_number = None

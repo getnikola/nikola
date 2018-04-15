@@ -249,7 +249,7 @@ POSTS_SECTIONS = True
 
 # Final locations are:
 # output / TRANSLATION[lang] / SECTION_PATH / SECTION_NAME / index.html (list of posts for a section)
-# output / TRANSLATION[lang] / SECTION_PATH / SECTION_NAME / rss RSS_EXTENSION (RSS feed for a section)
+# output / TRANSLATION[lang] / SECTION_PATH / SECTION_NAME / RSS_FILENAME_BASE RSS_EXTENSION (RSS feed for a section)
 # (translatable)
 # SECTION_PATH = ""
 
@@ -518,11 +518,14 @@ USE_BASE_TAG = False
 # Extension for RSS feed files
 # RSS_EXTENSION = ".xml"
 
+# RSS filename base (without extension); used for indexes, sections and galleries.
+# (translatable)
+# RSS_FILENAME_BASE = "rss"
+
 # Final location for the blog main RSS feed is:
-# output / TRANSLATION[lang] / RSS_PATH / RSS_PATH_FILENAME_BASE RSS_EXTENSION
+# output / TRANSLATION[lang] / RSS_PATH / RSS_FILENAME_BASE RSS_EXTENSION
 # (translatable)
 # RSS_PATH = ""
-# RSS_PATH_FILENAME_BASE = "rss"
 
 # Slug the Tag URL. Easier for users to type, special characters are
 # often removed or replaced as well.
