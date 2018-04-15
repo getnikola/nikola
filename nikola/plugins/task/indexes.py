@@ -91,9 +91,9 @@ Example:
     def get_path(self, classification, lang, dest_type='page'):
         """Return a path for the given classification."""
         if dest_type == 'rss':
-            return [self.site.config['RSS_PATH'](lang)], 'auto'
+            return [self.site.config['RSS_PATH'](lang), 'rss'], 'auto'
         if dest_type == 'feed':
-            return [self.site.config['ATOM_PATH'](lang)], 'auto'
+            return [self.site.config['ATOM_PATH'](lang), 'index'], 'auto'
         page_number = None
         if dest_type == 'page':
             # Interpret argument as page number

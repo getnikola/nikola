@@ -1214,11 +1214,11 @@
         <td>
             <samp>Titles&nbsp;are&nbsp;targets,&nbsp;too</samp>
             <br><samp>=======================</samp>
-            <br><samp>Implict&nbsp;references,&nbsp;like&nbsp;`Titles&nbsp;are</samp>
+            <br><samp>Implicit&nbsp;references,&nbsp;like&nbsp;`Titles&nbsp;are</samp>
             <br><samp>targets,&nbsp;too`_.</samp>
         <td>
             <font size="+2"><strong><a name="title">Titles are targets, too</a></strong></font>
-            <p>Implict references, like <a href="#title">Titles are
+            <p>Implicit references, like <a href="#title">Titles are
             targets, too</a>.
         </table>
 

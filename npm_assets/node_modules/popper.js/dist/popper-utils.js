@@ -1,6 +1,6 @@
 /**!
  * @fileOverview Kickass library to create and place poppers near their reference elements.
- * @version 1.14.1
+ * @version 1.14.3
  * @license
  * Copyright (c) 2016 Federico Zivolo and contributors
  *
@@ -82,36 +82,27 @@ function getScrollParent(element) {
   return getScrollParent(getParentNode(element));
 }
 
+var isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
+
+const isIE11 = isBrowser && !!(window.MSInputMethodContext && document.documentMode);
+const isIE10 = isBrowser && /MSIE 10/.test(navigator.userAgent);
+
 /**
- * Tells if you are running Internet Explorer
+ * Determines if the browser is Internet Explorer
  * @method
  * @memberof Popper.Utils
- * @argument {number} version to check
+ * @param {Number} version to check
  * @returns {Boolean} isIE
  */
-const cache = {};
-
-var isIE = function (version = 'all') {
-  version = version.toString();
-  if (cache.hasOwnProperty(version)) {
-    return cache[version];
+function isIE(version) {
+  if (version === 11) {
+    return isIE11;
   }
-  switch (version) {
-    case '11':
-      cache[version] = navigator.userAgent.indexOf('Trident') !== -1;
-      break;
-    case '10':
-      cache[version] = navigator.appVersion.indexOf('MSIE 10') !== -1;
-      break;
-    case 'all':
-      cache[version] = navigator.userAgent.indexOf('Trident') !== -1 || navigator.userAgent.indexOf('MSIE') !== -1;
-      break;
+  if (version === 10) {
+    return isIE10;
   }
-
-  //Set IE
-  cache.all = cache.all || Object.keys(cache).some(key => cache[key]);
-  return cache[version];
-};
+  return isIE11 || isIE10;
+}
 
 /**
  * Returns the offset parent of the given element
@@ -592,7 +583,6 @@ function computeAutoPlacement(placement, refRect, popper, reference, boundariesE
   return computedPlacement + (variation ? `-${variation}` : '');
 }
 
-const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
 const longerTimeoutBrowsers = ['Edge', 'Trident', 'Firefox'];
 let timeoutDuration = 0;
 for (let i = 0; i < longerTimeoutBrowsers.length; i += 1) {

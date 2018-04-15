@@ -683,6 +683,7 @@ class Nikola(object):
                                              'posts_section_name',
                                              'posts_section_title',
                                              'front_index_header',
+                                             'rss_path',
                                              )
         # WARNING: navigation_links SHOULD NOT be added to the list above.
         #          Themes ask for [lang] there and we should provide it.
@@ -1408,6 +1409,8 @@ class Nikola(object):
 
                 # unquote from issue #2934
                 dst = self.link(dst_url.netloc, unquote(dst_url.path.lstrip('/')), lang, **link_kwargs)
+                if dst_url.fragment:
+                    dst += '#' + dst_url.fragment
             # Assuming the site is served over one of these, and
             # since those are the only URLs we want to rewrite...
             else:
