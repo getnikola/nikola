@@ -162,7 +162,7 @@ class Galleries(Task, ImageProcessor):
         gallery_path = self._find_gallery_path(name)
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang]] +
                 gallery_path.split(os.sep) +
-                ['rss.xml'] if _f]
+                ['rss' + self.site.config['RSS_EXTENSION']] if _f]
 
     def gen_tasks(self):
         """Render image galleries."""

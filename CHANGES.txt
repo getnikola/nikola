@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Allowing to customize RSS and Atom feed extensions (Issue #3041)
 * Allowing to customize filename base appended to RSS_PATH
   (Issue #3041)
 * Use basic ipynb template by default for slightly better appearance
