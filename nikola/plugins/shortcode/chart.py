@@ -44,6 +44,7 @@ class Plugin(ShortcodePlugin):
     name = "chart"
 
     def handler(self, chart_type, **_options):
+        """Generate chart using Pygal."""
         if pygal is None:
             msg = req_missing(
                 ['pygal'], 'use the Chart directive', optional=True)
