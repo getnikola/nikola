@@ -249,7 +249,7 @@ POSTS_SECTIONS = True
 
 # Final locations are:
 # output / TRANSLATION[lang] / SECTION_PATH / SECTION_NAME / index.html (list of posts for a section)
-# output / TRANSLATION[lang] / SECTION_PATH / SECTION_NAME / rss.xml (RSS feed for a section)
+# output / TRANSLATION[lang] / SECTION_PATH / SECTION_NAME / RSS_FILENAME_BASE RSS_EXTENSION (RSS feed for a section)
 # (translatable)
 # SECTION_PATH = ""
 
@@ -315,7 +315,7 @@ POSTS_SECTIONS = True
 # Final locations are:
 # output / TRANSLATION[lang] / TAG_PATH / index.html (list of tags)
 # output / TRANSLATION[lang] / TAG_PATH / tag.html (list of posts for a tag)
-# output / TRANSLATION[lang] / TAG_PATH / tag.xml (RSS feed for a tag)
+# output / TRANSLATION[lang] / TAG_PATH / tag RSS_EXTENSION (RSS feed for a tag)
 # (translatable)
 # TAG_PATH = "categories"
 
@@ -373,7 +373,7 @@ HIDDEN_TAGS = ['mathjax']
 # Final locations are:
 # output / TRANSLATION[lang] / CATEGORY_PATH / index.html (list of categories)
 # output / TRANSLATION[lang] / CATEGORY_PATH / CATEGORY_PREFIX category.html (list of posts for a category)
-# output / TRANSLATION[lang] / CATEGORY_PATH / CATEGORY_PREFIX category.xml (RSS feed for a category)
+# output / TRANSLATION[lang] / CATEGORY_PATH / CATEGORY_PREFIX category RSS_EXTENSION (RSS feed for a category)
 # (translatable)
 # CATEGORY_PATH = "categories"
 # CATEGORY_PREFIX = "cat_"
@@ -440,7 +440,7 @@ HIDDEN_CATEGORIES = []
 # Path to author pages. Final locations are:
 # output / TRANSLATION[lang] / AUTHOR_PATH / index.html (list of authors)
 # output / TRANSLATION[lang] / AUTHOR_PATH / author.html (list of posts by an author)
-# output / TRANSLATION[lang] / AUTHOR_PATH / author.xml (RSS feed for an author)
+# output / TRANSLATION[lang] / AUTHOR_PATH / author RSS_EXTENSION (RSS feed for an author)
 # (translatable)
 # AUTHOR_PATH = "authors"
 
@@ -515,8 +515,15 @@ FRONT_INDEX_HEADER = {
 # have mirrors of your site, they will point to SITE_URL everywhere.
 USE_BASE_TAG = False
 
+# Extension for RSS feed files
+# RSS_EXTENSION = ".xml"
+
+# RSS filename base (without extension); used for indexes, sections and galleries.
+# (translatable)
+# RSS_FILENAME_BASE = "rss"
+
 # Final location for the blog main RSS feed is:
-# output / TRANSLATION[lang] / RSS_PATH / rss.xml
+# output / TRANSLATION[lang] / RSS_PATH / RSS_FILENAME_BASE RSS_EXTENSION
 # (translatable)
 # RSS_PATH = ""
 
@@ -1058,6 +1065,9 @@ MARKDOWN_EXTENSIONS = ['markdown.extensions.fenced_code', 'markdown.extensions.c
 # are generated even for old indexes and have pagination link relations
 # between each other. Old Atom feeds with no changes are marked as archived.
 # GENERATE_ATOM = False
+
+# Extension for Atom feed files
+# ATOM_EXTENSION = ".atom"
 
 # Only include teasers in Atom and RSS feeds. Disabling include the full
 # content. Defaults to True.

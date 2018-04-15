@@ -538,14 +538,17 @@ class Nikola(object):
             'REDIRECTIONS': [],
             'ROBOTS_EXCLUSIONS': [],
             'GENERATE_ATOM': False,
+            'ATOM_EXTENSION': '.atom',
             'FEED_TEASERS': True,
             'FEED_PLAIN': False,
             'FEED_PREVIEWIMAGE': True,
             'FEED_READ_MORE_LINK': DEFAULT_FEED_READ_MORE_LINK,
             'FEED_LINKS_APPEND_QUERY': False,
             'GENERATE_RSS': True,
+            'RSS_EXTENSION': '.xml',
             'RSS_LINK': None,
             'RSS_PATH': '',
+            'RSS_FILENAME_BASE': 'rss',
             'SEARCH_FORM': '',
             'SHOW_BLOG_TITLE': True,
             'SHOW_INDEX_PAGE_NAVIGATION': False,
@@ -656,6 +659,7 @@ class Nikola(object):
                                       'SECTION_PATH',
                                       'INDEX_PATH',
                                       'RSS_PATH',
+                                      'RSS_FILENAME_BASE',
                                       'AUTHOR_PATH',
                                       'DATE_FORMAT',
                                       'JS_DATE_FORMAT',
@@ -684,6 +688,7 @@ class Nikola(object):
                                              )
 
         self._ALL_PAGE_DEPENDENCIES_TRANSLATABLE = ('rss_path',
+                                                    'rss_filename_base',
                                                     )
         # WARNING: navigation_links SHOULD NOT be added to the list above.
         #          Themes ask for [lang] there and we should provide it.
@@ -1173,7 +1178,10 @@ class Nikola(object):
         Changes of values in this dict will force a rebuild of all pages.
         Unlike global context, contents are NOT available to templates.
         """
+        self.ALL_PAGE_DEPENDENCIES['atom_extension'] = self.config.get('ATOM_EXTENSION')
+        self.ALL_PAGE_DEPENDENCIES['rss_extension'] = self.config.get('RSS_EXTENSION')
         self.ALL_PAGE_DEPENDENCIES['rss_path'] = self.config.get('RSS_PATH')
+        self.ALL_PAGE_DEPENDENCIES['rss_filename_base'] = self.config.get('RSS_FILENAME_BASE')
 
     def _activate_plugins_of_category(self, category):
         """Activate all the plugins of a given category and return them."""
