@@ -374,7 +374,7 @@ class TranslatableSetting(object):
 
     def __repr__(self):
         """Provide a representation for programmers."""
-        return '<TranslatableSetting: {0!r}>'.format(self.name)
+        return '<TranslatableSetting: {0!r} = {1!r}>'.format(self.name, self._inp)
 
     def format(self, *args, **kwargs):
         """Format ALL the values in the setting the same way."""
