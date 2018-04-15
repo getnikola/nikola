@@ -88,7 +88,6 @@ Name                                Type                                Descript
 ``posts_section_title``             TranslatableSetting<str>            ``POSTS_SECTION_TITLE`` setting
 ``rel_link``                        function                            ``Nikola.rel_link`` function
 ``rss_link``                        str                                 ``RSS_LINK`` setting
-``rss_path``                        TranslatableSetting<str>            ``RSS_PATH`` setting
 ``search_form``                     TranslatableSetting<str>            ``SEARCH_FORM`` setting
 ``set_locale``                      function                            ``LocaleBorg.set_locale`` function (or None if not available)
 ``show_blog_title``                 bool                                ``SHOW_BLOG_TITLE`` setting
