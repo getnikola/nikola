@@ -126,7 +126,7 @@ def default_metadata_extractors_by() -> dict:
     return d
 
 
-def _register_default(extractor: MetadataExtractor) -> MetadataExtractor:
+def _register_default(extractor: type) -> type:
     """Register a default extractor."""
     _default_extractors.append(extractor())
     return extractor
@@ -238,6 +238,11 @@ class FilenameRegexMetadata(MetadataExtractor):
     source = MetaSource.filename
     priority = MetaPriority.fallback
     conditions = [(MetaCondition.config_bool, 'FILE_METADATA_REGEXP')]
+
+    def _extract_metadata_from_text(self, source_text: str) -> dict:
+        """Extract metadata from text."""
+        # This extractor does not use the source text, and as such, this method returns an empty dict.
+        return {}
 
     def extract_filename(self, filename: str, lang: str) -> dict:
         """Try to read the metadata from the filename based on the given re.
