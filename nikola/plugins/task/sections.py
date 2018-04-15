@@ -100,7 +100,7 @@ link://section_index_rss/cars => /cars/rss.xml""",
         """Return a path for the given classification."""
         result = [_f for _f in [self.site.config['SECTION_PATH'](lang), section] if _f]
         if dest_type == 'rss':
-            return result + [self.site.config['RSS_FILENAME_BASE'](lang) + self.site.config['RSS_EXTENSION']], 'never'
+            return result + [self.site.config['RSS_FILENAME_BASE'](lang)], 'auto'
         return result, 'always'
 
     def provide_context_and_uptodate(self, classification, lang, node=None):
