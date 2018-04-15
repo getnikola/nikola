@@ -682,6 +682,9 @@ class Nikola(object):
                                              'posts_section_title',
                                              'front_index_header',
                                              )
+
+        self._ALL_PAGE_DEPENDENCIES_TRANSLATABLE = ('rss_path',
+                                                    )
         # WARNING: navigation_links SHOULD NOT be added to the list above.
         #          Themes ask for [lang] there and we should provide it.
 
@@ -2153,6 +2156,8 @@ class Nikola(object):
 
         for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
             deps_dict[k] = deps_dict['global'][k](lang)
+        for k in self._ALL_PAGE_DEPENDENCIES_TRANSLATABLE:
+            deps_dict[k] = deps_dict['all_page_dependencies'][k](lang)
 
         deps_dict['navigation_links'] = deps_dict['global']['navigation_links'](lang)
 
@@ -2282,6 +2287,8 @@ class Nikola(object):
 
         for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
             deps_context[k] = deps_context['global'][k](lang)
+        for k in self._ALL_PAGE_DEPENDENCIES_TRANSLATABLE:
+            deps_dict[k] = deps_dict['all_page_dependencies'][k](lang)
 
         deps_context['navigation_links'] = deps_context['global']['navigation_links'](lang)
 
