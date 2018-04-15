@@ -235,12 +235,12 @@ class TaxonomiesClassifier(SignalHandler):
         if dest_type == 'feed':
             force_extension = self.site.config['ATOM_EXTENSION']
         elif dest_type == 'rss':
-            force_extension = '.xml'
+            force_extension = self.site.config['RSS_EXTENSION']
         # Determine how to extend path
         path = [_f for _f in path if _f]
         if force_extension is not None:
             if len(path) == 0 and dest_type == 'rss':
-                path = ['rss']
+                path = [self.site.config['RSS_FILENAME_BASE'](lang)]
             elif len(path) == 0 or append_index == 'always':
                 path = path + [os.path.splitext(self.site.config['INDEX_FILE'])[0]]
             elif len(path) > 0 and append_index == 'never':
