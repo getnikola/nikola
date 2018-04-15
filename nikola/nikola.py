@@ -614,7 +614,7 @@ class Nikola(object):
         self.config['__quiet__'] = self.quiet
 
         # Use ATOM_PATH when set
-        self.config['ATOM_PATH'] = self.config['ATOM_PATH'] or self.config['INDEX_PATH'] + '/index'
+        self.config['ATOM_PATH'] = self.config['ATOM_PATH'] or self.config['INDEX_PATH']
 
         # Make sure we have sane NAVIGATION_LINKS.
         if not self.config['NAVIGATION_LINKS']:
