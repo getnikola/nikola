@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Fixing behavior of RSS_PATH to do what the documentation
+  says it does (Issue #3024)
 * Add support for fragments in path handlers (Issue #3032)
 * Explain index.html conflicts better (Issue #3022)
 * Recognize both TEASER_END and (new) END_TEASER (Issue #3010)
