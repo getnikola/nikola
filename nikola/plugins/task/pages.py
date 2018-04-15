@@ -45,14 +45,13 @@ class RenderPages(Task):
             "filters": self.site.config["FILTERS"],
             "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
             "demote_headers": self.site.config['DEMOTE_HEADERS'],
-            "disable_indexes": self.site.config["DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED"],
         }
         self.site.scan_posts()
         yield self.group_task()
         index_paths = {}
         for lang in kw["translations"]:
             index_paths[lang] = False
-            if not kw["disable_indexes"]:
+            if not self.site.config["DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED"]:
                 index_paths[lang] = os.path.normpath(os.path.join(self.site.config['OUTPUT_FOLDER'],
                                                      self.site.path('index', '', lang=lang)))
 
