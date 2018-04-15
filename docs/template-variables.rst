@@ -41,6 +41,7 @@ Name                                Type                                Descript
 ``abs_link``                        function                            ``Nikola.abs_link`` function
 ``atom_path``                       TranslatableSetting<str>            ``ATOM_PATH`` setting
 ``author_pages_generated``          bool                                False
+``atom_extension``                  str                                 ``ATOM_EXTENSION`` setting
 ``blog_author``                     TranslatableSetting<str>            ``BLOG_AUTHOR`` setting
 ``blog_email``                      str                                 ``BLOG_EMAIL`` setting
 ``blog_description``                TranslatableSetting<str>            ``BLOG_DESCRIPTION`` setting
@@ -88,6 +89,8 @@ Name                                Type                                Descript
 ``posts_section_name``              TranslatableSetting<str>            ``POSTS_SECTION_NAME`` setting
 ``posts_section_title``             TranslatableSetting<str>            ``POSTS_SECTION_TITLE`` setting
 ``rel_link``                        function                            ``Nikola.rel_link`` function
+``rss_extension``                   str                                 ``RSS_EXTENSION`` setting
+``rss_filename_base``                TranslatableSetting<str>            ``RSS_FILENAME_BASE`` setting
 ``rss_link``                        str                                 ``RSS_LINK`` setting
 ``rss_path``                        TranslatableSetting<str>            ``RSS_PATH`` setting
 ``search_form``                     TranslatableSetting<str>            ``SEARCH_FORM`` setting
