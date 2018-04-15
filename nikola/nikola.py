@@ -1145,6 +1145,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['posts_section_name'] = self.config.get('POSTS_SECTION_NAME')
         self._GLOBAL_CONTEXT['posts_section_title'] = self.config.get('POSTS_SECTION_TITLE')
         self._GLOBAL_CONTEXT['sort_posts'] = utils.sort_posts
+        self._GLOBAL_CONTEXT['smartjoin'] = utils.smartjoin
         self._GLOBAL_CONTEXT['meta_generator_tag'] = self.config.get('META_GENERATOR_TAG')
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))

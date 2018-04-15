@@ -95,8 +95,8 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real',
            'get_displayed_page_number', 'adjust_name_for_index_path_list',
            'adjust_name_for_index_path', 'adjust_name_for_index_link',
            'NikolaPygmentsHTML', 'create_redirect', 'clean_before_deployment',
-           'sort_posts', 'indent', 'load_data', 'html_unescape', 'rss_writer',
-           'map_metadata',
+           'sort_posts', 'smartjoin', 'indent', 'load_data', 'html_unescape',
+           'rss_writer', 'map_metadata', 'req_missing',
            # Deprecated, moved to hierarchy_utils:
            'TreeNode', 'clone_treenode', 'flatten_tree_structure',
            'sort_classifications', 'join_hierarchical_category_path',
@@ -1860,6 +1860,26 @@ def sort_posts(posts, *keys):
 
         posts = sorted(posts, reverse=reverse, key=keyfunc)
     return posts
+
+
+def smartjoin(join_char: str, string_or_iterable) -> str:
+    """Join string_or_iterable with join_char if it is not a string already.
+
+    >>> smartjoin('; ', 'foo, bar')
+    'foo, bar'
+    >>> smartjoin('; ', ['foo', 'bar'])
+    'foo; bar'
+    """
+    if isinstance(string_or_iterable, (unicode_str, bytes_str)):
+        return string_or_iterable
+    else:
+        return join_char.join(string_or_iterable)
+
+
+def _smartjoin_filter(string_or_iterable, join_char: str) -> str:
+    """A version of smartjoin that works as a Jinja filter (with reversed arguments)."""
+    # http://jinja.pocoo.org/docs/2.10/api/#custom-filters
+    return smartjoin(join_char, string_or_iterable)
 
 
 # Stolen from textwrap in Python 3.4.3.
