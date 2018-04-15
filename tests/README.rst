@@ -95,7 +95,7 @@ You can check the `current build status <https://travis-ci.org/getnikola/nikola>
 Writing tests
 -------------
 
-* When adding new *.py files under tests/ , remember to include at the begining the lines::
+* When adding new *.py files under tests/ , remember to include at the beginning the lines::
 
 	# This code is so you can run the samples without installing the package,
 	# and should be before any import touching nikola, in any file under tests/

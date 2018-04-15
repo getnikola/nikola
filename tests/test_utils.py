@@ -95,13 +95,15 @@ class GetMetaTest(unittest.TestCase):
         self.assertFalse('description' in meta)
 
     def test_extracting_metadata_from_filename(self):
+        dummy_opener_mock = mock.mock_open(read_data="No metadata in the file!")
+
         post = dummy()
         post.source_path = '2013-01-23-the_slug-dub_dub_title.md'
         post.metadata_path = '2013-01-23-the_slug-dub_dub_title.meta'
         post.config['FILE_METADATA_REGEXP'] = r'(?P<date>\d{4}-\d{2}-\d{2})-(?P<slug>.*)-(?P<title>.*)\.md'
         for unslugify, title in ((True, 'Dub dub title'), (False, 'dub_dub_title')):
             post.config['FILE_METADATA_UNSLUGIFY_TITLES'] = unslugify
-            with mock.patch('nikola.post.io.open', create=True):
+            with mock.patch('nikola.post.io.open', dummy_opener_mock, create=True):
                 meta = get_meta(post, None)[0]
 
             self.assertEqual(title, meta['title'])
@@ -109,10 +111,11 @@ class GetMetaTest(unittest.TestCase):
             self.assertEqual('2013-01-23', meta['date'])
 
     def test_get_meta_slug_only_from_filename(self):
+        dummy_opener_mock = mock.mock_open(read_data="No metadata in the file!")
         post = dummy()
         post.source_path = 'some/path/the_slug.md'
         post.metadata_path = 'some/path/the_slug.meta'
-        with mock.patch('nikola.post.io.open', create=True):
+        with mock.patch('nikola.post.io.open', dummy_opener_mock, create=True):
             meta = get_meta(post, None)[0]
 
         self.assertEqual('the_slug', meta['slug'])
@@ -218,10 +221,7 @@ class TranslatableSettingsTest(unittest.TestCase):
         S.default_lang = 'xx'
         S.lang = 'xx'
 
-        try:
-            u = unicode(S)
-        except NameError:  # Python 3
-            u = str(S)
+        u = str(S)
 
         cn = S()      # no language specified
         cr = S('xx')  # real language specified
@@ -243,10 +243,7 @@ class TranslatableSettingsTest(unittest.TestCase):
         S.default_lang = 'xx'
         S.lang = 'xx'
 
-        try:
-            u = unicode(S)
-        except NameError:  # Python 3
-            u = str(S)
+        u = str(S)
 
         cn = S()
         cx = S('xx')
@@ -268,10 +265,7 @@ class TranslatableSettingsTest(unittest.TestCase):
         S.default_lang = 'xx'
         S.lang = 'xx'
 
-        try:
-            u = unicode(S)
-        except NameError:  # Python 3
-            u = str(S)
+        u = str(S)
 
         cn = S()
 

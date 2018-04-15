@@ -509,6 +509,7 @@ class Nikola(object):
             'LOGO_URL': '',
             'NAVIGATION_LINKS': {},
             'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite', 'extra'],
+            'MARKDOWN_EXTENSION_CONFIGS': {},
             'MAX_IMAGE_SIZE': 1280,
             'MATHJAX_CONFIG': '',
             'METADATA_FORMAT': 'nikola',
@@ -657,6 +658,8 @@ class Nikola(object):
                                       'JS_DATE_FORMAT',
                                       'RSS_COPYRIGHT',
                                       'RSS_COPYRIGHT_PLAIN',
+                                      # Issue #2970
+                                      'MARKDOWN_EXTENSION_CONFIGS',
                                       )
 
         self._GLOBAL_CONTEXT_TRANSLATABLE = ('blog_author',
@@ -675,6 +678,7 @@ class Nikola(object):
                                              'posts_section_name',
                                              'posts_section_title',
                                              'front_index_header',
+                                             'rss_path',
                                              )
         # WARNING: navigation_links SHOULD NOT be added to the list above.
         #          Themes ask for [lang] there and we should provide it.
@@ -1399,6 +1403,8 @@ class Nikola(object):
 
                 # unquote from issue #2934
                 dst = self.link(dst_url.netloc, unquote(dst_url.path.lstrip('/')), lang, **link_kwargs)
+                if dst_url.fragment:
+                    dst += '#' + dst_url.fragment
             # Assuming the site is served over one of these, and
             # since those are the only URLs we want to rewrite...
             else:

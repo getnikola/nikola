@@ -30,6 +30,7 @@
 import io
 import os
 import threading
+import json
 
 try:
     from markdown import Markdown
@@ -50,9 +51,9 @@ class ThreadLocalMarkdown(threading.local):
     See discussion in #2661.
     """
 
-    def __init__(self, extensions):
+    def __init__(self, extensions, extension_configs):
         """Create a Markdown instance."""
-        self.markdown = Markdown(extensions=extensions, output_format="html5")
+        self.markdown = Markdown(extensions=extensions, extension_configs=extension_configs, output_format="html5")
 
     def convert(self, data):
         """Convert data to HTML and reset internal state."""
@@ -89,18 +90,27 @@ class CompileMarkdown(PageCompiler):
         site_extensions = self.site.config.get("MARKDOWN_EXTENSIONS")
         self.config_dependencies.append(str(sorted(site_extensions)))
         extensions.extend(site_extensions)
+
+        site_extension_configs = self.site.config.get("MARKDOWN_EXTENSION_CONFIGS", {})
+        if site_extension_configs:
+            self.config_dependencies.append(json.dumps(site_extension_configs.values, sort_keys=True))
+
         if Markdown is not None:
-            self.converter = ThreadLocalMarkdown(extensions)
+            self.converters = {}
+            for lang in self.site.config['TRANSLATIONS']:
+                self.converters[lang] = ThreadLocalMarkdown(extensions, site_extension_configs.get(lang, {}))
         self.supports_metadata = 'markdown.extensions.meta' in extensions
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
         """Compile Markdown into HTML strings."""
+        if lang is None:
+            lang = LocaleBorg().current_lang
         if Markdown is None:
             req_missing(['markdown'], 'build this site (compile Markdown)')
         if not is_two_file:
             _, data = self.split_metadata(data, post, lang)
         new_data, shortcodes = sc.extract_shortcodes(data)
-        output, _ = self.converter.convert(new_data)
+        output, _ = self.converters[lang].convert(new_data)
         output, shortcode_deps = self.site.apply_shortcodes_uuid(output, shortcodes, filename=source_path, extra_context={'post': post})
         return output, shortcode_deps
 
@@ -142,6 +152,7 @@ class CompileMarkdown(PageCompiler):
 
     def read_metadata(self, post, lang=None):
         """Read the metadata from a post, and return a metadata dict."""
+        lang = lang or self.site.config.get('DEFAULT_LANGUAGE', 'en')
         if not self.supports_metadata:
             return {}
         if Markdown is None:
@@ -157,7 +168,7 @@ class CompileMarkdown(PageCompiler):
             # bad things like setting empty tags to "''"
             if data.startswith('---\n'):
                 return {}
-            _, meta = self.converter.convert(data)
+            _, meta = self.converters[lang].convert(data)
         # Map metadata from other platforms to names Nikola expects (Issue #2817)
         map_metadata(meta, 'markdown_metadata', self.site.config)
         return meta
