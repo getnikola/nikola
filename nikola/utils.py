@@ -1877,7 +1877,7 @@ def smartjoin(join_char: str, string_or_iterable) -> str:
 
 
 def _smartjoin_filter(string_or_iterable, join_char: str) -> str:
-    """A version of smartjoin that works as a Jinja filter (with reversed arguments)."""
+    """Join stuff smartly, with reversed arguments for Jinja2 filters."""
     # http://jinja.pocoo.org/docs/2.10/api/#custom-filters
     return smartjoin(join_char, string_or_iterable)
 
