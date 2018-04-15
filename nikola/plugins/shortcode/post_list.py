@@ -47,6 +47,7 @@ class Plugin(ShortcodePlugin):
                 sections=None, slugs=None, post_type='post', type=False,
                 lang=None, template='post_list_directive.tmpl', sort=None,
                 id=None, data=None, state=None, site=None, date=None, filename=None, post=None):
+        """Generate HTML for post-list."""
         if lang is None:
             lang = utils.LocaleBorg().current_lang
         if site.invariant:  # for testing purposes
