@@ -25,17 +25,11 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """Post list directive for reStructuredText."""
 
-import os
-import uuid
-import natsort
-import operator
-
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 
 from nikola import utils
 from nikola.plugin_categories import RestExtension
-from nikola.packages.datecond import date_in_range
 
 # from nikola.plugins.shortcode.post_list import _do_post_list
 

@@ -32,8 +32,6 @@ import os
 import uuid
 
 import natsort
-from docutils import nodes
-from docutils.parsers.rst import Directive, directives
 
 from nikola import utils
 from nikola.packages.datecond import date_in_range
@@ -46,9 +44,9 @@ class Plugin(ShortcodePlugin):
     name = "post_list"
 
     def handler(self, start=None, stop=None, reverse=False, tags=None, require_all_tags=False, categories=None,
-                    sections=None, slugs=None, post_type='post', type=False,
-                    lang=None, template='post_list_directive.tmpl', sort=None,
-                    id=None, data=None, state=None, site=None, date=None, filename=None, post=None):
+                sections=None, slugs=None, post_type='post', type=False,
+                lang=None, template='post_list_directive.tmpl', sort=None,
+                id=None, data=None, state=None, site=None, date=None, filename=None, post=None):
         if lang is None:
             lang = utils.LocaleBorg().current_lang
         if site.invariant:  # for testing purposes
@@ -161,6 +159,7 @@ class Plugin(ShortcodePlugin):
         output = site.template_system.render_template(
             template, None, template_data)
         return output, template_deps
+
 
 # Request file name from shortcode (Issue #2412)
 Plugin.handler.nikola_shortcode_pass_filename = True
