@@ -134,6 +134,7 @@ Name                Type        Description
 ``title``           str         Title of the page (taken from post, config, etc.)
 ``formatmsg``       function    Wrapper over ``%`` string formatting
 ``striphtml``       function    Strips HTML tags (Mako only)
+``crumbs``          list        Breadcrumbs for this page
 ==================  ==========  ===============================================================
 
 __ https://getnikola.com/theming.html#identifying-and-customizing-different-kinds-of-pages-with-a-shared-template

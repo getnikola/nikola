@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Make ``crumbs`` available to all pages
 * Allowing to customize RSS and Atom feed extensions with
   ``RSS_EXTENSION``, ``ATOM_EXTENSION`` settings (Issue #3041)
 * Allowing to customize filename base appended to RSS_PATH
