@@ -2184,7 +2184,9 @@ class Nikola(object):
         context['description'] = post.description(lang)
         context['permalink'] = post.permalink(lang)
         if 'crumbs' not in context:
-            crumb_path = post.permalink(lang).lstrip('/').rstrip(self.config['INDEX_FILE'])
+            crumb_path = post.permalink(lang).lstrip('/')
+            if crumb_path.endswith(self.config['INDEX_FILE']):
+                crumb_path = crumb_path[:-len(self.config['INDEX_FILE'])]
             if crumb_path.endswith('/'):
                 context['crumbs'] = utils.get_crumbs(crumb_path.rstrip('/'), is_file=False)
             else:
