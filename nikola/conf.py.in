@@ -516,9 +516,10 @@ FRONT_INDEX_HEADER = {
 USE_BASE_TAG = False
 
 # Final location for the blog main RSS feed is:
-# output / TRANSLATION[lang] / RSS_PATH / rss.xml
+# output / TRANSLATION[lang] / RSS_PATH / RSS_PATH_FILENAME_BASE .xml
 # (translatable)
 # RSS_PATH = ""
+# RSS_PATH_FILENAME_BASE = "rss"
 
 # Slug the Tag URL. Easier for users to type, special characters are
 # often removed or replaced as well.
