@@ -1,6 +1,8 @@
 New in v7-maintenance
 =====================
 
+* Fixing behavior of RSS_PATH to do what the documentation
+  says it does (Issue #3024)
 * Use documented dateutil API for time zone list (Issue #3006)
 
 New in v7.8.14
