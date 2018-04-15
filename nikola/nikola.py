@@ -2147,7 +2147,7 @@ class Nikola(object):
         deps_dict['OUTPUT_FOLDER'] = self.config['OUTPUT_FOLDER']
         deps_dict['TRANSLATIONS'] = self.config['TRANSLATIONS']
         deps_dict['global'] = self.GLOBAL_CONTEXT
-        deps_dict["all_page_dependencies"] = self.ALL_PAGE_DEPENDENCIES
+        deps_dict['all_page_dependencies'] = self.ALL_PAGE_DEPENDENCIES
         if post_deps_dict:
             deps_dict.update(post_deps_dict)
 
@@ -2288,7 +2288,7 @@ class Nikola(object):
         for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
             deps_context[k] = deps_context['global'][k](lang)
         for k in self._ALL_PAGE_DEPENDENCIES_TRANSLATABLE:
-            deps_dict[k] = deps_dict['all_page_dependencies'][k](lang)
+            deps_context[k] = deps_context['all_page_dependencies'][k](lang)
 
         deps_context['navigation_links'] = deps_context['global']['navigation_links'](lang)
 
