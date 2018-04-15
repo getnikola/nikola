@@ -27,9 +27,6 @@
 
 from ast import literal_eval
 
-from docutils import nodes
-from docutils.parsers.rst import Directive, directives
-
 try:
     import pygal
 except ImportError:

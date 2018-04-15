@@ -25,8 +25,6 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """Chart directive for reSTructuredText."""
 
-from ast import literal_eval
-
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 
@@ -36,7 +34,6 @@ except ImportError:
     pygal = None  # NOQA
 
 from nikola.plugin_categories import RestExtension
-from nikola.utils import req_missing
 
 _site = None
 
