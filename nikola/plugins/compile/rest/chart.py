@@ -23,7 +23,6 @@
 # OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
 """Chart directive for reSTructuredText."""
 
 from ast import literal_eval
@@ -52,7 +51,6 @@ class Plugin(RestExtension):
         global _site
         _site = self.site = site
         directives.register_directive('chart', Chart)
-        self.site.register_shortcode('chart', _gen_chart)
         return super(Plugin, self).set_site(site)
 
 
@@ -157,41 +155,9 @@ class Chart(Directive):
     def run(self):
         """Run the directive."""
         self.options['site'] = None
-        html = _gen_chart(self.arguments[0], data='\n'.join(self.content), **self.options)
+        html = _site.plugin_manager.GetPluginByName(
+            'chart', 'ShortcodePlugin').plugin_object.handler(
+                self.arguments[0],
+                data='\n'.join(self.content),
+                **self.options)
         return [nodes.raw('', html, format='html')]
-
-
-def _gen_chart(chart_type, **_options):
-    if pygal is None:
-        msg = req_missing(['pygal'], 'use the Chart directive', optional=True)
-        return '<div class="text-error">{0}</div>'.format(msg)
-    options = {}
-    data = _options.pop('data')
-    _options.pop('post', None)
-    _options.pop('site')
-    if 'style' in _options:
-        style_name = _options.pop('style')
-    else:
-        style_name = 'BlueStyle'
-    if '(' in style_name:  # Parametric style
-        style = eval('pygal.style.' + style_name)
-    else:
-        style = getattr(pygal.style, style_name)
-    for k, v in _options.items():
-        try:
-            options[k] = literal_eval(v)
-        except Exception:
-            options[k] = v
-    chart = pygal
-    for o in chart_type.split('.'):
-        chart = getattr(chart, o)
-    chart = chart(style=style)
-    if _site and _site.invariant:
-        chart.no_prefix = True
-    chart.config(**options)
-    for line in data.splitlines():
-        line = line.strip()
-        if line:
-            label, series = literal_eval('({0})'.format(line))
-            chart.add(label, series)
-    return chart.render().decode('utf8')
