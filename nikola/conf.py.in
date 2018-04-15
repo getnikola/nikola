@@ -1067,7 +1067,7 @@ MARKDOWN_EXTENSIONS = ['markdown.extensions.fenced_code', 'markdown.extensions.c
 # GENERATE_ATOM = False
 
 # Extension for Atom feed files
-# FEED_EXTENSION = ".atom"
+# ATOM_EXTENSION = ".atom"
 
 # Only include teasers in Atom and RSS feeds. Disabling include the full
 # content. Defaults to True.

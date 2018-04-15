@@ -538,7 +538,7 @@ class Nikola(object):
             'REDIRECTIONS': [],
             'ROBOTS_EXCLUSIONS': [],
             'GENERATE_ATOM': False,
-            'FEED_EXTENSION': '.atom',
+            'ATOM_EXTENSION': '.atom',
             'FEED_TEASERS': True,
             'FEED_PLAIN': False,
             'FEED_PREVIEWIMAGE': True,
@@ -1121,6 +1121,8 @@ class Nikola(object):
             'CONTENT_FOOTER')
         self._GLOBAL_CONTEXT['generate_atom'] = self.config.get('GENERATE_ATOM')
         self._GLOBAL_CONTEXT['generate_rss'] = self.config.get('GENERATE_RSS')
+        self._GLOBAL_CONTEXT['atom_extension'] = self.config.get('ATOM_EXTENSION')
+        self._GLOBAL_CONTEXT['rss_extension'] = self.config.get('RSS_EXTENSION')
         self._GLOBAL_CONTEXT['rss_path'] = self.config.get('RSS_PATH')
         self._GLOBAL_CONTEXT['rss_filename_base'] = self.config.get('RSS_FILENAME_BASE')
         self._GLOBAL_CONTEXT['rss_link'] = self.config.get('RSS_LINK')

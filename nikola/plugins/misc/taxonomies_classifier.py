@@ -233,7 +233,7 @@ class TaxonomiesClassifier(SignalHandler):
         # Forcing extension for Atom feeds and RSS feeds
         force_extension = None
         if dest_type == 'feed':
-            force_extension = self.site.config['FEED_EXTENSION']
+            force_extension = self.site.config['ATOM_EXTENSION']
         elif dest_type == 'rss':
             force_extension = '.xml'
         # Determine how to extend path
