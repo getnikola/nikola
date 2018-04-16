@@ -581,6 +581,18 @@ For Hugo, use:
 
 The following source names are supported: ``yaml``, ``toml``, ``rest_docinfo``, ``markdown_metadata``.
 
+Additionally, you can use ``METADATA_VALUE_MAPPING`` to perform any extra conversions on metadata for **all** posts of a given format (``nikola`` metadata is also supported). A few examples:
+
+.. code:: python
+
+    METADATA_VALUE_MAPPING = {
+        "yaml": {"keywords": lambda value: ', '.join(value)},  # yaml: 'keywords' list -> str
+        "nikola": {
+            "widgets": lambda value: value.split(', '),  # nikola: 'widgets' comma-separated string -> list
+            "tags": str.lower  # nikola: force lowercase 'tags' (input would be string)
+         }
+    }
+
 Multilingual posts
 ~~~~~~~~~~~~~~~~~~
 

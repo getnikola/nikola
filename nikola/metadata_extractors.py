@@ -142,6 +142,7 @@ class NikolaMetadata(MetadataExtractor):
     supports_write = True
     split_metadata_re = re.compile('\n\n')
     nikola_re = re.compile(r'^\s*\.\. (.*?): (.*)')
+    map_from = 'nikola'  # advertised in values mapping only
 
     def _extract_metadata_from_text(self, source_text: str) -> dict:
         """Extract metadata from text."""

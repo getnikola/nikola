@@ -14,6 +14,10 @@ Features
 * Fixing behavior of RSS_PATH to do what the documentation
   says it does (Issue #3024)
 * Add support for fragments in path handlers (Issue #3032)
+* New ``METADATA_VALUE_MAPPING`` setting to allow for flexible global
+  modification of metadata (Issue #3025)
+* New ``smartjoin`` template function/filter that joins lists and
+  leaves strings as-is (Issue #3025)
 * Explain index.html conflicts better (Issue #3022)
 * Recognize both TEASER_END and (new) END_TEASER (Issue #3010)
 * New MARKDOWN_EXTENSION_CONFIGS setting (Issue #2970)
