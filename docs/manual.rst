@@ -387,7 +387,7 @@ template
        .. template: story.tmpl
 
 updated
-    The last time this post was updated, defaults to the posts ``date``
+    The last time this post was updated, defaults to the post’s ``date``
     metadata value. It is not displayed by default in most themes, including
     the defaults — you can use ``post.formatted_updated(date_format)`` (and
     perhaps check ``if post.updated != post.date``) in your post template to
