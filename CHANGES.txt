@@ -51,7 +51,9 @@ Features
 Bugfixes
 --------
 
-* Put post_list shortcode in its own plugin and make the reSt
+* Make chart shortcode its own plugin and make the reST directive
+  depend on it.
+* Put post_list shortcode in its own plugin and make the reST
   directive depend on it.
 * Don’t silence syntax errors and other exceptions that occur while
   reading metadata
