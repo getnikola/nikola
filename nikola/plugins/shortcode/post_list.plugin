@@ -1,10 +1,9 @@
 [Core]
-name = rest_post_list
+name = post_list
 module = post_list
 
 [Nikola]
-compiler = rest
-PluginCategory = CompilerExtension
+PluginCategory = Shortcode
 
 [Documentation]
 author = Udo Spallek

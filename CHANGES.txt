@@ -51,6 +51,8 @@ Features
 Bugfixes
 --------
 
+* Put post_list shortcode in its own plugin and make the reSt
+  directive depend on it.
 * Don’t silence syntax errors and other exceptions that occur while
   reading metadata
 * Use documented dateutil API for time zone list (Issue #3006)
