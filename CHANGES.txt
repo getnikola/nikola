@@ -4,6 +4,11 @@ New in master
 Features
 --------
 
+* Make ``crumbs`` available to all pages
+* Allowing to customize RSS and Atom feed extensions with
+  ``RSS_EXTENSION``, ``ATOM_EXTENSION`` settings (Issue #3041)
+* Allowing to customize filename base appended to RSS_PATH
+  with ``RSS_FILENAME_BASE`` setting (Issue #3041)
 * Use basic ipynb template by default for slightly better appearance
   and behavior
 * Fixing behavior of RSS_PATH to do what the documentation
@@ -48,6 +53,8 @@ Bugfixes
 
 * Make chart shortcode its own plugin and make the reSt directive
   depend on it.
+* Put post_list shortcode in its own plugin and make the reSt
+  directive depend on it.
 * Don’t silence syntax errors and other exceptions that occur while
   reading metadata
 * Use documented dateutil API for time zone list (Issue #3006)

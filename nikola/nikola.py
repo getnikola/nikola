@@ -538,14 +538,17 @@ class Nikola(object):
             'REDIRECTIONS': [],
             'ROBOTS_EXCLUSIONS': [],
             'GENERATE_ATOM': False,
+            'ATOM_EXTENSION': '.atom',
             'FEED_TEASERS': True,
             'FEED_PLAIN': False,
             'FEED_PREVIEWIMAGE': True,
             'FEED_READ_MORE_LINK': DEFAULT_FEED_READ_MORE_LINK,
             'FEED_LINKS_APPEND_QUERY': False,
             'GENERATE_RSS': True,
+            'RSS_EXTENSION': '.xml',
             'RSS_LINK': None,
             'RSS_PATH': '',
+            'RSS_FILENAME_BASE': 'rss',
             'SEARCH_FORM': '',
             'SHOW_BLOG_TITLE': True,
             'SHOW_INDEX_PAGE_NAVIGATION': False,
@@ -653,6 +656,7 @@ class Nikola(object):
                                       'SECTION_PATH',
                                       'INDEX_PATH',
                                       'RSS_PATH',
+                                      'RSS_FILENAME_BASE',
                                       'AUTHOR_PATH',
                                       'DATE_FORMAT',
                                       'JS_DATE_FORMAT',
@@ -679,6 +683,7 @@ class Nikola(object):
                                              'posts_section_title',
                                              'front_index_header',
                                              'rss_path',
+                                             'rss_filename_base',
                                              )
         # WARNING: navigation_links SHOULD NOT be added to the list above.
         #          Themes ask for [lang] there and we should provide it.
@@ -1116,7 +1121,10 @@ class Nikola(object):
             'CONTENT_FOOTER')
         self._GLOBAL_CONTEXT['generate_atom'] = self.config.get('GENERATE_ATOM')
         self._GLOBAL_CONTEXT['generate_rss'] = self.config.get('GENERATE_RSS')
+        self._GLOBAL_CONTEXT['atom_extension'] = self.config.get('ATOM_EXTENSION')
+        self._GLOBAL_CONTEXT['rss_extension'] = self.config.get('RSS_EXTENSION')
         self._GLOBAL_CONTEXT['rss_path'] = self.config.get('RSS_PATH')
+        self._GLOBAL_CONTEXT['rss_filename_base'] = self.config.get('RSS_FILENAME_BASE')
         self._GLOBAL_CONTEXT['rss_link'] = self.config.get('RSS_LINK')
 
         self._GLOBAL_CONTEXT['navigation_links'] = self.config.get('NAVIGATION_LINKS')
@@ -2175,6 +2183,14 @@ class Nikola(object):
         context['title'] = post.title(lang)
         context['description'] = post.description(lang)
         context['permalink'] = post.permalink(lang)
+        if 'crumbs' not in context:
+            crumb_path = post.permalink(lang).lstrip('/')
+            if crumb_path.endswith(self.config['INDEX_FILE']):
+                crumb_path = crumb_path[:-len(self.config['INDEX_FILE'])]
+            if crumb_path.endswith('/'):
+                context['crumbs'] = utils.get_crumbs(crumb_path.rstrip('/'), is_file=False)
+            else:
+                context['crumbs'] = utils.get_crumbs(crumb_path, is_file=True)
         if 'pagekind' not in context:
             context['pagekind'] = ['generic_page']
         if post.use_in_feeds:
