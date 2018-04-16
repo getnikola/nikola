@@ -45,90 +45,13 @@ class Plugin(RestExtension):
     def set_site(self, site):
         """Set Nikola site."""
         self.site = site
-        directives.register_directive('post-list', PostList)
-        PostList.site = site
+        directives.register_directive('post-list', PostListDirective)
+        PostListDirective.site = site
         return super(Plugin, self).set_site(site)
 
 
-class PostList(Directive):
-    """Provide a reStructuredText directive to create a list of posts.
-
-    Post List
-    =========
-    :Directive Arguments: None.
-    :Directive Options: lang, start, stop, reverse, sort, date, tags, categories, sections, slugs, post_type, template, id
-    :Directive Content: None.
-
-    The posts appearing in the list can be filtered by options.
-    *List slicing* is provided with the *start*, *stop* and *reverse* options.
-
-    The following not required options are recognized:
-
-    ``start`` : integer
-        The index of the first post to show.
-        A negative value like ``-3`` will show the *last* three posts in the
-        post-list.
-        Defaults to None.
-
-    ``stop`` : integer
-        The index of the last post to show.
-        A value negative value like ``-1`` will show every post, but not the
-        *last* in the post-list.
-        Defaults to None.
-
-    ``reverse`` : flag
-        Reverse the order of the post-list.
-        Defaults is to not reverse the order of posts.
-
-    ``sort`` : string
-        Sort post list by one of each post's attributes, usually ``title`` or a
-        custom ``priority``.  Defaults to None (chronological sorting).
-
-    ``date`` : string
-        Show posts that match date range specified by this option. Format:
-
-        * comma-separated clauses (AND)
-        * clause: attribute comparison_operator value (spaces optional)
-          * attribute: year, month, day, hour, month, second, weekday, isoweekday; or empty for full datetime
-          * comparison_operator: == != <= >= < >
-          * value: integer, 'now' or dateutil-compatible date input
-
-    ``tags`` : string [, string...]
-        Filter posts to show only posts having at least one of the ``tags``.
-        Defaults to None.
-
-    ``require_all_tags`` : flag
-        Change tag filter behaviour to show only posts that have all specified ``tags``.
-        Defaults to False.
-
-    ``categories`` : string [, string...]
-        Filter posts to show only posts having one of the ``categories``.
-        Defaults to None.
-
-    ``sections`` : string [, string...]
-        Filter posts to show only posts having one of the ``sections``.
-        Defaults to None.
-
-    ``slugs`` : string [, string...]
-        Filter posts to show only posts having at least one of the ``slugs``.
-        Defaults to None.
-
-    ``post_type`` (or ``type``) : string
-        Show only ``posts``, ``pages`` or ``all``.
-        Replaces ``all``. Defaults to ``posts``.
-
-    ``lang`` : string
-        The language of post *titles* and *links*.
-        Defaults to default language.
-
-    ``template`` : string
-        The name of an alternative template to render the post-list.
-        Defaults to ``post_list_directive.tmpl``
-
-    ``id`` : string
-        A manual id for the post list.
-        Defaults to a random name composed by 'post_list_' + uuid.uuid4().hex.
-    """
+class PostListDirective(Directive):
+    """Provide a reStructuredText directive to create a list of posts."""
 
     option_spec = {
         'start': int,
