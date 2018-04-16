@@ -51,7 +51,7 @@ class RenderPages(Task):
         index_paths = {}
         for lang in kw["translations"]:
             index_paths[lang] = False
-            if not self.site.config["DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED"]:
+            if not self.site.config["DISABLE_INDEXES"]:
                 index_paths[lang] = os.path.normpath(os.path.join(self.site.config['OUTPUT_FOLDER'],
                                                      self.site.path('index', '', lang=lang)))
 

@@ -1,4 +1,4 @@
-* `Agustin Henze <https://github.com/agustinhenze>`_
+﻿* `Agustin Henze <https://github.com/agustinhenze>`_
 * `Alberto Berti <https://github.com/azazel75>`_
 * `Alex Popescu <https://github.com/al3xandru>`_
 * `Alex Walters <https://github.com/tritium21>`_
@@ -8,6 +8,7 @@
 * `Aru Sahni <https://github.com/arusahni>`_
 * `Aurelien Naldi <https://github.com/aurelien-naldi>`_
 * `Ben Mather <https://github.com/bwhmather>`_
+* `Bendik Knapstad <https://github.com/knapstad>`_	
 * `Boris Kaul <https://github.com/localvoid>`_
 * `Brad Miller <https://github.com/bnmnetp>`_
 * `Brandon W. Maister <https://github.com/quodlibetor>`_
