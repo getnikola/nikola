@@ -387,10 +387,11 @@ template
        .. template: story.tmpl
 
 updated
-    The last time this post was updated, defaults to now. It is not displayed
-    by default in most themes, including the defaults — you can use
-    ``post.formatted_updated(date_format)`` (and perhaps check ``if post.updated
-    != post.date``) in your post template to show it.
+    The last time this post was updated, defaults to the post’s ``date``
+    metadata value. It is not displayed by default in most themes, including
+    the defaults — you can use ``post.formatted_updated(date_format)`` (and
+    perhaps check ``if post.updated != post.date``) in your post template to
+    show it.
 
 To add these metadata fields to all new posts by default, you can set the
 variable ``ADDITIONAL_METADATA`` in your configuration.  For example, you can
@@ -580,6 +581,18 @@ For Hugo, use:
 
 The following source names are supported: ``yaml``, ``toml``, ``rest_docinfo``, ``markdown_metadata``.
 
+Additionally, you can use ``METADATA_VALUE_MAPPING`` to perform any extra conversions on metadata for **all** posts of a given format (``nikola`` metadata is also supported). A few examples:
+
+.. code:: python
+
+    METADATA_VALUE_MAPPING = {
+        "yaml": {"keywords": lambda value: ', '.join(value)},  # yaml: 'keywords' list -> str
+        "nikola": {
+            "widgets": lambda value: value.split(', '),  # nikola: 'widgets' comma-separated string -> list
+            "tags": str.lower  # nikola: force lowercase 'tags' (input would be string)
+         }
+    }
+
 Multilingual posts
 ~~~~~~~~~~~~~~~~~~
 
@@ -680,6 +693,12 @@ options. The exact mechanism is explained above the config options in the
    ``posts/foo/bar.txt`` would produce  ``output/posts/foo/bar.html``, assuming the slug is also ``bar``.
 
    If you have ``PRETTY_URLS`` enabled, that would be ``output/posts/foo/bar/index.html``.
+
+
+.. warning::
+
+    Removing the ``.rst`` entries is not recommended. Some features (eg.
+    shortcodes) may not work properly if you do that.
 
 The ``new_post`` command
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1178,6 +1197,12 @@ Example of a paired shortcode (note that we don't have a highlight shortcode yet
 Built-in shortcodes
 ~~~~~~~~~~~~~~~~~~~
 
+.. warning::
+
+    Some of the shortcodes are implemented as bindings to reST directives. In
+    order to use them, you need at least one entry for ``*.rst`` in
+    POSTS/PAGES.
+
 chart
     Create charts via PyGal. This is similar to the `chart directive <#chart>`__ except the syntax is adapted to
     shortcodes. This is an example:
@@ -1229,7 +1254,7 @@ media
         {{% raw %}}{{% media url="https://www.youtube.com/watch?v=Nck6BZga7TQ" %}}{{% /raw %}}
 
 post-list
-    Will show a list of posts, see the `Post List directive for details <#post-list>`__
+    Will show a list of posts, see the `Post List directive for details <#post-list>`__.
 
 raw
     Passes the content along, mostly used so I can write this damn section and you can see the shortcodes instead
@@ -1318,7 +1343,7 @@ In that case, the template engine used will be your theme's and the arguments yo
 as well as the global context from your ``conf.py``, are available to the template you
 are creating.
 
-You can use anything defined in your confguration's ``GLOBAL_CONTEXT`` as
+You can use anything defined in your configuration's ``GLOBAL_CONTEXT`` as
 variables in your shortcode template, with a caveat: Because of an unfortunate
 implementation detail (a name conflict), ``data`` is called ``global_data``
 when used in a shortcode.
@@ -1772,7 +1797,7 @@ to one of "disqus", "intensedebate", "livefyre", "moot", "facebook", "isso" or "
    * For isso, it is the URL of isso (must be world-accessible, encoded with
      Punycode (if using Internationalized Domain Names) and **have a trailing slash**,
      default ``http://localhost:8080/``)
-   * For commento it's the URL of the commento instance as required by the ``serverUrl`` 
+   * For commento it's the URL of the commento instance as required by the ``serverUrl``
      parameter in commento's documentation.
 
 To use comments in a visible site, you should register with the service and
@@ -2642,7 +2667,6 @@ Using shortcode syntax (for other compilers):
 .. code:: text
 
    {{% raw %}}{{% post-list stop=5 %}}{{% /post-list %}}{{% /raw %}}
-
 
 The following options are recognized:
 

@@ -59,6 +59,8 @@ class CompileIPynb(PageCompiler):
         self._req_missing_ipynb()
         c = Config(self.site.config['IPYNB_CONFIG'])
         c.update(get_default_jupyter_config())
+        if 'template_file' not in self.site.config['IPYNB_CONFIG'].get('Exporter', {}):
+            c['Exporter']['template_file'] = 'basic.tpl'  # not a typo
         exportHtml = HTMLExporter(config=c)
         body, _ = exportHtml.from_notebook_node(nb_json)
         return body

@@ -17,7 +17,7 @@ fi
 nikola init -qd nikola-baseline-build
 cd nikola-baseline-build
 cp ../tests/data/1-nolinks.rst posts/1.rst
-rm "pages/creating-a-theme.rst" "pages/extending.txt" "pages/internals.txt" "pages/manual.rst" "pages/social_buttons.txt" "pages/theming.rst" "pages/path_handlers.txt" "pages/charts.txt"
+rm "pages/creating-a-theme.rst" "pages/extending.rst" "pages/internals.rst" "pages/manual.rst" "pages/social_buttons.rst" "pages/theming.rst" "pages/path_handlers.rst" "pages/charts.rst"
 LC_ALL='en_US.UTF-8' PYTHONHASHSEED=0 nikola build --invariant
 if [[ "$1" == "check" ]]; then
     echo -e "\033[36m>> Testing baseline...\033[0m"

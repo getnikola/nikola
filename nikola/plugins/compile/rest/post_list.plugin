@@ -8,7 +8,7 @@ PluginCategory = CompilerExtension
 
 [Documentation]
 author = Udo Spallek
-version = 0.1
+version = 0.2
 website = https://getnikola.com/
-description = Includes a list of posts with tag and slide based filters.
+description = Includes a list of posts with tag and slice based filters.
 

@@ -5,7 +5,24 @@ Features
 --------
 
 * Support captioned images and image ordering in galleries (Issue #3017)
+* Make ``crumbs`` available to all pages
+* Allowing to customize RSS and Atom feed extensions with
+  ``RSS_EXTENSION``, ``ATOM_EXTENSION`` settings (Issue #3041)
+* Allowing to customize filename base appended to RSS_PATH
+  with ``RSS_FILENAME_BASE`` setting (Issue #3041)
+* Use basic ipynb template by default for slightly better appearance
+  and behavior
+* Fixing behavior of RSS_PATH to do what the documentation
+  says it does (Issue #3024)
+* Add support for fragments in path handlers (Issue #3032)
+* New ``METADATA_VALUE_MAPPING`` setting to allow for flexible global
+  modification of metadata (Issue #3025)
+* New ``smartjoin`` template function/filter that joins lists and
+  leaves strings as-is (Issue #3025)
+* Explain index.html conflicts better (Issue #3022)
 * Recognize both TEASER_END and (new) END_TEASER (Issue #3010)
+  (warning: if you perform manual splits, the regex change means new
+  indexes must be used)
 * New MARKDOWN_EXTENSION_CONFIGS setting (Issue #2970)
 * Replace ``flowr.js`` with ``justified-layout.js`` by Flickr
   (does not require jQuery!)
@@ -41,6 +58,12 @@ Features
 Bugfixes
 --------
 
+* Make chart shortcode its own plugin and make the reST directive
+  depend on it.
+* Put post_list shortcode in its own plugin and make the reST
+  directive depend on it.
+* Don’t silence syntax errors and other exceptions that occur while
+  reading metadata
 * Use documented dateutil API for time zone list (Issue #3006)
 * Handle trailing slash redirects with query strings correctly in
   ``nikola serve`` (Issue #3000)

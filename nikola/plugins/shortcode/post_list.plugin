@@ -1,0 +1,13 @@
+[Core]
+name = post_list
+module = post_list
+
+[Nikola]
+PluginCategory = Shortcode
+
+[Documentation]
+author = Udo Spallek
+version = 0.2
+website = https://getnikola.com/
+description = Includes a list of posts with tag and slice based filters.
+

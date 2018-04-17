@@ -1,4 +1,4 @@
-﻿.. title: A BID FOR FORTUNE OR; DR. NIKOLA'S VENDETTA
+.. title: A BID FOR FORTUNE OR; DR. NIKOLA'S VENDETTA
 .. template: book.tmpl
 .. hyphenate: yes
 .. filters: filters.typogrify

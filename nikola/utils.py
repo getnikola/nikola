@@ -95,8 +95,8 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real',
            'get_displayed_page_number', 'adjust_name_for_index_path_list',
            'adjust_name_for_index_path', 'adjust_name_for_index_link',
            'NikolaPygmentsHTML', 'create_redirect', 'clean_before_deployment',
-           'sort_posts', 'indent', 'load_data', 'html_unescape', 'rss_writer',
-           'map_metadata',
+           'sort_posts', 'smartjoin', 'indent', 'load_data', 'html_unescape',
+           'rss_writer', 'map_metadata', 'req_missing',
            # Deprecated, moved to hierarchy_utils:
            'TreeNode', 'clone_treenode', 'flatten_tree_structure',
            'sort_classifications', 'join_hierarchical_category_path',
@@ -361,7 +361,7 @@ class TranslatableSetting(object):
 
     def __repr__(self):
         """Provide a representation for programmers."""
-        return '<TranslatableSetting: {0!r}>'.format(self.name)
+        return '<TranslatableSetting: {0!r} = {1!r}>'.format(self.name, self._inp)
 
     def format(self, *args, **kwargs):
         """Format ALL the values in the setting the same way."""
@@ -1862,6 +1862,26 @@ def sort_posts(posts, *keys):
     return posts
 
 
+def smartjoin(join_char: str, string_or_iterable) -> str:
+    """Join string_or_iterable with join_char if it is not a string already.
+
+    >>> smartjoin('; ', 'foo, bar')
+    'foo, bar'
+    >>> smartjoin('; ', ['foo', 'bar'])
+    'foo; bar'
+    """
+    if isinstance(string_or_iterable, (unicode_str, bytes_str)):
+        return string_or_iterable
+    else:
+        return join_char.join(string_or_iterable)
+
+
+def _smartjoin_filter(string_or_iterable, join_char: str) -> str:
+    """Join stuff smartly, with reversed arguments for Jinja2 filters."""
+    # http://jinja.pocoo.org/docs/2.10/api/#custom-filters
+    return smartjoin(join_char, string_or_iterable)
+
+
 # Stolen from textwrap in Python 3.4.3.
 def indent(text, prefix, predicate=None):
     """Add 'prefix' to the beginning of selected lines in 'text'.
@@ -1932,11 +1952,15 @@ def rss_writer(rss_obj, output_path):
 def map_metadata(meta, key, config):
     """Map metadata from other platforms to Nikola names.
 
-    This uses the METADATA_MAPPING setting (via ``config``) and modifies the dict in place.
+    This uses the METADATA_MAPPING and METADATA_VALUE_MAPPING settings (via ``config``) and modifies the dict in place.
     """
     for foreign, ours in config.get('METADATA_MAPPING', {}).get(key, {}).items():
         if foreign in meta:
             meta[ours] = meta[foreign]
+
+    for meta_key, hook in config.get('METADATA_VALUE_MAPPING', {}).get(key, {}).items():
+        if meta_key in meta:
+            meta[meta_key] = hook(meta[meta_key])
 
 
 class ClassificationTranslationManager(object):
