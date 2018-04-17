@@ -1089,8 +1089,6 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['rel_link'] = self.rel_link
         self._GLOBAL_CONTEXT['abs_link'] = self.abs_link
         self._GLOBAL_CONTEXT['exists'] = self.file_exists
-        self._GLOBAL_CONTEXT['SLUG_AUTHOR_PATH'] = self.config['SLUG_AUTHOR_PATH']
-        self._GLOBAL_CONTEXT['SLUG_TAG_PATH'] = self.config['SLUG_TAG_PATH']
         self._GLOBAL_CONTEXT['index_display_post_count'] = self.config[
             'INDEX_DISPLAY_POST_COUNT']
         self._GLOBAL_CONTEXT['index_file'] = self.config['INDEX_FILE']
@@ -1182,6 +1180,8 @@ class Nikola(object):
         self.ALL_PAGE_DEPENDENCIES['rss_extension'] = self.config.get('RSS_EXTENSION')
         self.ALL_PAGE_DEPENDENCIES['rss_path'] = self.config.get('RSS_PATH')
         self.ALL_PAGE_DEPENDENCIES['rss_filename_base'] = self.config.get('RSS_FILENAME_BASE')
+        self.ALL_PAGE_DEPENDENCIES['slug_author_path'] = self.config.get('SLUG_AUTHOR_PATH')
+        self.ALL_PAGE_DEPENDENCIES['slug_tag_path'] = self.config.get('SLUG_TAG_PATH')
 
     def _activate_plugins_of_category(self, category):
         """Activate all the plugins of a given category and return them."""
