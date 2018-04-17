@@ -1839,7 +1839,26 @@ its settings, change the layout, etc.).
 Images in galleries may be provided with captions and given a specific
 ordering, by creating a file in the gallery directory called metadata.yml.
 This YAML file should contain a 'name' field for each image in the gallery,
-and (if desired) either or both of 'caption' and 'order'. 
+and (if desired) either or both of 'caption' and 'order'. Only one
+`metadata.yml` is needed per gallery. Here is an example, showing names,
+captions and ordering.
+
+.. code:: yaml
+
+    ---
+    name: ready-for-the-acid-wash.jpg
+    ---
+    name: almost-full.jpg
+    caption: The pool is now almost full
+    ---
+    name: jumping-in.jpg
+    caption: We're enjoying the new pool already
+    order: 4
+    ---
+    name: waterline-tiles.jpg
+    order: 2
+    ---
+
 
 Images to be used in normal posts can be placed in the ``images`` folder. These
 images will be processed and have thumbnails created just as for galleries, but will
@@ -1865,13 +1884,6 @@ The ``conf.py`` options affecting images and gallery pages are these:
 
     # If set to False, it will sort by filename instead. Defaults to True
     GALLERY_SORT_BY_DATE = True
-
-    # If set to true, then the user can provide an metadata file which contains
-    # the order in which photos in a gallery should be presented. This file is
-    # named metadata.yml, is YAML and must contain at least a 'name' field. Other
-    # recognised field names are 'order' and 'caption'.
-    # Defaults to True
-    # GALLERY_SORT_BY_META_FILE = True
 
     # Folders containing images to be used in normal posts or pages.
     # IMAGE_FOLDERS is a dictionary of the form {"source": "destination"},

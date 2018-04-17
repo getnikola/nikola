@@ -56,6 +56,7 @@
 * `Joshua Barratt <https://github.com/jbarratt>`_
 * `Juan Pedro Fisanotti <https://github.com/fisadev>`_
 * `Juanjo Conti <https://github.com/jjconti>`_
+* `James C. McPherson <https://github.com/jmcp>`_
 * `Kade For <https://github.com/kadefor>`_
 * `Kay Hayen <https://github.com/kayhayen>`_
 * `lbiaggi <https://github.com/lbiaggi>`_
