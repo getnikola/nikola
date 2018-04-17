@@ -8,7 +8,7 @@
 <%block name="extra_head">
     ${parent.extra_head()}
     % if post.meta('keywords'):
-    <meta name="keywords" content="${post.meta('keywords')|h}">
+    <meta name="keywords" content="${smartjoin(', ', post.meta('keywords'))|h}">
     % endif
     <meta name="author" content="${post.author()|h}">
     %if post.prev_post:

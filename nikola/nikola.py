@@ -1160,6 +1160,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['posts_section_name'] = self.config.get('POSTS_SECTION_NAME')
         self._GLOBAL_CONTEXT['posts_section_title'] = self.config.get('POSTS_SECTION_TITLE')
         self._GLOBAL_CONTEXT['sort_posts'] = utils.sort_posts
+        self._GLOBAL_CONTEXT['smartjoin'] = utils.smartjoin
         self._GLOBAL_CONTEXT['meta_generator_tag'] = self.config.get('META_GENERATOR_TAG')
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
@@ -2189,6 +2190,14 @@ class Nikola(object):
         context['title'] = post.title(lang)
         context['description'] = post.description(lang)
         context['permalink'] = post.permalink(lang)
+        if 'crumbs' not in context:
+            crumb_path = post.permalink(lang).lstrip('/')
+            if crumb_path.endswith(self.config['INDEX_FILE']):
+                crumb_path = crumb_path[:-len(self.config['INDEX_FILE'])]
+            if crumb_path.endswith('/'):
+                context['crumbs'] = utils.get_crumbs(crumb_path.rstrip('/'), is_file=False)
+            else:
+                context['crumbs'] = utils.get_crumbs(crumb_path, is_file=True)
         if 'pagekind' not in context:
             context['pagekind'] = ['generic_page']
         if post.use_in_feeds:
