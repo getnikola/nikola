@@ -603,7 +603,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT = {}
 
         # dependencies for all pages, not included in global context
-        self.ALL_PAGE_DEPENDENCIES = {}
+        self.ALL_PAGE_DEPS = {}
 
         self.config.update(config)
 
@@ -687,9 +687,9 @@ class Nikola(object):
                                              'front_index_header',
                                              )
 
-        self._ALL_PAGE_DEPENDENCIES_TRANSLATABLE = ('rss_path',
-                                                    'rss_filename_base',
-                                                    )
+        self._ALL_PAGE_DEPS_TRANSLATABLE = ('rss_path',
+                                            'rss_filename_base',
+                                            )
         # WARNING: navigation_links SHOULD NOT be added to the list above.
         #          Themes ask for [lang] there and we should provide it.
 
@@ -852,7 +852,7 @@ class Nikola(object):
             self.register_filter(filter_name_format.format(filter_name), filter_definition)
 
         self._set_global_context_from_config()
-        self._set_all_page_dependencies_from_config()
+        self._set_all_page_deps_from_config()
         # Read data files only if a site exists (Issue #2708)
         if self.configured:
             self._set_global_context_from_data()
@@ -1170,18 +1170,18 @@ class Nikola(object):
         # Offer global_data as an alias for data (Issue #2488)
         self._GLOBAL_CONTEXT['global_data'] = self._GLOBAL_CONTEXT['data']
 
-    def _set_all_page_dependencies_from_config(self):
-        """Create dependencies for all pages from configuration.
+    def _set_all_page_deps_from_config(self):
+        """Save dependencies for all pages from configuration.
 
         Changes of values in this dict will force a rebuild of all pages.
         Unlike global context, contents are NOT available to templates.
         """
-        self.ALL_PAGE_DEPENDENCIES['atom_extension'] = self.config.get('ATOM_EXTENSION')
-        self.ALL_PAGE_DEPENDENCIES['rss_extension'] = self.config.get('RSS_EXTENSION')
-        self.ALL_PAGE_DEPENDENCIES['rss_path'] = self.config.get('RSS_PATH')
-        self.ALL_PAGE_DEPENDENCIES['rss_filename_base'] = self.config.get('RSS_FILENAME_BASE')
-        self.ALL_PAGE_DEPENDENCIES['slug_author_path'] = self.config.get('SLUG_AUTHOR_PATH')
-        self.ALL_PAGE_DEPENDENCIES['slug_tag_path'] = self.config.get('SLUG_TAG_PATH')
+        self.ALL_PAGE_DEPS['atom_extension'] = self.config.get('ATOM_EXTENSION')
+        self.ALL_PAGE_DEPS['rss_extension'] = self.config.get('RSS_EXTENSION')
+        self.ALL_PAGE_DEPS['rss_path'] = self.config.get('RSS_PATH')
+        self.ALL_PAGE_DEPS['rss_filename_base'] = self.config.get('RSS_FILENAME_BASE')
+        self.ALL_PAGE_DEPS['slug_author_path'] = self.config.get('SLUG_AUTHOR_PATH')
+        self.ALL_PAGE_DEPS['slug_tag_path'] = self.config.get('SLUG_TAG_PATH')
 
     def _activate_plugins_of_category(self, category):
         """Activate all the plugins of a given category and return them."""
@@ -2155,7 +2155,7 @@ class Nikola(object):
         deps_dict['OUTPUT_FOLDER'] = self.config['OUTPUT_FOLDER']
         deps_dict['TRANSLATIONS'] = self.config['TRANSLATIONS']
         deps_dict['global'] = self.GLOBAL_CONTEXT
-        deps_dict['all_page_dependencies'] = self.ALL_PAGE_DEPENDENCIES
+        deps_dict['all_page_deps'] = self.ALL_PAGE_DEPS
         if post_deps_dict:
             deps_dict.update(post_deps_dict)
 
@@ -2164,8 +2164,8 @@ class Nikola(object):
 
         for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
             deps_dict[k] = deps_dict['global'][k](lang)
-        for k in self._ALL_PAGE_DEPENDENCIES_TRANSLATABLE:
-            deps_dict[k] = deps_dict['all_page_dependencies'][k](lang)
+        for k in self._ALL_PAGE_DEPS_TRANSLATABLE:
+            deps_dict[k] = deps_dict['all_page_deps'][k](lang)
 
         deps_dict['navigation_links'] = deps_dict['global']['navigation_links'](lang)
 
@@ -2291,12 +2291,12 @@ class Nikola(object):
         deps_context["posts"] = [(p.meta[lang]['title'], p.permalink(lang)) for p in
                                  posts]
         deps_context["global"] = self.GLOBAL_CONTEXT
-        deps_context["all_page_dependencies"] = self.ALL_PAGE_DEPENDENCIES
+        deps_context["all_page_deps"] = self.ALL_PAGE_DEPS
 
         for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
             deps_context[k] = deps_context['global'][k](lang)
-        for k in self._ALL_PAGE_DEPENDENCIES_TRANSLATABLE:
-            deps_context[k] = deps_context['all_page_dependencies'][k](lang)
+        for k in self._ALL_PAGE_DEPS_TRANSLATABLE:
+            deps_context[k] = deps_context['all_page_deps'][k](lang)
 
         deps_context['navigation_links'] = deps_context['global']['navigation_links'](lang)
 
