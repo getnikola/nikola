@@ -5,6 +5,7 @@ Features
 --------
 
 * Support captioned images and image ordering in galleries (Issue #3017)
+* New ``ATOM_PATH`` setting (Issue #2971)
 * Make ``crumbs`` available to all pages
 * Allowing to customize RSS and Atom feed extensions with
   ``RSS_EXTENSION``, ``ATOM_EXTENSION`` settings (Issue #3041)
@@ -58,6 +59,8 @@ Features
 Bugfixes
 --------
 
+* Renamed ``DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED`` to ``DISABLE_INDEXES``
+  and ``DISABLE_INDEXES_PLUGIN_RSS_FEED`` to ``DISABLE_MAIN_RSS_FEED`` (Issue #3039)
 * Make chart shortcode its own plugin and make the reST directive
   depend on it.
 * Put post_list shortcode in its own plugin and make the reST

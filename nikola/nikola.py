@@ -456,8 +456,8 @@ class Nikola(object):
             'CREATE_FULL_ARCHIVES': False,
             'CREATE_DAILY_ARCHIVE': False,
             'DATE_FORMAT': '%Y-%m-%d %H:%M',
-            'DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED': False,
-            'DISABLE_INDEXES_PLUGIN_RSS_FEED': False,
+            'DISABLE_INDEXES': False,
+            'DISABLE_MAIN_RSS_FEED': False,
             'JS_DATE_FORMAT': 'YYYY-MM-DD HH:mm',
             'DATE_FANCINESS': 0,
             'DEFAULT_LANG': "en",
@@ -539,6 +539,7 @@ class Nikola(object):
             'ROBOTS_EXCLUSIONS': [],
             'GENERATE_ATOM': False,
             'ATOM_EXTENSION': '.atom',
+            'ATOM_PATH': '',
             'FEED_TEASERS': True,
             'FEED_PLAIN': False,
             'FEED_PREVIEWIMAGE': True,
@@ -602,6 +603,9 @@ class Nikola(object):
         # set global_context for template rendering
         self._GLOBAL_CONTEXT = {}
 
+        # dependencies for all pages, not included in global context
+        self.ALL_PAGE_DEPS = {}
+
         self.config.update(config)
 
         # __builtins__ contains useless cruft
@@ -614,6 +618,9 @@ class Nikola(object):
         self.config['__colorful__'] = self.colorful
         self.config['__invariant__'] = self.invariant
         self.config['__quiet__'] = self.quiet
+
+        # Use ATOM_PATH when set
+        self.config['ATOM_PATH'] = self.config['ATOM_PATH'] or self.config['INDEX_PATH']
 
         # Make sure we have sane NAVIGATION_LINKS.
         if not self.config['NAVIGATION_LINKS']:
@@ -655,6 +662,7 @@ class Nikola(object):
                                       'CATEGORIES_INDEX_PATH',
                                       'SECTION_PATH',
                                       'INDEX_PATH',
+                                      'ATOM_PATH',
                                       'RSS_PATH',
                                       'RSS_FILENAME_BASE',
                                       'AUTHOR_PATH',
@@ -682,9 +690,12 @@ class Nikola(object):
                                              'posts_section_name',
                                              'posts_section_title',
                                              'front_index_header',
-                                             'rss_path',
-                                             'rss_filename_base',
                                              )
+
+        self._ALL_PAGE_DEPS_TRANSLATABLE = ('atom_path',
+                                            'rss_path',
+                                            'rss_filename_base',
+                                            )
         # WARNING: navigation_links SHOULD NOT be added to the list above.
         #          Themes ask for [lang] there and we should provide it.
 
@@ -714,6 +725,14 @@ class Nikola(object):
         if 'UNSLUGIFY_TITLES' in self.config:
             utils.LOGGER.warn('The UNSLUGIFY_TITLES setting was renamed to FILE_METADATA_UNSLUGIFY_TITLES.')
             self.config['FILE_METADATA_UNSLUGIFY_TITLES'] = self.config['UNSLUGIFY_TITLES']
+
+        if 'DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED' in self.config:
+            utils.LOGGER.warn('The DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED setting was renamed to DISABLE_INDEXES.')
+            self.config['DISABLE_INDEXES'] = self.config['DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED']
+
+        if 'DISABLE_INDEXES_PLUGIN_RSS_FEED' in self.config:
+            utils.LOGGER.warn('The DISABLE_INDEXES_PLUGIN_RSS_FEED setting was renamed to DISABLE_MAIN_RSS_FEED.')
+            self.config['DISABLE_MAIN_RSS_FEED'] = self.config['DISABLE_INDEXES_PLUGIN_RSS_FEED']
 
         # Handle CONTENT_FOOTER and RSS_COPYRIGHT* properly.
         # We provide the arguments to format in CONTENT_FOOTER_FORMATS and RSS_COPYRIGHT_FORMATS.
@@ -757,16 +776,16 @@ class Nikola(object):
                     utils.LOGGER.warn('You are disabling the "render_indexes" plugin, as well as disabling the "generate_rss" plugin or setting GENERATE_RSS to False. To achieve the same effect, please disable the "classify_indexes" plugin in the future.')
                     self.config['DISABLED_PLUGINS'].append('classify_indexes')
             else:
-                if not self.config['DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED']:
-                    utils.LOGGER.warn('You are disabling the "render_indexes" plugin, but not the generation of RSS feeds. Please put "DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED = True" into your configuration instead.')
-                    self.config['DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED'] = True
+                if not self.config['DISABLE_INDEXES']:
+                    utils.LOGGER.warn('You are disabling the "render_indexes" plugin, but not the generation of RSS feeds. Please put "DISABLE_INDEXES = True" into your configuration instead.')
+                    self.config['DISABLE_INDEXES'] = True
 
         # Disable RSS.  For a successful disable, we must have both the option
         # false and the plugin disabled through the official means.
         if 'generate_rss' in self.config['DISABLED_PLUGINS'] and self.config['GENERATE_RSS'] is True:
             utils.LOGGER.warn('Please use GENERATE_RSS to disable RSS feed generation, instead of mentioning generate_rss in DISABLED_PLUGINS.')
             self.config['GENERATE_RSS'] = False
-            self.config['DISABLE_INDEXES_PLUGIN_RSS_FEED'] = True
+            self.config['DISABLE_MAIN_RSS_FEED'] = True
 
         # PRETTY_URLS defaults to enabling STRIP_INDEXES unless explicitly disabled
         if self.config.get('PRETTY_URLS') and 'STRIP_INDEXES' not in config:
@@ -847,6 +866,7 @@ class Nikola(object):
             self.register_filter(filter_name_format.format(filter_name), filter_definition)
 
         self._set_global_context_from_config()
+        self._set_all_page_deps_from_config()
         # Read data files only if a site exists (Issue #2708)
         if self.configured:
             self._set_global_context_from_data()
@@ -1083,8 +1103,6 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['rel_link'] = self.rel_link
         self._GLOBAL_CONTEXT['abs_link'] = self.abs_link
         self._GLOBAL_CONTEXT['exists'] = self.file_exists
-        self._GLOBAL_CONTEXT['SLUG_AUTHOR_PATH'] = self.config['SLUG_AUTHOR_PATH']
-        self._GLOBAL_CONTEXT['SLUG_TAG_PATH'] = self.config['SLUG_TAG_PATH']
         self._GLOBAL_CONTEXT['index_display_post_count'] = self.config[
             'INDEX_DISPLAY_POST_COUNT']
         self._GLOBAL_CONTEXT['index_file'] = self.config['INDEX_FILE']
@@ -1121,10 +1139,6 @@ class Nikola(object):
             'CONTENT_FOOTER')
         self._GLOBAL_CONTEXT['generate_atom'] = self.config.get('GENERATE_ATOM')
         self._GLOBAL_CONTEXT['generate_rss'] = self.config.get('GENERATE_RSS')
-        self._GLOBAL_CONTEXT['atom_extension'] = self.config.get('ATOM_EXTENSION')
-        self._GLOBAL_CONTEXT['rss_extension'] = self.config.get('RSS_EXTENSION')
-        self._GLOBAL_CONTEXT['rss_path'] = self.config.get('RSS_PATH')
-        self._GLOBAL_CONTEXT['rss_filename_base'] = self.config.get('RSS_FILENAME_BASE')
         self._GLOBAL_CONTEXT['rss_link'] = self.config.get('RSS_LINK')
 
         self._GLOBAL_CONTEXT['navigation_links'] = self.config.get('NAVIGATION_LINKS')
@@ -1170,6 +1184,20 @@ class Nikola(object):
                 self._GLOBAL_CONTEXT['data'][key] = data
         # Offer global_data as an alias for data (Issue #2488)
         self._GLOBAL_CONTEXT['global_data'] = self._GLOBAL_CONTEXT['data']
+
+    def _set_all_page_deps_from_config(self):
+        """Save dependencies for all pages from configuration.
+
+        Changes of values in this dict will force a rebuild of all pages.
+        Unlike global context, contents are NOT available to templates.
+        """
+        self.ALL_PAGE_DEPS['atom_extension'] = self.config.get('ATOM_EXTENSION')
+        self.ALL_PAGE_DEPS['atom_path'] = self.config.get('ATOM_PATH')
+        self.ALL_PAGE_DEPS['rss_extension'] = self.config.get('RSS_EXTENSION')
+        self.ALL_PAGE_DEPS['rss_path'] = self.config.get('RSS_PATH')
+        self.ALL_PAGE_DEPS['rss_filename_base'] = self.config.get('RSS_FILENAME_BASE')
+        self.ALL_PAGE_DEPS['slug_author_path'] = self.config.get('SLUG_AUTHOR_PATH')
+        self.ALL_PAGE_DEPS['slug_tag_path'] = self.config.get('SLUG_TAG_PATH')
 
     def _activate_plugins_of_category(self, category):
         """Activate all the plugins of a given category and return them."""
@@ -2143,6 +2171,7 @@ class Nikola(object):
         deps_dict['OUTPUT_FOLDER'] = self.config['OUTPUT_FOLDER']
         deps_dict['TRANSLATIONS'] = self.config['TRANSLATIONS']
         deps_dict['global'] = self.GLOBAL_CONTEXT
+        deps_dict['all_page_deps'] = self.ALL_PAGE_DEPS
         if post_deps_dict:
             deps_dict.update(post_deps_dict)
 
@@ -2151,6 +2180,8 @@ class Nikola(object):
 
         for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
             deps_dict[k] = deps_dict['global'][k](lang)
+        for k in self._ALL_PAGE_DEPS_TRANSLATABLE:
+            deps_dict[k] = deps_dict['all_page_deps'][k](lang)
 
         deps_dict['navigation_links'] = deps_dict['global']['navigation_links'](lang)
 
@@ -2284,9 +2315,12 @@ class Nikola(object):
         deps_context["posts"] = [(p.meta[lang]['title'], p.permalink(lang)) for p in
                                  posts]
         deps_context["global"] = self.GLOBAL_CONTEXT
+        deps_context["all_page_deps"] = self.ALL_PAGE_DEPS
 
         for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
             deps_context[k] = deps_context['global'][k](lang)
+        for k in self._ALL_PAGE_DEPS_TRANSLATABLE:
+            deps_context[k] = deps_context['all_page_deps'][k](lang)
 
         deps_context['navigation_links'] = deps_context['global']['navigation_links'](lang)
 

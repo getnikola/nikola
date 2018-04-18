@@ -225,6 +225,10 @@ COMPILERS = {
 # output / TRANSLATION[lang] / RSS_PATH / rss.xml
 # RSS_PATH = ""
 
+# Final location for the blog main Atom feed is:
+# output / TRANSLATION[lang] / ATOM_PATH / index.atom
+# ATOM_PATH = ""
+
 # Number of posts in RSS feeds
 # FEED_LENGTH = 10
 
