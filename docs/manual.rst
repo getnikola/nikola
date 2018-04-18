@@ -404,7 +404,6 @@ to your configuration:
         'author': 'John Doe'
     }
 
-
 Metadata formats
 ~~~~~~~~~~~~~~~~
 
@@ -441,6 +440,8 @@ The “traditional” and default meta field format is:
    .. name: value
 
 If you are not using reStructuredText, make sure the fields are in a HTML comment in output.
+
+Also, note that this format does not support any multi-line values. Try YAML or reST docinfo if you need those.
 
 Two-file format
 ```````````````
