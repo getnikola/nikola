@@ -692,7 +692,8 @@ class Nikola(object):
                                              'front_index_header',
                                              )
 
-        self._ALL_PAGE_DEPS_TRANSLATABLE = ('rss_path',
+        self._ALL_PAGE_DEPS_TRANSLATABLE = ('atom_path',
+                                            'rss_path',
                                             'rss_filename_base',
                                             )
         # WARNING: navigation_links SHOULD NOT be added to the list above.
@@ -1129,7 +1130,6 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['content_footer'] = self.config.get(
             'CONTENT_FOOTER')
         self._GLOBAL_CONTEXT['generate_atom'] = self.config.get('GENERATE_ATOM')
-        self._GLOBAL_CONTEXT['atom_path'] = self.config.get('ATOM_PATH')
         self._GLOBAL_CONTEXT['generate_rss'] = self.config.get('GENERATE_RSS')
         self._GLOBAL_CONTEXT['rss_link'] = self.config.get('RSS_LINK')
 
@@ -1184,6 +1184,7 @@ class Nikola(object):
         Unlike global context, contents are NOT available to templates.
         """
         self.ALL_PAGE_DEPS['atom_extension'] = self.config.get('ATOM_EXTENSION')
+        self.ALL_PAGE_DEPS['atom_path'] = self.config.get('ATOM_PATH')
         self.ALL_PAGE_DEPS['rss_extension'] = self.config.get('RSS_EXTENSION')
         self.ALL_PAGE_DEPS['rss_path'] = self.config.get('RSS_PATH')
         self.ALL_PAGE_DEPS['rss_filename_base'] = self.config.get('RSS_FILENAME_BASE')
