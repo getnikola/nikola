@@ -61,7 +61,7 @@ configuration file:
     INDEX_PATH = "blog"
 
     # Or you can disable blog indexes altogether:
-    # DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED = True
+    # DISABLE_INDEXES = True
 
 
 And now we are ready to create our first page:

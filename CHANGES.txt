@@ -57,6 +57,8 @@ Features
 Bugfixes
 --------
 
+* Renamed ``DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED`` to ``DISABLE_INDEXES``
+  and ``DISABLE_INDEXES_PLUGIN_RSS_FEED`` to ``DISABLE_MAIN_RSS_FEED`` (Issue #3039)
 * Make chart shortcode its own plugin and make the reST directive
   depend on it.
 * Put post_list shortcode in its own plugin and make the reST

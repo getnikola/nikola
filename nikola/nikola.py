@@ -456,8 +456,8 @@ class Nikola(object):
             'CREATE_FULL_ARCHIVES': False,
             'CREATE_DAILY_ARCHIVE': False,
             'DATE_FORMAT': '%Y-%m-%d %H:%M',
-            'DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED': False,
-            'DISABLE_INDEXES_PLUGIN_RSS_FEED': False,
+            'DISABLE_INDEXES': False,
+            'DISABLE_MAIN_RSS_FEED': False,
             'JS_DATE_FORMAT': 'YYYY-MM-DD HH:mm',
             'DATE_FANCINESS': 0,
             'DEFAULT_LANG': "en",
@@ -720,6 +720,14 @@ class Nikola(object):
             utils.LOGGER.warn('The UNSLUGIFY_TITLES setting was renamed to FILE_METADATA_UNSLUGIFY_TITLES.')
             self.config['FILE_METADATA_UNSLUGIFY_TITLES'] = self.config['UNSLUGIFY_TITLES']
 
+        if 'DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED' in self.config:
+            utils.LOGGER.warn('The DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED setting was renamed to DISABLE_INDEXES.')
+            self.config['DISABLE_INDEXES'] = self.config['DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED']
+
+        if 'DISABLE_INDEXES_PLUGIN_RSS_FEED' in self.config:
+            utils.LOGGER.warn('The DISABLE_INDEXES_PLUGIN_RSS_FEED setting was renamed to DISABLE_MAIN_RSS_FEED.')
+            self.config['DISABLE_MAIN_RSS_FEED'] = self.config['DISABLE_INDEXES_PLUGIN_RSS_FEED']
+
         # Handle CONTENT_FOOTER and RSS_COPYRIGHT* properly.
         # We provide the arguments to format in CONTENT_FOOTER_FORMATS and RSS_COPYRIGHT_FORMATS.
         self.config['CONTENT_FOOTER'].langformat(self.config['CONTENT_FOOTER_FORMATS'])
@@ -762,16 +770,16 @@ class Nikola(object):
                     utils.LOGGER.warn('You are disabling the "render_indexes" plugin, as well as disabling the "generate_rss" plugin or setting GENERATE_RSS to False. To achieve the same effect, please disable the "classify_indexes" plugin in the future.')
                     self.config['DISABLED_PLUGINS'].append('classify_indexes')
             else:
-                if not self.config['DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED']:
-                    utils.LOGGER.warn('You are disabling the "render_indexes" plugin, but not the generation of RSS feeds. Please put "DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED = True" into your configuration instead.')
-                    self.config['DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED'] = True
+                if not self.config['DISABLE_INDEXES']:
+                    utils.LOGGER.warn('You are disabling the "render_indexes" plugin, but not the generation of RSS feeds. Please put "DISABLE_INDEXES = True" into your configuration instead.')
+                    self.config['DISABLE_INDEXES'] = True
 
         # Disable RSS.  For a successful disable, we must have both the option
         # false and the plugin disabled through the official means.
         if 'generate_rss' in self.config['DISABLED_PLUGINS'] and self.config['GENERATE_RSS'] is True:
             utils.LOGGER.warn('Please use GENERATE_RSS to disable RSS feed generation, instead of mentioning generate_rss in DISABLED_PLUGINS.')
             self.config['GENERATE_RSS'] = False
-            self.config['DISABLE_INDEXES_PLUGIN_RSS_FEED'] = True
+            self.config['DISABLE_MAIN_RSS_FEED'] = True
 
         # PRETTY_URLS defaults to enabling STRIP_INDEXES unless explicitly disabled
         if self.config.get('PRETTY_URLS') and 'STRIP_INDEXES' not in config:
