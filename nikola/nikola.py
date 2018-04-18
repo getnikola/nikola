@@ -539,6 +539,7 @@ class Nikola(object):
             'ROBOTS_EXCLUSIONS': [],
             'GENERATE_ATOM': False,
             'ATOM_EXTENSION': '.atom',
+            'ATOM_PATH': '',
             'FEED_TEASERS': True,
             'FEED_PLAIN': False,
             'FEED_PREVIEWIMAGE': True,
@@ -618,6 +619,9 @@ class Nikola(object):
         self.config['__invariant__'] = self.invariant
         self.config['__quiet__'] = self.quiet
 
+        # Use ATOM_PATH when set
+        self.config['ATOM_PATH'] = self.config['ATOM_PATH'] or self.config['INDEX_PATH']
+
         # Make sure we have sane NAVIGATION_LINKS.
         if not self.config['NAVIGATION_LINKS']:
             self.config['NAVIGATION_LINKS'] = {self.config['DEFAULT_LANG']: ()}
@@ -658,6 +662,7 @@ class Nikola(object):
                                       'CATEGORIES_INDEX_PATH',
                                       'SECTION_PATH',
                                       'INDEX_PATH',
+                                      'ATOM_PATH',
                                       'RSS_PATH',
                                       'RSS_FILENAME_BASE',
                                       'AUTHOR_PATH',
@@ -687,7 +692,8 @@ class Nikola(object):
                                              'front_index_header',
                                              )
 
-        self._ALL_PAGE_DEPS_TRANSLATABLE = ('rss_path',
+        self._ALL_PAGE_DEPS_TRANSLATABLE = ('atom_path',
+                                            'rss_path',
                                             'rss_filename_base',
                                             )
         # WARNING: navigation_links SHOULD NOT be added to the list above.
@@ -1186,6 +1192,7 @@ class Nikola(object):
         Unlike global context, contents are NOT available to templates.
         """
         self.ALL_PAGE_DEPS['atom_extension'] = self.config.get('ATOM_EXTENSION')
+        self.ALL_PAGE_DEPS['atom_path'] = self.config.get('ATOM_PATH')
         self.ALL_PAGE_DEPS['rss_extension'] = self.config.get('RSS_EXTENSION')
         self.ALL_PAGE_DEPS['rss_path'] = self.config.get('RSS_PATH')
         self.ALL_PAGE_DEPS['rss_filename_base'] = self.config.get('RSS_FILENAME_BASE')

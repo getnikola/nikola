@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* New ``ATOM_PATH`` setting (Issue #2971)
 * Make ``crumbs`` available to all pages
 * Allowing to customize RSS and Atom feed extensions with
   ``RSS_EXTENSION``, ``ATOM_EXTENSION`` settings (Issue #3041)
