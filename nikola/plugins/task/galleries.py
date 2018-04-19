@@ -316,8 +316,7 @@ class Galleries(Task, ImageProcessor):
                             context.copy(),
                             dest_img_list,
                             img_titles,
-                            thumbs,
-                            file_dep))],
+                            thumbs))],
                     'clean': True,
                     'uptodate': [utils.config_changed({
                         1: self.kw.copy(),
@@ -620,6 +619,7 @@ class Galleries(Task, ImageProcessor):
             context,
             img_list,
             img_titles,
+            img_metadata,
             thumbs):
         """Build the gallery index."""
         # The photo array needs to be created here, because
