@@ -126,7 +126,7 @@ Other changes
 -------------
 
 * Rename ``crumbs.tmpl`` to ``ui_helper.tmpl`` and the breadcrumbs
-  function to ``breadcrumbs``
+  ``bar`` function to ``breadcrumbs``
 
 New in v7.8.8
 =============
