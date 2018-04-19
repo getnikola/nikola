@@ -164,7 +164,7 @@ class Galleries(Task, ImageProcessor):
         gallery_path = self._find_gallery_path(name)
         return [_f for _f in [self.site.config['TRANSLATIONS'][lang]] +
                 gallery_path.split(os.sep) +
-                [self.site.config['RSS_FILENAME_BASE'](lang) + self.site.config['RSS_EXTENSION']] if _f]
+                ['rss.xml'] if _f]
 
     def gen_tasks(self):
         """Render image galleries."""
@@ -413,6 +413,7 @@ class Galleries(Task, ImageProcessor):
 
     def find_metadata(self, gallery, lang):
         """Search for a gallery metadata file.
+
         If there is an metadata file for the gallery, use that to determine
         captions and the order in which images shall be displayed in the
         gallery. You only need to list the images if a specific ordering or
@@ -427,10 +428,8 @@ class Galleries(Task, ImageProcessor):
         we depend on how PyYAML returns the information - which may or may not
         be in the same order as in the file itself. Non-numeric ordering is not
         supported. If no caption is specified, then we return an empty string.
-        Returns:
-        string (l18n'd metadata filename), list (ordering), dict (captions).
+        Returns a string (l18n'd filename), list (ordering), dict (captions).
         """
-
         base_meta_path = os.path.join(gallery, "metadata.yml")
         localized_meta_path = utils.get_translation_candidate(self.site.config,
                                                               base_meta_path, lang)
