@@ -672,10 +672,10 @@ class Galleries(Task, ImageProcessor):
             # Do we have any orphan entries from metadata.yml, or
             # are the files from the gallery not listed in metadata.yml?
             if photo_info:
-                for key in sorted(photo_info):
+                for entry in sorted(photo_info):
                     photo_array.append(photo_info[entry])
         else:
-            for key in sorted(photo_info):
+            for entry in sorted(photo_info):
                 photo_array.append(photo_info[entry])
 
         context['photo_array'] = photo_array
