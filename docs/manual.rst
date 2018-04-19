@@ -1863,10 +1863,11 @@ customize it there (you could switch to another lightbox instead of baguetteBox,
 its settings, change the layout, etc.).
 
 Images in galleries may be provided with captions and given a specific
-ordering, by creating a file in the gallery directory called metadata.yml.
-This YAML file should contain a 'name' field for each image in the gallery,
-and (if desired) either or both of 'caption' and 'order'. Only one
-`metadata.yml` is needed per gallery. Here is an example, showing names,
+ordering, by creating a file in the gallery directory called ``metadata.yml``.
+This YAML file should contain a 'name' field for each image in the gallery
+for which you wish to provide either a caption or specific ordering.
+
+Only one ``metadata.yml`` is needed per gallery. Here is an example, showing names,
 captions and ordering.
 
 .. code:: yaml
