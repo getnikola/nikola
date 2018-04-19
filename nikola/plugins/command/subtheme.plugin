@@ -1,6 +1,6 @@
 [Core]
-name = sub_theme
-module = sub_theme
+name = subtheme
+module = subtheme
 
 [Documentation]
 author = Roberto Alsina

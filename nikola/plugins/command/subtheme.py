@@ -33,7 +33,7 @@ import requests
 from nikola.plugin_categories import Command
 from nikola import utils
 
-LOGGER = utils.get_logger('sub_theme')
+LOGGER = utils.get_logger('subtheme')
 
 
 def _check_for_theme(theme, themes):
@@ -46,7 +46,7 @@ def _check_for_theme(theme, themes):
 class CommandSubTheme(Command):
     """Given a swatch name from bootswatch.com and a parent theme, creates a custom theme."""
 
-    name = "sub_theme"
+    name = "subtheme"
     doc_usage = "[options]"
     doc_purpose = "given a swatch name from bootswatch.com or hackerthemes.com and a parent theme, creates a custom"\
         " theme"
@@ -95,10 +95,10 @@ class CommandSubTheme(Command):
             version = '4'
         elif not _check_for_theme('bootstrap4', themes) and not _check_for_theme('bootstrap4-jinja', themes):
             LOGGER.warn(
-                '"sub_theme" only makes sense for themes that use bootstrap')
+                '"subtheme" only makes sense for themes that use bootstrap')
         elif _check_for_theme('bootstrap3-gradients', themes) or _check_for_theme('bootstrap3-gradients-jinja', themes):
             LOGGER.warn(
-                '"sub_theme" doesn\'t work well with the bootstrap3-gradients family')
+                '"subtheme" doesn\'t work well with the bootstrap3-gradients family')
 
         LOGGER.info("Creating '{0}' theme from '{1}' and '{2}'".format(
             name, swatch, parent))
@@ -108,6 +108,7 @@ class CommandSubTheme(Command):
                     'bubblegum', 'business-tycoon', 'charming', 'daydream',
                     'executive-suite', 'good-news', 'growth', 'harbor', 'hello-world',
                     'neon-glow', 'pleasant', 'retro', 'vibrant-sea', 'wizardry']:  # Hackerthemes
+                LOGGER.info('Hackertheme-based subthemes often require you use a custom font for full effect.')
                 if version != '4':
                     LOGGER.error('The hackertheme subthemes are only available for Bootstrap 4.')
                     return 1
