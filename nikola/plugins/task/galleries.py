@@ -620,8 +620,7 @@ class Galleries(Task, ImageProcessor):
             context,
             img_list,
             img_titles,
-            thumbs,
-            file_dep):
+            thumbs):
         """Build the gallery index."""
         # The photo array needs to be created here, because
         # it relies on thumbnails already being created on
@@ -672,10 +671,10 @@ class Galleries(Task, ImageProcessor):
             # Do we have any orphan entries from metadata.yml, or
             # are the files from the gallery not listed in metadata.yml?
             if photo_info:
-                for entry in sorted(photo_info):
+                for entry in photo_info:
                     photo_array.append(photo_info[entry])
         else:
-            for entry in sorted(photo_info):
+            for entry in photo_info:
                 photo_array.append(photo_info[entry])
 
         context['photo_array'] = photo_array
