@@ -4,7 +4,7 @@ New in master
 Features
 --------
 
-* Support hackerthemes.com themes and renamed bootswatch_theme command sub_theme (Issue #3049)
+* Support hackerthemes.com themes and renamed bootswatch_theme command subtheme (Issue #3049)
 * Support captioned images and image ordering in galleries (Issue #3017)
 * New ``ATOM_PATH`` setting (Issue #2971)
 * Make ``crumbs`` available to all pages
