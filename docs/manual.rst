@@ -1650,23 +1650,21 @@ If you create a nice theme, please share it!  You can do it as a pull
 request in the  `GitHub repository <https://github.com/getnikola/nikola-themes>`__.
 
 One other option is to tweak an existing theme using a different color scheme,
-typography and CSS in general. Nikola provides a ``bootswatch_theme`` option
-to create a custom theme by downloading free CSS files from http://bootswatch.com:
+typography and CSS in general. Nikola provides a ``subtheme`` command
+to create a custom theme by downloading free CSS files from http://bootswatch.com
+and http://hackerthemes.com
 
 
 .. code:: console
 
-    $ nikola bootswatch_theme -n custom_theme -s flatly -p bootstrap3
-    [2013-10-12T16:46:58Z] NOTICE: bootswatch_theme: Creating 'custom_theme' theme
+    $ nikola subtheme -n custom_theme -s flatly -p bootstrap3
+    [2013-10-12T16:46:58Z] NOTICE: subtheme: Creating 'custom_theme' theme
     from 'flatly' and 'bootstrap3'
-    [2013-10-12T16:46:58Z] NOTICE: bootswatch_theme: Downloading:
+    [2013-10-12T16:46:58Z] NOTICE: subtheme: Downloading:
     http://bootswatch.com//flatly/bootstrap.min.css
-    [2013-10-12T16:46:58Z] NOTICE: bootswatch_theme: Downloading:
+    [2013-10-12T16:46:58Z] NOTICE: subtheme: Downloading:
     http://bootswatch.com//flatly/bootstrap.css
-    [2013-10-12T16:46:59Z] NOTICE: bootswatch_theme: Theme created. Change the THEME setting to "custom_theme" to use it.
-
-You can even try what different swatches do on an existing site using
-their handy `bootswatchlet <http://news.bootswatch.com/post/29555952123/a-bookmarklet-for-bootswatch>`_
+    [2013-10-12T16:46:59Z] NOTICE: subtheme: Theme created. Change the THEME setting to "custom_theme" to use it.
 
 Play with it, there's cool stuff there. This feature was suggested by
 `clodo <http://elgalpondebanquito.com.ar>`_.
