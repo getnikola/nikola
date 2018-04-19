@@ -32,6 +32,8 @@ import io
 import json
 import mimetypes
 import os
+import yaml
+
 try:
     from urlparse import urljoin
 except ImportError:
@@ -220,6 +222,12 @@ class Galleries(Task, ImageProcessor):
                     self.kw[k] = self.site.GLOBAL_CONTEXT[k](lang)
 
                 context = {}
+
+                # Do we have a metadata file?
+                meta_path, order, captions = self.find_metadata(gallery, lang)
+                context['meta_path'] = meta_path
+                context['order'] = order
+                context['captions'] = captions
                 context["lang"] = lang
                 if post:
                     context["title"] = post.title(lang)
@@ -229,7 +237,17 @@ class Galleries(Task, ImageProcessor):
 
                 image_name_list = [os.path.basename(p) for p in image_list]
 
-                if self.kw['use_filename_as_title']:
+                if captions:
+                    img_titles = []
+                    for fn in image_name_list:
+                        if fn in captions:
+                            img_titles.append(captions[fn])
+                        else:
+                            img_titles.append(fn)
+                            self.logger.debug(
+                                "Image {0} found in gallery but not listed in {1}".
+                                format(fn, context['meta_path']))
+                elif self.kw['use_filename_as_title']:
                     img_titles = []
                     for fn in image_name_list:
                         name_without_ext = os.path.splitext(os.path.basename(fn))[0]
@@ -392,6 +410,63 @@ class Galleries(Task, ImageProcessor):
                 'clean': True,
                 'uptodate': [utils.config_changed(self.kw.copy(), 'nikola.plugins.task.galleries:mkdir')],
             }
+
+    def find_metadata(self, gallery, lang):
+        """Search for a gallery metadata file.
+
+        If there is an metadata file for the gallery, use that to determine
+        captions and the order in which images shall be displayed in the
+        gallery. You only need to list the images if a specific ordering or
+        caption is required. The metadata file is YAML-formatted, with field
+        names of
+        #
+        name:
+        caption:
+        order:
+        #
+        If a numeric order value is specified, we use that directly, otherwise
+        we depend on how PyYAML returns the information - which may or may not
+        be in the same order as in the file itself. Non-numeric ordering is not
+        supported. If no caption is specified, then we return an empty string.
+        Returns a string (l18n'd filename), list (ordering), dict (captions).
+        """
+        base_meta_path = os.path.join(gallery, "metadata.yml")
+        localized_meta_path = utils.get_translation_candidate(self.site.config,
+                                                              base_meta_path, lang)
+        order = []
+        captions = {}
+        used_path = ""
+
+        if os.path.isfile(localized_meta_path):
+            used_path = localized_meta_path
+        elif os.path.isfile(base_meta_path):
+            used_path = base_meta_path
+        else:
+            return "", [], {}
+
+        self.logger.debug("Using {0} for gallery {1}".format(
+            used_path, gallery))
+        with open(used_path, "r") as meta_file:
+            meta = yaml.safe_load_all(meta_file)
+            for img in meta:
+                # load_all and safe_load_all both return None as their
+                # final element, so skip it
+                if not img:
+                    continue
+                if 'name' in img:
+                    if 'caption' in img and img['caption']:
+                        captions[img['name']] = img['caption']
+                    else:
+                        captions[img['name']] = ""
+
+                    if 'order' in img and img['order']:
+                        order.insert(img['order'], img['name'])
+                    else:
+                        order.append(img['name'])
+                else:
+                    self.logger.error("no 'name:' for ({0}) in {1}".format(
+                        img, used_path))
+        return used_path, order, captions
 
     def parse_index(self, gallery, input_folder, output_folder):
         """Return a Post object if there is an index.txt."""
@@ -568,7 +643,7 @@ class Galleries(Task, ImageProcessor):
         else:
             img_list, thumbs, img_titles = [], [], []
 
-        photo_array = []
+        photo_info = {}
         for img, thumb, title in zip(img_list, thumbs, img_titles):
             w, h = _image_size_cache.get(thumb, (None, None))
             if w is None:
@@ -579,7 +654,7 @@ class Galleries(Task, ImageProcessor):
                     w, h = im.size
                     _image_size_cache[thumb] = w, h
             # Thumbs are files in output, we need URLs
-            photo_array.append({
+            photo_info[url_from_path(img)] = {
                 'url': url_from_path(img),
                 'url_thumb': url_from_path(thumb),
                 'title': title,
@@ -589,9 +664,23 @@ class Galleries(Task, ImageProcessor):
                 },
                 'width': w,
                 'height': h
-            })
+            }
+        photo_array = []
+        if context['order']:
+            for entry in context['order']:
+                photo_array.append(photo_info.pop(entry))
+            # Do we have any orphan entries from metadata.yml, or
+            # are the files from the gallery not listed in metadata.yml?
+            if photo_info:
+                for key in sorted(photo_info):
+                    photo_array.append(photo_info[entry])
+        else:
+            for key in sorted(photo_info):
+                photo_array.append(photo_info[entry])
+
         context['photo_array'] = photo_array
         context['photo_array_json'] = json.dumps(photo_array, sort_keys=True)
+
         self.site.render_template(template_name, output_name, context)
 
     def gallery_rss(self, img_list, dest_img_list, img_titles, lang, permalink, output_path, title):

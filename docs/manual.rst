@@ -1862,6 +1862,32 @@ The gallery pages are generated using the ``gallery.tmpl`` template, and you can
 customize it there (you could switch to another lightbox instead of baguetteBox, change
 its settings, change the layout, etc.).
 
+Images in galleries may be provided with captions and given a specific
+ordering, by creating a file in the gallery directory called ``metadata.yml``.
+This YAML file should contain a 'name' field for each image in the gallery
+for which you wish to provide either a caption or specific ordering. You can also
+create localized versions (``metadata.xx.yml``).
+
+Only one ``metadata.yml`` is needed per gallery. Here is an example, showing names,
+captions and ordering.
+
+.. code:: yaml
+
+    ---
+    name: ready-for-the-acid-wash.jpg
+    ---
+    name: almost-full.jpg
+    caption: The pool is now almost full
+    ---
+    name: jumping-in.jpg
+    caption: We're enjoying the new pool already
+    order: 4
+    ---
+    name: waterline-tiles.jpg
+    order: 2
+    ---
+
+
 Images to be used in normal posts can be placed in the ``images`` folder. These
 images will be processed and have thumbnails created just as for galleries, but will
 then be copied directly to the corresponding path in the ``output`` directory, so you

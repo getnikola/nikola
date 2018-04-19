@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Support captioned images and image ordering in galleries (Issue #3017)
 * New ``ATOM_PATH`` setting (Issue #2971)
 * Make ``crumbs`` available to all pages
 * Allowing to customize RSS and Atom feed extensions with
