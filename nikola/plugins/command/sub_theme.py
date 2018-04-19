@@ -24,7 +24,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Given a swatch name from bootswatch.com and a parent theme, creates a custom theme."""
+"""Given a swatch name from bootswatch.com or hackerthemes.com and a parent
+theme, creates a custom theme."""
 
 import os
 import requests
@@ -32,7 +33,7 @@ import requests
 from nikola.plugin_categories import Command
 from nikola import utils
 
-LOGGER = utils.get_logger('bootswatch_theme')
+LOGGER = utils.get_logger('sub_theme')
 
 
 def _check_for_theme(theme, themes):
@@ -42,12 +43,12 @@ def _check_for_theme(theme, themes):
     return False
 
 
-class CommandBootswatchTheme(Command):
+class CommandSubTheme(Command):
     """Given a swatch name from bootswatch.com and a parent theme, creates a custom theme."""
 
-    name = "bootswatch_theme"
+    name = "sub_theme"
     doc_usage = "[options]"
-    doc_purpose = "given a swatch name from bootswatch.com and a parent theme, creates a custom"\
+    doc_purpose = "given a swatch name from bootswatch.com or hackerthemes.com and a parent theme, creates a custom"\
         " theme"
     cmd_options = [
         {
@@ -93,22 +94,37 @@ class CommandBootswatchTheme(Command):
         elif _check_for_theme('bootstrap4', themes) or _check_for_theme('bootstrap4-jinja', themes):
             version = '4'
         elif not _check_for_theme('bootstrap4', themes) and not _check_for_theme('bootstrap4-jinja', themes):
-            LOGGER.warn('"bootswatch_theme" only makes sense for themes that use bootstrap')
+            LOGGER.warn(
+                '"sub_theme" only makes sense for themes that use bootstrap')
         elif _check_for_theme('bootstrap3-gradients', themes) or _check_for_theme('bootstrap3-gradients-jinja', themes):
-            LOGGER.warn('"bootswatch_theme" doesn\'t work well with the bootstrap3-gradients family')
+            LOGGER.warn(
+                '"sub_theme" doesn\'t work well with the bootstrap3-gradients family')
 
-        LOGGER.info("Creating '{0}' theme from '{1}' and '{2}'".format(name, swatch, parent))
+        LOGGER.info("Creating '{0}' theme from '{1}' and '{2}'".format(
+            name, swatch, parent))
         utils.makedirs(os.path.join('themes', name, 'assets', 'css'))
         for fname in ('bootstrap.min.css', 'bootstrap.css'):
-            url = 'https://bootswatch.com'
-            if version:
-                url += '/' + version
-            url = '/'.join((url, swatch, fname))
+            if swatch in [
+                    'bubblegum', 'business-tycoon', 'charming', 'daydream',
+                    'executive-suite', 'good-news', 'growth', 'harbor', 'hello-world',
+                    'neon-glow', 'pleasant', 'retro', 'vibrant-sea', 'wizardry']:  # Hackerthemes
+                if version != '4':
+                    LOGGER.error('The hackertheme subthemes are only available for Bootstrap 4.')
+                    return 1
+                if fname == 'bootstrap.css':
+                    url = 'https://raw.githubusercontent.com/HackerThemes/theme-machine/master/dist/{swatch}/css/bootstrap4-{swatch}.css'.format(swatch=swatch)
+                else:
+                    url = 'https://raw.githubusercontent.com/HackerThemes/theme-machine/master/dist/{swatch}/css/bootstrap4-{swatch}.min.css'.format(swatch=swatch)
+            else:  # Bootswatch
+                url = 'https://bootswatch.com'
+                if version:
+                    url += '/' + version
+                url = '/'.join((url, swatch, fname))
             LOGGER.info("Downloading: " + url)
             r = requests.get(url)
             if r.status_code > 299:
                 LOGGER.error('Error {} getting {}', r.status_code, url)
-                exit(1)
+                return 1
             data = r.text
             with open(os.path.join('themes', name, 'assets', 'css', fname),
                       'wb+') as output:
@@ -116,4 +132,5 @@ class CommandBootswatchTheme(Command):
 
         with open(os.path.join('themes', name, 'parent'), 'wb+') as output:
             output.write(parent.encode('utf-8'))
-        LOGGER.notice('Theme created.  Change the THEME setting to "{0}" to use it.'.format(name))
+        LOGGER.notice(
+            'Theme created.  Change the THEME setting to "{0}" to use it.'.format(name))
