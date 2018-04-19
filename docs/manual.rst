@@ -1657,13 +1657,13 @@ and http://hackerthemes.com
 
 .. code:: console
 
-    $ nikola subtheme -n custom_theme -s flatly -p bootstrap3
+    $ nikola subtheme -n custom_theme -s flatly -p bootstrap4
     [2013-10-12T16:46:58Z] NOTICE: subtheme: Creating 'custom_theme' theme
-    from 'flatly' and 'bootstrap3'
+    from 'flatly' and 'bootstrap4'
     [2013-10-12T16:46:58Z] NOTICE: subtheme: Downloading:
-    http://bootswatch.com//flatly/bootstrap.min.css
+    http://bootswatch.com/flatly/bootstrap.min.css
     [2013-10-12T16:46:58Z] NOTICE: subtheme: Downloading:
-    http://bootswatch.com//flatly/bootstrap.css
+    http://bootswatch.com/flatly/bootstrap.css
     [2013-10-12T16:46:59Z] NOTICE: subtheme: Theme created. Change the THEME setting to "custom_theme" to use it.
 
 Play with it, there's cool stuff there. This feature was suggested by
