@@ -256,7 +256,7 @@ Name                 Type            Description
 ``other_languages``  list<tuple>     List of triples ``(other_lang, other_classification, title)``
 ===================  ==============  =============================================================
 
-Index-style classification pages have ``kind`` in addtion to the usual index variables.
+Index-style classification pages have ``kind`` in addition to the usual index variables.
 
 Subclassification page
 ~~~~~~~~~~~~~~~~~~~~~~
