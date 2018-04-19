@@ -619,7 +619,6 @@ class Galleries(Task, ImageProcessor):
             context,
             img_list,
             img_titles,
-            img_metadata,
             thumbs):
         """Build the gallery index."""
         # The photo array needs to be created here, because
