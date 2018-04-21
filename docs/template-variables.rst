@@ -24,7 +24,7 @@ Variables and functions come from three places:
 * the local context of a page
 * the templates themselves and the templates they import
 
-.. class:: alert alert-info
+.. class:: alert alert-primary
 .. contents::
 
 Global variables
