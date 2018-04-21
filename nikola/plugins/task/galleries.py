@@ -480,7 +480,7 @@ class Galleries(Task, ImageProcessor):
                 destination,
                 False,
                 self.site.MESSAGES,
-                'story.tmpl',
+                'page.tmpl',
                 self.site.get_compiler(index_path),
                 None,
                 self.site.metadata_extractors_by

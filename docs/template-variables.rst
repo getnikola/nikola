@@ -135,8 +135,8 @@ Name                Type        Description
 
 __ https://getnikola.com/theming.html#identifying-and-customizing-different-kinds-of-pages-with-a-shared-template
 
-Variables available in post pages (``post.tmpl``, ``story.tmpl`` etc.)
-----------------------------------------------------------------------
+Variables available in post pages (``post.tmpl``, ``page.tmpl`` etc.)
+---------------------------------------------------------------------
 
 .. class:: table table-bordered table-striped
 
