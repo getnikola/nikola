@@ -188,7 +188,7 @@ lang="{{ lang }}">
 {% macro html_translations() %}
     {% for langname in translations|sort %}
         {% if langname != lang %}
-            <li><a href="{{ abs_link(_link("root", None, langname)) }}" rel="alternate" hreflang="{{ langname }}">{{ messages("LANGUAGE", langname) }}</a></li>
+            <li class="nav-item"><a href="{{ abs_link(_link("root", None, langname)) }}" rel="alternate" hreflang="{{ langname }}" class="nav-link">{{ messages("LANGUAGE", langname) }}</a></li>
         {% endif %}
     {% endfor %}
 {% endmacro %}

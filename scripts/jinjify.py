@@ -25,6 +25,7 @@ dumb_replacements = [
     ['dir="rtl" \\', 'dir="rtl"'],
     ['sorted(translations)', 'translations|sort'],
     ['abs(i - current_page)', '(i - current_page)|abs'],
+    ['loop.index', 'loop.index0'],
 ]
 
 dumber_replacements = [
