@@ -92,6 +92,9 @@ class Galleries(Task, ImageProcessor):
             'gallery_index_title': site.config['GALLERY_INDEX_TITLE'],
             'galleries_use_thumbnail': site.config['GALLERIES_USE_THUMBNAIL'],
             'galleries_default_thumbnail': site.config['GALLERIES_DEFAULT_THUMBNAIL'],
+            'preserve_exif_data': site.config['PRESERVE_EXIF_DATA'],
+            'exif_whitelist': site.config['EXIF_WHITELIST'],
+            'preserve_icc_profiles': site.config['PRESERVE_ICC_PROFILES'],
         }
 
         # Verify that no folder in GALLERY_FOLDERS appears twice
