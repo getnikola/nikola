@@ -23,10 +23,13 @@ nikola/data/themes/base/assets/js/html5shiv-printshiv.min.js
 nikola/data/themes/base/assets/js/justified-layout.min.js
 nikola/data/themes/base/assets/js/moment-with-locales.min.js
 nikola/data/themes/base/messages/messages_cz.py
+nikola/data/themes/bootblog4-jinja/assets/css/bootblog.css
+nikola/data/themes/bootblog4-jinja/bundles
 nikola/data/themes/bootstrap4-jinja/assets/css/bootstrap.min.css
 nikola/data/themes/bootstrap4-jinja/assets/js/bootstrap.min.js
 nikola/data/themes/bootstrap4-jinja/assets/js/jquery.min.js
 nikola/data/themes/bootstrap4-jinja/assets/js/popper.min.js
+nikola/data/themes/bootstrap4-jinja/bundles
 nikola/data/themes/bootstrap4/assets/css/bootstrap.min.css
 nikola/data/themes/bootstrap4/assets/js/bootstrap.min.js
 nikola/data/themes/bootstrap4/assets/js/jquery.min.js

@@ -32,7 +32,11 @@ import io
 import json
 import mimetypes
 import os
-import yaml
+
+try:
+    import yaml
+except ImportError:
+    yaml = None  # NOQA
 
 try:
     from urlparse import urljoin
@@ -446,6 +450,8 @@ class Galleries(Task, ImageProcessor):
         self.logger.debug("Using {0} for gallery {1}".format(
             used_path, gallery))
         with open(used_path, "r") as meta_file:
+            if yaml is None:
+                utils.req_missing(['PyYAML'], 'use metadata.yml files for galleries')
             meta = yaml.safe_load_all(meta_file)
             for img in meta:
                 # load_all and safe_load_all both return None as their
