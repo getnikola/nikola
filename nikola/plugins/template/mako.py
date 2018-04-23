@@ -65,7 +65,12 @@ class MakoTemplates(TemplateSystem):
         # Some templates will include "foo.tmpl" and we need paths, so normalize them
         # using the template lookup
         for i, d in enumerate(deps):
-            deps[i] = self.get_template_path(d)
+            dep = self.get_template_path(d)
+            if dep:
+                deps[i] = dep
+            else:
+                LOGGER.error("Cannot find template {0} referenced in {1}",
+                             d, filename)
         return deps
 
     def get_deps(self, filename):
