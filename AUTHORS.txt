@@ -70,6 +70,7 @@
 * `Mario Pozzo <https://github.com/camboris>`_
 * `Mark Eichin <https://github.com/eichin>`_
 * `Martin Bless <https://github.com/marble>`_
+* `Martin Michlmayr <https://github.com/tbm>`_
 * `Martin Wimpress <https://github.com/wimpr1m>`_
 * `Martín Gaitán <https://github.com/mgaitan>`_
 * `Matias Novoa <https://github.com/mattgaviota>`_

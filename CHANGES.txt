@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Produce a better error message when a template referenced in another
+  template is missing (Issue #3055)
 * Support captioned images and image ordering in galleries (Issue #3017)
 * New ``ATOM_PATH`` setting (Issue #2971)
 * Make ``crumbs`` available to all pages
