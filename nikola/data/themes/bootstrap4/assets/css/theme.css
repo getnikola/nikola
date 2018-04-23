@@ -1,17 +1,5 @@
-#container {
-    width: 960px;
-    margin: 0 auto;
-}
-
-#contentcolumn {
-    max-width: 760px;
-}
-#q {
-    width: 150px;
-}
-
 img {
-    max-width: 90%;
+    max-width: 100%;
 }
 
 .titlebox {
@@ -60,10 +48,6 @@ ul.bricks > li {
     margin: 3px;
 }
 
-.at300b, .stMainServices, .stButton, .stButton_gradient {
-    box-sizing: content-box;
-}
-
 pre, pre code {
     white-space: pre;
     word-wrap: normal;
@@ -77,10 +61,6 @@ article.post-micro {
 
 .image-block {
     display: inline-block;
-}
-
-.flowr_row {
-    width: 100%;
 }
 
 .tags {
