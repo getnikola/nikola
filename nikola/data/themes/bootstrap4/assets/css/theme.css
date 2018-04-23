@@ -10,6 +10,10 @@
     width: 150px;
 }
 
+img {
+    max-width: 100%;
+}
+
 .titlebox {
     text-align: right;
 }
