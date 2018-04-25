@@ -8,7 +8,7 @@
 
 .. raw:: html
 
-        <div class="alert alert-info pull-right" style="margin-left: 2em;">
+        <div class="alert alert-primary float-md-right" style="margin-left: 2em;">
         <h2><a name="contents">Contents</a></h2>
 
         <ul>

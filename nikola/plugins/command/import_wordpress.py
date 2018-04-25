@@ -479,7 +479,7 @@ class CommandImportWordpress(Command, ImportMixin):
         PAGES = '(\n'
         for extension in extensions:
             POSTS += '    ("posts/*.{0}", "posts", "post.tmpl"),\n'.format(extension)
-            PAGES += '    ("pages/*.{0}", "pages", "story.tmpl"),\n'.format(extension)
+            PAGES += '    ("pages/*.{0}", "pages", "page.tmpl"),\n'.format(extension)
         POSTS += ')\n'
         PAGES += ')\n'
         context['POSTS'] = POSTS

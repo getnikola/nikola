@@ -5,6 +5,8 @@ Features
 --------
 
 * Support hackerthemes.com themes and renamed bootswatch_theme command subtheme (Issue #3049)
+* Produce a better error message when a template referenced in another
+  template is missing (Issue #3055)
 * Support captioned images and image ordering in galleries (Issue #3017)
 * New ``ATOM_PATH`` setting (Issue #2971)
 * Make ``crumbs`` available to all pages
@@ -127,7 +129,7 @@ Other changes
 -------------
 
 * Rename ``crumbs.tmpl`` to ``ui_helper.tmpl`` and the breadcrumbs
-  function to ``breadcrumbs``
+  ``bar`` function to ``breadcrumbs``
 
 New in v7.8.8
 =============

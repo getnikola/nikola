@@ -24,7 +24,7 @@ Variables and functions come from three places:
 * the local context of a page
 * the templates themselves and the templates they import
 
-.. class:: alert alert-info
+.. class:: alert alert-primary
 .. contents::
 
 Global variables
@@ -135,8 +135,8 @@ Name                Type        Description
 
 __ https://getnikola.com/theming.html#identifying-and-customizing-different-kinds-of-pages-with-a-shared-template
 
-Variables available in post pages (``post.tmpl``, ``story.tmpl`` etc.)
-----------------------------------------------------------------------
+Variables available in post pages (``post.tmpl``, ``page.tmpl`` etc.)
+---------------------------------------------------------------------
 
 .. class:: table table-bordered table-striped
 
@@ -256,7 +256,7 @@ Name                 Type            Description
 ``other_languages``  list<tuple>     List of triples ``(other_lang, other_classification, title)``
 ===================  ==============  =============================================================
 
-Index-style classification pages have ``kind`` in addtion to the usual index variables.
+Index-style classification pages have ``kind`` in addition to the usual index variables.
 
 Subclassification page
 ~~~~~~~~~~~~~~~~~~~~~~

@@ -12,7 +12,7 @@ Theming Nikola
 :Version: 7.8.8
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
-.. class:: alert alert-info float-md-right
+.. class:: alert alert-primary float-md-right
 
 .. contents::
 
@@ -284,7 +284,7 @@ These are the templates that come with the included themes:
     Used to display section indexes, if ``POST_SECTIONS_ARE_INDEXES`` is True.
     By default, it just inherits ``index.tmpl``, with added feeds.
 
-``story.tmpl``
+``page.tmpl``
     Used for pages that are not part of a blog, usually a cleaner, less
     intrusive layout than ``post.tmpl``, but same parameters.
 

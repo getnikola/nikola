@@ -52,9 +52,9 @@ configuration file:
     POSTS = ()
     # remove destination directory to generate pages in the root directory
     PAGES = (
-        ("pages/*.rst", "", "story.tmpl"),
-        ("pages/*.txt", "", "story.tmpl"),
-        ("pages/*.html", "", "story.tmpl"),
+        ("pages/*.rst", "", "page.tmpl"),
+        ("pages/*.txt", "", "page.tmpl"),
+        ("pages/*.html", "", "page.tmpl"),
     )
 
     # And to avoid a conflict because blogs try to generate /index.html

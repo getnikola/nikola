@@ -32,7 +32,11 @@ import io
 import json
 import mimetypes
 import os
-import yaml
+
+try:
+    import yaml
+except ImportError:
+    yaml = None  # NOQA
 
 try:
     from urlparse import urljoin
@@ -316,8 +320,7 @@ class Galleries(Task, ImageProcessor):
                             context.copy(),
                             dest_img_list,
                             img_titles,
-                            thumbs,
-                            file_dep))],
+                            thumbs))],
                     'clean': True,
                     'uptodate': [utils.config_changed({
                         1: self.kw.copy(),
@@ -447,6 +450,8 @@ class Galleries(Task, ImageProcessor):
         self.logger.debug("Using {0} for gallery {1}".format(
             used_path, gallery))
         with open(used_path, "r") as meta_file:
+            if yaml is None:
+                utils.req_missing(['PyYAML'], 'use metadata.yml files for galleries')
             meta = yaml.safe_load_all(meta_file)
             for img in meta:
                 # load_all and safe_load_all both return None as their
@@ -481,7 +486,7 @@ class Galleries(Task, ImageProcessor):
                 destination,
                 False,
                 self.site.MESSAGES,
-                'story.tmpl',
+                'page.tmpl',
                 self.site.get_compiler(index_path),
                 None,
                 self.site.metadata_extractors_by
@@ -620,8 +625,7 @@ class Galleries(Task, ImageProcessor):
             context,
             img_list,
             img_titles,
-            thumbs,
-            file_dep):
+            thumbs):
         """Build the gallery index."""
         # The photo array needs to be created here, because
         # it relies on thumbnails already being created on
@@ -672,10 +676,10 @@ class Galleries(Task, ImageProcessor):
             # Do we have any orphan entries from metadata.yml, or
             # are the files from the gallery not listed in metadata.yml?
             if photo_info:
-                for entry in sorted(photo_info):
+                for entry in photo_info:
                     photo_array.append(photo_info[entry])
         else:
-            for entry in sorted(photo_info):
+            for entry in photo_info:
                 photo_array.append(photo_info[entry])
 
         context['photo_array'] = photo_array

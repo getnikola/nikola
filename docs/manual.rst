@@ -11,7 +11,7 @@ The Nikola Handbook
 
 :Version: 7.8.8
 
-.. class:: alert alert-info float-md-right
+.. class:: alert alert-primary float-md-right
 
 .. contents::
 
@@ -384,7 +384,7 @@ template
 
     .. code:: restructuredtext
 
-       .. template: story.tmpl
+       .. template: foobar.tmpl
 
 updated
     The last time this post was updated, defaults to the post’s ``date``
@@ -672,8 +672,8 @@ options. The exact mechanism is explained above the config options in the
     # Finally, note that destination can be translated, i.e. you can
     # specify a different translation folder per language. Example:
     #     PAGES = (
-    #         ("pages/*.rst", {"en": "pages", "de": "seiten"}, "story.tmpl"),
-    #         ("pages/*.md", {"en": "pages", "de": "seiten"}, "story.tmpl"),
+    #         ("pages/*.rst", {"en": "pages", "de": "seiten"}, "page.tmpl"),
+    #         ("pages/*.md", {"en": "pages", "de": "seiten"}, "page.tmpl"),
     #     )
 
     POSTS = (
@@ -682,9 +682,9 @@ options. The exact mechanism is explained above the config options in the
         ("posts/*.html", "posts", "post.tmpl"),
     )
     PAGES = (
-        ("pages/*.rst", "pages", "story.tmpl"),
-        ("pages/*.txt", "pages", "story.tmpl"),
-        ("pages/*.html", "pages", "story.tmpl"),
+        ("pages/*.rst", "pages", "page.tmpl"),
+        ("pages/*.txt", "pages", "page.tmpl"),
+        ("pages/*.html", "pages", "page.tmpl"),
     )
 
 .. admonition:: POSTS and PAGES are not flat!
@@ -1028,7 +1028,7 @@ Pages are the same as posts, except that:
 
 * They are not added to the front page
 * They don't appear on the RSS feed
-* They use the ``story.tmpl`` template instead of ``post.tmpl`` by default
+* They use the ``page.tmpl`` template instead of ``post.tmpl`` by default
 
 The default configuration expects the page's metadata and text files to be on the
 ``pages`` folder, but that can be changed (see ``PAGES`` option above).
