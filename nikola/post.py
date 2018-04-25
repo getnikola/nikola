@@ -1012,9 +1012,9 @@ def get_meta(post, lang):
         metadata_extractors_by = metadata_extractors.default_metadata_extractors_by()
 
     # If meta file exists, use it
-    meta.update(get_metadata_from_meta_file(post.metadata_path, post, config, lang, metadata_extractors_by))
+    metafile_meta = get_metadata_from_meta_file(post.metadata_path, post, config, lang, metadata_extractors_by)
 
-    if not meta:
+    if not metafile_meta:
         post.is_two_file = False
 
     # Fetch compiler metadata.
@@ -1026,11 +1026,12 @@ def get_meta(post, lang):
         used_extractor = post.compiler
         meta.update(compiler_meta)
 
-    if not post.is_two_file and not compiler_meta:
-        # Meta file has precedence over file, which can contain garbage.
-        # Moreover, we should not read the file if we have compiler meta.
+    # Meta files and inter-file metadata override compiler metadata
+    if not post.is_two_file:
         new_meta, used_extractor = get_metadata_from_file(post.source_path, post, config, lang, metadata_extractors_by)
         meta.update(new_meta)
+    else:
+        meta.update(metafile_meta)
 
     # Filename-based metadata extractors (fallback only)
     if not meta:
