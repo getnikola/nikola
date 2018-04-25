@@ -131,6 +131,8 @@ Other changes
 
 * Rename ``crumbs.tmpl`` to ``ui_helper.tmpl`` and the breadcrumbs
   ``bar`` function to ``breadcrumbs``
+* Reading reST docinfo metadata, including first heading as title,
+  requires ``USE_REST_DOCINFO_METADATA`` now (Issue #2987)
 
 New in v7.8.8
 =============
