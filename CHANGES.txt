@@ -61,7 +61,9 @@ Features
 Bugfixes
 --------
 
-* Renamed ``DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED`` to ``DISABLE_INDEXES``
+* Read file metadata if compiler metadata exists and prefer it over
+  compiler metadata (Issue #3008)
+* Rename ``DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED`` to ``DISABLE_INDEXES``
   and ``DISABLE_INDEXES_PLUGIN_RSS_FEED`` to ``DISABLE_MAIN_RSS_FEED`` (Issue #3039)
 * Make chart shortcode its own plugin and make the reST directive
   depend on it.
@@ -129,6 +131,8 @@ Other changes
 
 * Rename ``crumbs.tmpl`` to ``ui_helper.tmpl`` and the breadcrumbs
   ``bar`` function to ``breadcrumbs``
+* Reading reST docinfo metadata, including first heading as title,
+  requires ``USE_REST_DOCINFO_METADATA`` now (Issue #2987)
 
 New in v7.8.8
 =============
