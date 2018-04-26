@@ -542,7 +542,6 @@ class Nikola(object):
             'ATOM_PATH': '',
             'FEED_TEASERS': True,
             'FEED_PLAIN': False,
-            'FEED_PREVIEWIMAGE': True,
             'FEED_READ_MORE_LINK': DEFAULT_FEED_READ_MORE_LINK,
             'FEED_LINKS_APPEND_QUERY': False,
             'GENERATE_RSS': True,
@@ -1671,7 +1670,7 @@ class Nikola(object):
             if feed_url is not None and data:
                 # Massage the post's HTML (unless plain)
                 if not rss_plain:
-                    if self.config["FEED_PREVIEWIMAGE"] and 'previewimage' in post.meta[lang] and post.meta[lang]['previewimage'] not in data:
+                    if 'previewimage' in post.meta[lang] and post.meta[lang]['previewimage'] not in data:
                         data = "<figure><img src=\"{}\"></figure> {}".format(post.meta[lang]['previewimage'], data)
                     # FIXME: this is duplicated with code in Post.text()
                     try:
@@ -2378,7 +2377,7 @@ class Nikola(object):
 
         def atom_post_text(post, text):
             if not self.config["FEED_PLAIN"]:
-                if self.config["FEED_PREVIEWIMAGE"] and 'previewimage' in post.meta[lang] and post.meta[lang]['previewimage'] not in text:
+                if 'previewimage' in post.meta[lang] and post.meta[lang]['previewimage'] not in text:
                     text = "<figure><img src=\"{}\"></figure> {}".format(post.meta[lang]['previewimage'], text)
 
                 # FIXME: this is duplicated with code in Post.text() and generic_rss_renderer
@@ -2602,7 +2601,6 @@ class Nikola(object):
                 context["feedpagecount"] = num_pages
                 kw['feed_teasers'] = self.config['FEED_TEASERS']
                 kw['feed_plain'] = self.config['FEED_PLAIN']
-                kw['feed_previewimage'] = self.config['FEED_PREVIEWIMAGE']
                 atom_task = {
                     "basename": basename,
                     "name": atom_output_name,
