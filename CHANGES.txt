@@ -123,6 +123,17 @@ Bugfixes
 * Language was not passed to title and link generation for page indexes
 * Addressed issue with snaps not allowing certain functions to work properly.
 
+Removed conf.py settings
+------------------------
+
+The following settings have been removed. Nikola will now always
+behave as if the value was what is displayed afer the setting name.
+
+* ``FEED_PREVIEWIMAGE =  True``
+* ``SITEMAP_INCLUDE_FILELESS_DIRS = True``
+* ``USE_OPEN_GRAPH = True``
+* ``USE_BASE_TAG = False``
+
 Removed features
 ----------------
 
