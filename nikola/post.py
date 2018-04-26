@@ -241,6 +241,7 @@ class Post(object):
 
         is_draft = False
         is_private = False
+        post_status = 'published'
         self._tags = {}
         for lang in self.translated_to:
             if isinstance(self.meta[lang]['tags'], (list, tuple, set)):
@@ -251,20 +252,48 @@ class Post(object):
                 list(set([x.strip() for x in _tag_list])),
                 alg=natsort.ns.F | natsort.ns.IC)
             self._tags[lang] = [t for t in self._tags[lang] if t]
-            if 'draft' in [_.lower() for _ in self._tags[lang]]:
-                is_draft = True
-                LOGGER.debug('The post "{0}" is a draft.'.format(self.source_path))
-                self._tags[lang].remove('draft')
 
-            if 'private' in self._tags[lang]:
-                is_private = True
-                LOGGER.debug('The post "{0}" is private.'.format(self.source_path))
-                self._tags[lang].remove('private')
+            status = self.meta[lang].get('status')
+            if status:
+                is_private = False
+                is_draft = False
+                if status == 'published':
+                    post_status = status
+                elif status == 'private':
+                    post_status = status
+                    is_private = True
+                elif status == 'draft':
+                    post_status = status
+                    is_draft = True
+                else:
+                    LOGGER.warn('The post "{0}" has the unknown status "{1}". ' +
+                                'Valid values are "published", "private" and "draft".'.format(status))
+
+            if self.config['WARN_ABOUT_TAG_METADATA']:
+                if 'draft' in [_.lower() for _ in self._tags[lang]]:
+                    LOGGER.warn('The post "{0}" uses the "draft" tag.'.format(self.source_path))
+                if 'private' in self._tags[lang]:
+                    LOGGER.warn('The post "{0}" uses the "private" tag.'.format(self.source_path))
+                if 'mathjax' in self._tags[lang]:
+                    LOGGER.warn('The post "{0}" uses the "mathjax" tag.'.format(self.source_path))
+            if self.config['USE_TAG_METADATA']:
+                if 'draft' in [_.lower() for _ in self._tags[lang]]:
+                    is_draft = True
+                    LOGGER.debug('The post "{0}" is a draft.'.format(self.source_path))
+                    self._tags[lang].remove('draft')
+                    post_status = 'draft'
+
+                if 'private' in self._tags[lang]:
+                    is_private = True
+                    LOGGER.debug('The post "{0}" is private.'.format(self.source_path))
+                    self._tags[lang].remove('private')
+                    post_status = 'private'
 
         # While draft comes from the tags, it's not really a tag
         self.is_draft = is_draft
         self.is_private = is_private
         self.is_post = use_in_feeds
+        self.post_status = post_status
         self.use_in_feeds = use_in_feeds and not is_draft and not is_private \
             and not self.publish_later
 
@@ -312,14 +341,25 @@ class Post(object):
 
     @property
     def is_mathjax(self):
-        """Return True if this post has the mathjax tag in the current language or is a python notebook."""
+        """Return True if this post has has_math set to True, hast set the
+        mathjax tag in the current language or is a python notebook."""
         if self.compiler.name == 'ipynb':
             return True
         lang = nikola.utils.LocaleBorg().current_lang
         if self.is_translation_available(lang):
-            return 'mathjax' in self.tags_for_language(lang)
+            if self.meta[lang].get('has_math'):
+                return True
+            if self.config['USE_TAG_METADATA']:
+                has_math = 'mathjax' in self.tags_for_language(lang)
+                return has_math
         # If it has math in ANY other language, enable it. Better inefficient than broken.
-        return 'mathjax' in self.alltags
+        for lang in self.translated_to:
+            if self.meta[lang].get('has_math'):
+                return True
+        if self.config['USE_TAG_METADATA']:
+            has_math = 'mathjax' in self.alltags
+            return has_math
+        return False
 
     @property
     def alltags(self):
