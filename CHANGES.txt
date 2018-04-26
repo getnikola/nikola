@@ -1,6 +1,18 @@
 New in master
 =============
 
+Important compatibility changes
+-------------------------------
+
+* Rename ``crumbs.tmpl`` to ``ui_helper.tmpl`` and the breadcrumbs
+  ``bar`` function to ``breadcrumbs`` (your templates may need
+  changing as well)
+* Reading reST docinfo metadata, including first heading as title,
+  requires ``USE_REST_DOCINFO_METADATA`` now (Issue #2987)
+* RSS feeds might have changed their places due to ``RSS_PATH``
+  behavior changes (you may need to change ``RSS_PATH``,
+  ``RSS_FILENAME_BASE``)
+
 Features
 --------
 
@@ -125,14 +137,6 @@ Removed features
 * Removed taxonomy option ``also_create_classifications_from_other_languages``
   (Issue #2785)
 * Removed old 7-line metadata format (Issue #2839)
-
-Other changes
--------------
-
-* Rename ``crumbs.tmpl`` to ``ui_helper.tmpl`` and the breadcrumbs
-  ``bar`` function to ``breadcrumbs``
-* Reading reST docinfo metadata, including first heading as title,
-  requires ``USE_REST_DOCINFO_METADATA`` now (Issue #2987)
 
 New in v7.8.8
 =============
