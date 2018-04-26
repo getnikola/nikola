@@ -561,7 +561,6 @@ class Nikola(object):
             'PAGE_INDEX': False,
             'SECTION_PATH': '',
             'STRIP_INDEXES': True,
-            'SITEMAP_INCLUDE_FILELESS_DIRS': True,
             'TAG_PATH': 'categories',
             'TAG_PAGES_ARE_INDEXES': False,
             'TAG_PAGES_DESCRIPTIONS': {},
