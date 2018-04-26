@@ -3,7 +3,8 @@
 .. date: 2012-03-30 23:00:00 UTC-03:00
 .. link:
 .. description:
-.. tags: mathjax
+.. tags:
+.. has_math: true
 .. author: The Nikola Team
 
 The Nikola Handbook

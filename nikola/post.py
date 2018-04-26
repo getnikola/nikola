@@ -266,8 +266,8 @@ class Post(object):
                     post_status = status
                     is_draft = True
                 else:
-                    LOGGER.warn('The post "{0}" has the unknown status "{1}". ' +
-                                'Valid values are "published", "private" and "draft".'.format(status))
+                    LOGGER.warn(('The post "{0}" has the unknown status "{1}". ' +
+                                 'Valid values are "published", "private" and "draft".').format(self.source_path, status))
 
             if self.config['WARN_ABOUT_TAG_METADATA']:
                 if 'draft' in [_.lower() for _ in self._tags[lang]]:
@@ -341,8 +341,11 @@ class Post(object):
 
     @property
     def is_mathjax(self):
-        """Return True if this post has has_math set to True, hast set the
-        mathjax tag in the current language or is a python notebook."""
+        """Return True if this post has has_math set to True or is a python notebook.
+
+        Alternatively, it will return True if it has set the mathjax tag in the
+        current language and the USE_TAG_METADATA config setting is True.
+        """
         if self.compiler.name == 'ipynb':
             return True
         lang = nikola.utils.LocaleBorg().current_lang
