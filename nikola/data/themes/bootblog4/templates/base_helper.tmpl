@@ -1,24 +1,15 @@
 ## -*- coding: utf-8 -*-
 
-<%namespace name="notes" file="annotation_helper.tmpl" import="*" />
 <%def name="html_headstart()">
 <!DOCTYPE html>
 <html
 \
-% if use_open_graph or (twitter_card and twitter_card['use_twitter_cards']) or (comment_system == 'facebook'):
 prefix='\
-%if use_open_graph or (twitter_card and twitter_card['use_twitter_cards']):
-og: http://ogp.me/ns# \
-%endif
-%if use_open_graph:
-article: http://ogp.me/ns/article# \
-%endif
+og: http://ogp.me/ns# article: http://ogp.me/ns/article# \
 %if comment_system == 'facebook':
 fb: http://ogp.me/ns/fb# \
 %endif
 '\
-%endif
-\
 % if is_rtl:
 dir="rtl" \
 % endif

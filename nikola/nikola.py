@@ -583,7 +583,6 @@ class Nikola(object):
             'USE_REST_DOCINFO_METADATA': False,
             'USE_FILENAME_AS_TITLE': True,
             'USE_KATEX': False,
-            'USE_OPEN_GRAPH': True,
             'USE_SLUGIFY': True,
             'TIMEZONE': 'UTC',
             'WRITE_TAG_CLOUD': False,
@@ -1142,8 +1141,6 @@ class Nikola(object):
 
         self._GLOBAL_CONTEXT['navigation_links'] = self.config.get('NAVIGATION_LINKS')
 
-        self._GLOBAL_CONTEXT['use_open_graph'] = self.config.get(
-            'USE_OPEN_GRAPH', True)
         self._GLOBAL_CONTEXT['twitter_card'] = self.config.get(
             'TWITTER_CARD', {})
         self._GLOBAL_CONTEXT['hide_sourcelink'] = not self.config.get(
