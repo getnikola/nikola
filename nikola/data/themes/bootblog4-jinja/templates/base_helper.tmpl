@@ -17,9 +17,6 @@ dir="rtl"
 lang="{{ lang }}">
     <head>
     <meta charset="utf-8">
-    {% if use_base_tag %}
-    <base href="{{ abs_link(permalink) }}">
-    {% endif %}
     {% if description %}
     <meta name="description" content="{{ description|e }}">
     {% endif %}

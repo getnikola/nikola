@@ -576,7 +576,6 @@ class Nikola(object):
             'THUMBNAIL_SIZE': 180,
             'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}',
             'URL_TYPE': 'rel_path',
-            'USE_BASE_TAG': False,
             'USE_BUNDLES': True,
             'USE_CDN': False,
             'USE_CDN_WARNING': True,
@@ -1104,7 +1103,6 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['index_display_post_count'] = self.config[
             'INDEX_DISPLAY_POST_COUNT']
         self._GLOBAL_CONTEXT['index_file'] = self.config['INDEX_FILE']
-        self._GLOBAL_CONTEXT['use_base_tag'] = self.config['USE_BASE_TAG']
         self._GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
         self._GLOBAL_CONTEXT['use_cdn'] = self.config.get("USE_CDN")
         self._GLOBAL_CONTEXT['theme_color'] = self.config.get("THEME_COLOR")
