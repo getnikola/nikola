@@ -2302,14 +2302,17 @@ class Nikola(object):
         for post in posts:
             deps += post.deps(lang)
             uptodate_deps += post.deps_uptodate(lang)
+
         context = {}
+        blog_title = self.config['BLOG_TITLE'](lang)
         context["posts"] = posts
-        context["title"] = self.config['BLOG_TITLE'](lang)
+        context["title"] = blog_title
         context["description"] = self.config['BLOG_DESCRIPTION'](lang)
         context["lang"] = lang
-        context["prevlink"] = None
-        context["nextlink"] = None
         context.update(extra_context)
+
+        context["title"] = "{0} ({1})".format(blog_title, context["title"]) if blog_title != context["title"] else blog_title
+
         deps_context = copy(context)
         deps_context["posts"] = [(p.meta[lang]['title'], p.permalink(lang)) for p in
                                  posts]
