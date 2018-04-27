@@ -2465,10 +2465,6 @@ class Nikola(object):
         kw["indexes_pages_main"] = self.config['INDEXES_PAGES_MAIN']
         kw["indexes_static"] = self.config['INDEXES_STATIC']
         kw['indexes_pretty_page_url'] = self.config["INDEXES_PRETTY_PAGE_URL"]
-        kw['demote_headers'] = self.config['DEMOTE_HEADERS']
-        kw['generate_atom'] = self.config["GENERATE_ATOM"]
-        kw['feed_links_append_query'] = self.config["FEED_LINKS_APPEND_QUERY"]
-        kw['currentfeed'] = None
         kw['show_index_page_navigation'] = self.config['SHOW_INDEX_PAGE_NAVIGATION']
 
         # Split in smaller lists
@@ -2600,7 +2596,6 @@ class Nikola(object):
         # Update kw
         kw = kw.copy()
         kw["feed_length"] = self.config['FEED_LENGTH']
-        kw['demote_headers'] = self.config['DEMOTE_HEADERS']
         kw['generate_atom'] = self.config["GENERATE_ATOM"]
         kw['feed_links_append_query'] = self.config["FEED_LINKS_APPEND_QUERY"]
         kw['feed_teasers'] = self.config['FEED_TEASERS']
