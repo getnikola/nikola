@@ -237,6 +237,7 @@ class RenderTaxonomies(Task):
         template_name = taxonomy.template_for_single_list
 
         yield self.site.generic_index_renderer(lang, filtered_posts, context['title'], template_name, context, kw, str(self.name), page_link, page_path)
+        yield self.site.generic_atom_renderer(lang, filtered_posts, context, kw, str(self.name), page_link, page_path)
 
     def _generate_classification_page_as_list_atom(self, taxonomy, classification, filtered_posts, context, kw, lang):
         """Generate atom feeds for classification lists."""

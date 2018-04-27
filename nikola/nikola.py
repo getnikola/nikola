@@ -2592,34 +2592,6 @@ class Nikola(object):
             task['basename'] = basename
             yield task
 
-            if kw['generate_atom']:
-                atom_output_name = os.path.join(kw['output_folder'], page_path(i, ipages_i, num_pages, False, extension=".atom"))
-                context["feedlink"] = page_link(i, ipages_i, num_pages, False, extension=".atom")
-                if not kw["currentfeed"]:
-                    kw["currentfeed"] = context["feedlink"]
-                context["currentfeedlink"] = kw["currentfeed"]
-                context["feedpagenum"] = i
-                context["feedpagecount"] = num_pages
-                kw['feed_teasers'] = self.config['FEED_TEASERS']
-                kw['feed_plain'] = self.config['FEED_PLAIN']
-                kw['feed_previewimage'] = self.config['FEED_PREVIEWIMAGE']
-                atom_task = {
-                    "basename": basename,
-                    "name": atom_output_name,
-                    "file_dep": sorted([_.base_path for _ in post_list]),
-                    "task_dep": ['render_posts'],
-                    "targets": [atom_output_name],
-                    "actions": [(self.atom_feed_renderer,
-                                (lang,
-                                 post_list,
-                                 atom_output_name,
-                                 kw['filters'],
-                                 context,))],
-                    "clean": True,
-                    "uptodate": [utils.config_changed(kw, 'nikola.nikola.Nikola.atom_feed_renderer')] + additional_dependencies
-                }
-                yield utils.apply_filters(atom_task, kw['filters'])
-
         if kw["indexes_pages_main"] and kw['indexes_pretty_page_url'](lang):
             # create redirection
             output_name = os.path.join(kw['output_folder'], page_path(0, displayed_page_numbers[0], num_pages, True))
@@ -2632,6 +2604,67 @@ class Nikola(object):
                 'clean': True,
                 'uptodate': [utils.config_changed(kw, 'nikola.nikola.Nikola.generic_index_renderer')],
             }, kw["filters"])
+
+    def generic_atom_renderer(self, lang, posts, context_source, kw, basename, page_link, page_path, additional_dependencies=[]):
+        """Create an Atom feed.
+
+        lang: The language
+        posts: A list of posts
+        context_source: This will be copied and extended and used as every
+                        page's context
+        kw: An extended version will be used for uptodate dependencies
+        basename: Basename for task
+        page_link: A function accepting an index i, the displayed page number,
+                   the number of pages, and a boolean force_addition
+                   which creates a link to the i-th page (where i ranges
+                   between 0 and num_pages-1). The displayed page (between 1
+                   and num_pages) is the number (optionally) displayed as
+                   'page %d' on the rendered page. If force_addition is True,
+                   the appendum (inserting '-%d' etc.) should be done also for
+                   i == 0.
+        page_path: A function accepting an index i, the displayed page number,
+                   the number of pages, and a boolean force_addition,
+                   which creates a path to the i-th page. All arguments are
+                   as the ones for page_link.
+        additional_dependencies: a list of dependencies which will be added
+                                 to task['uptodate']
+        """
+        # Update kw
+        kw = kw.copy()
+        kw["feed_length"] = self.config['FEED_LENGTH']
+        kw['demote_headers'] = self.config['DEMOTE_HEADERS']
+        kw['generate_atom'] = self.config["GENERATE_ATOM"]
+        kw['feed_links_append_query'] = self.config["FEED_LINKS_APPEND_QUERY"]
+        kw['feed_teasers'] = self.config['FEED_TEASERS']
+        kw['feed_plain'] = self.config['FEED_PLAIN']
+        kw['feed_previewimage'] = self.config['FEED_PREVIEWIMAGE']
+
+        post_list = posts[:kw["feed_length"]]
+        feedlink = page_link(None, None, None, False, extension=".atom")
+        feedpath = page_path(None, None, None, False, extension=".atom")
+
+        context = context_source.copy()
+        if 'has_other_languages' not in context:
+            context['has_other_languages'] = False
+
+        output_name = os.path.join(kw['output_folder'], feedpath)
+        context["feedlink"] = feedlink
+        task = {
+            "basename": basename,
+            "name": output_name,
+            "file_dep": sorted([_.base_path for _ in post_list]),
+            "task_dep": ['render_posts'],
+            "targets": [output_name],
+            "actions": [(self.atom_feed_renderer,
+                        (lang,
+                         post_list,
+                         output_name,
+                         kw['filters'],
+                         context,))],
+            "clean": True,
+            "uptodate": [utils.config_changed(kw, 'nikola.nikola.Nikola.atom_feed_renderer')] + additional_dependencies
+        }
+        yield utils.apply_filters(task, kw['filters'])
 
     def __repr__(self):
         """Representation of a Nikola site."""
