@@ -158,21 +158,17 @@ class Archive(Taxonomy):
                 page_kind = "index"
         if len(hierarchy) == 0:
             title = kw["messages"][lang]["Archive"]
-            kw["is_feed_stale"] = False
         elif len(hierarchy) == 1:
             title = kw["messages"][lang]["Posts for year %s"] % hierarchy[0]
-            kw["is_feed_stale"] = (datetime.datetime.utcnow().strftime("%Y") != hierarchy[0])
         elif len(hierarchy) == 2:
             title = kw["messages"][lang]["Posts for {month} {year}"].format(
                 year=hierarchy[0],
                 month=nikola.utils.LocaleBorg().get_month_name(int(hierarchy[1]), lang))
-            kw["is_feed_stale"] = (datetime.datetime.utcnow().strftime("%Y/%m") != classification)
         elif len(hierarchy) == 3:
             title = kw["messages"][lang]["Posts for {month} {day}, {year}"].format(
                 year=hierarchy[0],
                 month=nikola.utils.LocaleBorg().get_month_name(int(hierarchy[1]), lang),
                 day=int(hierarchy[2]))
-            kw["is_feed_stale"] = (datetime.datetime.utcnow().strftime("%Y/%m/%d") != classification)
         else:
             raise Exception("Cannot interpret classification {}!".format(repr(classification)))
 
@@ -210,8 +206,6 @@ class Archive(Taxonomy):
             context["has_archive_navigation"] = bool(context["previous_archive"] or context["up_archive"] or context["next_archive"])
         else:
             context["has_archive_navigation"] = False
-        if page_kind == 'index':
-            context["is_feed_stale"] = kw["is_feed_stale"]
         kw.update(context)
         return context, kw
 

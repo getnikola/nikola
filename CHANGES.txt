@@ -137,6 +137,7 @@ Removed features
 * Removed taxonomy option ``also_create_classifications_from_other_languages``
   (Issue #2785)
 * Removed old 7-line metadata format (Issue #2839)
+* Atom feeds are now limited to one page (Issue #3016)
 
 New in v7.8.8
 =============
