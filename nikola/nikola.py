@@ -2324,8 +2324,6 @@ class Nikola(object):
         for k in self._ALL_PAGE_DEPS_TRANSLATABLE:
             deps_context[k] = deps_context['all_page_deps'][k](lang)
 
-        deps_context['navigation_links'] = deps_context['global']['navigation_links'](lang)
-
         feed_xsl_link = self.abs_link("/assets/xml/atom.xsl")
         feed_root = lxml.etree.Element("feed")
         feed_root.addprevious(lxml.etree.ProcessingInstruction(
