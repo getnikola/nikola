@@ -223,12 +223,10 @@ class RenderTaxonomies(Task):
         kind = taxonomy.classification_name
 
         def page_link(i, displayed_i, num_pages, force_addition, extension=None):
-            feed = "{}_atom" if extension == ".atom" else "{}"
-            return self.site.link(feed.format(kind), classification, lang, alternative_path=force_addition, page=i)
+            return self.site.link(kind, classification, lang, alternative_path=force_addition, page=i)
 
         def page_path(i, displayed_i, num_pages, force_addition, extension=None):
-            feed = "{}_atom" if extension == ".atom" else "{}"
-            return self.site.path(feed.format(kind), classification, lang, alternative_path=force_addition, page=i)
+            return self.site.path(kind, classification, lang, alternative_path=force_addition, page=i)
 
         context = copy(context)
         context["kind"] = kind
@@ -237,28 +235,12 @@ class RenderTaxonomies(Task):
         template_name = taxonomy.template_for_single_list
 
         yield self.site.generic_index_renderer(lang, filtered_posts, context['title'], template_name, context, kw, str(self.name), page_link, page_path)
-        yield self.site.generic_atom_renderer(lang, filtered_posts, context, kw, str(self.name), page_link, page_path)
+        yield self.site.generic_atom_renderer(lang, filtered_posts, context, kw, str(self.name), classification, kind)
 
     def _generate_classification_page_as_list_atom(self, taxonomy, classification, filtered_posts, context, kw, lang):
         """Generate atom feeds for classification lists."""
         kind = taxonomy.classification_name
-        context = copy(context)
-        context['feedlink'] = self.site.abs_link(self.site.path('{}_atom'.format(kind), classification, lang))
-        feed_path = os.path.join(self.site.config['OUTPUT_FOLDER'], self.site.path('{}_atom'.format(kind), classification, lang))
-
-        post_list = filtered_posts[:self.site.config["FEED_LENGTH"]]
-
-        task = {
-            'basename': str(self.name),
-            'name': feed_path,
-            'file_dep': sorted([_.base_path for _ in post_list]),
-            'task_dep': ['render_posts'],
-            'targets': [feed_path],
-            'actions': [(self.site.atom_feed_renderer, (lang, post_list, feed_path, kw['filters'], context))],
-            'clean': True,
-            'uptodate': [utils.config_changed(kw, 'nikola.plugins.task.taxonomies:atom')],
-        }
-        yield utils.apply_filters(task, kw['filters'])
+        yield self.site.generic_atom_renderer(lang, filtered_posts, context, kw, str(self.name), classification, kind)
 
     def _generate_classification_page_as_list(self, taxonomy, classification, filtered_posts, context, kw, lang):
         """Render a single flat link list with this classification's posts."""

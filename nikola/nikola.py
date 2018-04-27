@@ -2585,7 +2585,7 @@ class Nikola(object):
                 'uptodate': [utils.config_changed(kw, 'nikola.nikola.Nikola.generic_index_renderer')],
             }, kw["filters"])
 
-    def generic_atom_renderer(self, lang, posts, context_source, kw, basename, page_link, page_path, additional_dependencies=[]):
+    def generic_atom_renderer(self, lang, posts, context_source, kw, basename, classification, kind, additional_dependencies=[]):
         """Create an Atom feed.
 
         lang: The language
@@ -2594,18 +2594,8 @@ class Nikola(object):
                         page's context
         kw: An extended version will be used for uptodate dependencies
         basename: Basename for task
-        page_link: A function accepting an index i, the displayed page number,
-                   the number of pages, and a boolean force_addition
-                   which creates a link to the i-th page (where i ranges
-                   between 0 and num_pages-1). The displayed page (between 1
-                   and num_pages) is the number (optionally) displayed as
-                   'page %d' on the rendered page. If force_addition is True,
-                   the appendum (inserting '-%d' etc.) should be done also for
-                   i == 0.
-        page_path: A function accepting an index i, the displayed page number,
-                   the number of pages, and a boolean force_addition,
-                   which creates a path to the i-th page. All arguments are
-                   as the ones for page_link.
+        classification: name of current classification (used to generate links)
+        kind: classification kind (used to generate links)
         additional_dependencies: a list of dependencies which will be added
                                  to task['uptodate']
         """
@@ -2620,8 +2610,8 @@ class Nikola(object):
         kw['feed_previewimage'] = self.config['FEED_PREVIEWIMAGE']
 
         post_list = posts[:kw["feed_length"]]
-        feedlink = page_link(None, None, None, False, extension=".atom")
-        feedpath = page_path(None, None, None, False, extension=".atom")
+        feedlink = self.link(kind + "_atom", classification, lang)
+        feedpath = self.path(kind + "_atom", classification, lang)
 
         context = context_source.copy()
         if 'has_other_languages' not in context:

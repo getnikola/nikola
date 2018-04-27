@@ -28,7 +28,6 @@
 
 import natsort
 import nikola.utils
-import datetime
 from collections import defaultdict
 from nikola.plugin_categories import Taxonomy
 
