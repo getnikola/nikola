@@ -246,16 +246,19 @@ class RenderTaxonomies(Task):
         context['feedlink'] = self.site.abs_link(self.site.path('{}_atom'.format(kind), classification, lang))
         feed_path = os.path.join(self.site.config['OUTPUT_FOLDER'], self.site.path('{}_atom'.format(kind), classification, lang))
 
+        post_list = filtered_posts[:self.site.config["FEED_LENGTH"]]
+
         task = {
             'basename': str(self.name),
             'name': feed_path,
+            'file_dep': sorted([_.base_path for _ in post_list]),
+            'task_dep': ['render_posts'],
             'targets': [feed_path],
-            'actions': [(self.site.atom_feed_renderer, (lang, filtered_posts, feed_path, kw['filters'], context))],
+            'actions': [(self.site.atom_feed_renderer, (lang, post_list, feed_path, kw['filters'], context))],
             'clean': True,
             'uptodate': [utils.config_changed(kw, 'nikola.plugins.task.taxonomies:atom')],
-            'task_dep': ['render_posts'],
         }
-        return task
+        yield utils.apply_filters(task, kw['filters'])
 
     def _generate_classification_page_as_list(self, taxonomy, classification, filtered_posts, context, kw, lang):
         """Render a single flat link list with this classification's posts."""
@@ -333,6 +336,7 @@ class RenderTaxonomies(Task):
         kw["site_url"] = self.site.config['SITE_URL']
         kw["blog_title"] = self.site.config['BLOG_TITLE']
         kw["generate_rss"] = self.site.config['GENERATE_RSS']
+        kw["generate_atom"] = self.site.config['GENERATE_ATOM']
         kw["feed_teasers"] = self.site.config["FEED_TEASERS"]
         kw["feed_plain"] = self.site.config["FEED_PLAIN"]
         kw["feed_links_append_query"] = self.site.config["FEED_LINKS_APPEND_QUERY"]

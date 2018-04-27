@@ -73,6 +73,8 @@ Features
 Bugfixes
 --------
 
+* Always follow ``FEED_LENGTH`` for Atom feeds
+* Apply filters to all Atom feeds
 * Read file metadata if compiler metadata exists and prefer it over
   compiler metadata (Issue #3008)
 * Rename ``DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED`` to ``DISABLE_INDEXES``
