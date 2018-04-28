@@ -2430,7 +2430,7 @@ class Nikola(object):
                 data = data.decode('utf-8')
             atom_file.write(data)
 
-    def generic_index_renderer(self, lang, posts, indexes_title, template_name, context_source, kw, basename, page_link, page_path, additional_dependencies=[]):
+    def generic_index_renderer(self, lang, posts, indexes_title, template_name, context_source, kw, basename, page_link, page_path, additional_dependencies=None):
         """Create an index page.
 
         lang: The language
@@ -2466,6 +2466,9 @@ class Nikola(object):
         kw["indexes_static"] = self.config['INDEXES_STATIC']
         kw['indexes_pretty_page_url'] = self.config["INDEXES_PRETTY_PAGE_URL"]
         kw['show_index_page_navigation'] = self.config['SHOW_INDEX_PAGE_NAVIGATION']
+
+        if additional_dependencies is None:
+            additional_dependencies = []
 
         # Split in smaller lists
         lists = []
@@ -2579,7 +2582,7 @@ class Nikola(object):
                 'uptodate': [utils.config_changed(kw, 'nikola.nikola.Nikola.generic_index_renderer')],
             }, kw["filters"])
 
-    def generic_atom_renderer(self, lang, posts, context_source, kw, basename, classification, kind, additional_dependencies=[]):
+    def generic_atom_renderer(self, lang, posts, context_source, kw, basename, classification, kind, additional_dependencies=None):
         """Create an Atom feed.
 
         lang: The language
@@ -2601,6 +2604,9 @@ class Nikola(object):
         kw['feed_teasers'] = self.config['FEED_TEASERS']
         kw['feed_plain'] = self.config['FEED_PLAIN']
         kw['feed_previewimage'] = self.config['FEED_PREVIEWIMAGE']
+
+        if additional_dependencies is None:
+            additional_dependencies = []
 
         post_list = posts[:kw["feed_length"]]
         feedlink = self.link(kind + "_atom", classification, lang)
