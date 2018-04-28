@@ -16,6 +16,9 @@ Important compatibility changes
 Features
 --------
 
+* Tags ``draft``, ``private`` and ``mathjax`` are no longer treated
+  special if ``USE_TAG_METADATA`` is set to ``True`` (default for
+  new blogs) (Issue #2761)
 * Produce a better error message when a template referenced in another
   template is missing (Issue #3055)
 * Support captioned images and image ordering in galleries (Issue #3017)
@@ -137,6 +140,14 @@ Removed features
 * Removed taxonomy option ``also_create_classifications_from_other_languages``
   (Issue #2785)
 * Removed old 7-line metadata format (Issue #2839)
+
+Other changes
+-------------
+
+* Rename ``is_mathjax`` to ``has_math``. Themes using ``is_mathjax`` must
+  be updated; it is recommended that they are changed to use ``math_helper.tmpl``.
+* Rename ``crumbs.tmpl`` to ``ui_helper.tmpl`` and the breadcrumbs
+  ``bar`` function to ``breadcrumbs``
 
 New in v7.8.8
 =============
