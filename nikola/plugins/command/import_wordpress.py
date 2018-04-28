@@ -916,7 +916,7 @@ class CommandImportWordpress(Command, ImportMixin):
         tags = []
         categories = []
         post_status = 'published'
-        has_math = False
+        has_math = "no"
         if status == 'trash':
             LOGGER.warn('Trashed post "{0}" will not be imported.'.format(title))
             return False
@@ -945,7 +945,7 @@ class CommandImportWordpress(Command, ImportMixin):
                 tags.append(text)
 
         if '$latex' in content:
-            has_math = True
+            has_math = "yes"
 
         for i, cat in enumerate(categories[:]):
             cat = self._sanitize(cat, True)

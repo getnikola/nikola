@@ -306,8 +306,8 @@ status
     Can be set to ``published`` (default), ``draft``, or ``private``.
 
 has_math
-    If set to ``True``, MathJax resp. KaTeX support is enabled for this
-    post.
+    If set to ``true`` or ``yes``, MathJax resp. KaTeX support is enabled
+    for this post.
 
 category
     Like tags, except each post can have only one, and they usually have

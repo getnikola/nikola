@@ -359,18 +359,16 @@ class Post(object):
             return True
         lang = nikola.utils.LocaleBorg().current_lang
         if self.is_translation_available(lang):
-            if self.meta[lang].get('has_math'):
+            if self.meta[lang].get('has_math') in ('true', 'True', 'yes'):
                 return True
             if self.config['USE_TAG_METADATA']:
-                has_math = 'mathjax' in self.tags_for_language(lang)
-                return has_math
+                return 'mathjax' in self.tags_for_language(lang)
         # If it has math in ANY other language, enable it. Better inefficient than broken.
         for lang in self.translated_to:
-            if self.meta[lang].get('has_math'):
+            if self.meta[lang].get('has_math') in ('true', 'True', 'yes'):
                 return True
         if self.config['USE_TAG_METADATA']:
-            has_math = 'mathjax' in self.alltags
-            return has_math
+            return 'mathjax' in self.alltags
         return False
 
     @property
