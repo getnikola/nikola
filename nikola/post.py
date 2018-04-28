@@ -340,7 +340,7 @@ class Post(object):
         return self.has_pretty_url(lang)
 
     @property
-    def is_mathjax(self):
+    def has_math(self):
         """Return True if this post has has_math set to True or is a python notebook.
 
         Alternatively, it will return True if it has set the mathjax tag in the
