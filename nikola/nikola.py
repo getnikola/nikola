@@ -588,7 +588,7 @@ class Nikola(object):
             'USE_SLUGIFY': True,
             'USE_TAG_METADATA': True,
             'TIMEZONE': 'UTC',
-            'WARN_ABOUT_TAG_METADATA': False,
+            'WARN_ABOUT_TAG_METADATA': True,
             'WRITE_TAG_CLOUD': False,
             'DEPLOY_DRAFTS': True,
             'DEPLOY_FUTURE': False,
