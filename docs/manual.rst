@@ -303,7 +303,7 @@ tags
     Comma-separated tags of the post.
 
 status
-    Can be set to ``published`` (default), ``draft``, or ``private``.
+    Can be set to ``published`` (default), ``featured``, ``draft``, or ``private``.
 
 has_math
     If set to ``true`` or ``yes``, MathJax resp. KaTeX support is enabled
@@ -2295,9 +2295,9 @@ Nikola uses MathJax by default. If you want to use KaTeX (faster and prettier,
 but may not support every feature yet), set ``USE_KATEX = True`` in
 ``conf.py``.
 
-To use mathematics in a post, you **must** set the ``has_math`` metadata to
-``true``, no matter which renderer you are using.  (Exception: posts that are
-Jupyter Notebooks are automatically marked as math)
+To use mathematics in a post, you **must** set the ``has_math`` metadata field
+to ``true``. (Exception: posts that are Jupyter Notebooks are automatically
+marked as math)
 
 .. Note to editors: the paragraph below uses U+200B, zero-width space. Don’t break it.
 
