@@ -257,7 +257,7 @@ class Post(object):
             if status:
                 is_private = False
                 is_draft = False
-                if status == 'published':
+                if status in ('published', 'featured'):
                     post_status = status
                 elif status == 'private':
                     post_status = status
