@@ -78,7 +78,7 @@ from nikola import metadata_extractors
 
 __all__ = ('Post',)
 
-TEASER_REGEXP = re.compile('<!--\s*(TEASER_END|END_TEASER)(:(.+))?\s*-->', re.IGNORECASE)
+TEASER_REGEXP = re.compile(r'<!--\s*(TEASER_END|END_TEASER)(:(.+))?\s*-->', re.IGNORECASE)
 
 
 class Post(object):
