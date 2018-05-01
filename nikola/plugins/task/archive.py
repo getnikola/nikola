@@ -44,9 +44,9 @@ class Archive(Taxonomy):
     include_posts_from_subhierarchies = True
     include_posts_into_hierarchy_root = True
     subcategories_list_template = "list.tmpl"
-    generate_atom_feeds_for_post_lists = False
     template_for_classification_overview = None
     always_disable_rss = True
+    always_disable_atom = True
     apply_to_posts = True
     apply_to_pages = False
     minimum_post_count_per_classification_in_overview = 1
@@ -59,11 +59,7 @@ class Archive(Taxonomy):
         Example:
 
         link://archive/2013 => /archives/2013/index.html""",
-        'archive_atom': """Link to archive Atom path, name is the year (archive pages must be indexes).
-
-        Example:
-
-        link://archive_atom/2013 => /archives/2013/index.atom""",
+        'archive_atom': False,
         'archive_rss': False,
     }
 

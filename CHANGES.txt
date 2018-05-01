@@ -12,6 +12,8 @@ Important compatibility changes
 * RSS feeds might have changed their places due to ``RSS_PATH``
   behavior changes (you may need to change ``RSS_PATH``,
   ``RSS_FILENAME_BASE``)
+* Atom feeds for archives and Atom pagination are no longer supported
+  (Issue #3016)
 
 Features
 --------
