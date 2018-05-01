@@ -423,8 +423,8 @@ class Nikola(object):
             'CATEGORIES_INDEX_PATH': '',
             'CATEGORY_PATH': None,  # None means: same as TAG_PATH
             'CATEGORY_PAGES_ARE_INDEXES': None,  # None means: same as TAG_PAGES_ARE_INDEXES
-            'CATEGORY_PAGES_DESCRIPTIONS': {},
-            'CATEGORY_PAGES_TITLES': {},
+            'CATEGORY_DESCRIPTIONS': {},
+            'CATEGORY_TITLES': {},
             'CATEGORY_PREFIX': 'cat_',
             'CATEGORY_ALLOW_HIERARCHIES': False,
             'CATEGORY_OUTPUT_FLAT_HIERARCHY': False,
@@ -727,6 +727,14 @@ class Nikola(object):
         if 'UNSLUGIFY_TITLES' in self.config:
             utils.LOGGER.warn('The UNSLUGIFY_TITLES setting was renamed to FILE_METADATA_UNSLUGIFY_TITLES.')
             self.config['FILE_METADATA_UNSLUGIFY_TITLES'] = self.config['UNSLUGIFY_TITLES']
+
+        if 'CATEGORY_PAGES_TITLES' in self.config:
+            utils.LOGGER.warn('The CATEGORY_PAGES_TITLES setting was renamed to CATEGORY_TITLES.')
+            self.config['CATEGORY_TITLES'] = self.config['CATEGORY_PAGES_TITLES']
+
+        if 'CATEGORY_PAGES_DESCRIPTIONS' in self.config:
+            utils.LOGGER.warn('The CATEGORY_PAGES_DESCRIPTIONS setting was renamed to CATEGORY_DESCRIPTIONS.')
+            self.config['CATEGORY_DESCRIPTIONS'] = self.config['CATEGORY_PAGES_DESCRIPTIONS']
 
         if 'DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED' in self.config:
             utils.LOGGER.warn('The DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED setting was renamed and split to DISABLE_INDEXES and DISABLE_MAIN_ATOM_FEED.')

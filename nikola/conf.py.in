@@ -403,7 +403,7 @@ CATEGORY_OUTPUT_FLAT_HIERARCHY = ${CATEGORY_OUTPUT_FLAT_HIERARCHY}
 # Set descriptions for category pages to make them more interesting. The
 # default is no description. The value is used in the meta description
 # and displayed underneath the category list or index page’s title.
-# CATEGORY_PAGES_DESCRIPTIONS = {
+# CATEGORY_DESCRIPTIONS = {
 #    DEFAULT_LANG: {
 #        "blogging": "Meta-blog posts about blogging about blogging.",
 #        "open source": "My contributions to my many, varied, ever-changing, and eternal libre software projects."
@@ -411,7 +411,7 @@ CATEGORY_OUTPUT_FLAT_HIERARCHY = ${CATEGORY_OUTPUT_FLAT_HIERARCHY}
 # }
 
 # Set special titles for category pages. The default is "Posts about CATEGORY".
-# CATEGORY_PAGES_TITLES = {
+# CATEGORY_TITLES = {
 #    DEFAULT_LANG: {
 #        "blogging": "Meta-posts about blogging",
 #        "open source": "Posts about open source software"

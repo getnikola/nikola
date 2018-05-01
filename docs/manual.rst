@@ -1009,8 +1009,8 @@ Configuring tags, categories and sections
 There are multiple configuration variables dedicated to each of the three taxonomies. You can set:
 
 * ``TAG_PATH``, ``TAGS_INDEX_PATH``, ``CATEGORY_PATH``, ``CATEGORY_PREFIX`` to configure paths used for tags and categories
-* ``POST_SECTION_NAME``, ``POST_SECTION_TITLE`, `TAG_PAGES_TITLES``, ``CATEGORY_PAGES_TITLES`` to set friendly section names and titles for index pages
-* ``POST_SECTION_DESCRIPTIONS``, `TAG_PAGES_DESCRIPTIONS``, ``CATEGORY_PAGES_DESCRIPTIONS`` to set descriptions for each of the items
+* ``POST_SECTION_NAME``, ``POST_SECTION_TITLE`, `TAG_PAGES_TITLES``, ``CATEGORY_TITLES`` to set friendly section names and titles for index pages
+* ``POST_SECTION_DESCRIPTIONS``, `TAG_PAGES_DESCRIPTIONS``, ``CATEGORY_DESCRIPTIONS`` to set descriptions for each of the items
 * ``POST_SECTION_COLORS`` to customize colors for each section
 * ``CATEGORY_ALLOW_HIERARCHIES`` and ``CATEGORY_OUTPUT_FLAT_HIERARCHIES`` to allow hierarchical categories
 * ``TAG_PAGES_ARE_INDEXES`` and ``CATEGORY_PAGES_ARE_INDEXES`` to display full-size indexes instead of simple post lists

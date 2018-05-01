@@ -140,8 +140,8 @@ link://category_rss/dogs => /categories/dogs.xml""",
             'category_prefix': self.site.config['CATEGORY_PREFIX'],
             "category_pages_are_indexes": self.site.config['CATEGORY_PAGES_ARE_INDEXES'],
             "tzinfo": self.site.tzinfo,
-            "category_pages_descriptions": self.site.config['CATEGORY_PAGES_DESCRIPTIONS'],
-            "category_pages_titles": self.site.config['CATEGORY_PAGES_TITLES'],
+            "category_descriptions": self.site.config['CATEGORY_DESCRIPTIONS'],
+            "category_titles": self.site.config['CATEGORY_TITLES'],
         }
         context = {
             "title": self.site.MESSAGES[lang]["Categories"],
@@ -159,8 +159,8 @@ link://category_rss/dogs => /categories/dogs.xml""",
             'category_prefix': self.site.config['CATEGORY_PREFIX'],
             "category_pages_are_indexes": self.site.config['CATEGORY_PAGES_ARE_INDEXES'],
             "tzinfo": self.site.tzinfo,
-            "category_pages_descriptions": self.site.config['CATEGORY_PAGES_DESCRIPTIONS'],
-            "category_pages_titles": self.site.config['CATEGORY_PAGES_TITLES'],
+            "category_descriptions": self.site.config['CATEGORY_DESCRIPTIONS'],
+            "category_titles": self.site.config['CATEGORY_TITLES'],
         }
         posts = self.site.posts_per_classification[self.classification_name][lang]
         if node is None:
@@ -170,8 +170,8 @@ link://category_rss/dogs => /categories/dogs.xml""",
         subcats = [(child.name, self.site.link(self.classification_name, child.classification_name, lang)) for child in children]
         friendly_name = self.get_classification_friendly_name(classification, lang)
         context = {
-            "title": self.site.config['CATEGORY_PAGES_TITLES'].get(lang, {}).get(classification, self.site.MESSAGES[lang]["Posts about %s"] % friendly_name),
-            "description": self.site.config['CATEGORY_PAGES_DESCRIPTIONS'].get(lang, {}).get(classification),
+            "title": self.site.config['CATEGORY_TITLES'].get(lang, {}).get(classification, self.site.MESSAGES[lang]["Posts about %s"] % friendly_name),
+            "description": self.site.config['CATEGORY_DESCRIPTIONS'].get(lang, {}).get(classification),
             "pagekind": ["tag_page", "index" if self.show_list_as_index else "list"],
             "tag": friendly_name,
             "category": classification,

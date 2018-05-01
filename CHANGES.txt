@@ -28,6 +28,8 @@ Features
 * Tags ``draft``, ``private`` and ``mathjax`` are no longer treated
   special if ``USE_TAG_METADATA`` is set to ``False`` (default for
   new sites) (Issue #2761)
+* Rename ``CATEGORY_PAGES_TITLES`` → ``CATEGORY_TITLES``,
+  ``CATEGORY_PAGES_DESCRIPTIONS`` → ``CATEGORY_DESCRIPTIONS``.
 * Produce a better error message when a template referenced in another
   template is missing (Issue #3055)
 * Support captioned images and image ordering in galleries, as well as
