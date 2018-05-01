@@ -267,7 +267,7 @@ class Post(object):
                     is_draft = True
                 else:
                     LOGGER.warn(('The post "{0}" has the unknown status "{1}". ' +
-                                 'Valid values are "published", "private" and "draft".').format(self.source_path, status))
+                                 'Valid values are "published", "featured", "private" and "draft".').format(self.source_path, status))
 
             if self.config['WARN_ABOUT_TAG_METADATA']:
                 show_warning = False
@@ -359,13 +359,13 @@ class Post(object):
             return True
         lang = nikola.utils.LocaleBorg().current_lang
         if self.is_translation_available(lang):
-            if self.meta[lang].get('has_math') in ('true', 'True', 'yes'):
+            if self.meta[lang].get('has_math') in ('true', 'True', 'yes', '1', 1, True):
                 return True
             if self.config['USE_TAG_METADATA']:
                 return 'mathjax' in self.tags_for_language(lang)
         # If it has math in ANY other language, enable it. Better inefficient than broken.
         for lang in self.translated_to:
-            if self.meta[lang].get('has_math') in ('true', 'True', 'yes'):
+            if self.meta[lang].get('has_math') in ('true', 'True', 'yes', '1', 1, True):
                 return True
         if self.config['USE_TAG_METADATA']:
             return 'mathjax' in self.alltags
