@@ -540,6 +540,7 @@ class Nikola(object):
             'GENERATE_ATOM': False,
             'ATOM_EXTENSION': '.atom',
             'ATOM_PATH': '',
+            'ATOM_FILENAME_BASE': 'index',
             'FEED_TEASERS': True,
             'FEED_PLAIN': False,
             'FEED_PREVIEWIMAGE': True,
@@ -665,6 +666,7 @@ class Nikola(object):
                                       'ATOM_PATH',
                                       'RSS_PATH',
                                       'RSS_FILENAME_BASE',
+                                      'ATOM_FILENAME_BASE',
                                       'AUTHOR_PATH',
                                       'DATE_FORMAT',
                                       'JS_DATE_FORMAT',
@@ -695,6 +697,7 @@ class Nikola(object):
         self._ALL_PAGE_DEPS_TRANSLATABLE = ('atom_path',
                                             'rss_path',
                                             'rss_filename_base',
+                                            'atom_filename_base',
                                             )
         # WARNING: navigation_links SHOULD NOT be added to the list above.
         #          Themes ask for [lang] there and we should provide it.
@@ -1196,6 +1199,7 @@ class Nikola(object):
         self.ALL_PAGE_DEPS['rss_extension'] = self.config.get('RSS_EXTENSION')
         self.ALL_PAGE_DEPS['rss_path'] = self.config.get('RSS_PATH')
         self.ALL_PAGE_DEPS['rss_filename_base'] = self.config.get('RSS_FILENAME_BASE')
+        self.ALL_PAGE_DEPS['atom_filename_base'] = self.config.get('ATOM_FILENAME_BASE')
         self.ALL_PAGE_DEPS['slug_author_path'] = self.config.get('SLUG_AUTHOR_PATH')
         self.ALL_PAGE_DEPS['slug_tag_path'] = self.config.get('SLUG_TAG_PATH')
 

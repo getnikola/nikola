@@ -96,7 +96,10 @@ Example:
                 self.site.config['RSS_FILENAME_BASE'](lang)
             ], 'auto'
         if dest_type == 'feed':
-            return [self.site.config['ATOM_PATH'](lang)], 'always'
+            return [
+                self.site.config['ATOM_PATH'](lang),
+                self.site.config['ATOM_FILENAME_BASE'](lang)
+            ], 'auto'
         page_number = None
         if dest_type == 'page':
             # Interpret argument as page number

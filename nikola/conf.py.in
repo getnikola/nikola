@@ -528,9 +528,16 @@ USE_BASE_TAG = False
 # RSS_PATH = ""
 
 # Final location for the blog main Atom feed is:
-# output / TRANSLATION[lang] / ATOM_PATH / index.atom
+# output / TRANSLATION[lang] / ATOM_PATH / ATOM_FILENAME_BASE ATOM_EXTENSION
 # (translatable)
 # ATOM_PATH = ""
+
+# Atom filename base (without extension); used for indexes.
+# (translatable)
+ATOM_FILENAME_BASE = "feed"
+
+# Extension for Atom feed files
+# ATOM_EXTENSION = ".atom"
 
 # Slug the Tag URL. Easier for users to type, special characters are
 # often removed or replaced as well.
@@ -1070,9 +1077,6 @@ MARKDOWN_EXTENSIONS = ['markdown.extensions.fenced_code', 'markdown.extensions.c
 # are generated even for old indexes and have pagination link relations
 # between each other. Old Atom feeds with no changes are marked as archived.
 # GENERATE_ATOM = False
-
-# Extension for Atom feed files
-# ATOM_EXTENSION = ".atom"
 
 # Only include teasers in Atom and RSS feeds. Disabling include the full
 # content. Defaults to True.

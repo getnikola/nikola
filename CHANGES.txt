@@ -16,6 +16,8 @@ Important compatibility changes
 Features
 --------
 
+* Add ``ATOM_FILENAME_BASE`` setting (defaults to ``index`` for
+  existing sites, but ``feed`` for new sites) (Issue #3016)
 * Produce a better error message when a template referenced in another
   template is missing (Issue #3055)
 * Support captioned images and image ordering in galleries (Issue #3017)

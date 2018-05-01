@@ -101,6 +101,8 @@ link://section_index_rss/cars => /cars/rss.xml""",
         result = [_f for _f in [self.site.config['SECTION_PATH'](lang), section] if _f]
         if dest_type == 'rss':
             return result + [self.site.config['RSS_FILENAME_BASE'](lang)], 'auto'
+        elif dest_type == 'feed':
+            return result + [self.site.config['ATOM_FILENAME_BASE'](lang)], 'auto'
         return result, 'always'
 
     def provide_context_and_uptodate(self, classification, lang, node=None):
