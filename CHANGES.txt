@@ -7,6 +7,9 @@ Important compatibility changes
 * Rename ``crumbs.tmpl`` to ``ui_helper.tmpl`` and the breadcrumbs
   ``bar`` function to ``breadcrumbs`` (your templates may need
   changing as well)
+* Rename ``post.is_mathjax`` to ``post.has_math``. Themes using
+  ``post.is_mathjax`` must be updated; it is recommended that they are
+  changed to use ``math_helper.tmpl``.
 * Reading reST docinfo metadata, including first heading as title,
   requires ``USE_REST_DOCINFO_METADATA`` now (Issue #2987)
 * RSS feeds might have changed their places due to ``RSS_PATH``
@@ -140,14 +143,6 @@ Removed features
 * Removed taxonomy option ``also_create_classifications_from_other_languages``
   (Issue #2785)
 * Removed old 7-line metadata format (Issue #2839)
-
-Other changes
--------------
-
-* Rename ``is_mathjax`` to ``has_math``. Themes using ``is_mathjax`` must
-  be updated; it is recommended that they are changed to use ``math_helper.tmpl``.
-* Rename ``crumbs.tmpl`` to ``ui_helper.tmpl`` and the breadcrumbs
-  ``bar`` function to ``breadcrumbs``
 
 New in v7.8.8
 =============
