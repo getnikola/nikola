@@ -281,10 +281,9 @@ class Post(object):
                     LOGGER.warn('The post "{0}" uses the "mathjax" tag.'.format(self.source_path))
                     show_warning = True
                 if show_warning:
-                    LOGGER.warn('It is suggested that you convert special tags to metadata and set ' +
-                                'USE_TAG_METADATA to False. You can use the XXX command plugin for ' +
-                                'conversion. Change the WARN_ABOUT_TAG_METADATA configuration to ' +
-                                'disable this warning.')
+                    LOGGER.warn('It is suggested that you convert special tags to metadata and set '
+                                'USE_TAG_METADATA to False. Change the WARN_ABOUT_TAG_METADATA '
+                                'configuration to disable this warning.')
             if self.config['USE_TAG_METADATA']:
                 if 'draft' in [_.lower() for _ in self._tags[lang]]:
                     is_draft = True
