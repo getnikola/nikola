@@ -42,9 +42,9 @@ class ClassifyTags(Taxonomy):
     more_than_one_classifications_per_post = True
     has_hierarchy = False
     show_list_as_subcategories_list = False
-    generate_atom_feeds_for_post_lists = True
     template_for_classification_overview = "tags.tmpl"
     always_disable_rss = False
+    always_disable_atom = False
     apply_to_posts = True
     apply_to_pages = False
     omit_empty_classifications = True
