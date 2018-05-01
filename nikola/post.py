@@ -243,6 +243,7 @@ class Post(object):
         is_private = False
         post_status = 'published'
         self._tags = {}
+        self.has_oldstyle_metadata_tags = False
         for lang in self.translated_to:
             if isinstance(self.meta[lang]['tags'], (list, tuple, set)):
                 _tag_list = self.meta[lang]['tags']
@@ -282,7 +283,9 @@ class Post(object):
                     show_warning = True
                 if show_warning:
                     LOGGER.warn('It is suggested that you convert special tags to metadata and set '
-                                'USE_TAG_METADATA to False. Change the WARN_ABOUT_TAG_METADATA '
+                                'USE_TAG_METADATA to False. You can use the upgrade_metadata_v8 '
+                                'command plugin for conversion (install with: nikola plugin -i '
+                                'upgrade_metadata_v8). Change the WARN_ABOUT_TAG_METADATA '
                                 'configuration to disable this warning.')
             if self.config['USE_TAG_METADATA']:
                 if 'draft' in [_.lower() for _ in self._tags[lang]]:
@@ -290,12 +293,17 @@ class Post(object):
                     LOGGER.debug('The post "{0}" is a draft.'.format(self.source_path))
                     self._tags[lang].remove('draft')
                     post_status = 'draft'
+                    self.has_oldstyle_metadata_tags = True
 
                 if 'private' in self._tags[lang]:
                     is_private = True
                     LOGGER.debug('The post "{0}" is private.'.format(self.source_path))
                     self._tags[lang].remove('private')
                     post_status = 'private'
+                    self.has_oldstyle_metadata_tags = True
+
+                if 'mathjax' in self._tags[lang]:
+                    self.has_oldstyle_metadata_tags = True
 
         # While draft comes from the tags, it's not really a tag
         self.is_draft = is_draft
