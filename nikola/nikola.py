@@ -457,6 +457,7 @@ class Nikola(object):
             'CREATE_DAILY_ARCHIVE': False,
             'DATE_FORMAT': '%Y-%m-%d %H:%M',
             'DISABLE_INDEXES': False,
+            'DISABLE_MAIN_ATOM_FEED': False,
             'DISABLE_MAIN_RSS_FEED': False,
             'JS_DATE_FORMAT': 'YYYY-MM-DD HH:mm',
             'DATE_FANCINESS': 0,
@@ -730,8 +731,9 @@ class Nikola(object):
             self.config['FILE_METADATA_UNSLUGIFY_TITLES'] = self.config['UNSLUGIFY_TITLES']
 
         if 'DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED' in self.config:
-            utils.LOGGER.warn('The DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED setting was renamed to DISABLE_INDEXES.')
+            utils.LOGGER.warn('The DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED setting was renamed and split to DISABLE_INDEXES and DISABLE_MAIN_ATOM_FEED.')
             self.config['DISABLE_INDEXES'] = self.config['DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED']
+            self.config['DISABLE_MAIN_ATOM_FEED'] = self.config['DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED']
 
         if 'DISABLE_INDEXES_PLUGIN_RSS_FEED' in self.config:
             utils.LOGGER.warn('The DISABLE_INDEXES_PLUGIN_RSS_FEED setting was renamed to DISABLE_MAIN_RSS_FEED.')

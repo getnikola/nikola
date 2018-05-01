@@ -18,6 +18,7 @@ Important compatibility changes
 Features
 --------
 
+* Add ``DISABLE_MAIN_ATOM_FEED`` setting (Issue #3016, Issue #3039)
 * Add ``ATOM_FILENAME_BASE`` setting (defaults to ``index`` for
   existing sites, but ``feed`` for new sites) (Issue #3016)
 * Produce a better error message when a template referenced in another

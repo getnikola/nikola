@@ -1246,10 +1246,10 @@ MARKDOWN_EXTENSIONS = ['markdown.extensions.fenced_code', 'markdown.extensions.c
 # Plugins you don't want to use. Be careful :-)
 # DISABLED_PLUGINS = ["render_galleries"]
 
-# Special settings to disable only parts of the indexes plugin (to allow RSS
-# but no blog indexes, or to allow blog indexes and Atom but no site-wide RSS).
+# Special settings to disable only parts of the indexes plugin.
 # Use with care.
 # DISABLE_INDEXES = False
+# DISABLE_MAIN_ATOM_FEED = False
 # DISABLE_MAIN_RSS_FEED = False
 
 # Add the absolute paths to directories containing plugins to use them.
