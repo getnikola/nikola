@@ -27,11 +27,13 @@
 """Given a swatch name from bootswatch.com or hackerthemes.com and a parent
 theme, creates a custom theme."""
 
+import configparser
 import os
+
 import requests
 
-from nikola.plugin_categories import Command
 from nikola import utils
+from nikola.plugin_categories import Command
 
 LOGGER = utils.get_logger('subtheme')
 
@@ -108,14 +110,18 @@ class CommandSubTheme(Command):
                     'bubblegum', 'business-tycoon', 'charming', 'daydream',
                     'executive-suite', 'good-news', 'growth', 'harbor', 'hello-world',
                     'neon-glow', 'pleasant', 'retro', 'vibrant-sea', 'wizardry']:  # Hackerthemes
-                LOGGER.info('Hackertheme-based subthemes often require you use a custom font for full effect.')
+                LOGGER.info(
+                    'Hackertheme-based subthemes often require you use a custom font for full effect.')
                 if version != '4':
-                    LOGGER.error('The hackertheme subthemes are only available for Bootstrap 4.')
+                    LOGGER.error(
+                        'The hackertheme subthemes are only available for Bootstrap 4.')
                     return 1
                 if fname == 'bootstrap.css':
-                    url = 'https://raw.githubusercontent.com/HackerThemes/theme-machine/master/dist/{swatch}/css/bootstrap4-{swatch}.css'.format(swatch=swatch)
+                    url = 'https://raw.githubusercontent.com/HackerThemes/theme-machine/master/dist/{swatch}/css/bootstrap4-{swatch}.css'.format(
+                        swatch=swatch)
                 else:
-                    url = 'https://raw.githubusercontent.com/HackerThemes/theme-machine/master/dist/{swatch}/css/bootstrap4-{swatch}.min.css'.format(swatch=swatch)
+                    url = 'https://raw.githubusercontent.com/HackerThemes/theme-machine/master/dist/{swatch}/css/bootstrap4-{swatch}.min.css'.format(
+                        swatch=swatch)
             else:  # Bootswatch
                 url = 'https://bootswatch.com'
                 if version:
@@ -127,11 +133,19 @@ class CommandSubTheme(Command):
                 LOGGER.error('Error {} getting {}', r.status_code, url)
                 return 1
             data = r.text
-            with open(os.path.join('themes', name, 'assets', 'css', fname),
-                      'wb+') as output:
-                output.write(data.encode('utf-8'))
 
-        with open(os.path.join('themes', name, 'parent'), 'wb+') as output:
-            output.write(parent.encode('utf-8'))
+            with open(os.path.join('themes', name, 'assets', 'css', fname),
+                      'w+') as output:
+                output.write(data)
+
+        with open(os.path.join('themes', name, '%s.theme' % name), 'w+') as output:
+            parent_theme_data_path = utils.get_asset_path(
+                '%s.theme' % parent, themes)
+            cp = configparser.ConfigParser()
+            cp.read(parent_theme_data_path)
+            cp['Theme']['parent'] = parent
+            cp['Family'] = {'family': cp['Family']['family']}
+            cp.write(output)
+
         LOGGER.notice(
             'Theme created.  Change the THEME setting to "{0}" to use it.'.format(name))
