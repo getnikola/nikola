@@ -249,7 +249,7 @@ class Post(object):
 
             # Handle CATEGORY_DESTPATH_AS_DEFAULT
             if 'category' not in meta and self.config['CATEGORY_DESTPATH_AS_DEFAULT']:
-                if self.config['CATEGORY_DESTPATH_TRIM_PREFIX']:
+                if self.config['CATEGORY_DESTPATH_TRIM_PREFIX'] and self.folder_relative != '.':
                     category = self.folder_relative
                 else:
                     category = self.folders[lang]
