@@ -43,9 +43,9 @@ class CommandConsole(Command):
     shells = ['ipython', 'bpython', 'plain']
     doc_purpose = "start an interactive Python console with access to your site"
     doc_description = """\
-The site engine is accessible as `site`, the config file as `conf`, and commands are available as `commands`.
+The site engine is accessible as `site` and `nikola_site`, the config file as `conf`, and commands are available as `commands`.
 If there is no console to use specified (as -b, -i, -p) it tries IPython, then falls back to bpython, and finally falls back to the plain Python console."""
-    header = "Nikola v" + __version__ + " -- {0} Console (conf = configuration file, site = site engine, commands = nikola commands)"
+    header = "Nikola v" + __version__ + " -- {0} Console (conf = configuration file, site, nikola_site = site engine, commands = nikola commands)"
     cmd_options = [
         {
             'name': 'bpython',
@@ -71,6 +71,14 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
             'default': False,
             'help': 'Use the plain Python interpreter',
         },
+        {
+            'name': 'command',
+            'short': 'c',
+            'long': 'command',
+            'type': str,
+            'default': None,
+            'help': 'Run a single command',
+        },
     ]
 
     def ipython(self, willful=True):
@@ -83,7 +91,7 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
             raise  # That’s how _execute knows whether to try something else.
         else:
             site = self.context['site']  # NOQA
-            nikola_site = self.context['site']  # NOQA
+            nikola_site = self.context['nikola_site']  # NOQA
             conf = self.context['conf']  # NOQA
             commands = self.context['commands']  # NOQA
             IPython.embed(header=self.header.format('IPython'))
@@ -133,7 +141,9 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
             'nikola_site': self.site,
             'commands': self.site.commands,
         }
-        if options['bpython']:
+        if options['command']:
+            exec(options['command'], None, self.context)
+        elif options['bpython']:
             self.bpython(True)
         elif options['ipython']:
             self.ipython(True)
