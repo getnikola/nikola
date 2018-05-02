@@ -24,8 +24,7 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Given a swatch name from bootswatch.com or hackerthemes.com and a parent
-theme, creates a custom theme."""
+"""Given a swatch name from bootswatch.com or hackerthemes.com and a parent theme, creates a custom theme."""
 
 import configparser
 import os
