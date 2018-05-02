@@ -915,17 +915,19 @@ class CommandImportWordpress(Command, ImportMixin):
 
         tags = []
         categories = []
+        post_status = 'published'
+        has_math = "no"
         if status == 'trash':
             LOGGER.warn('Trashed post "{0}" will not be imported.'.format(title))
             return False
         elif status == 'private':
-            tags.append('private')
             is_draft = False
             is_private = True
+            post_status = 'private'
         elif status != 'publish':
-            tags.append('draft')
             is_draft = True
             is_private = False
+            post_status = 'draft'
         else:
             is_draft = False
             is_private = False
@@ -943,7 +945,7 @@ class CommandImportWordpress(Command, ImportMixin):
                 tags.append(text)
 
         if '$latex' in content:
-            tags.append('mathjax')
+            has_math = "yes"
 
         for i, cat in enumerate(categories[:]):
             cat = self._sanitize(cat, True)
@@ -1010,6 +1012,8 @@ class CommandImportWordpress(Command, ImportMixin):
                     "date": post_date,
                     "description": description,
                     "tags": ','.join(tags),
+                    "status": post_status,
+                    "has_math": has_math,
                 }
                 meta.update(other_meta)
                 if self.onefile:

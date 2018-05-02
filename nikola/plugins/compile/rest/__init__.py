@@ -28,6 +28,7 @@
 
 import io
 import os
+import logbook
 import logbook.base
 
 import docutils.core
@@ -68,9 +69,13 @@ class CompileRest(PageCompiler):
             lang = LocaleBorg().current_lang
         source_path = post.translated_source_path(lang)
 
+        # Silence reST errors, some of which are due to a different
+        # environment. Real issues will be reported while compiling.
+        null_logger = logbook.Logger('NULL')
+        null_logger.handlers = [logbook.NullHandler()]
         with io.open(source_path, 'r', encoding='utf-8') as inf:
             data = inf.read()
-            _, _, _, document = rst2html(data, logger=self.logger, source_path=source_path, transforms=self.site.rst_transforms, no_title_transform=False)
+            _, _, _, document = rst2html(data, logger=null_logger, source_path=source_path, transforms=self.site.rst_transforms, no_title_transform=False)
         meta = {}
         if 'title' in document:
             meta['title'] = document['title']

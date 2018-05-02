@@ -96,7 +96,10 @@ Example:
                 self.site.config['RSS_FILENAME_BASE'](lang)
             ], 'auto'
         if dest_type == 'feed':
-            return [self.site.config['ATOM_PATH'](lang)], 'always'
+            return [
+                self.site.config['ATOM_PATH'](lang),
+                self.site.config['ATOM_FILENAME_BASE'](lang)
+            ], 'auto'
         page_number = None
         if dest_type == 'page':
             # Interpret argument as page number
@@ -121,6 +124,10 @@ Example:
     def should_generate_classification_page(self, classification, post_list, lang):
         """Only generates list of posts for classification if this function returns True."""
         return not self.site.config["DISABLE_INDEXES"]
+
+    def should_generate_atom_for_classification_page(self, classification, post_list, lang):
+        """Only generates Atom feed for list of posts for classification if this function returns True."""
+        return not self.site.config["DISABLE_MAIN_ATOM_FEED"]
 
     def should_generate_rss_for_classification_page(self, classification, post_list, lang):
         """Only generates RSS feed for list of posts for classification if this function returns True."""

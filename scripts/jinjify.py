@@ -14,7 +14,7 @@ import colorama
 import jinja2
 
 dumb_replacements = [
-    ["{% if any(post.is_mathjax for post in posts) %}", '{% if posts|selectattr("is_mathjax")|list %}'],
+    ["{% if any(post.has_math for post in posts) %}", '{% if posts|selectattr("has_math")|list %}'],
     ["json.dumps(title)", "title|tojson"],
     ["{{ parent.extra_head() }}", "{{ super() }}"],
     ["{{ parent.content() }}", "{{ super() }}"],

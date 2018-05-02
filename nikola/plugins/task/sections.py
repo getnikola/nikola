@@ -40,7 +40,6 @@ class ClassifySections(Taxonomy):
     overview_page_variable_name = "sections"
     more_than_one_classifications_per_post = False
     has_hierarchy = False
-    generate_atom_feeds_for_post_lists = False
     template_for_classification_overview = None
     apply_to_posts = True
     apply_to_pages = False
@@ -57,7 +56,7 @@ link://section_index/cars => /cars/index.html""",
 
 Example:
 
-link://section_index_atom/cars => /cars/index.atom""",
+link://section_index_atom/cars => /cars/feed.atom""",
         'section_index_rss': """Link to the RSS feed for a section.
 
 Example:
@@ -101,6 +100,8 @@ link://section_index_rss/cars => /cars/rss.xml""",
         result = [_f for _f in [self.site.config['SECTION_PATH'](lang), section] if _f]
         if dest_type == 'rss':
             return result + [self.site.config['RSS_FILENAME_BASE'](lang)], 'auto'
+        elif dest_type == 'feed':
+            return result + [self.site.config['ATOM_FILENAME_BASE'](lang)], 'auto'
         return result, 'always'
 
     def provide_context_and_uptodate(self, classification, lang, node=None):

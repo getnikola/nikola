@@ -78,7 +78,7 @@ from nikola import metadata_extractors
 
 __all__ = ('Post',)
 
-TEASER_REGEXP = re.compile('<!--\s*(TEASER_END|END_TEASER)(:(.+))?\s*-->', re.IGNORECASE)
+TEASER_REGEXP = re.compile(r'<!--\s*(TEASER_END|END_TEASER)(:(.+))?\s*-->', re.IGNORECASE)
 
 
 class Post(object):
@@ -241,7 +241,9 @@ class Post(object):
 
         is_draft = False
         is_private = False
+        post_status = 'published'
         self._tags = {}
+        self.has_oldstyle_metadata_tags = False
         for lang in self.translated_to:
             if isinstance(self.meta[lang]['tags'], (list, tuple, set)):
                 _tag_list = self.meta[lang]['tags']
@@ -251,20 +253,63 @@ class Post(object):
                 list(set([x.strip() for x in _tag_list])),
                 alg=natsort.ns.F | natsort.ns.IC)
             self._tags[lang] = [t for t in self._tags[lang] if t]
-            if 'draft' in [_.lower() for _ in self._tags[lang]]:
-                is_draft = True
-                LOGGER.debug('The post "{0}" is a draft.'.format(self.source_path))
-                self._tags[lang].remove('draft')
 
-            if 'private' in self._tags[lang]:
-                is_private = True
-                LOGGER.debug('The post "{0}" is private.'.format(self.source_path))
-                self._tags[lang].remove('private')
+            status = self.meta[lang].get('status')
+            if status:
+                is_private = False
+                is_draft = False
+                if status in ('published', 'featured'):
+                    post_status = status
+                elif status == 'private':
+                    post_status = status
+                    is_private = True
+                elif status == 'draft':
+                    post_status = status
+                    is_draft = True
+                else:
+                    LOGGER.warn(('The post "{0}" has the unknown status "{1}". '
+                                 'Valid values are "published", "featured", "private" and "draft".').format(self.source_path, status))
+
+            if self.config['WARN_ABOUT_TAG_METADATA']:
+                show_warning = False
+                if 'draft' in [_.lower() for _ in self._tags[lang]]:
+                    LOGGER.warn('The post "{0}" uses the "draft" tag.'.format(self.source_path))
+                    show_warning = True
+                if 'private' in self._tags[lang]:
+                    LOGGER.warn('The post "{0}" uses the "private" tag.'.format(self.source_path))
+                    show_warning = True
+                if 'mathjax' in self._tags[lang]:
+                    LOGGER.warn('The post "{0}" uses the "mathjax" tag.'.format(self.source_path))
+                    show_warning = True
+                if show_warning:
+                    LOGGER.warn('It is suggested that you convert special tags to metadata and set '
+                                'USE_TAG_METADATA to False. You can use the upgrade_metadata_v8 '
+                                'command plugin for conversion (install with: nikola plugin -i '
+                                'upgrade_metadata_v8). Change the WARN_ABOUT_TAG_METADATA '
+                                'configuration to disable this warning.')
+            if self.config['USE_TAG_METADATA']:
+                if 'draft' in [_.lower() for _ in self._tags[lang]]:
+                    is_draft = True
+                    LOGGER.debug('The post "{0}" is a draft.'.format(self.source_path))
+                    self._tags[lang].remove('draft')
+                    post_status = 'draft'
+                    self.has_oldstyle_metadata_tags = True
+
+                if 'private' in self._tags[lang]:
+                    is_private = True
+                    LOGGER.debug('The post "{0}" is private.'.format(self.source_path))
+                    self._tags[lang].remove('private')
+                    post_status = 'private'
+                    self.has_oldstyle_metadata_tags = True
+
+                if 'mathjax' in self._tags[lang]:
+                    self.has_oldstyle_metadata_tags = True
 
         # While draft comes from the tags, it's not really a tag
         self.is_draft = is_draft
         self.is_private = is_private
         self.is_post = use_in_feeds
+        self.post_status = post_status
         self.use_in_feeds = use_in_feeds and not is_draft and not is_private \
             and not self.publish_later
 
@@ -311,15 +356,27 @@ class Post(object):
         return self.has_pretty_url(lang)
 
     @property
-    def is_mathjax(self):
-        """Return True if this post has the mathjax tag in the current language or is a python notebook."""
+    def has_math(self):
+        """Return True if this post has has_math set to True or is a python notebook.
+
+        Alternatively, it will return True if it has set the mathjax tag in the
+        current language and the USE_TAG_METADATA config setting is True.
+        """
         if self.compiler.name == 'ipynb':
             return True
         lang = nikola.utils.LocaleBorg().current_lang
         if self.is_translation_available(lang):
-            return 'mathjax' in self.tags_for_language(lang)
+            if self.meta[lang].get('has_math') in ('true', 'True', 'yes', '1', 1, True):
+                return True
+            if self.config['USE_TAG_METADATA']:
+                return 'mathjax' in self.tags_for_language(lang)
         # If it has math in ANY other language, enable it. Better inefficient than broken.
-        return 'mathjax' in self.alltags
+        for lang in self.translated_to:
+            if self.meta[lang].get('has_math') in ('true', 'True', 'yes', '1', 1, True):
+                return True
+        if self.config['USE_TAG_METADATA']:
+            return 'mathjax' in self.alltags
+        return False
 
     @property
     def alltags(self):
@@ -1012,9 +1069,9 @@ def get_meta(post, lang):
         metadata_extractors_by = metadata_extractors.default_metadata_extractors_by()
 
     # If meta file exists, use it
-    meta.update(get_metadata_from_meta_file(post.metadata_path, post, config, lang, metadata_extractors_by))
+    metafile_meta = get_metadata_from_meta_file(post.metadata_path, post, config, lang, metadata_extractors_by)
 
-    if not meta:
+    if not metafile_meta:
         post.is_two_file = False
 
     # Fetch compiler metadata.
@@ -1026,11 +1083,12 @@ def get_meta(post, lang):
         used_extractor = post.compiler
         meta.update(compiler_meta)
 
-    if not post.is_two_file and not compiler_meta:
-        # Meta file has precedence over file, which can contain garbage.
-        # Moreover, we should not read the file if we have compiler meta.
+    # Meta files and inter-file metadata override compiler metadata
+    if not post.is_two_file:
         new_meta, used_extractor = get_metadata_from_file(post.source_path, post, config, lang, metadata_extractors_by)
         meta.update(new_meta)
+    else:
+        meta.update(metafile_meta)
 
     # Filename-based metadata extractors (fallback only)
     if not meta:

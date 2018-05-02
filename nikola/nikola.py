@@ -457,6 +457,7 @@ class Nikola(object):
             'CREATE_DAILY_ARCHIVE': False,
             'DATE_FORMAT': '%Y-%m-%d %H:%M',
             'DISABLE_INDEXES': False,
+            'DISABLE_MAIN_ATOM_FEED': False,
             'DISABLE_MAIN_RSS_FEED': False,
             'JS_DATE_FORMAT': 'YYYY-MM-DD HH:mm',
             'DATE_FANCINESS': 0,
@@ -540,9 +541,9 @@ class Nikola(object):
             'GENERATE_ATOM': False,
             'ATOM_EXTENSION': '.atom',
             'ATOM_PATH': '',
+            'ATOM_FILENAME_BASE': 'index',
             'FEED_TEASERS': True,
             'FEED_PLAIN': False,
-            'FEED_PREVIEWIMAGE': True,
             'FEED_READ_MORE_LINK': DEFAULT_FEED_READ_MORE_LINK,
             'FEED_LINKS_APPEND_QUERY': False,
             'GENERATE_RSS': True,
@@ -562,7 +563,6 @@ class Nikola(object):
             'PAGE_INDEX': False,
             'SECTION_PATH': '',
             'STRIP_INDEXES': True,
-            'SITEMAP_INCLUDE_FILELESS_DIRS': True,
             'TAG_PATH': 'categories',
             'TAG_PAGES_ARE_INDEXES': False,
             'TAG_PAGES_DESCRIPTIONS': {},
@@ -577,16 +577,16 @@ class Nikola(object):
             'THUMBNAIL_SIZE': 180,
             'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}',
             'URL_TYPE': 'rel_path',
-            'USE_BASE_TAG': False,
             'USE_BUNDLES': True,
             'USE_CDN': False,
             'USE_CDN_WARNING': True,
             'USE_REST_DOCINFO_METADATA': False,
             'USE_FILENAME_AS_TITLE': True,
             'USE_KATEX': False,
-            'USE_OPEN_GRAPH': True,
             'USE_SLUGIFY': True,
+            'USE_TAG_METADATA': True,
             'TIMEZONE': 'UTC',
+            'WARN_ABOUT_TAG_METADATA': True,
             'WRITE_TAG_CLOUD': False,
             'DEPLOY_DRAFTS': True,
             'DEPLOY_FUTURE': False,
@@ -665,6 +665,7 @@ class Nikola(object):
                                       'ATOM_PATH',
                                       'RSS_PATH',
                                       'RSS_FILENAME_BASE',
+                                      'ATOM_FILENAME_BASE',
                                       'AUTHOR_PATH',
                                       'DATE_FORMAT',
                                       'JS_DATE_FORMAT',
@@ -695,6 +696,7 @@ class Nikola(object):
         self._ALL_PAGE_DEPS_TRANSLATABLE = ('atom_path',
                                             'rss_path',
                                             'rss_filename_base',
+                                            'atom_filename_base',
                                             )
         # WARNING: navigation_links SHOULD NOT be added to the list above.
         #          Themes ask for [lang] there and we should provide it.
@@ -727,8 +729,9 @@ class Nikola(object):
             self.config['FILE_METADATA_UNSLUGIFY_TITLES'] = self.config['UNSLUGIFY_TITLES']
 
         if 'DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED' in self.config:
-            utils.LOGGER.warn('The DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED setting was renamed to DISABLE_INDEXES.')
+            utils.LOGGER.warn('The DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED setting was renamed and split to DISABLE_INDEXES and DISABLE_MAIN_ATOM_FEED.')
             self.config['DISABLE_INDEXES'] = self.config['DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED']
+            self.config['DISABLE_MAIN_ATOM_FEED'] = self.config['DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED']
 
         if 'DISABLE_INDEXES_PLUGIN_RSS_FEED' in self.config:
             utils.LOGGER.warn('The DISABLE_INDEXES_PLUGIN_RSS_FEED setting was renamed to DISABLE_MAIN_RSS_FEED.')
@@ -1106,7 +1109,6 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['index_display_post_count'] = self.config[
             'INDEX_DISPLAY_POST_COUNT']
         self._GLOBAL_CONTEXT['index_file'] = self.config['INDEX_FILE']
-        self._GLOBAL_CONTEXT['use_base_tag'] = self.config['USE_BASE_TAG']
         self._GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
         self._GLOBAL_CONTEXT['use_cdn'] = self.config.get("USE_CDN")
         self._GLOBAL_CONTEXT['theme_color'] = self.config.get("THEME_COLOR")
@@ -1143,8 +1145,6 @@ class Nikola(object):
 
         self._GLOBAL_CONTEXT['navigation_links'] = self.config.get('NAVIGATION_LINKS')
 
-        self._GLOBAL_CONTEXT['use_open_graph'] = self.config.get(
-            'USE_OPEN_GRAPH', True)
         self._GLOBAL_CONTEXT['twitter_card'] = self.config.get(
             'TWITTER_CARD', {})
         self._GLOBAL_CONTEXT['hide_sourcelink'] = not self.config.get(
@@ -1196,6 +1196,7 @@ class Nikola(object):
         self.ALL_PAGE_DEPS['rss_extension'] = self.config.get('RSS_EXTENSION')
         self.ALL_PAGE_DEPS['rss_path'] = self.config.get('RSS_PATH')
         self.ALL_PAGE_DEPS['rss_filename_base'] = self.config.get('RSS_FILENAME_BASE')
+        self.ALL_PAGE_DEPS['atom_filename_base'] = self.config.get('ATOM_FILENAME_BASE')
         self.ALL_PAGE_DEPS['slug_author_path'] = self.config.get('SLUG_AUTHOR_PATH')
         self.ALL_PAGE_DEPS['slug_tag_path'] = self.config.get('SLUG_TAG_PATH')
 
@@ -1671,7 +1672,7 @@ class Nikola(object):
             if feed_url is not None and data:
                 # Massage the post's HTML (unless plain)
                 if not rss_plain:
-                    if self.config["FEED_PREVIEWIMAGE"] and 'previewimage' in post.meta[lang] and post.meta[lang]['previewimage'] not in data:
+                    if 'previewimage' in post.meta[lang] and post.meta[lang]['previewimage'] not in data:
                         data = "<figure><img src=\"{}\"></figure> {}".format(post.meta[lang]['previewimage'], data)
                     # FIXME: this is duplicated with code in Post.text()
                     try:
@@ -2302,15 +2303,17 @@ class Nikola(object):
         for post in posts:
             deps += post.deps(lang)
             uptodate_deps += post.deps_uptodate(lang)
+
         context = {}
+        blog_title = self.config['BLOG_TITLE'](lang)
         context["posts"] = posts
-        context["title"] = self.config['BLOG_TITLE'](lang)
+        context["title"] = blog_title
         context["description"] = self.config['BLOG_DESCRIPTION'](lang)
         context["lang"] = lang
-        context["prevlink"] = None
-        context["nextlink"] = None
-        context["is_feed_stale"] = None
         context.update(extra_context)
+
+        context["title"] = "{0} ({1})".format(blog_title, context["title"]) if blog_title != context["title"] else blog_title
+
         deps_context = copy(context)
         deps_context["posts"] = [(p.meta[lang]['title'], p.permalink(lang)) for p in
                                  posts]
@@ -2322,13 +2325,8 @@ class Nikola(object):
         for k in self._ALL_PAGE_DEPS_TRANSLATABLE:
             deps_context[k] = deps_context['all_page_deps'][k](lang)
 
-        deps_context['navigation_links'] = deps_context['global']['navigation_links'](lang)
-
-        nslist = {}
-        if context["is_feed_stale"] or "feedpagenum" in context and (not context["feedpagenum"] == context["feedpagecount"] - 1 and not context["feedpagenum"] == 0):
-            nslist["fh"] = "http://purl.org/syndication/history/1.0"
         feed_xsl_link = self.abs_link("/assets/xml/atom.xsl")
-        feed_root = lxml.etree.Element("feed", nsmap=nslist)
+        feed_root = lxml.etree.Element("feed")
         feed_root.addprevious(lxml.etree.ProcessingInstruction(
             "xml-stylesheet",
             'href="' + utils.encodelink(feed_xsl_link) + '" type="text/xsl media="all"'))
@@ -2345,25 +2343,6 @@ class Nikola(object):
         feed_author_name.text = self.config["BLOG_AUTHOR"](lang)
         feed_root.append(atom_link("self", "application/atom+xml",
                                    self.abs_link(context["feedlink"])))
-        # Older is "next" and newer is "previous" in paginated feeds (opposite of archived)
-        if "nextfeedlink" in context:
-            feed_root.append(atom_link("next", "application/atom+xml",
-                                       self.abs_link(context["nextfeedlink"])))
-        if "prevfeedlink" in context:
-            feed_root.append(atom_link("previous", "application/atom+xml",
-                                       self.abs_link(context["prevfeedlink"])))
-        if context["is_feed_stale"] or "feedpagenum" in context and not context["feedpagenum"] == 0:
-            feed_root.append(atom_link("current", "application/atom+xml",
-                             self.abs_link(context["currentfeedlink"])))
-            # Older is "prev-archive" and newer is "next-archive" in archived feeds (opposite of paginated)
-            if "prevfeedlink" in context and (context["is_feed_stale"] or "feedpagenum" in context and not context["feedpagenum"] == context["feedpagecount"] - 1):
-                feed_root.append(atom_link("next-archive", "application/atom+xml",
-                                           self.abs_link(context["prevfeedlink"])))
-            if "nextfeedlink" in context:
-                feed_root.append(atom_link("prev-archive", "application/atom+xml",
-                                           self.abs_link(context["nextfeedlink"])))
-            if context["is_feed_stale"] or "feedpagenum" and not context["feedpagenum"] == context["feedpagecount"] - 1:
-                lxml.etree.SubElement(feed_root, "{http://purl.org/syndication/history/1.0}archive")
         feed_root.append(atom_link("alternate", "text/html",
                                    self.abs_link(context["permalink"])))
         feed_generator = lxml.etree.SubElement(feed_root, "generator")
@@ -2378,7 +2357,7 @@ class Nikola(object):
 
         def atom_post_text(post, text):
             if not self.config["FEED_PLAIN"]:
-                if self.config["FEED_PREVIEWIMAGE"] and 'previewimage' in post.meta[lang] and post.meta[lang]['previewimage'] not in text:
+                if 'previewimage' in post.meta[lang] and post.meta[lang]['previewimage'] not in text:
                     text = "<figure><img src=\"{}\"></figure> {}".format(post.meta[lang]['previewimage'], text)
 
                 # FIXME: this is duplicated with code in Post.text() and generic_rss_renderer
@@ -2452,7 +2431,7 @@ class Nikola(object):
                 data = data.decode('utf-8')
             atom_file.write(data)
 
-    def generic_index_renderer(self, lang, posts, indexes_title, template_name, context_source, kw, basename, page_link, page_path, additional_dependencies=[]):
+    def generic_index_renderer(self, lang, posts, indexes_title, template_name, context_source, kw, basename, page_link, page_path, additional_dependencies=None):
         """Create an index page.
 
         lang: The language
@@ -2487,11 +2466,10 @@ class Nikola(object):
         kw["indexes_pages_main"] = self.config['INDEXES_PAGES_MAIN']
         kw["indexes_static"] = self.config['INDEXES_STATIC']
         kw['indexes_pretty_page_url'] = self.config["INDEXES_PRETTY_PAGE_URL"]
-        kw['demote_headers'] = self.config['DEMOTE_HEADERS']
-        kw['generate_atom'] = self.config["GENERATE_ATOM"]
-        kw['feed_links_append_query'] = self.config["FEED_LINKS_APPEND_QUERY"]
-        kw['currentfeed'] = None
         kw['show_index_page_navigation'] = self.config['SHOW_INDEX_PAGE_NAVIGATION']
+
+        if additional_dependencies is None:
+            additional_dependencies = []
 
         # Split in smaller lists
         lists = []
@@ -2592,34 +2570,6 @@ class Nikola(object):
             task['basename'] = basename
             yield task
 
-            if kw['generate_atom']:
-                atom_output_name = os.path.join(kw['output_folder'], page_path(i, ipages_i, num_pages, False, extension=".atom"))
-                context["feedlink"] = page_link(i, ipages_i, num_pages, False, extension=".atom")
-                if not kw["currentfeed"]:
-                    kw["currentfeed"] = context["feedlink"]
-                context["currentfeedlink"] = kw["currentfeed"]
-                context["feedpagenum"] = i
-                context["feedpagecount"] = num_pages
-                kw['feed_teasers'] = self.config['FEED_TEASERS']
-                kw['feed_plain'] = self.config['FEED_PLAIN']
-                kw['feed_previewimage'] = self.config['FEED_PREVIEWIMAGE']
-                atom_task = {
-                    "basename": basename,
-                    "name": atom_output_name,
-                    "file_dep": sorted([_.base_path for _ in post_list]),
-                    "task_dep": ['render_posts'],
-                    "targets": [atom_output_name],
-                    "actions": [(self.atom_feed_renderer,
-                                (lang,
-                                 post_list,
-                                 atom_output_name,
-                                 kw['filters'],
-                                 context,))],
-                    "clean": True,
-                    "uptodate": [utils.config_changed(kw, 'nikola.nikola.Nikola.atom_feed_renderer')] + additional_dependencies
-                }
-                yield utils.apply_filters(atom_task, kw['filters'])
-
         if kw["indexes_pages_main"] and kw['indexes_pretty_page_url'](lang):
             # create redirection
             output_name = os.path.join(kw['output_folder'], page_path(0, displayed_page_numbers[0], num_pages, True))
@@ -2632,6 +2582,58 @@ class Nikola(object):
                 'clean': True,
                 'uptodate': [utils.config_changed(kw, 'nikola.nikola.Nikola.generic_index_renderer')],
             }, kw["filters"])
+
+    def generic_atom_renderer(self, lang, posts, context_source, kw, basename, classification, kind, additional_dependencies=None):
+        """Create an Atom feed.
+
+        lang: The language
+        posts: A list of posts
+        context_source: This will be copied and extended and used as every
+                        page's context
+        kw: An extended version will be used for uptodate dependencies
+        basename: Basename for task
+        classification: name of current classification (used to generate links)
+        kind: classification kind (used to generate links)
+        additional_dependencies: a list of dependencies which will be added
+                                 to task['uptodate']
+        """
+        # Update kw
+        kw = kw.copy()
+        kw["feed_length"] = self.config['FEED_LENGTH']
+        kw['generate_atom'] = self.config["GENERATE_ATOM"]
+        kw['feed_links_append_query'] = self.config["FEED_LINKS_APPEND_QUERY"]
+        kw['feed_teasers'] = self.config['FEED_TEASERS']
+        kw['feed_plain'] = self.config['FEED_PLAIN']
+
+        if additional_dependencies is None:
+            additional_dependencies = []
+
+        post_list = posts[:kw["feed_length"]]
+        feedlink = self.link(kind + "_atom", classification, lang)
+        feedpath = self.path(kind + "_atom", classification, lang)
+
+        context = context_source.copy()
+        if 'has_other_languages' not in context:
+            context['has_other_languages'] = False
+
+        output_name = os.path.join(kw['output_folder'], feedpath)
+        context["feedlink"] = feedlink
+        task = {
+            "basename": basename,
+            "name": output_name,
+            "file_dep": sorted([_.base_path for _ in post_list]),
+            "task_dep": ['render_posts'],
+            "targets": [output_name],
+            "actions": [(self.atom_feed_renderer,
+                        (lang,
+                         post_list,
+                         output_name,
+                         kw['filters'],
+                         context,))],
+            "clean": True,
+            "uptodate": [utils.config_changed(kw, 'nikola.nikola.Nikola.atom_feed_renderer')] + additional_dependencies
+        }
+        yield utils.apply_filters(task, kw['filters'])
 
     def __repr__(self):
         """Representation of a Nikola site."""

@@ -117,7 +117,6 @@ class Sitemap(LateTask):
             "output_folder": self.site.config["OUTPUT_FOLDER"],
             "strip_indexes": self.site.config["STRIP_INDEXES"],
             "index_file": self.site.config["INDEX_FILE"],
-            "sitemap_include_fileless_dirs": self.site.config["SITEMAP_INCLUDE_FILELESS_DIRS"],
             "mapped_extensions": self.site.config.get('MAPPED_EXTENSIONS', ['.atom', '.html', '.htm', '.php', '.xml', '.rss']),
             "robots_exclusions": self.site.config["ROBOTS_EXCLUSIONS"],
             "filters": self.site.config["FILTERS"],
@@ -140,7 +139,7 @@ class Sitemap(LateTask):
         def scan_locs():
             """Scan site locations."""
             for root, dirs, files in os.walk(output, followlinks=True):
-                if not dirs and not files and not kw['sitemap_include_fileless_dirs']:
+                if not dirs and not files:
                     continue  # Totally empty, not on sitemap
                 path = os.path.relpath(root, output)
                 # ignore the current directory.

@@ -1,10 +1,33 @@
 New in master
 =============
 
+Important compatibility changes
+-------------------------------
+
+* Rename ``crumbs.tmpl`` to ``ui_helper.tmpl`` and the breadcrumbs
+  ``bar`` function to ``breadcrumbs`` (your templates may need
+  changing as well)
+* Rename ``post.is_mathjax`` to ``post.has_math``. Themes using
+  ``post.is_mathjax`` must be updated; it is recommended that they are
+  changed to use ``math_helper.tmpl``.
+* Reading reST docinfo metadata, including first heading as title,
+  requires ``USE_REST_DOCINFO_METADATA`` now (Issue #2987)
+* RSS feeds might have changed their places due to ``RSS_PATH``
+  behavior changes (you may need to change ``RSS_PATH``,
+  ``RSS_FILENAME_BASE``)
+* Atom feeds for archives and Atom pagination are no longer supported
+  (Issue #3016)
+
 Features
 --------
 
 * Support hackerthemes.com themes and renamed bootswatch_theme command subtheme (Issue #3049)
+* Add ``DISABLE_MAIN_ATOM_FEED`` setting (Issue #3016, Issue #3039)
+* Add ``ATOM_FILENAME_BASE`` setting (defaults to ``index`` for
+  existing sites, but ``feed`` for new sites) (Issue #3016)
+* Tags ``draft``, ``private`` and ``mathjax`` are no longer treated
+  special if ``USE_TAG_METADATA`` is set to ``False`` (default for
+  new sites) (Issue #2761)
 * Produce a better error message when a template referenced in another
   template is missing (Issue #3055)
 * Support captioned images and image ordering in galleries (Issue #3017)
@@ -62,7 +85,11 @@ Features
 Bugfixes
 --------
 
-* Renamed ``DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED`` to ``DISABLE_INDEXES``
+* Always follow ``FEED_LENGTH`` for Atom feeds
+* Apply filters to all Atom feeds
+* Read file metadata if compiler metadata exists and prefer it over
+  compiler metadata (Issue #3008)
+* Rename ``DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED`` to ``DISABLE_INDEXES``
   and ``DISABLE_INDEXES_PLUGIN_RSS_FEED`` to ``DISABLE_MAIN_RSS_FEED`` (Issue #3039)
 * Make chart shortcode its own plugin and make the reST directive
   depend on it.
@@ -110,6 +137,17 @@ Bugfixes
 * Language was not passed to title and link generation for page indexes
 * Addressed issue with snaps not allowing certain functions to work properly.
 
+Removed conf.py settings
+------------------------
+
+The following settings have been removed. Nikola will now always
+behave as if the value was what is displayed afer the setting name.
+
+* ``FEED_PREVIEWIMAGE =  True``
+* ``SITEMAP_INCLUDE_FILELESS_DIRS = True``
+* ``USE_OPEN_GRAPH = True``
+* ``USE_BASE_TAG = False``
+
 Removed features
 ----------------
 
@@ -124,12 +162,7 @@ Removed features
 * Removed taxonomy option ``also_create_classifications_from_other_languages``
   (Issue #2785)
 * Removed old 7-line metadata format (Issue #2839)
-
-Other changes
--------------
-
-* Rename ``crumbs.tmpl`` to ``ui_helper.tmpl`` and the breadcrumbs
-  ``bar`` function to ``breadcrumbs``
+* Atom feeds are now limited to one page (Issue #3016)
 
 New in v7.8.8
 =============

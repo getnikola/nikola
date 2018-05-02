@@ -3,7 +3,8 @@
 .. date: 2012-03-30 23:00:00 UTC-03:00
 .. link:
 .. description:
-.. tags: mathjax
+.. tags:
+.. has_math: true
 .. author: The Nikola Team
 
 The Nikola Handbook
@@ -299,8 +300,14 @@ date
     Adding a timezone is recommended. (required for posts)
 
 tags
-    Comma-separated tags of the post. Some tags have special meaning, including
-    ``draft``, ``private``, ``mathjax``
+    Comma-separated tags of the post.
+
+status
+    Can be set to ``published`` (default), ``featured``, ``draft``, or ``private``.
+
+has_math
+    If set to ``true`` or ``yes``, MathJax resp. KaTeX support is enabled
+    for this post.
 
 category
     Like tags, except each post can have only one, and they usually have
@@ -809,11 +816,11 @@ Or you can completely customize the link using the ``READ_MORE_LINK`` option.
 Drafts
 ~~~~~~
 
-If you add a "draft" tag to a post, then it will not be shown in indexes and feeds.
-It *will* be compiled, and if you deploy it it *will* be made available, so use
-with care. If you wish your drafts to be not available in your deployed site, you
-can set ``DEPLOY_DRAFTS = False`` in your configuration. This will not work if
-lazily include ``nikola build`` in your ``DEPLOY_COMMANDS``.
+If you set the ``status`` metadata field of a post to ``draft``, it will not be shown
+in indexes and feeds. It *will* be compiled, and if you deploy it it *will* be made
+available, so use with care. If you wish your drafts to be not available in your
+deployed site, you can set ``DEPLOY_DRAFTS = False`` in your configuration. This will
+not work if lazily include ``nikola build`` in your ``DEPLOY_COMMANDS``.
 
 Also if a post has a date in the future, it will not be shown in indexes until
 you rebuild after that date. This behavior can be disabled by setting
@@ -826,9 +833,9 @@ Generally, you want FUTURE_IS_NOW and DEPLOY_FUTURE to be the same value.
 Private Posts
 ~~~~~~~~~~~~~
 
-If you add a "private" tag to a post, then it will not be shown in indexes and feeds.
-It *will* be compiled, and if you deploy it it *will* be made available, so it will
-not generate 404s for people who had linked to it.
+If you set the ``status`` metadata field of a post to ``private``, it will not be shown
+in indexes and feeds. It *will* be compiled, and if you deploy it it *will* be made
+available, so it will not generate 404s for people who had linked to it.
 
 Queuing Posts
 ~~~~~~~~~~~~~
@@ -966,8 +973,6 @@ Please note that tags are case-sensitive and that you cannot have two tags that 
    ERROR: Nikola: You have tags that are too similar: Nikola and nikola
    ERROR: Nikola: Tag Nikola is used in: posts/second-post.rst
    ERROR: Nikola: Tag nikola is used in: posts/1.rst
-
-Nikola uses some tags to mark a post as “special” — those are ``draft``, ``private``, ``mathjax`` (for math support).
 
 You can also generate a tag cloud with the `tx3_tag_cloud <https://plugins.getnikola.com/#tx3_tag_cloud>`_ plugin.
 
@@ -2288,9 +2293,9 @@ Nikola uses MathJax by default. If you want to use KaTeX (faster and prettier,
 but may not support every feature yet), set ``USE_KATEX = True`` in
 ``conf.py``.
 
-To use mathematics in a post, you **must** add the ``mathjax`` tag, no matter
-which renderer you are using.  (Exception: posts that are Jupyter Notebooks are
-automatically marked as math)
+To use mathematics in a post, you **must** set the ``has_math`` metadata field
+to ``true``. (Exception: posts that are Jupyter Notebooks are automatically
+marked as math)
 
 .. Note to editors: the paragraph below uses U+200B, zero-width space. Don’t break it.
 
