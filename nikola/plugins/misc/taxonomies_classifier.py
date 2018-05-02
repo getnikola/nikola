@@ -241,6 +241,8 @@ class TaxonomiesClassifier(SignalHandler):
         if force_extension is not None:
             if len(path) == 0 and dest_type == 'rss':
                 path = [self.site.config['RSS_FILENAME_BASE'](lang)]
+            elif len(path) == 0 and dest_type == 'feed':
+                path = [self.site.config['ATOM_FILENAME_BASE'](lang)]
             elif len(path) == 0 or append_index == 'always':
                 path = path + [os.path.splitext(self.site.config['INDEX_FILE'])[0]]
             elif len(path) > 0 and append_index == 'never':

@@ -28,7 +28,6 @@
 
 import natsort
 import nikola.utils
-import datetime
 from collections import defaultdict
 from nikola.plugin_categories import Taxonomy
 
@@ -45,9 +44,9 @@ class Archive(Taxonomy):
     include_posts_from_subhierarchies = True
     include_posts_into_hierarchy_root = True
     subcategories_list_template = "list.tmpl"
-    generate_atom_feeds_for_post_lists = False
     template_for_classification_overview = None
     always_disable_rss = True
+    always_disable_atom = True
     apply_to_posts = True
     apply_to_pages = False
     minimum_post_count_per_classification_in_overview = 1
@@ -60,11 +59,7 @@ class Archive(Taxonomy):
         Example:
 
         link://archive/2013 => /archives/2013/index.html""",
-        'archive_atom': """Link to archive Atom path, name is the year (archive pages must be indexes).
-
-        Example:
-
-        link://archive_atom/2013 => /archives/2013/index.atom""",
+        'archive_atom': False,
         'archive_rss': False,
     }
 
@@ -158,21 +153,17 @@ class Archive(Taxonomy):
                 page_kind = "index"
         if len(hierarchy) == 0:
             title = kw["messages"][lang]["Archive"]
-            kw["is_feed_stale"] = False
         elif len(hierarchy) == 1:
             title = kw["messages"][lang]["Posts for year %s"] % hierarchy[0]
-            kw["is_feed_stale"] = (datetime.datetime.utcnow().strftime("%Y") != hierarchy[0])
         elif len(hierarchy) == 2:
             title = kw["messages"][lang]["Posts for {month} {year}"].format(
                 year=hierarchy[0],
                 month=nikola.utils.LocaleBorg().get_month_name(int(hierarchy[1]), lang))
-            kw["is_feed_stale"] = (datetime.datetime.utcnow().strftime("%Y/%m") != classification)
         elif len(hierarchy) == 3:
             title = kw["messages"][lang]["Posts for {month} {day}, {year}"].format(
                 year=hierarchy[0],
                 month=nikola.utils.LocaleBorg().get_month_name(int(hierarchy[1]), lang),
                 day=int(hierarchy[2]))
-            kw["is_feed_stale"] = (datetime.datetime.utcnow().strftime("%Y/%m/%d") != classification)
         else:
             raise Exception("Cannot interpret classification {}!".format(repr(classification)))
 
@@ -210,8 +201,6 @@ class Archive(Taxonomy):
             context["has_archive_navigation"] = bool(context["previous_archive"] or context["up_archive"] or context["next_archive"])
         else:
             context["has_archive_navigation"] = False
-        if page_kind == 'index':
-            context["is_feed_stale"] = kw["is_feed_stale"]
         kw.update(context)
         return context, kw
 

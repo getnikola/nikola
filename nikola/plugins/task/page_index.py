@@ -41,10 +41,10 @@ class PageIndex(Taxonomy):
     has_hierarchy = True
     include_posts_from_subhierarchies = False
     show_list_as_index = False
-    generate_atom_feeds_for_post_lists = False
     template_for_single_list = "list.tmpl"
     template_for_classification_overview = None
     always_disable_rss = True
+    always_disable_atom = True
     apply_to_posts = False
     apply_to_pages = True
     omit_empty_classifications = True

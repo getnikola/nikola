@@ -643,9 +643,6 @@ class Taxonomy(BasePlugin):
         The template to use for the subcategories list when
         show_list_as_subcategories_list is True.
 
-    generate_atom_feeds_for_post_lists = False:
-        Whether to generate Atom feeds for post lists in case GENERATE_ATOM is set.
-
     template_for_single_list = "tagindex.tmpl":
         The template to use for the post list for one classification.
 
@@ -653,8 +650,11 @@ class Taxonomy(BasePlugin):
         The template to use for the classification overview page.
         Set to None to avoid generating overviews.
 
+    always_disable_atom = False:
+        Whether to always disable Atom feed generation.
+
     always_disable_rss = False:
-        Whether to always disable RSS feed generation
+        Whether to always disable RSS feed generation.
 
     apply_to_posts = True:
         Whether this classification applies to posts.
@@ -698,9 +698,9 @@ class Taxonomy(BasePlugin):
     show_list_as_subcategories_list = False
     show_list_as_index = False
     subcategories_list_template = "taxonomy_list.tmpl"
-    generate_atom_feeds_for_post_lists = False
     template_for_single_list = "tagindex.tmpl"
     template_for_classification_overview = "list.tmpl"
+    always_disable_atom = False
     always_disable_rss = False
     apply_to_posts = True
     apply_to_pages = False
@@ -859,6 +859,10 @@ class Taxonomy(BasePlugin):
     def should_generate_classification_page(self, classification: str, post_list: 'typing.List[nikola.post.Post]', lang: str) -> bool:
         """Only generates list of posts for classification if this function returns True."""
         return True
+
+    def should_generate_atom_for_classification_page(self, classification: str, post_list: 'typing.List[nikola.post.Post]', lang: str) -> bool:
+        """Only generates Atom feed for list of posts for classification if this function returns True."""
+        return self.should_generate_classification_page(classification, post_list, lang)
 
     def should_generate_rss_for_classification_page(self, classification: str, post_list: 'typing.List[nikola.post.Post]', lang: str) -> bool:
         """Only generates RSS feed for list of posts for classification if this function returns True."""

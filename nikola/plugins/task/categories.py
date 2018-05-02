@@ -45,9 +45,9 @@ class ClassifyCategories(Taxonomy):
     include_posts_from_subhierarchies = True
     include_posts_into_hierarchy_root = False
     show_list_as_subcategories_list = False
-    generate_atom_feeds_for_post_lists = True
     template_for_classification_overview = "tags.tmpl"
     always_disable_rss = False
+    always_disable_atom = False
     apply_to_posts = True
     apply_to_pages = False
     minimum_post_count_per_classification_in_overview = 1
