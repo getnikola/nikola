@@ -756,7 +756,6 @@ class Nikola(object):
             else:
                 self.config['CATEGORY_PATH_AS_DEFAULT'] = False
 
-
         # Handle CONTENT_FOOTER and RSS_COPYRIGHT* properly.
         # We provide the arguments to format in CONTENT_FOOTER_FORMATS and RSS_COPYRIGHT_FORMATS.
         self.config['CONTENT_FOOTER'].langformat(self.config['CONTENT_FOOTER_FORMATS'])

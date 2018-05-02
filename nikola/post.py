@@ -257,7 +257,6 @@ class Post(object):
                     category = category.split(os.sep)[0]  # TODO test on Windows
                 meta['category'] = category
 
-
         self.publish_later = False if self.current_time is None else self.date >= self.current_time
 
         is_draft = False
