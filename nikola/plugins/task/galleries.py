@@ -228,7 +228,7 @@ class Galleries(Task, ImageProcessor):
                 context = {}
 
                 # Do we have a metadata file?
-                meta_path, order, captions = self.find_metadata(gallery, lang)
+                meta_path, order, captions, img_metadata = self.find_metadata(gallery, lang)
                 context['meta_path'] = meta_path
                 context['order'] = order
                 context['captions'] = captions
@@ -320,7 +320,8 @@ class Galleries(Task, ImageProcessor):
                             context.copy(),
                             dest_img_list,
                             img_titles,
-                            thumbs))],
+                            thumbs,
+                            img_metadata))],
                     'clean': True,
                     'uptodate': [utils.config_changed({
                         1: self.kw.copy(),
@@ -431,13 +432,15 @@ class Galleries(Task, ImageProcessor):
         we depend on how PyYAML returns the information - which may or may not
         be in the same order as in the file itself. Non-numeric ordering is not
         supported. If no caption is specified, then we return an empty string.
-        Returns a string (l18n'd filename), list (ordering), dict (captions).
+        Returns a string (l18n'd filename), list (ordering), dict (captions),
+        dict (image metadata).
         """
         base_meta_path = os.path.join(gallery, "metadata.yml")
         localized_meta_path = utils.get_translation_candidate(self.site.config,
                                                               base_meta_path, lang)
         order = []
         captions = {}
+        custom_metadata = {}
         used_path = ""
 
         if os.path.isfile(localized_meta_path):
@@ -445,7 +448,7 @@ class Galleries(Task, ImageProcessor):
         elif os.path.isfile(base_meta_path):
             used_path = base_meta_path
         else:
-            return "", [], {}
+            return "", [], {}, {}
 
         self.logger.debug("Using {0} for gallery {1}".format(
             used_path, gallery))
@@ -459,19 +462,19 @@ class Galleries(Task, ImageProcessor):
                 if not img:
                     continue
                 if 'name' in img:
-                    if 'caption' in img and img['caption']:
-                        captions[img['name']] = img['caption']
-                    else:
-                        captions[img['name']] = ""
+                    img_name = img.pop('name')
+                    if 'caption' in img:
+                        captions[img_name] = img.pop('caption')
 
-                    if 'order' in img and img['order']:
-                        order.insert(img['order'], img['name'])
+                    if 'order' in img:
+                        order.insert(img.pop('order'), img_name)
                     else:
-                        order.append(img['name'])
+                        order.append(img_name)
+                    custom_metadata[img_name] = img
                 else:
                     self.logger.error("no 'name:' for ({0}) in {1}".format(
                         img, used_path))
-        return used_path, order, captions
+        return used_path, order, captions, custom_metadata
 
     def parse_index(self, gallery, input_folder, output_folder):
         """Return a Post object if there is an index.txt."""
@@ -625,7 +628,8 @@ class Galleries(Task, ImageProcessor):
             context,
             img_list,
             img_titles,
-            thumbs):
+            thumbs,
+            img_metadata):
         """Build the gallery index."""
         # The photo array needs to be created here, because
         # it relies on thumbnails already being created on
@@ -658,8 +662,9 @@ class Galleries(Task, ImageProcessor):
                     w, h = im.size
                     _image_size_cache[thumb] = w, h
             # Thumbs are files in output, we need URLs
-            photo_info[url_from_path(img)] = {
-                'url': url_from_path(img),
+            url = url_from_path(img)
+            photo_info[url] = {
+                'url': url,
                 'url_thumb': url_from_path(thumb),
                 'title': title,
                 'size': {
@@ -669,6 +674,8 @@ class Galleries(Task, ImageProcessor):
                 'width': w,
                 'height': h
             }
+            if url in img_metadata:
+                photo_info[url].update(img_metadata[url])
         photo_array = []
         if context['order']:
             for entry in context['order']:

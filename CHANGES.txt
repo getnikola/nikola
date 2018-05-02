@@ -29,7 +29,9 @@ Features
   new sites) (Issue #2761)
 * Produce a better error message when a template referenced in another
   template is missing (Issue #3055)
-* Support captioned images and image ordering in galleries (Issue #3017)
+* Support captioned images and image ordering in galleries, as well as
+  arbitrary metadata through a new ``metadata.yml`` file (Issue #3017,
+  Issue #3050, Issue #2837)
 * New ``ATOM_PATH`` setting (Issue #2971)
 * Make ``crumbs`` available to all pages
 * Allowing to customize RSS and Atom feed extensions with

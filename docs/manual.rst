@@ -1869,12 +1869,13 @@ its settings, change the layout, etc.).
 
 Images in galleries may be provided with captions and given a specific
 ordering, by creating a file in the gallery directory called ``metadata.yml``.
-This YAML file should contain a 'name' field for each image in the gallery
+This YAML file should contain a ``name`` field for each image in the gallery
 for which you wish to provide either a caption or specific ordering. You can also
 create localized versions (``metadata.xx.yml``).
 
 Only one ``metadata.yml`` is needed per gallery. Here is an example, showing names,
-captions and ordering.
+captions and ordering. ``caption`` and ``order`` are given special treatment,
+anything else is available to templates, as keys of ``photo_array`` images.
 
 .. code:: yaml
 
@@ -1890,6 +1891,7 @@ captions and ordering.
     ---
     name: waterline-tiles.jpg
     order: 2
+    custom: metadata is supported
     ---
 
 
