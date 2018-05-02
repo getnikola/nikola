@@ -1177,6 +1177,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['url_replacer'] = self.url_replacer
         self._GLOBAL_CONTEXT['sort_posts'] = utils.sort_posts
         self._GLOBAL_CONTEXT['smartjoin'] = utils.smartjoin
+        self._GLOBAL_CONTEXT['colorize_str'] = utils.colorize_str
         self._GLOBAL_CONTEXT['meta_generator_tag'] = self.config.get('META_GENERATOR_TAG')
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
