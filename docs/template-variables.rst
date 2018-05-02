@@ -104,11 +104,9 @@ Name                                Type                                Descript
 ``twitter_card``                    dict                                ``TWITTER_CARD`` setting, defaults to an empty dictionary
 ``url_replacer``                    function                            ``Nikola.url_replacer`` function
 ``url_type``                        str                                 ``URL_TYPE`` setting
-``use_base_tag``                    bool                                ``USE_BASE_TAG`` setting
 ``use_bundles``                     bool                                ``USE_BUNDLES`` setting
 ``use_cdn``                         bool                                ``USE_CDN`` setting
 ``use_katex``                       bool                                ``USE_KATEX`` setting
-``use_open_graph``                  bool                                ``USE_OPEN_GRAPH`` setting, defaults to True
 ``subtheme``                        str?                                ``THEME_REVEAL_CONFIG_SUBTHEME`` setting (only if set — deprecated)
 ``transition``                      str?                                ``THEME_REVEAL_CONFIG_TRANSITION`` setting (only if set — deprecated)
 ==================================  ==================================  ================================================================================

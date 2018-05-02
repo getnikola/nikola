@@ -544,7 +544,6 @@ class Nikola(object):
             'ATOM_FILENAME_BASE': 'index',
             'FEED_TEASERS': True,
             'FEED_PLAIN': False,
-            'FEED_PREVIEWIMAGE': True,
             'FEED_READ_MORE_LINK': DEFAULT_FEED_READ_MORE_LINK,
             'FEED_LINKS_APPEND_QUERY': False,
             'GENERATE_RSS': True,
@@ -564,7 +563,6 @@ class Nikola(object):
             'PAGE_INDEX': False,
             'SECTION_PATH': '',
             'STRIP_INDEXES': True,
-            'SITEMAP_INCLUDE_FILELESS_DIRS': True,
             'TAG_PATH': 'categories',
             'TAG_PAGES_ARE_INDEXES': False,
             'TAG_PAGES_DESCRIPTIONS': {},
@@ -579,14 +577,12 @@ class Nikola(object):
             'THUMBNAIL_SIZE': 180,
             'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}',
             'URL_TYPE': 'rel_path',
-            'USE_BASE_TAG': False,
             'USE_BUNDLES': True,
             'USE_CDN': False,
             'USE_CDN_WARNING': True,
             'USE_REST_DOCINFO_METADATA': False,
             'USE_FILENAME_AS_TITLE': True,
             'USE_KATEX': False,
-            'USE_OPEN_GRAPH': True,
             'USE_SLUGIFY': True,
             'USE_TAG_METADATA': True,
             'TIMEZONE': 'UTC',
@@ -1113,7 +1109,6 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['index_display_post_count'] = self.config[
             'INDEX_DISPLAY_POST_COUNT']
         self._GLOBAL_CONTEXT['index_file'] = self.config['INDEX_FILE']
-        self._GLOBAL_CONTEXT['use_base_tag'] = self.config['USE_BASE_TAG']
         self._GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
         self._GLOBAL_CONTEXT['use_cdn'] = self.config.get("USE_CDN")
         self._GLOBAL_CONTEXT['theme_color'] = self.config.get("THEME_COLOR")
@@ -1150,8 +1145,6 @@ class Nikola(object):
 
         self._GLOBAL_CONTEXT['navigation_links'] = self.config.get('NAVIGATION_LINKS')
 
-        self._GLOBAL_CONTEXT['use_open_graph'] = self.config.get(
-            'USE_OPEN_GRAPH', True)
         self._GLOBAL_CONTEXT['twitter_card'] = self.config.get(
             'TWITTER_CARD', {})
         self._GLOBAL_CONTEXT['hide_sourcelink'] = not self.config.get(
@@ -1679,7 +1672,7 @@ class Nikola(object):
             if feed_url is not None and data:
                 # Massage the post's HTML (unless plain)
                 if not rss_plain:
-                    if self.config["FEED_PREVIEWIMAGE"] and 'previewimage' in post.meta[lang] and post.meta[lang]['previewimage'] not in data:
+                    if 'previewimage' in post.meta[lang] and post.meta[lang]['previewimage'] not in data:
                         data = "<figure><img src=\"{}\"></figure> {}".format(post.meta[lang]['previewimage'], data)
                     # FIXME: this is duplicated with code in Post.text()
                     try:
@@ -2364,7 +2357,7 @@ class Nikola(object):
 
         def atom_post_text(post, text):
             if not self.config["FEED_PLAIN"]:
-                if self.config["FEED_PREVIEWIMAGE"] and 'previewimage' in post.meta[lang] and post.meta[lang]['previewimage'] not in text:
+                if 'previewimage' in post.meta[lang] and post.meta[lang]['previewimage'] not in text:
                     text = "<figure><img src=\"{}\"></figure> {}".format(post.meta[lang]['previewimage'], text)
 
                 # FIXME: this is duplicated with code in Post.text() and generic_rss_renderer
@@ -2611,7 +2604,6 @@ class Nikola(object):
         kw['feed_links_append_query'] = self.config["FEED_LINKS_APPEND_QUERY"]
         kw['feed_teasers'] = self.config['FEED_TEASERS']
         kw['feed_plain'] = self.config['FEED_PLAIN']
-        kw['feed_previewimage'] = self.config['FEED_PREVIEWIMAGE']
 
         if additional_dependencies is None:
             additional_dependencies = []
