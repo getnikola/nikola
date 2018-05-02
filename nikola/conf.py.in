@@ -518,9 +518,16 @@ FRONT_INDEX_HEADER = {
 # RSS_PATH = ""
 
 # Final location for the blog main Atom feed is:
-# output / TRANSLATION[lang] / ATOM_PATH / index.atom
+# output / TRANSLATION[lang] / ATOM_PATH / ATOM_FILENAME_BASE ATOM_EXTENSION
 # (translatable)
 # ATOM_PATH = ""
+
+# Atom filename base (without extension); used for indexes.
+# (translatable)
+ATOM_FILENAME_BASE = "feed"
+
+# Extension for Atom feed files
+# ATOM_EXTENSION = ".atom"
 
 # Slug the Tag URL. Easier for users to type, special characters are
 # often removed or replaced as well.
@@ -1053,9 +1060,6 @@ MARKDOWN_EXTENSIONS = ['markdown.extensions.fenced_code', 'markdown.extensions.c
 # between each other. Old Atom feeds with no changes are marked as archived.
 # GENERATE_ATOM = False
 
-# Extension for Atom feed files
-# ATOM_EXTENSION = ".atom"
-
 # Only include teasers in Atom and RSS feeds. Disabling include the full
 # content. Defaults to True.
 # FEED_TEASERS = True
@@ -1213,10 +1217,10 @@ MARKDOWN_EXTENSIONS = ['markdown.extensions.fenced_code', 'markdown.extensions.c
 # Plugins you don't want to use. Be careful :-)
 # DISABLED_PLUGINS = ["render_galleries"]
 
-# Special settings to disable only parts of the indexes plugin (to allow RSS
-# but no blog indexes, or to allow blog indexes and Atom but no site-wide RSS).
+# Special settings to disable only parts of the indexes plugin.
 # Use with care.
 # DISABLE_INDEXES = False
+# DISABLE_MAIN_ATOM_FEED = False
 # DISABLE_MAIN_RSS_FEED = False
 
 # Add the absolute paths to directories containing plugins to use them.
@@ -1271,3 +1275,12 @@ GLOBAL_CONTEXT = {}
 # GLOBAL_CONTEXT as parameter when the template is about to be
 # rendered
 GLOBAL_CONTEXT_FILLER = []
+
+# If set to True, the tags 'draft', 'mathjax' and 'private' have special
+# meaning. If set to False, these tags are handled like regular tags.
+USE_TAG_METADATA = False
+
+# If set to True, a warning is issued if one of the 'draft', 'mathjax'
+# and 'private' tags are found in a post. Useful for checking that
+# migration was successful.
+WARN_ABOUT_TAG_METADATA = False

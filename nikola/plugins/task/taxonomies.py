@@ -219,16 +219,14 @@ class RenderTaxonomies(Task):
         return utils.apply_filters(task, kw['filters'])
 
     def _generate_classification_page_as_index(self, taxonomy, classification, filtered_posts, context, kw, lang):
-        """Render a sort of index page collection using only this classification's posts."""
+        """Render an index page collection using only this classification's posts."""
         kind = taxonomy.classification_name
 
         def page_link(i, displayed_i, num_pages, force_addition, extension=None):
-            feed = "{}_atom" if extension == ".atom" else "{}"
-            return self.site.link(feed.format(kind), classification, lang, alternative_path=force_addition, page=i)
+            return self.site.link(kind, classification, lang, alternative_path=force_addition, page=i)
 
         def page_path(i, displayed_i, num_pages, force_addition, extension=None):
-            feed = "{}_atom" if extension == ".atom" else "{}"
-            return self.site.path(feed.format(kind), classification, lang, alternative_path=force_addition, page=i)
+            return self.site.path(kind, classification, lang, alternative_path=force_addition, page=i)
 
         context = copy(context)
         context["kind"] = kind
@@ -238,23 +236,14 @@ class RenderTaxonomies(Task):
 
         yield self.site.generic_index_renderer(lang, filtered_posts, context['title'], template_name, context, kw, str(self.name), page_link, page_path)
 
-    def _generate_classification_page_as_list_atom(self, taxonomy, classification, filtered_posts, context, kw, lang):
+    def _generate_classification_page_as_atom(self, taxonomy, classification, filtered_posts, context, kw, lang):
         """Generate atom feeds for classification lists."""
         kind = taxonomy.classification_name
-        context = copy(context)
-        context['feedlink'] = self.site.abs_link(self.site.path('{}_atom'.format(kind), classification, lang))
-        feed_path = os.path.join(self.site.config['OUTPUT_FOLDER'], self.site.path('{}_atom'.format(kind), classification, lang))
 
-        task = {
-            'basename': str(self.name),
-            'name': feed_path,
-            'targets': [feed_path],
-            'actions': [(self.site.atom_feed_renderer, (lang, filtered_posts, feed_path, kw['filters'], context))],
-            'clean': True,
-            'uptodate': [utils.config_changed(kw, 'nikola.plugins.task.taxonomies:atom')],
-            'task_dep': ['render_posts'],
-        }
-        return task
+        context = copy(context)
+        context["kind"] = kind
+
+        yield self.site.generic_atom_renderer(lang, filtered_posts, context, kw, str(self.name), classification, kind)
 
     def _generate_classification_page_as_list(self, taxonomy, classification, filtered_posts, context, kw, lang):
         """Render a single flat link list with this classification's posts."""
@@ -269,15 +258,10 @@ class RenderTaxonomies(Task):
             context["posts"] = filtered_posts
         if "pagekind" not in context:
             context["pagekind"] = ["list", "tag_page"]
-        if not (taxonomy.generate_atom_feeds_for_post_lists and self.site.config['GENERATE_ATOM']):
-            context["generate_atom"] = False
         task = self.site.generic_post_list_renderer(lang, filtered_posts, output_name, template_name, kw['filters'], context)
         task['uptodate'] = task['uptodate'] + [utils.config_changed(kw, 'nikola.plugins.task.taxonomies:list')]
         task['basename'] = str(self.name)
         yield task
-
-        if taxonomy.generate_atom_feeds_for_post_lists and self.site.config['GENERATE_ATOM']:
-            yield self._generate_classification_page_as_list_atom(taxonomy, classification, filtered_posts, context, kw, lang)
 
     def _filter_list(self, post_list, lang):
         """Return only the posts which should be shown for this language."""
@@ -315,10 +299,10 @@ class RenderTaxonomies(Task):
         task['basename'] = self.name
         return task
 
-    def _generate_classification_page(self, taxonomy, classification, filtered_posts, generate_list, generate_rss, lang, post_lists_per_lang, classification_set_per_lang=None):
+    def _generate_classification_page(self, taxonomy, classification, filtered_posts, generate_list, generate_rss, generate_atom, lang, post_lists_per_lang, classification_set_per_lang=None):
         """Render index or post list and associated feeds per classification."""
         # Should we create this list?
-        if not generate_list and not generate_rss:
+        if not any((generate_list, generate_rss, generate_atom)):
             return
         # Get data
         node = None
@@ -332,6 +316,7 @@ class RenderTaxonomies(Task):
         kw["site_url"] = self.site.config['SITE_URL']
         kw["blog_title"] = self.site.config['BLOG_TITLE']
         kw["generate_rss"] = self.site.config['GENERATE_RSS']
+        kw["generate_atom"] = self.site.config['GENERATE_ATOM']
         kw["feed_teasers"] = self.site.config["FEED_TEASERS"]
         kw["feed_plain"] = self.site.config["FEED_PLAIN"]
         kw["feed_links_append_query"] = self.site.config["FEED_LINKS_APPEND_QUERY"]
@@ -397,6 +382,11 @@ class RenderTaxonomies(Task):
         # Generate RSS feed
         if generate_rss and kw["generate_rss"] and not taxonomy.always_disable_rss:
             yield self._generate_classification_page_as_rss(taxonomy, classification, filtered_posts, context['title'], context.get("description"), kw, lang)
+
+        # Generate Atom feed
+        if generate_atom and kw["generate_atom"] and not taxonomy.always_disable_atom:
+            yield self._generate_classification_page_as_atom(taxonomy, classification, filtered_posts, context, kw, lang)
+
         # Render HTML
         if generate_list and taxonomy.show_list_as_index:
             yield self._generate_classification_page_as_index(taxonomy, classification, filtered_posts, context, kw, lang)
@@ -428,13 +418,13 @@ class RenderTaxonomies(Task):
                     # Filter list
                     filtered_posts = self._filter_list(posts, lang)
                     if len(filtered_posts) == 0 and taxonomy.omit_empty_classifications:
-                        generate_list = False
-                        generate_rss = False
+                        generate_list = generate_rss = generate_atom = False
                     else:
                         # Should we create this list?
                         generate_list = taxonomy.should_generate_classification_page(classification, filtered_posts, lang)
                         generate_rss = taxonomy.should_generate_rss_for_classification_page(classification, filtered_posts, lang)
-                    result[classification] = (filtered_posts, generate_list, generate_rss)
+                        generate_atom = taxonomy.should_generate_atom_for_classification_page(classification, filtered_posts, lang)
+                    result[classification] = (filtered_posts, generate_list, generate_rss, generate_atom)
                 plpl[lang] = result
             post_lists_per_lang[taxonomy.classification_name] = plpl
 
@@ -457,9 +447,9 @@ class RenderTaxonomies(Task):
                             yield task
 
                 # Process classifications
-                for classification, (filtered_posts, generate_list, generate_rss) in post_lists_per_lang[taxonomy.classification_name][lang].items():
+                for classification, (filtered_posts, generate_list, generate_rss, generate_atom) in post_lists_per_lang[taxonomy.classification_name][lang].items():
                     for task in self._generate_classification_page(taxonomy, classification, filtered_posts,
-                                                                   generate_list, generate_rss, lang,
+                                                                   generate_list, generate_rss, generate_atom, lang,
                                                                    post_lists_per_lang[taxonomy.classification_name],
                                                                    classification_set_per_lang.get(taxonomy.classification_name)):
                         yield task
