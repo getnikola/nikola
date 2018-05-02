@@ -45,25 +45,25 @@
 {% endmacro %}
 
 {% macro math_scripts_ifpost(post) %}
-    {% if post.is_mathjax %}
+    {% if post.has_math %}
         {{ math_scripts() }}
     {% endif %}
 {% endmacro %}
 
 {% macro math_scripts_ifposts(posts) %}
-    {% if posts|selectattr("is_mathjax")|list %}
+    {% if posts|selectattr("has_math")|list %}
         {{ math_scripts() }}
     {% endif %}
 {% endmacro %}
 
 {% macro math_styles_ifpost(post) %}
-    {% if post.is_mathjax %}
+    {% if post.has_math %}
         {{ math_styles() }}
     {% endif %}
 {% endmacro %}
 
 {% macro math_styles_ifposts(posts) %}
-    {% if posts|selectattr("is_mathjax")|list %}
+    {% if posts|selectattr("has_math")|list %}
         {{ math_styles() }}
     {% endif %}
 {% endmacro %}
