@@ -750,11 +750,8 @@ class Nikola(object):
 
             self.config['CATEGORY_DESTPATH_NAMES'] = self.config.get('POSTS_SECTION_NAME', {})
 
-            if self.config.get('POSTS_SECTION_FROM_META') is False:
-                utils.LOGGER.info("Setting CATEGORY_DESTPATH_AS_DEFAULT = True")
-                self.config['CATEGORY_DESTPATH_AS_DEFAULT'] = True
-            else:
-                self.config['CATEGORY_DESTPATH_AS_DEFAULT'] = False
+            self.config['CATEGORY_DESTPATH_AS_DEFAULT'] = not self.config.get('POSTS_SECTION_FROM_META')
+            utils.LOGGER.info("Setting CATEGORY_DESTPATH_AS_DEFAULT = " + str(self.config['CATEGORY_DESTPATH_AS_DEFAULT']))
 
         # Handle CONTENT_FOOTER and RSS_COPYRIGHT* properly.
         # We provide the arguments to format in CONTENT_FOOTER_FORMATS and RSS_COPYRIGHT_FORMATS.
