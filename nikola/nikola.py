@@ -430,7 +430,7 @@ class Nikola(object):
             'CATEGORY_OUTPUT_FLAT_HIERARCHY': False,
             'CATEGORY_DESTPATH_AS_DEFAULT': False,
             'CATEGORY_DESTPATH_TRIM_PREFIX': False,
-            'CATEGORY_DESTPATH_FIRST_DIRECTORY_ONLY': False,
+            'CATEGORY_DESTPATH_FIRST_DIRECTORY_ONLY': True,
             'CATEGORY_DESTPATH_NAMES': {},
             'CATEGORY_TRANSLATIONS': [],
             'CATEGORY_TRANSLATIONS_ADD_DEFAULTS': False,
