@@ -253,7 +253,7 @@ class Post(object):
                     category = self.folder_relative
                 else:
                     category = self.folders[lang]
-                category.replace(os.sep, '/')  # TODO: does Windows need this?
+                category = category.replace(os.sep, '/')
                 if self.config['CATEGORY_DESTPATH_FIRST_DIRECTORY_ONLY']:
                     category = category.split('/')[0]
                 meta['category'] = category
