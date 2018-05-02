@@ -1,0 +1,13 @@
+[Core]
+name = subtheme
+module = subtheme
+
+[Documentation]
+author = Roberto Alsina
+version = 1.1
+website = https://getnikola.com/
+description = Given a swatch name and a parent theme, creates a custom subtheme.
+
+[Nikola]
+PluginCategory = Command
+
