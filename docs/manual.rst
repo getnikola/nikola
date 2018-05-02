@@ -380,10 +380,6 @@ previewimage
 
     Note that the default themes do not display this image.
 
-section
-    Section for the post (instead of inferring from output path; requires
-    ``POSTS_SECTION_FROM_META`` setting)
-
 template
     Change the template used to render this page/post specific page. That
     template needs to either be part of the theme, or be placed in a
@@ -953,13 +949,7 @@ lead to rebuilding all index pages, which might be a problem for larger blogs
 Post taxonomy
 ~~~~~~~~~~~~~
 
-There are three taxonomy systems in Nikola, or three ways to organize posts. Those are:
-
-* tags
-* categories
-* sections
-
-Tags and categories are visible on the *Tags and Categories* page, by default available at ``/categories/``. Each tag/category/section has an index page and feeds.
+There are two taxonomy systems in Nikola, or two ways to organize posts. Those are tags and categories. They are visible on the *Tags and Categories* page, by default available at ``/categories/``. Each tag/category has an index page and feeds.
 
 Tags
 ````
@@ -979,44 +969,29 @@ You can also generate a tag cloud with the `tx3_tag_cloud <https://plugins.getni
 Categories
 ``````````
 
-The next unit for organizing your content are categories. A post can have only one category, specified with the ``category`` meta tag. Those are *deprecated* and replaced by sections. They are displayed alongside tags. You can have categories and tags with the same name (categories’ RSS and HTML files are prefixed with ``cat_`` by default).
+The next unit for organizing your content are categories. A post can have only one category, specified with the ``category`` meta tag. They are displayed alongside tags. You can have categories and tags with the same name (categories’ RSS and HTML files are prefixed with ``cat_`` by default).
 
-Sections
-````````
+Categories are handy to organize different parts of your blog, parts that are about different topics. Unlike tags, which you should have tens (hundreds?) of, the list of categories should be shorter.
 
-Sections are the newest feature for taxonomy, and are not supported in themes by default. There are two ways to assign a section to a post:
+Nikola v7 used to support a third taxonomy, called sections. Those have been removed, but all the functionality can be recreated by using the ``CATEGORY_DESTPATH`` settings.
 
-* through the directory structure (first directory is the section name, eg. ``/code/my-project/`` is in the `code` category) — your POSTS should have those directories as the second element, eg.
 
-  .. code:: python
-
-     POSTS = (
-         ('posts/code/*.rst', 'code', 'posts'),
-     )
-
-* through the ``section`` meta field (requires ``POSTS_SECTION_FROM_META`` setting; recommended especially for existing sites which should not change the directory hierarchy)
-
-Sections are meant to be used to organize different parts of your blog, parts that are about different topics. Unlike tags, which you should have tens (hundreds?) of, you should ideally have less than 10 sections (though it depends on what your blog needs; there is no hard limit).
-
-With sections, you can also use some custom styling — if you install ``husl``, you can use ``post.section_color()`` from within templates to get a distinct color for the section of a post, which you can then use in some inline CSS for the section name.
-
-You can find some examples and more information in the `original announcement
-<https://getnikola.com/blog/new-feature-in-nikola-sections.html>`_
-
-Configuring tags, categories and sections
-`````````````````````````````````````````
+Configuring tags and categories
+```````````````````````````````
 
 There are multiple configuration variables dedicated to each of the three taxonomies. You can set:
 
 * ``TAG_PATH``, ``TAGS_INDEX_PATH``, ``CATEGORY_PATH``, ``CATEGORY_PREFIX`` to configure paths used for tags and categories
-* ``POST_SECTION_NAME``, ``POST_SECTION_TITLE`, `TAG_PAGES_TITLES``, ``CATEGORY_TITLES`` to set friendly section names and titles for index pages
-* ``POST_SECTION_DESCRIPTIONS``, `TAG_PAGES_DESCRIPTIONS``, ``CATEGORY_DESCRIPTIONS`` to set descriptions for each of the items
-* ``POST_SECTION_COLORS`` to customize colors for each section
+*  `TAG_PAGES_TITLES``, ``CATEGORY_TITLES`` to set titles and descriptions for index pages
+* ``TAG_PAGES_DESCRIPTIONS``, ``CATEGORY_DESCRIPTIONS`` to set descriptions for each of the items
 * ``CATEGORY_ALLOW_HIERARCHIES`` and ``CATEGORY_OUTPUT_FLAT_HIERARCHIES`` to allow hierarchical categories
 * ``TAG_PAGES_ARE_INDEXES`` and ``CATEGORY_PAGES_ARE_INDEXES`` to display full-size indexes instead of simple post lists
 * ``WRITE_TAG_CLOUDS`` to enable/disable generating tag cloud files
 * ``HIDDEN_TAGS``. ``HIDDEN_CATEGORIES`` to make some tags/categories invisible in lists
-* ``POSTS_SECTION_FROM_META`` to use ``.. section:`` in posts instead of inferring paths from paths
+* ``CATEGORY_DESTPATH_AS_DEFAULT`` to use the destination path as the category if none is specified in the post
+* ``CATEGORY_DESTPATH_TRIM_PREFIX`` to trim the prefix that comes from ``POSTS`` for the destination path
+* ``CATEGORY_DESTPATH_FIRST_DIRECTORY`` to only use the first directory name for the defaulted category
+* ``CATEGORY_DESTPATH_NAMES`` to specify friendly names for defaulted categories
 
 What if I don’t want a blog?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2717,10 +2692,6 @@ The following options are recognized:
 
 * ``categories`` : string [, string...]
       Filter posts to show only posts having one of the ``categories``.
-      Defaults to None.
-
-* ``sections`` : string [, string...]
-      Filter posts to show only posts having one of the ``sections``.
       Defaults to None.
 
 * ``slugs`` : string [, string...]

@@ -428,10 +428,10 @@ class Nikola(object):
             'CATEGORY_PREFIX': 'cat_',
             'CATEGORY_ALLOW_HIERARCHIES': False,
             'CATEGORY_OUTPUT_FLAT_HIERARCHY': False,
-            'CATEGORY_PATH_AS_DEFAULT': False,
-            'CATEGORY_PATH_TRIM_PREFIX': False,
-            'CATEGORY_PATH_FIRST_DIRECTORY_ONLY': False,
-            'CATEGORY_PATH_NAMES': {},
+            'CATEGORY_DESTPATH_AS_DEFAULT': False,
+            'CATEGORY_DESTPATH_TRIM_PREFIX': False,
+            'CATEGORY_DESTPATH_FIRST_DIRECTORY_ONLY': False,
+            'CATEGORY_DESTPATH_NAMES': {},
             'CATEGORY_TRANSLATIONS': [],
             'CATEGORY_TRANSLATIONS_ADD_DEFAULTS': False,
             'CODE_COLOR_SCHEME': 'default',
@@ -644,7 +644,7 @@ class Nikola(object):
                                       'INDEX_READ_MORE_LINK',
                                       'FEED_READ_MORE_LINK',
                                       'INDEXES_TITLE',
-                                      'CATEGORY_PATH_NAMES',
+                                      'CATEGORY_DESTPATH_NAMES',
                                       'INDEXES_PAGES',
                                       'INDEXES_PRETTY_PAGE_URL',
                                       # PATH options (Issue #1914)
@@ -748,13 +748,13 @@ class Nikola(object):
                     self.config[section_config].update(self.config[cat_config])
                     self.config[cat_config] = self.config[section_config]
 
-            self.config['CATEGORY_PATH_NAMES'] = self.config.get('POSTS_SECTION_NAME', {})
+            self.config['CATEGORY_DESTPATH_NAMES'] = self.config.get('POSTS_SECTION_NAME', {})
 
             if self.config.get('POSTS_SECTION_FROM_META') is False:
-                utils.LOGGER.info("Setting CATEGORY_PATH_AS_DEFAULT = True")
-                self.config['CATEGORY_PATH_AS_DEFAULT'] = True
+                utils.LOGGER.info("Setting CATEGORY_DESTPATH_AS_DEFAULT = True")
+                self.config['CATEGORY_DESTPATH_AS_DEFAULT'] = True
             else:
-                self.config['CATEGORY_PATH_AS_DEFAULT'] = False
+                self.config['CATEGORY_DESTPATH_AS_DEFAULT'] = False
 
         # Handle CONTENT_FOOTER and RSS_COPYRIGHT* properly.
         # We provide the arguments to format in CONTENT_FOOTER_FORMATS and RSS_COPYRIGHT_FORMATS.

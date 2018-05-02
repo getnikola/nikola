@@ -368,20 +368,21 @@ HIDDEN_CATEGORIES = []
 # CATEGORY_TRANSLATIONS_ADD_DEFAULTS = True
 
 # If no category is specified in a post, the destination path of the post
-# can be used in its place. This replaces the
-# CATEGORY_PATH_AS_DEFAULT = False
+# can be used in its place. This replaces the sections feature. Using
+# category hierarchies is recommended.
+# CATEGORY_DESTPATH_AS_DEFAULT = False
 
 # If True, the prefix will be trimmed from the category name, eg. if the
 # POSTS destination is "foo/bar", and the path is "foo/bar/baz/quux",
 # the category will be "baz/quux" (or "baz" if only the first directory is considered).
 # Note that prefixes coming from translations are always ignored.
-# CATEGORY_PATH_TRIM_PREFIX = False
+# CATEGORY_DESTPATH_TRIM_PREFIX = False
 
 # If True, only the first directory of a path will be used.
-# CATEGORY_PATH_FIRST_DIRECTORY_ONLY = True
+# CATEGORY_DESTPATH_FIRST_DIRECTORY_ONLY = True
 
 # Map paths to prettier category names.
-# CATEGORY_PATH_NAMES = {
+# CATEGORY_DESTPATH_NAMES = {
 #    DEFAULT_LANG: {
 #        'webdev': 'Web Development',
 #        'random': 'Odds and Ends',

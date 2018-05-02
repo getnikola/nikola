@@ -247,14 +247,15 @@ class Post(object):
                     meta['category'] = meta['section']
                     LOGGER.notice("Post {0} uses 'section' metadata, setting its value to 'category'".format(source_path))
 
-            # Handle CATEGORY_PATH_AS_DEFAULT
-            if 'category' not in meta and self.config['CATEGORY_PATH_AS_DEFAULT']:
-                if self.config['CATEGORY_PATH_TRIM_PREFIX']:
+            # Handle CATEGORY_DESTPATH_AS_DEFAULT
+            if 'category' not in meta and self.config['CATEGORY_DESTPATH_AS_DEFAULT']:
+                if self.config['CATEGORY_DESTPATH_TRIM_PREFIX']:
                     category = self.folder_relative
                 else:
                     category = self.folders[lang]
-                if self.config['CATEGORY_PATH_FIRST_DIRECTORY_ONLY']:
-                    category = category.split(os.sep)[0]  # TODO test on Windows
+                category.replace(os.sep, '/')  # TODO: does Windows need this?
+                if self.config['CATEGORY_DESTPATH_FIRST_DIRECTORY_ONLY']:
+                    category = category.split('/')[0]
                 meta['category'] = category
 
         self.publish_later = False if self.current_time is None else self.date >= self.current_time
