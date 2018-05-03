@@ -992,6 +992,7 @@ There are multiple configuration variables dedicated to each of the three taxono
 * ``CATEGORY_DESTPATH_TRIM_PREFIX`` to trim the prefix that comes from ``POSTS`` for the destination path
 * ``CATEGORY_DESTPATH_FIRST_DIRECTORY`` to only use the first directory name for the defaulted category
 * ``CATEGORY_DESTPATH_NAMES`` to specify friendly names for defaulted categories
+* ``CATEGORY_PAGES_FOLLOW_DESTPATH`` to put category pages next to their related posts (via destpath)
 
 What if I don’t want a blog?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~

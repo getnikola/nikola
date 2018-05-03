@@ -123,7 +123,27 @@ link://category_rss/dogs => /categories/dogs.xml""",
 
     def get_path(self, classification, lang, dest_type='page'):
         """Return a path for the given classification."""
-        return [_f for _f in [self.site.config['CATEGORY_PATH'](lang)] if _f] + self.slugify_category_name(classification, lang), 'auto'
+        cat_string = '/'.join(classification)
+        if self.site.config['CATEGORY_PAGES_FOLLOW_DESTPATH']:
+            base_dir = None
+            sub_dir = []
+            for post in self.site.posts_per_category[cat_string]:
+                if post.category_from_destpath:
+                    if not self.site.config['CATEGORY_DESTPATH_FIRST_DIRECTORY_ONLY']:
+                        base_dir = post.folders[lang]
+                    elif post.folder_relative == '.':
+                        base_dir = post.folder_base(lang)
+                    else:
+                        base_dir = post.folder_base(lang) + '/' + post.folder_relative
+                    break
+            # fallback: first POSTS entry + classification
+            if base_dir is None:
+                base_dir = self.site.config['POSTS'][0][1]
+                sub_dir = [self.slugify_tag_name(part, lang) for part in classification]
+            return [_f for _f in ([base_dir] + sub_dir) if _f], 'auto'
+        else:
+            return [_f for _f in [self.site.config['CATEGORY_PATH'](lang)] if _f] + self.slugify_category_name(
+                classification, lang), 'auto'
 
     def extract_hierarchy(self, classification):
         """Given a classification, return a list of parts in the hierarchy."""

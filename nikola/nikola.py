@@ -432,6 +432,7 @@ class Nikola(object):
             'CATEGORY_DESTPATH_TRIM_PREFIX': False,
             'CATEGORY_DESTPATH_FIRST_DIRECTORY_ONLY': True,
             'CATEGORY_DESTPATH_NAMES': {},
+            'CATEGORY_PAGES_FOLLOW_DESTPATH': False,
             'CATEGORY_TRANSLATIONS': [],
             'CATEGORY_TRANSLATIONS_ADD_DEFAULTS': False,
             'CODE_COLOR_SCHEME': 'default',
@@ -752,6 +753,11 @@ class Nikola(object):
 
             self.config['CATEGORY_DESTPATH_AS_DEFAULT'] = not self.config.get('POSTS_SECTION_FROM_META')
             utils.LOGGER.info("Setting CATEGORY_DESTPATH_AS_DEFAULT = " + str(self.config['CATEGORY_DESTPATH_AS_DEFAULT']))
+
+        if self.config.get('CATEGORY_PAGES_FOLLOW_DESTPATH') and (not self.config.get('CATEGORY_ALLOW_HIERARCHIES') or self.config.get('CATEGORY_OUTPUT_FLAT_HIERARCHY')):
+            utils.LOGGER.warn('CATEGORY_PAGES_FOLLOW_DESTPATH requires CATEGORY_ALLOW_HIERARCHIES = True, CATEGORY_OUTPUT_FLAT_HIERARCHY = False.')
+            self.config['CATEGORY_ALLOW_HIERARCHIES'] = True
+            self.config['CATEGORY_OUTPUT_FLAT_HIERARCHY'] = False
 
         # Handle CONTENT_FOOTER and RSS_COPYRIGHT* properly.
         # We provide the arguments to format in CONTENT_FOOTER_FORMATS and RSS_COPYRIGHT_FORMATS.

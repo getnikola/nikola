@@ -249,6 +249,7 @@ class Post(object):
 
             # Handle CATEGORY_DESTPATH_AS_DEFAULT
             if 'category' not in meta and self.config['CATEGORY_DESTPATH_AS_DEFAULT']:
+                self.category_from_destpath = True
                 if self.config['CATEGORY_DESTPATH_TRIM_PREFIX'] and self.folder_relative != '.':
                     category = self.folder_relative
                 else:
@@ -257,6 +258,8 @@ class Post(object):
                 if self.config['CATEGORY_DESTPATH_FIRST_DIRECTORY_ONLY']:
                     category = category.split('/')[0]
                 meta['category'] = self.config['CATEGORY_DESTPATH_NAMES'](lang).get(category, category)
+            else:
+                self.category_from_destpath = False
 
         self.publish_later = False if self.current_time is None else self.date >= self.current_time
 

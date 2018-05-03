@@ -389,6 +389,14 @@ HIDDEN_CATEGORIES = []
 #    },
 # }
 
+# By default, category indexes will appear in CATEGORY_PATH and use
+# CATEGORY_PREFIX. If this is enabled, those settings will be ignored (except
+# for the index) and instead, they will follow destination paths (eg. category
+# 'foo' might appear in 'posts/foo'). If the category does not come from a
+# destpath, first entry in POSTS followed by the category name will be used.
+# For this setting, category hierarchies are required and cannot be flattened.
+# CATEGORY_PAGES_FOLLOW_DESTPATH = False
+
 # If ENABLE_AUTHOR_PAGES is set to True and there is more than one
 # author, author pages are generated.
 # ENABLE_AUTHOR_PAGES = True
