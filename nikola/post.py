@@ -256,7 +256,7 @@ class Post(object):
                 category = category.replace(os.sep, '/')
                 if self.config['CATEGORY_DESTPATH_FIRST_DIRECTORY_ONLY']:
                     category = category.split('/')[0]
-                meta['category'] = category
+                meta['category'] = self.config['CATEGORY_DESTPATH_NAMES'](lang).get(category, category)
 
         self.publish_later = False if self.current_time is None else self.date >= self.current_time
 
