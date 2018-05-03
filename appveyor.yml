@@ -6,15 +6,16 @@ environment:
 init:
   - "ECHO %PYTHON%"
   - ps: "ls C:/Python*"
+  - "set path=%PYTHON%/Scripts;%path%"
+  - "%PYTHON%/python.exe --version"
+  - "%PYTHON%/Scripts/pip.exe --version"
+
 install:
   - "%PYTHON%/python.exe -m pip install --upgrade-strategy eager -U pip setuptools wheel"
   - "%PYTHON%/python.exe -m pip install --upgrade-strategy eager -Ur requirements-extras.txt pytest coverage pytest-cov mock freezegun"
   - "%PYTHON%/python.exe -m pip install ."
 
 test_script:
-  - "set path=%PYTHON%/Scripts;%path%"
-  - "%PYTHON%/python.exe --version"
-  - "%PYTHON%/Scripts/pip.exe --version"
   - "py.test tests/"
   - "nikola"
   - "nikola help"
