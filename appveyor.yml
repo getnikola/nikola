@@ -7,9 +7,9 @@ init:
   - "ECHO %PYTHON%"
   - ps: "ls C:/Python*"
 install:
-  - "%PYTHON%/python.exe -m pip install -U pip setuptools"
-  - "%PYTHON%/Scripts/pip.exe install -r requirements-extras.txt pytest coverage pytest-cov mock freezegun"
-  - "%PYTHON%/Scripts/pip.exe install ."
+  - "%PYTHON%/python.exe -m pip install --upgrade-strategy eager -U pip setuptools wheel"
+  - "%PYTHON%/python.exe -m pip install --upgrade-strategy eager -Ur requirements-extras.txt pytest coverage pytest-cov mock freezegun"
+  - "%PYTHON%/python.exe -m pip install ."
 
 test_script:
   - "set path=%PYTHON%/Scripts;%path%"
