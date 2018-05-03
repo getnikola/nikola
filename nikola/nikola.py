@@ -750,6 +750,8 @@ class Nikola(object):
                     self.config[cat_config] = self.config[section_config]
 
             self.config['CATEGORY_DESTPATH_NAMES'] = self.config.get('POSTS_SECTION_NAME', {})
+            # Need to mark this translatable manually.
+            self.config['CATEGORY_DESTPATH_NAMES'] = utils.TranslatableSetting('CATEGORY_DESTPATH_NAMES', self.config['CATEGORY_DESTPATH_NAMES'], self.config['TRANSLATIONS'])
 
             self.config['CATEGORY_DESTPATH_AS_DEFAULT'] = not self.config.get('POSTS_SECTION_FROM_META')
             utils.LOGGER.info("Setting CATEGORY_DESTPATH_AS_DEFAULT = " + str(self.config['CATEGORY_DESTPATH_AS_DEFAULT']))

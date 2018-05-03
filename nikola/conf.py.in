@@ -381,7 +381,7 @@ HIDDEN_CATEGORIES = []
 # If True, only the first directory of a path will be used.
 # CATEGORY_DESTPATH_FIRST_DIRECTORY_ONLY = True
 
-# Map paths to prettier category names.
+# Map paths to prettier category names. (translatable)
 # CATEGORY_DESTPATH_NAMES = {
 #    DEFAULT_LANG: {
 #        'webdev': 'Web Development',
