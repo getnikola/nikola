@@ -27,6 +27,7 @@
 """Render the category pages and feeds."""
 
 
+import os
 from nikola.plugin_categories import Taxonomy
 from nikola import utils, hierarchy_utils
 
@@ -134,13 +135,14 @@ link://category_rss/dogs => /categories/dogs.xml""",
                     elif post.folder_relative == '.':
                         base_dir = post.folder_base(lang)
                     else:
-                        base_dir = post.folder_base(lang) + '/' + post.folder_relative
+                        base_dir = post.folder_base(lang) + os.sep + post.folder_relative
                     break
             # fallback: first POSTS entry + classification
             if base_dir is None:
                 base_dir = self.site.config['POSTS'][0][1]
                 sub_dir = [self.slugify_tag_name(part, lang) for part in classification]
-            return [_f for _f in ([base_dir] + sub_dir) if _f], 'auto'
+            base_dir_list = base_dir.split(os.sep)
+            return [_f for _f in (base_dir_list + sub_dir) if _f], 'auto'
         else:
             return [_f for _f in [self.site.config['CATEGORY_PATH'](lang)] if _f] + self.slugify_category_name(
                 classification, lang), 'auto'
