@@ -1262,6 +1262,15 @@ MARKDOWN_EXTENSIONS = ['markdown.extensions.fenced_code', 'markdown.extensions.c
 # sometimes crash Nikola, your web server, or eat your cat.
 # USE_SLUGIFY = True
 
+# If set to True, the tags 'draft', 'mathjax' and 'private' have special
+# meaning. If set to False, these tags are handled like regular tags.
+USE_TAG_METADATA = False
+
+# If set to True, a warning is issued if one of the 'draft', 'mathjax'
+# and 'private' tags are found in a post. Useful for checking that
+# migration was successful.
+WARN_ABOUT_TAG_METADATA = False
+
 # Templates will use those filters, along with the defaults.
 # Consult your engine's documentation on filters if you need help defining
 # those.
@@ -1275,12 +1284,3 @@ GLOBAL_CONTEXT = {}
 # GLOBAL_CONTEXT as parameter when the template is about to be
 # rendered
 GLOBAL_CONTEXT_FILLER = []
-
-# If set to True, the tags 'draft', 'mathjax' and 'private' have special
-# meaning. If set to False, these tags are handled like regular tags.
-USE_TAG_METADATA = False
-
-# If set to True, a warning is issued if one of the 'draft', 'mathjax'
-# and 'private' tags are found in a post. Useful for checking that
-# migration was successful.
-WARN_ABOUT_TAG_METADATA = False
