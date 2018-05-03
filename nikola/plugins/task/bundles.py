@@ -46,7 +46,7 @@ class BuildBundles(LateTask):
     def set_site(self, site):
         """Set Nikola site."""
         super(BuildBundles, self).set_site(site)
-        if webassets is None and site.config['USE_BUNDLES']:
+        if webassets is None and site.configured and site.config['USE_BUNDLES']:
             utils.req_missing(['webassets'], 'USE_BUNDLES', optional=True)
             self.logger.warn('Setting USE_BUNDLES to False.')
             site.config['USE_BUNDLES'] = False
