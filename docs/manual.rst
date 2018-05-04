@@ -979,10 +979,10 @@ Nikola v7 used to support a third taxonomy, called sections. Those have been rem
 Configuring tags and categories
 ```````````````````````````````
 
-There are multiple configuration variables dedicated to each of the three taxonomies. You can set:
+There are multiple configuration variables dedicated to each of the two taxonomies. You can set:
 
 * ``TAG_PATH``, ``TAGS_INDEX_PATH``, ``CATEGORY_PATH``, ``CATEGORY_PREFIX`` to configure paths used for tags and categories
-*  `TAG_PAGES_TITLES``, ``CATEGORY_TITLES`` to set titles and descriptions for index pages
+* ``TAG_PAGES_TITLES``, ``CATEGORY_TITLES`` to set titles and descriptions for index pages
 * ``TAG_PAGES_DESCRIPTIONS``, ``CATEGORY_DESCRIPTIONS`` to set descriptions for each of the items
 * ``CATEGORY_ALLOW_HIERARCHIES`` and ``CATEGORY_OUTPUT_FLAT_HIERARCHIES`` to allow hierarchical categories
 * ``TAG_PAGES_ARE_INDEXES`` and ``CATEGORY_PAGES_ARE_INDEXES`` to display full-size indexes instead of simple post lists

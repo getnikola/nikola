@@ -757,9 +757,8 @@ class Nikola(object):
             utils.LOGGER.info("Setting CATEGORY_DESTPATH_AS_DEFAULT = " + str(self.config['CATEGORY_DESTPATH_AS_DEFAULT']))
 
         if self.config.get('CATEGORY_PAGES_FOLLOW_DESTPATH') and (not self.config.get('CATEGORY_ALLOW_HIERARCHIES') or self.config.get('CATEGORY_OUTPUT_FLAT_HIERARCHY')):
-            utils.LOGGER.warn('CATEGORY_PAGES_FOLLOW_DESTPATH requires CATEGORY_ALLOW_HIERARCHIES = True, CATEGORY_OUTPUT_FLAT_HIERARCHY = False.')
-            self.config['CATEGORY_ALLOW_HIERARCHIES'] = True
-            self.config['CATEGORY_OUTPUT_FLAT_HIERARCHY'] = False
+            utils.LOGGER.error('CATEGORY_PAGES_FOLLOW_DESTPATH requires CATEGORY_ALLOW_HIERARCHIES = True, CATEGORY_OUTPUT_FLAT_HIERARCHY = False.')
+            sys.exit(1)
 
         # Handle CONTENT_FOOTER and RSS_COPYRIGHT* properly.
         # We provide the arguments to format in CONTENT_FOOTER_FORMATS and RSS_COPYRIGHT_FORMATS.
