@@ -65,10 +65,7 @@ def test_builtin_extractors_rest(metadata_extractors_by, meta_twofile, meta_form
     meta, extractor = get_meta(post, None)
 
     assert meta
-    if twofile:
-        assert extractor is None
-    else:
-        assert extractor is metadata_extractors_by['name'][format_lc]
+    assert extractor is metadata_extractors_by['name'][format_lc]
 
     assert meta['title'] == title
     assert meta['slug'] == slug
@@ -98,10 +95,7 @@ def test_nikola_meta_markdown(metadata_extractors_by, meta_twofile):
         assert os.path.exists(metadata_path)
 
     meta, extractor = get_meta(post, None)
-    if twofile:
-        assert extractor is None
-    else:
-        assert extractor is metadata_extractors_by['name']['nikola']
+    assert extractor is metadata_extractors_by['name']['nikola']
 
     assert meta['title'] == title
     assert meta['slug'] == slug
