@@ -87,6 +87,8 @@ Features
 Bugfixes
 --------
 
+* Fixes behavior for posts not available in default language
+  (Issues #2956 and #3073)
 * Always follow ``FEED_LENGTH`` for Atom feeds
 * Apply filters to all Atom feeds
 * Read file metadata if compiler metadata exists and prefer it over
