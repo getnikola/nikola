@@ -1047,14 +1047,14 @@ def get_metadata_from_meta_file(path, post, config, lang, metadata_extractors_by
     elif lang:
         meta_path += '.' + lang
     if os.path.isfile(meta_path):
-        return get_metadata_from_file(meta_path, post, config, lang, metadata_extractors_by)[0]
+        return get_metadata_from_file(meta_path, post, config, lang, metadata_extractors_by)
     elif lang:
         # Metadata file doesn't exist, but not default language,
         # So, if default language metadata exists, return that.
         # This makes the 2-file format detection more reliable (Issue #525)
         return get_metadata_from_meta_file(meta_path, post, config, None, metadata_extractors_by)
     else:  # No 2-file metadata
-        return {}
+        return {}, None
 
 
 def get_meta(post, lang):
@@ -1068,7 +1068,7 @@ def get_meta(post, lang):
         metadata_extractors_by = metadata_extractors.default_metadata_extractors_by()
 
     # If meta file exists, use it
-    metafile_meta = get_metadata_from_meta_file(post.metadata_path, post, config, lang, metadata_extractors_by)
+    metafile_meta, used_extractor = get_metadata_from_meta_file(post.metadata_path, post, config, lang, metadata_extractors_by)
 
     if not metafile_meta:
         post.is_two_file = False
