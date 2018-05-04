@@ -1,7 +1,9 @@
 New in v7-maintenance
 =====================
 
-* Fixing behavior of RSS_PATH to do what the documentation
+* Fix behavior for posts not available in default language
+  (Issues #2956 and #3073)
+* Fix behavior of RSS_PATH to do what the documentation
   says it does (Issue #3024)
 * Use documented dateutil API for time zone list (Issue #3006)
 
