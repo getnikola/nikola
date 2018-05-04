@@ -587,11 +587,10 @@ class Post(object):
     def deps(self, lang):
         """Return a list of file dependencies to build this post's page."""
         deps = []
-        if self.default_lang in self.translated_to:
-            deps.append(self.base_path)
-            deps.append(self.source_path)
-            if os.path.exists(self.metadata_path):
-                deps.append(self.metadata_path)
+        deps.append(self.base_path)
+        deps.append(self.source_path)
+        if os.path.exists(self.metadata_path):
+            deps.append(self.metadata_path)
         if lang != self.default_lang:
             cand_1 = get_translation_candidate(self.config, self.source_path, lang)
             cand_2 = get_translation_candidate(self.config, self.base_path, lang)

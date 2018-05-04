@@ -83,11 +83,9 @@ class ScanPosts(PostScanner):
                              if not any([x.startswith('.')
                                          for x in p.split(os.sep)])]
 
-                for base_path in full_list:
+                for base_path in sorted(full_list):
                     if base_path in seen:
                         continue
-                    else:
-                        seen.add(base_path)
                     try:
                         post = Post(
                             base_path,
@@ -100,6 +98,8 @@ class ScanPosts(PostScanner):
                             destination_base=destination_translatable,
                             metadata_extractors_by=self.site.metadata_extractors_by
                         )
+                        for lang in post.translated_to:
+                            seen.add(post.translated_source_path(lang))
                         timeline.append(post)
                     except Exception:
                         LOGGER.error('Error reading post {}'.format(base_path))
