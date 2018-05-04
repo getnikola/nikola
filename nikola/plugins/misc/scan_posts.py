@@ -83,7 +83,7 @@ class ScanPosts(PostScanner):
                              if not any([x.startswith('.')
                                          for x in p.split(os.sep)])]
 
-                for base_path in full_list:
+                for base_path in sorted(full_list):
                     if base_path in seen:
                         continue
                     try:
