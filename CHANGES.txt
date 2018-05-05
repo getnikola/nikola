@@ -1,5 +1,5 @@
-New in v7-maintenance
-=====================
+New in v7.8.15
+==============
 
 * Fix behavior for posts not available in default language
   (Issues #2956 and #3073)

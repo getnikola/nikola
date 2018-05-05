@@ -7,16 +7,17 @@
 # Translators:
 # Translators:
 # Translators:
-# Chris Warrick <kwpolska@gmail.com>, 2014
-# Chris Warrick <kwpolska@gmail.com>, 2014
+# Chris Warrick, 2014
+# Chris Warrick, 2014
 # Lauri Võsandi <inactive+v6sa@transifex.com>, 2013
+# Rivo Zängov <eraser@eraser.ee>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2017-06-12 12:47+0000\n"
-"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"PO-Revision-Date: 2018-05-02 08:48+0000\n"
+"Last-Translator: Rivo Zängov <eraser@eraser.ee>\n"
 "Language-Team: Estonian (http://www.transifex.com/ralsina/nikola/language/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +43,7 @@ msgid "Tags and Categories"
 msgstr "Sildid ja kategooriad"
 
 msgid "Comments"
-msgstr ""
+msgstr "Kommentaarid"
 
 msgid "Read more"
 msgstr "Loe veel"
@@ -80,7 +81,7 @@ msgid "Also available in:"
 msgstr "Saadaval ka:"
 
 msgid "Languages:"
-msgstr ""
+msgstr "Keeled:"
 
 msgid "Original site"
 msgstr "Algallikas"
@@ -92,7 +93,7 @@ msgid "Archive"
 msgstr "Arhiiv"
 
 msgid "Publication date"
-msgstr ""
+msgstr "Avaldamise kuupäev"
 
 msgid "Posted:"
 msgstr "Postitatud:"
@@ -101,70 +102,70 @@ msgid "Posts for {month} {year}"
 msgstr "Postitused {year} aasta kuust {month} "
 
 msgid "Posts for {month} {day}, {year}"
-msgstr ""
+msgstr "Postitused {day}.{month}.{year}"
 
 msgid "Nothing found."
-msgstr ""
+msgstr "Midagi ei leitud."
 
 msgid "No posts found."
-msgstr ""
+msgstr "Postitusi ei leitud."
 
 msgid "RSS feed"
-msgstr ""
+msgstr "RSS uudisvoog"
 
 msgid "%d min remaining to read"
-msgstr ""
+msgstr "%d minutit veel lugeda"
 
 msgid "Skip to main content"
-msgstr ""
+msgstr "Otse peamise sisu juurde"
 
 msgid "Subcategories:"
-msgstr ""
+msgstr "Alamkategooriad:"
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
-msgstr ""
+msgstr "(aktiivne)"
 
 #. Default content for a new post
 msgid "Write your post here."
-msgstr ""
+msgstr "Kirjuta oma postitus siia."
 
 #. Default content for a new page
 msgid "Write your page here."
-msgstr ""
+msgstr "Kirjuta oma lehekülje sisu siia."
 
 msgid "Uncategorized"
-msgstr ""
+msgstr "Kategooriata"
 
 #. Used for feeds of any format
 msgid "Updates"
-msgstr ""
+msgstr "Uuendused"
 
 msgid "Authors"
-msgstr ""
+msgstr "Autorid"
 
 msgid "Posts by %s"
-msgstr ""
+msgstr "Postitus kasutajalt %s"
 
 msgid "Toggle navigation"
-msgstr ""
+msgstr "Näita või peida menüüd"
 
 #. Used to format months per year
 msgid "{month} {year}"
-msgstr ""
+msgstr "{month} {year}"
 
 #. Used to format a date
 msgid "{month} {day}, {year}"
-msgstr ""
+msgstr "{day}.{month}.{year}"
 
 msgid "Previous"
-msgstr ""
+msgstr "Eelmine"
 
 msgid "Up"
-msgstr ""
+msgstr "Üles"
 
 msgid "Next"
-msgstr ""
+msgstr "Järgmine"
 
 msgid "Atom feed"
-msgstr ""
+msgstr "Atom uudisvoog"
