@@ -28,7 +28,7 @@ Features
   existing sites, but ``feed`` for new sites) (Issue #3016)
 * Add ``CATEGORY_DESTPATH_AS_DEFAULT``, ``CATEGORY_DESTPATH_TRIM_PREFIX``,
   ``CATEGORY_DESTPATH_FIRST_DIRECTORY_ONLY`` settings, as part of
-   replacing sections with categories (Issue #2833)
+  replacing sections with categories (Issue #2833)
 * Tags ``draft``, ``private`` and ``mathjax`` are no longer treated
   special if ``USE_TAG_METADATA`` is set to ``False`` (default for
   new sites) (Issue #2761)
