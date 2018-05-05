@@ -1,5 +1,5 @@
-New in master
-=============
+New in v8.0.0b1
+===============
 
 Important compatibility changes
 -------------------------------
@@ -158,7 +158,7 @@ Removed conf.py settings
 The following settings have been removed. Nikola will now always
 behave as if the value was what is displayed afer the setting name.
 
-* ``FEED_PREVIEWIMAGE =  True``
+* ``FEED_PREVIEWIMAGE = True``
 * ``SITEMAP_INCLUDE_FILELESS_DIRS = True``
 * ``USE_OPEN_GRAPH = True``
 * ``USE_BASE_TAG = False``
@@ -180,6 +180,57 @@ Removed features
 * Removed old 7-line metadata format (Issue #2839)
 * Atom feeds are now limited to one page (Issue #3016)
 * Removed sections (replaced by improved categories) (Issue #2833)
+
+New in v7.8.15
+==============
+
+* Fix behavior for posts not available in default language
+  (Issues #2956 and #3073)
+* Fix behavior of RSS_PATH to do what the documentation
+  says it does (Issue #3024)
+* Use documented dateutil API for time zone list (Issue #3006)
+
+New in v7.8.14
+==============
+
+* doit v0.31.0 compatibility (Issue #2980, #3004, v8 backport)
+
+New in v7.8.13
+==============
+
+* Add new Thai translation by Narumol Hankrotha and Jean Jordaan
+  (v8 backport)
+* Hide “Incomplete language” message for overrides of complete
+  languages
+* Restore ability to override messages partially
+
+New in v7.8.12
+==============
+
+* Fix loading non-default languages
+
+New in v7.8.11
+==============
+
+* Make errors in reST display in logs again
+* Restore version number to Bootswatch URLs (Issue #2916)
+
+New in v7.8.10
+==============
+
+* Fix crashes with Jinja2 themes and tag indexes (Issue #2900)
+* Ignore empty tags in HTML metadata reader (Issue #2890)
+* Fix crash when compiling empty ``.html`` posts (Issue #2851)
+
+New in v7.8.9
+=============
+
+* Restore missing unminified assets
+* Make failures to get source commit hash non-fatal in
+  ``github_deploy`` (Issue #2847)
+* Fix a bug in HTML meta parsing that crashed on ``<meta>`` tags
+  without ``name`` (Issue #2835)
+* Fix math not showing up in some circumstances (Issue #2841)
 
 New in v7.8.8
 =============

@@ -21,13 +21,6 @@ archive
     
     link://archive/2013 => /archives/2013/index.html
 
-archive_atom
-    Link to archive Atom path, name is the year (archive pages must be indexes).
-    
-    Example:
-    
-    link://archive_atom/2013 => /archives/2013/index.atom
-
 author
     Link to an author's page.
     
@@ -195,27 +188,6 @@ rss
     Example:
     
     link://rss => /blog/rss.xml
-
-section_index
-    Link to the index for a section.
-    
-    Example:
-    
-    link://section_index/cars => /cars/index.html
-
-section_index_atom
-    Link to the Atom index for a section.
-    
-    Example:
-    
-    link://section_index_atom/cars => /cars/index.atom
-
-section_index_rss
-    Link to the RSS feed for a section.
-    
-    Example:
-    
-    link://section_index_rss/cars => /cars/rss.xml
 
 slug
     Return a link to a post with given slug, if not ambiguous.
