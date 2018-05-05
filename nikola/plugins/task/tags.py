@@ -119,8 +119,8 @@ link://tag_rss/cats => /tags/cats.xml""",
             "tag_pages_are_indexes": self.site.config['TAG_PAGES_ARE_INDEXES'],
             "taglist_minimum_post_count": self.site.config['TAGLIST_MINIMUM_POSTS'],
             "tzinfo": self.site.tzinfo,
-            "tag_pages_descriptions": self.site.config['TAG_PAGES_DESCRIPTIONS'],
-            "tag_pages_titles": self.site.config['TAG_PAGES_TITLES'],
+            "tag_descriptions": self.site.config['TAG_DESCRIPTIONS'],
+            "tag_titles": self.site.config['TAG_TITLES'],
         }
         context = {
             "title": self.site.MESSAGES[lang]["Tags"],
@@ -137,12 +137,12 @@ link://tag_rss/cats => /tags/cats.xml""",
             "tag_pages_are_indexes": self.site.config['TAG_PAGES_ARE_INDEXES'],
             "taglist_minimum_post_count": self.site.config['TAGLIST_MINIMUM_POSTS'],
             "tzinfo": self.site.tzinfo,
-            "tag_pages_descriptions": self.site.config['TAG_PAGES_DESCRIPTIONS'],
-            "tag_pages_titles": self.site.config['TAG_PAGES_TITLES'],
+            "tag_descriptions": self.site.config['TAG_DESCRIPTIONS'],
+            "tag_titles": self.site.config['TAG_TITLES'],
         }
         context = {
-            "title": self.site.config['TAG_PAGES_TITLES'].get(lang, {}).get(classification, self.site.MESSAGES[lang]["Posts about %s"] % classification),
-            "description": self.site.config['TAG_PAGES_DESCRIPTIONS'].get(lang, {}).get(classification),
+            "title": self.site.config['TAG_TITLES'].get(lang, {}).get(classification, self.site.MESSAGES[lang]["Posts about %s"] % classification),
+            "description": self.site.config['TAG_DESCRIPTIONS'].get(lang, {}).get(classification),
             "pagekind": ["tag_page", "index" if self.show_list_as_index else "list"],
             "tag": classification,
         }

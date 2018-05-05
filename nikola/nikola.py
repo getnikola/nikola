@@ -561,8 +561,8 @@ class Nikola(object):
             'STRIP_INDEXES': True,
             'TAG_PATH': 'categories',
             'TAG_PAGES_ARE_INDEXES': False,
-            'TAG_PAGES_DESCRIPTIONS': {},
-            'TAG_PAGES_TITLES': {},
+            'TAG_DESCRIPTIONS': {},
+            'TAG_TITLES': {},
             'TAG_TRANSLATIONS': [],
             'TAG_TRANSLATIONS_ADD_DEFAULTS': False,
             'TAGS_INDEX_PATH': '',
@@ -716,6 +716,14 @@ class Nikola(object):
         if 'UNSLUGIFY_TITLES' in self.config:
             utils.LOGGER.warn('The UNSLUGIFY_TITLES setting was renamed to FILE_METADATA_UNSLUGIFY_TITLES.')
             self.config['FILE_METADATA_UNSLUGIFY_TITLES'] = self.config['UNSLUGIFY_TITLES']
+
+        if 'TAG_PAGES_TITLES' in self.config:
+            utils.LOGGER.warn('The TAG_PAGES_TITLES setting was renamed to TAG_TITLES.')
+            self.config['TAG_TITLES'] = self.config['TAG_PAGES_TITLES']
+
+        if 'TAG_PAGES_DESCRIPTIONS' in self.config:
+            utils.LOGGER.warn('The TAG_PAGES_DESCRIPTIONS setting was renamed to TAG_DESCRIPTIONS.')
+            self.config['TAG_DESCRIPTIONS'] = self.config['TAG_PAGES_DESCRIPTIONS']
 
         if 'CATEGORY_PAGES_TITLES' in self.config:
             utils.LOGGER.warn('The CATEGORY_PAGES_TITLES setting was renamed to CATEGORY_TITLES.')
