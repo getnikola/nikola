@@ -97,6 +97,7 @@ Name                                Type                                Descript
 ``social_buttons_code``             TranslatableSetting<str>            ``SOCIAL_BUTTONS_CODE`` setting
 ``sort_posts``                      function                            ``utils.sort_posts`` function
 ``smartjoin``                       function                            ``utils.smartjoin`` function
+``colorize_str``                    function                            ``utils.colorize_str`` function
 ``template_hooks``                  dict<str, TemplateHookRegistry>     Template hooks registered by plugins
 ``theme_color``                     str                                 ``THEME_COLOR`` setting
 ``timezone``                        tzinfo                              Timezone object (represents the configured timezone)

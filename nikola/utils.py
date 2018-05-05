@@ -1767,6 +1767,13 @@ def colorize_str_from_base_color(string, base_color):
     return husl.husl_to_hex(h, s, l)
 
 
+def colorize_str(string: str, base_color: str, presets: dict):
+    """Colorize a string by using a presets dict or generate one based on base_color."""
+    if string in presets:
+        return presets[string]
+    return colorize_str_from_base_color(string, base_color)
+
+
 def color_hsl_adjust_hex(hexstr, adjust_h=None, adjust_s=None, adjust_l=None):
     """Adjust a hex color using HSL arguments, adjustments in percentages 1.0 to -1.0. Returns a hex color."""
     h, s, l = husl.hex_to_husl(hexstr)

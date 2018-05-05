@@ -237,6 +237,30 @@ class Post(object):
             # default value is 'text'
             default_metadata['type'] = 'text'
 
+        for lang, meta in self.meta.items():
+            # Migrate section to category
+            # TODO: remove in v9
+            if 'section' in meta:
+                if 'category' in meta:
+                    LOGGER.warn("Post {0} has both 'category' and 'section' metadata. Section will be ignored.".format(source_path))
+                else:
+                    meta['category'] = meta['section']
+                    LOGGER.notice("Post {0} uses 'section' metadata, setting its value to 'category'".format(source_path))
+
+            # Handle CATEGORY_DESTPATH_AS_DEFAULT
+            if 'category' not in meta and self.config['CATEGORY_DESTPATH_AS_DEFAULT']:
+                self.category_from_destpath = True
+                if self.config['CATEGORY_DESTPATH_TRIM_PREFIX'] and self.folder_relative != '.':
+                    category = self.folder_relative
+                else:
+                    category = self.folders[lang]
+                category = category.replace(os.sep, '/')
+                if self.config['CATEGORY_DESTPATH_FIRST_DIRECTORY_ONLY']:
+                    category = category.split('/')[0]
+                meta['category'] = self.config['CATEGORY_DESTPATH_NAMES'](lang).get(category, category)
+            else:
+                self.category_from_destpath = False
+
         self.publish_later = False if self.current_time is None else self.date >= self.current_time
 
         is_draft = False
@@ -886,61 +910,6 @@ class Post(object):
         if path.startswith('./'):
             path = path[2:]
         return path
-
-    def section_color(self, lang=None):
-        """Return the color of the post's section."""
-        slug = self.section_slug(lang)
-        if slug in self.config['POSTS_SECTION_COLORS'](lang):
-            return self.config['POSTS_SECTION_COLORS'](lang)[slug]
-        base = self.config['THEME_COLOR']
-        return utils.colorize_str_from_base_color(slug, base)
-
-    def section_link(self, lang=None):
-        """Return the link to the post's section (deprecated)."""
-        utils.LOGGER.warning("Post.section_link is deprecated. Please use " +
-                             "site.link('section_index', post.section_slug()) instead.")
-        if lang is None:
-            lang = nikola.utils.LocaleBorg().current_lang
-
-        slug = self.section_slug(lang)
-        t = os.path.normpath(self.translations[lang])
-        if t == '.':
-            t = ''
-        link = '/' + '/'.join(i for i in (t, slug) if i) + '/'
-        if not self.pretty_urls:
-            link = urljoin(link, self.index_file)
-        link = utils.encodelink(link)
-        return link
-
-    def section_name(self, lang=None):
-        """Return the name of the post's section."""
-        slug = self.section_slug(lang)
-        if slug in self.config['POSTS_SECTION_NAME'](lang):
-            name = self.config['POSTS_SECTION_NAME'](lang)[slug]
-        else:
-            name = slug.replace('-', ' ').title()
-        return name
-
-    def section_slug(self, lang=None):
-        """Return the slug for the post's section."""
-        if lang is None:
-            lang = nikola.utils.LocaleBorg().current_lang
-
-        if not self.config['POSTS_SECTION_FROM_META']:
-            dest = self.destination_path(lang)
-            if dest[-(1 + len(self.index_file)):] == os.sep + self.index_file:
-                dest = dest[:-(1 + len(self.index_file))]
-            dirname = os.path.dirname(dest)
-            slug = dest.split(os.sep)
-            if not slug or dirname == '.':
-                slug = self.messages[lang]["Uncategorized"]
-            elif lang == slug[0]:
-                slug = slug[1]
-            else:
-                slug = slug[0]
-        else:
-            slug = self.meta[lang]['section'].split(',')[0] if 'section' in self.meta[lang] else self.messages[lang]["Uncategorized"]
-        return utils.slugify(slug, lang)
 
     def permalink(self, lang=None, absolute=False, extension='.html', query=None):
         """Return permalink for a post."""

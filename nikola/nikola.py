@@ -423,11 +423,16 @@ class Nikola(object):
             'CATEGORIES_INDEX_PATH': '',
             'CATEGORY_PATH': None,  # None means: same as TAG_PATH
             'CATEGORY_PAGES_ARE_INDEXES': None,  # None means: same as TAG_PAGES_ARE_INDEXES
-            'CATEGORY_PAGES_DESCRIPTIONS': {},
-            'CATEGORY_PAGES_TITLES': {},
+            'CATEGORY_DESCRIPTIONS': {},
+            'CATEGORY_TITLES': {},
             'CATEGORY_PREFIX': 'cat_',
             'CATEGORY_ALLOW_HIERARCHIES': False,
             'CATEGORY_OUTPUT_FLAT_HIERARCHY': False,
+            'CATEGORY_DESTPATH_AS_DEFAULT': False,
+            'CATEGORY_DESTPATH_TRIM_PREFIX': False,
+            'CATEGORY_DESTPATH_FIRST_DIRECTORY_ONLY': True,
+            'CATEGORY_DESTPATH_NAMES': {},
+            'CATEGORY_PAGES_FOLLOW_DESTPATH': False,
             'CATEGORY_TRANSLATIONS': [],
             'CATEGORY_TRANSLATIONS_ADD_DEFAULTS': False,
             'CODE_COLOR_SCHEME': 'default',
@@ -520,15 +525,6 @@ class Nikola(object):
             'OLD_THEME_SUPPORT': True,
             'OUTPUT_FOLDER': 'output',
             'POSTS': (("posts/*.txt", "posts", "post.tmpl"),),
-            'POSTS_SECTIONS': True,
-            'POSTS_SECTION_COLORS': {},
-            'POSTS_SECTIONS_ARE_INDEXES': True,
-            'POSTS_SECTION_DESCRIPTIONS': "",
-            'POSTS_SECTION_FROM_META': False,
-            'POSTS_SECTION_NAME': "",
-            'POSTS_SECTION_TITLE': "{name}",
-            'POSTS_SECTION_TRANSLATIONS': [],
-            'POSTS_SECTION_TRANSLATIONS_ADD_DEFAULTS': False,
             'PRESERVE_EXIF_DATA': False,
             'PRESERVE_ICC_PROFILES': False,
             'PAGES': (("pages/*.txt", "pages", "page.tmpl"),),
@@ -565,8 +561,8 @@ class Nikola(object):
             'STRIP_INDEXES': True,
             'TAG_PATH': 'categories',
             'TAG_PAGES_ARE_INDEXES': False,
-            'TAG_PAGES_DESCRIPTIONS': {},
-            'TAG_PAGES_TITLES': {},
+            'TAG_DESCRIPTIONS': {},
+            'TAG_TITLES': {},
             'TAG_TRANSLATIONS': [],
             'TAG_TRANSLATIONS_ADD_DEFAULTS': False,
             'TAGS_INDEX_PATH': '',
@@ -649,10 +645,7 @@ class Nikola(object):
                                       'INDEX_READ_MORE_LINK',
                                       'FEED_READ_MORE_LINK',
                                       'INDEXES_TITLE',
-                                      'POSTS_SECTION_COLORS',
-                                      'POSTS_SECTION_DESCRIPTIONS',
-                                      'POSTS_SECTION_NAME',
-                                      'POSTS_SECTION_TITLE',
+                                      'CATEGORY_DESTPATH_NAMES',
                                       'INDEXES_PAGES',
                                       'INDEXES_PRETTY_PAGE_URL',
                                       # PATH options (Issue #1914)
@@ -686,10 +679,6 @@ class Nikola(object):
                                              'extra_head_data',
                                              'date_format',
                                              'js_date_format',
-                                             'posts_section_colors',
-                                             'posts_section_descriptions',
-                                             'posts_section_name',
-                                             'posts_section_title',
                                              'front_index_header',
                                              )
 
@@ -728,6 +717,22 @@ class Nikola(object):
             utils.LOGGER.warn('The UNSLUGIFY_TITLES setting was renamed to FILE_METADATA_UNSLUGIFY_TITLES.')
             self.config['FILE_METADATA_UNSLUGIFY_TITLES'] = self.config['UNSLUGIFY_TITLES']
 
+        if 'TAG_PAGES_TITLES' in self.config:
+            utils.LOGGER.warn('The TAG_PAGES_TITLES setting was renamed to TAG_TITLES.')
+            self.config['TAG_TITLES'] = self.config['TAG_PAGES_TITLES']
+
+        if 'TAG_PAGES_DESCRIPTIONS' in self.config:
+            utils.LOGGER.warn('The TAG_PAGES_DESCRIPTIONS setting was renamed to TAG_DESCRIPTIONS.')
+            self.config['TAG_DESCRIPTIONS'] = self.config['TAG_PAGES_DESCRIPTIONS']
+
+        if 'CATEGORY_PAGES_TITLES' in self.config:
+            utils.LOGGER.warn('The CATEGORY_PAGES_TITLES setting was renamed to CATEGORY_TITLES.')
+            self.config['CATEGORY_TITLES'] = self.config['CATEGORY_PAGES_TITLES']
+
+        if 'CATEGORY_PAGES_DESCRIPTIONS' in self.config:
+            utils.LOGGER.warn('The CATEGORY_PAGES_DESCRIPTIONS setting was renamed to CATEGORY_DESCRIPTIONS.')
+            self.config['CATEGORY_DESCRIPTIONS'] = self.config['CATEGORY_PAGES_DESCRIPTIONS']
+
         if 'DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED' in self.config:
             utils.LOGGER.warn('The DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED setting was renamed and split to DISABLE_INDEXES and DISABLE_MAIN_ATOM_FEED.')
             self.config['DISABLE_INDEXES'] = self.config['DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED']
@@ -736,6 +741,32 @@ class Nikola(object):
         if 'DISABLE_INDEXES_PLUGIN_RSS_FEED' in self.config:
             utils.LOGGER.warn('The DISABLE_INDEXES_PLUGIN_RSS_FEED setting was renamed to DISABLE_MAIN_RSS_FEED.')
             self.config['DISABLE_MAIN_RSS_FEED'] = self.config['DISABLE_INDEXES_PLUGIN_RSS_FEED']
+
+        if self.config.get('POSTS_SECTIONS'):
+            utils.LOGGER.warn("The sections feature has been removed and its functionality has been merged into categories.")
+            utils.LOGGER.warn("For more information on how to migrate, please read: TODO")  # TODO: blog post
+
+            for section_config_suffix, cat_config_suffix in (
+                ('DESCRIPTIONS', 'DESCRIPTIONS'),
+                ('TITLE', 'TITLES'),
+                ('TRANSLATIONS', 'TRANSLATIONS')
+            ):
+                section_config = 'POSTS_SECTION_' + section_config_suffix
+                cat_config = 'CATEGORY_' + cat_config_suffix
+                if section_config in self.config:
+                    self.config[section_config].update(self.config[cat_config])
+                    self.config[cat_config] = self.config[section_config]
+
+            self.config['CATEGORY_DESTPATH_NAMES'] = self.config.get('POSTS_SECTION_NAME', {})
+            # Need to mark this translatable manually.
+            self.config['CATEGORY_DESTPATH_NAMES'] = utils.TranslatableSetting('CATEGORY_DESTPATH_NAMES', self.config['CATEGORY_DESTPATH_NAMES'], self.config['TRANSLATIONS'])
+
+            self.config['CATEGORY_DESTPATH_AS_DEFAULT'] = not self.config.get('POSTS_SECTION_FROM_META')
+            utils.LOGGER.info("Setting CATEGORY_DESTPATH_AS_DEFAULT = " + str(self.config['CATEGORY_DESTPATH_AS_DEFAULT']))
+
+        if self.config.get('CATEGORY_PAGES_FOLLOW_DESTPATH') and (not self.config.get('CATEGORY_ALLOW_HIERARCHIES') or self.config.get('CATEGORY_OUTPUT_FLAT_HIERARCHY')):
+            utils.LOGGER.error('CATEGORY_PAGES_FOLLOW_DESTPATH requires CATEGORY_ALLOW_HIERARCHIES = True, CATEGORY_OUTPUT_FLAT_HIERARCHY = False.')
+            sys.exit(1)
 
         # Handle CONTENT_FOOTER and RSS_COPYRIGHT* properly.
         # We provide the arguments to format in CONTENT_FOOTER_FORMATS and RSS_COPYRIGHT_FORMATS.
@@ -1159,16 +1190,9 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['hidden_categories'] = self.config.get('HIDDEN_CATEGORIES')
         self._GLOBAL_CONTEXT['hidden_authors'] = self.config.get('HIDDEN_AUTHORS')
         self._GLOBAL_CONTEXT['url_replacer'] = self.url_replacer
-        self._GLOBAL_CONTEXT['posts_sections'] = self.config.get('POSTS_SECTIONS')
-        self._GLOBAL_CONTEXT['posts_section_are_indexes'] = self.config.get('POSTS_SECTIONS_ARE_INDEXES')
-        self._GLOBAL_CONTEXT['posts_sections_are_indexes'] = self.config.get('POSTS_SECTIONS_ARE_INDEXES')
-        self._GLOBAL_CONTEXT['posts_section_colors'] = self.config.get('POSTS_SECTION_COLORS')
-        self._GLOBAL_CONTEXT['posts_section_descriptions'] = self.config.get('POSTS_SECTION_DESCRIPTIONS')
-        self._GLOBAL_CONTEXT['posts_section_from_meta'] = self.config.get('POSTS_SECTION_FROM_META')
-        self._GLOBAL_CONTEXT['posts_section_name'] = self.config.get('POSTS_SECTION_NAME')
-        self._GLOBAL_CONTEXT['posts_section_title'] = self.config.get('POSTS_SECTION_TITLE')
         self._GLOBAL_CONTEXT['sort_posts'] = utils.sort_posts
         self._GLOBAL_CONTEXT['smartjoin'] = utils.smartjoin
+        self._GLOBAL_CONTEXT['colorize_str'] = utils.colorize_str
         self._GLOBAL_CONTEXT['meta_generator_tag'] = self.config.get('META_GENERATOR_TAG')
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))

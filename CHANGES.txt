@@ -17,6 +17,7 @@ Important compatibility changes
   ``RSS_FILENAME_BASE``)
 * Atom feeds for archives and Atom pagination are no longer supported
   (Issue #3016)
+* Sections are replaced by categories (Issue #2833)
 
 Features
 --------
@@ -25,9 +26,16 @@ Features
 * Add ``DISABLE_MAIN_ATOM_FEED`` setting (Issue #3016, Issue #3039)
 * Add ``ATOM_FILENAME_BASE`` setting (defaults to ``index`` for
   existing sites, but ``feed`` for new sites) (Issue #3016)
+* Add ``CATEGORY_DESTPATH_AS_DEFAULT``, ``CATEGORY_DESTPATH_TRIM_PREFIX``,
+  ``CATEGORY_DESTPATH_FIRST_DIRECTORY_ONLY`` settings, as part of
+   replacing sections with categories (Issue #2833)
 * Tags ``draft``, ``private`` and ``mathjax`` are no longer treated
   special if ``USE_TAG_METADATA`` is set to ``False`` (default for
   new sites) (Issue #2761)
+* Rename ``TAG_PAGES_TITLES`` → ``TAG_TITLES``,
+  ``TAG_PAGES_DESCRIPTIONS`` → ``TAG_DESCRIPTIONS``.
+* Rename ``CATEGORY_PAGES_TITLES`` → ``CATEGORY_TITLES``,
+  ``CATEGORY_PAGES_DESCRIPTIONS`` → ``CATEGORY_DESCRIPTIONS``.
 * Produce a better error message when a template referenced in another
   template is missing (Issue #3055)
 * Support captioned images and image ordering in galleries, as well as
