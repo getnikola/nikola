@@ -32,6 +32,9 @@ Features
 * Tags ``draft``, ``private`` and ``mathjax`` are no longer treated
   special if ``USE_TAG_METADATA`` is set to ``False`` (default for
   new sites) (Issue #2761)
+* Replace ``draft`` and ``private`` tags with a ``status`` meta field
+  (supports ``published``, ``featured``, ``draft``, ``private``)
+  and ``mathjax`` with ``.. has_math: yes`` (Issue #2761)
 * Rename ``TAG_PAGES_TITLES`` → ``TAG_TITLES``,
   ``TAG_PAGES_DESCRIPTIONS`` → ``TAG_DESCRIPTIONS``.
 * Rename ``CATEGORY_PAGES_TITLES`` → ``CATEGORY_TITLES``,
@@ -163,7 +166,7 @@ behave as if the value was what is displayed afer the setting name.
 Removed features
 ----------------
 
-* Removed Colorbox (Issue #2777)
+* Removed Colorbox, baguetteBox is used instead (Issue #2777)
 * Removed ``googleplus`` comments (no longer supported) (Issue #635)
 * Removed the slides directive for docutils, it will now be a separate plugin.
 * Dropped Python 2 and Python 3.3 support (oldest supported version is 3.4)
@@ -172,9 +175,11 @@ Removed features
 * Stopped supporting all deprecated config options
 * Dropped annotations support (annotateit.org closed down in March 2017)
 * Removed taxonomy option ``also_create_classifications_from_other_languages``
-  (Issue #2785)
+  (Issue #2785) and ``generate_atom_feeds_for_post_lists`` (Issue
+  #3016)
 * Removed old 7-line metadata format (Issue #2839)
 * Atom feeds are now limited to one page (Issue #3016)
+* Removed sections (replaced by improved categories) (Issue #2833)
 
 New in v7.8.8
 =============
