@@ -247,7 +247,10 @@ class Galleries(Task, ImageProcessor):
                         if fn in captions:
                             img_titles.append(captions[fn])
                         else:
-                            img_titles.append(fn)
+                            if self.kw['use_filename_as_title']:
+                                img_titles.append(fn)
+                            else:
+                                img_titles.append('')
                             self.logger.debug(
                                 "Image {0} found in gallery but not listed in {1}".
                                 format(fn, context['meta_path']))
@@ -463,10 +466,10 @@ class Galleries(Task, ImageProcessor):
                     continue
                 if 'name' in img:
                     img_name = img.pop('name')
-                    if 'caption' in img:
+                    if 'caption' in img and img['caption']:
                         captions[img_name] = img.pop('caption')
 
-                    if 'order' in img:
+                    if 'order' in img and img['order'] is not None:
                         order.insert(img.pop('order'), img_name)
                     else:
                         order.append(img_name)
@@ -661,10 +664,11 @@ class Galleries(Task, ImageProcessor):
                     im = Image.open(thumb)
                     w, h = im.size
                     _image_size_cache[thumb] = w, h
-            # Thumbs are files in output, we need URLs
-            url = url_from_path(img)
-            photo_info[url] = {
-                'url': url,
+            # Use basename to avoid issues with multilingual sites (Issue #3078)
+            img_basename = os.path.basename(img)
+            photo_info[img_basename] = {
+                # Thumbs are files in output, we need URLs
+                'url': url_from_path(img),
                 'url_thumb': url_from_path(thumb),
                 'title': title,
                 'size': {
@@ -674,8 +678,8 @@ class Galleries(Task, ImageProcessor):
                 'width': w,
                 'height': h
             }
-            if url in img_metadata:
-                photo_info[url].update(img_metadata[url])
+            if img_basename in img_metadata:
+                photo_info[img_basename].update(img_metadata[img_basename])
         photo_array = []
         if context['order']:
             for entry in context['order']:
