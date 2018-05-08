@@ -661,10 +661,11 @@ class Galleries(Task, ImageProcessor):
                     im = Image.open(thumb)
                     w, h = im.size
                     _image_size_cache[thumb] = w, h
-            # Thumbs are files in output, we need URLs
-            url = url_from_path(img)
-            photo_info[url] = {
-                'url': url,
+            # Use basename to avoid issues with multilingual sites (Issue #3078)
+            img_basename = os.path.basename(img)
+            photo_info[img_basename] = {
+                # Thumbs are files in output, we need URLs
+                'url': url_from_path(img),
                 'url_thumb': url_from_path(thumb),
                 'title': title,
                 'size': {
@@ -674,8 +675,8 @@ class Galleries(Task, ImageProcessor):
                 'width': w,
                 'height': h
             }
-            if url in img_metadata:
-                photo_info[url].update(img_metadata[url])
+            if img_basename in img_metadata:
+                photo_info[img_basename].update(img_metadata[img_basename])
         photo_array = []
         if context['order']:
             for entry in context['order']:
