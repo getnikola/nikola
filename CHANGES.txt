@@ -9,6 +9,7 @@ Features
 Bugfixes
 --------
 
+* Respect ``USE_FILENAME_AS_TITLE`` in galleries with a meta file
 * Fix gallery metadata for multilingual sites (Issue #3078)
 
 New in v8.0.0b1

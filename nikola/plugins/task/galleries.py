@@ -247,7 +247,10 @@ class Galleries(Task, ImageProcessor):
                         if fn in captions:
                             img_titles.append(captions[fn])
                         else:
-                            img_titles.append(fn)
+                            if self.kw['use_filename_as_title']:
+                                img_titles.append(fn)
+                            else:
+                                img_titles.append('')
                             self.logger.debug(
                                 "Image {0} found in gallery but not listed in {1}".
                                 format(fn, context['meta_path']))
