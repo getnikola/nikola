@@ -466,10 +466,10 @@ class Galleries(Task, ImageProcessor):
                     continue
                 if 'name' in img:
                     img_name = img.pop('name')
-                    if 'caption' in img:
+                    if 'caption' in img and img['caption']:
                         captions[img_name] = img.pop('caption')
 
-                    if 'order' in img:
+                    if 'order' in img and img['order'] is not None:
                         order.insert(img.pop('order'), img_name)
                     else:
                         order.append(img_name)
