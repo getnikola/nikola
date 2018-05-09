@@ -69,7 +69,7 @@ except ImportError:
     husl = None
 
 from blinker import signal
-from collections import defaultdict, Callable, OrderedDict
+from collections import defaultdict, Callable, OrderedDict, Iterable
 from importlib import reload as _reload
 from logbook.compat import redirect_logging
 from logbook.more import ExceptionHandler, ColorizedStderrHandler
@@ -1870,17 +1870,21 @@ def sort_posts(posts, *keys):
 
 
 def smartjoin(join_char: str, string_or_iterable) -> str:
-    """Join string_or_iterable with join_char if it is not a string already.
+    """Join string_or_iterable with join_char if it is iterable; otherwise converts it to string.
 
     >>> smartjoin('; ', 'foo, bar')
     'foo, bar'
     >>> smartjoin('; ', ['foo', 'bar'])
     'foo; bar'
+    >>> smartjoin(' to ', ['count', 42])
+    'count to 42'
     """
     if isinstance(string_or_iterable, (unicode_str, bytes_str)):
         return string_or_iterable
+    elif isinstance(string_or_iterable, Iterable):
+        return join_char.join([str(e) for e in string_or_iterable])
     else:
-        return join_char.join(string_or_iterable)
+        return str(string_or_iterable)
 
 
 def _smartjoin_filter(string_or_iterable, join_char: str) -> str:
