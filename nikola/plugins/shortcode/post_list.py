@@ -121,6 +121,7 @@ class PostListShortcode(ShortcodePlugin):
     name = "post_list"
 
     def set_site(self, site):
+        """Set the site."""
         super(PostListShortcode, self).set_site(site)
         site.register_shortcode('post-list', self.handler)
 
