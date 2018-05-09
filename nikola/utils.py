@@ -69,7 +69,7 @@ except ImportError:
     husl = None
 
 from blinker import signal
-from collections import defaultdict, Callable, OrderedDict
+from collections import defaultdict, Callable, OrderedDict, Iterable
 from importlib import reload as _reload
 from logbook.compat import redirect_logging
 from logbook.more import ExceptionHandler, ColorizedStderrHandler
@@ -1881,7 +1881,7 @@ def smartjoin(join_char: str, string_or_iterable) -> str:
     """
     if isinstance(string_or_iterable, (unicode_str, bytes_str)):
         return string_or_iterable
-    elif hasattr(string_or_iterable, '__iter__'):
+    elif isinstance(string_or_iterable, Iterable):
         return join_char.join([str(e) for e in string_or_iterable])
     else:
         return str(string_or_iterable)
