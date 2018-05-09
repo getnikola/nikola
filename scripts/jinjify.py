@@ -27,6 +27,7 @@ dumb_replacements = [
     ['abs(i - current_page)', '(i - current_page)|abs'],
     ['loop.index', 'loop.index0'],
     ['is None', 'is none'],
+    ['is not None', 'is not none'],
 ]
 
 dumber_replacements = [
