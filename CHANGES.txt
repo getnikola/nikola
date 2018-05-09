@@ -9,6 +9,7 @@ Features
 Bugfixes
 --------
 
+* Make post-list and post_list synonymous (Issue #3083)
 * Make ``CATEGORY_PAGES_FOLLOW_DESTPATH`` more resilient (Issue #3081)
 * Guard against null items in gallery meta files (Issues #3076, #3077)
 * Respect ``USE_FILENAME_AS_TITLE`` in galleries with a meta file

@@ -46,6 +46,7 @@ class Plugin(RestExtension):
         """Set Nikola site."""
         self.site = site
         directives.register_directive('post-list', PostListDirective)
+        directives.register_directive('post_list', PostListDirective)
         PostListDirective.site = site
         return super(Plugin, self).set_site(site)
 
