@@ -127,16 +127,15 @@ link://category_rss/dogs => /categories/dogs.xml""",
         cat_string = '/'.join(classification)
         if self.site.config['CATEGORY_PAGES_FOLLOW_DESTPATH']:
             base_dir = None
-            sub_dir = []
             for post in self.site.posts_per_category[cat_string]:
                 if post.category_from_destpath:
-                    base_dir = post.folder_base(lang) + os.sep + os.sep.join(classification)
+                    base_dir = post.folder_base(lang)
                     break
             # fallback: first POSTS entry + classification
             if base_dir is None:
                 base_dir = self.site.config['POSTS'][0][1]
-                sub_dir = [self.slugify_tag_name(part, lang) for part in classification]
             base_dir_list = base_dir.split(os.sep)
+            sub_dir = [self.slugify_tag_name(part, lang) for part in classification]
             return [_f for _f in (base_dir_list + sub_dir) if _f], 'auto'
         else:
             return [_f for _f in [self.site.config['CATEGORY_PATH'](lang)] if _f] + self.slugify_category_name(
