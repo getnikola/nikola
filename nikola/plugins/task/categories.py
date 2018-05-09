@@ -130,12 +130,7 @@ link://category_rss/dogs => /categories/dogs.xml""",
             sub_dir = []
             for post in self.site.posts_per_category[cat_string]:
                 if post.category_from_destpath:
-                    if not self.site.config['CATEGORY_DESTPATH_FIRST_DIRECTORY_ONLY']:
-                        base_dir = post.folders[lang]
-                    elif post.folder_relative == '.':
-                        base_dir = post.folder_base(lang)
-                    else:
-                        base_dir = post.folder_base(lang) + os.sep + post.folder_relative
+                    base_dir = post.folder_base(lang) + os.sep + os.sep.join(classification)
                     break
             # fallback: first POSTS entry + classification
             if base_dir is None:

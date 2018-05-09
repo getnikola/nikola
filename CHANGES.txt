@@ -9,6 +9,7 @@ Features
 Bugfixes
 --------
 
+* Make ``CATEGORY_PAGES_FOLLOW_DESTPATH`` more resilient (Issue #3081)
 * Guard against null items in gallery meta files (Issues #3076, #3077)
 * Respect ``USE_FILENAME_AS_TITLE`` in galleries with a meta file
 * Fix gallery metadata for multilingual sites (Issue #3078)
