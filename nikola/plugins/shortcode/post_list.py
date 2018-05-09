@@ -154,7 +154,7 @@ class PostListShortcode(ShortcodePlugin):
 
         filtered_timeline = []
         posts = []
-        step = -1 if reverse is None else None
+        step = -1 if reverse is False else None
 
         if type is not False:
             post_type = type
