@@ -26,6 +26,7 @@ dumb_replacements = [
     ['sorted(translations)', 'translations|sort'],
     ['abs(i - current_page)', '(i - current_page)|abs'],
     ['loop.index', 'loop.index0'],
+    ['is None', 'is none'],
 ]
 
 dumber_replacements = [
