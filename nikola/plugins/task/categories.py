@@ -125,17 +125,28 @@ link://category_rss/dogs => /categories/dogs.xml""",
     def get_path(self, classification, lang, dest_type='page'):
         """Return a path for the given classification."""
         cat_string = '/'.join(classification)
+        classification_raw = classification  # needed to undo CATEGORY_DESTPATH_NAMES
+        cat_names_reverse = self.site.config['_CATEGORY_DESTPATH_NAMES_REVERSE'](lang)
         if self.site.config['CATEGORY_PAGES_FOLLOW_DESTPATH']:
             base_dir = None
             for post in self.site.posts_per_category[cat_string]:
                 if post.category_from_destpath:
                     base_dir = post.folder_base(lang)
+                    # Handle CATEGORY_DESTPATH_NAMES
+                    if cat_string in cat_names_reverse:
+                        cat_string = cat_names_reverse[cat_string]
+                        classification_raw = cat_string.split('/')
                     break
-            # fallback: first POSTS entry + classification
+
+            if not self.site.config['CATEGORY_DESTPATH_TRIM_PREFIX']:
+                # If prefixes are not trimmed, we'll already have the base_dir in classification_raw
+                base_dir = ''
+
             if base_dir is None:
+                # fallback: first POSTS entry + classification
                 base_dir = self.site.config['POSTS'][0][1]
             base_dir_list = base_dir.split(os.sep)
-            sub_dir = [self.slugify_tag_name(part, lang) for part in classification]
+            sub_dir = [self.slugify_tag_name(part, lang) for part in classification_raw]
             return [_f for _f in (base_dir_list + sub_dir) if _f], 'auto'
         else:
             return [_f for _f in [self.site.config['CATEGORY_PATH'](lang)] if _f] + self.slugify_category_name(
