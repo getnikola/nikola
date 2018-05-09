@@ -1870,17 +1870,21 @@ def sort_posts(posts, *keys):
 
 
 def smartjoin(join_char: str, string_or_iterable) -> str:
-    """Join string_or_iterable with join_char if it is not a string already.
+    """Join string_or_iterable with join_char if it is iterable; otherwise converts it to string.
 
     >>> smartjoin('; ', 'foo, bar')
     'foo, bar'
     >>> smartjoin('; ', ['foo', 'bar'])
     'foo; bar'
+    >>> smartjoin(' to ', ['count', 42])
+    'count to 42'
     """
     if isinstance(string_or_iterable, (unicode_str, bytes_str)):
         return string_or_iterable
+    elif hasattr(string_or_iterable, '__iter__'):
+        return join_char.join([str(e) for e in string_or_iterable])
     else:
-        return join_char.join(string_or_iterable)
+        return str(string_or_iterable)
 
 
 def _smartjoin_filter(string_or_iterable, join_char: str) -> str:
