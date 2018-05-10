@@ -385,6 +385,7 @@ HIDDEN_CATEGORIES = []
 # CATEGORY_DESTPATH_NAMES = {
 #    DEFAULT_LANG: {
 #        'webdev': 'Web Development',
+#        'webdev/django': 'Web Development/Django',
 #        'random': 'Odds and Ends',
 #    },
 # }
