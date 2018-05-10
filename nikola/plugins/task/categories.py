@@ -84,6 +84,16 @@ link://category_rss/dogs => /categories/dogs.xml""",
         self.template_for_single_list = "tagindex.tmpl" if self.show_list_as_index else "tag.tmpl"
         self.translation_manager = utils.ClassificationTranslationManager()
 
+        # Needed to undo names for CATEGORY_PAGES_FOLLOW_DESTPATH
+        self.destpath_names_reverse = {}
+        for lang in self.site.config['TRANSLATIONS']:
+            self.destpath_names_reverse[lang] = {}
+            for k, v in self.site.config['CATEGORY_DESTPATH_NAMES'](lang).items():
+                self.destpath_names_reverse[lang][v] = k
+        self.destpath_names_reverse = utils.TranslatableSetting(
+            '_CATEGORY_DESTPATH_NAMES_REVERSE', self.destpath_names_reverse,
+            self.site.config['TRANSLATIONS'])
+
     def is_enabled(self, lang=None):
         """Return True if this taxonomy is enabled, or False otherwise."""
         return True
@@ -126,15 +136,15 @@ link://category_rss/dogs => /categories/dogs.xml""",
         """Return a path for the given classification."""
         cat_string = '/'.join(classification)
         classification_raw = classification  # needed to undo CATEGORY_DESTPATH_NAMES
-        cat_names_reverse = self.site.config['_CATEGORY_DESTPATH_NAMES_REVERSE'](lang)
+        destpath_names_reverse = self.destpath_names_reverse(lang)
         if self.site.config['CATEGORY_PAGES_FOLLOW_DESTPATH']:
             base_dir = None
             for post in self.site.posts_per_category[cat_string]:
                 if post.category_from_destpath:
                     base_dir = post.folder_base(lang)
                     # Handle CATEGORY_DESTPATH_NAMES
-                    if cat_string in cat_names_reverse:
-                        cat_string = cat_names_reverse[cat_string]
+                    if cat_string in destpath_names_reverse:
+                        cat_string = destpath_names_reverse[cat_string]
                         classification_raw = cat_string.split('/')
                     break
 

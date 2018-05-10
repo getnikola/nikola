@@ -768,14 +768,6 @@ class Nikola(object):
             utils.LOGGER.error('CATEGORY_PAGES_FOLLOW_DESTPATH requires CATEGORY_ALLOW_HIERARCHIES = True, CATEGORY_OUTPUT_FLAT_HIERARCHY = False.')
             sys.exit(1)
 
-        # Needed to undo names for CATEGORY_PAGES_FOLLOW_DESTPATH
-        destpath_names_reverse = {}
-        for lang in self.config['TRANSLATIONS']:
-            destpath_names_reverse[lang] = {}
-            for k, v in self.config['CATEGORY_DESTPATH_NAMES'](lang).items():
-                destpath_names_reverse[lang][v] = k
-        self.config['_CATEGORY_DESTPATH_NAMES_REVERSE'] = utils.TranslatableSetting('_CATEGORY_DESTPATH_NAMES_REVERSE', destpath_names_reverse, self.config['TRANSLATIONS'])
-
         # Handle CONTENT_FOOTER and RSS_COPYRIGHT* properly.
         # We provide the arguments to format in CONTENT_FOOTER_FORMATS and RSS_COPYRIGHT_FORMATS.
         self.config['CONTENT_FOOTER'].langformat(self.config['CONTENT_FOOTER_FORMATS'])
