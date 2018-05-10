@@ -744,7 +744,7 @@ class Nikola(object):
 
         if self.config.get('POSTS_SECTIONS'):
             utils.LOGGER.warn("The sections feature has been removed and its functionality has been merged into categories.")
-            utils.LOGGER.warn("For more information on how to migrate, please read: TODO")  # TODO: blog post
+            utils.LOGGER.warn("For more information on how to migrate, please read: https://getnikola.com/blog/upgrading-to-nikola-v8.html#sections-were-replaced-by-categories")
 
             for section_config_suffix, cat_config_suffix in (
                 ('DESCRIPTIONS', 'DESCRIPTIONS'),
