@@ -48,7 +48,8 @@ class Plugin(RestExtension):
 CODE = """\
 <div class="youtube-video{align}">
 <iframe width="{width}" height="{height}"
-src="https://www.youtube.com/embed/{yid}?rel=0&amp;hd=1&amp;wmode=transparent"
+src="https://www.youtube-nocookie.com/embed/{yid}?rel=0&wmode=transparent"
+frameborder="0" allow="encrypted-media" allowfullscreen
 ></iframe>
 </div>"""
 
@@ -76,8 +77,8 @@ class Youtube(Directive):
         self.check_content()
         options = {
             'yid': self.arguments[0],
-            'width': 425,
-            'height': 344,
+            'width': 560,
+            'height': 315,
         }
         options.update(self.options)
         if self.options.get('align') in _align_options_base:

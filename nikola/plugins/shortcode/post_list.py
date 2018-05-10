@@ -120,6 +120,11 @@ class PostListShortcode(ShortcodePlugin):
 
     name = "post_list"
 
+    def set_site(self, site):
+        """Set the site."""
+        super(PostListShortcode, self).set_site(site)
+        site.register_shortcode('post-list', self.handler)
+
     def handler(self, start=None, stop=None, reverse=False, tags=None, require_all_tags=False, categories=None,
                 sections=None, slugs=None, post_type='post', type=False,
                 lang=None, template='post_list_directive.tmpl', sort=None,
