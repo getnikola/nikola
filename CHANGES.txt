@@ -6,6 +6,9 @@ Changes since v8 Beta 1
 Features
 --------
 
+* Use youtube-nocookie.com for better privacy in ``youtube`` reST
+  directive and improve the appearance of the player
+
 Bugfixes
 --------
 
