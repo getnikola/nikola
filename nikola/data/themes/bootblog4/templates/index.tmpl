@@ -58,3 +58,74 @@ ${helper.html_pager()}
 ${comments.comment_link_script()}
 ${math.math_scripts_ifposts(posts)}
 </%block>
+
+<%block name="before_content">
+% if 'main_index' in pagekind and is_frontmost_index and featured and (theme_config.get('featured_large') or theme_config.get('featured_small')):
+% if theme_config.get('featured_on_mobile'):
+<div class="d-block">
+% else:
+<div class="d-none d-md-block">
+% endif
+% if featured and theme_config.get('featured_large'):
+      <div class="jumbotron p-0 text-white rounded bg-dark">
+        <div class="row bootblog4-featured-jumbotron-row">
+          <div class="col-md-6 p-3 p-md-5 pr-0 h-md-250">
+            <h1 class="display-4 font-italic"><a class="text-white" href="${featured[0].permalink()}">${featured[0].title()}</a></h1>
+          % if featured[0].previewimage:
+            <div class="lead my-3 mb-0">${featured[0].text(teaser_only=True, strip_html=theme_config.get('featured_strip_html', True))}</div>
+          </div>
+          <div class="col-md-6 p-0 h-md-250 text-right">
+            <img class="bootblog4-featured-large-image" src="${featured[0].previewimage}" alt="${featured.pop(0).title()}">
+          % else:
+            <div class="lead my-3 mb-0">${featured.pop(0).text(teaser_only=True, strip_html=theme_config.get('featured_strip_html', True))}</div>
+          % endif
+</div>
+        </div>
+      </div>
+% endif
+
+% if featured and theme_config.get('featured_small'):
+    <div class="row mb-2">
+
+           % if len(featured) == 1:
+            <div class="col-md-12">
+           % else:
+            <div class="col-md-6">
+           % endif
+           <div class="card flex-md-row mb-4 box-shadow h-md-250">
+            <div class="card-body d-flex flex-column align-items-start">
+              <h3 class="mb-0">
+                <a class="text-dark" href="${featured[0].permalink()}">${featured[0].title()}</a>
+              </h3>
+            % if featured[0].previewimage:
+              <div class="card-text mb-auto">${featured[0].text(teaser_only=True, strip_html=theme_config.get('featured_strip_html', True))}</div>
+              </div>
+              <img class="card-img-right flex-auto d-none d-lg-block" src="${featured[0].previewimage}" alt="${featured.pop(0).title()}">
+            % else:
+              <div class="card-text mb-auto">${featured.pop(0).text(teaser_only=True, strip_html=theme_config.get('featured_strip_html', True))}</div>
+              </div>
+            % endif
+            </div>
+            </div>
+        % if featured:
+        <div class="col-md-6">
+          <div class="card flex-md-row mb-4 box-shadow h-md-250">
+            <div class="card-body d-flex flex-column align-items-start">
+              <h3 class="mb-0">
+                <a class="text-dark" href="${featured[0].permalink()}">${featured[0].title()}</a>
+              </h3>
+            % if featured[0].previewimage:
+              <div class="card-text mb-auto">${featured[0].text(teaser_only=True, strip_html=theme_config.get('featured_strip_html', True))}</div>
+              </div>
+              <img class="card-img-right flex-auto d-none d-lg-block" src="${featured[0].previewimage}" alt="${featured.pop(0).title()}">
+            % else:
+              <div class="card-text mb-auto">${featured.pop(0).text(teaser_only=True, strip_html=theme_config.get('featured_strip_html', True))}</div>
+              </div>
+            % endif
+        </div>
+        % endif
+      </div>
+    </div>
+% endif
+% endif
+</%block>

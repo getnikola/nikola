@@ -65,6 +65,11 @@ h1, h2, h3, h4, h5, h6 {
   flex: 0 0 auto;
 }
 
+.h-150 { height: 150px; }
+@media (min-width: 768px) {
+  .h-md-150 { height: 150px; }
+}
+
 .h-250 { height: 250px; }
 @media (min-width: 768px) {
   .h-md-250 { height: 250px; }
@@ -149,4 +154,14 @@ article .metadata {
 .navbar-brand {
     padding: 0;
     white-space: initial;
+}
+
+.bootblog4-featured-large-image {
+    height: 100%;
+    border-top-right-radius: .25rem!important;
+    border-bottom-right-radius: .25rem!important;
+}
+
+.bootblog4-featured-jumbotron-row {
+    margin-right: 0;
 }
