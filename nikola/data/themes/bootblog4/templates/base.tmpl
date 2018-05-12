@@ -57,10 +57,16 @@ ${template_hooks['extra_head']()}
 
 <div class="container" id="content" role="main">
     <div class="body-content">
+        % if theme_config.get('sidebar'):
+            <div class="row"><div class="col-md-8 blog-main">
+        % endif
         <!--Body content-->
         ${template_hooks['page_header']()}
         <%block name="content"></%block>
         <!--End of body content-->
+        % if theme_config.get('sidebar'):
+        </div><aside class="col-md-4 blog-sidebar">${theme_config.get('sidebar')}</aside></div>
+        % endif
 
         <footer id="footer">
             ${content_footer}
