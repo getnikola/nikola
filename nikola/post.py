@@ -263,9 +263,9 @@ class Post(object):
 
         self.publish_later = False if self.current_time is None else self.date >= self.current_time
 
-        is_draft = False
-        is_private = False
-        post_status = 'published'
+        self.is_draft = False
+        self.is_private = False
+        self.post_status = 'published'
         self._tags = {}
         self.has_oldstyle_metadata_tags = False
         for lang in self.translated_to:
@@ -280,16 +280,16 @@ class Post(object):
 
             status = self.meta[lang].get('status')
             if status:
-                is_private = False
-                is_draft = False
-                if status in ('published', 'featured'):
-                    post_status = status
+                if status == 'published':
+                    pass  # already set before, mixing published + something else should result in the other thing
+                if status == 'featured':
+                    self.post_status = status
                 elif status == 'private':
-                    post_status = status
-                    is_private = True
+                    self.post_status = status
+                    self.is_private = True
                 elif status == 'draft':
-                    post_status = status
-                    is_draft = True
+                    self.post_status = status
+                    self.is_draft = True
                 else:
                     LOGGER.warn(('The post "{0}" has the unknown status "{1}". '
                                  'Valid values are "published", "featured", "private" and "draft".').format(self.source_path, status))
@@ -313,29 +313,25 @@ class Post(object):
                                 'configuration to disable this warning.')
             if self.config['USE_TAG_METADATA']:
                 if 'draft' in [_.lower() for _ in self._tags[lang]]:
-                    is_draft = True
+                    self.is_draft = True
                     LOGGER.debug('The post "{0}" is a draft.'.format(self.source_path))
                     self._tags[lang].remove('draft')
-                    post_status = 'draft'
+                    self.post_status = 'draft'
                     self.has_oldstyle_metadata_tags = True
 
                 if 'private' in self._tags[lang]:
-                    is_private = True
+                    self.is_private = True
                     LOGGER.debug('The post "{0}" is private.'.format(self.source_path))
                     self._tags[lang].remove('private')
-                    post_status = 'private'
+                    self.post_status = 'private'
                     self.has_oldstyle_metadata_tags = True
 
                 if 'mathjax' in self._tags[lang]:
                     self.has_oldstyle_metadata_tags = True
 
         # While draft comes from the tags, it's not really a tag
-        self.is_draft = is_draft
-        self.is_private = is_private
         self.is_post = use_in_feeds
-        self.post_status = post_status
-        self.use_in_feeds = use_in_feeds and not is_draft and not is_private \
-            and not self.publish_later
+        self.use_in_feeds = self.is_post and not self.is_draft and not self.is_private and not self.publish_later
 
         # Allow overriding URL_TYPE via meta
         # The check is done here so meta dicts won’t change inside of
