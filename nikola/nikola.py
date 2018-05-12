@@ -570,6 +570,7 @@ class Nikola(object):
             'TEMPLATE_FILTERS': {},
             'THEME': LEGAL_VALUES['DEFAULT_THEME'],
             'THEME_COLOR': '#5670d4',  # light "corporate blue"
+            'THEME_CONFIG': {},
             'THUMBNAIL_SIZE': 180,
             'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}',
             'URL_TYPE': 'rel_path',
@@ -648,6 +649,7 @@ class Nikola(object):
                                       'CATEGORY_DESTPATH_NAMES',
                                       'INDEXES_PAGES',
                                       'INDEXES_PRETTY_PAGE_URL',
+                                      'THEME_CONFIG',
                                       # PATH options (Issue #1914)
                                       'TAG_PATH',
                                       'TAGS_INDEX_PATH',
@@ -680,6 +682,7 @@ class Nikola(object):
                                              'date_format',
                                              'js_date_format',
                                              'front_index_header',
+                                             'theme_config',
                                              )
 
         self._ALL_PAGE_DEPS_TRANSLATABLE = ('atom_path',
@@ -1143,6 +1146,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['use_bundles'] = self.config['USE_BUNDLES']
         self._GLOBAL_CONTEXT['use_cdn'] = self.config.get("USE_CDN")
         self._GLOBAL_CONTEXT['theme_color'] = self.config.get("THEME_COLOR")
+        self._GLOBAL_CONTEXT['theme_config'] = self.config.get("THEME_CONFIG")
         self._GLOBAL_CONTEXT['favicons'] = self.config['FAVICONS']
         self._GLOBAL_CONTEXT['date_format'] = self.config.get('DATE_FORMAT')
         self._GLOBAL_CONTEXT['blog_author'] = self.config.get('BLOG_AUTHOR')
@@ -2581,6 +2585,7 @@ class Nikola(object):
                     context['current_page'] = ipages_i - 1
                 context['prev_next_links_reversed'] = kw['indexes_static']
             context["permalink"] = page_links[i]
+            context["is_frontmost_index"] = i == 0
             output_name = os.path.join(kw['output_folder'], page_path(i, ipages_i, num_pages, False))
             task = self.generic_post_list_renderer(
                 lang,

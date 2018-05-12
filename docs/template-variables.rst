@@ -100,6 +100,7 @@ Name                                Type                                Descript
 ``colorize_str``                    function                            ``utils.colorize_str`` function
 ``template_hooks``                  dict<str, TemplateHookRegistry>     Template hooks registered by plugins
 ``theme_color``                     str                                 ``THEME_COLOR`` setting
+``theme_config``                    dict                                ``THEME_CONFIG`` setting
 ``timezone``                        tzinfo                              Timezone object (represents the configured timezone)
 ``translations``                    dict<str, str>                      ``TRANSLATIONS`` setting
 ``twitter_card``                    dict                                ``TWITTER_CARD`` setting, defaults to an empty dictionary
@@ -179,6 +180,7 @@ Name                            Type            Description
 ``prevfeedlink``                str             Link to previous page as an Atom feed
 ``nextfeedlink``                str             Link to next page as an Atom feed
 ``prev_next_links_reversed``    bool            Whether or not previous and next links should be reversed (``INDEXES_STATIC``)
+``is_frontmost_index``          bool            Whether or not this is the front-most index (page 0)
 ==============================  ==============  ===============================================================================
 
 Variables available in taxonomies
