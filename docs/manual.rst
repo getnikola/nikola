@@ -369,7 +369,7 @@ pretty_url
 previewimage
     Designate a preview or other representative image path relative to BASE_URL
     for use with Open Graph for posts. Adds the image when sharing on social
-    media and many other uses.
+    media, feeds, and many other uses.
 
     .. code:: restructuredtext
 
@@ -378,7 +378,8 @@ previewimage
     The image can be of any size and dimension (services will crop and adapt)
     but should less than 1 MB and be larger than 300x300 (ideally 600x600).
 
-    Note that the default themes do not display this image.
+    This image is displayed by ``bootblog4`` for featured posts (see `Featured
+    Posts`_ for details).
 
 template
     Change the template used to render this page/post specific page. That
@@ -832,6 +833,53 @@ Private Posts
 If you set the ``status`` metadata field of a post to ``private``, it will not be shown
 in indexes and feeds. It *will* be compiled, and if you deploy it it *will* be made
 available, so it will not generate 404s for people who had linked to it.
+
+Featured Posts
+~~~~~~~~~~~~~~
+
+Some themes, ``bootblog4`` in particular, support featured posts. To mark a
+post as featured, simply set the ``status`` meta field to ``featured``. All
+featured posts are available in index templates in a ``featured``
+list, but only if this is the main blog index.
+
+For bootblog4, you can display up to three posts as featured: one can be shown
+in a large gray box (jumbotron), and two more can appear in small white
+cards.  In order to enable this feature, you need to add ``THEME_CONFIG`` to
+your configuration, and set it up properly:
+
+.. code:: python
+
+    THEME_CONFIG = {
+        DEFAULT_LANG: {
+            # Show the latest featured post in a large box, with the previewimage as its background.
+            'featured_large': True,
+            # Show the first (remaining) two featured posts in small boxes.
+            'featured_small': True,
+            # Show featured posts on mobile.
+            'featured_on_mobile': True,
+            # Strip HTML from featured post text.
+            'featured_strip_html': True,
+            # Contents of the sidebar, If empty, the sidebar is not displayed.
+            'sidebar': ''
+        }
+    }
+
+You can pick betweeen (up to) 1, 2, or 3 featured posts. You can mix
+``featured_large`` and ``featured_small``, rest assured that Nikola will always
+display the latest posts no matter what setup you choose. If only one posts
+qualifies for the small cards, one card taking up all the width will appear.
+
+Both featured box formats display an image to the right. You can set it by changing the ``previewimage`` meta value to the full path to the image (eg. ``.. previewimage: /images/featured1.png``). This works best with images in portrait orientation.
+
+The featured boxes display only the teaser. We recommend keeping it short so
+you don’t get an ugly scrollbar.
+
+Finally, here’s an example (you’ll need to imagine a scrollbar in the right box
+yourself):
+
+.. thumbnail:: https://getnikola.com/images/bootblog4-featured2x.png
+   :align: center
+   :alt: An example of how featured posts look in bootblog4.
 
 Queuing Posts
 ~~~~~~~~~~~~~

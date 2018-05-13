@@ -93,7 +93,7 @@ THEME = ${THEME}
 THEME_COLOR = '#5670d4'
 
 # Theme configuration. Fully theme-dependent. (translatable)
-# Examples before are for bootblog4.
+# Examples below are for bootblog4.
 THEME_CONFIG = {
     DEFAULT_LANG: {
         # Show the latest featured post in a large box, with the previewimage as its background.

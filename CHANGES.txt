@@ -6,6 +6,9 @@ Changes since v8 Beta 1
 Features
 --------
 
+* Support featured posts in bootblog4 (Issue #2964)
+* Add ``THEME_CONFIG`` setting that themes can use in any way they
+  like
 * Use youtube-nocookie.com for better privacy in ``youtube`` reST
   directive and improve the appearance of the player
 
