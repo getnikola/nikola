@@ -17,6 +17,8 @@ Variables available in templates are listed below.
   <https://getnikola.com/conf.html>`_ respectively.
 * Templates often create their own functions (macros), and import macros from
   other templates. Those macros are not listed here.
+* This list has a partial documentation of post objects, but no other objects. For full docs, please consult
+  the code, or auto-generated code docs on `ReadTheDocs <http://nikola.readthedocs.io/>`_.
 
 Variables and functions come from three places:
 
@@ -461,5 +463,57 @@ Name                Type        Description
 ``messages``        dict        The messages dictionary
 ``_link``           function    ``Nikola.link`` function
 ==================  ==========  =====================================
+
+Post object attributes
+----------------------
+
+*Usable anywhere post objects are accessible.*
+
+This list only includes variables that make sense for templates. Some function signatures have been shortened to save space, ``?`` means the argument has default value.
+
+More docs: `nikola.post.Post on ReadTheDocs <http://nikola.readthedocs.io/en/latest/nikola/#nikola.post.Post>`_. Check out the source of the Post class as well.
+
+===================================================================  ==========  =============================================================
+Name                                                                 Type        Description
+===================================================================  ==========  =============================================================
+``alltags``                                                          list<str>   All tags for the post
+``author(lang=None)``                                                str         Localized author or ``BLOG_AUTHOR``
+``base_path``                                                        str         ``cache`` path with local ``os.sep``
+``category_from_destpath``                                           bool        If category was set by ``CATEGORY_DESTPATH_AS_DEFAULT``
+``data(key, lang=None)``                                             ?           Access to post data
+``date``                                                             datetime    Date of post (from meta)
+``description(key, lang=None)``                                      str         Description of post (from meta)
+``destination_path(lang?, extension?, sep?)``                        str         Destination path of post
+``formatted_date(date_format, date=None)``                           str         Format a date (default: post date)
+``formatted_updated(date_format)``                                   str         Format the last update date
+``guid(lang=None)``                                                  str         GUID of post (used for feeds)
+``has_math``                                                         bool        If the post has math
+``has_pretty_url(lang)``                                             bool        If the post has a pretty URL
+``is_draft``                                                         bool        If the post is a draft
+``is_post``                                                          bool        If the post is not a page
+``is_private``                                                       bool        If the post is private
+``is_translation_available(lang)``                                   bool        If the post is available in (translated to) a given language
+``is_two_file``                                                      bool        If the post uses two-file metadata
+``meta(key, lang=None)``                                             ?           Metadata of the post (assumes current language)
+``next_post``                                                        Post        Next post in the order
+``paragraph_count``                                                  int         Paragraph count for a post
+``permalink(lang?, absolute?, extension?, query?)``                  str         Permanent link for a post
+``post_name``                                                        str         Source path, without extension
+``post_status``                                                      str         Post status meta field (published, featured, private, draft)
+``prev_post``                                                        Post        Previous post in the order
+``previewimage``                                                     str         Preview image of the post
+``publish_later``                                                    bool        True if the post is not yet published (due to date)
+``reading_time``                                                     int         Approximate reading time in minutes (220 wpm)
+``remaining_paragraph_count``                                        int         Paragraph count after the teaser
+``remaining_reading_time``                                           int         Reading time after the teaser
+``source_link``                                                      str         Absolute link to the post's source
+``tags``                                                             list<str>   Tags for the current language
+``tags_for_language(lang)``                                          list<str>   Tags for a given language
+``text(lang?, teaser_only?, strip_html?, show_read_more_link?, …)``  str         The text of a post
+``title(lang=None)``                                                 str         Localized title of post
+``translated_to``                                                    list<str>   List of languages of post
+``updated``                                                          datetime    Date of last update (from meta)
+``use_in_feeds``                                                     bool        If this post should be displayed in feeds
+===================================================================  ==========  =============================================================
 
 .. vim: nowrap textwidth=0
