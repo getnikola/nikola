@@ -91,14 +91,15 @@ class CompileMarkdown(PageCompiler):
         self.config_dependencies.append(str(sorted(site_extensions)))
         extensions.extend(site_extensions)
 
-        site_extension_configs = self.site.config.get("MARKDOWN_EXTENSION_CONFIGS", {})
+        site_extension_configs = self.site.config.get("MARKDOWN_EXTENSION_CONFIGS")
         if site_extension_configs:
             self.config_dependencies.append(json.dumps(site_extension_configs.values, sort_keys=True))
 
         if Markdown is not None:
             self.converters = {}
             for lang in self.site.config['TRANSLATIONS']:
-                self.converters[lang] = ThreadLocalMarkdown(extensions, site_extension_configs(lang))
+                lang_extension_configs = site_extension_configs(lang) if site_extension_configs else {}
+                self.converters[lang] = ThreadLocalMarkdown(extensions, lang_extension_configs)
         self.supports_metadata = 'markdown.extensions.meta' in extensions
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
