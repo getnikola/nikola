@@ -65,6 +65,11 @@ h1, h2, h3, h4, h5, h6 {
   flex: 0 0 auto;
 }
 
+.h-150 { height: 150px; }
+@media (min-width: 768px) {
+  .h-md-150 { height: 150px; }
+}
+
 .h-250 { height: 250px; }
 @media (min-width: 768px) {
   .h-md-250 { height: 250px; }
@@ -146,7 +151,71 @@ article .metadata {
   }
 }
 
+/* Various fixes that make this theme look better for Nikola's needs */
 .navbar-brand {
     padding: 0;
     white-space: initial;
+}
+
+.bootblog4-featured-large-image {
+    height: 100%;
+    border-top-right-radius: .25rem!important;
+    border-bottom-right-radius: .25rem!important;
+}
+
+.bootblog4-featured-jumbotron-row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.bootblog4-right-nav {
+    text-align: right;
+}
+
+.bootblog4-featured-text {
+    overflow: auto;
+}
+
+/* extend the mobile appearance to `sm`, because otherwise weird things happen */
+@media (min-width: 576px) {
+    .nbb-navbar-toggler {
+        display: block;
+    }
+}
+
+@media (max-width: 767px) {
+    .bootblog4-right-nav {
+        margin-top: 1rem;
+    }
+
+    .bootblog4-search-form-holder {
+        position: absolute;
+        top: 2.75rem;
+    }
+
+    .bootblog4-search-form-holder input.form-control {
+        width: 6rem;
+    }
+
+    .bootblog4-brand {
+        text-align: left;
+    }
+}
+
+@media (min-width: 768px) {
+    .nbb-navbar-toggler {
+        display: none;
+    }
+
+    .flex-collapse {
+        display: flex !important;
+    }
+
+    .bootblog4-search-form-holder {
+        display: block !important;
+    }
+
+    .bootblog4-brand {
+        text-align: center;
+    }
 }

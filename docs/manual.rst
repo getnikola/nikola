@@ -369,7 +369,7 @@ pretty_url
 previewimage
     Designate a preview or other representative image path relative to BASE_URL
     for use with Open Graph for posts. Adds the image when sharing on social
-    media and many other uses.
+    media, feeds, and many other uses.
 
     .. code:: restructuredtext
 
@@ -378,7 +378,8 @@ previewimage
     The image can be of any size and dimension (services will crop and adapt)
     but should less than 1 MB and be larger than 300x300 (ideally 600x600).
 
-    Note that the default themes do not display this image.
+    This image is displayed by ``bootblog4`` for featured posts (see `Featured
+    Posts`_ for details).
 
 template
     Change the template used to render this page/post specific page. That
@@ -833,6 +834,62 @@ If you set the ``status`` metadata field of a post to ``private``, it will not b
 in indexes and feeds. It *will* be compiled, and if you deploy it it *will* be made
 available, so it will not generate 404s for people who had linked to it.
 
+Featured Posts
+~~~~~~~~~~~~~~
+
+Some themes, ``bootblog4`` in particular, support featured posts. To mark a
+post as featured, simply set the ``status`` meta field to ``featured``. All
+featured posts are available in index templates in a ``featured``
+list, but only if this is the main blog index.
+
+For bootblog4, you can display up to three posts as featured: one can be shown
+in a large gray box (jumbotron), and two more can appear in small white
+cards.  In order to enable this feature, you need to add ``THEME_CONFIG`` to
+your configuration, and set it up properly:
+
+.. code:: python
+
+    THEME_CONFIG = {
+        DEFAULT_LANG: {
+            # Show the latest featured post in a large box, with the previewimage as its background.
+            'featured_large': True,
+            # Show the first (remaining) two featured posts in small boxes.
+            'featured_small': True,
+            # Show featured posts on mobile.
+            'featured_on_mobile': True,
+            # Show image in `featured_large` on mobile.
+            # `featured_small` displays them only on desktop.
+            'featured_large_image_on_mobile': False,
+            # Strip HTML from featured post text.
+            'featured_strip_html': True,
+            # Contents of the sidebar, If empty, the sidebar is not displayed.
+            'sidebar': ''
+        }
+    }
+
+You can pick betweeen (up to) 1, 2, or 3 featured posts. You can mix
+``featured_large`` and ``featured_small``, rest assured that Nikola will always
+display the latest posts no matter what setup you choose. If only one posts
+qualifies for the small cards, one card taking up all the width will appear.
+
+Both featured box formats display an image to the right. You can set it by changing the ``previewimage`` meta value to the full path to the image (eg. ``.. previewimage: /images/featured1.png``). This works best with images in portrait orientation.
+
+Note that, due to space constraints, only the large box may show the image on
+mobile, below the text (this behavior can be disbled). Small boxes never
+display images on mobile. In particular: ``xs`` and ``sm`` display only the
+large image, and only if configured; ``md`` displays only the large image,
+``lg`` displays all three images.
+
+The boxes display only the teaser. We recommend keeping it short so
+you don’t get an ugly scrollbar.
+
+Finally, here’s an example (you’ll need to imagine a scrollbar in the right box
+yourself):
+
+.. thumbnail:: https://getnikola.com/images/bootblog4-featured2x.png
+   :align: center
+   :alt: An example of how featured posts look in bootblog4.
+
 Queuing Posts
 ~~~~~~~~~~~~~
 
@@ -1249,8 +1306,8 @@ thumbnail
 
         {{% raw %}}{{% thumbnail "/images/foo.png" %}}{{% /thumbnail %}}{{% /raw %}}
         {{% raw %}}{{% thumbnail "/images/foo.png" alt="Foo Image" align="center" %}}{{% /thumbnail %}}{{% /raw %}}
-        {{% raw %}}{{% thumbnail "/images/foo.png" imgclass="image-grayscale" figclass="figure-shadow" %}}<p>Image caption</p>{{% /thumbnail %}}{{% /raw %}}
-        {{% raw %}}{{% thumbnail "/images/foo.png" alt="Foo Image" title="Insert title-text joke here" align="right" %}}<p class="caption">Foo Image (right-aligned) caption</p>{{% /thumbnail %}}{{% /raw %}}
+        {{% raw %}}{{% thumbnail "/images/foo.png" imgclass="image-grayscale" figclass="figure-shadow" %}}&lt;p&gt;Image caption&lt;/p&gt;{{% /thumbnail %}}{{% /raw %}}
+        {{% raw %}}{{% thumbnail "/images/foo.png" alt="Foo Image" title="Insert title-text joke here" align="right" %}}&lt;p class="caption"&gt;Foo Image (right-aligned) caption&lt;/p&gt;{{% /thumbnail %}}{{% /raw %}}
 
     The following keyword arguments are supported:
 
@@ -1834,7 +1891,7 @@ If you click on images on a gallery, or on images with links in post, you will
 see a bigger image, thanks to the excellent `baguetteBox
 <https://feimosi.github.io/baguetteBox.js/>`_.  If don’t want this behavior, add an
 ``.islink`` class to your link. (The behavior is caused by ``<a
-class="image-reference">`` if you need to use it outside of galleries and reST
+class="reference">`` if you need to use it outside of galleries and reST
 thumbnails.)
 
 The gallery pages are generated using the ``gallery.tmpl`` template, and you can
@@ -2540,19 +2597,22 @@ To include an image placed in the ``images`` folder (or other folders defined in
 .. code:: restructuredtext
 
     .. thumbnail:: /images/tesla.jpg
+       :alt: Nikola Tesla
 
 The small thumbnail will be placed in the page, and it will be linked to the bigger
 version of the image when clicked, using
 `baguetteBox <https://feimosi.github.io/baguetteBox.js/>`_ by default. All options supported by
 the reST `image <http://docutils.sourceforge.net/docs/ref/rst/directives.html#image>`_
-directive are supported (except ``target``). If a body element is provided, the
-thumbnail will mimic the behavior of the
-`figure <http://docutils.sourceforge.net/docs/ref/rst/directives.html#figure>`_
+directive are supported (except ``target``). Providing ``alt`` is recommended,
+as this is the image caption. If a body element is provided, the thumbnail will
+mimic the behavior of the `figure
+<http://docutils.sourceforge.net/docs/ref/rst/directives.html#figure>`_
 directive instead:
 
 .. code:: restructuredtext
 
     .. thumbnail:: /images/tesla.jpg
+       :alt: Nikola Tesla
 
        Nikola Tesla, the man that invented the 20th century.
 
@@ -2561,7 +2621,7 @@ least this basic HTML:
 
 .. code:: html
 
-   <a class="image-reference" href="images/tesla.jpg"><img src="images/tesla.thumbnail.jpg"></a>
+   <a class="reference" href="images/tesla.jpg" alt="Nikola Tesla"><img src="images/tesla.thumbnail.jpg"></a>
 
 Chart
 ~~~~~
