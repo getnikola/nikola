@@ -118,8 +118,8 @@ Example:
             "title": self.site.config["INDEXES_TITLE"](lang) or self.site.config["BLOG_TITLE"](lang),
             "description": self.site.config["BLOG_DESCRIPTION"](lang),
             "pagekind": ["main_index", "index"],
-            "featured": [p for p in self.site.posts if p.post_status == 'featured'
-                         and (lang in p.translated_to or kw["show_untranslated_posts"])],
+            "featured": [p for p in self.site.posts if p.post_status == 'featured' and
+                         (lang in p.translated_to or kw["show_untranslated_posts"])],
         }
         kw.update(context)
         return context, kw

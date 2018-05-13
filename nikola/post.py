@@ -466,11 +466,11 @@ class Post(object):
         return self.meta[lang]['template'] or self._template_name
 
     def formatted_date(self, date_format, date=None):
-        """Return the formatted date as unicode."""
+        """Return the formatted date as string."""
         return utils.LocaleBorg().formatted_date(date_format, date if date else self.date)
 
     def formatted_updated(self, date_format):
-        """Return the updated date as unicode."""
+        """Return the updated date as string."""
         return self.formatted_date(date_format, self.updated)
 
     def title(self, lang=None):
