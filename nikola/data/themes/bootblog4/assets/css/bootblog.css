@@ -176,24 +176,46 @@ article .metadata {
     overflow: auto;
 }
 
+/* extend the mobile appearance to `sm`, because otherwise weird things happen */
+@media (min-width: 576px) {
+    .nbb-navbar-toggler {
+        display: block;
+    }
+}
+
 @media (max-width: 767px) {
     .bootblog4-right-nav {
         margin-top: 1rem;
     }
+
     .bootblog4-search-form-holder {
         position: absolute;
         top: 2.75rem;
     }
+
     .bootblog4-search-form-holder input.form-control {
         width: 6rem;
+    }
+
+    .bootblog4-brand {
+        text-align: left;
     }
 }
 
 @media (min-width: 768px) {
+    .nbb-navbar-toggler {
+        display: none;
+    }
+
     .flex-collapse {
         display: flex !important;
     }
+
     .bootblog4-search-form-holder {
         display: block !important;
+    }
+
+    .bootblog4-brand {
+        text-align: center;
     }
 }

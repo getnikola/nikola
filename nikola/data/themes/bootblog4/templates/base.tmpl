@@ -15,7 +15,7 @@ ${template_hooks['extra_head']()}
 <div class="container">
       <header class="blog-header py-3">
         <div class="row nbb-header align-items-center">
-          <div class="col-md-3 col-xs-2" style="width: auto;">
+          <div class="col-md-3 col-xs-2 col-sm-2" style="width: auto;">
             <button class="navbar-toggler navbar-light bg-light nbb-navbar-toggler" type="button" data-toggle="collapse" data-target=".bs-nav-collapsible" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -23,7 +23,7 @@ ${template_hooks['extra_head']()}
                 ${search_form}
             </div>
         </div>
-          <div class="col-md-6 col-xs-10 text-center" style="width: auto;">
+          <div class="col-md-6 col-xs-10 col-sm-10 bootblog4-brand" style="width: auto;">
             <a class="navbar-brand blog-header-logo text-dark" href="${abs_link(_link("root", None, lang))}">
         %if logo_url:
             <img src="${logo_url}" alt="${blog_title|h}" id="logo" class="d-inline-block align-top">
