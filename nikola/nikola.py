@@ -514,6 +514,7 @@ class Nikola(object):
             'LISTINGS_FOLDERS': {'listings': 'listings'},
             'LOGO_URL': '',
             'NAVIGATION_LINKS': {},
+            'NAVIGATION_ALT_LINKS': {},
             'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite', 'extra'],
             'MARKDOWN_EXTENSION_CONFIGS': {},
             'MAX_IMAGE_SIZE': 1280,
@@ -619,9 +620,11 @@ class Nikola(object):
         # Use ATOM_PATH when set
         self.config['ATOM_PATH'] = self.config['ATOM_PATH'] or self.config['INDEX_PATH']
 
-        # Make sure we have sane NAVIGATION_LINKS.
+        # Make sure we have sane NAVIGATION_LINKS and NAVIGATION_ALT_LINKS.
         if not self.config['NAVIGATION_LINKS']:
             self.config['NAVIGATION_LINKS'] = {self.config['DEFAULT_LANG']: ()}
+        if not self.config['NAVIGATION_ALT_LINKS']:
+            self.config['NAVIGATION_ALT_LINKS'] = {self.config['DEFAULT_LANG']: ()}
 
         # Translatability configuration.
         self.config['TRANSLATIONS'] = self.config.get('TRANSLATIONS',
@@ -642,6 +645,7 @@ class Nikola(object):
                                       'BODY_END',
                                       'EXTRA_HEAD_DATA',
                                       'NAVIGATION_LINKS',
+                                      'NAVIGATION_ALT_LINKS',
                                       'FRONT_INDEX_HEADER',
                                       'INDEX_READ_MORE_LINK',
                                       'FEED_READ_MORE_LINK',
@@ -690,7 +694,7 @@ class Nikola(object):
                                             'rss_filename_base',
                                             'atom_filename_base',
                                             )
-        # WARNING: navigation_links SHOULD NOT be added to the list above.
+        # WARNING: navigation_(alt_)links SHOULD NOT be added to the list above.
         #          Themes ask for [lang] there and we should provide it.
 
         # We first have to massage JS_DATE_FORMAT, otherwise we run into trouble
@@ -1179,6 +1183,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['rss_link'] = self.config.get('RSS_LINK')
 
         self._GLOBAL_CONTEXT['navigation_links'] = self.config.get('NAVIGATION_LINKS')
+        self._GLOBAL_CONTEXT['navigation_alt_links'] = self.config.get('NAVIGATION_ALT_LINKS')
 
         self._GLOBAL_CONTEXT['twitter_card'] = self.config.get(
             'TWITTER_CARD', {})
@@ -2213,6 +2218,7 @@ class Nikola(object):
             deps_dict[k] = deps_dict['all_page_deps'][k](lang)
 
         deps_dict['navigation_links'] = deps_dict['global']['navigation_links'](lang)
+        deps_dict['navigation_alt_links'] = deps_dict['global']['navigation_alt_links'](lang)
 
         task = {
             'name': os.path.normpath(output_name),

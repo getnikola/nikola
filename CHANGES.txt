@@ -12,11 +12,12 @@ Important compatibility changes not mentioned previously
 Features
 --------
 
-* Added documentation of post objects to list of template variables
+* Add ``NAVIGATION_ALT_LINKS`` option, displayed on the right side in
+  bootstrap4/bootblog4 (Issue #3030)
+* Added documentation of Post objects to list of template variables
   (Issue #3003)
 * Support featured posts in bootblog4 (Issue #2964)
-* Add ``THEME_CONFIG`` setting that themes can use in any way they
-  like
+* Add ``THEME_CONFIG`` setting that themes can use in any way
 * Use youtube-nocookie.com for better privacy in ``youtube`` reST
   directive and improve the appearance of the player
 

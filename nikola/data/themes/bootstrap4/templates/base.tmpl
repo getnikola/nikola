@@ -30,7 +30,7 @@ ${template_hooks['extra_head']()}
 
         <div class="collapse navbar-collapse" id="bs-navbar">
             <ul class="navbar-nav mr-auto">
-                ${base.html_navigation_links()}
+                ${base.html_navigation_links_entries(navigation_links)}
                 ${template_hooks['menu']()}
             </ul>
             %if search_form:
@@ -38,6 +38,7 @@ ${template_hooks['extra_head']()}
             %endif
 
             <ul class="navbar-nav navbar-right">
+                ${base.html_navigation_links_entries(navigation_alt_links)}
                 <%block name="belowtitle">
                 %if len(translations) > 1:
                     <li>${base.html_translations()}</li>

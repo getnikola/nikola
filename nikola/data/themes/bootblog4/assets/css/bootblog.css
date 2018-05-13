@@ -169,13 +169,17 @@ article .metadata {
 }
 
 .bootblog4-right-nav {
-    text-align: right;
+    flex-direction: row;
+}
+
+.bootblog4-right-nav .nav-link {
+    padding-right: .5rem;
+    padding-left: .5rem;
 }
 
 .bootblog4-featured-text {
     overflow: auto;
 }
-
 /* extend the mobile appearance to `sm`, because otherwise weird things happen */
 @media (min-width: 576px) {
     .nbb-navbar-toggler {
