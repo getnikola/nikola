@@ -6,7 +6,7 @@ Nikola
 A Static Site and Blog Generator
 --------------------------------
 
-:Version: Nikola 8.0.0b1
+:Version: Nikola 8.0.0b2
 :Manual section: 1
 :Manual group: User Commands
 

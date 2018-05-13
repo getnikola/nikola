@@ -9,7 +9,7 @@
 Theming Nikola
 ==============
 
-:Version: 8.0.0b1
+:Version: 8.0.0b2
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
 .. class:: alert alert-primary float-md-right

@@ -9,14 +9,14 @@
 # Translators:
 # Chris Warrick, 2018
 # Dong Geun <dglee2@gmail.com>, 2014
-# Yi donghoon <icq4ever@gmail.com>, 2016
+# Yi donghoon <icq4ever@gmail.com>, 2016,2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2018-03-04 16:39+0000\n"
-"Last-Translator: Chris Warrick\n"
+"PO-Revision-Date: 2018-05-07 20:57+0000\n"
+"Last-Translator: Yi donghoon <icq4ever@gmail.com>\n"
 "Language-Team: Korean (http://www.transifex.com/ralsina/nikola/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -158,13 +158,13 @@ msgid "{month} {day}, {year}"
 msgstr ""
 
 msgid "Previous"
-msgstr ""
+msgstr "이전"
 
 msgid "Up"
 msgstr ""
 
 msgid "Next"
-msgstr ""
+msgstr "다음"
 
 msgid "Atom feed"
 msgstr ""
