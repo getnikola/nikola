@@ -164,6 +164,7 @@ article .metadata {
 }
 
 .bootblog4-featured-jumbotron-row {
+    margin-left: 0;
     margin-right: 0;
 }
 
@@ -171,15 +172,19 @@ article .metadata {
     text-align: right;
 }
 
+.bootblog4-featured-text {
+    overflow: auto;
+}
+
 @media (max-width: 767px) {
     .bootblog4-right-nav {
         margin-top: 1rem;
     }
-    .search-form-holder {
+    .bootblog4-search-form-holder {
         position: absolute;
         top: 2.75rem;
     }
-    .search-form-holder input.form-control {
+    .bootblog4-search-form-holder input.form-control {
         width: 6rem;
     }
 }
@@ -188,7 +193,7 @@ article .metadata {
     .flex-collapse {
         display: flex !important;
     }
-    .search-form-holder {
+    .bootblog4-search-form-holder {
         display: block !important;
     }
 }

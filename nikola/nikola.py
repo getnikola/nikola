@@ -2586,6 +2586,12 @@ class Nikola(object):
                 context['prev_next_links_reversed'] = kw['indexes_static']
             context["permalink"] = page_links[i]
             context["is_frontmost_index"] = i == 0
+
+            # Add dependencies to featured posts
+            if 'featured' in context:
+                for post in context['featured']:
+                    additional_dependencies += post.deps_uptodate(lang)
+
             output_name = os.path.join(kw['output_folder'], page_path(i, ipages_i, num_pages, False))
             task = self.generic_post_list_renderer(
                 lang,
