@@ -118,7 +118,11 @@ lang="${lang}">
 </%def>
 
 <%def name="html_navigation_links()">
-    %for url, text in navigation_links[lang]:
+    ${html_navigation_links_entries(navigation_links)}
+</%def>
+
+<%def name="html_navigation_links_entries(navigation_links_source)">
+    %for url, text in navigation_links_source[lang]:
         % if isinstance(url, tuple):
             <li class="nav-item dropdown"><a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${text}</a>
             <div class="dropdown-menu">
@@ -132,7 +136,6 @@ lang="${lang}">
             </div>
         % else:
             % if rel_link(permalink, url) == "#":
-                  ##<a class="p-2 text-white bg-secondary active" href="${url}">${text} <span class="sr-only">${messages("(active)", lang)}</span></a>
                 <li class="nav-item active"><a href="${permalink}" class="nav-link">${text} <span class="sr-only">${messages("(active)", lang)}</span></a>
             %else:
                 <li class="nav-item"><a href="${url}" class="nav-link">${text}</a>
@@ -140,6 +143,8 @@ lang="${lang}">
         % endif
     %endfor
 </%def>
+
+
 
 <%def name="html_feedlinks()">
     %if rss_link:
@@ -167,7 +172,7 @@ lang="${lang}">
 <%def name="html_translations()">
     %for langname in sorted(translations):
         %if langname != lang:
-            <a href="${abs_link(_link("root", None, langname))}" rel="alternate" hreflang="${langname}" class="p-2 text-secondary">${messages("LANGUAGE", langname)}</a>
+            <li class="nav-item"><a href="${abs_link(_link("root", None, langname))}" rel="alternate" hreflang="${langname}" class="nav-link">${messages("LANGUAGE", langname)}</a></li>
         %endif
     %endfor
 </%def>

@@ -115,7 +115,11 @@ lang="{{ lang }}">
 {% endmacro %}
 
 {% macro html_navigation_links() %}
-    {% for url, text in navigation_links[lang] %}
+    {{ html_navigation_links_entries(navigation_links) }}
+{% endmacro %}
+
+{% macro html_navigation_links_entries(navigation_links_source) %}
+    {% for url, text in navigation_links_source[lang] %}
         {% if isinstance(url, tuple) %}
             <li class="nav-item dropdown"><a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ text }}</a>
             <div class="dropdown-menu">

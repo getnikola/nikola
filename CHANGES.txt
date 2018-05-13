@@ -12,9 +12,10 @@ Important compatibility changes not mentioned previously
 Features
 --------
 
+* Add ``NAVIGATION_ALT_LINKS`` option, displayed on the right side in
+  bootstrap4/bootblog4 (Issue #3030)
 * Support featured posts in bootblog4 (Issue #2964)
-* Add ``THEME_CONFIG`` setting that themes can use in any way they
-  like
+* Add ``THEME_CONFIG`` setting that themes can use in any way
 * Use youtube-nocookie.com for better privacy in ``youtube`` reST
   directive and improve the appearance of the player
 

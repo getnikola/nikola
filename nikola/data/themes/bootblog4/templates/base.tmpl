@@ -35,6 +35,9 @@ ${template_hooks['extra_head']()}
         </a>
           </div>
             <div class="col-md-3 justify-content-end align-items-center bs-nav-collapsible collapse flex-collapse bootblog4-right-nav">
+            <nav class="navbar navbar-light bg-white">
+            <ul class="navbar-nav bootblog4-right-nav">
+                    ${base.html_navigation_links_entries(navigation_alt_links)}
                     <%block name="belowtitle">
                     %if len(translations) > 1:
                         ${base.html_translations()}
@@ -42,6 +45,7 @@ ${template_hooks['extra_head']()}
                     </%block>
                     <%block name="sourcelink"></%block>
                     ${template_hooks['menu_alt']()}
+            </ul></nav>
             </div>
     </div>
 </header>
@@ -49,7 +53,7 @@ ${template_hooks['extra_head']()}
 <nav class="navbar navbar-expand-md navbar-light bg-white static-top">
         <div class="collapse navbar-collapse bs-nav-collapsible" id="bs-navbar">
             <ul class="navbar-nav nav-fill d-flex w-100">
-                ${base.html_navigation_links()}
+                ${base.html_navigation_links_entries(navigation_links)}
                 ${template_hooks['menu']()}
             </ul>
         </div><!-- /.navbar-collapse -->

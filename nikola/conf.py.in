@@ -75,7 +75,7 @@ TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
 #
 # WARNING: Support for submenus is theme-dependent.
 #          Only one level of submenus is supported.
-# WARNING: Some themes, including the default Bootstrap 3 theme,
+# WARNING: Some themes, including the default Bootstrap 4 theme,
 #          may present issues if the menu is too large.
 #          (in Bootstrap, the navbar can grow too large and cover contents.)
 # WARNING: If you link to directories, make sure to follow
@@ -84,6 +84,13 @@ TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
 #          else they won’t be highlighted when active.
 
 NAVIGATION_LINKS = ${NAVIGATION_LINKS}
+
+# Alternative navigation links. Works the same way NAVIGATION_LINKS does,
+# although themes may not always support them. (translatable)
+# (Bootstrap 4: right-side of navbar, Bootblog 4: right side of title)
+NAVIGATION_ALT_LINKS = {
+    DEFAULT_LANG: {}
+}
 
 # Name of the theme to use.
 THEME = ${THEME}
