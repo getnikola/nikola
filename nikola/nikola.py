@@ -2484,6 +2484,9 @@ class Nikola(object):
                    as the ones for page_link.
         additional_dependencies: a list of dependencies which will be added
                                  to task['uptodate']
+
+        Note: if context['featured'] is present, it must be a list of posts,
+        whose dependencies will be taken added to task['uptodate'].
         """
         # Update kw
         kw = kw.copy()

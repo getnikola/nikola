@@ -112,12 +112,14 @@ Example:
     def provide_context_and_uptodate(self, classification, lang, node=None):
         """Provide data for the context and the uptodate list for the list of the given classifiation."""
         kw = {
+            "show_untranslated_posts": self.site.config["SHOW_UNTRANSLATED_POSTS"],
         }
         context = {
             "title": self.site.config["INDEXES_TITLE"](lang) or self.site.config["BLOG_TITLE"](lang),
             "description": self.site.config["BLOG_DESCRIPTION"](lang),
             "pagekind": ["main_index", "index"],
-            "featured": [p for p in self.site.posts if p.post_status == 'featured' and lang in p.translated_to],
+            "featured": [p for p in self.site.posts if p.post_status == 'featured'
+                         and (lang in p.translated_to or kw["show_untranslated_posts"])],
         }
         kw.update(context)
         return context, kw
