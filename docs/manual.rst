@@ -1548,6 +1548,9 @@ Navigation Links
           it’s set to ``True``, end your links with a ``/``, otherwise end them
           with ``/index.html`` — or else they won’t be highlighted when active.
 
+    There’s also ``NAVIGATION_ALT_LINKS``. Themes may display this somewhere
+    else, or not at all. Bootstrap puts it on the right side of the header.
+
     The ``SEARCH_FORM`` option contains the HTML code for a search form based on
     duckduckgo.com which should always work, but feel free to change it to
     something else.

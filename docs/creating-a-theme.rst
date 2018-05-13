@@ -355,7 +355,7 @@ all the interesting stuff:
 That link which says "Skip to main content" is very important for accessibility, so we will leave it in
 place. But below, you can see how it creates the "container" div we see in the Nikola page, and the content is
 created by ``html_header()`` which is defined in ``base_header.tmpl`` The actual ``nav`` element is done
-by the ``html_navigation_links`` function out of the ``NAVIGATION_LINKS`` option.
+by the ``html_navigation_links`` function out of the ``NAVIGATION_LINKS`` and ``NAVIGATION_ALT_LINKS`` options. (Let's put the alt links after regular ones; Bootstrap puts it on the right side, for example.)
 
 So, first, lets change that base template to be more lanyon-like:
 
@@ -433,6 +433,10 @@ Another problem is that the contents of the nav element are wrong. They are not 
             <a class="sidebar-nav-item" href="${url}">${text}</a>
         %endfor
         ${template_hooks['menu']()}
+
+        %for url, text in navigation_alt_links[lang]:
+            <a class="sidebar-nav-item" href="${url}">${text}</a>
+        %endfor
         ${template_hooks['menu_alt']()}
         </nav>
     </%def>
