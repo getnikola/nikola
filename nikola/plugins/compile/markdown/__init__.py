@@ -98,7 +98,7 @@ class CompileMarkdown(PageCompiler):
         if Markdown is not None:
             self.converters = {}
             for lang in self.site.config['TRANSLATIONS']:
-                self.converters[lang] = ThreadLocalMarkdown(extensions, site_extension_configs.get(lang, {}))
+                self.converters[lang] = ThreadLocalMarkdown(extensions, site_extension_configs(lang))
         self.supports_metadata = 'markdown.extensions.meta' in extensions
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):

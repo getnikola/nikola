@@ -1,7 +1,19 @@
+Changes since Beta 2
+====================
+
+.. to be merged into one "new in v8.0.0" entry later
+
+Features
+--------
+
+Bugfixes
+--------
+
+* Implement ``MARKDOWN_EXTENSION_CONFIGS`` properly (Issue #2970)
+
 New in v8.0.0b2 (changes since Beta 1)
 ======================================
 
-.. to be merged into one "new in v8.0.0" entry later
 
 Important compatibility changes not mentioned previously
 --------------------------------------------------------

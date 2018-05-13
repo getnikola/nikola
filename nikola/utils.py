@@ -353,11 +353,7 @@ class TranslatableSetting(object):
 
     def __str__(self):
         """Return the value in the currently set language (deprecated)."""
-        return self.values[self.get_lang()]
-
-    def __unicode__(self):
-        """Return the value in the currently set language (deprecated)."""
-        return self.values[self.get_lang()]
+        return str(self.values[self.get_lang()])
 
     def __repr__(self):
         """Provide a representation for programmers."""
