@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* Improve appearance of ``bootblog4`` on mobile (Issue #3069)
 * Make ``smartjoin`` more flexible (Issue #3080)
 * Make post-list and post_list synonymous (Issue #3083)
 * Support ``CATEGORY_DESTPATH_NAMES`` with pages following destpath

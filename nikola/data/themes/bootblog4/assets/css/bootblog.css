@@ -151,6 +151,7 @@ article .metadata {
   }
 }
 
+/* Various fixes that make this theme look better for Nikola's needs */
 .navbar-brand {
     padding: 0;
     white-space: initial;
@@ -164,4 +165,30 @@ article .metadata {
 
 .bootblog4-featured-jumbotron-row {
     margin-right: 0;
+}
+
+.bootblog4-right-nav {
+    text-align: right;
+}
+
+@media (max-width: 767px) {
+    .bootblog4-right-nav {
+        margin-top: 1rem;
+    }
+    .search-form-holder {
+        position: absolute;
+        top: 2.75rem;
+    }
+    .search-form-holder input.form-control {
+        width: 6rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .flex-collapse {
+        display: flex !important;
+    }
+    .search-form-holder {
+        display: block !important;
+    }
 }
