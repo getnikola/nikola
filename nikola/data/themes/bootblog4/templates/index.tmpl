@@ -75,7 +75,11 @@
                     % if featured[0].previewimage:
                             <div class="lead my-3 mb-0">${featured[0].text(teaser_only=True, strip_html=theme_config.get('featured_strip_html', True))}</div>
                         </div>
+                        % if theme_config.get('featured_large_image_on_mobile'):
                         <div class="col-md-6 p-0 h-md-250 text-right">
+                        % else:
+                        <div class="col-md-6 p-0 h-md-250 text-right d-none d-md-block">
+                        % endif
                             <img class="bootblog4-featured-large-image" src="${featured[0].previewimage}" alt="${featured.pop(0).title()}">
                         </div>
                     % else:

@@ -857,6 +857,9 @@ your configuration, and set it up properly:
             'featured_small': True,
             # Show featured posts on mobile.
             'featured_on_mobile': True,
+            # Show image in `featured_large` on mobile.
+            # `featured_small` displays them only on desktop.
+            'featured_large_image_on_mobile': False,
             # Strip HTML from featured post text.
             'featured_strip_html': True,
             # Contents of the sidebar, If empty, the sidebar is not displayed.
@@ -871,7 +874,13 @@ qualifies for the small cards, one card taking up all the width will appear.
 
 Both featured box formats display an image to the right. You can set it by changing the ``previewimage`` meta value to the full path to the image (eg. ``.. previewimage: /images/featured1.png``). This works best with images in portrait orientation.
 
-The featured boxes display only the teaser. We recommend keeping it short so
+Note that, due to space constraints, only the large box may show the image on
+mobile, below the text (this behavior can be disbled). Small boxes never
+display images on mobile. In particular: ``xs`` and ``sm`` display only the
+large image, and only if configured; ``md`` displays only the large image,
+``lg`` displays all three images.
+
+The boxes display only the teaser. We recommend keeping it short so
 you don’t get an ugly scrollbar.
 
 Finally, here’s an example (you’ll need to imagine a scrollbar in the right box
