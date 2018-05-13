@@ -3,6 +3,12 @@ Changes since v8 Beta 1
 
 .. to be merged into one "new in v8.0.0" entry later
 
+Important compatibility changes not mentioned previously
+--------------------------------------------------------
+
+* You need ``<a class="reference">`` (instead of ``image-reference``)
+  to activate the lightbox now
+
 Features
 --------
 

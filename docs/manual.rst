@@ -1297,8 +1297,8 @@ thumbnail
 
         {{% raw %}}{{% thumbnail "/images/foo.png" %}}{{% /thumbnail %}}{{% /raw %}}
         {{% raw %}}{{% thumbnail "/images/foo.png" alt="Foo Image" align="center" %}}{{% /thumbnail %}}{{% /raw %}}
-        {{% raw %}}{{% thumbnail "/images/foo.png" imgclass="image-grayscale" figclass="figure-shadow" %}}<p>Image caption</p>{{% /thumbnail %}}{{% /raw %}}
-        {{% raw %}}{{% thumbnail "/images/foo.png" alt="Foo Image" title="Insert title-text joke here" align="right" %}}<p class="caption">Foo Image (right-aligned) caption</p>{{% /thumbnail %}}{{% /raw %}}
+        {{% raw %}}{{% thumbnail "/images/foo.png" imgclass="image-grayscale" figclass="figure-shadow" %}}&lt;p&gt;Image caption&lt;/p&gt;{{% /thumbnail %}}{{% /raw %}}
+        {{% raw %}}{{% thumbnail "/images/foo.png" alt="Foo Image" title="Insert title-text joke here" align="right" %}}&lt;p class="caption"&gt;Foo Image (right-aligned) caption&lt;/p&gt;{{% /thumbnail %}}{{% /raw %}}
 
     The following keyword arguments are supported:
 
@@ -1882,7 +1882,7 @@ If you click on images on a gallery, or on images with links in post, you will
 see a bigger image, thanks to the excellent `baguetteBox
 <https://feimosi.github.io/baguetteBox.js/>`_.  If don’t want this behavior, add an
 ``.islink`` class to your link. (The behavior is caused by ``<a
-class="image-reference">`` if you need to use it outside of galleries and reST
+class="reference">`` if you need to use it outside of galleries and reST
 thumbnails.)
 
 The gallery pages are generated using the ``gallery.tmpl`` template, and you can
@@ -2588,19 +2588,22 @@ To include an image placed in the ``images`` folder (or other folders defined in
 .. code:: restructuredtext
 
     .. thumbnail:: /images/tesla.jpg
+       :alt: Nikola Tesla
 
 The small thumbnail will be placed in the page, and it will be linked to the bigger
 version of the image when clicked, using
 `baguetteBox <https://feimosi.github.io/baguetteBox.js/>`_ by default. All options supported by
 the reST `image <http://docutils.sourceforge.net/docs/ref/rst/directives.html#image>`_
-directive are supported (except ``target``). If a body element is provided, the
-thumbnail will mimic the behavior of the
-`figure <http://docutils.sourceforge.net/docs/ref/rst/directives.html#figure>`_
+directive are supported (except ``target``). Providing ``alt`` is recommended,
+as this is the image caption. If a body element is provided, the thumbnail will
+mimic the behavior of the `figure
+<http://docutils.sourceforge.net/docs/ref/rst/directives.html#figure>`_
 directive instead:
 
 .. code:: restructuredtext
 
     .. thumbnail:: /images/tesla.jpg
+       :alt: Nikola Tesla
 
        Nikola Tesla, the man that invented the 20th century.
 
@@ -2609,7 +2612,7 @@ least this basic HTML:
 
 .. code:: html
 
-   <a class="image-reference" href="images/tesla.jpg"><img src="images/tesla.thumbnail.jpg"></a>
+   <a class="reference" href="images/tesla.jpg" alt="Nikola Tesla"><img src="images/tesla.thumbnail.jpg"></a>
 
 Chart
 ~~~~~
