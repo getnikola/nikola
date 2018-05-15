@@ -245,7 +245,7 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
             # transmitted *less* than the content-length!
             f = open(path, 'rb')
         except IOError:
-            self.send_error(404, "File not found")
+            self.send_error(404, "File not found: {}".format(path))
             return None
 
         filtered_bytes = None
