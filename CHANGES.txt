@@ -6,6 +6,9 @@ Changes since Beta 2
 Features
 --------
 
+* Show the filename of the missing file when ``nikola serve`` can't
+  find a file (i.e. when an 404 error occurs).
+
 Bugfixes
 --------
 
