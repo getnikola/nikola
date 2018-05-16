@@ -29,6 +29,7 @@
 from nikola.plugin_categories import Command
 from nikola.utils import get_logger
 import nikola.plugins.command.init
+import sys
 
 
 LOGGER = get_logger('default_config')
@@ -49,4 +50,4 @@ class CommandShowConfig(Command):
         try:
             print(nikola.plugins.command.init.CommandInit.create_configuration_to_string())
         except Exception:
-            print(nikola.plugins.command.init.CommandInit.create_configuration_to_string().encode('utf-8'))
+            sys.stdout.buffer.write(nikola.plugins.command.init.CommandInit.create_configuration_to_string().encode('utf-8'))
