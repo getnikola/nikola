@@ -91,9 +91,9 @@ function renderGallery() {
         div.style.height = boxes[i].height + 'px';
         div.style.top = boxes[i].top + 'px';
         div.style.left = boxes[i].left + 'px';
-        link.append(img);
-        div.append(link);
-        container.append(div);
+        link.appendChild(img);
+        div.appendChild(link);
+        container.appendChild(div);
     }
     baguetteBox.run('#gallery_container', {
         captions: function(element) {
