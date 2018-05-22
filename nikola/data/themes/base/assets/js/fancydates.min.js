@@ -1,0 +1,1 @@
+function fancydates(e,t){if(0!=e)for(var a=document.getElementsByClassName("dt-published"),n=a.length,m=0;m<n;m++){var o,l=moment(a[m].attributes.datetime.value);o=1==e?l.local().format(t):l.fromNow(),a[m].innerHTML=o}}
