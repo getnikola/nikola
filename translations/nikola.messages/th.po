@@ -10,13 +10,15 @@
 # Chris Warrick, 2018
 # molnly <hankrothan@gmail.com>, 2018
 # Jean Jordaan <jean.jordaan@gmail.com>, 2018
+# Poi Ploy <poiploy@gmail.com>, 2018
+# Tino Thamjarat <tino.thamjarat@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2018-03-17 13:22+0000\n"
-"Last-Translator: Jean Jordaan <jean.jordaan@gmail.com>\n"
+"PO-Revision-Date: 2018-05-25 11:31+0000\n"
+"Last-Translator: Tino Thamjarat <tino.thamjarat@gmail.com>\n"
 "Language-Team: Thai (http://www.transifex.com/ralsina/nikola/language/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,7 +79,7 @@ msgid "Previous post"
 msgstr "โพสต์ก่อนหน้า"
 
 msgid "Also available in:"
-msgstr "อีกทั้งยังมี:"
+msgstr "ภาษาอื่นๆ:"
 
 msgid "Languages:"
 msgstr "ภาษา:"
@@ -113,17 +115,17 @@ msgid "RSS feed"
 msgstr "ฟีด RSS"
 
 msgid "%d min remaining to read"
-msgstr "%d อย่างน้อยการอ่านคงเหลือ"
+msgstr "ใช้เวลาอ่านอีก %d นาที"
 
 msgid "Skip to main content"
-msgstr "ไปสู่หน้าหลัก"
+msgstr "ข้ามไปหน้าหลัก"
 
 msgid "Subcategories:"
 msgstr "หมวดหมู่ย่อย:"
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
-msgstr "(ใช้งาน)"
+msgstr "(ถูกใช้งาน)"
 
 #. Default content for a new post
 msgid "Write your post here."
@@ -161,7 +163,7 @@ msgid "Previous"
 msgstr "ก่อนหน้า"
 
 msgid "Up"
-msgstr "กลับไป"
+msgstr "ขึ้นด้านบน"
 
 msgid "Next"
 msgstr "ถัดไป"
