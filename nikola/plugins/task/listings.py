@@ -181,6 +181,8 @@ class Listings(Task):
 
         for input_folder, output_folder in self.kw['listings_folders'].items():
             for root, dirs, files in os.walk(input_folder, followlinks=True):
+                if '.DS_Store' in root.split(os.path.sep):
+                    continue
                 files = [f for f in files if os.path.splitext(f)[-1] not in ignored_extensions]
 
                 uptodate = {'c': self.site.GLOBAL_CONTEXT}
