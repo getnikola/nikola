@@ -13,7 +13,7 @@ Bugfixes
 --------
 
 * Implement ``MARKDOWN_EXTENSION_CONFIGS`` properly (Issue #2970)
-* Don't walk down ".DS_Store" directories when processing listings (Issue #3099)
+* Ignore ``.DS_Store`` when processing listings (Issue #3099)
 
 New in v8.0.0b2 (changes since Beta 1)
 ======================================
