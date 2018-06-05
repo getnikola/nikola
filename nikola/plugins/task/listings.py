@@ -222,6 +222,8 @@ class Listings(Task):
                     'clean': True,
                 }, self.kw["filters"])
                 for f in files:
+                    if f == '.DS_Store':
+                        continue
                     ext = os.path.splitext(f)[-1]
                     if ext in ignored_extensions:
                         continue
