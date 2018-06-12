@@ -408,6 +408,14 @@ to your configuration:
         'author': 'John Doe'
     }
 
+url_type
+    Change the URL_TYPE setting for the given page only. Useful for eg. error
+    pages which cannot use relative URLs.
+
+    .. code:: restructuredtext
+
+       .. url_type: full_path
+
 Metadata formats
 ~~~~~~~~~~~~~~~~
 
