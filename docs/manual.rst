@@ -2655,10 +2655,10 @@ Here's an example of how it works:
 
 The argument passed next to the directive (Bar in that example) is the type of chart, and can be one of
 Line, StackedLine, Bar, StackedBar, HorizontalBar, XY, DateY, Pie, Radar, Dot, Funnel, Gauge, Pyramid. For
-examples of what each kind of graph is, `check here <http://pygal.org/chart_types/>`_
+examples of what each kind of graph is, `check here <http://pygal.org/en/stable/documentation/types/index.html>`_
 
 It can take *a lot* of options to let you customize the charts (in the example, title and x_labels).
-You can use any option described in `the pygal docs <http://pygal.org/basic_customizations/>`_
+You can use any option described in `the pygal docs <http://pygal.org/en/stable/documentation/configuration/chart.html>`_
 
 Finally, the content of the directive is the actual data, in the form of a label and
 a list of values, one series per line.
