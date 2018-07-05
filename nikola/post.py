@@ -664,8 +664,7 @@ class Post(object):
                 self.source_path, self.date))
 
     def fragment_deps(self, lang):
-        """Return a list of dependencies to build this post's fragment.
-        """
+        """Return a list of dependencies to build this post's fragment."""
         deps = [self.source_path]
         if os.path.isfile(self.metadata_path):
             deps.append(self.metadata_path)
