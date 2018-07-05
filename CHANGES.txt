@@ -12,6 +12,8 @@ Features
 Bugfixes
 --------
 
+* Fix post fragment dependencies when posts are only available in a
+  non-default language (Issue #3112)
 * Implement ``MARKDOWN_EXTENSION_CONFIGS`` properly (Issue #2970)
 * Ignore ``.DS_Store`` when processing listings (Issue #3099)
 
