@@ -623,7 +623,7 @@ class Post(object):
             deps.append(self.meta('data', lang))
         deps += self._get_dependencies(self._dependency_file_page[lang])
         deps += self._get_dependencies(self._dependency_file_page[None])
-        return sorted(deps)
+        return sorted(set(deps))
 
     def deps_uptodate(self, lang):
         """Return a list of uptodate dependencies to build this post's page.
