@@ -664,14 +664,9 @@ class Post(object):
                 self.source_path, self.date))
 
     def fragment_deps(self, lang):
-        """Return a list of uptodate dependencies to build this post's fragment.
-
-        These dependencies should be included in ``uptodate`` for the task
-        which generates the fragment.
+        """Return a list of dependencies to build this post's fragment.
         """
-        deps = []
-        if self.default_lang in self.translated_to:
-            deps.append(self.source_path)
+        deps = [self.source_path]
         if os.path.isfile(self.metadata_path):
             deps.append(self.metadata_path)
         lang_deps = []
