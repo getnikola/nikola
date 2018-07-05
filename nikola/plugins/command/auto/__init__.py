@@ -484,7 +484,7 @@ class NikolaEventHandler:
 
     def dispatch(self, event):
         """Dispatch events to handler."""
-        self.loop.call_soon_threadsafe(asyncio.async, self.on_any_event(event))
+        self.loop.call_soon_threadsafe(asyncio.ensure_future, self.on_any_event(event))
 
 
 class ConfigEventHandler(NikolaEventHandler):

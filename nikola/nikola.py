@@ -1406,9 +1406,9 @@ class Nikola(object):
         utils.makedirs(os.path.dirname(output_name))
         parser = lxml.html.HTMLParser(remove_blank_text=True)
         if is_fragment:
-            doc = lxml.html.fragment_fromstring(data, parser)
+            doc = lxml.html.fragment_fromstring(data.strip(), parser)
         else:
-            doc = lxml.html.document_fromstring(data, parser)
+            doc = lxml.html.document_fromstring(data.strip(), parser)
         self.rewrite_links(doc, src, context['lang'], url_type)
         if is_fragment:
             # doc.text contains text before the first HTML, or None if there was no text
