@@ -201,7 +201,7 @@ class CommandAuto(Command):
         self.wd_observer = Observer()
         # Watch output folders and trigger reloads
         if self.has_server:
-            self.wd_observer.schedule(NikolaEventHandler(self.reload_page, loop), 'output/', recursive=True)
+            self.wd_observer.schedule(NikolaEventHandler(self.reload_page, loop), out_folder, recursive=True)
 
         # Watch input folders and trigger rebuilds
         for p in watched:

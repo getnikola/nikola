@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* Watch correct output folder in ``nikola auto`` (Issue #3119)
 * Fix post fragment dependencies when posts are only available in a
   non-default language (Issue #3112)
 * Implement ``MARKDOWN_EXTENSION_CONFIGS`` properly (Issue #2970)
