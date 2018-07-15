@@ -30,6 +30,7 @@ import io
 import os
 import sys
 
+import doit
 import logbook
 from doit.cmd_base import Command as DoitCommand
 from yapsy.IPlugin import IPlugin
@@ -173,7 +174,9 @@ def help(self):
     return "\n".join(text)
 
 
-DoitCommand.help = help
+# we need to patch DoitCommand.help with doit <0.31.0
+if doit.__version__ < (0, 31, 0):
+    DoitCommand.help = help
 
 
 class BaseTask(BasePlugin):
