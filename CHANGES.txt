@@ -12,6 +12,7 @@ Features
 Bugfixes
 --------
 
+* Fix listing installed themes if theme directory is missing.
 * Watch correct output folder in ``nikola auto`` (Issue #3119)
 * Fix post fragment dependencies when posts are only available in a
   non-default language (Issue #3112)
