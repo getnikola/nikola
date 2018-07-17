@@ -8,7 +8,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v4.1.1): tooltip.js
+ * Bootstrap (v4.1.2): tooltip.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -19,7 +19,7 @@ var Tooltip = function ($) {
    * ------------------------------------------------------------------------
    */
   var NAME = 'tooltip';
-  var VERSION = '4.1.1';
+  var VERSION = '4.1.2';
   var DATA_KEY = 'bs.tooltip';
   var EVENT_KEY = "." + DATA_KEY;
   var JQUERY_NO_CONFLICT = $.fn[NAME];
@@ -229,7 +229,7 @@ var Tooltip = function ($) {
         var attachment = this._getAttachment(placement);
 
         this.addAttachmentClass(attachment);
-        var container = this.config.container === false ? document.body : $(this.config.container);
+        var container = this.config.container === false ? document.body : $(document).find(this.config.container);
         $(tip).data(this.constructor.DATA_KEY, this);
 
         if (!$.contains(this.element.ownerDocument.documentElement, this.tip)) {
@@ -368,9 +368,9 @@ var Tooltip = function ($) {
     };
 
     _proto.setContent = function setContent() {
-      var $tip = $(this.getTipElement());
-      this.setElementContent($tip.find(Selector.TOOLTIP_INNER), this.getTitle());
-      $tip.removeClass(ClassName.FADE + " " + ClassName.SHOW);
+      var tip = this.getTipElement();
+      this.setElementContent($(tip.querySelectorAll(Selector.TOOLTIP_INNER)), this.getTitle());
+      $(tip).removeClass(ClassName.FADE + " " + ClassName.SHOW);
     };
 
     _proto.setElementContent = function setElementContent($element, content) {
@@ -563,15 +563,18 @@ var Tooltip = function ($) {
       var $tip = $(this.getTipElement());
       var tabClass = $tip.attr('class').match(BSCLS_PREFIX_REGEX);
 
-      if (tabClass !== null && tabClass.length > 0) {
+      if (tabClass !== null && tabClass.length) {
         $tip.removeClass(tabClass.join(''));
       }
     };
 
-    _proto._handlePopperPlacementChange = function _handlePopperPlacementChange(data) {
+    _proto._handlePopperPlacementChange = function _handlePopperPlacementChange(popperData) {
+      var popperInstance = popperData.instance;
+      this.tip = popperInstance.popper;
+
       this._cleanTipClass();
 
-      this.addAttachmentClass(this._getAttachment(data.placement));
+      this.addAttachmentClass(this._getAttachment(popperData.placement));
     };
 
     _proto._fixTransition = function _fixTransition() {
