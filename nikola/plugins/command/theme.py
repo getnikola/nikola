@@ -290,7 +290,9 @@ class CommandTheme(Command):
         themes = []
         themes_dirs = self.site.themes_dirs + [resource_filename('nikola', os.path.join('data', 'themes'))]
         for tdir in themes_dirs:
-            themes += [(i, os.path.join(tdir, i)) for i in os.listdir(tdir)]
+            if os.path.isdir(tdir):
+                themes += [(i, os.path.join(tdir, i)) for i in os.listdir(tdir)]
+
         for tname, tpath in sorted(set(themes)):
             if os.path.isdir(tpath):
                 print("{0} at {1}".format(tname, tpath))
