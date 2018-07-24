@@ -26,8 +26,9 @@
 
 """Manage themes."""
 
-import os
 import io
+import json.decoder
+import os
 import shutil
 import time
 import requests
@@ -374,10 +375,19 @@ class CommandTheme(Command):
         """Download the JSON file with all plugins."""
         if self.json is None:
             try:
-                self.json = requests.get(url).json()
-            except requests.exceptions.SSLError:
-                LOGGER.warning("SSL error, using http instead of https (press ^C to abort)")
-                time.sleep(1)
-                url = url.replace('https', 'http', 1)
-                self.json = requests.get(url).json()
+                try:
+                    self.json = requests.get(url).json()
+                except requests.exceptions.SSLError:
+                    LOGGER.warning("SSL error, using http instead of https (press ^C to abort)")
+                    time.sleep(1)
+                    url = url.replace('https', 'http', 1)
+                    self.json = requests.get(url).json()
+            except json.decoder.JSONDecodeError as e:
+                LOGGER.error("Failed to decode JSON data in response from server.")
+                LOGGER.error("JSON error encountered:" + str(e))
+                LOGGER.error("This issue might be caused by server-side issues, or by to unusual activity in your "
+                             "network (as determined by CloudFlare). Please visit https://themes.getnikola.com/ in "
+                             "a browser.")
+                sys.exit(2)
+
         return self.json
