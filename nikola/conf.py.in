@@ -176,11 +176,12 @@ TIMEZONE = ${TIMEZONE}
 # FORCE_ISO8601 = False
 
 # Date format used to display post dates. (translatable)
-# (str used by datetime.datetime.strftime)
-# DATE_FORMAT = '%Y-%m-%d %H:%M'
+# Used by babel.dates, CLDR style: http://cldr.unicode.org/translation/date-time
+# You can also use 'full', 'long', 'medium', or 'short'
+# DATE_FORMAT = 'YYYY-MM-dd HH:mm'
 
 # Date format used to display post dates, if local dates are used. (translatable)
-# (str used by moment.js)
+# Used by moment.js: https://momentjs.com/docs/#/displaying/format/
 # JS_DATE_FORMAT = 'YYYY-MM-DD HH:mm'
 
 # Date fanciness.
@@ -192,20 +193,9 @@ TIMEZONE = ${TIMEZONE}
 # Your theme must support it, Bootstrap already does.
 # DATE_FANCINESS = 0
 
-# While Nikola can select a sensible locale for each language,
-# sometimes explicit control can come handy.
-# In this file we express locales in the string form that
-# python's locales will accept in your OS, by example
-# "en_US.utf8" in Unix-like OS, "English_United States" in Windows.
-# LOCALES = dict mapping language --> explicit locale for the languages
-# in TRANSLATIONS. You can omit one or more keys.
-# LOCALE_FALLBACK = locale to use when an explicit locale is unavailable
-# LOCALE_DEFAULT = locale to use for languages not mentioned in LOCALES; if
-# not set the default Nikola mapping is used.
-
+# Customize the locale/region used for a language.
+# For example, to use British instead of US English: LOCALES = {'en': 'en_GB'}
 # LOCALES = {}
-# LOCALE_FALLBACK = None
-# LOCALE_DEFAULT = None
 
 # One or more folders containing files to be copied as-is into the output.
 # The format is a dictionary of {source: relative destination}.
