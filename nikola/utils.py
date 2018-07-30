@@ -1129,7 +1129,7 @@ class LocaleBorg(object):
     initialized = False
 
     @classmethod
-    def initialize(cls, locales, initial_lang):
+    def initialize(cls, locales: 'typing.Dict[str, str]', initial_lang: str):
         """Initialize LocaleBorg.
 
         locales: dict with custom locale name overrides.
@@ -1142,7 +1142,7 @@ class LocaleBorg(object):
         cls.initialized = True
 
     def __get_shared_state(self):
-        if not self.initialized:
+        if not self.initialized:  # pragma: no cover
             raise LocaleBorgUninitializedException()
         shared_state = getattr(self.__thread_local, 'shared_state', None)
         if shared_state is None:
@@ -1180,7 +1180,7 @@ class LocaleBorg(object):
             self.__get_shared_state()['current_lang'] = lang
             return ''
 
-    def formatted_date(self, date_format: 'typing.Union[typing.Tuple[str], str]',
+    def formatted_date(self, date_format: 'str',
                        date: 'typing.Union[datetime.date, datetime.datetime]',
                        lang: 'typing.Optional[str]' = None) -> str:
         """Return the formatted date/datetime as a string."""
@@ -1201,7 +1201,7 @@ class LocaleBorg(object):
         else:
             return babel.dates.format_datetime(date, date_format, locale=locale)
 
-    def format_date_in_string(self, message: str, date: datetime.date, lang: 'typing.Optional[str]') -> str:
+    def format_date_in_string(self, message: str, date: datetime.date, lang: 'typing.Optional[str]' = None) -> str:
         """Format date inside a string (message).
         Accepted modes: month, month_year, month_day_year.
         Format: {month} for standard, {month:MMMM} for customization.

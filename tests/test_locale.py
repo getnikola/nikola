@@ -1,247 +1,137 @@
 # -*- coding: utf-8 -*-
 
-import sys
+import datetime
+import dateutil
+import pytest
+import unittest.mock
+from nikola.nikola import LEGAL_VALUES
+from nikola.utils import TranslatableSetting, LocaleBorg, LocaleBorgUninitializedException
+
+TESLA_BIRTHDAY = datetime.date(1856, 7, 10)
+TESLA_BIRTHDAY_DT = datetime.datetime(1856, 7, 10, 12, 34, 56)
+DT_EN_US = 'July 10, 1856 at 12:34:56 PM UTC'
+
+DT_PL = '10 lipca 1856 12:34:56 UTC'
+
+@pytest.fixture
+def localeborg_base():
+    """A base config of LocaleBorg."""
+    LocaleBorg.reset()
+    assert not LocaleBorg.initialized
+    LocaleBorg.initialize({}, 'en')
+    assert LocaleBorg.initialized
+    assert LocaleBorg().current_lang == 'en'
+    return None
 
 
-# needed if @unittest.expectedFailure is used
-try:
-    import unittest2 as unittest
-except Exception:
-    import unittest
-
-import nikola.nikola
-import nikola.utils
-from .base import LocaleSupportInTesting
-
-LocaleSupportInTesting.initialize_locales_for_testing('bilingual')
-lang_11, loc_11 = LocaleSupportInTesting.langlocales['default']
-lang_22, loc_22 = LocaleSupportInTesting.langlocales['other']
+def test_initilalize_failure():
+    LocaleBorg.reset()
+    with pytest.raises(ValueError):
+        LocaleBorg.initialize({}, None)
+        LocaleBorg.initialize({}, '')
+    assert not LocaleBorg.initialized
 
 
-# these are candidates to hardcoded locales, using str() for py2x setlocale
-loc_C = str('C')
-loc_Cutf8 = str('C.utf8')
-
-if sys.platform != 'win32':
-    nikola.nikola.workaround_empty_LC_ALL_posix()
-
-
-class TestHarcodedFallbacks(unittest.TestCase):
-    def test_hardcoded_fallbacks_work(self):
-        # keep in sync with nikola.valid_locale_fallback
-        if sys.platform == 'win32':
-            self.assertTrue(nikola.nikola.is_valid_locale(str('English')))
-            self.assertTrue(nikola.nikola.is_valid_locale(str('C')))
-        elif sys.platform == 'darwin':
-            self.assertTrue(nikola.nikola.is_valid_locale(str('en_US.UTF-8')))
-            self.assertTrue(nikola.nikola.is_valid_locale(str('C')))
-        else:
-            # the 1st is desired in Travis, not a problem if fails in user host
-            self.assertTrue(nikola.nikola.is_valid_locale(str('en_US.utf8')))
-            # this is supposed to be always valid, and we need an universal
-            # fallback. Failure is not a problem in user host if he / she
-            # sets a valid (in his host) locale_fallback.
-            self.assertTrue(nikola.nikola.is_valid_locale(str('C')))
+def test_initialize():
+    LocaleBorg.reset()
+    assert not LocaleBorg.initialized
+    LocaleBorg.initialize({}, 'en')
+    assert LocaleBorg.initialized
+    assert LocaleBorg().current_lang == 'en'
+    LocaleBorg.reset()
+    LocaleBorg.initialize({}, 'pl')
+    assert LocaleBorg.initialized
+    assert LocaleBorg().current_lang == 'pl'
 
 
-class TestConfigLocale(unittest.TestCase):
-
-    def test_implicit_fallback(self):
-        locale_fallback = None
-        sanitized_fallback = nikola.nikola.valid_locale_fallback(
-            desired_locale=locale_fallback)
-        self.assertTrue(nikola.nikola.is_valid_locale(sanitized_fallback))
-
-    def test_explicit_good_fallback(self):
-        locale_fallback = loc_22
-        sanitized_fallback = nikola.nikola.valid_locale_fallback(
-            desired_locale=locale_fallback)
-        self.assertEqual(sanitized_fallback, locale_fallback)
-
-    def test_explicit_bad_fallback(self):
-        locale_fallback = str('xyz')
-        sanitized_fallback = nikola.nikola.valid_locale_fallback(
-            desired_locale=locale_fallback)
-        self.assertTrue(nikola.nikola.is_valid_locale(sanitized_fallback))
-
-    def test_explicit_good_default(self):
-        locale_fallback, locale_default, LOCALES, translations = (
-            loc_22,
-            loc_11,
-            {},
-            {lang_11: ''},
-        )
-        fallback, default, locales = nikola.nikola.sanitized_locales(
-            locale_fallback,
-            locale_default,
-            LOCALES,
-            translations)
-        self.assertEqual(fallback, locale_fallback)
-        self.assertEqual(default, locale_default)
-
-    def test_explicit_bad_default(self):
-        locale_fallback, locale_default, LOCALES, translations = (
-            loc_22,
-            str('xyz'),
-            {},
-            {lang_11: ''},
-        )
-        fallback, default, locales = nikola.nikola.sanitized_locales(
-            locale_fallback,
-            locale_default,
-            LOCALES,
-            translations)
-        self.assertEqual(fallback, locale_fallback)
-        self.assertEqual(default, fallback)
-
-    def test_extra_locales_deleted(self):
-        locale_fallback, locale_default, LOCALES, translations = (
-            loc_22,
-            None,
-            {'@z': loc_22},
-            {lang_11: ''},
-        )
-        fallback, default, locales = nikola.nikola.sanitized_locales(
-            locale_fallback,
-            locale_default,
-            LOCALES,
-            translations)
-        self.assertTrue('@z' not in locales)
-
-    def test_explicit_good_locale_retained(self):
-        locale_fallback, locale_default, LOCALES, translations = (
-            loc_22,
-            loc_22,
-            {lang_11: loc_11},
-            {lang_11: ''},
-        )
-        fallback, default, locales = nikola.nikola.sanitized_locales(
-            locale_fallback,
-            locale_default,
-            LOCALES,
-            translations)
-        self.assertEqual(locales[lang_11], str(LOCALES[lang_11]))
-
-    def test_explicit_bad_locale_replaced_with_fallback(self):
-        locale_fallback, locale_default, LOCALES, translations = (
-            loc_22,
-            loc_11,
-            {lang_11: str('xyz')},
-            {lang_11: ''},
-        )
-        fallback, default, locales = nikola.nikola.sanitized_locales(
-            locale_fallback,
-            locale_default,
-            LOCALES,
-            translations)
-        self.assertEqual(locales['en'], locale_fallback)
-
-    def test_impicit_locale_when_default_locale_defined(self):
-        locale_fallback, locale_default, LOCALES, translations = (
-            loc_11,
-            loc_22,
-            {},
-            {lang_11: ''},
-        )
-        fallback, default, locales = nikola.nikola.sanitized_locales(
-            locale_fallback,
-            locale_default,
-            LOCALES,
-            translations)
-        self.assertEqual(locales['en'], locale_default)
-
-    def test_impicit_locale_when_default_locale_is_not_defined(self):
-        # legacy mode, compat v6.0.4 : guess locale from lang
-        locale_fallback, locale_default, LOCALES, translations = (
-            loc_22,
-            None,
-            {},
-            {lang_11: ''},
-        )
-        fallback, default, locales = nikola.nikola.sanitized_locales(
-            locale_fallback,
-            locale_default,
-            LOCALES,
-            translations)
-        if sys.platform == 'win32':
-            guess_locale_for_lang = nikola.nikola.guess_locale_from_lang_windows
-        else:
-            guess_locale_for_lang = nikola.nikola.guess_locale_from_lang_posix
-
-        self.assertEqual(locales[lang_11], guess_locale_for_lang(lang_11))
+def test_uninitialized_error():
+    LocaleBorg.reset()
+    with pytest.raises(LocaleBorgUninitializedException):
+        LocaleBorg()
 
 
-class TestCalendarRelated(unittest.TestCase):
-    def test_type_of_month_name(self):
-        """validate assumption calendar month name is of type str
-
-        Yes, both in windows and linuxTravis, py 26, 27, 33
-        """
-        import calendar
-        with calendar.different_locale(loc_11):
-            s = calendar.month_name[1]
-        self.assertTrue(type(s) == str)
+def test_set_locale(localeborg_base):
+    LocaleBorg().set_locale('pl')
+    assert LocaleBorg.initialized
+    assert LocaleBorg().current_lang == 'pl'
+    LocaleBorg().set_locale('xx')  # fake language -- used to ensure any locale can be supported
+    assert LocaleBorg.initialized
+    assert LocaleBorg().current_lang == 'xx'
+    assert LocaleBorg().set_locale('xz') == ''  # empty string for template ease of use
 
 
-class TestLocaleBorg(unittest.TestCase):
-    def test_initial_lang(self):
-        lang_11, loc_11 = LocaleSupportInTesting.langlocales['default']
-        lang_22, loc_22 = LocaleSupportInTesting.langlocales['other']
-
-        locales = {lang_11: loc_11, lang_22: loc_22}
-        initial_lang = lang_22
-        nikola.utils.LocaleBorg.initialize(locales, initial_lang)
-        self.assertEqual(initial_lang, nikola.utils.LocaleBorg().current_lang)
-
-    def test_remembers_last_lang(self):
-        lang_11, loc_11 = LocaleSupportInTesting.langlocales['default']
-        lang_22, loc_22 = LocaleSupportInTesting.langlocales['other']
-
-        locales = {lang_11: loc_11, lang_22: loc_22}
-        initial_lang = lang_22
-        nikola.utils.LocaleBorg.initialize(locales, initial_lang)
-
-        nikola.utils.LocaleBorg().set_locale(lang_11)
-        self.assertTrue(nikola.utils.LocaleBorg().current_lang, lang_11)
-
-    def test_services_ensure_initialization(self):
-        nikola.utils.LocaleBorg.reset()
-        self.assertRaises(Exception, nikola.utils.LocaleBorg)
-
-    def test_services_reject_dumb_wrong_call(self):
-        lang_11, loc_11 = LocaleSupportInTesting.langlocales['default']
-        nikola.utils.LocaleBorg.reset()
-        self.assertRaises(Exception, nikola.utils.LocaleBorg)
-        self.assertRaises(
-            Exception, nikola.utils.LocaleBorg.set_locale, lang_11)
-
-    def test_set_locale_raises_on_invalid_lang(self):
-        lang_11, loc_11 = LocaleSupportInTesting.langlocales['default']
-        lang_22, loc_22 = LocaleSupportInTesting.langlocales['other']
-
-        locales = {lang_11: loc_11, lang_22: loc_22}
-        initial_lang = lang_22
-        nikola.utils.LocaleBorg.initialize(locales, initial_lang)
-        self.assertRaises(KeyError, nikola.utils.LocaleBorg().set_locale, '@z')
+def test_format_date_webiso_basic(localeborg_base):
+    with unittest.mock.patch('babel.dates.format_datetime') as m:
+        assert LocaleBorg().formatted_date('webiso', TESLA_BIRTHDAY_DT) == '1856-07-10T12:34:56'
+        m.assert_not_called()
 
 
-class TestTestPreconditions(unittest.TestCase):
-    """If this fails the other test in this module are mostly nonsense, and
-       probably same for tests of multilingual features.
+def test_format_date_basic(localeborg_base):
+    assert LocaleBorg().formatted_date('YYYY-MM-dd HH:mm:ss', TESLA_BIRTHDAY_DT) == '1856-07-10 12:34:56'
+    LocaleBorg().set_locale('pl')
+    assert LocaleBorg().formatted_date('YYYY-MM-dd HH:mm:ss', TESLA_BIRTHDAY_DT) == '1856-07-10 12:34:56'
 
-       Failure probably means the OS support for the failing locale is not
-       instaled or environmet variables NIKOLA_LOCALE_DEFAULT  or
-       NIKOLA_LOCALE_OTHER with bad values.
-    """
 
-    def test_langlocale_default_availability(self):
-        msg = "META ERROR: The pair lang, locale : {0} {1} is invalid"
-        self.assertTrue(
-            nikola.nikola.is_valid_locale(loc_11),
-            msg.format(lang_11, loc_11))
+def test_format_date_long(localeborg_base):
+    assert LocaleBorg().formatted_date('long', TESLA_BIRTHDAY_DT) == DT_EN_US
+    assert LocaleBorg().formatted_date('long', TESLA_BIRTHDAY_DT, 'en') == DT_EN_US
+    assert LocaleBorg().formatted_date('long', TESLA_BIRTHDAY_DT, 'pl') == DT_PL
+    LocaleBorg().set_locale('pl')
+    assert LocaleBorg().formatted_date('long', TESLA_BIRTHDAY_DT) == DT_PL
+    assert LocaleBorg().formatted_date('long', TESLA_BIRTHDAY_DT, 'en') == DT_EN_US
 
-    def test_langlocale_other_availability(self):
-        msg = "META ERROR: The pair lang, locale : {0} {1} is invalid"
-        self.assertTrue(
-            nikola.nikola.is_valid_locale(loc_22),
-            msg.format(lang_22, loc_22))
+
+def test_format_date_timezone(localeborg_base):
+    tesla_birthday_dtz = datetime.datetime(1856, 7, 10, 12, 34, 56, tzinfo=dateutil.tz.gettz('America/New_York'))
+    assert LocaleBorg().formatted_date('long', tesla_birthday_dtz) == 'July 10, 1856 at 12:34:56 PM -0400'
+
+
+def test_format_date_locale_variants():
+    LocaleBorg.reset()
+    LocaleBorg.initialize({'en': 'en_US'}, 'en')
+    assert LocaleBorg().formatted_date('long', TESLA_BIRTHDAY_DT, 'en') == DT_EN_US
+    LocaleBorg.reset()
+    LocaleBorg.initialize({'en': 'en_GB'}, 'en')
+    assert LocaleBorg().formatted_date('long', TESLA_BIRTHDAY_DT, 'en') == '10 July 1856 at 12:34:56 UTC'
+
+
+def test_format_date_translatablesetting(localeborg_base):
+    df = TranslatableSetting("DATE_FORMAT", {'en': "'en' MMMM", 'pl': "MMMM 'pl'"}, {'en': '', 'pl': ''})
+    assert LocaleBorg().formatted_date(df, TESLA_BIRTHDAY_DT, 'en') == 'en July'
+    assert LocaleBorg().formatted_date(df, TESLA_BIRTHDAY_DT, 'pl') == 'lipca pl'
+
+def test_format_date_in_string_month(localeborg_base):
+    assert LocaleBorg().format_date_in_string("Foo {month} Bar", TESLA_BIRTHDAY) == 'Foo July Bar'
+    assert LocaleBorg().format_date_in_string("Foo {month} Bar", TESLA_BIRTHDAY, 'pl') == 'Foo lipiec Bar'
+
+def test_format_date_in_string_month_year(localeborg_base):
+    assert LocaleBorg().format_date_in_string("Foo {month_year} Bar", TESLA_BIRTHDAY) == 'Foo July 1856 Bar'
+    assert LocaleBorg().format_date_in_string("Foo {month_year} Bar", TESLA_BIRTHDAY, 'pl') == 'Foo lipiec 1856 Bar'
+
+
+def test_format_date_in_string_month_day_year(localeborg_base):
+    assert LocaleBorg().format_date_in_string("Foo {month_day_year} Bar", TESLA_BIRTHDAY) == 'Foo July 10, 1856 Bar'
+    assert LocaleBorg().format_date_in_string("Foo {month_day_year} Bar", TESLA_BIRTHDAY,
+                                              'pl') == 'Foo 10 lipca 1856 Bar'
+
+
+def test_format_date_in_string_month_day_year_gb():
+    LocaleBorg.reset()
+    LocaleBorg.initialize({'en': 'en_GB'}, 'en')
+    assert LocaleBorg().format_date_in_string("Foo {month_day_year} Bar", TESLA_BIRTHDAY) == 'Foo 10 July 1856 Bar'
+    assert LocaleBorg().format_date_in_string("Foo {month_day_year} Bar", TESLA_BIRTHDAY,
+                                              'pl') == 'Foo 10 lipca 1856 Bar'
+
+
+def test_format_date_in_string_customization(localeborg_base):
+    assert LocaleBorg().format_date_in_string("Foo {month:'miesiąca' MMMM} Bar", TESLA_BIRTHDAY,
+                                              'pl') == 'Foo miesiąca lipca Bar'
+    assert LocaleBorg().format_date_in_string("Foo {month_year:MMMM yyyy} Bar", TESLA_BIRTHDAY,
+                                              'pl') == 'Foo lipca 1856 Bar'
+
+
+def test_locale_base():
+    LocaleBorg.reset()
+    LocaleBorg.initialize(LEGAL_VALUES['LOCALES_BASE'], 'en')
+    assert LocaleBorg().formatted_date('long', TESLA_BIRTHDAY_DT, 'sr') == '10. јул 1856. 12:34:56 UTC'
+    assert LocaleBorg().formatted_date('long', TESLA_BIRTHDAY_DT, 'sr_latin') == '10. jul 1856. 12:34:56 UTC'
