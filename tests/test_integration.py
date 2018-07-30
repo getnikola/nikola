@@ -16,9 +16,7 @@ import nikola.plugins.command
 import nikola.plugins.command.init
 import nikola.utils
 
-from .base import BaseTestCase, cd, LocaleSupportInTesting
-
-LocaleSupportInTesting.initialize()
+from .base import BaseTestCase, cd, LOCALE_DEFAULT, LOCALE_OTHER, initialize_localeborg
 
 
 class EmptyBuildTest(BaseTestCase):
@@ -30,7 +28,7 @@ class EmptyBuildTest(BaseTestCase):
     def setUpClass(cls):
         """Setup a demo site."""
         # for tests that need bilingual support override language_settings
-        cls.language_settings()
+        initialize_localeborg()
         cls.startdir = os.getcwd()
         cls.tmpdir = tempfile.mkdtemp()
         cls.target_dir = os.path.join(cls.tmpdir, "target")
@@ -38,10 +36,6 @@ class EmptyBuildTest(BaseTestCase):
         cls.fill_site()
         cls.patch_site()
         cls.build()
-
-    @classmethod
-    def language_settings(cls):
-        LocaleSupportInTesting.initialize_locales_for_testing("unilingual")
 
     @classmethod
     def fill_site(self):
@@ -192,17 +186,11 @@ class TranslatedBuildTest(EmptyBuildTest):
 
     dataname = "translated_titles"
 
-    @classmethod
-    def language_settings(cls):
-        LocaleSupportInTesting.initialize_locales_for_testing("bilingual")
-        # the other language
-        cls.ol = LocaleSupportInTesting.langlocales["other"][0]
-
     def test_translated_titles(self):
         """Check that translated title is picked up."""
         en_file = os.path.join(self.target_dir, "output", "pages", "1", "index.html")
         pl_file = os.path.join(self.target_dir, "output",
-                               self.ol, "pages", "1", "index.html")
+                               LOCALE_OTHER, "pages", "1", "index.html")
         # Files should be created
         self.assertTrue(os.path.isfile(en_file))
         self.assertTrue(os.path.isfile(pl_file))
@@ -221,8 +209,8 @@ class TranslationsPatternTest1(TranslatedBuildTest):
     @classmethod
     def patch_site(self):
         """Set the TRANSLATIONS_PATTERN to the old v6 default"""
-        os.rename(os.path.join(self.target_dir, "pages", "1.%s.txt" % self.ol),
-                  os.path.join(self.target_dir, "pages", "1.txt.%s" % self.ol)
+        os.rename(os.path.join(self.target_dir, "pages", "1.%s.txt" % LOCALE_OTHER),
+                  os.path.join(self.target_dir, "pages", "1.txt.%s" % LOCALE_OTHER)
                   )
         conf_path = os.path.join(self.target_dir, "conf.py")
         with io.open(conf_path, "r", encoding="utf-8") as inf:
@@ -253,8 +241,8 @@ class TranslationsPatternTest2(TranslatedBuildTest):
     def patch_site(self):
         """Set the TRANSLATIONS_PATTERN to the old v6 default"""
         conf_path = os.path.join(self.target_dir, "conf.py")
-        os.rename(os.path.join(self.target_dir, "pages", "1.%s.txt" % self.ol),
-                  os.path.join(self.target_dir, "pages", "1.txt.%s" % self.ol)
+        os.rename(os.path.join(self.target_dir, "pages", "1.%s.txt" % LOCALE_OTHER),
+                  os.path.join(self.target_dir, "pages", "1.txt.%s" % LOCALE_OTHER)
                   )
         with io.open(conf_path, "r", encoding="utf-8") as inf:
             data = inf.read()

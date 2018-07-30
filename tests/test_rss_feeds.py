@@ -12,7 +12,7 @@ import dateutil.tz
 from lxml import etree
 import mock
 
-from .base import LocaleSupportInTesting
+from .base import initialize_localeborg
 import nikola
 
 fake_conf = defaultdict(str)
@@ -44,7 +44,7 @@ class FakeCompiler(object):
 
 class RSSFeedTest(unittest.TestCase):
     def setUp(self):
-        LocaleSupportInTesting.initialize_locales_for_testing('unilingual')
+        initialize_localeborg()
         self.blog_url = "http://some.blog"
 
         with mock.patch('nikola.post.get_meta',
