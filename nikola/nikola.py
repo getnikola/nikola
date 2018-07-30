@@ -162,6 +162,10 @@ LEGAL_VALUES = {
 
         # This dict is currently empty.
     },
+    'LOCALES_BASE': {
+        # A list of locale mappings to apply for every site. Can be overridden in the config.
+        'sr_latin': 'sr_Latn',
+    },
     'RTL_LANGUAGES': ('ar', 'fa', 'he', 'ur'),
     'MOMENTJS_LOCALES': defaultdict(
         str,
@@ -707,8 +711,12 @@ class Nikola(object):
                 sys.exit(1)
 
         # Silently upgrade LOCALES (remove encoding)
-        for k, v in self.config['LOCALES'].items():
-            self.config['LOCALES'][k] = v.split('.')[0]
+        locales = LEGAL_VALUES['LOCALES_BASE']
+        if 'LOCALES' in self.config:
+            for k, v in self.config['LOCALES'].items():
+                self.config['LOCALES'][k] = v.split('.')[0]
+            locales.update(self.config['LOCALES'])
+        self.config['LOCALES'] = locales
 
         if self.config.get('POSTS_SECTIONS'):
             utils.LOGGER.warn("The sections feature has been removed and its functionality has been merged into categories.")
