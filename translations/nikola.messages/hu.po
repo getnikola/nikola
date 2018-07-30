@@ -7,16 +7,17 @@
 # Translators:
 # Translators:
 # Translators:
+# Attila Nagy <attila@attilanagy.net>, 2018
 # Baptiste Darthenay <baptiste+transifex@darthenay.fr>, 2015
 # B E <steleto@gmail.com>, 2015
-# Chris Warrick <kwpolska@gmail.com>, 2015
+# Chris Warrick, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2017-06-12 12:47+0000\n"
-"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"PO-Revision-Date: 2018-07-30 19:15+0000\n"
+"Last-Translator: Chris Warrick\n"
 "Language-Team: Hungarian (http://www.transifex.com/ralsina/nikola/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -97,11 +98,11 @@ msgstr "A megjelenés dátuma"
 msgid "Posted:"
 msgstr "Megjelent:"
 
-msgid "Posts for {month} {year}"
-msgstr "{year}. {month}.-i bejegyzések"
+msgid "Posts for {month_year}"
+msgstr "{month_year} bejegyzések"
 
-msgid "Posts for {month} {day}, {year}"
-msgstr "{year}. {month}. {day}.-i bejegyzések"
+msgid "Posts for {month_day_year}"
+msgstr "{month_day_year} bejegyzések"
 
 msgid "Nothing found."
 msgstr "Nincs találat."
@@ -149,22 +150,14 @@ msgstr "Bejegyzések %s által"
 msgid "Toggle navigation"
 msgstr ""
 
-#. Used to format months per year
-msgid "{month} {year}"
-msgstr ""
-
-#. Used to format a date
-msgid "{month} {day}, {year}"
-msgstr ""
-
 msgid "Previous"
-msgstr ""
+msgstr "Előző"
 
 msgid "Up"
-msgstr ""
+msgstr "Fel"
 
 msgid "Next"
-msgstr ""
+msgstr "Következő"
 
 msgid "Atom feed"
-msgstr ""
+msgstr "Atom"

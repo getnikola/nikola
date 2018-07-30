@@ -24,8 +24,8 @@ MESSAGES = {
     "Posts about %s": "%sについての文書",
     "Posts by %s": "%sの文書一覧",
     "Posts for year %s": "%s年の文書",
-    "Posts for {month} {day}, {year}": "{year}年{month}{day}日の文書",
-    "Posts for {month} {year}": "{year}年{month}の文書",
+    "Posts for {month_day_year}": "{month_day_year}の文書",
+    "Posts for {month_year}": "{month_year}の文書",
     "Previous post": "一つ前の文書",
     "Previous": "前",
     "Publication date": "公開日",
@@ -45,6 +45,4 @@ MESSAGES = {
     "Write your post here.": "ここに文書を記述してください。",
     "old posts, page %d": "過去の文書 %dページ目",
     "page %d": "ページ%d",
-    "{month} {day}, {year}": "{月} {日}, {年}",
-    "{month} {year}": "{月} {年}",
 }

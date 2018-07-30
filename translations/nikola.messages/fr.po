@@ -8,9 +8,10 @@
 # Translators:
 # Translators:
 # Baptiste Darthenay <baptiste+transifex@darthenay.fr>, 2015
+# jco jco <julth.co@gmail.com>, 2017
 # John Mille <john.mille78@gmail.com>, 2014
 # John Mille <john.mille78@gmail.com>, 2014
-# Pablo SEMINARIO <pablo@seminar.io>, 2014-2015
+# Pablo SEMINARIO <pablo@seminar.io>, 2013-2015
 # Pablo SEMINARIO <pablo@seminar.io>, 2013
 # Pablo SEMINARIO <pablo@seminar.io>, 2013
 # Pablo SEMINARIO <pablo@seminar.io>, 2013
@@ -21,8 +22,8 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2017-06-12 12:47+0000\n"
-"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"PO-Revision-Date: 2018-07-30 19:15+0000\n"
+"Last-Translator: Chris Warrick\n"
 "Language-Team: French (http://www.transifex.com/ralsina/nikola/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,11 +104,11 @@ msgstr "Date de publication"
 msgid "Posted:"
 msgstr "Publié :"
 
-msgid "Posts for {month} {year}"
-msgstr "Articles de {month} {year}"
+msgid "Posts for {month_year}"
+msgstr "Articles de {month_year}"
 
-msgid "Posts for {month} {day}, {year}"
-msgstr "Articles du {day} {month} {year}"
+msgid "Posts for {month_day_year}"
+msgstr "Articles du {month_day_year}"
 
 msgid "Nothing found."
 msgstr "Pas de résultats."
@@ -153,24 +154,16 @@ msgid "Posts by %s"
 msgstr "Publiés par %s"
 
 msgid "Toggle navigation"
-msgstr ""
-
-#. Used to format months per year
-msgid "{month} {year}"
-msgstr ""
-
-#. Used to format a date
-msgid "{month} {day}, {year}"
-msgstr ""
+msgstr "Basculer en navigation"
 
 msgid "Previous"
-msgstr ""
+msgstr "Article précédent"
 
 msgid "Up"
-msgstr ""
+msgstr "Retour en haut"
 
 msgid "Next"
-msgstr ""
+msgstr "Article suivant"
 
 msgid "Atom feed"
-msgstr ""
+msgstr "Flux Atom"

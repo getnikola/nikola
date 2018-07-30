@@ -24,8 +24,8 @@ MESSAGES = {
     "Posts about %s": "%s에 대한 포스트",
     "Posts by %s": "%s에 의해 작성된 글",
     "Posts for year %s": "%s년도 포스트",
-    "Posts for {month} {day}, {year}": " {year}년 {month}월 {day}일에 작성된 포스트",
-    "Posts for {month} {year}": "{year}년 {month}월에 쓴 포스트",
+    "Posts for {month_day_year}": "{month_day_year}에 작성된 포스트",
+    "Posts for {month_year}": "{month_year}에 쓴 포스트",
     "Previous post": "이전 포스트",
     "Previous": "이전",
     "Publication date": "발간일",
@@ -45,6 +45,4 @@ MESSAGES = {
     "Write your post here.": "이곳에 글을 작성하세요.",
     "old posts, page %d": "이전 포스트, 페이지 %d",
     "page %d": "페이지 %d",
-    "{month} {day}, {year}": "",
-    "{month} {year}": "",
 }

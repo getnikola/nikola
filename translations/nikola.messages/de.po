@@ -8,11 +8,11 @@
 # Translators:
 # Translators:
 # amokleben <wenso@gmx.de>, 2013
-# Chris Warrick <kwpolska@gmail.com>, 2013-2014,2017
+# Chris Warrick, 2013-2014,2017
 # Felix Fontein <felix@fontein.de>, 2015-2016
 # Jürgen Schwarze <juergen.schwarze.70@gmail.com>, 2017
-# Chris Warrick <kwpolska@gmail.com>, 2013
-# Chris Warrick <kwpolska@gmail.com>, 2013
+# Chris Warrick, 2013
+# Chris Warrick, 2013
 # Martin Bless <martin.bless@gmail.com>, 2014
 # amokleben <wenso@gmx.de>, 2013
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
@@ -25,8 +25,8 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2017-06-12 12:51+0000\n"
-"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"PO-Revision-Date: 2018-07-30 19:16+0000\n"
+"Last-Translator: Chris Warrick\n"
 "Language-Team: German (http://www.transifex.com/ralsina/nikola/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -107,11 +107,11 @@ msgstr "Veröffentlichungsdatum"
 msgid "Posted:"
 msgstr "Veröffentlicht:"
 
-msgid "Posts for {month} {year}"
-msgstr "Einträge aus {month} {year}"
+msgid "Posts for {month_year}"
+msgstr "Einträge aus {month_year}"
 
-msgid "Posts for {month} {day}, {year}"
-msgstr "Einträge vom {day}. {month} {year}"
+msgid "Posts for {month_day_year}"
+msgstr "Einträge vom {month_day_year}"
 
 msgid "Nothing found."
 msgstr "Nichts gefunden."
@@ -158,14 +158,6 @@ msgstr "Einträge von %s"
 
 msgid "Toggle navigation"
 msgstr "Navigation umschalten"
-
-#. Used to format months per year
-msgid "{month} {year}"
-msgstr "{month} {year}"
-
-#. Used to format a date
-msgid "{month} {day}, {year}"
-msgstr "{day}. {month} {year}"
 
 msgid "Previous"
 msgstr "Vorheriger Eintrag"

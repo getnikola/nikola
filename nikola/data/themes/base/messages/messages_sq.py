@@ -24,8 +24,8 @@ MESSAGES = {
     "Posts about %s": "Postime rreth %s",
     "Posts by %s": "Postime nga %s",
     "Posts for year %s": "Postime për vitin %s",
-    "Posts for {month} {day}, {year}": "Postime për {month} {day}, {year}",
-    "Posts for {month} {year}": "Postime për {month} {year}",
+    "Posts for {month_day_year}": "Postime për {month_day_year}",
+    "Posts for {month_year}": "Postime për {month_year}",
     "Previous post": "Postim i kaluar",
     "Previous": "",
     "Publication date": "Data e publikimit",
@@ -45,6 +45,4 @@ MESSAGES = {
     "Write your post here.": "Shkruaj postin tënd këtu.",
     "old posts, page %d": "Postime të kaluara, faqe %d",
     "page %d": "faqe %d",
-    "{month} {day}, {year}": "",
-    "{month} {year}": "",
 }

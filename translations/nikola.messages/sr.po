@@ -9,13 +9,14 @@
 # Translators:
 # Ivan Radeljic <radeljicivan85@gmail.com>, 2014
 # Saša Savić <sasa.savic@protonmail.com>, 2015
+# Saša Savić <sasa.savic@protonmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2017-06-12 12:47+0000\n"
-"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"PO-Revision-Date: 2018-07-30 19:15+0000\n"
+"Last-Translator: Chris Warrick\n"
 "Language-Team: Serbian (http://www.transifex.com/ralsina/nikola/language/sr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,11 +97,11 @@ msgstr "Датум објаве"
 msgid "Posted:"
 msgstr "Објављено:"
 
-msgid "Posts for {month} {year}"
-msgstr "Постови за {month} {year}"
+msgid "Posts for {month_year}"
+msgstr "Постови за {month_year}"
 
-msgid "Posts for {month} {day}, {year}"
-msgstr "Објаве за {month} {day}, {year}"
+msgid "Posts for {month_day_year}"
+msgstr "Објаве за {month_day_year}"
 
 msgid "Nothing found."
 msgstr "Није ништа пронађено."
@@ -146,14 +147,6 @@ msgid "Posts by %s"
 msgstr ""
 
 msgid "Toggle navigation"
-msgstr ""
-
-#. Used to format months per year
-msgid "{month} {year}"
-msgstr ""
-
-#. Used to format a date
-msgid "{month} {day}, {year}"
 msgstr ""
 
 msgid "Previous"

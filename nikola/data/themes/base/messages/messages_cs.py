@@ -24,8 +24,8 @@ MESSAGES = {
     "Posts about %s": "Příspěvky o %s",
     "Posts by %s": "",
     "Posts for year %s": "Příspěvky v roce %s",
-    "Posts for {month} {day}, {year}": "Příspěvky v {month} {day}, {year}",
-    "Posts for {month} {year}": "Příspěvky v {month} {year}",
+    "Posts for {month_day_year}": "Příspěvky v {month_day_year}",
+    "Posts for {month_year}": "Příspěvky v {month_year}",
     "Previous post": "Předchozí příspěvek",
     "Previous": "",
     "Publication date": "Datum zveřejnění",
@@ -45,6 +45,4 @@ MESSAGES = {
     "Write your post here.": "",
     "old posts, page %d": "staré příspěvky, strana %d",
     "page %d": "strana %d",
-    "{month} {day}, {year}": "",
-    "{month} {year}": "",
 }

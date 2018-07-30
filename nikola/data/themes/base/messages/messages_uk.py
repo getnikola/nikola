@@ -24,8 +24,8 @@ MESSAGES = {
     "Posts about %s": "Статті про %s",
     "Posts by %s": "Статті %s",
     "Posts for year %s": "Статті за %s рік",
-    "Posts for {month} {day}, {year}": "Статті за {month} {day}, {year}",
-    "Posts for {month} {year}": "Статті за {month} {year}",
+    "Posts for {month_day_year}": "Статті за {month_day_year}",
+    "Posts for {month_year}": "Статті за {month_year}",
     "Previous post": "Попередня стаття",
     "Previous": "",
     "Publication date": "Дата публікації",
@@ -45,6 +45,4 @@ MESSAGES = {
     "Write your post here.": "Напишить Вашу статтю тут.",
     "old posts, page %d": "старі статті, сторінка %d",
     "page %d": "сторінка %d",
-    "{month} {day}, {year}": "",
-    "{month} {year}": "",
 }

@@ -24,8 +24,8 @@ MESSAGES = {
     "Posts about %s": "Αναρτήσεις για %s",
     "Posts by %s": "",
     "Posts for year %s": "Αναρτήσεις για το έτος %s",
-    "Posts for {month} {day}, {year}": "Αναρτήσεις στις {day} {month}, {year}",
-    "Posts for {month} {year}": "Αναρτήσεις για τον {month} του {year}",
+    "Posts for {month_day_year}": "Αναρτήσεις στις {month_day_year}",
+    "Posts for {month_year}": "Αναρτήσεις για τον {month_year}",
     "Previous post": "Προηγούμενη ανάρτηση",
     "Previous": "",
     "Publication date": "Ημερομηνία δημοσίευσης",
@@ -45,6 +45,4 @@ MESSAGES = {
     "Write your post here.": "",
     "old posts, page %d": "σελίδα παλαιότερων αναρτήσεων %d",
     "page %d": "σελίδα %d",
-    "{month} {day}, {year}": "",
-    "{month} {year}": "",
 }

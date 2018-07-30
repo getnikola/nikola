@@ -24,8 +24,8 @@ MESSAGES = {
     "Posts about %s": "%s గూర్చి టపాలు",
     "Posts by %s": "%s యొక్క టపాలు",
     "Posts for year %s": "%s సంవత్సర టపాలు",
-    "Posts for {month} {day}, {year}": "",
-    "Posts for {month} {year}": "",
+    "Posts for {month_day_year}": "",
+    "Posts for {month_year}": "",
     "Previous post": "మునుపటి టపా",
     "Previous": "",
     "Publication date": "ప్రచురణ తేదీ",
@@ -45,6 +45,4 @@ MESSAGES = {
     "Write your post here.": "ఇక్కడ మీ టపా ను వ్రాయండి.",
     "old posts, page %d": "పాత టపాలు, పేజీ %d",
     "page %d": "పేజీ %d",
-    "{month} {day}, {year}": "",
-    "{month} {year}": "",
 }

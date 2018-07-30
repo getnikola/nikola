@@ -24,8 +24,8 @@ MESSAGES = {
     "Posts about %s": "Berichten over %s",
     "Posts by %s": "Berichten van %s",
     "Posts for year %s": "Berichten voor het jaar %s",
-    "Posts for {month} {day}, {year}": "Berichten voor {month} {day}, {year}",
-    "Posts for {month} {year}": "Berichten voor {month} {year}",
+    "Posts for {month_day_year}": "Berichten voor {month_day_year}",
+    "Posts for {month_year}": "Berichten voor {month_year}",
     "Previous post": "Vorig bericht",
     "Previous": "Vorige",
     "Publication date": "Publicatiedatum",
@@ -45,6 +45,4 @@ MESSAGES = {
     "Write your post here.": "Schrijf hier je bericht.",
     "old posts, page %d": "oude berichten, pagina %d",
     "page %d": "pagina %d",
-    "{month} {day}, {year}": "{maand} {dag}, {jaar}",
-    "{month} {year}": "{maand} {jaar}",
 }

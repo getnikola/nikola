@@ -24,8 +24,8 @@ MESSAGES = {
     "Posts about %s": "مقالات عن %s",
     "Posts by %s": "مقالات بواسطة %s",
     "Posts for year %s": "مقالات سنة %s",
-    "Posts for {month} {day}, {year}": "",
-    "Posts for {month} {year}": "",
+    "Posts for {month_day_year}": "",
+    "Posts for {month_year}": "",
     "Previous post": "المقالة السابقة",
     "Previous": "السابق",
     "Publication date": "تاريخ النشر",
@@ -45,6 +45,4 @@ MESSAGES = {
     "Write your post here.": "أكتب مقالك هنا",
     "old posts, page %d": "مقالات قديمة, صفحة %d",
     "page %d": "صفحة %d",
-    "{month} {day}, {year}": "",
-    "{month} {year}": "",
 }

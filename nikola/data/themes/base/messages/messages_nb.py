@@ -24,8 +24,8 @@ MESSAGES = {
     "Posts about %s": "Innlegg om %s",
     "Posts by %s": "",
     "Posts for year %s": "Innlegg fra %s",
-    "Posts for {month} {day}, {year}": "Innlegg fra {day}. {month} {year}",
-    "Posts for {month} {year}": "Innlegg fra {month} {year}",
+    "Posts for {month_day_year}": "Innlegg fra {month_day_year}",
+    "Posts for {month_year}": "Innlegg fra {month_year}",
     "Previous post": "Forrige innlegg",
     "Previous": "",
     "Publication date": "Publiseringsdato",
@@ -45,6 +45,4 @@ MESSAGES = {
     "Write your post here.": "Skriv innlegget din her.",
     "old posts, page %d": "eldre innlegg, side %d",
     "page %d": "side %d",
-    "{month} {day}, {year}": "",
-    "{month} {year}": "",
 }

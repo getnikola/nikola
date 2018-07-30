@@ -24,8 +24,8 @@ MESSAGES = {
     "Posts about %s": "文章分類：%s",
     "Posts by %s": "%s 發佈",
     "Posts for year %s": "%s 年的文章",
-    "Posts for {month} {day}, {year}": "{year}年{month}月{day}日的文章",
-    "Posts for {month} {year}": "{year}年{month}月的文章",
+    "Posts for {month_day_year}": "{month_day_year}的文章",
+    "Posts for {month_year}": "{month_year}的文章",
     "Previous post": "上一篇",
     "Previous": "上一篇",
     "Publication date": "發佈日期",
@@ -45,6 +45,4 @@ MESSAGES = {
     "Write your post here.": "從這裡開始編輯文章",
     "old posts, page %d": "舊文章，第 %d 頁",
     "page %d": "第 %d 頁",
-    "{month} {day}, {year}": "",
-    "{month} {year}": "",
 }

@@ -8,21 +8,26 @@
 # Translators:
 # Translators:
 # Thiago Cangussu <cng.thg@gmail.com>, 2014
+# Chris Warrick, 2013
 # eduardo <schettino72@gmail.com>, 2013
+# Fabio Rosado <fabioglrosado@gmail.com>, 2017
 # felipeiasi <felipeiasi@gmail.com>, 2015
-# Chris Warrick <kwpolska@gmail.com>, 2013
-# Chris Warrick <kwpolska@gmail.com>, 2013
+# felipeiasi <felipeiasi@gmail.com>, 2015
+# Jhony Souza <jhonybass159@gmail.com>, 2017
+# Chris Warrick, 2013
+# Chris Warrick, 2013
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
 # eduardo <schettino72@gmail.com>, 2013
+# Thiago Cangussu <cng.thg@gmail.com>, 2014
 # Tiago Nunes <tmpvnunes@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2017-06-12 12:47+0000\n"
-"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"PO-Revision-Date: 2018-07-30 19:15+0000\n"
+"Last-Translator: Chris Warrick\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/ralsina/nikola/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,11 +108,11 @@ msgstr "Data de publicação"
 msgid "Posted:"
 msgstr "Publicado:"
 
-msgid "Posts for {month} {year}"
-msgstr "Posts de {month} {year}"
+msgid "Posts for {month_year}"
+msgstr "Posts de {month_year}"
 
-msgid "Posts for {month} {day}, {year}"
-msgstr "Posts do {day} {month}, {year}"
+msgid "Posts for {month_day_year}"
+msgstr "Posts do {month_day_year}"
 
 msgid "Nothing found."
 msgstr "Nada encontrado."
@@ -155,22 +160,14 @@ msgstr "Postado por %s"
 msgid "Toggle navigation"
 msgstr "Alternar navegação"
 
-#. Used to format months per year
-msgid "{month} {year}"
-msgstr ""
-
-#. Used to format a date
-msgid "{month} {day}, {year}"
-msgstr ""
-
 msgid "Previous"
-msgstr ""
+msgstr "Anterior"
 
 msgid "Up"
-msgstr ""
+msgstr "acima"
 
 msgid "Next"
-msgstr ""
+msgstr "Próximo"
 
 msgid "Atom feed"
-msgstr ""
+msgstr "Feed Atom"

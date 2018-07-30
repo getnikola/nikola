@@ -24,8 +24,8 @@ MESSAGES = {
     "Posts about %s": "Kirjoituksia aiheesta %s",
     "Posts by %s": "Artikkelit kirjoittajalta %s",
     "Posts for year %s": "Kirjoituksia vuodelta %s",
-    "Posts for {month} {day}, {year}": "Kirjoituksia ajalta {month} {day}, {year}",
-    "Posts for {month} {year}": "Kirjoituksia ajalta {month} {year}",
+    "Posts for {month_day_year}": "Kirjoituksia ajalta {month_day_year}",
+    "Posts for {month_year}": "Kirjoituksia ajalta {month_year}",
     "Previous post": "Edellinen kirjoitus",
     "Previous": "Edellinen",
     "Publication date": "Julkaisupäivämäärä",
@@ -45,6 +45,4 @@ MESSAGES = {
     "Write your post here.": "Kirjoita sisältö tähän.",
     "old posts, page %d": "vanhoja kirjoituksia, sivu %d",
     "page %d": "sivu %d",
-    "{month} {day}, {year}": "{kuukausi} {päivä}, {vuosi}",
-    "{month} {year}": "{kuukausi} {vuosi}",
 }
