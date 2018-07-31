@@ -53,34 +53,6 @@ def initialize_localeborg():
     nikola.utils.LocaleBorg.initialize({}, LOCALE_DEFAULT)
 
 
-class LocaleSupportInTesting(object):
-    """
-    Nikola needs two pairs of valid (language, locale_n) to test multilingual sites.
-
-    As languages of interest and installed OS support varies from host to host
-    we allow to specify two such pairs.
-
-    A valid pair complies
-        'languaje' one of the names of nikola translations ('en', 'es', ...)
-        'locale_n' is a string that python accepts to set a locale, like in
-            import locale
-            locale.setlocale(locale.LC_ALL, str(locale_n))
-
-    You specify the custom pairs to use with two environment variables
-    NIKOLA_LOCALE_DEFAULT (lang and locale to use as nikola's DEFAULT_LANG)
-    NIKOLA_LOCALE_OTHER
-
-    The value of the pair is lang (as in keys of Nikola's TRANSLATIONS), followed
-    by coma, followed by the locale.
-    """
-
-    @classmethod
-    def initialize_locales_for_testing(cls, variant):
-        """initializes nikola.utils.LocaleBorg"""
-        nikola.utils.LocaleBorg.reset()
-        nikola.utils.LocaleBorg.initialize({}, 'en')
-
-
 class FakePost(object):
 
     def __init__(self, title, slug):
