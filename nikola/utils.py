@@ -1221,11 +1221,11 @@ class LocaleBorg(object):
             if custom_format:
                 return babel.dates.format_date(date, custom_format, locale)
             else:
-                function, format = modes[mode]
+                function, fmt = modes[mode]
                 if function == 'skeleton':
-                    return babel.dates.format_skeleton(format, date, locale=locale)
+                    return babel.dates.format_skeleton(fmt, date, locale=locale)
                 else:
-                    return babel.dates.format_date(date, format, locale)
+                    return babel.dates.format_date(date, fmt, locale)
 
         return re.sub(r'{(.*?)(?::(.*?))?}', date_formatter, message)
 
