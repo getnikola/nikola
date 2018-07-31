@@ -13,6 +13,7 @@ DT_EN_US = 'July 10, 1856 at 12:34:56 PM UTC'
 
 DT_PL = '10 lipca 1856 12:34:56 UTC'
 
+
 @pytest.fixture
 def localeborg_base():
     """A base config of LocaleBorg."""
@@ -100,9 +101,11 @@ def test_format_date_translatablesetting(localeborg_base):
     assert LocaleBorg().formatted_date(df, TESLA_BIRTHDAY_DT, 'en') == 'en July'
     assert LocaleBorg().formatted_date(df, TESLA_BIRTHDAY_DT, 'pl') == 'lipca pl'
 
+
 def test_format_date_in_string_month(localeborg_base):
     assert LocaleBorg().format_date_in_string("Foo {month} Bar", TESLA_BIRTHDAY) == 'Foo July Bar'
     assert LocaleBorg().format_date_in_string("Foo {month} Bar", TESLA_BIRTHDAY, 'pl') == 'Foo lipiec Bar'
+
 
 def test_format_date_in_string_month_year(localeborg_base):
     assert LocaleBorg().format_date_in_string("Foo {month_year} Bar", TESLA_BIRTHDAY) == 'Foo July 1856 Bar'

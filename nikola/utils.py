@@ -68,8 +68,8 @@ except ImportError:
     husl = None
 
 try:
-    import typing
-    import typing.re
+    import typing  # NOQA
+    import typing.re  # NOQA
 except ImportError:
     pass
 
@@ -1187,8 +1187,6 @@ class LocaleBorg(object):
         if lang is None:
             lang = self.current_lang
         locale = self.locales.get(lang, lang)
-        # For thread-safety
-        fmt_date = None
         # Get a string out of a TranslatableSetting
         if isinstance(date_format, TranslatableSetting):
             date_format = date_format(lang)
@@ -1203,6 +1201,7 @@ class LocaleBorg(object):
 
     def format_date_in_string(self, message: str, date: datetime.date, lang: 'typing.Optional[str]' = None) -> str:
         """Format date inside a string (message).
+
         Accepted modes: month, month_year, month_day_year.
         Format: {month} for standard, {month:MMMM} for customization.
         """
@@ -1217,7 +1216,7 @@ class LocaleBorg(object):
         locale = self.locales.get(lang, lang)
 
         def date_formatter(match: 'typing.re.Match') -> str:
-            """A customizable date formatter."""
+            """Format a date as requested."""
             mode, custom_format = match.groups()
             if custom_format:
                 return babel.dates.format_date(date, custom_format, locale)

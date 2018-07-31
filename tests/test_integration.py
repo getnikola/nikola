@@ -16,7 +16,7 @@ import nikola.plugins.command
 import nikola.plugins.command.init
 import nikola.utils
 
-from .base import BaseTestCase, cd, LOCALE_DEFAULT, LOCALE_OTHER, initialize_localeborg
+from .base import BaseTestCase, cd, LOCALE_OTHER, initialize_localeborg
 
 
 class EmptyBuildTest(BaseTestCase):

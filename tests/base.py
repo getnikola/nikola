@@ -10,11 +10,8 @@ __all__ = ["BaseTestCase", "cd", "initialize_localeborg", "LOCALE_DEFAULT", "LOC
 
 
 import os
-import sys
-
 
 from contextlib import contextmanager
-import locale
 import unittest
 
 import logbook
@@ -46,6 +43,7 @@ def cd(path):
     yield
     os.chdir(old_dir)
 
+
 LOCALE_DEFAULT = os.environ.get('NIKOLA_LOCALE_DEFAULT', 'en')
 LOCALE_OTHER = os.environ.get('NIKOLA_LOCALE_OTHER', 'pl')
 
@@ -53,6 +51,7 @@ LOCALE_OTHER = os.environ.get('NIKOLA_LOCALE_OTHER', 'pl')
 def initialize_localeborg():
     nikola.utils.LocaleBorg.reset()
     nikola.utils.LocaleBorg.initialize({}, LOCALE_DEFAULT)
+
 
 class LocaleSupportInTesting(object):
     """
@@ -80,6 +79,7 @@ class LocaleSupportInTesting(object):
         """initializes nikola.utils.LocaleBorg"""
         nikola.utils.LocaleBorg.reset()
         nikola.utils.LocaleBorg.initialize({}, 'en')
+
 
 class FakePost(object):
 
