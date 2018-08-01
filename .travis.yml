@@ -64,6 +64,3 @@ notifications:
     - 'Build details: %{build_url}'
     skip_join: false
     use_notice: true
-    nick: NikolaService|CI
-    password:
-      secure: ZuvNGatyXwSLxDa4Xr3XAso7gAF7zdyyjrs2t1HTYxPM+BFXo93QPpd4h/xGTpO6IJV3eaR1SRtyUSywZc5lj2icDEcgRgV3PbPEadC8C8S6CSEjMOiFOiMwp5lV0feAN8iM2LwR+StTI0uCj7HWjy6NVtKLeW873Wj/byzenjM=
