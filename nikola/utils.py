@@ -865,7 +865,7 @@ def unslugify(value, lang=None, discard_numbers=True):
     """
     if discard_numbers:
         value = re.sub('^[0-9]+', '', value)
-    value = re.sub('([_\-\.])', ' ', value)
+    value = re.sub(r'([_\-\.])', ' ', value)
     value = value.strip().capitalize()
     return value
 
@@ -1121,12 +1121,19 @@ class LocaleBorg(object):
         .formatted_date: format a date(time) according to locale rules
         .format_date_in_string: take a message and format the date in it
 
-    NOTE: the current implementation completely ignores the Python `locale`
-          module, as it only leads to problems (insted opting for the
-          `babel` package).
+    The default implementation uses the Babel package and completely ignores
+    the Python `locale` module. If you wish to override this, write functions
+    and assign them to the appropriate names. The functions are:
+
+     * LocaleBorg.datetime_formatter(date, date_format, lang, locale)
+     * LocaleBorg.in_string_formatter(date, mode, custom_format, lang, locale)
     """
 
     initialized = False
+
+    # Can be used to override Babel
+    datetime_formatter = None
+    in_string_formatter = None
 
     @classmethod
     def initialize(cls, locales: 'typing.Dict[str, str]', initial_lang: str):
@@ -1163,6 +1170,8 @@ class LocaleBorg(object):
         cls.locales = {}
         cls.initialized = False
         cls.thread_local = None
+        cls.datetime_formatter = None
+        cls.in_string_formatter = None
 
     def __init__(self):
         """Initialize."""
@@ -1196,6 +1205,8 @@ class LocaleBorg(object):
             # Formatted after RFC 3339 (web ISO 8501 profile) with Zulu
             # zone designator for times in UTC and no microsecond precision.
             return date.replace(microsecond=0).isoformat().replace('+00:00', 'Z')
+        elif LocaleBorg.datetime_formatter is not None:
+            LocaleBorg.datetime_formatter(date, date_format, lang, locale)
         else:
             return babel.dates.format_datetime(date, date_format, locale=locale)
 
@@ -1218,7 +1229,9 @@ class LocaleBorg(object):
         def date_formatter(match: 'typing.re.Match') -> str:
             """Format a date as requested."""
             mode, custom_format = match.groups()
-            if custom_format:
+            if LocaleBorg.in_string_formatter is not None:
+                LocaleBorg.in_string_formatter(date, mode, custom_format, lang, locale)
+            elif custom_format:
                 return babel.dates.format_date(date, custom_format, locale)
             else:
                 function, fmt = modes[mode]
@@ -1368,7 +1381,7 @@ def get_translation_candidate(config, path, lang):
     # This will still break if the user has ?*[]\ in the pattern. But WHY WOULD HE?
     pattern = pattern.replace('.', r'\.')
     pattern = pattern.replace('{path}', '(?P<path>.+?)')
-    pattern = pattern.replace('{ext}', '(?P<ext>[^\./]+)')
+    pattern = pattern.replace('{ext}', r'(?P<ext>[^\./]+)')
     pattern = pattern.replace('{lang}', '(?P<lang>{0})'.format('|'.join(config['TRANSLATIONS'].keys())))
     m = re.match(pattern, path)
     if m and all(m.groups()):  # It's a translated path
