@@ -435,6 +435,8 @@ class MetadataExtractor(BasePlugin):
     def extract_text(self, source_text: str) -> 'typing.Dict[str, str]':
         """Split file, return metadata and the content."""
         split = self.split_metadata_from_text(source_text)
+        if not split:
+            return {}
         meta = self._extract_metadata_from_text(split[0])
         return meta
 
