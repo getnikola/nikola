@@ -72,6 +72,7 @@ class Chart(Directive):
         "classes": directives.unchanged,
         "css": directives.unchanged,
         "defs": directives.unchanged,
+        "data_file": directives.unchanged,
         "disable_xml_declaration": directives.unchanged,
         "dots_size": directives.unchanged,
         "dynamic_print_values": directives.unchanged,
