@@ -74,7 +74,8 @@ class ChartShortcode(ShortcodePlugin):
         else:
             style = getattr(pygal.style, style_name)
         for k, v in options.items():
-            try:                options[k] = literal_eval(v)
+            try:
+                options[k] = literal_eval(v)
             except Exception:
                 options[k] = v
         chart = pygal
