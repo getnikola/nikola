@@ -24,8 +24,8 @@ MESSAGES = {
     "Posts about %s": "Постови о %s",
     "Posts by %s": "",
     "Posts for year %s": "Постови за годину %s",
-    "Posts for {month} {day}, {year}": "Објаве за {month} {day}, {year}",
-    "Posts for {month} {year}": "Постови за {month} {year}",
+    "Posts for {month_day_year}": "Објаве за {month_day_year}",
+    "Posts for {month_year}": "Постови за {month_year}",
     "Previous post": "Претходни пост",
     "Previous": "",
     "Publication date": "Датум објаве",
@@ -45,6 +45,4 @@ MESSAGES = {
     "Write your post here.": "Вашу објаву напишите овдје.",
     "old posts, page %d": "стари постови, страна %d",
     "page %d": "страна %d",
-    "{month} {day}, {year}": "",
-    "{month} {year}": "",
 }

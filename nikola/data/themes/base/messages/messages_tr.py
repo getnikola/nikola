@@ -24,8 +24,8 @@ MESSAGES = {
     "Posts about %s": "%s ile ilgili yazılar",
     "Posts by %s": "%s tarafından yazılanlar",
     "Posts for year %s": "%s yılındaki yazılar",
-    "Posts for {month} {day}, {year}": "{month} {day}, {year} tarihinden itibaren yazılar",
-    "Posts for {month} {year}": "{month} {year} göre yazılar",
+    "Posts for {month_day_year}": "{month_day_year} tarihinden itibaren yazılar",
+    "Posts for {month_year}": "{month_year} göre yazılar",
     "Previous post": "Önceki yazı",
     "Previous": "",
     "Publication date": "Yayınlanma tarihi",
@@ -45,6 +45,4 @@ MESSAGES = {
     "Write your post here.": "Yazınızı buraya yazın.",
     "old posts, page %d": "eski yazılar, sayfa %d",
     "page %d": "sayfa %d",
-    "{month} {day}, {year}": "",
-    "{month} {year}": "",
 }

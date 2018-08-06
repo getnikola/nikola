@@ -11,6 +11,9 @@ Features
   find a file (i.e. when an 404 error occurs).
 * Better error messages for JSON download failures in ``nikola
   plugin`` and  ``nikola theme`` (Issue getnikola/plugins#282)
+* Use Babel instead of the locale module to better handle
+  localizations (Issues #2606, #3121)
+* Change ``DATE_FORMAT`` formats to CLDR formats (Issue #2606)
 
 Bugfixes
 --------

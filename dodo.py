@@ -1,7 +1,6 @@
 
 import os
 import fnmatch
-import locale
 import subprocess
 
 DOIT_CONFIG = {
@@ -33,42 +32,9 @@ def task_pydocstyle():
     }
 
 
-def task_locale():
-    """set environ locale vars used in nikola tests"""
-    def set_nikola_test_locales():
-        try:
-            out = subprocess.check_output(['locale', '-a'])
-            out = out.decode('utf-8')
-            locales = []
-            languages = set()
-            for line in out.splitlines():
-                if (line.endswith('.utf8') or line.endswith('.UTF-8')) and '_' in line:
-                    lang = line.split('_')[0]
-                    if lang not in languages:
-                        try:
-                            locale.setlocale(locale.LC_ALL, str(line))
-                        except Exception:
-                            continue
-                        languages.add(lang)
-                        locales.append((lang, line))
-                        if len(locales) == 2:
-                            break
-            if len(locales) != 2:
-                return False  # task failed
-            else:
-                os.environ['NIKOLA_LOCALE_DEFAULT'] = ','.join(locales[0])
-                os.environ['NIKOLA_LOCALE_OTHER'] = ','.join(locales[1])
-        finally:
-            # restore to default locale
-            locale.resetlocale()
-
-    return {'actions': [set_nikola_test_locales], 'verbosity': 2}
-
-
 def task_test():
     """run unit-tests using py.test"""
     return {
-        'task_dep': ['locale'],
         'actions': ['py.test tests/'],
     }
 
@@ -76,7 +42,6 @@ def task_test():
 def task_coverage():
     """run unit-tests using py.test, with coverage reporting"""
     return {
-        'task_dep': ['locale'],
         'actions': ['py.test --cov nikola --cov-report term-missing tests/'],
         'verbosity': 2,
     }

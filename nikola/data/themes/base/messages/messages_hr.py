@@ -24,8 +24,8 @@ MESSAGES = {
     "Posts about %s": "Postovi o %s",
     "Posts by %s": "Objave od %s",
     "Posts for year %s": "Postovi za godinu %s",
-    "Posts for {month} {day}, {year}": "Objave za {month} {day}, {year}",
-    "Posts for {month} {year}": "Postovi za {month} {year}",
+    "Posts for {month_day_year}": "Postovi za {month_day_year}",
+    "Posts for {month_year}": "Postovi za {month_year}",
     "Previous post": "Prethodni post",
     "Previous": "",
     "Publication date": "Nadnevak objave",
@@ -45,6 +45,4 @@ MESSAGES = {
     "Write your post here.": "Napiši svoju objavu ovdje",
     "old posts, page %d": "stari postovi, stranice %d",
     "page %d": "stranice %d",
-    "{month} {day}, {year}": "",
-    "{month} {year}": "",
 }

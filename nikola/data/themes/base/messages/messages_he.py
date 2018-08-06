@@ -24,8 +24,8 @@ MESSAGES = {
     "Posts about %s": "פוסטים אודות %s",
     "Posts by %s": "פוסטים ע״י %s",
     "Posts for year %s": "פוסטים לשנת %s",
-    "Posts for {month} {day}, {year}": "פוסטים עבוד {year},{day}{month}",
-    "Posts for {month} {year}": "פוסטים עבוד {year}{month}",
+    "Posts for {month_day_year}": "פוסטים עבוד {month_day_year}",
+    "Posts for {month_year}": "פוסטים עבוד {month_year}",
     "Previous post": "פוסט הקודם",
     "Previous": "",
     "Publication date": "תאריך פרסום",
@@ -45,6 +45,4 @@ MESSAGES = {
     "Write your post here.": "תכתוב את הפוסט שלך פה.",
     "old posts, page %d": "פוסטים קודמים, דף %d",
     "page %d": "עמוד %d",
-    "{month} {day}, {year}": "",
-    "{month} {year}": "",
 }

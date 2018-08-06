@@ -1611,7 +1611,7 @@ Fancy Dates
 Nikola can use various styles for presenting dates.
 
 DATE_FORMAT
-    The date format to use if there is no JS or fancy dates are off.  Compatible with Python’s ``strftime()`` syntax.
+    The date format to use if there is no JS or fancy dates are off.  `Compatible with CLDR syntax. <http://cldr.unicode.org/translation/date-time>`_
 
 JS_DATE_FORMAT
     The date format to use if fancy dates are on.  Compatible with ``moment.js`` syntax.

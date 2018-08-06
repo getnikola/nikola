@@ -24,8 +24,8 @@ MESSAGES = {
     "Posts about %s": "Публикации относно %s",
     "Posts by %s": "Публикации от %s",
     "Posts for year %s": "Публикации за %s година",
-    "Posts for {month} {day}, {year}": "Публикации от {day} {month} {year}",
-    "Posts for {month} {year}": "Публикации за {month} {year}",
+    "Posts for {month_day_year}": "Публикации от {month_day_year}",
+    "Posts for {month_year}": "Публикации за {month_year}",
     "Previous post": "Предишна публикация",
     "Previous": "",
     "Publication date": "Дата на публикуване",
@@ -45,6 +45,4 @@ MESSAGES = {
     "Write your post here.": "Напиши тук текста на твоята публикация.",
     "old posts, page %d": "стари публикации, страница %d",
     "page %d": "страница %d",
-    "{month} {day}, {year}": "",
-    "{month} {year}": "",
 }

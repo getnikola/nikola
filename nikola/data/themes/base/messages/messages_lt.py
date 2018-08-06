@@ -24,8 +24,8 @@ MESSAGES = {
     "Posts about %s": "Įrašai apie %s",
     "Posts by %s": "Autoriaus %s įrašai",
     "Posts for year %s": "%s metų įrašai",
-    "Posts for {month} {day}, {year}": "{month} {day}, {year} įrašai",
-    "Posts for {month} {year}": "{month} {year} įrašai",
+    "Posts for {month_day_year}": "{month_day_year} įrašai",
+    "Posts for {month_year}": "{month_year} įrašai",
     "Previous post": "Ankstesnis įrašas",
     "Previous": "",
     "Publication date": "Publikavimo data",
@@ -45,6 +45,4 @@ MESSAGES = {
     "Write your post here.": "Čia rašykite įrašo tekstą.",
     "old posts, page %d": "seni įrašai, %d puslapis",
     "page %d": "%d puslapis",
-    "{month} {day}, {year}": "",
-    "{month} {year}": "",
 }

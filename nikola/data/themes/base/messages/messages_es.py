@@ -24,8 +24,8 @@ MESSAGES = {
     "Posts about %s": "Publicaciones sobre %s",
     "Posts by %s": "Publicaciones de %s",
     "Posts for year %s": "Publicaciones del año %s",
-    "Posts for {month} {day}, {year}": "Publicaciones del {day} de {month} de {year}",
-    "Posts for {month} {year}": "Posts de {month} de {year}",
+    "Posts for {month_day_year}": "Publicaciones del {month_day_year}",
+    "Posts for {month_year}": "Posts de {month_year}",
     "Previous post": "Publicación anterior",
     "Previous": "Anterior",
     "Publication date": "Fecha de publicación",
@@ -45,6 +45,4 @@ MESSAGES = {
     "Write your post here.": "Escriba su publicación aquí.",
     "old posts, page %d": "publicaciones antiguas, página %d",
     "page %d": "página %d",
-    "{month} {day}, {year}": "{month} {day}, {year}",
-    "{month} {year}": "{month} {year}",
 }

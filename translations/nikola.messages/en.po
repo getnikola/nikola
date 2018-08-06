@@ -95,11 +95,11 @@ msgstr "Publication date"
 msgid "Posted:"
 msgstr "Posted:"
 
-msgid "Posts for {month} {year}"
-msgstr "Posts for {month} {year}"
+msgid "Posts for {month_year}"
+msgstr "Posts for {month_year}"
 
-msgid "Posts for {month} {day}, {year}"
-msgstr "Posts for {month} {day}, {year}"
+msgid "Posts for {month_day_year}"
+msgstr "Posts for {month_day_year}"
 
 msgid "Nothing found."
 msgstr "Nothing found."
@@ -146,14 +146,6 @@ msgstr "Posts by %s"
 
 msgid "Toggle navigation"
 msgstr "Toggle navigation"
-
-#. Used to format months per year
-msgid "{month} {year}"
-msgstr "{month} {year}"
-
-#. Used to format a date
-msgid "{month} {day}, {year}"
-msgstr "{month} {day}, {year}"
 
 msgid "Previous"
 msgstr "Previous"

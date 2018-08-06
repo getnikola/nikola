@@ -32,7 +32,6 @@ from copy import copy
 from pkg_resources import resource_filename
 import datetime
 import functools
-import locale
 import operator
 import os
 import json
@@ -155,56 +154,6 @@ LEGAL_VALUES = {
         'zh_cn': 'Chinese (Simplified)',
         'zh_tw': 'Chinese (Traditional)'
     },
-    '_WINDOWS_LOCALE_GUESSES': {
-        # TODO incomplete
-        # some languages may need that the appropriate Microsoft Language Pack be installed.
-        "ar": "Arabic",
-        "az": "Azeri (Latin)",
-        "bg": "Bulgarian",
-        "bs": "Bosnian",
-        "ca": "Catalan",
-        "cs": "Czech",
-        "da": "Danish",
-        "de": "German",
-        "el": "Greek",
-        "en": "English",
-        # "eo": "Esperanto", # Not available
-        "es": "Spanish",
-        "et": "Estonian",
-        "eu": "Basque",
-        "fa": "Persian",  # Persian
-        "fi": "Finnish",
-        "fr": "French",
-        "gl": "Galician",
-        "he": "Hebrew",
-        "hi": "Hindi",
-        "hr": "Croatian",
-        "hu": "Hungarian",
-        "id": "Indonesian",
-        "it": "Italian",
-        "ja": "Japanese",
-        "ko": "Korean",
-        "nb": "Norwegian",  # Not Bokmål, as Windows doesn't find it for unknown reasons.
-        "nl": "Dutch",
-        "pa": "Punjabi",
-        "pl": "Polish",
-        "pt": "Portuguese_Portugal",
-        "pt_br": "Portuguese_Brazil",
-        "ru": "Russian",
-        "sk": "Slovak",
-        "sl": "Slovenian",
-        "sq": "Albanian",
-        "sr": "Serbian",
-        "sr_latin": "Serbian (Latin)",
-        "sv": "Swedish",
-        "te": "Telugu",
-        "th": "Thai",
-        "tr": "Turkish",
-        "uk": "Ukrainian",
-        "ur": "Urdu",
-        "zh_cn": "Chinese_China",  # Chinese (Simplified)
-        "zh_tw": "Chinese_Taiwan",  # Chinese (Traditional)
-    },
     '_TRANSLATIONS_WITH_COUNTRY_SPECIFIERS': {
         # This dict is used in `init` in case of locales that exist with a
         # country specifier.  If there is no other locale that has the same
@@ -212,6 +161,10 @@ LEGAL_VALUES = {
         # will accept it, warning the user about it.
 
         # This dict is currently empty.
+    },
+    'LOCALES_BASE': {
+        # A list of locale mappings to apply for every site. Can be overridden in the config.
+        'sr_latin': 'sr_Latn',
     },
     'RTL_LANGUAGES': ('ar', 'fa', 'he', 'ur'),
     'MOMENTJS_LOCALES': defaultdict(
@@ -460,7 +413,7 @@ class Nikola(object):
             'CREATE_SINGLE_ARCHIVE': False,
             'CREATE_FULL_ARCHIVES': False,
             'CREATE_DAILY_ARCHIVE': False,
-            'DATE_FORMAT': '%Y-%m-%d %H:%M',
+            'DATE_FORMAT': 'YYYY-MM-dd HH:mm',
             'DISABLE_INDEXES': False,
             'DISABLE_MAIN_ATOM_FEED': False,
             'DISABLE_MAIN_RSS_FEED': False,
@@ -749,6 +702,22 @@ class Nikola(object):
             utils.LOGGER.warn('The DISABLE_INDEXES_PLUGIN_RSS_FEED setting was renamed to DISABLE_MAIN_RSS_FEED.')
             self.config['DISABLE_MAIN_RSS_FEED'] = self.config['DISABLE_INDEXES_PLUGIN_RSS_FEED']
 
+        for val in self.config['DATE_FORMAT'].values.values():
+            if '%' in val:
+                utils.LOGGER.error('The DATE_FORMAT setting needs to be upgraded.')
+                utils.LOGGER.notice("Nikola now uses CLDR-style date strings. http://cldr.unicode.org/translation/date-time")
+                utils.LOGGER.notice("Example: %Y-%m-%d %H:%M ==> YYYY-MM-dd HH:mm")
+                utils.LOGGER.notice("(note it’s different to what moment.js uses!)")
+                sys.exit(1)
+
+        # Silently upgrade LOCALES (remove encoding)
+        locales = LEGAL_VALUES['LOCALES_BASE']
+        if 'LOCALES' in self.config:
+            for k, v in self.config['LOCALES'].items():
+                self.config['LOCALES'][k] = v.split('.')[0]
+            locales.update(self.config['LOCALES'])
+        self.config['LOCALES'] = locales
+
         if self.config.get('POSTS_SECTIONS'):
             utils.LOGGER.warn("The sections feature has been removed and its functionality has been merged into categories.")
             utils.LOGGER.warn("For more information on how to migrate, please read: https://getnikola.com/blog/upgrading-to-nikola-v8.html#sections-were-replaced-by-categories")
@@ -843,11 +812,7 @@ class Nikola(object):
         self.default_lang = self.config['DEFAULT_LANG']
         self.translations = self.config['TRANSLATIONS']
 
-        locale_fallback, locale_default, locales = sanitized_locales(
-            self.config.get('LOCALE_FALLBACK', None),
-            self.config.get('LOCALE_DEFAULT', None),
-            self.config.get('LOCALES', {}), self.translations)
-        utils.LocaleBorg.initialize(locales, self.default_lang)
+        utils.LocaleBorg.initialize(self.config.get('LOCALES', {}), self.default_lang)
 
         # BASE_URL defaults to SITE_URL
         if 'BASE_URL' not in self.config:
@@ -1232,6 +1197,7 @@ class Nikola(object):
         self.ALL_PAGE_DEPS['atom_filename_base'] = self.config.get('ATOM_FILENAME_BASE')
         self.ALL_PAGE_DEPS['slug_author_path'] = self.config.get('SLUG_AUTHOR_PATH')
         self.ALL_PAGE_DEPS['slug_tag_path'] = self.config.get('SLUG_TAG_PATH')
+        self.ALL_PAGE_DEPS['locale'] = self.config.get('LOCALE')
 
     def _activate_plugins_of_category(self, category):
         """Activate all the plugins of a given category and return them."""
@@ -2673,168 +2639,3 @@ class Nikola(object):
     def __repr__(self):
         """Representation of a Nikola site."""
         return '<Nikola Site: {0!r}>'.format(self.config['BLOG_TITLE'](self.config['DEFAULT_LANG']))
-
-
-def sanitized_locales(locale_fallback, locale_default, locales, translations):
-    """Sanitize all locales availble in Nikola.
-
-    There will be one locale for each language in translations.
-
-    Locales for languages not in translations are ignored.
-
-    An explicit locale for a language can be specified in locales[language].
-
-    Locales at the input must be in the string style (like 'en', 'en.utf8'), and
-    the string can be unicode or bytes; at the output will be of type str, as
-    required by locale.setlocale.
-
-    Explicit but invalid locales are replaced with the sanitized locale_fallback
-
-    Languages with no explicit locale are set to
-        the sanitized locale_default if it was explicitly set
-        sanitized guesses compatible with v 6.0.4 if locale_default was None
-
-    NOTE: never use locale.getlocale(), it can return values that
-    locale.setlocale will not accept in Windows.
-    Examples: "Spanish", "French" can't do the full circle set / get / set
-
-    """
-    if sys.platform != 'win32':
-        workaround_empty_LC_ALL_posix()
-
-    # locales for languages not in translations are ignored
-    extras = set(locales) - set(translations)
-    if extras:
-        msg = 'Unexpected languages in LOCALES, ignoring them: {0}'
-        utils.LOGGER.warn(msg.format(', '.join(extras)))
-        for lang in extras:
-            del locales[lang]
-
-    # py2x: get/setlocale related functions require the locale string as a str
-    # so convert
-    locale_fallback = str(locale_fallback) if locale_fallback else None
-    locale_default = str(locale_default) if locale_default else None
-    for lang in locales:
-        locales[lang] = str(locales[lang])
-
-    locale_fallback = valid_locale_fallback(locale_fallback)
-
-    # explicit but invalid locales are replaced with the sanitized locale_fallback
-    for lang in locales:
-        if not is_valid_locale(locales[lang]):
-            msg = 'Locale {0} for language {1} not accepted by python locale.'
-            utils.LOGGER.warn(msg.format(locales[lang], lang))
-            locales[lang] = locale_fallback
-
-    # languages with no explicit locale
-    missing = set(translations) - set(locales)
-    if locale_default:
-        # are set to the sanitized locale_default if it was explicitly set
-        if not is_valid_locale(locale_default):
-            msg = 'LOCALE_DEFAULT {0} could not be set, using {1}'
-            utils.LOGGER.warn(msg.format(locale_default, locale_fallback))
-            locale_default = locale_fallback
-        for lang in missing:
-            locales[lang] = locale_default
-    else:
-        # are set to sanitized guesses compatible with v 6.0.4 in Linux-Mac (was broken in Windows)
-        if sys.platform == 'win32':
-            guess_locale_fom_lang = guess_locale_from_lang_windows
-        else:
-            guess_locale_fom_lang = guess_locale_from_lang_posix
-        for lang in missing:
-            locale_n = guess_locale_fom_lang(lang)
-            if not locale_n:
-                locale_n = locale_fallback
-                msg = "Could not guess locale for language {0}, using locale {1}"
-                utils.LOGGER.warn(msg.format(lang, locale_n))
-                utils.LOGGER.warn("Please fix your OS locale configuration or use the LOCALES option in conf.py to specify your preferred locale.")
-                if sys.platform != 'win32':
-                    utils.LOGGER.warn("Make sure to use an UTF-8 locale to ensure Unicode support.")
-            locales[lang] = locale_n
-
-    return locale_fallback, locale_default, locales
-
-
-def is_valid_locale(locale_n):
-    """Check if locale (type str) is valid."""
-    try:
-        locale.setlocale(locale.LC_ALL, locale_n)
-        return True
-    except locale.Error:
-        return False
-
-
-def valid_locale_fallback(desired_locale=None):
-    """Provide a default fallback_locale, a string that locale.setlocale will accept.
-
-    If desired_locale is provided must be of type str for py2x compatibility
-    """
-    # Whenever fallbacks change, adjust test TestHarcodedFallbacksWork
-    candidates_windows = [str('English'), str('C')]
-    candidates_posix = [str('en_US.UTF-8'), str('C')]
-    candidates = candidates_windows if sys.platform == 'win32' else candidates_posix
-    if desired_locale:
-        candidates = list(candidates)
-        candidates.insert(0, desired_locale)
-    found_valid = False
-    for locale_n in candidates:
-        found_valid = is_valid_locale(locale_n)
-        if found_valid:
-            break
-    if not found_valid:
-        msg = 'Could not find a valid fallback locale, tried: {0}'
-        utils.LOGGER.warn(msg.format(candidates))
-    elif desired_locale and (desired_locale != locale_n):
-        msg = 'Desired fallback locale {0} could not be set, using: {1}'
-        utils.LOGGER.warn(msg.format(desired_locale, locale_n))
-    return locale_n
-
-
-def guess_locale_from_lang_windows(lang):
-    """Guess a locale, basing on Windows language."""
-    locale_n = str(LEGAL_VALUES['_WINDOWS_LOCALE_GUESSES'].get(lang, None))
-    if not is_valid_locale(locale_n):
-        locale_n = None
-    return locale_n
-
-
-def guess_locale_from_lang_posix(lang):
-    """Guess a locale, basing on POSIX system language."""
-    # compatibility v6.0.4
-    if is_valid_locale(str(lang)):
-        locale_n = str(lang)
-    else:
-        # Guess using locale.getdefaultlocale()
-        try:
-            # str() is the default string type: bytes on py2, unicode on py3
-            # only that type is accepted by the locale module
-            locale_n = str('.'.join(locale.getdefaultlocale()))
-        except (ValueError, TypeError):
-            locale_n = str()
-        # Use guess only if it’s the same language
-        if not locale_n.startswith(lang.lower()):
-            locale_n = str()
-    if not locale_n or not is_valid_locale(locale_n):
-        # this works in Travis when locale support set by Travis suggestion
-        locale_n = str((locale.normalize(lang).split('.')[0]) + '.UTF-8')
-    if not is_valid_locale(locale_n):
-        # http://thread.gmane.org/gmane.comp.web.nikola/337/focus=343
-        locale_n = str((locale.normalize(lang).split('.')[0]))
-    if not is_valid_locale(locale_n):
-        locale_n = None
-    return locale_n
-
-
-def workaround_empty_LC_ALL_posix():
-    # clunky hack: we have seen some posix locales with all or most of LC_*
-    # defined to the same value, but with LC_ALL empty.
-    # Manually doing what we do here seems to work for nikola in that case.
-    # It is unknown if it will work when the LC_* aren't homogeneous
-    try:
-        lc_time = os.environ.get('LC_TIME', None)
-        lc_all = os.environ.get('LC_ALL', None)
-        if lc_time and not lc_all:
-            os.environ['LC_ALL'] = lc_time
-    except Exception:
-        pass

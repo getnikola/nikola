@@ -24,8 +24,8 @@ MESSAGES = {
     "Posts about %s": "โพสต์เกี่ยวกับ %s",
     "Posts by %s": "โพสต์โดย %s",
     "Posts for year %s": "โพสต์เมื่อปี  %s",
-    "Posts for {month} {day}, {year}": "โพสต์เมื่อ {month} {day}, {year}",
-    "Posts for {month} {year}": "โพสต์เมื่อ  {month} {year}",
+    "Posts for {month_day_year}": "โพสต์เมื่อ {month_day_year}",
+    "Posts for {month_year}": "โพสต์เมื่อ  {month_year}",
     "Previous post": "โพสต์ก่อนหน้า",
     "Previous": "ก่อนหน้า",
     "Publication date": "วันที่ตีพิมพ์",
@@ -45,6 +45,4 @@ MESSAGES = {
     "Write your post here.": "เขียนโพสต์ที่นี่",
     "old posts, page %d": "โพสต์เก่า, หน้า %d",
     "page %d": "หน้า %d",
-    "{month} {day}, {year}": "{month} {day}, {year}",
-    "{month} {year}": "{month} {year}",
 }

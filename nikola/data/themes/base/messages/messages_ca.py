@@ -24,8 +24,8 @@ MESSAGES = {
     "Posts about %s": "Entrades sobre %s",
     "Posts by %s": "Entrades per %s",
     "Posts for year %s": "Entrades de l'any %s",
-    "Posts for {month} {day}, {year}": "Entrades per {month} {day}, {year}",
-    "Posts for {month} {year}": "Publicat en {month} {year}",
+    "Posts for {month_day_year}": "Entrades per {month_day_year}",
+    "Posts for {month_year}": "Publicat en {month_year}",
     "Previous post": "Entrada anterior",
     "Previous": "",
     "Publication date": "Data de publicació",
@@ -45,6 +45,4 @@ MESSAGES = {
     "Write your post here.": "Escribiu la vostra entrada aquí",
     "old posts, page %d": "entrades antigues, pàgina %d",
     "page %d": "pàgina %d",
-    "{month} {day}, {year}": "",
-    "{month} {year}": "",
 }

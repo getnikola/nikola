@@ -24,8 +24,8 @@ MESSAGES = {
     "Posts about %s": "Artigos sobre %s",
     "Posts by %s": "Publicacións de %s",
     "Posts for year %s": "Artigos do ano %s",
-    "Posts for {month} {day}, {year}": "Artigos de {month} {day}, {year}",
-    "Posts for {month} {year}": "Artigos de {month} {year}",
+    "Posts for {month_day_year}": "Artigos de {month_day_year}",
+    "Posts for {month_year}": "Artigos de {month_year}",
     "Previous post": "Artigo anterior",
     "Previous": "",
     "Publication date": "Data de publicación",
@@ -45,6 +45,4 @@ MESSAGES = {
     "Write your post here.": "Escribe o teu artigo aquí.",
     "old posts, page %d": "Artigos vellos, páxina %d",
     "page %d": "páxina %d",
-    "{month} {day}, {year}": "",
-    "{month} {year}": "",
 }

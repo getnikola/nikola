@@ -26,13 +26,12 @@
 
 """Utility functions."""
 
-import calendar
+import babel.dates
 import configparser
 import datetime
 import dateutil.tz
 import hashlib
 import io
-import locale
 import logging
 import operator
 import os
@@ -67,6 +66,12 @@ try:
     import husl
 except ImportError:
     husl = None
+
+try:
+    import typing  # NOQA
+    import typing.re  # NOQA
+except ImportError:
+    pass
 
 from blinker import signal
 from collections import defaultdict, Callable, OrderedDict, Iterable
@@ -860,7 +865,7 @@ def unslugify(value, lang=None, discard_numbers=True):
     """
     if discard_numbers:
         value = re.sub('^[0-9]+', '', value)
-    value = re.sub('([_\-\.])', ' ', value)
+    value = re.sub(r'([_\-\.])', ' ', value)
     value = value.strip().capitalize()
     return value
 
@@ -1101,18 +1106,8 @@ class LocaleBorgUninitializedException(Exception):
 class LocaleBorg(object):
     """Provide locale related services and autoritative current_lang.
 
-    current_lang is the last lang for which the locale was set
-    and is meant to be set only by LocaleBorg.set_locale.
-
-    python's locale code should not be directly called from code outside of
-    LocaleBorg, they are compatibilty issues with py version and OS support
-    better handled at one central point, LocaleBorg.
-
-    In particular, don't call locale.setlocale outside of LocaleBorg.
-
-    Assumptions:
-        We need locales only for the languages there is a nikola translation.
-        We don't need to support current_lang through nested contexts
+    This class stores information about the locales used and interfaces
+    with the Babel library to provide internationalization services.
 
     Usage:
         # early in cmd or test execution
@@ -1122,47 +1117,39 @@ class LocaleBorg(object):
         lang = LocaleBorg().<service>
 
     Available services:
-        .current_lang : autoritative current_lang , the last seen in set_locale
-        .set_locale(lang) : sets current_lang and sets the locale for lang
-        .get_month_name(month_no, lang) : returns the localized month name
+        .current_lang: autoritative current_lang, the last seen in set_locale
+        .formatted_date: format a date(time) according to locale rules
+        .format_date_in_string: take a message and format the date in it
 
-    NOTE: never use locale.getlocale() , it can return values that
-    locale.setlocale will not accept in Windows XP, 7 and pythons 2.6, 2.7, 3.3
-    Examples: "Spanish", "French" can't do the full circle set / get / set
+    The default implementation uses the Babel package and completely ignores
+    the Python `locale` module. If you wish to override this, write functions
+    and assign them to the appropriate names. The functions are:
+
+     * LocaleBorg.datetime_formatter(date, date_format, lang, locale)
+     * LocaleBorg.in_string_formatter(date, mode, custom_format, lang, locale)
     """
 
     initialized = False
 
+    # Can be used to override Babel
+    datetime_formatter = None
+    in_string_formatter = None
+
     @classmethod
-    def initialize(cls, locales, initial_lang):
+    def initialize(cls, locales: 'typing.Dict[str, str]', initial_lang: str):
         """Initialize LocaleBorg.
 
-        locales : dict with lang: locale_n
-            the same keys as in nikola's TRANSLATIONS
-            locale_n a sanitized locale, meaning
-                locale.setlocale(locale.LC_ALL, locale_n) will succeed
-                locale_n expressed in the string form, like "en.utf8"
+        locales: dict with custom locale name overrides.
         """
-        if initial_lang is None or initial_lang not in locales:
+        if not initial_lang:
             raise ValueError("Unknown initial language {0}".format(initial_lang))
         cls.reset()
         cls.locales = locales
-        cls.month_name_handlers = []
-        cls.formatted_date_handlers = []
-
-        # needed to decode some localized output in py2x
-        encodings = {}
-        for lang in locales:
-            locale.setlocale(locale.LC_ALL, locales[lang])
-            loc, encoding = locale.getlocale()
-            encodings[lang] = encoding
-
-        cls.encodings = encodings
         cls.__initial_lang = initial_lang
         cls.initialized = True
 
     def __get_shared_state(self):
-        if not self.initialized:
+        if not self.initialized:  # pragma: no cover
             raise LocaleBorgUninitializedException()
         shared_state = getattr(self.__thread_local, 'shared_state', None)
         if shared_state is None:
@@ -1181,33 +1168,10 @@ class LocaleBorg(object):
         cls.__thread_lock = threading.Lock()
 
         cls.locales = {}
-        cls.encodings = {}
         cls.initialized = False
-        cls.month_name_handlers = []
-        cls.formatted_date_handlers = []
         cls.thread_local = None
-        cls.thread_lock = None
-
-    @classmethod
-    def add_handler(cls, month_name_handler=None, formatted_date_handler=None):
-        """Allow to add month name and formatted date handlers.
-
-        If month_name_handler is not None, it is expected to be a callable
-        which accepts (month_no, lang) and returns either a string or None.
-
-        If formatted_date_handler is not None, it is expected to be a callable
-        which accepts (date_format, date, lang) and returns either a string or
-        None.
-
-        A handler is expected to either return the correct result for the given
-        language and data, or return None to indicate it is not able to do the
-        job. In that case, the next handler is asked, and finally the default
-        implementation is used.
-        """
-        if month_name_handler is not None:
-            cls.month_name_handlers.append(month_name_handler)
-        if formatted_date_handler is not None:
-            cls.formatted_date_handlers.append(formatted_date_handler)
+        cls.datetime_formatter = None
+        cls.in_string_formatter = None
 
     def __init__(self):
         """Initialize."""
@@ -1215,74 +1179,68 @@ class LocaleBorg(object):
             raise LocaleBorgUninitializedException()
 
     @property
-    def current_lang(self):
+    def current_lang(self) -> str:
         """Return the current language."""
         return self.__get_shared_state()['current_lang']
 
-    def __set_locale(self, lang):
-        """Set the locale for language lang without updating current_lang."""
-        locale_n = self.locales[lang]
-        locale.setlocale(locale.LC_ALL, locale_n)
-
-    def set_locale(self, lang):
-        """Set the locale for language lang, returns an empty string.
-
-        in linux the locale encoding is set to utf8,
-        in windows that cannot be guaranted.
-        In either case, the locale encoding is available in cls.encodings[lang]
-        """
+    def set_locale(self, lang: str) -> str:
+        """Set the current language and return an empty string (to make use in templates easier)."""
         with self.__thread_lock:
-            # intentional non try-except: templates must ask locales with a lang,
-            # let the code explode here and not hide the point of failure
-            # Also, not guarded with an if lang==current_lang because calendar may
-            # put that out of sync
-            self.__set_locale(lang)
             self.__get_shared_state()['current_lang'] = lang
             return ''
 
-    def get_month_name(self, month_no, lang):
-        """Return localized month name in an unicode string."""
-        # For thread-safety
-        with self.__thread_lock:
-            for handler in self.month_name_handlers:
-                res = handler(month_no, lang)
-                if res is not None:
-                    return res
-            old_lang = self.current_lang
-            self.__set_locale(lang)
-            s = calendar.month_name[month_no]
-            self.__set_locale(old_lang)
-            return s
+    def formatted_date(self, date_format: 'str',
+                       date: 'typing.Union[datetime.date, datetime.datetime]',
+                       lang: 'typing.Optional[str]' = None) -> str:
+        """Return the formatted date/datetime as a string."""
+        if lang is None:
+            lang = self.current_lang
+        locale = self.locales.get(lang, lang)
+        # Get a string out of a TranslatableSetting
+        if isinstance(date_format, TranslatableSetting):
+            date_format = date_format(lang)
 
-    def formatted_date(self, date_format, date):
-        """Return the formatted date as unicode."""
-        with self.__thread_lock:
-            current_lang = self.current_lang
-            # For thread-safety
-            self.__set_locale(current_lang)
-            fmt_date = None
-            # Get a string out of a TranslatableSetting
-            if isinstance(date_format, TranslatableSetting):
-                date_format = date_format(current_lang)
-            # Always ask Python if the date_format is webiso
-            if date_format == 'webiso':
-                # Formatted after RFC 3339 (web ISO 8501 profile) with Zulu
-                # zone designator for times in UTC and no microsecond precision.
-                fmt_date = date.replace(microsecond=0).isoformat().replace('+00:00', 'Z')
-            # If not, check handlers
+        # Always ask Python if the date_format is webiso
+        if date_format == 'webiso':
+            # Formatted after RFC 3339 (web ISO 8501 profile) with Zulu
+            # zone designator for times in UTC and no microsecond precision.
+            return date.replace(microsecond=0).isoformat().replace('+00:00', 'Z')
+        elif LocaleBorg.datetime_formatter is not None:
+            LocaleBorg.datetime_formatter(date, date_format, lang, locale)
+        else:
+            return babel.dates.format_datetime(date, date_format, locale=locale)
+
+    def format_date_in_string(self, message: str, date: datetime.date, lang: 'typing.Optional[str]' = None) -> str:
+        """Format date inside a string (message).
+
+        Accepted modes: month, month_year, month_day_year.
+        Format: {month} for standard, {month:MMMM} for customization.
+        """
+        modes = {
+            'month': ('date', 'LLLL'),
+            'month_year': ('skeleton', 'yMMMM'),
+            'month_day_year': ('date', 'long')
+        }
+
+        if lang is None:
+            lang = self.current_lang
+        locale = self.locales.get(lang, lang)
+
+        def date_formatter(match: 'typing.re.Match') -> str:
+            """Format a date as requested."""
+            mode, custom_format = match.groups()
+            if LocaleBorg.in_string_formatter is not None:
+                LocaleBorg.in_string_formatter(date, mode, custom_format, lang, locale)
+            elif custom_format:
+                return babel.dates.format_date(date, custom_format, locale)
             else:
-                for handler in self.formatted_date_handlers:
-                    fmt_date = handler(date_format, date, current_lang)
-                    if fmt_date is not None:
-                        break
-                # If no handler was able to format the date, ask Python
-                if fmt_date is None:
-                    fmt_date = date.strftime(date_format)
+                function, fmt = modes[mode]
+                if function == 'skeleton':
+                    return babel.dates.format_skeleton(fmt, date, locale=locale)
+                else:
+                    return babel.dates.format_date(date, fmt, locale)
 
-            # Issue #383, this changes from py2 to py3
-            if isinstance(fmt_date, bytes_str):
-                fmt_date = fmt_date.decode('utf8')
-            return fmt_date
+        return re.sub(r'{(.*?)(?::(.*?))?}', date_formatter, message)
 
 
 class ExtendedRSS2(rss.RSS2):
@@ -1423,7 +1381,7 @@ def get_translation_candidate(config, path, lang):
     # This will still break if the user has ?*[]\ in the pattern. But WHY WOULD HE?
     pattern = pattern.replace('.', r'\.')
     pattern = pattern.replace('{path}', '(?P<path>.+?)')
-    pattern = pattern.replace('{ext}', '(?P<ext>[^\./]+)')
+    pattern = pattern.replace('{ext}', r'(?P<ext>[^\./]+)')
     pattern = pattern.replace('{lang}', '(?P<lang>{0})'.format('|'.join(config['TRANSLATIONS'].keys())))
     m = re.match(pattern, path)
     if m and all(m.groups()):  # It's a translated path

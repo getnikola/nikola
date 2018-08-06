@@ -24,8 +24,8 @@ MESSAGES = {
     "Posts about %s": "%s ਬਾਰੇ ਲਿਖਤਾਂ",
     "Posts by %s": "%s ਦੀ ਲਿਖਤਾਂ",
     "Posts for year %s": "ਸਾਲ %s ਦੀਆਂ ਲਿਖਤਾਂ",
-    "Posts for {month} {day}, {year}": "{day} {month} {year} ਦੀਆਂ ਲਿਖਤਾਂ",
-    "Posts for {month} {year}": "{month} {year} ਦੀਆਂ ਲਿਖਤਾਂ",
+    "Posts for {month_day_year}": "{month_day_year} ਦੀਆਂ ਲਿਖਤਾਂ",
+    "Posts for {month_year}": "{month_year} ਦੀਆਂ ਲਿਖਤਾਂ",
     "Previous post": "ਪਿਛਲੀ ਲਿਖਤ",
     "Previous": "ਪਿੱਛੇ ",
     "Publication date": "ਛਪਾਈ ਦੀ ਤਰੀਕ",
@@ -45,6 +45,4 @@ MESSAGES = {
     "Write your post here.": "ਆਪਣੀ ਲਿਖਤ ਏਥੇ ਲਿਖੋ |",
     "old posts, page %d": "ਪੁਰਾਣੀਆਂ ਲਿਖਤਾਂ , ਸਫ਼ਾ %d",
     "page %d": "ਸਫ਼ਾ %d",
-    "{month} {day}, {year}": "{ਮਹੀਨਾ} {ਦਿਨ}, {ਸਾਲ} ",
-    "{month} {year}": "{ਮਹੀਨਾ} {ਸਾਲ}",
 }

@@ -26,6 +26,7 @@
 
 """Classify the posts in archives."""
 
+import datetime
 import natsort
 import nikola.utils
 from collections import defaultdict
@@ -107,20 +108,21 @@ class Archive(Taxonomy):
         elif len(classification) == 1:
             return classification[0]
         elif len(classification) == 2:
-            month = nikola.utils.LocaleBorg().get_month_name(int(classification[1]), lang)
             if only_last_component:
-                return month
+                date_str = "{month}"
             else:
-                year = classification[0]
-                return self.site.MESSAGES[lang]['{month} {year}'].format(year=year, month=month)
+                date_str = "{month_year}"
+            return nikola.utils.LocaleBorg().format_date_in_string(
+                date_str,
+                datetime.date(int(classification[0]), int(classification[1]), 1),
+                lang)
         else:
-            day = int(classification[2])
             if only_last_component:
-                return str(day)
-            else:
-                year = classification[0]
-                month = nikola.utils.LocaleBorg().get_month_name(int(classification[1]), lang)
-                return self.site.MESSAGES[lang]['{month} {day}, {year}'].format(year=year, month=month, day=day)
+                return str(classification[2])
+            return nikola.utils.LocaleBorg().format_date_in_string(
+                "{month_day_year}",
+                datetime.date(int(classification[0]), int(classification[1]), int(classification[2])),
+                lang)
 
     def get_path(self, classification, lang, dest_type='page'):
         """Return a path for the given classification."""
@@ -156,14 +158,15 @@ class Archive(Taxonomy):
         elif len(hierarchy) == 1:
             title = kw["messages"][lang]["Posts for year %s"] % hierarchy[0]
         elif len(hierarchy) == 2:
-            title = kw["messages"][lang]["Posts for {month} {year}"].format(
-                year=hierarchy[0],
-                month=nikola.utils.LocaleBorg().get_month_name(int(hierarchy[1]), lang))
+            title = nikola.utils.LocaleBorg().format_date_in_string(
+                kw["messages"][lang]["Posts for {month_year}"],
+                datetime.date(int(hierarchy[0]), int(hierarchy[1]), 1),
+                lang)
         elif len(hierarchy) == 3:
-            title = kw["messages"][lang]["Posts for {month} {day}, {year}"].format(
-                year=hierarchy[0],
-                month=nikola.utils.LocaleBorg().get_month_name(int(hierarchy[1]), lang),
-                day=int(hierarchy[2]))
+            title = nikola.utils.LocaleBorg().format_date_in_string(
+                kw["messages"][lang]["Posts for {month_day_year}"],
+                datetime.date(int(hierarchy[0]), int(hierarchy[1]), int(hierarchy[2])),
+                lang)
         else:
             raise Exception("Cannot interpret classification {}!".format(repr(classification)))
 

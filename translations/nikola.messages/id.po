@@ -7,14 +7,16 @@
 # Translators:
 # Translators:
 # Translators:
+# Chris Warrick, 2018
+# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2018
 # Willy Sudiarto Raharjo <willysr@slackware-id.org>, 2014-2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2017-06-12 12:47+0000\n"
-"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"PO-Revision-Date: 2018-07-30 19:20+0000\n"
+"Last-Translator: Chris Warrick\n"
 "Language-Team: Indonesian (http://www.transifex.com/ralsina/nikola/language/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -95,11 +97,11 @@ msgstr "Tanggal publikasi"
 msgid "Posted:"
 msgstr "Ditulis oleh:"
 
-msgid "Posts for {month} {year}"
-msgstr "Tulisan untuk {month} {year}"
+msgid "Posts for {month_year}"
+msgstr "Tulisan untuk {month_year}"
 
-msgid "Posts for {month} {day}, {year}"
-msgstr "Tulisan untuk {month} {day}, {year}"
+msgid "Posts for {month_day_year}"
+msgstr "Tulisan untuk {month_day_year}"
 
 msgid "Nothing found."
 msgstr "Tidak ditemukan."
@@ -145,24 +147,16 @@ msgid "Posts by %s"
 msgstr "Tulisan oleh %s"
 
 msgid "Toggle navigation"
-msgstr ""
-
-#. Used to format months per year
-msgid "{month} {year}"
-msgstr ""
-
-#. Used to format a date
-msgid "{month} {day}, {year}"
-msgstr ""
+msgstr "Alih navigasi"
 
 msgid "Previous"
-msgstr ""
+msgstr "Sebelum"
 
 msgid "Up"
-msgstr ""
+msgstr "Atas"
 
 msgid "Next"
-msgstr ""
+msgstr "Sesudah"
 
 msgid "Atom feed"
-msgstr ""
+msgstr "Umpan Atom"
