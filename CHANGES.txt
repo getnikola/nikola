@@ -6,6 +6,7 @@ Changes since Beta 2
 Features
 --------
 
+* New data_file option for chart shortcode and directive (Issue #3129)
 * Show the filename of the missing file when ``nikola serve`` can't
   find a file (i.e. when an 404 error occurs).
 * Better error messages for JSON download failures in ``nikola
