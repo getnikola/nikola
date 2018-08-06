@@ -1262,8 +1262,7 @@ x_labels='["2002","2003","2004","2005","2006","2007"]' %}}
         'Chrome',  [None, None, None, None, None, None]
         'IE',      [85.8, 84.6, 84.7, 74.5, 66, 58.6]
         'Others',  [14.2, 15.4, 15.3, 8.9, 9, 10.4]
-        {{% /chart %}}
-        {{% /raw %}}
+        {{% /chart %}}{{% /raw %}}
 
     Additionally, you can use a file_data argument which can point to a JSON or YAML file, and will be used for both arguments and data.
     Example:
