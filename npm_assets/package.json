@@ -12,6 +12,6 @@
         "justified-layout": "^2.1.1",
         "livereload-js": "^2.3.0",
         "moment": "^2.22.2",
-        "popper.js": "^1.14.3"
+        "popper.js": "^1.14.4"
     }
 }

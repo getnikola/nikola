@@ -10,7 +10,7 @@
 The Nikola Handbook
 ===================
 
-:Version: 8.0.0b2
+:Version: 8.0.0b3
 
 .. class:: alert alert-primary float-md-right
 
