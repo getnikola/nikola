@@ -366,7 +366,12 @@ class Galleries(Task, ImageProcessor):
         self.gallery_list = []
         for input_folder, output_folder in self.kw['gallery_folders'].items():
             for root, dirs, files in os.walk(input_folder, followlinks=True):
-                self.gallery_list.append((root, input_folder, output_folder))
+                # If output folder is empty, the top-level gallery
+                # index will collide with the main page for the site.
+                # Don't generate the top-level gallery index in that
+                # case.
+                if output_folder or root != input_folder:
+                    self.gallery_list.append((root, input_folder, output_folder))
 
     def create_galleries_paths(self):
         """Given a list of galleries, put their paths into self.gallery_links."""
