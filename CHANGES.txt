@@ -1,7 +1,19 @@
-New in v8.0.0b3 (changes since Beta 2)
-======================================
+New since Beta 3
+================
 
 .. to be merged into one "new in v8.0.0" entry later
+
+Features
+--------
+
+* Don’t generate gallery index if the destination directory is
+  site root and it would conflict with blog index (Issue #3133)
+
+Bugfixes
+--------
+
+New in v8.0.0b3 (changes since Beta 2)
+======================================
 
 Features
 --------

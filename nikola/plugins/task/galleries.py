@@ -92,6 +92,8 @@ class Galleries(Task, ImageProcessor):
             'preserve_exif_data': site.config['PRESERVE_EXIF_DATA'],
             'exif_whitelist': site.config['EXIF_WHITELIST'],
             'preserve_icc_profiles': site.config['PRESERVE_ICC_PROFILES'],
+            'index_path': site.config['INDEX_PATH'],
+            'disable_indexes': site.config['DISABLE_INDEXES'],
         }
 
         # Verify that no folder in GALLERY_FOLDERS appears twice
@@ -370,7 +372,9 @@ class Galleries(Task, ImageProcessor):
                 # index will collide with the main page for the site.
                 # Don't generate the top-level gallery index in that
                 # case.
-                if output_folder or root != input_folder:
+                # FIXME: also ignore pages named index
+                if (output_folder or root != input_folder and
+                        (not self.kw['disable_indexes'] and self.kw['index_path'] == '')):
                     self.gallery_list.append((root, input_folder, output_folder))
 
     def create_galleries_paths(self):
