@@ -8,6 +8,14 @@ Features
 
 * Don’t generate gallery index if the destination directory is
   site root and it would conflict with blog index (Issue #3133)
+* ``base`` and ``base-jinja`` templates now support updated
+  timestamp fields in posts. The update time, if it is specified and
+  different from the posting time will be displayed as
+  "{postDate} updated {updateDate}". If no update time is specified, the
+  posting time will be displayed alone.
+* ``base`` and ``base-jinja`` templates now support the ``DATE_FANCINESS``
+  parameter in ``conf.py``. If ``DATE_FANCINESS == 0``, the additional
+  JavaScript dependencies will **not** be pulled in.
 
 Bugfixes
 --------
