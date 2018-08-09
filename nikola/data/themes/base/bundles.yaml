@@ -1,0 +1,13 @@
+assets/css/all.css:
+  - rst_base.css
+  - nikola_rst.css
+  - code.css
+  - theme.css
+assets/css/all-nocdn.css:
+  - rst_base.css
+  - nikola_rst.css
+  - code.css
+  - theme.css
+  - baguetteBox.min.css
+assets/js/all-nocdn.js:
+  - baguetteBox.min.js

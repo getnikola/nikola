@@ -63,6 +63,7 @@ def legacy_loader(bundlefilename):
             except ValueError:
                 # for empty lines
                 pass
+    return bundles
 
 
 def yaml_loader(bundlefilename):
@@ -78,7 +79,11 @@ def yaml_loader(bundlefilename):
           - sourcepath4
     """
     with open(bundlefilename, 'rt') as fd:
-        return yaml.load(fd, Loader=YamlLoader)
+        bundles = yaml.load(fd, Loader=YamlLoader)
+        return {
+            name.strip().replace('/', os.sep): [f.strip() for f in files]
+            for name, files in bundles.items()
+        }
 
 
 EXTENSION_AND_LOADER = [
@@ -86,6 +91,19 @@ EXTENSION_AND_LOADER = [
     ('.yml', yaml_loader),
     ('', legacy_loader),
 ]
+
+
+def get_theme_bundles(themes):
+    """Given a theme chain, return the bundle definitions."""
+    for theme_name in themes:
+        theme_path = utils.get_theme_path(theme_name)
+        for extension, loader in EXTENSION_AND_LOADER:
+            bundle_filename = 'bundles' + extension
+            bundle_path = os.path.join(theme_path, bundle_filename)
+            if os.path.isfile(bundle_path):
+                return loader(bundle_path)
+    return {}
+
 
 class BuildBundles(LateTask):
     """Bundle assets using WebAssets."""
@@ -170,15 +188,3 @@ class BuildBundles(LateTask):
                     'clean': True,
                 }
                 yield utils.apply_filters(task, kw['filters'])
-
-
-def get_theme_bundles(themes):
-    """Given a theme chain, return the bundle definitions."""
-    for theme_name in themes:
-        theme_path = utils.get_theme_path(theme_name)
-        for extension, loader in EXTENSION_AND_LOADER:
-            bundle_filename = 'bundles' + extension
-            bundle_path = os.path.join(theme_path, bundle_filename)
-            if os.path.isfile(bundle_path):
-                return loader(bundle_path)
-    return {}
