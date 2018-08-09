@@ -8,6 +8,7 @@ Features
 
 * Don’t generate gallery index if the destination directory is
   site root and it would conflict with blog index (Issue #3133)
+* Theme bundles may now be defined using yaml as ``bundles.yaml``
 
 Bugfixes
 --------
