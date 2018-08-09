@@ -20,6 +20,14 @@
          {{ footer.html_footer() }}
     </div>
     {{ base.late_load_js() }}
+    {% if date_fanciness != 0 %}
+    <!-- fancy dates -->
+    <script>
+    moment.locale("{{ momentjs_locales[lang] }}");
+    fancydates({{ date_fanciness }}, {{ js_date_format }});
+    </script>
+    <!-- end fancy dates -->
+    {% endif %}
     {% block extra_js %}{% endblock %}
     <script>
     baguetteBox.run('div#content', {

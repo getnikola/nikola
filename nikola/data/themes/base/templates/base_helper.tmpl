@@ -66,14 +66,27 @@ lang="${lang}">
     % if use_bundles:
         % if use_cdn:
             <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.9.1/baguetteBox.min.js" integrity="sha256-SoEATAB7PgNWyyK100I7yQXYm5V08k5SFupDP0h72MY=" crossorigin="anonymous"></script>
+            % if date_fanciness != 0:
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment-with-locales.min.js"></script>
+            % endif
+            <script src="/assets/js/all.js"></script>
         % else:
             <script src="/assets/js/all-nocdn.js"></script>
         % endif
     % else:
         % if use_cdn:
             <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.9.1/baguetteBox.min.js" integrity="sha256-SoEATAB7PgNWyyK100I7yQXYm5V08k5SFupDP0h72MY=" crossorigin="anonymous"></script>
+            % if date_fanciness != 0:
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment-with-locales.min.js"></script>
+            % endif
         % else:
             <script src="/assets/js/baguetteBox.min.js"></script>
+            % if date_fanciness != 0:
+                <script src="/assets/js/moment-with-locales.min.js"></script>
+            % endif
+        % endif
+        % if date_fanciness != 0:
+            <script src="/assets/js/fancydates.js"></script>
         % endif
     % endif
     ${social_buttons_code}
