@@ -34,9 +34,58 @@ try:
 except ImportError:
     webassets = None  # NOQA
 
+import yaml
+try:
+    YamlLoader = yaml.CSafeLoader
+except AttributeError:
+    YamlLoader = yaml.SafeLoader
+
 from nikola.plugin_categories import LateTask
 from nikola import utils
 
+
+def legacy_loader(bundlefilename):
+    """Load bundle files in legacy bundle format.
+
+    Format is of the form:
+
+        targetpath=sourcepath,sourcepath2
+        targetpath2=sourcepath3,sourcepath4
+    """
+    bundles = {}
+    with open(bundlefilename, 'rt') as fd:
+        for line in fd:
+            try:
+                name, files = line.split('=')
+                name = name.strip().replace('/', os.sep)
+                files = [f.strip() for f in files.split(',')]
+                bundles[name] = files
+            except ValueError:
+                # for empty lines
+                pass
+
+
+def yaml_loader(bundlefilename):
+    """Load bundle files in yaml format.
+
+    Format is of the form:
+
+        targetpath:
+          - sourcepath
+          - sourcepath2
+        targetpath2:
+          - sourcepath3
+          - sourcepath4
+    """
+    with open(bundlefilename, 'rt') as fd:
+        return yaml.load(fd, Loader=YamlLoader)
+
+
+EXTENSION_AND_LOADER = [
+    ('.yaml', yaml_loader),
+    ('.yml', yaml_loader),
+    ('', legacy_loader),
+]
 
 class BuildBundles(LateTask):
     """Bundle assets using WebAssets."""
@@ -125,19 +174,11 @@ class BuildBundles(LateTask):
 
 def get_theme_bundles(themes):
     """Given a theme chain, return the bundle definitions."""
-    bundles = {}
     for theme_name in themes:
-        bundles_path = os.path.join(
-            utils.get_theme_path(theme_name), 'bundles')
-        if os.path.isfile(bundles_path):
-            with open(bundles_path) as fd:
-                for line in fd:
-                    try:
-                        name, files = line.split('=')
-                        files = [f.strip() for f in files.split(',')]
-                        bundles[name.strip().replace('/', os.sep)] = files
-                    except ValueError:
-                        # for empty lines
-                        pass
-                break
-    return bundles
+        theme_path = utils.get_theme_path(theme_name)
+        for extension, loader in EXTENSION_AND_LOADER:
+            bundle_filename = 'bundles' + extension
+            bundle_path = os.path.join(theme_path, bundle_filename)
+            if os.path.isfile(bundle_path):
+                return loader(bundle_path)
+    return {}
