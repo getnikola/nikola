@@ -72,13 +72,20 @@ parent, engine
     respectively.  Those are needed for older versions (Nikola v7.8.5 and
     older).
 
-bundles
-    A text file containing a list of files to be turned into bundles using WebAssets.
+bundles.yaml
+    A yaml file containing a mapping of WebAsset bundles to input files.
     For example:
 
-    .. code:: text
+    .. code:: yaml
 
-        assets/css/all.css=bootstrap.min.css,rst_base.css,nikola_rst.css,code.css,baguetteBox.min.css,theme.css,custom.css
+        assets/css/all.css:
+          - bootstrap.min.css
+          - rst_base.css
+          - nikola_rst.css
+          - code.css
+          - baguetteBox.min.css
+          - theme.css
+          - custom.css
 
     This creates a file called "assets/css/all.css" in your output that is the
     combination of all the other file paths, relative to the output file.
@@ -89,6 +96,14 @@ bundles
 
     Templates should use either the bundle or the individual files based on the ``use_bundles``
     variable, which in turn is set by the ``USE_BUNDLES`` option.
+
+bundles (deprecated)
+    A text file containing a list of files to be turned into bundles using WebAssets.
+    For example:
+
+    .. code:: text
+
+        assets/css/all.css=bootstrap.min.css,rst_base.css,nikola_rst.css,code.css,baguetteBox.min.css,theme.css,custom.css
 
 Theme meta files
 ----------------
