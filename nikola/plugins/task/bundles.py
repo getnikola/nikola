@@ -27,6 +27,9 @@
 """Bundle assets using WebAssets."""
 
 
+import configparser
+import io
+import itertools
 import os
 
 try:
@@ -125,19 +128,17 @@ class BuildBundles(LateTask):
 
 def get_theme_bundles(themes):
     """Given a theme chain, return the bundle definitions."""
-    bundles = {}
     for theme_name in themes:
         bundles_path = os.path.join(
             utils.get_theme_path(theme_name), 'bundles')
         if os.path.isfile(bundles_path):
-            with open(bundles_path) as fd:
-                for line in fd:
-                    try:
-                        name, files = line.split('=')
-                        files = [f.strip() for f in files.split(',')]
-                        bundles[name.strip().replace('/', os.sep)] = files
-                    except ValueError:
-                        # for empty lines
-                        pass
-                break
-    return bundles
+            config = configparser.ConfigParser()
+            header = io.StringIO('[bundles]\n')
+            with open(bundles_path, 'rt') as fd:
+                config.read_file(itertools.chain(header, fd))
+            bundles = {}
+            for name, files in config['bundles'].items():
+                name = name.strip().replace('/', os.sep)
+                files = [f.strip() for f in files.split(',') if f.strip()]
+                bundles[name] = files
+            return bundles

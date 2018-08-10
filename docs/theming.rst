@@ -73,12 +73,20 @@ parent, engine
     older).
 
 bundles
-    A text file containing a list of files to be turned into bundles using WebAssets.
-    For example:
+    A `config <https://docs.python.org/3/library/configparser.html>`_ file
+    containing a list of files to be turned into bundles using WebAssets. For
+    example:
 
-    .. code:: text
+    .. code:: ini
 
-        assets/css/all.css=bootstrap.min.css,rst_base.css,nikola_rst.css,code.css,baguetteBox.min.css,theme.css,custom.css
+        assets/css/all.css=
+            bootstrap.min.css,
+            rst_base.css,
+            nikola_rst.css,
+            code.css,
+            baguetteBox.min.css,
+            theme.css,
+            custom.css,
 
     This creates a file called "assets/css/all.css" in your output that is the
     combination of all the other file paths, relative to the output file.
