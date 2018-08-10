@@ -1,3 +1,4 @@
+; css bundles
 assets/css/all.css=
     rst_base.css,
     nikola_rst.css,
@@ -9,6 +10,8 @@ assets/css/all-nocdn.css=
     code.css,
     theme.css,
     baguetteBox.min.css,
+
+; javascript bundles
 assets/js/all.js=
     fancydates.js,
 assets/js/all-nocdn.js=

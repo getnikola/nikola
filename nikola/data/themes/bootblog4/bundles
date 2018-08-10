@@ -1,3 +1,4 @@
+; css bundles
 assets/css/all-nocdn.css=
     bootstrap.min.css,
     rst_base.css,
@@ -15,6 +16,8 @@ assets/css/all.css=
     theme.css,
     bootblog.css,
     custom.css,
+
+; javascript bundles
 assets/js/all-nocdn.js=
     jquery.min.js,
     popper.min.js,
