@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "Kirjoita sisältö tähän.",
     "old posts, page %d": "vanhoja kirjoituksia, sivu %d",
     "page %d": "sivu %d",
+    "updated": "",
 }

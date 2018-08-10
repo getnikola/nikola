@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "",
     "old posts, page %d": "gamle indlæg, side %d",
     "page %d": "side %d",
+    "updated": "",
 }

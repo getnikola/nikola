@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "Öz məqaləni bura yaz",
     "old posts, page %d": "köhnə yazılar, səhifə %s",
     "page %d": "səhifə %d",
+    "updated": "",
 }

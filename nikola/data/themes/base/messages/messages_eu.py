@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "Idatzi zure argitalpena hemen",
     "old posts, page %d": "Argitalpen zaharragoak, %d. orria",
     "page %d": "%d. orria",
+    "updated": "",
 }

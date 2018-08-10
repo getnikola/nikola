@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "이곳에 글을 작성하세요.",
     "old posts, page %d": "이전 포스트, 페이지 %d",
     "page %d": "페이지 %d",
+    "updated": "",
 }

@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "ਆਪਣੀ ਲਿਖਤ ਏਥੇ ਲਿਖੋ |",
     "old posts, page %d": "ਪੁਰਾਣੀਆਂ ਲਿਖਤਾਂ , ਸਫ਼ਾ %d",
     "page %d": "ਸਫ਼ਾ %d",
+    "updated": "",
 }

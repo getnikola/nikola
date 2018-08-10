@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "Escribiu la vostra entrada aquí",
     "old posts, page %d": "entrades antigues, pàgina %d",
     "page %d": "pàgina %d",
+    "updated": "",
 }

@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "Skribu tie vian artikolon.",
     "old posts, page %d": "%da paĝo de malnovaj artikoloj",
     "page %d": "paĝo %d",
+    "updated": "",
 }

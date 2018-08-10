@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "ఇక్కడ మీ టపా ను వ్రాయండి.",
     "old posts, page %d": "పాత టపాలు, పేజీ %d",
     "page %d": "పేజీ %d",
+    "updated": "",
 }

@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "",
     "old posts, page %d": "stare objave, stran %d",
     "page %d": "stran %d",
+    "updated": "",
 }

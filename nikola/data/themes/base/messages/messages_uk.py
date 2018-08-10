@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "Напишить Вашу статтю тут.",
     "old posts, page %d": "старі статті, сторінка %d",
     "page %d": "сторінка %d",
+    "updated": "",
 }

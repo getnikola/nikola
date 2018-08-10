@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "在这里书写你的文章。",
     "old posts, page %d": "旧文章页 %d",
     "page %d": "第 %d 页",
+    "updated": "",
 }

@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "Создайте Вашу запись здесь.",
     "old posts, page %d": "%d страница со старыми записями",
     "page %d": "%d страница",
+    "updated": "",
 }

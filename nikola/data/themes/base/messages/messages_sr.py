@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "Вашу објаву напишите овдје.",
     "old posts, page %d": "стари постови, страна %d",
     "page %d": "страна %d",
+    "updated": "",
 }

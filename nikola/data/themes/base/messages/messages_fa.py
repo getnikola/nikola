@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "متن پست‌تان را این‌جا بنویسید.",
     "old posts, page %d": "صفحهٔ ارسال‌های قدیمی %d",
     "page %d": "برگه %d",
+    "updated": "",
 }

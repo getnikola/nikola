@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "ここに文書を記述してください。",
     "old posts, page %d": "過去の文書 %dページ目",
     "page %d": "ページ%d",
+    "updated": "",
 }
