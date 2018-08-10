@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "Ide írd a bejegyzésed.",
     "old posts, page %d": "régi bejegyzések, %d. oldal",
     "page %d": "%d. oldal",
+    "updated": "",
 }

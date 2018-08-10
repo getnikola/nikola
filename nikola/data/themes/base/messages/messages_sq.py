@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "Shkruaj postin tënd këtu.",
     "old posts, page %d": "Postime të kaluara, faqe %d",
     "page %d": "faqe %d",
+    "updated": "",
 }

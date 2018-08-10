@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "अपनी पोस्ट यहाँ लिखिए",
     "old posts, page %d": "पुरानी पोस्टें, पृष्‍ठ %d",
     "page %d": "पृष्‍ठ %d",
+    "updated": "",
 }

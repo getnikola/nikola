@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "",
     "old posts, page %d": "σελίδα παλαιότερων αναρτήσεων %d",
     "page %d": "σελίδα %d",
+    "updated": "",
 }

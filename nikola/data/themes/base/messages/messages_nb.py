@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "Skriv innlegget din her.",
     "old posts, page %d": "eldre innlegg, side %d",
     "page %d": "side %d",
+    "updated": "",
 }

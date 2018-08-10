@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "從這裡開始編輯文章",
     "old posts, page %d": "舊文章，第 %d 頁",
     "page %d": "第 %d 頁",
+    "updated": "",
 }

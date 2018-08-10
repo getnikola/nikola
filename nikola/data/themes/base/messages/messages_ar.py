@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "أكتب مقالك هنا",
     "old posts, page %d": "مقالات قديمة, صفحة %d",
     "page %d": "صفحة %d",
+    "updated": "",
 }

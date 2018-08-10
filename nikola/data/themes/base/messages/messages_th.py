@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "เขียนโพสต์ที่นี่",
     "old posts, page %d": "โพสต์เก่า, หน้า %d",
     "page %d": "หน้า %d",
+    "updated": "",
 }

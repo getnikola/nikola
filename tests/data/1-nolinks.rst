@@ -1,6 +1,7 @@
 .. title: Welcome to Nikola
 .. slug: welcome-to-nikola
 .. date: 2012-03-30 23:00:00 UTC-03:00
+.. updated: 2018-08-10 06:54:00Z
 .. tags: nikola, python, demo, blog
 .. author: Roberto Alsina
 .. link: https://getnikola.com/

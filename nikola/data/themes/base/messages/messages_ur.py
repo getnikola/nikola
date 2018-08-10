@@ -45,4 +45,5 @@ MESSAGES = {
     "Write your post here.": "اپنی تحریر یہاں لکھیں۔",
     "old posts, page %d": "پرانی تحاریر صفحہ %d",
     "page %d": "صفحہ %d",
+    "updated": "",
 }
