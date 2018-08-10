@@ -24,7 +24,7 @@ MESSAGES = {
     "Posts about %s": "Postitused %s kohta",
     "Posts by %s": "Postitus kasutajalt %s",
     "Posts for year %s": "Postitused aastast %s",
-    "Posts for {month_day_year}": "",
+    "Posts for {month_day_year}": "Postitused {month_day_year}",
     "Posts for {month_year}": "Postitused {month_year}",
     "Previous post": "Eelmine postitus",
     "Previous": "Eelmine",

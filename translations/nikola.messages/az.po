@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2018-07-30 19:16+0000\n"
+"PO-Revision-Date: 2018-08-10 08:02+0000\n"
 "Last-Translator: Chris Warrick\n"
 "Language-Team: Azerbaijani (http://www.transifex.com/ralsina/nikola/language/az/)\n"
 "MIME-Version: 1.0\n"
@@ -159,3 +159,7 @@ msgstr "Növbəti"
 
 msgid "Atom feed"
 msgstr "Atom feed"
+
+#. {date} (updated {updated_date})
+msgid "updated"
+msgstr ""
