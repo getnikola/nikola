@@ -139,6 +139,6 @@ def get_theme_bundles(themes):
             bundles = {}
             for name, files in config['bundles'].items():
                 name = name.strip().replace('/', os.sep)
-                files = [f.strip() for f in files.split(',')]
+                files = [f.strip() for f in files.split(',') if f.strip()]
                 bundles[name] = files
             return bundles

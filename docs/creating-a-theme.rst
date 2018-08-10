@@ -816,12 +816,24 @@ Bundles
 If you have ``webassets`` installed and the ``USE_BUNDLES`` option set to True, Nikola can put several CSS or JS files together in a larger file,
 which makes sites load faster. To do that, your theme needs a ``bundles`` file where the syntax is::
 
-    outputfile1.js=thing1.js,thing2.js,...
-    outputfile2.css=thing1.css,thing2.css,...
+    outputfile1.js=
+        thing1.js,
+        thing2.js,
+        ...
+    outputfile2.css=
+        thing1.css,
+        thing2.css,
+        ...
 
-For the Lanyon theme, it should be like this::
+For the Lanyon theme, it should look like this::
 
-    assets/css/all.css=rst_base.css,nikola_rst.css,code.css,poole.css,lanyon.css,custom.css
+    assets/css/all.css=
+        rst_base.css,
+        nikola_rst.css,
+        code.css,
+        poole.css,
+        lanyon.css,
+        custom.css
 
 **Note:** Some themes also support the ``USE_CDN`` option meaning that in some cases it will load one bundle with all CSS and in other will load some CSS files
 from a CDN and others from a bundle. This is complicated and probably not worth the effort.

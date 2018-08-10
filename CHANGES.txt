@@ -14,6 +14,8 @@ Features
   "{postDate} (${messages("updated")} {updateDate})". If no update
   time is specified, the posting time will be displayed alone.
 * All built-in themes now support the ``DATE_FANCINESS`` option.
+* Theme bundles are now parsed using the configparser module and
+  can support newlines inside entries as well ad comments
 
 Bugfixes
 --------
