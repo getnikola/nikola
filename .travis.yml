@@ -24,8 +24,7 @@ matrix:
     before_install:
     - brew update
     - brew upgrade python
-    - pip3 install virtualenv
-    - python3 -m virtualenv nikola-tests-venv
+    - python3 -m venv nikola-tests-venv
     - source nikola-tests-venv/bin/activate
     - pip install --upgrade-strategy eager -U pip wheel
   - python: '3.6'
