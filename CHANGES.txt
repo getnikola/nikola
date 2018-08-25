@@ -20,6 +20,9 @@ Features
 Bugfixes
 --------
 
+* Enforce trailing slash for directories in ``nikola auto``
+  (Issue #3140)
+
 New in v8.0.0b3 (changes since Beta 2)
 ======================================
 

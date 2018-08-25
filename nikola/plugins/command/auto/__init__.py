@@ -38,7 +38,7 @@ try:
     import aiohttp
     from aiohttp import web
     from aiohttp.web_urldispatcher import StaticResource
-    from aiohttp.web_exceptions import HTTPNotFound, HTTPForbidden
+    from aiohttp.web_exceptions import HTTPNotFound, HTTPForbidden, HTTPMovedPermanently
     from aiohttp.web_response import Response
     from aiohttp.web_fileresponse import FileResponse
 except ImportError:
@@ -432,7 +432,11 @@ class IndexHtmlStaticResource(StaticResource):
             if filename.endswith('/') or not filename:
                 ret = yield from self.handle_file(request, filename + 'index.html', from_index=filename)
             else:
-                ret = yield from self.handle_file(request, filename + '/index.html', from_index=filename)
+                # Redirect and add trailing slash so relative links work (Issue #3140)
+                new_url = request.rel_url.path + '/'
+                if request.rel_url.query_string:
+                    new_url += '?' + request.rel_url.query_string
+                raise HTTPMovedPermanently(new_url)
         elif filepath.is_file():
             ct, encoding = mimetypes.guess_type(str(filepath))
             encoding = encoding or 'utf-8'
