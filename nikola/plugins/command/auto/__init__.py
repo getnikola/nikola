@@ -256,7 +256,7 @@ class CommandAuto(Command):
             if self.dns_sd:
                 self.dns_sd.Reset()
             srv.close()
-            self.rebuild_queue.put((None, None))
+            loop.run_until_complete(self.rebuild_queue.put((None, None)))
             loop.run_until_complete(srv.wait_closed())
             loop.run_until_complete(webapp.shutdown())
             loop.run_until_complete(handler.shutdown(5.0))
