@@ -1,0 +1,165 @@
+# Messages in Nikola
+# Copyright (C) 2012-2016
+# This file is distributed under the same license as the Nikola package.
+# 
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+# Chris Warrick, 2018
+# Hoai-Thu Vuong <thuvh87@gmail.com>, 2018
+msgid ""
+msgstr ""
+"Project-Id-Version: Nikola\n"
+"Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
+"POT-Creation-Date: 2013-03-15 12:24-0300\n"
+"PO-Revision-Date: 2018-08-26 09:27+0000\n"
+"Last-Translator: Chris Warrick\n"
+"Language-Team: Vietnamese (http://www.transifex.com/ralsina/nikola/language/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "More posts about %s"
+msgstr "Các bài đăng khác về %s"
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "LANGUAGE"
+msgstr "Tiếng Việt"
+
+msgid "Tags"
+msgstr "Thẻ"
+
+msgid "Categories"
+msgstr "Thể loại"
+
+msgid "Tags and Categories"
+msgstr "Thẻ và Thể loại"
+
+msgid "Comments"
+msgstr "Bình luận"
+
+msgid "Read more"
+msgstr "Đọc thêm"
+
+msgid "Posts about %s"
+msgstr "Bài viết về %s"
+
+msgid "Next post"
+msgstr "Bài viết tiếp theo"
+
+msgid "old posts, page %d"
+msgstr "các bài viết trước đây, trang %d"
+
+msgid "page %d"
+msgstr "trang %d"
+
+msgid "Source"
+msgstr "Nguồn"
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "Read in English"
+msgstr "Phiên bản Tiếng Việt"
+
+msgid "Posts for year %s"
+msgstr "Các bài viết trong năm %s"
+
+msgid "Newer posts"
+msgstr "Bài viết gần đây"
+
+msgid "Previous post"
+msgstr "Bài viết trước"
+
+msgid "Also available in:"
+msgstr "Cũng có sẵn trong:"
+
+msgid "Languages:"
+msgstr "Ngôn ngữ:"
+
+msgid "Original site"
+msgstr "Trang gốc"
+
+msgid "Older posts"
+msgstr "Bài viết trước đây"
+
+msgid "Archive"
+msgstr "Kho"
+
+msgid "Publication date"
+msgstr "Ngày phát hành"
+
+msgid "Posted:"
+msgstr "Đã đăng："
+
+msgid "Posts for {month_year}"
+msgstr "Các bài đã đăng {month_year}"
+
+msgid "Posts for {month_day_year}"
+msgstr "Các bài đã đăng {month_day_year}"
+
+msgid "Nothing found."
+msgstr "Không có kết quả."
+
+msgid "No posts found."
+msgstr "Không tìm thấy bài viết."
+
+msgid "RSS feed"
+msgstr "Nguồn cung cấp dữ liệu RSS"
+
+msgid "%d min remaining to read"
+msgstr "Cần %d phút để đọc"
+
+msgid "Skip to main content"
+msgstr "Chuyển đến nội dung chính"
+
+msgid "Subcategories:"
+msgstr "Thể loại con:"
+
+#. Used for active navigation links, for screen readers only
+msgid "(active)"
+msgstr "(active)"
+
+#. Default content for a new post
+msgid "Write your post here."
+msgstr "Bắt đầu viết bài ở đây."
+
+#. Default content for a new page
+msgid "Write your page here."
+msgstr "Bắt đầu viết nội dung của trang ở đây."
+
+msgid "Uncategorized"
+msgstr "Chưa được phân loại"
+
+#. Used for feeds of any format
+msgid "Updates"
+msgstr "Cập nhật"
+
+msgid "Authors"
+msgstr "Tác giả"
+
+msgid "Posts by %s"
+msgstr "Bài đăng bởi %s"
+
+msgid "Toggle navigation"
+msgstr "Chuyển điều hướng"
+
+msgid "Previous"
+msgstr "Trước"
+
+msgid "Up"
+msgstr "Trở lên"
+
+msgid "Next"
+msgstr "Kế tiếp"
+
+msgid "Atom feed"
+msgstr "Nguồn cung cấp dữ liệu Atom"
+
+#. {date} (updated {updated_date})
+msgid "updated"
+msgstr "Đã được cập nhật"

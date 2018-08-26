@@ -151,6 +151,7 @@ LEGAL_VALUES = {
         ('tr', '!tr_TR'): 'Turkish',
         'uk': 'Ukrainian',
         'ur': 'Urdu',
+        'vi': 'Vietnamese',
         'zh_cn': 'Chinese (Simplified)',
         'zh_tw': 'Chinese (Traditional)'
     },
@@ -216,6 +217,7 @@ LEGAL_VALUES = {
         th='th',
         uk='uk',
         ur='ur',
+        vi='vi',
         zh_cn='zh-cn',
         zh_tw='zh-tw'
     ),

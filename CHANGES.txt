@@ -6,6 +6,7 @@ New since Beta 3
 Features
 --------
 
+* Add Vietnamese translation by Hoai-Thu Vuong
 * Don’t generate gallery index if the destination directory is
   site root and it would conflict with blog index (Issue #3133)
 * All built-in themes now support ``updated`` timestamp fields in
