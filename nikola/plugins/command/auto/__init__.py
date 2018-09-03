@@ -467,7 +467,7 @@ class IndexHtmlStaticResource(StaticResource):
         # Inject livereload.js
         text = text.replace('</head>', self.snippet, 1)
         # Disable <base> tag
-        text = re.sub(r'<base\s([^>]*)>', '<!--base \g<1>-->', text, flags=re.IGNORECASE)
+        text = re.sub(r'<base\s([^>]*)>', r'<!--base \g<1>-->', text, flags=re.IGNORECASE)
         return text
 
 
