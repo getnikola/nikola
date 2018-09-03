@@ -21,6 +21,12 @@ Features
 Bugfixes
 --------
 
+Removed features
+----------------
+
+* The ``webassets`` library is no longer required, we now manually
+  bundle files (Issue #3074)
+
 New in v8.0.0b3 (changes since Beta 2)
 ======================================
 

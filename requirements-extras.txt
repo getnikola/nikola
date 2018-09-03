@@ -6,7 +6,6 @@ micawber>=0.3.0
 pygal>=2.0.0
 typogrify>=2.0.4
 phpserialize>=1.3
-webassets>=0.10.1
 notebook>=4.0.0
 ipykernel>=4.0.0
 ghp-import2>=1.0.0

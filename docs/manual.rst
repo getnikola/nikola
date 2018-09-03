@@ -2342,7 +2342,7 @@ different ones, or about other web servers, please share!
 4. Optionally you can create static compressed copies and save some CPU on your server
    with the GZIP_FILES option in Nikola.
 
-5. The webassets Nikola plugin can drastically decrease the number of CSS and JS files your site fetches.
+5. The bundles Nikola plugin can drastically decrease the number of CSS and JS files your site fetches.
 
 6. Through the filters feature, you can run your files through arbitrary commands, so that images
    are recompressed, JavaScript is minimized, etc.

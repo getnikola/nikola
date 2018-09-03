@@ -74,8 +74,7 @@ parent, engine
 
 bundles
     A `config <https://docs.python.org/3/library/configparser.html>`_ file
-    containing a list of files to be turned into bundles using WebAssets. For
-    example:
+    containing a list of files to be turned into bundles. For example:
 
     .. code:: ini
 
@@ -93,7 +92,7 @@ bundles
     This makes the page much more efficient because it avoids multiple connections to the server,
     at the cost of some extra difficult debugging.
 
-    WebAssets supports bundling CSS and JS files.
+    Bundling applies to CSS and JS files.
 
     Templates should use either the bundle or the individual files based on the ``use_bundles``
     variable, which in turn is set by the ``USE_BUNDLES`` option.
