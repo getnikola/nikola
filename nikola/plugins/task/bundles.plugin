@@ -6,7 +6,7 @@ module = bundles
 author = Roberto Alsina
 version = 1.0
 website = https://getnikola.com/
-description = Theme bundles using WebAssets
+description = Bundle assets
 
 [Nikola]
 PluginCategory = Task

@@ -9,14 +9,14 @@
 # Translators:
 # Chris Warrick, 2017
 # Joes Staal <joes@staalkemade.net>, 2013
-# Joes Staal <joes@staalkemade.net>, 2013-2017
+# Joes Staal <joes@staalkemade.net>, 2013-2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2018-08-10 08:02+0000\n"
-"Last-Translator: Chris Warrick\n"
+"PO-Revision-Date: 2018-08-11 20:50+0000\n"
+"Last-Translator: Joes Staal <joes@staalkemade.net>\n"
 "Language-Team: Dutch (http://www.transifex.com/ralsina/nikola/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -163,4 +163,4 @@ msgstr "Atom-feed"
 
 #. {date} (updated {updated_date})
 msgid "updated"
-msgstr ""
+msgstr "bijgewerkt"

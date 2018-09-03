@@ -24,39 +24,26 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Bundle assets using WebAssets."""
+"""Bundle assets."""
 
 
 import configparser
 import io
 import itertools
 import os
-
-try:
-    import webassets
-except ImportError:
-    webassets = None  # NOQA
+import shutil
 
 from nikola.plugin_categories import LateTask
 from nikola import utils
 
 
 class BuildBundles(LateTask):
-    """Bundle assets using WebAssets."""
+    """Bundle assets."""
 
     name = "create_bundles"
 
-    def set_site(self, site):
-        """Set Nikola site."""
-        super(BuildBundles, self).set_site(site)
-        if webassets is None and site.configured and site.config['USE_BUNDLES']:
-            utils.req_missing(['webassets'], 'USE_BUNDLES', optional=True)
-            self.logger.warn('Setting USE_BUNDLES to False.')
-            site.config['USE_BUNDLES'] = False
-            site._GLOBAL_CONTEXT['use_bundles'] = False
-
     def gen_tasks(self):
-        """Bundle assets using WebAssets."""
+        """Bundle assets."""
         kw = {
             'filters': self.site.config['FILTERS'],
             'output_folder': self.site.config['OUTPUT_FOLDER'],
@@ -70,28 +57,21 @@ class BuildBundles(LateTask):
         def build_bundle(output, inputs):
             out_dir = os.path.join(kw['output_folder'],
                                    os.path.dirname(output))
-            inputs = [os.path.relpath(i, out_dir) for i in inputs if os.path.isfile(i)]
-            cache_dir = os.path.join(kw['cache_folder'], 'webassets')
-            utils.makedirs(cache_dir)
-            env = webassets.Environment(out_dir, os.path.dirname(output),
-                                        cache=cache_dir)
-            if inputs:
-                bundle = webassets.Bundle(*inputs, output=os.path.basename(output))
-                env.register(output, bundle)
-                # This generates the file
-                try:
-                    env[output].build(force=True)
-                except Exception as e:
-                    self.logger.error("Failed to build bundles.")
-                    self.logger.exception(e)
-                    self.logger.notice("Try running ``nikola clean`` and building again.")
-            else:
-                with open(os.path.join(out_dir, os.path.basename(output)), 'wb+'):
-                    pass  # Create empty file
+            inputs = [
+                os.path.join(
+                    out_dir,
+                    os.path.relpath(i, out_dir))
+                for i in inputs if os.path.isfile(i)
+            ]
+            with open(os.path.join(out_dir, os.path.basename(output)), 'wb+') as out_fh:
+                for i in inputs:
+                    with open(i, 'rb') as in_fh:
+                        shutil.copyfileobj(in_fh, out_fh)
+                    out_fh.write(b'\n')
 
         yield self.group_task()
-        if (webassets is not None and self.site.config['USE_BUNDLES'] is not
-                False):
+
+        if self.site.config['USE_BUNDLES']:
             for name, _files in kw['theme_bundles'].items():
                 output_path = os.path.join(kw['output_folder'], name)
                 dname = os.path.dirname(name)

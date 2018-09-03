@@ -7,162 +7,159 @@
 # Translators:
 # Translators:
 # Translators:
-# Chris Warrick, 2017
-# Eero Kari <eero.kari@gmail.com>, 2013,2016-2018
-# Eero Kari <eero.kari@gmail.com>, 2013-2014
-# Timo Kankare <timo.kankare@iki.fi>, 2016
-# Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>, 2015
+# Chris Warrick, 2018
+# Hoai-Thu Vuong <thuvh87@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2018-08-11 07:27+0000\n"
-"Last-Translator: Eero Kari <eero.kari@gmail.com>\n"
-"Language-Team: Finnish (http://www.transifex.com/ralsina/nikola/language/fi/)\n"
+"PO-Revision-Date: 2018-08-26 09:27+0000\n"
+"Last-Translator: Chris Warrick\n"
+"Language-Team: Vietnamese (http://www.transifex.com/ralsina/nikola/language/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fi\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "More posts about %s"
-msgstr "Lisää kirjoituksia aiheesta %s"
+msgstr "Các bài đăng khác về %s"
 
 #. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "LANGUAGE"
-msgstr "Suomi"
+msgstr "Tiếng Việt"
 
 msgid "Tags"
-msgstr "Avainsanat"
+msgstr "Thẻ"
 
 msgid "Categories"
-msgstr "Kategoriat"
+msgstr "Thể loại"
 
 msgid "Tags and Categories"
-msgstr "Avainsanat ja kategoriat"
+msgstr "Thẻ và Thể loại"
 
 msgid "Comments"
-msgstr "Kommentit"
+msgstr "Bình luận"
 
 msgid "Read more"
-msgstr "Lue lisää"
+msgstr "Đọc thêm"
 
 msgid "Posts about %s"
-msgstr "Kirjoituksia aiheesta %s"
+msgstr "Bài viết về %s"
 
 msgid "Next post"
-msgstr "Seuraava kirjoitus"
+msgstr "Bài viết tiếp theo"
 
 msgid "old posts, page %d"
-msgstr "vanhoja kirjoituksia, sivu %d"
+msgstr "các bài viết trước đây, trang %d"
 
 msgid "page %d"
-msgstr "sivu %d"
+msgstr "trang %d"
 
 msgid "Source"
-msgstr "Lähde"
+msgstr "Nguồn"
 
 #. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "Read in English"
-msgstr "Lue suomeksi"
+msgstr "Phiên bản Tiếng Việt"
 
 msgid "Posts for year %s"
-msgstr "Kirjoituksia vuodelta %s"
+msgstr "Các bài viết trong năm %s"
 
 msgid "Newer posts"
-msgstr "Uudempia kirjoituksia"
+msgstr "Bài viết gần đây"
 
 msgid "Previous post"
-msgstr "Edellinen kirjoitus"
+msgstr "Bài viết trước"
 
 msgid "Also available in:"
-msgstr "Saatavilla myös:"
+msgstr "Cũng có sẵn trong:"
 
 msgid "Languages:"
-msgstr "Kielet:"
+msgstr "Ngôn ngữ:"
 
 msgid "Original site"
-msgstr "Alkuperäinen sivusto"
+msgstr "Trang gốc"
 
 msgid "Older posts"
-msgstr "Vanhempia kirjoituksia"
+msgstr "Bài viết trước đây"
 
 msgid "Archive"
-msgstr "Arkisto"
+msgstr "Kho"
 
 msgid "Publication date"
-msgstr "Julkaisupäivämäärä"
+msgstr "Ngày phát hành"
 
 msgid "Posted:"
-msgstr "Kirjoitettu:"
+msgstr "Đã đăng："
 
 msgid "Posts for {month_year}"
-msgstr "Kirjoituksia ajalta {month_year}"
+msgstr "Các bài đã đăng {month_year}"
 
 msgid "Posts for {month_day_year}"
-msgstr "Kirjoituksia ajalta {month_day_year}"
+msgstr "Các bài đã đăng {month_day_year}"
 
 msgid "Nothing found."
-msgstr "Ei hakutuloksia."
+msgstr "Không có kết quả."
 
 msgid "No posts found."
-msgstr "Kirjoituksia ei löytynyt."
+msgstr "Không tìm thấy bài viết."
 
 msgid "RSS feed"
-msgstr "RSS-syöte"
+msgstr "Nguồn cung cấp dữ liệu RSS"
 
 msgid "%d min remaining to read"
-msgstr "%d minuuttia lukuaikaa"
+msgstr "Cần %d phút để đọc"
 
 msgid "Skip to main content"
-msgstr "Hyppää sisältöön"
+msgstr "Chuyển đến nội dung chính"
 
 msgid "Subcategories:"
-msgstr "Alakategoriat:"
+msgstr "Thể loại con:"
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
-msgstr "(aktiivinen)"
+msgstr "(active)"
 
 #. Default content for a new post
 msgid "Write your post here."
-msgstr "Kirjoita sisältö tähän."
+msgstr "Bắt đầu viết bài ở đây."
 
 #. Default content for a new page
 msgid "Write your page here."
-msgstr "Kirjoita sisältö tähän."
+msgstr "Bắt đầu viết nội dung của trang ở đây."
 
 msgid "Uncategorized"
-msgstr "Luokittelematon"
+msgstr "Chưa được phân loại"
 
 #. Used for feeds of any format
 msgid "Updates"
-msgstr "Päivitykset"
+msgstr "Cập nhật"
 
 msgid "Authors"
-msgstr "Kirjoittajat"
+msgstr "Tác giả"
 
 msgid "Posts by %s"
-msgstr "Artikkelit kirjoittajalta %s"
+msgstr "Bài đăng bởi %s"
 
 msgid "Toggle navigation"
-msgstr "Vaihda navigointia"
+msgstr "Chuyển điều hướng"
 
 msgid "Previous"
-msgstr "Edellinen"
+msgstr "Trước"
 
 msgid "Up"
-msgstr "Ylös"
+msgstr "Trở lên"
 
 msgid "Next"
-msgstr "Seuraava"
+msgstr "Kế tiếp"
 
 msgid "Atom feed"
-msgstr "Atom-syöte"
+msgstr "Nguồn cung cấp dữ liệu Atom"
 
 #. {date} (updated {updated_date})
 msgid "updated"
-msgstr "päivitetty"
+msgstr "Đã được cập nhật"

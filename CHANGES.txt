@@ -6,6 +6,7 @@ New since Beta 3
 Features
 --------
 
+* Add Vietnamese translation by Hoai-Thu Vuong
 * Don’t generate gallery index if the destination directory is
   site root and it would conflict with blog index (Issue #3133)
 * All built-in themes now support ``updated`` timestamp fields in
@@ -22,6 +23,12 @@ Bugfixes
 
 * Enforce trailing slash for directories in ``nikola auto``
   (Issue #3140)
+
+Removed features
+----------------
+
+* The ``webassets`` library is no longer required, we now manually
+  bundle files (Issue #3074)
 
 New in v8.0.0b3 (changes since Beta 2)
 ======================================
