@@ -813,7 +813,7 @@ Doing the same for layout-reverse, sidebar-overlay and the rest is left as an ex
 Bundles
 -------
 
-If you have ``webassets`` installed and the ``USE_BUNDLES`` option set to True,
+If the ``USE_BUNDLES`` option set to True,
 Nikola can put several CSS or JS files together in a larger file, which can
 makes site load faster for some deployments. To do this, your theme needs
 a ``bundles`` file. The file format is a modified
