@@ -67,6 +67,7 @@ class BuildBundles(LateTask):
                 for i in inputs:
                     with open(i, 'rb') as in_fh:
                         shutil.copyfileobj(in_fh, out_fh)
+                out_fh.write(b'\n')
 
         yield self.group_task()
 
