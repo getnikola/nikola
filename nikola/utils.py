@@ -1206,7 +1206,7 @@ class LocaleBorg(object):
             # zone designator for times in UTC and no microsecond precision.
             return date.replace(microsecond=0).isoformat().replace('+00:00', 'Z')
         elif LocaleBorg.datetime_formatter is not None:
-            LocaleBorg.datetime_formatter(date, date_format, lang, locale)
+            return LocaleBorg.datetime_formatter(date, date_format, lang, locale)
         else:
             return babel.dates.format_datetime(date, date_format, locale=locale)
 
@@ -1230,7 +1230,7 @@ class LocaleBorg(object):
             """Format a date as requested."""
             mode, custom_format = match.groups()
             if LocaleBorg.in_string_formatter is not None:
-                LocaleBorg.in_string_formatter(date, mode, custom_format, lang, locale)
+                return LocaleBorg.in_string_formatter(date, mode, custom_format, lang, locale)
             elif custom_format:
                 return babel.dates.format_date(date, custom_format, locale)
             else:
