@@ -23,6 +23,8 @@ Bugfixes
 
 * Enforce trailing slash for directories in ``nikola auto``
   (Issue #3140)
+* Galleries with baguetteBox don’t glitch out on the first image
+  anymore (Issue #3141)
 
 Removed features
 ----------------
