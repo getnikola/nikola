@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Test metadata extractors."""
 
-import mock
+from unittest import mock
 import os
 import pytest
 from .base import FakeSite

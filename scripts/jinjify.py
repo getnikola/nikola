@@ -10,7 +10,6 @@ import json
 import shutil
 import tempfile
 
-import colorama
 import jinja2
 
 dumb_replacements = [
@@ -103,7 +102,7 @@ def jinjify(in_theme, out_theme):
 
 
 def error(msg):
-    print(colorama.Fore.RED + "ERROR:" + msg + colorama.Fore.RESET)
+    print("\033[1;31mERROR: {0}\033[0m".format(msg))
 
 
 def mako2jinja(input_file):

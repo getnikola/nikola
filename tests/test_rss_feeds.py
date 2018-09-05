@@ -10,7 +10,7 @@ import unittest
 
 import dateutil.tz
 from lxml import etree
-import mock
+from unittest import mock
 
 from .base import initialize_localeborg
 import nikola

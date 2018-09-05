@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest
-import mock
+from unittest import mock
 import os
 import lxml.html
 from nikola import metadata_extractors

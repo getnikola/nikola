@@ -3,7 +3,7 @@
 import os
 
 import unittest
-import mock
+from unittest import mock
 
 import nikola
 import nikola.plugins.command.import_wordpress
