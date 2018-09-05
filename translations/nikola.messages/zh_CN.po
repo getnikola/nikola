@@ -1,11 +1,7 @@
 # Messages in Nikola
 # Copyright (C) 2012-2016
 # This file is distributed under the same license as the Nikola package.
-# 
-# Translators:
-# Translators:
-# Translators:
-# Translators:
+#
 # Translators:
 # Christopher Meng <i@cicku.me>, 2013
 # Christopher Meng <i@cicku.me>, 2013
@@ -21,14 +17,15 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2018-08-10 08:02+0000\n"
-"Last-Translator: Chris Warrick\n"
+"PO-Revision-Date: 2018-09-05 19:27+0800\n"
+"Last-Translator: dingpengyu <dingpengyu06@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/ralsina/nikola/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 2.1.1\n"
 
 msgid "More posts about %s"
 msgstr "有关更多文章"
@@ -48,16 +45,16 @@ msgid "Tags and Categories"
 msgstr "标签和分类"
 
 msgid "Comments"
-msgstr "注释"
+msgstr "评论"
 
 msgid "Read more"
-msgstr "更多"
+msgstr "阅读更多"
 
 msgid "Posts about %s"
-msgstr "文章分类：%s"
+msgstr "关于文章 %s"
 
 msgid "Next post"
-msgstr "后一篇"
+msgstr "下一篇"
 
 msgid "old posts, page %d"
 msgstr "旧文章页 %d"
@@ -66,24 +63,24 @@ msgid "page %d"
 msgstr "第 %d 页"
 
 msgid "Source"
-msgstr "源代码"
+msgstr "资源"
 
 #. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "Read in English"
-msgstr "中文版"
+msgstr "阅读简体中文"
 
 msgid "Posts for year %s"
 msgstr "%s年文章"
 
 msgid "Newer posts"
-msgstr "新一篇"
+msgstr "较新的文章"
 
 msgid "Previous post"
-msgstr "前一篇"
+msgstr "上一篇文章"
 
 msgid "Also available in:"
-msgstr "其他语言版本："
+msgstr "也可用于："
 
 msgid "Languages:"
 msgstr "语言："
@@ -92,10 +89,10 @@ msgid "Original site"
 msgstr "原文地址"
 
 msgid "Older posts"
-msgstr "旧一篇"
+msgstr "以前的文章"
 
 msgid "Archive"
-msgstr "文章存档"
+msgstr "文章归档"
 
 msgid "Publication date"
 msgstr "发布日期"
@@ -150,23 +147,23 @@ msgid "Authors"
 msgstr "作者"
 
 msgid "Posts by %s"
-msgstr "%s 发布"
+msgstr "文章有%s发布"
 
 msgid "Toggle navigation"
-msgstr ""
+msgstr "展开导航栏"
 
 msgid "Previous"
-msgstr ""
+msgstr "以前"
 
 msgid "Up"
-msgstr ""
+msgstr "向上"
 
 msgid "Next"
-msgstr ""
+msgstr "项下"
 
 msgid "Atom feed"
-msgstr ""
+msgstr "Atom源"
 
 #. {date} (updated {updated_date})
 msgid "updated"
-msgstr ""
+msgstr "更新"
