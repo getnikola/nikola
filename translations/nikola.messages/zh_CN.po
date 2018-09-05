@@ -28,7 +28,7 @@ msgstr ""
 "X-Generator: Poedit 2.1.1\n"
 
 msgid "More posts about %s"
-msgstr "有关更多文章"
+msgstr "更多关于文章 %s"
 
 #. Here your translation should NOT say English but the name of your language
 #. instead
@@ -54,7 +54,7 @@ msgid "Posts about %s"
 msgstr "关于文章 %s"
 
 msgid "Next post"
-msgstr "下一篇"
+msgstr "下一篇文章"
 
 msgid "old posts, page %d"
 msgstr "旧文章页 %d"
