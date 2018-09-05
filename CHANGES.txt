@@ -17,6 +17,8 @@ Features
 * All built-in themes now support the ``DATE_FANCINESS`` option.
 * Theme bundles are now parsed using the configparser module and
   can support newlines inside entries as well as comments
+* Make bootstrap4 navbar color configurable with
+  ``THEME_CONFIG['navbar_light']`` (Issue #2863)
 
 Bugfixes
 --------

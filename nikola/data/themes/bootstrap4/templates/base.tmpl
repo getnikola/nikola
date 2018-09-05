@@ -13,7 +13,13 @@ ${template_hooks['extra_head']()}
 
 <!-- Menubar -->
 
-<nav class="navbar navbar-expand-md navbar-dark bg-dark static-top mb-4">
+<nav class="navbar navbar-expand-md static-top mb-4
+% if theme_config.get('navbar_light'):
+navbar-light bg-light
+% else:
+navbar-dark bg-dark
+% endif
+">
     <div class="container"><!-- This keeps the margins nice -->
         <a class="navbar-brand" href="${abs_link(_link("root", None, lang))}">
         %if logo_url:
