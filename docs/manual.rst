@@ -527,7 +527,13 @@ To do this, you need  ``USE_REST_DOCINFO_METADATA = True`` in your ``conf.py``,
 and Nikola will hide the docinfo fields in the output if you set
 ``HIDE_REST_DOCINFO = True``.
 
-Note that keys are converted to lowercase automatically.
+.. notice::
+
+    Keys are converted to lowercase automatically.
+
+    This setting also means that the first heading in a post will be removed
+    and considered a title. This is important if you’re mixing metadata
+    styles. This can be solved by putting a reST comment before your title.
 
 Markdown metadata
 `````````````````
