@@ -1142,7 +1142,9 @@ MARKDOWN_EXTENSIONS = ['markdown.extensions.fenced_code', 'markdown.extensions.c
 # Should titles fetched from file metadata be unslugified (made prettier?)
 # FILE_METADATA_UNSLUGIFY_TITLES = True
 
-# If enabled, extract metadata from docinfo fields in reST documents
+# If enabled, extract metadata from docinfo fields in reST documents.
+# If your text files start with a level 1 heading, it will be treated as the
+# document title and will be removed from the text.
 # USE_REST_DOCINFO_METADATA = False
 
 # If enabled, hide docinfo fields in reST document output
@@ -1234,12 +1236,6 @@ MARKDOWN_EXTENSIONS = ['markdown.extensions.fenced_code', 'markdown.extensions.c
 # example.
 # (defaults to 1.)
 # DEMOTE_HEADERS = 1
-
-# Docutils, by default, will perform a transform in your documents
-# extracting unique titles at the top of your document and turning
-# them into metadata. This surprises a lot of people, and setting
-# this option to True will prevent it.
-# NO_DOCUTILS_TITLE_TRANSFORM = False
 
 # If you don’t like slugified file names ([a-z0-9] and a literal dash),
 # and would prefer to use all the characters your file system allows.
