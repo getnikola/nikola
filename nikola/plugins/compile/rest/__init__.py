@@ -229,6 +229,7 @@ class NikolaReader(docutils.readers.standalone.Reader):
     def __init__(self, *args, **kwargs):
         """Initialize the reader."""
         self.transforms = kwargs.pop('transforms', [])
+        self.logging_settings = kwargs.pop('nikola_logging_settings', {})
         docutils.readers.standalone.Reader.__init__(self, *args, **kwargs)
 
     def get_transforms(self):
@@ -239,7 +240,7 @@ class NikolaReader(docutils.readers.standalone.Reader):
         """Create and return a new empty document tree (root node)."""
         document = docutils.utils.new_document(self.source.source_path, self.settings)
         document.reporter.stream = False
-        document.reporter.attach_observer(get_observer(self.l_settings))
+        document.reporter.attach_observer(get_observer(self.logging_settings))
         return document
 
 
@@ -317,14 +318,16 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
              reStructuredText syntax errors.
     """
     if reader is None:
-        reader = NikolaReader(transforms=transforms, no_title_transform=no_title_transform)
         # For our custom logging, we have special needs and special settings we
         # specify here.
         # logger    a logger from Nikola
         # source   source filename (docutils gets a string)
         # add_ln   amount of metadata lines (see comment in CompileRest.compile above)
-        reader.l_settings = {'logger': logger, 'source': source_path,
-                             'add_ln': l_add_ln}
+        reader = NikolaReader(transforms=transforms,
+                              nikola_logging_settings={
+                                  'logger': logger, 'source': source_path,
+                                  'add_ln': l_add_ln
+                              })
 
     pub = docutils.core.Publisher(reader, parser, writer, settings=settings,
                                   source_class=source_class,
