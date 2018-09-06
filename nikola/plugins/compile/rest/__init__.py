@@ -75,7 +75,7 @@ class CompileRest(PageCompiler):
         null_logger.handlers = [logbook.NullHandler()]
         with io.open(source_path, 'r', encoding='utf-8') as inf:
             data = inf.read()
-            _, _, _, document = rst2html(data, logger=null_logger, source_path=source_path, transforms=self.site.rst_transforms, no_title_transform=False)
+            _, _, _, document = rst2html(data, logger=null_logger, source_path=source_path, transforms=self.site.rst_transforms)
         meta = {}
         if 'title' in document:
             meta['title'] = document['title']
@@ -132,8 +132,7 @@ class CompileRest(PageCompiler):
         if self.site.config.get('HIDE_REST_DOCINFO', False):
             self.site.rst_transforms.append(RemoveDocinfo)
         output, error_level, deps, _ = rst2html(
-            new_data, settings_overrides=settings_overrides, logger=self.logger, source_path=source_path, l_add_ln=add_ln, transforms=self.site.rst_transforms,
-            no_title_transform=self.site.config.get('NO_DOCUTILS_TITLE_TRANSFORM', False))
+            new_data, settings_overrides=settings_overrides, logger=self.logger, source_path=source_path, l_add_ln=add_ln, transforms=self.site.rst_transforms)
         if not isinstance(output, unicode_str):
             # To prevent some weird bugs here or there.
             # Original issue: empty files.  `output` became a bytestring.
@@ -230,15 +229,11 @@ class NikolaReader(docutils.readers.standalone.Reader):
     def __init__(self, *args, **kwargs):
         """Initialize the reader."""
         self.transforms = kwargs.pop('transforms', [])
-        self.no_title_transform = kwargs.pop('no_title_transform', False)
         docutils.readers.standalone.Reader.__init__(self, *args, **kwargs)
 
     def get_transforms(self):
         """Get docutils transforms."""
-        transforms = docutils.readers.standalone.Reader(self).get_transforms() + self.transforms
-        if self.no_title_transform:
-            transforms = [t for t in transforms if str(t) != "<class 'docutils.transforms.frontmatter.DocTitle'>"]
-        return transforms
+        return docutils.readers.standalone.Reader(self).get_transforms() + self.transforms
 
     def new_document(self):
         """Create and return a new empty document tree (root node)."""
@@ -304,8 +299,7 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
              parser=None, parser_name='restructuredtext', writer=None,
              writer_name='html', settings=None, settings_spec=None,
              settings_overrides=None, config_section=None,
-             enable_exit_status=None, logger=None, l_add_ln=0, transforms=None,
-             no_title_transform=False):
+             enable_exit_status=None, logger=None, l_add_ln=0, transforms=None):
     """Set up & run a ``Publisher``, and return a dictionary of document parts.
 
     Dictionary keys are the names of parts, and values are Unicode strings;

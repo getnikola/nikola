@@ -21,6 +21,9 @@ Features
 Bugfixes
 --------
 
+* Remove ``NO_DOCUTILS_TITLE_TRANSFORM`` setting,
+  this is now default behavior if ``USE_REST_DOCINFO_METADATA``
+  is disabled (Issue #2382, #3124)
 * Enforce trailing slash for directories in ``nikola auto``
   (Issue #3140)
 * Galleries with baguetteBox don’t glitch out on the first image
