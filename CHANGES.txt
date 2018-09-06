@@ -21,6 +21,8 @@ Features
 Bugfixes
 --------
 
+* Do not remove first heading in document (reST document title)
+  if ``USE_REST_DOCINFO_METADATA`` is disabled (Issue #3124)
 * Remove ``NO_DOCUTILS_TITLE_TRANSFORM`` setting,
   this is now default behavior if ``USE_REST_DOCINFO_METADATA``
   is disabled (Issue #2382, #3124)

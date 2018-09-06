@@ -1139,7 +1139,9 @@ MARKDOWN_EXTENSIONS = ['markdown.extensions.fenced_code', 'markdown.extensions.c
 # Should titles fetched from file metadata be unslugified (made prettier?)
 # FILE_METADATA_UNSLUGIFY_TITLES = True
 
-# If enabled, extract metadata from docinfo fields in reST documents
+# If enabled, extract metadata from docinfo fields in reST documents.
+# If your text files start with a level 1 heading, it will be treated as the
+# document title and will be removed from the text.
 # USE_REST_DOCINFO_METADATA = False
 
 # If enabled, hide docinfo fields in reST document output
