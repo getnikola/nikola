@@ -464,7 +464,7 @@ class Galleries(Task, ImageProcessor):
 
         self.logger.debug("Using {0} for gallery {1}".format(
             used_path, gallery))
-        with open(used_path, "r") as meta_file:
+        with open(used_path, "r", encoding='utf-8-sig') as meta_file:
             if yaml is None:
                 utils.req_missing(['PyYAML'], 'use metadata.yml files for galleries')
             meta = yaml.safe_load_all(meta_file)
