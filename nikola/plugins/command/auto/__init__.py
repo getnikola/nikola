@@ -214,6 +214,10 @@ class CommandAuto(Command):
         self.wd_observer.schedule(ConfigEventHandler(_conf_fn, self.run_nikola_build, loop), _conf_dn, recursive=False)
         self.wd_observer.start()
 
+        win_sleeper = None
+        if sys.platform == 'win32':
+            win_sleeper = asyncio.ensure_future(windows_ctrlc_workaround())
+
         if not self.has_server:
             self.logger.info("Watching for changes...")
             # Run the event loop forever (no server mode).
@@ -225,6 +229,8 @@ class CommandAuto(Command):
             except KeyboardInterrupt:
                 pass
             finally:
+                if win_sleeper:
+                    win_sleeper.cancel()
                 self.wd_observer.stop()
                 self.wd_observer.join()
             loop.close()
@@ -253,6 +259,8 @@ class CommandAuto(Command):
             pass
         finally:
             self.logger.info("Server is shutting down.")
+            if win_sleeper:
+                win_sleeper.cancel()
             if self.dns_sd:
                 self.dns_sd.Reset()
             queue_future.cancel()
@@ -389,6 +397,13 @@ class CommandAuto(Command):
         for ws in to_delete:
             self.sockets.remove(ws)
 
+
+@asyncio.coroutine
+def windows_ctrlc_workaround():
+    """Work around bpo-23057."""
+    # https://bugs.python.org/issue23057
+    while True:
+        yield from asyncio.sleep(1)
 
 class IndexHtmlStaticResource(StaticResource):
     """A StaticResource implementation that serves /index.html in directory roots."""
