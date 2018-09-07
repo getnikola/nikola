@@ -527,7 +527,7 @@ To do this, you need  ``USE_REST_DOCINFO_METADATA = True`` in your ``conf.py``,
 and Nikola will hide the docinfo fields in the output if you set
 ``HIDE_REST_DOCINFO = True``.
 
-.. notice::
+.. note::
 
     Keys are converted to lowercase automatically.
 
