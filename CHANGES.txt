@@ -23,6 +23,7 @@ Features
 Bugfixes
 --------
 
+* Use UTF-8 instead of system encoding for gallery metadata.yml file
 * Do not remove first heading in document (reST document title)
   if ``USE_REST_DOCINFO_METADATA`` is disabled (Issue #3124)
 * Remove ``NO_DOCUTILS_TITLE_TRANSFORM`` setting,
