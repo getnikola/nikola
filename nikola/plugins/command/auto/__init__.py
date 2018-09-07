@@ -405,6 +405,7 @@ def windows_ctrlc_workaround():
     while True:
         yield from asyncio.sleep(1)
 
+
 class IndexHtmlStaticResource(StaticResource):
     """A StaticResource implementation that serves /index.html in directory roots."""
 
