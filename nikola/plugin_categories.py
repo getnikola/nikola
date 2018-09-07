@@ -73,7 +73,7 @@ class BasePlugin(IPlugin):
         self.inject_templates()
         self.logger = get_logger(self.name)
         if not site.debug:
-            self.logger.level = logbook.base.WARNING
+            self.logger.level = logbook.base.INFO
 
     def inject_templates(self):
         """Inject 'templates/<engine>' (if exists) very early in the theme chain."""
