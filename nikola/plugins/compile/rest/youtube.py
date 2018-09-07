@@ -67,8 +67,8 @@ class Youtube(Directive):
     has_content = True
     required_arguments = 1
     option_spec = {
-        "width": directives.positive_int,
-        "height": directives.positive_int,
+        "width": directives.unchanged,
+        "height": directives.unchanged,
         "align": _align_choice
     }
 
@@ -80,7 +80,7 @@ class Youtube(Directive):
             'width': 560,
             'height': 315,
         }
-        options.update(self.options)
+        options.update({k: v for k, v in self.options.items() if v})
         if self.options.get('align') in _align_options_base:
             options['align'] = ' align-' + self.options['align']
         else:
