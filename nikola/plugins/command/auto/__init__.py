@@ -245,7 +245,7 @@ class CommandAuto(Command):
         # Run the event loop forever and handle shutdowns.
         try:
             # Run rebuild queue
-            loop.run_until_complete(self.run_rebuild_queue())
+            queue_future = asyncio.ensure_future(self.run_rebuild_queue())
 
             self.dns_sd = dns_sd(port, (options['ipv6'] or '::' in host))
             loop.run_forever()
@@ -255,8 +255,8 @@ class CommandAuto(Command):
             self.logger.info("Server is shutting down.")
             if self.dns_sd:
                 self.dns_sd.Reset()
+            queue_future.cancel()
             srv.close()
-            loop.run_until_complete(self.rebuild_queue.put((None, None)))
             loop.run_until_complete(srv.wait_closed())
             loop.run_until_complete(webapp.shutdown())
             loop.run_until_complete(handler.shutdown(5.0))
@@ -291,9 +291,6 @@ class CommandAuto(Command):
         """Run rebuilds from a queue (Nikola can only build in a single instance)."""
         while True:
             date, event_path = yield from self.rebuild_queue.get()
-            if date is None:
-                # Shutdown queue
-                return
             if date < (self.last_rebuild + self.delta_last_rebuild):
                 self.logger.debug("Skipping rebuild from {0} (within delta)".format(event_path))
                 continue
