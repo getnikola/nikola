@@ -4,7 +4,7 @@
 .. description: Get help using Nikola, or contact us.
 .. author: The Nikola Team
 
-:Version: 8.0.0b3
+:Version: 8.0.0rc1
 
 .. class:: alert alert-primary float-md-right
 
