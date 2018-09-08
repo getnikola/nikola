@@ -174,7 +174,6 @@ Nikola provides the following features:
   * Author pages and feeds (not generated if ``ENABLE_AUTHOR_PAGES`` is set to ``False`` or there is only one author)
   * Archives with custom granularity (yearly or monthly)
   * `Comments`_
-  * Client-side tag clouds (needs manual configuration)
 
 * Static pages (not part of the blog)
 * `Math`_ rendering (via MathJax)
@@ -1035,7 +1034,7 @@ Please note that tags are case-sensitive and that you cannot have two tags that 
    ERROR: Nikola: Tag Nikola is used in: posts/second-post.rst
    ERROR: Nikola: Tag nikola is used in: posts/1.rst
 
-You can also generate a tag cloud with the `tx3_tag_cloud <https://plugins.getnikola.com/#tx3_tag_cloud>`_ plugin.
+You can also generate a tag cloud with the `tx3_tag_cloud <https://plugins.getnikola.com/v7/tx3_tag_cloud/>`_ plugin or get a data file for a tag cloud with the `tagcloud <https://plugins.getnikola.com/v7/tagcloud/>`_ plugin.
 
 Categories
 ``````````
@@ -1057,7 +1056,6 @@ There are multiple configuration variables dedicated to each of the two taxonomi
 * ``TAG_DESCRIPTIONS``, ``CATEGORY_DESCRIPTIONS`` to set descriptions for each of the items
 * ``CATEGORY_ALLOW_HIERARCHIES`` and ``CATEGORY_OUTPUT_FLAT_HIERARCHIES`` to allow hierarchical categories
 * ``TAG_PAGES_ARE_INDEXES`` and ``CATEGORY_PAGES_ARE_INDEXES`` to display full-size indexes instead of simple post lists
-* ``WRITE_TAG_CLOUDS`` to enable/disable generating tag cloud files
 * ``HIDDEN_TAGS``. ``HIDDEN_CATEGORIES`` to make some tags/categories invisible in lists
 * ``CATEGORY_DESTPATH_AS_DEFAULT`` to use the destination path as the category if none is specified in the post
 * ``CATEGORY_DESTPATH_TRIM_PREFIX`` to trim the prefix that comes from ``POSTS`` for the destination path

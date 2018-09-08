@@ -37,6 +37,8 @@ Bugfixes
 Removed features
 ----------------
 
+* Moved ``tag_cloud_data.json`` generation to a separate
+  ``tagcloud`` plugin (Issue #1696)
 * The ``webassets`` library is no longer required, we now manually
   bundle files (Issue #3074)
 
