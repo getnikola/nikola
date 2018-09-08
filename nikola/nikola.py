@@ -282,7 +282,7 @@ TAXONOMY_COMPATIBILITY_PLUGIN_NAME_MAP = {
     "render_archive": ["classify_archive"],
     "render_authors": ["classify_authors"],
     "render_indexes": ["classify_page_index", "classify_sections"],  # "classify_indexes" removed from list (see #2591 and special-case logic below)
-    "render_tags": ["classify_categories", "render_tag_cloud", "classify_tags"],
+    "render_tags": ["classify_categories", "classify_tags"],
 }
 
 
@@ -540,7 +540,6 @@ class Nikola(object):
             'USE_TAG_METADATA': True,
             'TIMEZONE': 'UTC',
             'WARN_ABOUT_TAG_METADATA': True,
-            'WRITE_TAG_CLOUD': False,
             'DEPLOY_DRAFTS': True,
             'DEPLOY_FUTURE': False,
             'SCHEDULE_ALL': False,
