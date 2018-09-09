@@ -133,6 +133,7 @@ LEGAL_VALUES = {
         ('ja', '!jp'): 'Japanese',
         'ko': 'Korean',
         'lt': 'Lithuanian',
+        'ml': 'Malayalam',
         'nb': 'Norwegian (Bokmål)',
         'nl': 'Dutch',
         'pa': 'Punjabi',
@@ -199,6 +200,7 @@ LEGAL_VALUES = {
         ja='ja',
         ko='ko',
         lt='lt',
+        ml='ml',
         nb='nb',
         nl='nl',
         pa='pa-in',
@@ -265,6 +267,7 @@ LEGAL_VALUES = {
         'it': 'it',
         'ja': 'ja',
         'lt': 'lt',
+        'nl': 'nl',
         'pl': 'pl',
         'pt': 'pt_br',  # hope nobody will mind
         'pt_br': 'pt_br',
