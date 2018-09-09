@@ -1,0 +1,159 @@
+# Messages in Nikola
+# Copyright (C) 2012-2016
+# This file is distributed under the same license as the Nikola package.
+# 
+# Translators:
+# nemo@dicto.xyz 2018
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Nikola\n"
+"Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
+"POT-Creation-Date: 2013-09-09 01:24-0300\n"
+"Language-Team: Malayalam (http://www.transifex.com/ralsina/nikola/language/ml/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ml\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "More posts about %s"
+msgstr "%s-നെ കുറിച്ചുള്ള കൂടുതല്‍ രചനകള്‍"
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "LANGUAGE"
+msgstr "മലയാളം"
+
+msgid "Tags"
+msgstr "ടാഗുകള്‍"
+
+msgid "Categories"
+msgstr "വിഭാഗങ്ങള്‍"
+
+msgid "Tags and Categories"
+msgstr "ടാഗുകളും വിഭാഗങ്ങളും"
+
+msgid "Comments"
+msgstr "കമന്റുകള്‍"
+
+msgid "Read more"
+msgstr "കൂടുതല്‍ വായിക്കുക"
+
+msgid "Posts about %s"
+msgstr "%s -നെ കുറിച്ചുള്ള രചനകള്‍"
+
+msgid "Next post"
+msgstr "അടുത്ത രചന"
+
+msgid "old posts, page %d"
+msgstr "പഴയ രചനകള്‍, താള്‍ %d"
+
+msgid "page %d"
+msgstr "താള്‍ %d"
+
+msgid "Source"
+msgstr "സ്രോതസ്സ്‌"
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "Read in English"
+msgstr "മലയാളത്തില്‍ വായിക്കുക"
+
+msgid "Posts for year %s"
+msgstr "%s-ാം ആണ്ടിലെ രചനകള്‍"
+
+msgid "Newer posts"
+msgstr "പുതിയ രചനകള്‍"
+
+msgid "Previous post"
+msgstr "മുമ്പിലെ രചന"
+
+msgid "Also available in:"
+msgstr "ലഭ്യമായ ഭാഷകള്‍:"
+
+msgid "Languages:"
+msgstr "ഭാഷകള്‍:"
+
+msgid "Original site"
+msgstr "യഥാര്‍ഥ സൈറ്റ്"
+
+msgid "Older posts"
+msgstr "പഴയ രചനകള്‍"
+
+msgid "Archive"
+msgstr "ആര്‍കൈവ്"
+
+msgid "Publication date"
+msgstr "പ്രസിദ്ധീകരിച്ച തീയതി"
+
+msgid "Posted:"
+msgstr "എഴുതിയത്:"
+
+msgid "Posts for {month_year}"
+msgstr "{month_year} ലെ രചനകള്‍"
+
+msgid "Posts for {month_day_year}"
+msgstr "{month_day_year} ലെ രചനകള്‍"
+
+msgid "Nothing found."
+msgstr "ഒന്നും ലഭ്യമല്ല."
+
+msgid "No posts found."
+msgstr "രചനകള്‍ ലഭ്യമല്ല."
+
+msgid "RSS feed"
+msgstr "ആര്‍ എസ് എസ് ഫീഡ്"
+
+msgid "%d min remaining to read"
+msgstr "%d മിനിട്ട് കൂടി വായിച്ചു തീരാന്‍  "
+
+msgid "Skip to main content"
+msgstr "പ്രധാന ഉള്ളടക്കത്തിലേക്ക് നേരെ പോവുക"
+
+msgid "Subcategories:"
+msgstr "ഉപവിഭാഗങ്ങള്‍:"
+
+#. Used for active navigation links, for screen readers only
+msgid "(active)"
+msgstr "(സജീവം)"
+
+#. Default content for a new post
+msgid "Write your post here."
+msgstr "താങ്കളുടെ രചന ഇവിടെ എഴുതുക."
+
+#. Default content for a new page
+msgid "Write your page here."
+msgstr "താങ്കളുടെ താള്‍ ഇവിടെ എഴുതുക."
+
+msgid "Uncategorized"
+msgstr "വേര്‍തിരിക്കാത്തവ"
+
+#. Used for feeds of any format
+msgid "Updates"
+msgstr "അപ്ഡേറ്റുകൾ"
+
+msgid "Authors"
+msgstr "രചയിതാക്കള്‍"
+
+msgid "Posts by %s"
+msgstr "%s എഴുതിയ രചനകള്‍"
+
+msgid "Toggle navigation"
+msgstr "നാവിഗേഷൻ മാറ്റുക"
+
+msgid "Previous"
+msgstr "കഴിഞ്ഞത്"
+
+msgid "Up"
+msgstr "മുകളിലേക്ക്"
+
+msgid "Next"
+msgstr "അടുത്തത്"
+
+msgid "Atom feed"
+msgstr "ആറ്റം ഫിഡ്"
+
+#. {date} (updated {updated_date})
+msgid "updated"
+msgstr "പുതുക്കിയത്"
