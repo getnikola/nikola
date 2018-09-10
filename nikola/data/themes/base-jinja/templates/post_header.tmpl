@@ -42,7 +42,7 @@
             <a href="{{ post.permalink() }}" rel="bookmark">
             <time class="published dt-published" datetime="{{ post.formatted_date('webiso') }}" itemprop="datePublished" title="{{ post.formatted_date(date_format)|e }}">{{ post.formatted_date(date_format)|e }}</time>
             {% if post.updated and post.updated != post.date %}
-                <span class="updated">({{ messages("updated") }}
+                <span class="updated"> ({{ messages("updated") }}
                     <time class="updated dt-updated" datetime="{{ post.formatted_updated('webiso') }}" itemprop="dateUpdated" title="{{ post.formatted_updated(date_format)|e }}">{{ post.formatted_updated(date_format)|e }}</time>)</span>
             {% endif %}
             </a>

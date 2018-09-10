@@ -9,7 +9,7 @@
 Using Alternative Social Buttons with Nikola
 ============================================
 
-:Version: 8.0.0rc1
+:Version: 8.0.0
 
 .. class:: alert alert-primary float-md-right
 
