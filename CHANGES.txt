@@ -1,3 +1,15 @@
+New in master
+=============
+
+Features
+--------
+
+Bugfixes
+--------
+
+* Fix docinfo removal for sites that use reST docinfo metadata
+  (Issue #3167)
+
 New in v8.0.0
 =============
 
