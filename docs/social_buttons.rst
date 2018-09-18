@@ -1,13 +1,10 @@
-.. title: Alternative Social Buttons
+.. title: Using Alternative Social Buttons with Nikola
 .. slug: social_buttons
 .. date: 2013-08-19 23:00:00 UTC-03:00
 .. tags:
 .. link:
 .. description:
 .. author: The Nikola Team
-
-Using Alternative Social Buttons with Nikola
-============================================
 
 :Version: 8.0.0
 

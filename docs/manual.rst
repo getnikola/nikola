@@ -7,9 +7,6 @@
 .. has_math: true
 .. author: The Nikola Team
 
-The Nikola Handbook
-===================
-
 :Version: 8.0.0
 
 .. class:: alert alert-primary float-md-right
