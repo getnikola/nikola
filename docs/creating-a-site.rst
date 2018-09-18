@@ -1,13 +1,10 @@
+.. title: Creating a Site (Not a Blog) with Nikola
 .. slug: creating-a-site-not-a-blog-with-nikola
 .. date: 2015-01-10 10:00:00 UTC
 .. tags: nikola, python
 .. link:
 .. description:
-.. title: Creating a Site (Not a Blog) with Nikola
 .. author: The Nikola Team
-
-Creating a Site (Not a Blog) with Nikola
-========================================
 
 .. class:: lead
 

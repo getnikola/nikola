@@ -6,9 +6,6 @@
 .. description:
 .. author: The Nikola Team
 
-Nikola Internals
-================
-
 .. class:: lead
 
 When trying to guide someone into adding a feature in Nikola, it hit me that
@@ -97,7 +94,7 @@ posts are added into RSS feeds and pages are not. All of them are in a list call
 
 When you are creating a task that needs the list of posts and/or pages (for example,
 the RSS creation plugin) on task execution time, your plugin should call ``self.site.scan_posts()``
-in ``gen_tasks`` to ensure the timeline is created and available in 
+in ``gen_tasks`` to ensure the timeline is created and available in
 ``self.site.timeline``. You should not modify the timeline, because it will cause consistency issues.
 
 .. sidebar:: scan_posts

@@ -6,9 +6,6 @@
 .. description:
 .. author: The Nikola Team
 
-Theming Nikola
-==============
-
 :Version: 8.0.0
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 

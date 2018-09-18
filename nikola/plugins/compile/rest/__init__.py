@@ -125,7 +125,7 @@ class CompileRest(PageCompiler):
             'math_output': 'mathjax /assets/js/mathjax.js',
             'template': default_template_path,
             'language_code': LEGAL_VALUES['DOCUTILS_LOCALES'].get(LocaleBorg().current_lang, 'en'),
-            'doctitle_xform': not self.site.config.get('USE_REST_DOCINFO_METADATA'),
+            'doctitle_xform': self.site.config.get('USE_REST_DOCINFO_METADATA'),
         }
 
         from nikola import shortcodes as sc

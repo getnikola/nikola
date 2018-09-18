@@ -842,12 +842,12 @@ class Nikola(object):
                 metadata_extractors.DEFAULT_EXTRACTOR_NAME))
             sys.exit(1)
 
-        # The pelican metadata format requires a markdown extension
+        # The Pelican metadata format requires a markdown extension
         if config.get('METADATA_FORMAT', 'nikola').lower() == 'pelican':
             if 'markdown.extensions.meta' not in config.get('MARKDOWN_EXTENSIONS', []) \
                     and 'markdown' in self.config['COMPILERS']:
                 utils.LOGGER.warn(
-                    'To use the pelican metadata format you need to add '
+                    'To use the Pelican metadata format, you need to add '
                     '"markdown.extensions.meta" to your MARKDOWN_EXTENSIONS setting.')
 
         # We use one global tzinfo object all over Nikola.

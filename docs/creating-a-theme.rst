@@ -7,9 +7,6 @@
 .. description:
 .. type: text
 
-Creating a Theme
-================
-
 Nikola is a static site and blog generator. So is Jekyll. While I like what we have done with Nikola,
 I do admit that Jekyll (and others!) have many more, and nicer themes than Nikola does.
 
