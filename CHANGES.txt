@@ -7,6 +7,7 @@ Features
 Bugfixes
 --------
 
+* Set logging level for reST to warning in order to limit noise
 * Fix docinfo removal for sites that use reST docinfo metadata
   (Issue #3167)
 

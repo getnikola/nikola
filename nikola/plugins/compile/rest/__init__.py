@@ -189,6 +189,9 @@ class CompileRest(PageCompiler):
             self.config_dependencies.append(plugin_info.name)
             plugin_info.plugin_object.short_help = plugin_info.description
 
+        if not site.debug:
+            self.logger.level = logbook.base.WARNING
+
 
 def get_observer(settings):
     """Return an observer for the docutils Reporter."""
