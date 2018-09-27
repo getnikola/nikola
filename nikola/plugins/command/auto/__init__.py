@@ -238,13 +238,13 @@ class CommandAuto(Command):
 
         host, port = srv.sockets[0].getsockname()
 
-        self.logger.info("Serving HTTP on {0} port {1}...".format(host, port))
-        if browser:
-            if options['ipv6'] or '::' in host:
-                server_url = "http://[{0}]:{1}/".format(host, port)
-            else:
-                server_url = "http://{0}:{1}/".format(host, port)
+        if options['ipv6'] or '::' in host:
+            server_url = "http://[{0}]:{1}/".format(host, port)
+        else:
+            server_url = "http://{0}:{1}/".format(host, port)
+        self.logger.info("Serving on {0} ...".format(server_url))
 
+        if browser:
             self.logger.info("Opening {0} in the default web browser...".format(server_url))
             webbrowser.open('http://{0}:{1}'.format(host, port))
 

@@ -4,6 +4,9 @@ New in master
 Features
 --------
 
+* Make URL displayed by ``nikola auto`` and ``nikola serve`` clickable
+  (Issue #3166)
+
 Bugfixes
 --------
 
