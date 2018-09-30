@@ -1,5 +1,8 @@
-New in master
+New in v8.0.1
 =============
+
+* Not compatible with Markdown 3.x yet, this release pins the
+  requirement down to 2.x (until we get 3.x support done)
 
 Features
 --------

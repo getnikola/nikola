@@ -96,7 +96,7 @@ class nikola_install(install):
 
 
 setup(name='Nikola',
-      version='8.0.0',
+      version='8.0.1',
       description='A modular, fast, simple, static website and blog generator',
       long_description=open('README.rst').read(),
       author='Roberto Alsina and others',

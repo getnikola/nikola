@@ -1,7 +1,7 @@
 /*!
  * baguetteBox.js
  * @author  feimosi
- * @version 1.10.0
+ * @version 1.11.0
  * @url https://github.com/feimosi/baguetteBox.js
  */
 
@@ -307,6 +307,12 @@
         case 27: // Esc
             hideOverlay();
             break;
+        case 36: // Home
+            showFirstImage(event);
+            break;
+        case 35: // End
+            showLastImage(event);
+            break;
         }
     }
 
@@ -482,7 +488,9 @@
         overlay.className = '';
         setTimeout(function() {
             overlay.style.display = 'none';
-            exitFullscreen();
+            if (document.fullscreen) {
+                exitFullscreen();
+            }
             if (options.bodyClass && document.body.classList) {
                 document.body.classList.remove(options.bodyClass);
             }
@@ -598,6 +606,22 @@
         return show(currentIndex - 1);
     }
 
+    // Return false at the left end of the gallery
+    function showFirstImage(event) {
+        if (event) {
+            event.preventDefault();
+        }
+        return show(0);
+    }
+
+    // Return false at the right end of the gallery
+    function showLastImage(event) {
+        if (event) {
+            event.preventDefault();
+        }
+        return show(currentGallery.length - 1);
+    }
+
     /**
      * Move the gallery to a specific index
      * @param `index` {number} - the position of the image
@@ -679,6 +703,7 @@
     }
 
     // Borrowed from https://github.com/seiyria/bootstrap-slider/pull/680/files
+    /* eslint-disable getter-return */
     function testPassiveEventsSupport() {
         var passiveEvents = false;
         try {
@@ -692,6 +717,7 @@
 
         return passiveEvents;
     }
+    /* eslint-enable getter-return */
 
     function preloadNext(index) {
         if (index - currentIndex >= options.preload) {
