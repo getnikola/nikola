@@ -27,7 +27,6 @@
 """Print Nikola version."""
 
 
-import lxml
 import requests
 
 from nikola.plugin_categories import Command
