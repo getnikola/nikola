@@ -8,7 +8,7 @@ from setuptools.command.install import install
 
 
 with open('requirements.txt', 'r') as fh:
-    dependencies = [l.strip() for l in fh]
+    dependencies = [l.strip().split("#")[0] for l in fh]
 
 extras = {}
 
