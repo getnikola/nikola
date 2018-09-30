@@ -33,7 +33,7 @@ import requests
 from nikola.plugin_categories import Command
 from nikola import __version__
 
-URL = 'https://pypi.python.org/pypi?:action=doap&name=Nikola'
+URL = 'https://pypi.org/pypi/Nikola/json'
 
 
 class CommandVersion(Command):
@@ -59,10 +59,11 @@ class CommandVersion(Command):
         """Print the version number."""
         print("Nikola v" + __version__)
         if options.get('check'):
-            data = requests.get(URL).text
-            doc = lxml.etree.fromstring(data.encode('utf8'))
-            revision = doc.findall('*//{http://usefulinc.com/ns/doap#}revision')[0].text
-            if revision == __version__:
+            data = requests.get(URL).json()
+            pypi_version = data['info']['version']
+            if pypi_version == __version__:
                 print("Nikola is up-to-date")
             else:
-                print("The latest version of Nikola is v{0} -- please upgrade using `pip install --upgrade Nikola=={0}` or your system package manager".format(revision))
+                print("The latest version of Nikola is v{0}. Please upgrade "
+                      "using `pip install --upgrade Nikola=={0}` or your "
+                      "system package manager.".format(pypi_version))

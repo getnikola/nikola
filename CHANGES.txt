@@ -10,6 +10,7 @@ Features
 Bugfixes
 --------
 
+* Make ``nikola version --check`` work again (Issue #3170)
 * Set logging level for reST to warning in order to limit noise
 * Fix docinfo removal for sites that use reST docinfo metadata
   (Issue #3167)
