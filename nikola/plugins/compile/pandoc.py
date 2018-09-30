@@ -55,7 +55,7 @@ class CompilePandoc(PageCompiler):
         try:
             subprocess.check_call(['pandoc', '-o', dest, source] + self.site.config['PANDOC_OPTIONS'])
             with open(dest, 'r', encoding='utf-8') as inf:
-                output, shortcode_deps = self.site.apply_shortcodes(inf.read(), with_dependencies=True)
+                output, shortcode_deps = self.site.apply_shortcodes(inf.read())
             with open(dest, 'w', encoding='utf-8') as outf:
                 outf.write(output)
             if post is None:
