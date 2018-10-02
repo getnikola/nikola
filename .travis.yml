@@ -17,6 +17,11 @@ python:
 - '3.6'
 matrix:
   include:
+  - language: python
+    sudo: required
+    dist: xenial
+    python: '3.7'
+  include:
   - os: osx
     language: generic
     env: NMODE=nikola OS=macOS
