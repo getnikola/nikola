@@ -74,7 +74,8 @@ except ImportError:
     pass
 
 from blinker import signal
-from collections import defaultdict, Callable, OrderedDict, Iterable
+from collections import defaultdict, OrderedDict
+from collections.abc import Callable, Iterable
 from importlib import reload as _reload
 from logbook.compat import redirect_logging
 from logbook.more import ExceptionHandler, ColorizedStderrHandler
