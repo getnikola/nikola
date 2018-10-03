@@ -67,14 +67,14 @@ class NikolaExtension(MarkdownExtension, Extension):
     def _add_nikola_post_processor(self, md):
         """Extend Markdown with the postprocessor."""
         pp = NikolaPostProcessor()
-        md.postprocessors.add('nikola_post_processor', pp, '_end')
+        md.postprocessors.register(pp, 'nikola_post_processor', 1)
 
     def _add_strikethrough_inline_pattern(self, md):
         """Support PHP-Markdown style strikethrough, for example: ``~~strike~~``."""
         pattern = SimpleTagPattern(STRIKE_RE, 'del')
-        md.inlinePatterns.add('strikethrough', pattern, '_end')
+        md.inlinePatterns.register(pattern, 'strikethrough', 175)
 
-    def extendMarkdown(self, md, md_globals):
+    def extendMarkdown(self, md, md_globals=None):
         """Extend markdown to Nikola flavours."""
         self._add_nikola_post_processor(md)
         self._add_strikethrough_inline_pattern(md)

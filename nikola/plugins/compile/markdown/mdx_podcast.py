@@ -79,11 +79,11 @@ class PodcastExtension(MarkdownExtension, Extension):
         for key, value in configs:
             self.setConfig(key, value)
 
-    def extendMarkdown(self, md, md_globals):
+    def extendMarkdown(self, md, md_globals=None):
         """Extend Markdown."""
         podcast_md_pattern = PodcastPattern(PODCAST_RE, self.getConfigs())
         podcast_md_pattern.md = md
-        md.inlinePatterns.add('podcast', podcast_md_pattern, "<not_strong")
+        md.inlinePatterns.register(podcast_md_pattern, 'podcast', 175)
         md.registerExtension(self)
 
 
