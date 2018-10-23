@@ -66,7 +66,7 @@ Part 4: assets
 ShareNice
 ---------
 
-`Sharenice <http://sharenice.org>`__ is "written in order to provide social sharing features to
+`ShareNice <https://graingert.co.uk/shareNice/>`__ is "written in order to provide social sharing features to
 web developers and website administrators who wish to maintain and protect their users' privacy"
 which sounds cool to me.
 
@@ -114,7 +114,7 @@ One bad bit of this so far is that you are now using a script from another site,
 doesn't let Nikola perform as many optimizations to your page as it could.
 So, if you really want to go the extra mile to save a few KB and round trips, you *could*
 install your own copy from the `github repo <https://github.com/mischat/shareNice>`_ and
-use that instead of the copy at sharenice.org.
+use that instead of the copy at `ShareNice <http://graingert.co.uk/shareNice>`_.
 
 Then, you can create your own theme inheriting from the one you are using and add the CSS
 and JS files from ShareNice into your ``bundles`` configuration so they are combined and
