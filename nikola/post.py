@@ -282,7 +282,7 @@ class Post(object):
             if status:
                 if status == 'published':
                     pass  # already set before, mixing published + something else should result in the other thing
-                if status == 'featured':
+                elif status == 'featured':
                     self.post_status = status
                 elif status == 'private':
                     self.post_status = status
