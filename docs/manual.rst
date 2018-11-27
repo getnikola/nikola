@@ -2929,11 +2929,6 @@ to your content.
 Nikola supports `Twitter Cards <https://dev.twitter.com/docs/cards>`_.
 They are implemented to use *Open Graph* tags whenever possible.
 
-.. admonition:: Important
-
-    To use Twitter Cards you need to opt-in on Twitter.
-    To do so, please visit https://cards-dev.twitter.com/validator
-
 Images displayed come from the `previewimage` meta tag.
 
 You can specify the card type by using the `card` parameter in TWITTER_CARD.

@@ -1178,10 +1178,6 @@ MARKDOWN_EXTENSIONS = ['markdown.extensions.fenced_code', 'markdown.extensions.c
 # They make it possible for you to attach media to Tweets that link
 # to your content.
 #
-# IMPORTANT:
-# Please note, that you need to opt-in for using Twitter Cards!
-# To do this please visit https://cards-dev.twitter.com/validator
-#
 # Uncomment and modify to following lines to match your accounts.
 # Images displayed come from the `previewimage` meta tag.
 # You can specify the card type by using the `card` parameter in TWITTER_CARD.

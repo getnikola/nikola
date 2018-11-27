@@ -6,6 +6,8 @@ Bugfixes
 
 * Don’t warn if post status is set to ``published`` explicitly
   (Issue #3181)
+* Remove mention of Twitter cards requiring an opt-in.
+  This is not true anymore - anyone can use them.
 
 New in v8.0.1
 =============
