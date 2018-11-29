@@ -74,7 +74,8 @@ except ImportError:
     pass
 
 from blinker import signal
-from collections import defaultdict, Callable, OrderedDict, Iterable
+from collections import defaultdict, OrderedDict
+from collections.abc import Callable, Iterable
 from importlib import reload as _reload
 from logbook.compat import redirect_logging
 from logbook.more import ExceptionHandler, ColorizedStderrHandler
@@ -1103,6 +1104,40 @@ class LocaleBorgUninitializedException(Exception):
         super(LocaleBorgUninitializedException, self).__init__("Attempt to use LocaleBorg before initialization")
 
 
+# Customized versions of babel.dates functions that don't do weird stuff with
+# timezones. Without these fixes, DST would follow local settings (because
+# dateutil’s timezones return stuff depending on their input, and datetime.time
+# objects have no year/month/day to base the information on.
+def format_datetime(datetime=None, format='medium',
+                    locale=babel.dates.LC_TIME):
+    "Format a datetime object."""
+    locale = babel.dates.Locale.parse(locale)
+    if format in ('full', 'long', 'medium', 'short'):
+        return babel.dates.get_datetime_format(format, locale=locale) \
+            .replace("'", "") \
+            .replace('{0}', format_time(datetime, format, locale=locale)) \
+            .replace('{1}', babel.dates.format_date(datetime, format, locale=locale))
+    else:
+        return babel.dates.parse_pattern(format).apply(datetime, locale)
+
+
+def format_time(time=None, format='medium', locale=babel.dates.LC_TIME):
+    """Format time. Input can be datetime.time or datetime.datetime."""
+    locale = babel.dates.Locale.parse(locale)
+    if format in ('full', 'long', 'medium', 'short'):
+        format = babel.dates.get_time_format(format, locale=locale)
+    return babel.dates.parse_pattern(format).apply(time, locale)
+
+def format_skeleton(skeleton, datetime=None, fo=None, fuzzy=True,
+        locale=babel.dates.LC_TIME):
+    """Format a datetime based on a skeleton."""
+    locale = babel.dates.Locale.parse(locale)
+    if fuzzy and skeleton not in locale.datetime_skeletons:
+        skeleton = babel.dates.match_skeleton(skeleton, locale.datetime_skeletons)
+    format = locale.datetime_skeletons[skeleton]
+    return format_datetime(datetime, format, locale)
+
+
 class LocaleBorg(object):
     """Provide locale related services and autoritative current_lang.
 
@@ -1208,7 +1243,7 @@ class LocaleBorg(object):
         elif LocaleBorg.datetime_formatter is not None:
             return LocaleBorg.datetime_formatter(date, date_format, lang, locale)
         else:
-            return babel.dates.format_datetime(date, date_format, locale=locale)
+            return format_datetime(date, date_format, locale=locale)
 
     def format_date_in_string(self, message: str, date: datetime.date, lang: 'typing.Optional[str]' = None) -> str:
         """Format date inside a string (message).
@@ -1236,7 +1271,7 @@ class LocaleBorg(object):
             else:
                 function, fmt = modes[mode]
                 if function == 'skeleton':
-                    return babel.dates.format_skeleton(fmt, date, locale=locale)
+                    return format_skeleton(fmt, date, locale=locale)
                 else:
                     return babel.dates.format_date(date, fmt, locale)
 
