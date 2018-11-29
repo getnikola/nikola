@@ -6,7 +6,7 @@ u"""Test shortcodes."""
 
 import pytest
 from nikola import shortcodes
-from .base import FakeSite, BaseTestCase
+from .base import FakeSite
 
 
 def noargs(site, data='', lang=''):
@@ -55,7 +55,7 @@ def test_arg_keyword(fakesite):
         'test({{% arg 1a=2b %}})', fakesite.shortcode_registry)[0] == "test(arg ()/[('1a', '2b')]/)"
     assert shortcodes.apply_shortcodes(
         'test({{% arg 1a="2b 3c" 4d=5f %}})', fakesite.shortcode_registry)[0] == "test(arg ()/[('1a', '2b 3c'), ('4d', '5f')]/)"
-    assert shortcodes.apply_shortcodes('test({{% arg 1a="2b 3c" 4d=5f back=slash\ slash %}})',
+    assert shortcodes.apply_shortcodes('test({{% arg 1a="2b 3c" 4d=5f back=slash\\ slash %}})',
                                        fakesite.shortcode_registry)[0] == "test(arg ()/[('1a', '2b 3c'), ('4d', '5f'), ('back', 'slash slash')]/)"
 
 
@@ -70,85 +70,51 @@ def test_data(fakesite):
                                        fakesite.shortcode_registry)[0] == "test(arg ('123 foo', 'foobar')/[('baz', 'quotes rock.'), ('foo', 'bar')]/Hello test suite!!)"
 
 
-class TestErrors(BaseTestCase):
-    def setUp(self):
-        self.fakesite = fakesite()
+def test_errors(fakesite):
+    with pytest.raises(shortcodes.ParsingError, match="^Shortcode 'start' starting at .* is not terminated correctly with '%}}'!"):
+        shortcodes.apply_shortcodes('{{% start', fakesite.shortcode_registry, raise_exceptions=True)
 
-    def test_errors(self):
-        self.assertRaisesRegexp(
-            shortcodes.ParsingError,
-            "^Shortcode 'start' starting at .* is not terminated correctly with '%}}'!",
-            shortcodes.apply_shortcodes, '{{% start', self.fakesite.
-            shortcode_registry, raise_exceptions=True)
-        self.assertRaisesRegexp(
-            shortcodes.ParsingError,
-            "^Syntax error in shortcode 'wrong' at .*: expecting whitespace!",
-            shortcodes.apply_shortcodes, '{{% wrong ending %%}', self.fakesite.
-            shortcode_registry, raise_exceptions=True)
-        self.assertRaisesRegexp(
-            shortcodes.ParsingError,
-            "^Found shortcode ending '{{% /end %}}' which isn't closing a started shortcode",
-            shortcodes.apply_shortcodes, '{{% start %}} {{% /end %}}', self.
-            fakesite.shortcode_registry, raise_exceptions=True)
-        self.assertRaisesRegexp(
-            shortcodes.ParsingError, "^Unexpected end of unquoted string",
-            shortcodes.apply_shortcodes, '{{% start "asdf %}}', self.fakesite.
-            shortcode_registry, raise_exceptions=True)
-        self.assertRaisesRegexp(shortcodes.ParsingError,
-                                "^String starting at .* must be non-empty!",
-                                shortcodes.apply_shortcodes,
-                                '{{% start =b %}}', self.fakesite.
-                                shortcode_registry, raise_exceptions=True)
-        self.assertRaisesRegexp(shortcodes.ParsingError,
-                                "^Unexpected end of data while escaping",
-                                shortcodes.apply_shortcodes, '{{% start "a\\',
-                                self.fakesite.shortcode_registry,
-                                raise_exceptions=True)
-        self.assertRaisesRegexp(shortcodes.ParsingError,
-                                "^Unexpected end of data while escaping",
-                                shortcodes.apply_shortcodes, '{{% start a\\',
-                                self.fakesite.shortcode_registry,
-                                raise_exceptions=True)
-        self.assertRaisesRegexp(shortcodes.ParsingError,
-                                "^Unexpected quotation mark in unquoted string",
-                                shortcodes.apply_shortcodes,
-                                '{{% start a"b" %}}', self.fakesite.
-                                shortcode_registry, raise_exceptions=True)
-        self.assertRaisesRegexp(
-            shortcodes.ParsingError,
-            "^Syntax error in shortcode 'start' at .*: expecting whitespace!",
-            shortcodes.apply_shortcodes, '{{% start "a"b %}}', self.fakesite.
-            shortcode_registry, raise_exceptions=True)
-        self.assertRaisesRegexp(
-            shortcodes.ParsingError,
-            "^Syntax error: '{{%' must be followed by shortcode name",
-            shortcodes.apply_shortcodes, '{{% %}}', self.fakesite.
-            shortcode_registry, raise_exceptions=True)
-        self.assertRaisesRegexp(
-            shortcodes.ParsingError,
-            "^Syntax error: '{{%' must be followed by shortcode name",
-            shortcodes.apply_shortcodes, '{{%', self.fakesite.
-            shortcode_registry, raise_exceptions=True)
-        self.assertRaisesRegexp(
-            shortcodes.ParsingError,
-            "^Syntax error: '{{%' must be followed by shortcode name",
-            shortcodes.apply_shortcodes, '{{% ', self.fakesite.
-            shortcode_registry, raise_exceptions=True)
-        self.assertRaisesRegexp(
-            shortcodes.ParsingError,
-            "^Found shortcode ending '{{% / %}}' which isn't closing a started shortcode",
-            shortcodes.apply_shortcodes, '{{% / %}}', self.fakesite.
-            shortcode_registry, raise_exceptions=True)
-        self.assertRaisesRegexp(shortcodes.ParsingError,
-                                "^Syntax error: '{{% /' must be followed by ' %}}'",
-                                shortcodes.apply_shortcodes, '{{% / a %}}',
-                                self.fakesite.shortcode_registry,
-                                raise_exceptions=True)
-        self.assertRaisesRegexp(
-            shortcodes.ParsingError,
-            "^Shortcode '<==' starting at .* is not terminated correctly with '%}}'!",
-            shortcodes.apply_shortcodes, '==> {{% <==', self.fakesite.
-            shortcode_registry, raise_exceptions=True)
+    with pytest.raises(shortcodes.ParsingError, match="^Syntax error in shortcode 'wrong' at .*: expecting whitespace!"):
+        shortcodes.apply_shortcodes('{{% wrong ending %%}', fakesite.shortcode_registry, raise_exceptions=True)
+
+    with pytest.raises(shortcodes.ParsingError, match="^Found shortcode ending '{{% /end %}}' which isn't closing a started shortcode"):
+        shortcodes.apply_shortcodes('{{% start %}} {{% /end %}}', fakesite.shortcode_registry, raise_exceptions=True)
+
+    with pytest.raises(shortcodes.ParsingError, match="^Unexpected end of unquoted string"):
+        shortcodes.apply_shortcodes('{{% start "asdf %}}', fakesite.shortcode_registry, raise_exceptions=True)
+
+    with pytest.raises(shortcodes.ParsingError, match="^String starting at .* must be non-empty!"):
+        shortcodes.apply_shortcodes('{{% start =b %}}', fakesite.shortcode_registry, raise_exceptions=True)
+
+    with pytest.raises(shortcodes.ParsingError, match="^Unexpected end of data while escaping"):
+        shortcodes.apply_shortcodes('{{% start "a\\', fakesite.shortcode_registry, raise_exceptions=True)
+
+    with pytest.raises(shortcodes.ParsingError, match="^Unexpected end of data while escaping"):
+        shortcodes.apply_shortcodes('{{% start a\\', fakesite.shortcode_registry, raise_exceptions=True)
+
+    with pytest.raises(shortcodes.ParsingError, match="^Unexpected quotation mark in unquoted string"):
+        shortcodes.apply_shortcodes('{{% start a"b" %}}', fakesite.shortcode_registry, raise_exceptions=True)
+
+    with pytest.raises(shortcodes.ParsingError, match="^Syntax error in shortcode 'start' at .*: expecting whitespace!"):
+        shortcodes.apply_shortcodes('{{% start "a"b %}}', fakesite.shortcode_registry, raise_exceptions=True)
+
+    with pytest.raises(shortcodes.ParsingError, match="^Syntax error: '{{%' must be followed by shortcode name"):
+        shortcodes.apply_shortcodes('{{% %}}', fakesite.shortcode_registry, raise_exceptions=True)
+
+    with pytest.raises(shortcodes.ParsingError, match="^Syntax error: '{{%' must be followed by shortcode name"):
+        shortcodes.apply_shortcodes('{{%', fakesite.shortcode_registry, raise_exceptions=True)
+
+    with pytest.raises(shortcodes.ParsingError, match="^Syntax error: '{{%' must be followed by shortcode name"):
+        shortcodes.apply_shortcodes('{{% ', fakesite.shortcode_registry, raise_exceptions=True)
+
+    with pytest.raises(shortcodes.ParsingError, match="^Found shortcode ending '{{% / %}}' which isn't closing a started shortcode"):
+        shortcodes.apply_shortcodes('{{% / %}}', fakesite.shortcode_registry, raise_exceptions=True)
+
+    with pytest.raises(shortcodes.ParsingError, match="^Syntax error: '{{% /' must be followed by ' %}}'"):
+        shortcodes.apply_shortcodes('{{% / a %}}', fakesite.shortcode_registry, raise_exceptions=True)
+
+    with pytest.raises(shortcodes.ParsingError, match="^Shortcode '<==' starting at .* is not terminated correctly with '%}}'!"):
+        shortcodes.apply_shortcodes('==> {{% <==', fakesite.shortcode_registry, raise_exceptions=True)
 
 
 @pytest.mark.parametrize(
