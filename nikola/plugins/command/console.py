@@ -100,7 +100,7 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
         """Run a bpython shell."""
         try:
             import bpython
-        except ImportError as e:
+        except ImportError:
             if willful:
                 req_missing(['bpython'], 'use the bpython console')
             raise  # That’s how _execute knows whether to try something else.

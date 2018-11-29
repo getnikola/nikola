@@ -254,7 +254,7 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
             # Comment out any <base> to allow local resolution of relative URLs.
             data = f.read().decode('utf8')
             f.close()
-            data = re.sub(r'<base\s([^>]*)>', '<!--base \g<1>-->', data, flags=re.IGNORECASE)
+            data = re.sub(r'<base\s([^>]*)>', r'<!--base \g<1>-->', data, flags=re.IGNORECASE)
             data = data.encode('utf8')
             f = StringIO()
             f.write(data)

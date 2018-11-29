@@ -45,7 +45,7 @@ def test_arg_pos(fakesite):
     assert shortcodes.apply_shortcodes(
         'test({{% arg "hello world" %}})', fakesite.shortcode_registry)[0] == "test(arg ('hello world',)/[]/)"
     assert shortcodes.apply_shortcodes(
-        'test({{% arg back\ slash arg2 %}})', fakesite.shortcode_registry)[0] == "test(arg ('back slash', 'arg2')/[]/)"
+        'test({{% arg back\\ slash arg2 %}})', fakesite.shortcode_registry)[0] == "test(arg ('back slash', 'arg2')/[]/)"
     assert shortcodes.apply_shortcodes(
         'test({{% arg "%}}" %}})', fakesite.shortcode_registry)[0] == "test(arg ('%}}',)/[]/)"
 

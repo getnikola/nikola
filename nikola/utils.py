@@ -1110,7 +1110,7 @@ class LocaleBorgUninitializedException(Exception):
 # objects have no year/month/day to base the information on.
 def format_datetime(datetime=None, format='medium',
                     locale=babel.dates.LC_TIME):
-    "Format a datetime object."""
+    """Format a datetime object."""
     locale = babel.dates.Locale.parse(locale)
     if format in ('full', 'long', 'medium', 'short'):
         return babel.dates.get_datetime_format(format, locale=locale) \
@@ -1128,8 +1128,9 @@ def format_time(time=None, format='medium', locale=babel.dates.LC_TIME):
         format = babel.dates.get_time_format(format, locale=locale)
     return babel.dates.parse_pattern(format).apply(time, locale)
 
+
 def format_skeleton(skeleton, datetime=None, fo=None, fuzzy=True,
-        locale=babel.dates.LC_TIME):
+                    locale=babel.dates.LC_TIME):
     """Format a datetime based on a skeleton."""
     locale = babel.dates.Locale.parse(locale)
     if fuzzy and skeleton not in locale.datetime_skeletons:

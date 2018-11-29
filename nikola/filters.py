@@ -330,7 +330,7 @@ def typogrify_sans_widont(data):
 def php_template_injection(data):
     """Insert PHP code into Nikola templates."""
     import re
-    template = re.search('<\!-- __NIKOLA_PHP_TEMPLATE_INJECTION source\:(.*) checksum\:(.*)__ -->', data)
+    template = re.search(r'<\!-- __NIKOLA_PHP_TEMPLATE_INJECTION source\:(.*) checksum\:(.*)__ -->', data)
     if template:
         source = template.group(1)
         with io.open(source, "r", encoding="utf-8") as in_file:

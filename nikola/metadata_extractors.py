@@ -28,6 +28,7 @@
 
 import re
 import natsort
+import nikola.nikola
 
 from enum import Enum
 from nikola.plugin_categories import MetadataExtractor
@@ -97,7 +98,7 @@ def classify_extractor(extractor: MetadataExtractor, metadata_extractors_by: dic
     metadata_extractors_by['all'].append(extractor)
 
 
-def load_defaults(site: 'nikola.nikola.Nikola', metadata_extractors_by: dict):
+def load_defaults(site: nikola.nikola.Nikola, metadata_extractors_by: dict):
     """Load default metadata extractors."""
     for extractor in _default_extractors:
         extractor.site = site
