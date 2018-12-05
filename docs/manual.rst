@@ -2832,6 +2832,16 @@ dependency issues.
 If you are using this as a shortcode, flags (``reverse``, ``all``) are meant to be used
 with a ``True`` argument, eg. ``all=True``.
 
+.. sidebar:: Docutils Configuration
+
+   ReStructured Text is "compiled" by docutils, which supports a number of 
+   configuration options. It would be difficult to integrate them all into
+   Nikola's configuration, so you can just put a ``docutils.conf`` next
+   to your ``conf.py`` and it will be used.
+
+   More information in the `docutils configuration reference <http://docutils.sourceforge.net/docs/user/config.html>`__ 
+
+
 Importing your WordPress site into Nikola
 -----------------------------------------
 
