@@ -264,23 +264,20 @@ provided by plugins:
 
     $ nikola list
     Scanning posts....done!
-    build_bundles
-    build_less
     copy_assets
     copy_files
+    create_bundles
     post_render
     redirect
-    render_archive
     render_galleries
-    render_galleries_clean
-    render_indexes
     render_listings
     render_pages
     render_posts
-    render_rss
     render_site
     render_sources
-    render_tags
+    render_taxonomies
+    robots_file
+    scale_images
     sitemap
 
 These have access to the ``site`` object which contains your timeline and
