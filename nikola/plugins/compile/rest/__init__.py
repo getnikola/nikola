@@ -230,6 +230,8 @@ def get_observer(settings):
 class NikolaReader(docutils.readers.standalone.Reader):
     """Nikola-specific docutils reader."""
 
+    config_section = 'nikola'
+
     def __init__(self, *args, **kwargs):
         """Initialize the reader."""
         self.transforms = kwargs.pop('transforms', [])
@@ -303,7 +305,7 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
              destination_path=None, reader=None,
              parser=None, parser_name='restructuredtext', writer=None,
              writer_name='html', settings=None, settings_spec=None,
-             settings_overrides=None, config_section=None,
+             settings_overrides=None, config_section='nikola',
              enable_exit_status=None, logger=None, l_add_ln=0, transforms=None):
     """Set up & run a ``Publisher``, and return a dictionary of document parts.
 

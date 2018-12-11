@@ -2837,7 +2837,7 @@ with a ``True`` argument, eg. ``all=True``.
    ReStructured Text is "compiled" by docutils, which supports a number of 
    configuration options. It would be difficult to integrate them all into
    Nikola's configuration, so you can just put a ``docutils.conf`` next
-   to your ``conf.py`` and it will be used.
+   to your ``conf.py`` and any settings in its ``[nikola]`` section will be used.
 
    More information in the `docutils configuration reference <http://docutils.sourceforge.net/docs/user/config.html>`__ 
 
