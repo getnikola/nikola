@@ -9,6 +9,11 @@ Bugfixes
 * Remove mention of Twitter cards requiring an opt-in.
   This is not true anymore - anyone can use them.
 
+Features
+--------
+
+* Support for docutils.conf (Issue #3188)
+
 New in v8.0.1
 =============
 
