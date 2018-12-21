@@ -2,8 +2,8 @@
   var Timer;
 
   exports.Timer = Timer = (function() {
-    function Timer(func) {
-      this.func = func;
+    function Timer(func1) {
+      this.func = func1;
       this.running = false;
       this.id = null;
       this._handler = (function(_this) {
