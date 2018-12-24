@@ -3,7 +3,7 @@ function fancydates(fanciness, date_format) {
         return;
     }
 
-    var dates = document.querySelectorAll('.dt-published, .dt-updated');
+    var dates = document.querySelectorAll('.dt-published, .dt-updated, .listdate');
 
     var l = dates.length;
 
