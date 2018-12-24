@@ -8,6 +8,7 @@ Bugfixes
   (Issue #3181)
 * Remove mention of Twitter cards requiring an opt-in.
   This is not true anymore - anyone can use them.
+* fancydates now workwith listdate items (ex. archives)
 
 Features
 --------
