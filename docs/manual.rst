@@ -7,7 +7,7 @@
 .. has_math: true
 .. author: The Nikola Team
 
-:Version: 8.0.1
+:Version: 8.0.2
 
 .. class:: alert alert-primary float-md-right
 
@@ -1031,7 +1031,7 @@ Please note that tags are case-sensitive and that you cannot have two tags that 
    ERROR: Nikola: Tag Nikola is used in: posts/second-post.rst
    ERROR: Nikola: Tag nikola is used in: posts/1.rst
 
-You can also generate a tag cloud with the `tx3_tag_cloud <https://plugins.getnikola.com/v7/tx3_tag_cloud/>`_ plugin or get a data file for a tag cloud with the `tagcloud <https://plugins.getnikola.com/v7/tagcloud/>`_ plugin.
+You can also generate a tag cloud with the `tx3_tag_cloud <https://plugins.getnikola.com/v7/tx3_tag_cloud/>`_ plugin or get a data file for a tag cloud with the `tagcloud <https://plugins.getnikola.com/v8/tagcloud/>`_ plugin.
 
 Categories
 ``````````
