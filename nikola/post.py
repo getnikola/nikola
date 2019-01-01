@@ -1029,8 +1029,7 @@ def get_meta(post, lang):
     # If meta file exists, use it
     metafile_meta, used_extractor = get_metadata_from_meta_file(post.metadata_path, post, config, lang, metadata_extractors_by)
 
-    if not metafile_meta:
-        post.is_two_file = False
+    is_two_file = bool(metafile_meta)
 
     # Fetch compiler metadata.
     compiler_meta = {}
@@ -1042,7 +1041,7 @@ def get_meta(post, lang):
         meta.update(compiler_meta)
 
     # Meta files and inter-file metadata override compiler metadata
-    if not post.is_two_file:
+    if not metafile_meta:
         new_meta, used_extractor = get_metadata_from_file(post.source_path, post, config, lang, metadata_extractors_by)
         meta.update(new_meta)
     else:
@@ -1067,6 +1066,10 @@ def get_meta(post, lang):
             # If no title is found, use the filename without extension
             meta['title'] = os.path.splitext(
                 os.path.basename(post.source_path))[0]
+
+    # Set one-file status basing on default language only (Issue #3191)
+    if is_two_file or lang is None:
+        post.is_two_file = is_two_file
 
     return meta, used_extractor
 
