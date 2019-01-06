@@ -57,8 +57,8 @@ class CompileIPynb(PageCompiler):
     def _compile_string(self, nb_json):
         """Export notebooks as HTML strings."""
         self._req_missing_ipynb()
-        c = Config(self.site.config['IPYNB_CONFIG'])
-        c.update(get_default_jupyter_config())
+        c = Config(get_default_jupyter_config())
+        c.merge(Config(self.site.config['IPYNB_CONFIG']))
         if 'template_file' not in self.site.config['IPYNB_CONFIG'].get('Exporter', {}):
             c['Exporter']['template_file'] = 'basic.tpl'  # not a typo
         exportHtml = HTMLExporter(config=c)
