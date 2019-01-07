@@ -1,5 +1,5 @@
 -r requirements-extras.txt
 coverage>=4.5.1
-pytest>=3.7.4,<=4.0.2
-pytest-cov>=2.5.1
+pytest>=4.1.0
+pytest-cov>=2.6.1
 freezegun>=0.3.10
