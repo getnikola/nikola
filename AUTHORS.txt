@@ -78,6 +78,7 @@
 * `Michael Joseph <https://github.com/michaeljoseph>`_
 * `Michael McNeil Forbes <https://github.com/mforbes>`_
 * `Michal Petrucha <https://github.com/koniiiik>`_
+* `Mickaël Schoentgen <https://github.com/BoboTiG>`_
 * `Miguel Ángel García <https://github.com/magmax>`_
 * `Mitch Chapman <https://github.com/mchapman87501>`_
 * `mrabbitt <https://github.com/mrabbitt>`_
