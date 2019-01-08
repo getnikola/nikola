@@ -146,20 +146,19 @@ def runinplace(command, infile):
 def yui_compressor(infile, executable=None):
     """Run YUI Compressor on a file."""
     yuicompressor = executable
-    with open(os.devnull, 'w') as devnull:
-        if not yuicompressor:
-            try:
-                subprocess.call('yui-compressor', stdout=devnull, stderr=devnull)
-                yuicompressor = 'yui-compressor'
-            except Exception:
-                pass
-        if not yuicompressor:
-            try:
-                subprocess.call('yuicompressor', stdout=devnull, stderr=devnull)
-                yuicompressor = 'yuicompressor'
-            except Exception:
-                raise Exception("yui-compressor is not installed.")
-                return False
+    if not yuicompressor:
+        try:
+            subprocess.call('yui-compressor', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            yuicompressor = 'yui-compressor'
+        except Exception:
+            pass
+    if not yuicompressor:
+        try:
+            subprocess.call('yuicompressor', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            yuicompressor = 'yuicompressor'
+        except Exception:
+            raise Exception("yui-compressor is not installed.")
+            return False
 
     return runinplace('{} --nomunge %1 -o %2'.format(yuicompressor), infile)
 

@@ -10,9 +10,6 @@ Bugfixes
 * Remove mention of Twitter cards requiring an opt-in.
   This is not true anymore - anyone can use them.
 * fancydates now workwith listdate items (eg. archives)
-* Several ``ResourceWarning: unclosed file``.
-  Also uniformize usage of the ``with`` context manager to
-  prevent resource leaks.
 
 Features
 --------
