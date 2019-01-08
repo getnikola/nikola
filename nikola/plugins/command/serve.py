@@ -252,8 +252,8 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
         filtered_bytes = None
         if ctype == 'text/html':
             # Comment out any <base> to allow local resolution of relative URLs.
-            data = f.read().decode('utf8')
-            f.close()
+            with f:
+                data = f.read().decode('utf8')
             data = re.sub(r'<base\s([^>]*)>', r'<!--base \g<1>-->', data, flags=re.IGNORECASE)
             data = data.encode('utf8')
             f = StringIO()

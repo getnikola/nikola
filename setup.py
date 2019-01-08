@@ -34,6 +34,9 @@ standard_exclude = ('*.pyc', '*$py.class', '*~', '.*', '*.bak')
 standard_exclude_directories = ('.*', 'CVS', '_darcs', './build',
                                 './dist', 'EGG-INFO', '*.egg-info')
 
+with open('README.rst') as f:
+    long_description = f.read()
+
 
 def copy_messages():
     themes_directory = os.path.join(
@@ -98,7 +101,7 @@ class nikola_install(install):
 setup(name='Nikola',
       version='8.0.1',
       description='A modular, fast, simple, static website and blog generator',
-      long_description=open('README.rst').read(),
+      long_description=long_description,
       author='Roberto Alsina and others',
       author_email='ralsina@netmanagers.com.ar',
       url='https://getnikola.com/',

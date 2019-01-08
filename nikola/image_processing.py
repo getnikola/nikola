@@ -188,8 +188,8 @@ class ImageProcessor(object):
                 op = gzip.GzipFile(dst, 'wb')
             else:
                 op = open(dst, 'wb')
-            op.write(lxml.etree.tostring(tree))
-            op.close()
+            with op:
+                op.write(lxml.etree.tostring(tree))
         except (KeyError, AttributeError) as e:
             self.logger.warn("No width/height in %s. Original exception: %s" % (src, e))
             utils.copy_file(src, dst)
