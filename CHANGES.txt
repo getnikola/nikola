@@ -4,6 +4,7 @@ New in master
 Bugfixes
 --------
 
+* Read listings files as UTF-8
 * Set one-file status basing on default language only (Issue #3191)
 * Don’t warn if post status is set to ``published`` explicitly
   (Issue #3181)
