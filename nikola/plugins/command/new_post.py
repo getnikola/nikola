@@ -264,7 +264,7 @@ class CommandNewPost(Command):
         if "@" in content_format:
             content_format, content_subformat = content_format.split("@")
 
-        if not content_format and path:
+        if not content_format and path and not os.path.isdir(path):
             # content_format not specified. If path was given, use
             # it to guess (Issue #2798)
             extension = os.path.splitext(path)[-1]
