@@ -4,6 +4,8 @@ New in master
 Bugfixes
 --------
 
+* Correctly handle separators in the relative path given to
+  "ignored_assets" key in theme meta files (Issue #3210)
 * Fix error when ``nikola new_post`` receives directory name as
   path (Issue #3207)
 * Read listings files as UTF-8
