@@ -129,6 +129,7 @@ LEGAL_VALUES = {
         'hi': 'Hindi',
         'hr': 'Croatian',
         'hu': 'Hungarian',
+        'ia': 'Interlingua',
         'id': 'Indonesian',
         'it': 'Italian',
         ('ja', '!jp'): 'Japanese',
