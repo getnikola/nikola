@@ -106,6 +106,7 @@ LEGAL_VALUES = {
         'muut',
     ],
     'TRANSLATIONS': {
+        'af': 'Afrikaans',
         'ar': 'Arabic',
         'az': 'Azerbaijani',
         'bg': 'Bulgarian',
@@ -171,6 +172,7 @@ LEGAL_VALUES = {
     'RTL_LANGUAGES': ('ar', 'fa', 'he', 'ur'),
     'MOMENTJS_LOCALES': defaultdict(
         str,
+        af='af',
         ar='ar',
         az='az',
         bg='bg',
@@ -224,6 +226,7 @@ LEGAL_VALUES = {
         zh_tw='zh-tw'
     ),
     'PYPHEN_LOCALES': {
+        'af': 'af',
         'bg': 'bg',
         'ca': 'ca',
         'cs': 'cs',
@@ -253,6 +256,7 @@ LEGAL_VALUES = {
         'uk': 'uk',
     },
     'DOCUTILS_LOCALES': {
+        'af': 'af',
         'ca': 'ca',
         'da': 'da',
         'de': 'de',
