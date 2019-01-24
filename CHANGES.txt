@@ -8,6 +8,8 @@ Bugfixes
   "ignored_assets" key in theme meta files (Issue #3210)
 * Fix error when ``nikola new_post`` receives directory name as
   path (Issue #3207)
+* Add slashes to paths with query strings in ``nikola serve``
+  only if there isn’t one before ``?``
 * Read listings files as UTF-8
 * Set one-file status basing on default language only (Issue #3191)
 * Don’t warn if post status is set to ``published`` explicitly
