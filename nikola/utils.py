@@ -26,7 +26,6 @@
 
 """Utility functions."""
 
-from collections import defaultdict
 import babel.dates
 import configparser
 import datetime
