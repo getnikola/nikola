@@ -4,6 +4,7 @@ New in master
 Bugfixes
 --------
 
+* Improve the custom JSON encoder to better support defaultdicts, tuples and sets (Issue #3216)
 * Make Commento comments work (Issue #3198)
 * Correctly handle separators in the relative path given to
   "ignored_assets" key in theme meta files (Issue #3210)

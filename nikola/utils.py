@@ -26,6 +26,7 @@
 
 """Utility functions."""
 
+from collections import defaultdict
 import babel.dates
 import configparser
 import datetime
@@ -542,8 +543,10 @@ class CustomEncoder(json.JSONEncoder):
         try:
             return super(CustomEncoder, self).default(obj)
         except TypeError:
-            if isinstance(obj, (set, frozenset)):
+            if isinstance(obj, (set, frozenset, list, tuple)):
                 return self.encode(sorted(list(obj)))
+            elif isinstance(obj, defaultdict):
+                self.encode(dict(obj))
             else:
                 s = repr(obj).split('0x', 1)[0]
             return s
