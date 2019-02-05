@@ -545,8 +545,6 @@ class CustomEncoder(json.JSONEncoder):
         except TypeError:
             if isinstance(obj, (set, frozenset, list, tuple)):
                 return self.encode(sorted(list(obj)))
-            elif isinstance(obj, defaultdict):
-                self.encode(dict(obj))
             else:
                 s = repr(obj).split('0x', 1)[0]
             return s

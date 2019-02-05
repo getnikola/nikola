@@ -171,8 +171,7 @@ LEGAL_VALUES = {
         'sr_latin': 'sr_Latn',
     },
     'RTL_LANGUAGES': ('ar', 'fa', 'he', 'ur'),
-    'MOMENTJS_LOCALES': defaultdict(
-        str,
+    'MOMENTJS_LOCALES': dict(
         af='af',
         ar='ar',
         az='az',
