@@ -5,6 +5,13 @@ Bugfixes
 --------
 
 * Make Commento comments work (Issue #3198)
+* Correctly handle separators in the relative path given to
+  "ignored_assets" key in theme meta files (Issue #3210)
+* Fix error when ``nikola new_post`` receives directory name as
+  path (Issue #3207)
+* Add slashes to paths with query strings in ``nikola serve``
+  only if there isn’t one before ``?``
+* Read listings files as UTF-8
 * Set one-file status basing on default language only (Issue #3191)
 * Don’t warn if post status is set to ``published`` explicitly
   (Issue #3181)
@@ -15,6 +22,8 @@ Bugfixes
 Features
 --------
 
+* Add Interlingua translation by Alberto Mardegan
+* Add Afrikaans translation by Friedel Wolff
 * Support for docutils.conf (Issue #3188)
 
 New in v8.0.1

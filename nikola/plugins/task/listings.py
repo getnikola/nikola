@@ -125,7 +125,7 @@ class Listings(Task):
                 title = os.path.basename(in_name)
                 needs_ipython_css = True
             elif in_name:
-                with open(in_name, 'r') as fd:
+                with open(in_name, 'r', encoding='utf-8') as fd:
                     try:
                         lexer = get_lexer_for_filename(in_name)
                     except Exception:

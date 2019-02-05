@@ -215,11 +215,11 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
         path = self.translate_path(self.path)
         f = None
         if os.path.isdir(path):
-            if not self.path.endswith('/'):
+            path_parts = list(self.path.partition('?'))
+            if not path_parts[0].endswith('/'):
                 # redirect browser - doing basically what apache does
-                self.send_response(301)
-                path_parts = list(self.path.partition('?'))
                 path_parts[0] += '/'
+                self.send_response(301)
                 self.send_header("Location", ''.join(path_parts))
                 # begin no-cache patch
                 # For redirects.  With redirects, caching is even worse and can

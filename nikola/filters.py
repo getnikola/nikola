@@ -148,13 +148,13 @@ def yui_compressor(infile, executable=None):
     yuicompressor = executable
     if not yuicompressor:
         try:
-            subprocess.call('yui-compressor', stdout=open(os.devnull, 'w'), stderr=open(os.devnull, 'w'))
+            subprocess.call('yui-compressor', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             yuicompressor = 'yui-compressor'
         except Exception:
             pass
     if not yuicompressor:
         try:
-            subprocess.call('yuicompressor', stdout=open(os.devnull, 'w'), stderr=open(os.devnull, 'w'))
+            subprocess.call('yuicompressor', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             yuicompressor = 'yuicompressor'
         except Exception:
             raise Exception("yui-compressor is not installed.")

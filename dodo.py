@@ -28,7 +28,7 @@ def task_pydocstyle():
     """pydocstyle -- static check for docstring style"""
     yield {
         'name': os.path.join(os.getcwd(), 'nikola'),
-        'actions': ["pydocstyle --count --match-dir='(?!^\.)(?!data).*' nikola/"],
+        'actions': ["pydocstyle --count --match-dir='(?!^\\.)(?!data).*' nikola/"],
     }
 
 
