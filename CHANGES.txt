@@ -4,6 +4,7 @@ New in master
 Bugfixes
 --------
 
+* Make Commento comments work (Issue #3198)
 * Correctly handle separators in the relative path given to
   "ignored_assets" key in theme meta files (Issue #3210)
 * Fix error when ``nikola new_post`` receives directory name as
