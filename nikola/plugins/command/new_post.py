@@ -343,10 +343,10 @@ class CommandNewPost(Command):
                 slug = utils.slugify(os.path.splitext(os.path.basename(path))[0], lang=self.site.default_lang)
 
         if isinstance(author, utils.bytes_str):
-                try:
-                    author = author.decode(sys.stdin.encoding)
-                except (AttributeError, TypeError):  # for tests
-                    author = author.decode('utf-8')
+            try:
+                author = author.decode(sys.stdin.encoding)
+            except (AttributeError, TypeError):  # for tests
+                author = author.decode('utf-8')
 
         # Calculate the date to use for the content
         # SCHEDULE_ALL is post-only (Issue #2921)
