@@ -1168,6 +1168,10 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['date_fanciness'] = self.config.get('DATE_FANCINESS')
         self._GLOBAL_CONTEXT['js_date_format'] = self.config.get('JS_DATE_FORMAT')
         self._GLOBAL_CONTEXT['momentjs_locales'] = LEGAL_VALUES['MOMENTJS_LOCALES']
+        # Patch missing locales into momentjs defaulting to english (Issue #3216)
+        for l in self._GLOBAL_CONTEXT['translations']:
+            if l not in self._GLOBAL_CONTEXT['momentjs_locales']:
+                self._GLOBAL_CONTEXT['momentjs_locales'][l] = ""
         self._GLOBAL_CONTEXT['hidden_tags'] = self.config.get('HIDDEN_TAGS')
         self._GLOBAL_CONTEXT['hidden_categories'] = self.config.get('HIDDEN_CATEGORIES')
         self._GLOBAL_CONTEXT['hidden_authors'] = self.config.get('HIDDEN_AUTHORS')
