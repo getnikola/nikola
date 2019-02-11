@@ -22,6 +22,8 @@ Bugfixes
 Features
 --------
 
+* Handle fragments in doc role (Issue #3212)
+* Slugify references in doc role.
 * Add Interlingua translation by Alberto Mardegan
 * Add Afrikaans translation by Friedel Wolff
 * Support for docutils.conf (Issue #3188)

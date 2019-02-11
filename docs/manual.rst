@@ -2716,6 +2716,13 @@ and it will produce:
 
     Take a look at :doc:`creating-a-theme` to know how to do it.
 
+The reference in angular brackets should be the `slug` for the target page. It supports a fragment, so
+things like ``<creating-a-theme#starting-from-somewhere>`` should work. You can also use the title, and
+Nikola will slugify it for you, so ``Creating a theme`` is also supported.
+
+Keep in mind that the important thing is the slug. No attempt is made to check if the fragment points to
+an existing location in the page, and references that don't match any page's slugs will cause warnings.
+
 Post List
 ~~~~~~~~~
 
@@ -2834,12 +2841,12 @@ with a ``True`` argument, eg. ``all=True``.
 
 .. sidebar:: Docutils Configuration
 
-   ReStructured Text is "compiled" by docutils, which supports a number of 
+   ReStructured Text is "compiled" by docutils, which supports a number of
    configuration options. It would be difficult to integrate them all into
    Nikola's configuration, so you can just put a ``docutils.conf`` next
    to your ``conf.py`` and any settings in its ``[nikola]`` section will be used.
 
-   More information in the `docutils configuration reference <http://docutils.sourceforge.net/docs/user/config.html>`__ 
+   More information in the `docutils configuration reference <http://docutils.sourceforge.net/docs/user/config.html>`__
 
 
 Importing your WordPress site into Nikola
