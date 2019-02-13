@@ -34,9 +34,9 @@ import mimetypes
 import os
 
 try:
-    import yaml
+    from ruamel.yaml import YAML
 except ImportError:
-    yaml = None  # NOQA
+    YAML = None  # NOQA
 
 try:
     from urlparse import urljoin
@@ -441,7 +441,7 @@ class Galleries(Task, ImageProcessor):
         order:
         #
         If a numeric order value is specified, we use that directly, otherwise
-        we depend on how PyYAML returns the information - which may or may not
+        we depend on how the library returns the information - which may or may not
         be in the same order as in the file itself. Non-numeric ordering is not
         supported. If no caption is specified, then we return an empty string.
         Returns a string (l18n'd filename), list (ordering), dict (captions),
@@ -465,9 +465,10 @@ class Galleries(Task, ImageProcessor):
         self.logger.debug("Using {0} for gallery {1}".format(
             used_path, gallery))
         with open(used_path, "r", encoding='utf-8-sig') as meta_file:
-            if yaml is None:
-                utils.req_missing(['PyYAML'], 'use metadata.yml files for galleries')
-            meta = yaml.safe_load_all(meta_file)
+            if YAML is None:
+                utils.req_missing(['ruamel.yaml'], 'use metadata.yml files for galleries')
+            yaml = YAML(typ='safe')
+            meta = yaml.load_all(meta_file)
             for img in meta:
                 # load_all and safe_load_all both return None as their
                 # final element, so skip it

@@ -49,14 +49,6 @@ try:
     import pyphen
 except ImportError:
     pyphen = None
-try:
-    import toml
-except ImportError:
-    toml = None
-try:
-    import yaml
-except ImportError:
-    yaml = None
 
 from math import ceil  # for reading time feature
 
