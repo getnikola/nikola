@@ -4,6 +4,8 @@ New in master
 Bugfixes
 --------
 
+* Apply modifications to ``default_metadata`` before copying it to
+  other languages
 * Make Commento comments work (Issue #3198)
 * Correctly handle separators in the relative path given to
   "ignored_assets" key in theme meta files (Issue #3210)
