@@ -160,20 +160,6 @@ class Post(object):
         self.meta[self.default_lang] = default_metadata
         self.used_extractor[self.default_lang] = default_used_extractor
 
-        for lang in self.translations:
-            if lang != self.default_lang:
-                meta = defaultdict(lambda: '')
-                meta.update(default_metadata)
-                _meta, _extractors = get_meta(self, lang)
-                meta.update(_meta)
-                self.meta[lang] = meta
-                self.used_extractor[lang] = _extractors
-
-        if not self.is_translation_available(self.default_lang):
-            # Special case! (Issue #373)
-            # Fill default_metadata with stuff from the other languages
-            for lang in sorted(self.translated_to):
-                default_metadata.update(self.meta[lang])
         # Compose paths
         if self.folder_base is not None:
             # Use translatable destination folders
@@ -186,12 +172,6 @@ class Post(object):
             # Old behavior (non-translatable destination path, normalized by scanner)
             self.folders = {lang: self.folder_relative for lang in self.config['TRANSLATIONS'].keys()}
         self.folder = self.folders[self.default_lang]
-
-        # Load data field from metadata
-        self.data = Functionary(lambda: None, self.default_lang)
-        for lang in self.translations:
-            if self.meta[lang].get('data') is not None:
-                self.data[lang] = utils.load_data(self.meta[lang]['data'])
 
         if 'date' not in default_metadata and not use_in_feeds:
             # For pages we don't *really* need a date
@@ -228,6 +208,27 @@ class Post(object):
         if 'type' not in default_metadata:
             # default value is 'text'
             default_metadata['type'] = 'text'
+
+        for lang in self.translations:
+            if lang != self.default_lang:
+                meta = defaultdict(lambda: '')
+                meta.update(default_metadata)
+                _meta, _extractors = get_meta(self, lang)
+                meta.update(_meta)
+                self.meta[lang] = meta
+                self.used_extractor[lang] = _extractors
+
+        if not self.is_translation_available(self.default_lang):
+            # Special case! (Issue #373)
+            # Fill default_metadata with stuff from the other languages
+            for lang in sorted(self.translated_to):
+                default_metadata.update(self.meta[lang])
+
+        # Load data field from metadata
+        self.data = Functionary(lambda: None, self.default_lang)
+        for lang in self.translations:
+            if self.meta[lang].get('data') is not None:
+                self.data[lang] = utils.load_data(self.meta[lang]['data'])
 
         for lang, meta in self.meta.items():
             # Migrate section to category
