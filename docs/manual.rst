@@ -1850,7 +1850,7 @@ Nikola supports several third party comment systems:
 * `LiveFyre <https://www.livefyre.com/>`_
 * `Muut (Formerly moot) <https://muut.com/>`_
 * `Facebook <https://facebook.com/>`_
-* `Isso <httsp://posativ.org/isso/>`_
+* `Isso <https://posativ.org/isso/>`_
 * `Commento <https://github.com/adtac/commento>`_
 
 By default it will use DISQUS, but you can change by setting ``COMMENT_SYSTEM``
