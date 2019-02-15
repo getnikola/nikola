@@ -1,7 +1,7 @@
 ## -*- coding: utf-8 -*-
 <%def name="comment_form(url, title, identifier)">
     %if comment_system_id:
-        <div data-title="${title|u}" id="isso-thread"></div>
+        <div data-title="${title|h}" id="isso-thread"></div>
         <script src="${comment_system_id}js/embed.min.js" data-isso="${comment_system_id}" data-isso-lang="${lang}"
         % if isso_config:
         % for k, v in isso_config.items():

@@ -1,7 +1,7 @@
 {#  -*- coding: utf-8 -*- #}
 {% macro comment_form(url, title, identifier) %}
     {% if comment_system_id %}
-        <div data-title="{{ title|urlencode }}" id="isso-thread"></div>
+        <div data-title="{{ title|e }}" id="isso-thread"></div>
         <script src="{{ comment_system_id }}js/embed.min.js" data-isso="{{ comment_system_id }}" data-isso-lang="{{ lang }}"
         {% if isso_config %}
         {% for k, v in isso_config.items() %}
