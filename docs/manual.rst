@@ -1845,12 +1845,12 @@ are probably expecting: comments.
 
 Nikola supports several third party comment systems:
 
-* `DISQUS <http://disqus.com>`_
-* `IntenseDebate <http://www.intensedebate.com/>`_
-* `LiveFyre <http://www.livefyre.com/>`_
-* `Muut (Formerly moot) <http://muut.com>`_
-* `Facebook <http://facebook.com/>`_
-* `Isso <http://posativ.org/isso/>`_
+* `DISQUS <https://disqus.com>`_
+* `IntenseDebate <https://www.intensedebate.com/>`_
+* `LiveFyre <https://www.livefyre.com/>`_
+* `Muut (Formerly moot) <https://muut.com/>`_
+* `Facebook <https://facebook.com/>`_
+* `Isso <httsp://posativ.org/isso/>`_
 * `Commento <https://github.com/adtac/commento>`_
 
 By default it will use DISQUS, but you can change by setting ``COMMENT_SYSTEM``
