@@ -2,7 +2,13 @@
 {% macro comment_form(url, title, identifier) %}
     {% if comment_system_id %}
         <div data-title="{{ title|urlencode }}" id="isso-thread"></div>
-        <script src="{{ comment_system_id }}js/embed.min.js" data-isso="{{ comment_system_id }}"></script>
+        <script src="{{ comment_system_id }}js/embed.min.js" data-isso="{{ comment_system_id }}" data-isso-lang="{{ lang }}"
+        {% if isso_config %}
+        {% for k, v in isso_config.items() %}
+        data-isso-{{ k }}="{{ v }}"
+        {% endfor %}
+        {% endif %}
+        ></script>
     {% endif %}
 {% endmacro %}
 
@@ -15,6 +21,6 @@
 
 {% macro comment_link_script() %}
     {% if comment_system_id and 'index' in pagekind %}
-        <script src="{{ comment_system_id }}js/count.min.js" data-isso="{{ comment_system_id }}"></script>
+        <script src="{{ comment_system_id }}js/count.min.js" data-isso="{{ comment_system_id }}" data-isso-lang="{{ lang }}"></script>
     {% endif %}
 {% endmacro %}

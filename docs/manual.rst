@@ -1845,12 +1845,12 @@ are probably expecting: comments.
 
 Nikola supports several third party comment systems:
 
-* `DISQUS <http://disqus.com>`_
-* `IntenseDebate <http://www.intensedebate.com/>`_
-* `LiveFyre <http://www.livefyre.com/>`_
-* `Muut (Formerly moot) <http://muut.com>`_
-* `Facebook <http://facebook.com/>`_
-* `isso <http://posativ.org/isso/>`_
+* `DISQUS <https://disqus.com>`_
+* `IntenseDebate <https://www.intensedebate.com/>`_
+* `LiveFyre <https://www.livefyre.com/>`_
+* `Muut (Formerly moot) <https://muut.com/>`_
+* `Facebook <https://facebook.com/>`_
+* `Isso <https://posativ.org/isso/>`_
 * `Commento <https://github.com/adtac/commento>`_
 
 By default it will use DISQUS, but you can change by setting ``COMMENT_SYSTEM``
@@ -1868,9 +1868,10 @@ to one of "disqus", "intensedebate", "livefyre", "moot", "facebook", "isso" or "
    * For Facebook, you need to `create an app
      <https://developers.facebook.com/apps>`_ (turn off sandbox mode!)
      and get an **App ID**
-   * For isso, it is the URL of isso (must be world-accessible, encoded with
+   * For Isso, it is the URL of your Isso instance (must be world-accessible, encoded with
      Punycode (if using Internationalized Domain Names) and **have a trailing slash**,
-     default ``http://localhost:8080/``)
+     default ``http://localhost:8080/``). You can add custom config options via
+     GLOBAL_CONTEXT, eg. ``GLOBAL_CONTEXT['isso_config'] = {"require-author": "true"}``
    * For commento it's the URL of the commento instance as required by the ``serverUrl``
      parameter in commento's documentation.
 
