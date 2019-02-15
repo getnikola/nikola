@@ -102,8 +102,8 @@ LEGAL_VALUES = {
         'facebook',
         'intensedebate',
         'isso',
-        'livefyre',
         'muut',
+        'commento',
     ],
     'TRANSLATIONS': {
         'af': 'Afrikaans',

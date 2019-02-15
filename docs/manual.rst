@@ -1847,7 +1847,6 @@ Nikola supports several third party comment systems:
 
 * `DISQUS <https://disqus.com>`_
 * `IntenseDebate <https://www.intensedebate.com/>`_
-* `LiveFyre <https://www.livefyre.com/>`_
 * `Muut (Formerly moot) <https://muut.com/>`_
 * `Facebook <https://facebook.com/>`_
 * `Isso <https://posativ.org/isso/>`_
@@ -1861,18 +1860,17 @@ to one of "disqus", "intensedebate", "livefyre", "moot", "facebook", "isso" or "
    The value of ``COMMENT_SYSTEM_ID`` depends on what comment system you
    are using and you can see it in the system's admin interface.
 
-   * For DISQUS it's called the **shortname**
-   * In IntenseDebate it's the **IntenseDebate site acct**
-   * In LiveFyre it's the **siteId**
-   * In Muut it's your **username**
+   * For DISQUS, it's called the **shortname**
+   * For IntenseDebate, it's the **IntenseDebate site acct**
+   * For Muut, it's your **username**
    * For Facebook, you need to `create an app
      <https://developers.facebook.com/apps>`_ (turn off sandbox mode!)
      and get an **App ID**
-   * For Isso, it is the URL of your Isso instance (must be world-accessible, encoded with
+   * For Isso, it's the URL of your Isso instance (must be world-accessible, encoded with
      Punycode (if using Internationalized Domain Names) and **have a trailing slash**,
      default ``http://localhost:8080/``). You can add custom config options via
      GLOBAL_CONTEXT, eg. ``GLOBAL_CONTEXT['isso_config'] = {"require-author": "true"}``
-   * For commento it's the URL of the commento instance as required by the ``serverUrl``
+   * For Commento, it's the URL of the commento instance as required by the ``serverUrl``
      parameter in commento's documentation.
 
 To use comments in a visible site, you should register with the service and
