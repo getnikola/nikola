@@ -1908,11 +1908,11 @@ def load_data(path):
     loader = None
     function = 'load'
     if ext in {'.yml', '.yaml'}:
-        loader = YAML(typ='safe')
-        function = 'load'
         if YAML is None:
             req_missing(['ruamel.yaml'], 'use YAML data files')
             return {}
+        loader = YAML(typ='safe')
+        function = 'load'
     elif ext in {'.json', '.js'}:
         loader = json
     elif ext in {'.toml', '.tml'}:
