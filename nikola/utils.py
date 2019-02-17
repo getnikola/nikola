@@ -561,6 +561,28 @@ class config_changed(tools.config_changed):
         if identifier is not None:
             self.identifier += ':' + identifier
 
+    # DEBUG (for unexpected rebuilds)
+    def _write_into_debug_db(self, digest: str, data: str) -> None:  # pragma: no cover
+        """Write full values of config_changed into a sqlite3 database."""
+        import sqlite3
+        try:
+            config_changed.debug_db_cursor
+        except AttributeError:
+            config_changed.debug_db_conn = sqlite3.connect("cc_debug.sqlite3")
+            config_changed.debug_db_id = datetime.datetime.now().isoformat()
+            config_changed.debug_db_cursor = config_changed.debug_db_conn.cursor()
+            config_changed.debug_db_cursor.execute("""
+            CREATE TABLE IF NOT EXISTS hashes (hash CHARACTER(32) PRIMARY KEY, json_data TEXT);
+            """)
+            config_changed.debug_db_conn.commit()
+
+        try:
+            config_changed.debug_db_cursor.execute("INSERT INTO hashes (hash, json_data) VALUES (?, ?);", (digest, data))
+            config_changed.debug_db_conn.commit()
+        except sqlite3.IntegrityError:
+            # ON CONFLICT DO NOTHING, except Ubuntu 16.04’s sqlite3 is too ancient for this
+            config_changed.debug_db_conn.rollback()
+
     def _calc_digest(self):
         """Calculate a config_changed digest."""
         if isinstance(self.config, str):
@@ -572,9 +594,14 @@ class config_changed(tools.config_changed):
             else:
                 byte_data = data
             digest = hashlib.md5(byte_data).hexdigest()
+
+            # DEBUG (for unexpected rebuilds)
+            # self._write_into_debug_db(digest, data)
+            # Alternative (without database):
             # LOGGER.debug('{{"{0}": {1}}}'.format(digest, byte_data))
             # Humanized format:
             # LOGGER.debug('[Digest {0} for {2}]\n{1}\n[Digest {0} for {2}]'.format(digest, byte_data, self.identifier))
+
             return digest
         else:
             raise Exception('Invalid type of config_changed parameter -- got '
