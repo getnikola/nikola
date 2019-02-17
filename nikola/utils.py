@@ -562,26 +562,27 @@ class config_changed(tools.config_changed):
             self.identifier += ':' + identifier
 
     # DEBUG (for unexpected rebuilds)
-    def _write_into_debug_db(self, digest: str, data: str) -> None:  # pragma: no cover
+    @classmethod
+    def _write_into_debug_db(cls, digest: str, data: str) -> None:  # pragma: no cover
         """Write full values of config_changed into a sqlite3 database."""
         import sqlite3
         try:
-            config_changed.debug_db_cursor
+            cls.debug_db_cursor
         except AttributeError:
-            config_changed.debug_db_conn = sqlite3.connect("cc_debug.sqlite3")
-            config_changed.debug_db_id = datetime.datetime.now().isoformat()
-            config_changed.debug_db_cursor = config_changed.debug_db_conn.cursor()
-            config_changed.debug_db_cursor.execute("""
+            cls.debug_db_conn = sqlite3.connect("cc_debug.sqlite3")
+            cls.debug_db_id = datetime.datetime.now().isoformat()
+            cls.debug_db_cursor = cls.debug_db_conn.cursor()
+            cls.debug_db_cursor.execute("""
             CREATE TABLE IF NOT EXISTS hashes (hash CHARACTER(32) PRIMARY KEY, json_data TEXT);
             """)
-            config_changed.debug_db_conn.commit()
+            cls.debug_db_conn.commit()
 
         try:
-            config_changed.debug_db_cursor.execute("INSERT INTO hashes (hash, json_data) VALUES (?, ?);", (digest, data))
-            config_changed.debug_db_conn.commit()
+            cls.debug_db_cursor.execute("INSERT INTO hashes (hash, json_data) VALUES (?, ?);", (digest, data))
+            cls.debug_db_conn.commit()
         except sqlite3.IntegrityError:
             # ON CONFLICT DO NOTHING, except Ubuntu 16.04’s sqlite3 is too ancient for this
-            config_changed.debug_db_conn.rollback()
+            cls.debug_db_conn.rollback()
 
     def _calc_digest(self):
         """Calculate a config_changed digest."""
