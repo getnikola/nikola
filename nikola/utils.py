@@ -59,9 +59,9 @@ try:
 except ImportError:
     toml = None
 try:
-    import yaml
+    from ruamel.yaml import YAML
 except ImportError:
-    yaml = None
+    YAML = None
 try:
     import husl
 except ImportError:
@@ -1908,10 +1908,10 @@ def load_data(path):
     loader = None
     function = 'load'
     if ext in {'.yml', '.yaml'}:
-        loader = yaml
-        function = 'safe_load'
-        if yaml is None:
-            req_missing(['yaml'], 'use YAML data files')
+        loader = YAML(typ='safe')
+        function = 'load'
+        if YAML is None:
+            req_missing(['ruamel.yaml'], 'use YAML data files')
             return {}
     elif ext in {'.json', '.js'}:
         loader = json

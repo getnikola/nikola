@@ -6,11 +6,6 @@ cache:
 - pip
 dist: trusty
 sudo: false
-addons:
-  apt:
-    packages:
-    - language-pack-en-base
-    - language-pack-pl-base
 python:
 - '3.4'
 - '3.5'

@@ -1,7 +1,6 @@
 ## -*- coding: utf-8 -*-
 
 <%namespace name="disqus" file="comments_helper_disqus.tmpl"/>
-<%namespace name="livefyre" file="comments_helper_livefyre.tmpl"/>
 <%namespace name="intensedebate" file="comments_helper_intensedebate.tmpl"/>
 <%namespace name="muut" file="comments_helper_muut.tmpl"/>
 <%namespace name="facebook" file="comments_helper_facebook.tmpl"/>
@@ -11,8 +10,6 @@
 <%def name="comment_form(url, title, identifier)">
     %if comment_system == 'disqus':
         ${disqus.comment_form(url, title, identifier)}
-    % elif comment_system == 'livefyre':
-        ${livefyre.comment_form(url, title, identifier)}
     % elif comment_system == 'intensedebate':
         ${intensedebate.comment_form(url, title, identifier)}
     % elif comment_system == 'muut':
@@ -29,8 +26,6 @@
 <%def name="comment_link(link, identifier)">
     %if comment_system == 'disqus':
         ${disqus.comment_link(link, identifier)}
-    % elif comment_system == 'livefyre':
-        ${livefyre.comment_link(link, identifier)}
     % elif comment_system == 'intensedebate':
         ${intensedebate.comment_link(link, identifier)}
     % elif comment_system == 'muut':
@@ -47,8 +42,6 @@
 <%def name="comment_link_script()">
     %if comment_system == 'disqus':
         ${disqus.comment_link_script()}
-    % elif comment_system == 'livefyre':
-        ${livefyre.comment_link_script()}
     % elif comment_system == 'intensedebate':
         ${intensedebate.comment_link_script()}
     % elif comment_system == 'muut':

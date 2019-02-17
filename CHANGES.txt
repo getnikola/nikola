@@ -5,6 +5,8 @@ Bugfixes
 --------
 
 * Improve the custom JSON encoder to better support defaultdicts, tuples and sets (Issue #3216)
+* Apply modifications to ``default_metadata`` before copying it to
+  other languages
 * Make Commento comments work (Issue #3198)
 * Correctly handle separators in the relative path given to
   "ignored_assets" key in theme meta files (Issue #3210)
@@ -23,6 +25,10 @@ Bugfixes
 Features
 --------
 
+* Support configuring Isso via ``GLOBAL_CONTEXT['isso_config']``
+  (Issue #3225)
+* Handle fragments in doc role (Issue #3212)
+* Slugify references in doc role.
 * Add Interlingua translation by Alberto Mardegan
 * Add Afrikaans translation by Friedel Wolff
 * Support for docutils.conf (Issue #3188)

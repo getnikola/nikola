@@ -1845,12 +1845,11 @@ are probably expecting: comments.
 
 Nikola supports several third party comment systems:
 
-* `DISQUS <http://disqus.com>`_
-* `IntenseDebate <http://www.intensedebate.com/>`_
-* `LiveFyre <http://www.livefyre.com/>`_
-* `Muut (Formerly moot) <http://muut.com>`_
-* `Facebook <http://facebook.com/>`_
-* `isso <http://posativ.org/isso/>`_
+* `DISQUS <https://disqus.com>`_
+* `IntenseDebate <https://www.intensedebate.com/>`_
+* `Muut (Formerly moot) <https://muut.com/>`_
+* `Facebook <https://facebook.com/>`_
+* `Isso <https://posativ.org/isso/>`_
 * `Commento <https://github.com/adtac/commento>`_
 
 By default it will use DISQUS, but you can change by setting ``COMMENT_SYSTEM``
@@ -1861,17 +1860,17 @@ to one of "disqus", "intensedebate", "livefyre", "moot", "facebook", "isso" or "
    The value of ``COMMENT_SYSTEM_ID`` depends on what comment system you
    are using and you can see it in the system's admin interface.
 
-   * For DISQUS it's called the **shortname**
-   * In IntenseDebate it's the **IntenseDebate site acct**
-   * In LiveFyre it's the **siteId**
-   * In Muut it's your **username**
+   * For DISQUS, it's called the **shortname**
+   * For IntenseDebate, it's the **IntenseDebate site acct**
+   * For Muut, it's your **username**
    * For Facebook, you need to `create an app
      <https://developers.facebook.com/apps>`_ (turn off sandbox mode!)
      and get an **App ID**
-   * For isso, it is the URL of isso (must be world-accessible, encoded with
+   * For Isso, it's the URL of your Isso instance (must be world-accessible, encoded with
      Punycode (if using Internationalized Domain Names) and **have a trailing slash**,
-     default ``http://localhost:8080/``)
-   * For commento it's the URL of the commento instance as required by the ``serverUrl``
+     default ``http://localhost:8080/``). You can add custom config options via
+     GLOBAL_CONTEXT, eg. ``GLOBAL_CONTEXT['isso_config'] = {"require-author": "true"}``
+   * For Commento, it's the URL of the commento instance as required by the ``serverUrl``
      parameter in commento's documentation.
 
 To use comments in a visible site, you should register with the service and
@@ -2716,6 +2715,13 @@ and it will produce:
 
     Take a look at :doc:`creating-a-theme` to know how to do it.
 
+The reference in angular brackets should be the `slug` for the target page. It supports a fragment, so
+things like ``<creating-a-theme#starting-from-somewhere>`` should work. You can also use the title, and
+Nikola will slugify it for you, so ``Creating a theme`` is also supported.
+
+Keep in mind that the important thing is the slug. No attempt is made to check if the fragment points to
+an existing location in the page, and references that don't match any page's slugs will cause warnings.
+
 Post List
 ~~~~~~~~~
 
@@ -2834,12 +2840,12 @@ with a ``True`` argument, eg. ``all=True``.
 
 .. sidebar:: Docutils Configuration
 
-   ReStructured Text is "compiled" by docutils, which supports a number of 
+   ReStructured Text is "compiled" by docutils, which supports a number of
    configuration options. It would be difficult to integrate them all into
    Nikola's configuration, so you can just put a ``docutils.conf`` next
    to your ``conf.py`` and any settings in its ``[nikola]`` section will be used.
 
-   More information in the `docutils configuration reference <http://docutils.sourceforge.net/docs/user/config.html>`__ 
+   More information in the `docutils configuration reference <http://docutils.sourceforge.net/docs/user/config.html>`__
 
 
 Importing your WordPress site into Nikola

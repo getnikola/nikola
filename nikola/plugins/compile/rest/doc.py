@@ -29,7 +29,7 @@
 from docutils import nodes
 from docutils.parsers.rst import roles
 
-from nikola.utils import split_explicit_title, LOGGER
+from nikola.utils import split_explicit_title, LOGGER, slugify
 from nikola.plugin_categories import RestExtension
 
 
@@ -51,6 +51,11 @@ def _doc_link(rawtext, text, options={}, content=[]):
     """Handle the doc role."""
     # split link's text and post's slug in role content
     has_explicit_title, title, slug = split_explicit_title(text)
+    if '#' in slug:
+        slug, fragment = slug.split('#', 1)
+    else:
+        fragment = None
+    slug = slugify(slug)
     # check if the slug given is part of our blog posts/pages
     twin_slugs = False
     post = None
@@ -72,6 +77,8 @@ def _doc_link(rawtext, text, options={}, content=[]):
         # use post's title as link's text
         title = post.title()
     permalink = post.permalink()
+    if fragment:
+        permalink += '#' + fragment
 
     return True, twin_slugs, title, permalink, slug
 
