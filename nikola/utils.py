@@ -544,6 +544,8 @@ class CustomEncoder(json.JSONEncoder):
         except TypeError:
             if isinstance(obj, (set, frozenset)):
                 return self.encode(sorted(list(obj)))
+            elif isinstance(obj, TranslatableSetting):
+                s = json.dumps(obj._inp, cls=CustomEncoder, sort_keys=True)
             else:
                 s = repr(obj).split('0x', 1)[0]
             return s
