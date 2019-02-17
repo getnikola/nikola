@@ -4,7 +4,8 @@ New in master
 Bugfixes
 --------
 
-* Improve the custom JSON encoder to better support defaultdicts, tuples and sets (Issue #3216)
+* Avoid random rebuilds with sites whose locales are not fullly
+  supported (Issue #3216)
 * Apply modifications to ``default_metadata`` before copying it to
   other languages
 * Make Commento comments work (Issue #3198)
