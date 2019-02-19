@@ -1632,6 +1632,7 @@ For Mako:
 
 .. code:: html
 
+    % if date_fanciness != 0:
     <!-- required scripts -- best handled with bundles -->
     <script src="/assets/js/moment-with-locales.min.js"></script>
     <script src="/assets/js/fancydates.js"></script>
@@ -1642,12 +1643,14 @@ For Mako:
     fancydates(${date_fanciness}, ${js_date_format});
     </script>
     <!-- end fancy dates code -->
+    %endif
 
 
 For Jinja2:
 
 .. code:: html
 
+    {% if date_fanciness != 0 %}
     <!-- required scripts -- best handled with bundles -->
     <script src="/assets/js/moment-with-locales.min.js"></script>
     <script src="/assets/js/fancydates.js"></script>
@@ -1658,6 +1661,7 @@ For Jinja2:
     fancydates({{ date_fanciness }}, {{ js_date_format }});
     </script>
     <!-- end fancy dates code -->
+    {% endif %}
 
 
 Adding Files
