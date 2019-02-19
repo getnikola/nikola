@@ -5,7 +5,8 @@ Bugfixes
 --------
 
 * Avoid random rebuilds with sites whose locales are not fullly
-  supported (Issue #3216)
+  supported, and random rebuilds on multilingual sites using Python
+  3.4/3.5 (Issue #3216)
 * Apply modifications to ``default_metadata`` before copying it to
   other languages
 * Make Commento comments work (Issue #3198)
