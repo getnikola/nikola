@@ -79,7 +79,7 @@ lang="${lang}">
     % endif
     % if date_fanciness != 0:
         % if use_cdn:
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment-with-locales.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment-with-locales.min.js" crossorigin="anonymous"></script>
         % else:
             <script src="/assets/js/moment-with-locales.min.js"></script>
         % endif
