@@ -66,9 +66,6 @@ lang="${lang}">
     % if use_bundles:
         % if use_cdn:
             <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js" integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script>
-            % if date_fanciness != 0:
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment-with-locales.min.js"></script>
-            % endif
             <script src="/assets/js/all.js"></script>
         % else:
             <script src="/assets/js/all-nocdn.js"></script>
@@ -76,16 +73,17 @@ lang="${lang}">
     % else:
         % if use_cdn:
             <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js" integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script>
-            % if date_fanciness != 0:
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment-with-locales.min.js"></script>
-            % endif
         % else:
             <script src="/assets/js/baguetteBox.min.js"></script>
-            % if date_fanciness != 0:
-                <script src="/assets/js/moment-with-locales.min.js"></script>
-            % endif
         % endif
-        % if date_fanciness != 0:
+    % endif
+    % if date_fanciness != 0:
+        % if use_cdn:
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment-with-locales.min.js"></script>
+        % else:
+            <script src="/assets/js/moment-with-locales.min.js"></script>
+        % endif
+        % if not use_bundles:
             <script src="/assets/js/fancydates.js"></script>
         % endif
     % endif
