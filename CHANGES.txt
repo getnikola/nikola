@@ -23,6 +23,8 @@ Bugfixes
 * Remove mention of Twitter cards requiring an opt-in.
   This is not true anymore - anyone can use them.
 * fancydates now workwith listdate items (eg. archives)
+* bootstrap4 and bootblog4 themes no longer load moment.js when
+  fancydates are off. (Issue #3231)
 
 Features
 --------

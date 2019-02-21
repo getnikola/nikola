@@ -21,7 +21,6 @@ assets/js/all-nocdn.js=
     popper.min.js,
     bootstrap.min.js,
     baguetteBox.min.js,
-    moment-with-locales.min.js,
     fancydates.min.js,
 assets/js/all.js=
     fancydates.min.js

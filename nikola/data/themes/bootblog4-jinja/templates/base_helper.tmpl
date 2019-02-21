@@ -68,7 +68,6 @@ lang="{{ lang }}">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha256-ZvOgfh+ptkpoa2Y4HkRY28ir89u/+VRyDE7sB7hEEcI=" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js" integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js" integrity="sha256-AdQN98MVZs44Eq2yTwtoKufhnU+uZ7v2kXnD5vqzZVo=" crossorigin="anonymous"></script>
     {% endif %}
     {% if use_bundles and use_cdn %}
         <script src="/assets/js/all.js"></script>
@@ -80,9 +79,17 @@ lang="{{ lang }}">
             <script src="/assets/js/popper.min.js"></script>
             <script src="/assets/js/bootstrap.min.js"></script>
             <script src="/assets/js/baguetteBox.min.js"></script>
+        {% endif %}
+    {% endif %}
+    {% if date_fanciness != 0 %}
+        {% if use_cdn %}
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js" integrity="sha256-AdQN98MVZs44Eq2yTwtoKufhnU+uZ7v2kXnD5vqzZVo=" crossorigin="anonymous"></script>
+        {% else %}
             <script src="/assets/js/moment-with-locales.min.js"></script>
         {% endif %}
-        <script src="/assets/js/fancydates.min.js"></script>
+        {% if not use_bundles %}
+            <script src="/assets/js/fancydates.min.js"></script>
+        {% endif %}
     {% endif %}
     {{ social_buttons_code }}
 {% endmacro %}
