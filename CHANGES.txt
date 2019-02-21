@@ -29,6 +29,7 @@ Bugfixes
 Features
 --------
 
+* Make ``ARCHIVE_PATH``, ``ARCHIVE_FILENAME`` translatable (Issue #3234)
 * Support configuring Isso via ``GLOBAL_CONTEXT['isso_config']``
   (Issue #3225)
 * Handle fragments in doc role (Issue #3212)

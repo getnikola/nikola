@@ -616,6 +616,8 @@ class Nikola(object):
                                       'INDEXES_PRETTY_PAGE_URL',
                                       'THEME_CONFIG',
                                       # PATH options (Issue #1914)
+                                      'ARCHIVE_PATH',
+                                      'ARCHIVE_FILENAME',
                                       'TAG_PATH',
                                       'TAGS_INDEX_PATH',
                                       'CATEGORY_PATH',
