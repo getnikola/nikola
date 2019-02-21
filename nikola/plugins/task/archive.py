@@ -126,12 +126,12 @@ class Archive(Taxonomy):
 
     def get_path(self, classification, lang, dest_type='page'):
         """Return a path for the given classification."""
-        components = [self.site.config['ARCHIVE_PATH']]
+        components = [self.site.config['ARCHIVE_PATH'](lang)]
         if classification:
             components.extend(classification)
             add_index = 'always'
         else:
-            components.append(self.site.config['ARCHIVE_FILENAME'])
+            components.append(self.site.config['ARCHIVE_FILENAME'](lang))
             add_index = 'never'
         return [_f for _f in components if _f], add_index
 
