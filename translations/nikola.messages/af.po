@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2019-01-06 19:30+0000\n"
+"PO-Revision-Date: 2019-02-19 18:32+0000\n"
 "Last-Translator: F Wolff <friedel@translate.org.za>\n"
 "Language-Team: Afrikaans (http://www.transifex.com/ralsina/nikola/language/af/)\n"
 "MIME-Version: 1.0\n"
@@ -157,7 +157,7 @@ msgid "Next"
 msgstr "Volgende"
 
 msgid "Atom feed"
-msgstr "Atoom-voer"
+msgstr "Atom-voer"
 
 #. {date} (updated {updated_date})
 msgid "updated"

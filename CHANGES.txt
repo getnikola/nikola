@@ -1,5 +1,18 @@
-New in master
+New in v8.0.2
 =============
+
+Features
+--------
+
+* Make ``ARCHIVE_PATH``, ``ARCHIVE_FILENAME`` translatable
+  (Issue #3234)
+* Support configuring Isso via ``GLOBAL_CONTEXT['isso_config']``
+  (Issue #3225)
+* Handle fragments in doc role (Issue #3212)
+* Slugify references in doc role.
+* Add Interlingua translation by Alberto Mardegan
+* Add Afrikaans translation by Friedel Wolff
+* Support for docutils.conf (Issue #3188)
 
 Bugfixes
 --------
@@ -25,18 +38,6 @@ Bugfixes
 * fancydates now workwith listdate items (eg. archives)
 * bootstrap4 and bootblog4 themes no longer load moment.js when
   fancydates are off. (Issue #3231)
-
-Features
---------
-
-* Make ``ARCHIVE_PATH``, ``ARCHIVE_FILENAME`` translatable (Issue #3234)
-* Support configuring Isso via ``GLOBAL_CONTEXT['isso_config']``
-  (Issue #3225)
-* Handle fragments in doc role (Issue #3212)
-* Slugify references in doc role.
-* Add Interlingua translation by Alberto Mardegan
-* Add Afrikaans translation by Friedel Wolff
-* Support for docutils.conf (Issue #3188)
 
 New in v8.0.1
 =============

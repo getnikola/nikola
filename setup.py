@@ -99,7 +99,7 @@ class nikola_install(install):
 
 
 setup(name='Nikola',
-      version='8.0.1',
+      version='8.0.2',
       description='A modular, fast, simple, static website and blog generator',
       long_description=long_description,
       author='Roberto Alsina and others',
@@ -124,6 +124,7 @@ setup(name='Nikola',
                    'Programming Language :: Python :: 3.4',
                    'Programming Language :: Python :: 3.5',
                    'Programming Language :: Python :: 3.6',
+                   'Programming Language :: Python :: 3.7',
                    'Topic :: Internet',
                    'Topic :: Internet :: WWW/HTTP',
                    'Topic :: Text Processing :: Markup'),
