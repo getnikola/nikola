@@ -31,6 +31,7 @@ import shutil
 import sys
 import traceback
 from collections import defaultdict
+from contextlib import contextmanager
 
 from blinker import signal
 from doit.cmd_auto import Auto as DoitAuto
@@ -122,9 +123,23 @@ def main(args=None):
 
     sys.path.append('')
     try:
-        loader = importlib.machinery.SourceFileLoader("conf", conf_filename)
-        conf = loader.load_module()
-        config = conf.__dict__
+        @contextmanager
+        def add_to_path(p):
+            import sys
+            old_path = sys.path
+            sys.path = sys.path[:]
+            sys.path.insert(0, p)
+            try:
+                yield
+            finally:
+                sys.path = old_path
+
+        with (add_to_path(os.path.dirname(conf_filename))):
+            specification = importlib.util.spec_from_file_location("conf", location=conf_filename)
+            module = importlib.util.module_from_spec(specification)
+            specification.loader.exec_module(module)
+
+        config = module.__dict__
     except Exception:
         if os.path.exists(conf_filename):
             msg = traceback.format_exc(0)
