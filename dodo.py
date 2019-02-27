@@ -1,7 +1,6 @@
 
 import os
 import fnmatch
-import subprocess
 
 DOIT_CONFIG = {
     'default_tasks': ['flake8', 'test'],
