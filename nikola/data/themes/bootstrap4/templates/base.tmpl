@@ -8,7 +8,7 @@ ${base.html_headstart()}
 </%block>
 ${template_hooks['extra_head']()}
 </head>
-<body>
+<body class="${' '.join(pagekind)} ${permalink.replace('/', ' ')} lang_${lang} lang_${'rtl' if is_rtl else 'ltr'}">
 <a href="#content" class="sr-only sr-only-focusable">${messages("Skip to main content")}</a>
 
 <!-- Menubar -->
