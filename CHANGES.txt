@@ -38,6 +38,7 @@ Bugfixes
 * fancydates now workwith listdate items (eg. archives)
 * bootstrap4 and bootblog4 themes no longer load moment.js when
   fancydates are off. (Issue #3231)
+* Improve the integrity of `flake8`
 * Add missing `flake8`-dependency
 
 New in v8.0.1
