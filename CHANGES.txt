@@ -13,6 +13,7 @@ Features
 * Add Interlingua translation by Alberto Mardegan
 * Add Afrikaans translation by Friedel Wolff
 * Support for docutils.conf (Issue #3188)
+* Add support for inherited config-files
 
 Bugfixes
 --------
