@@ -1,2 +1,0 @@
-[flake8]
-exclude = nikola/data/themes/base/messages
