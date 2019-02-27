@@ -5,6 +5,7 @@ import unittest
 from nikola import __main__ as nikola
 from .base import BaseTestCase
 
+
 class ConfigTest(BaseTestCase):
     """Provides tests for the configuration-file handling."""
     def setUp(self):
@@ -27,6 +28,7 @@ class ConfigTest(BaseTestCase):
         """Checks whether configuration-files with ineritance areinterpreted correctly."""
         assert self.simple_config[self.option] == self.complex_config[self.option]
         assert self.complex_config["ADDITIONAL_METADATA"]["ID"] == "prod"
+
 
 if __name__ == '__main__':
     unittest.main()
