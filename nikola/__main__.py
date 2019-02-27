@@ -26,6 +26,7 @@
 
 """The main function of Nikola."""
 
+import imp
 import os
 import shutil
 import sys
@@ -57,9 +58,6 @@ try:
     import readline  # NOQA
 except ImportError:
     pass  # This is only so raw_input/input does nicer things if it's available
-
-
-import importlib.machinery
 
 config = {}
 
@@ -135,10 +133,12 @@ def main(args=None):
             finally:
                 sys.path = old_path
 
-        with (add_to_path(os.path.dirname(conf_filename))):
-            module = importlib.import_module(Path(conf_filename).resolve().stem)
+        with add_to_path(os.path.dirname(conf_filename)):
+            with open(conf_filename, "rb") as file:
+                module = imp.load_module(conf_filename, file, conf_filename, (None, "rb", imp.PY_SOURCE))
 
         config = module.__dict__
+        del sys.modules[conf_filename]
     except Exception:
         if os.path.exists(conf_filename):
             msg = traceback.format_exc(0)
