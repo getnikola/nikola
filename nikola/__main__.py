@@ -126,6 +126,7 @@ def main(args=None):
     try:
         @contextmanager
         def add_to_path(p):
+            """Temporarily adds `p` to `sys.path`."""
             old_path = sys.path
             sys.path = sys.path[:]
             sys.path.insert(0, p)
