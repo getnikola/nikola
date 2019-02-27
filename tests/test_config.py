@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import random
+import re
 
 import unittest
 from nikola import __main__ as nikola
@@ -15,12 +16,14 @@ class ConfigTest(BaseTestCase):
         test_dir = os.path.join(script_root, "data", "test_config")
         nikola.main(["--conf=" + os.path.join(test_dir, "conf.py")])
         self.simple_config = nikola.config
-        options = list(self.simple_config.keys())
-        options.remove("ADDITIONAL_METADATA")
-        self.option = random.choice(options)
         nikola.main(["--conf=" + os.path.join(test_dir, "prod.py")])
         self.complex_config = nikola.config
-        pass
+
+        options = list()
+        for option in self.simple_config.keys():
+            if re.match("^[A-Z]+(_[A-Z]+)*$", option) and option != "ADDITIONAL_METADATA":
+                options.append(option)
+        self.option = random.choice(options)
 
     def test_simple_config(self):
         """Checks whether configuration-files without ineritance are interpreted correctly."""
