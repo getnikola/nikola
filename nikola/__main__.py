@@ -135,9 +135,9 @@ def main(args=None):
         with add_to_path(os.path.dirname(conf_filename)):
             with open(conf_filename, "rb") as file:
                 module = imp.load_module(conf_filename, file, conf_filename, (None, "rb", imp.PY_SOURCE))
+                del sys.modules[conf_filename]
 
         config = module.__dict__
-        del sys.modules[conf_filename]
     except Exception:
         if os.path.exists(conf_filename):
             msg = traceback.format_exc(0)
