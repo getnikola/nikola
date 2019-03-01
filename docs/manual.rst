@@ -536,7 +536,7 @@ Markdown metadata
 
 Markdown Metadata only works in Markdown files, and requires the ``markdown.extensions.meta`` extension
 (see `MARKDOWN_EXTENSIONS <#markdown>`__). The exact format is described in
-the `markdown metadata extension docs. <https://pythonhosted.org/Markdown/extensions/meta_data.html>`__
+the `markdown metadata extension docs. <https://python-markdown.github.io/extensions/meta_data/>`__
 
 .. code:: text
 
