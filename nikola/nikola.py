@@ -1675,6 +1675,8 @@ class Nikola(object):
 
         feed_append_query = None
         if rss_links_append_query:
+            if rss_links_append_query is True:
+                raise ValueError("RSS_LINKS_APPEND_QUERY (or FEED_LINKS_APPEND_QUERY) cannot be True. Valid values are False or a formattable string.")
             feed_append_query = rss_links_append_query.format(
                 feedRelUri='/' + feed_url[len(self.config['BASE_URL']):],
                 feedFormat="rss")
