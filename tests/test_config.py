@@ -44,7 +44,3 @@ class ConfigTest(BaseTestCase):
         """Checks whether files with illegal module-name characters can be set as config-files, too."""
         self.check_base_equality(config=self.complex_filename_config)
         assert self.complex_filename_config[self.metadata_option]["ID"] == "illegal"
-
-
-if __name__ == '__main__':
-    unittest.main()
