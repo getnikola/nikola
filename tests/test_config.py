@@ -26,21 +26,21 @@ class ConfigTest(BaseTestCase):
 
     @classmethod
     def check_base_equality(self, config):
-        """Checks whether the specified `config` equals the base config."""
+        """Check whether the specified `config` equals the base config."""
         for option in self.simple_config.keys():
             if re.match("^[A-Z]+(_[A-Z]+)*$", option) and option != self.metadata_option:
                 assert self.simple_config[option] == self.complex_config[option]
 
     def test_simple_config(self):
-        """Checks whether configuration-files without ineritance are interpreted correctly."""
+        """Check whether configuration-files without ineritance are interpreted correctly."""
         assert self.simple_config[self.metadata_option]["ID"] == "conf"
 
     def test_inherited_config(self):
-        """Checks whether configuration-files with ineritance are interpreted correctly."""
+        """Check whether configuration-files with ineritance are interpreted correctly."""
         self.check_base_equality(config=self.complex_config)
         assert self.complex_config[self.metadata_option]["ID"] == "prod"
 
     def test_config_with_illegal_filename(self):
-        """Checks whether files with illegal module-name characters can be set as config-files, too."""
+        """Check whether files with illegal module-name characters can be set as config-files, too."""
         self.check_base_equality(config=self.complex_filename_config)
         assert self.complex_filename_config[self.metadata_option]["ID"] == "illegal"

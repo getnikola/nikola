@@ -123,7 +123,7 @@ def main(args=None):
     try:
         @contextmanager
         def temp_import(filename):
-            """Imports a module temporarily."""
+            """Import a module temporarily."""
             old_path = sys.path
             old_modules = sys.modules
             sys.path = sys.path[:]
