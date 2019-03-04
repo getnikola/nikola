@@ -33,7 +33,7 @@ class ConfigTest(BaseTestCase):
         assert self.simple_config["ADDITIONAL_METADATA"]["ID"] == "conf"
 
     def test_inherited_config(self):
-        """Checks whether configuration-files with ineritance areinterpreted correctly."""
+        """Checks whether configuration-files with ineritance are interpreted correctly."""
         assert self.simple_config[self.option] == self.complex_config[self.option]
         assert self.complex_config["ADDITIONAL_METADATA"]["ID"] == "prod"
 
