@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
-import random
 import re
 
-import unittest
 from nikola import __main__ as nikola
 
 from .base import BaseTestCase
