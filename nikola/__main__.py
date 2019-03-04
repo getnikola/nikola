@@ -122,22 +122,23 @@ def main(args=None):
     sys.path.append('')
     try:
         @contextmanager
-        def add_to_path(p):
-            """Temporarily adds `p` to `sys.path`."""
+        def temp_import(filename):
+            """Imports a module temporarily."""
             old_path = sys.path
+            old_modules = sys.modules
             sys.path = sys.path[:]
-            sys.path.insert(0, p)
+            sys.modules = sys.modules.copy()
+            sys.path.insert(0, os.path.dirname(filename))
             try:
-                yield
+                with open(filename, "rb") as file:
+                    yield imp.load_module(filename, file, filename, (None, "rb", imp.PY_SOURCE))
             finally:
                 sys.path = old_path
+                sys.modules = old_modules
 
-        with add_to_path(os.path.dirname(conf_filename)):
-            with open(conf_filename, "rb") as file:
-                module = imp.load_module(conf_filename, file, conf_filename, (None, "rb", imp.PY_SOURCE))
-                del sys.modules[conf_filename]
+        with temp_import(conf_filename) as module:
+            config = module.__dict__
 
-        config = module.__dict__
     except Exception:
         if os.path.exists(conf_filename):
             msg = traceback.format_exc(0)
