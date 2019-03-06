@@ -32,7 +32,6 @@ import shutil
 import sys
 import traceback
 from collections import defaultdict
-from contextlib import contextmanager
 
 from blinker import signal
 from doit.cmd_auto import Auto as DoitAuto
