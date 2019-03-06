@@ -119,27 +119,17 @@ def main(args=None):
     else:
         needs_config_file = False
 
-    sys.path.append('')
+    old_path = sys.path
+    old_modules = sys.modules
+
     try:
-        @contextmanager
-        def temp_import(filename):
-            """Import a module temporarily."""
-            old_path = sys.path
-            old_modules = sys.modules
-            sys.path = sys.path[:]
-            sys.modules = sys.modules.copy()
-            sys.path.insert(0, os.path.dirname(filename))
-            try:
-                with open(filename, "rb") as file:
-                    yield imp.load_module(filename, file, filename, (None, "rb", imp.PY_SOURCE))
-            finally:
-                sys.path = old_path
-                sys.modules = old_modules
-
-        with temp_import(conf_filename) as module:
-            config = module.__dict__
-
+        sys.path = sys.path[:]
+        sys.modules = sys.modules.copy()
+        sys.path.insert(0, os.path.dirname(conf_filename))
+        with open(conf_filename, "rb") as file:
+            config = imp.load_module(conf_filename, file, conf_filename, (None, "rb", imp.PY_SOURCE)).__dict__
     except Exception:
+        config = {}
         if os.path.exists(conf_filename):
             msg = traceback.format_exc(0)
             LOGGER.error('"{0}" cannot be parsed.\n{1}'.format(conf_filename, msg))
@@ -147,7 +137,9 @@ def main(args=None):
         elif needs_config_file and conf_filename_changed:
             LOGGER.error('Cannot find configuration file "{0}".'.format(conf_filename))
             return 1
-        config = {}
+    finally:
+        sys.path = old_path
+        sys.modules = old_modules
 
     if conf_filename_changed:
         LOGGER.info("Using config file '{0}'".format(conf_filename))
