@@ -1487,10 +1487,10 @@ you can't, this will work.
 Configuration
 -------------
 
-You can pass a configuration-file to ``nikola`` by using the ``--conf``-command line switch.
-Otherwise the ``conf.py``-file in the root of the nikola website will be used.
+You can pass a configuration file to ``nikola`` by using the ``--conf`` command line switch.
+Otherwise the ``conf.py`` file in the root of the Nikola website will be used.
 
-The configuration-file can be used to customize a lot of
+The configuration file can be used to customize a lot of
 what Nikola does. Its syntax is python, but if you don't know the language, it
 still should not be terribly hard to grasp.
 
@@ -1515,7 +1515,7 @@ them.  For those options, two types of values can be provided:
 * a dict of language-value pairs, to have different values in each language
 
 .. note::
-    As of version 8.0.3 it is possible to create configuration files which inherit values from other python-files.
+    As of version 8.0.3 it is possible to create configuration files which inherit values from other Python files.
     This might be useful if you're working with similar environments.
 
     Example:
