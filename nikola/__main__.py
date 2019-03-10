@@ -116,7 +116,7 @@ def main(args=None):
         # Help and imports don't require config, but can use one if it exists
         needs_config_file = (argname != 'help') and not argname.startswith('import_')
         if needs_config_file:
-            if root == None:
+            if root is None:
                 LOGGER.error("The command could not be executed: You're not in a nikola website.")
                 return 1
             else:
