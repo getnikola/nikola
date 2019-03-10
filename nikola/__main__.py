@@ -26,6 +26,7 @@
 
 """The main function of Nikola."""
 
+import imp
 import os
 import shutil
 import sys
@@ -55,9 +56,6 @@ try:
     import readline  # NOQA
 except ImportError:
     pass  # This is only so raw_input/input does nicer things if it's available
-
-
-import importlib.machinery
 
 config = {}
 
@@ -117,15 +115,26 @@ def main(args=None):
             os.chdir(root)
         # Help and imports don't require config, but can use one if it exists
         needs_config_file = (argname != 'help') and not argname.startswith('import_')
+        if needs_config_file:
+            if root is None:
+                LOGGER.error("The command could not be executed: You're not in a nikola website.")
+                return 1
+            else:
+                LOGGER.info("Website root: '{0}'".format(root))
     else:
         needs_config_file = False
 
-    sys.path.append('')
+    old_path = sys.path
+    old_modules = sys.modules
+
     try:
-        loader = importlib.machinery.SourceFileLoader("conf", conf_filename)
-        conf = loader.load_module()
-        config = conf.__dict__
+        sys.path = sys.path[:]
+        sys.modules = sys.modules.copy()
+        sys.path.insert(0, os.path.dirname(conf_filename))
+        with open(conf_filename, "rb") as file:
+            config = imp.load_module(conf_filename, file, conf_filename, (None, "rb", imp.PY_SOURCE)).__dict__
     except Exception:
+        config = {}
         if os.path.exists(conf_filename):
             msg = traceback.format_exc(0)
             LOGGER.error('"{0}" cannot be parsed.\n{1}'.format(conf_filename, msg))
@@ -133,7 +142,9 @@ def main(args=None):
         elif needs_config_file and conf_filename_changed:
             LOGGER.error('Cannot find configuration file "{0}".'.format(conf_filename))
             return 1
-        config = {}
+    finally:
+        sys.path = old_path
+        sys.modules = old_modules
 
     if conf_filename_changed:
         LOGGER.info("Using config file '{0}'".format(conf_filename))

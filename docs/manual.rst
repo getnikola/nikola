@@ -1487,7 +1487,10 @@ you can't, this will work.
 Configuration
 -------------
 
-The configuration file is called ``conf.py`` and can be used to customize a lot of
+You can pass a configuration file to ``nikola`` by using the ``--conf`` command line switch.
+Otherwise the ``conf.py`` file in the root of the Nikola website will be used.
+
+The configuration file can be used to customize a lot of
 what Nikola does. Its syntax is python, but if you don't know the language, it
 still should not be terribly hard to grasp.
 
@@ -1511,10 +1514,33 @@ them.  For those options, two types of values can be provided:
 * a string, which will be used for all languages
 * a dict of language-value pairs, to have different values in each language
 
-.. note:: It is possible to load the configuration from another file by specifying
-          ``--conf=path/to/other.file`` on Nikola's command line. For example, to
-          build your blog using the configuration file ``configurations/test.conf.py``,
-          you have to execute ``nikola build --conf=configurations/test.conf.py``.
+.. note::
+    As of version 8.0.3 it is possible to create configuration files which inherit values from other Python files.
+    This might be useful if you're working with similar environments.
+
+    Example:
+        conf.py:
+            .. code:: python
+            
+                BLOG_AUTHOR = "Your Name"
+                BLOG_TITLE = "Demo Site"
+                SITE_URL = "https://yourname.github.io/demo-site
+                BLOG_EMAIL = "joe@demo.site"
+                BLOG_DESCRIPTION = "This is a demo site for Nikola."
+
+        debug.conf.py:
+            .. code:: python
+
+                import conf
+                globals().update(vars(conf))
+                SITE_URL = "http://localhost:8000/"
+
+            or
+
+            .. code:: python
+
+                from conf import *
+                SITE_URL = "http://localhost:8000/"
 
 Customizing Your Site
 ---------------------

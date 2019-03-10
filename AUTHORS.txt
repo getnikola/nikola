@@ -64,6 +64,7 @@
 * `Leandro Poblet <https://github.com/DoctorMalboro>`_
 * `Luis Miguel Morillas <https://github.com/lmorillas>`_
 * `Manuel Kaufmann <https://github.com/humitos>`_
+* `Manuel Thalmann <https://github.com/manuth>`_
 * `Marcelo MD <https://github.com/marcelomd>`_
 * `Marcos Dione <https://github.com/StyXman>`_
 * `Mariano Guerra <https://github.com/marianoguerra>`_
