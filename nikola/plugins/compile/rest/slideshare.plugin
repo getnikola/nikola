@@ -1,0 +1,12 @@
+[Core]
+name = rest_slideshare
+module = slideshare
+
+[Nikola]
+compiler = rest
+PluginCategory = CompilerExtension
+
+[Documentation]
+version = 1.0
+description = SlideShare directive
+

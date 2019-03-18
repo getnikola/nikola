@@ -2586,6 +2586,32 @@ You can also embed playlists, via the `soundcloud_playlist` directive which work
 Supported options: ``height``, ``width``, ``align`` (one of ``left``,
 ``center``, ``right``) — all are optional.
 
+SlideShare
+~~~~~~~~~~
+
+To link to SlideShare slides, you need the key of the slides. Click on "Share" and examine the :guilabel:`Embed` field.
+It should show something like:
+
+.. code:: html
+
+    <iframe src="//www.slideshare.net/slideshow/embed_code/key/Je1cVvMV6PA63S" ...>
+
+In this case they key is **Je1cVvMV6PA63S**.
+
+Now all you need to do is:
+
+.. code:: restructuredtext
+
+    .. slideshare:: Je1cVvMV6PA63S
+
+Supported options are ``height`` and ``width``. Example:
+
+.. code:: restructuredtext
+
+    .. slideshare:: Je1cVvMV6PA63S
+       :width: 298
+       :height: 242
+
 Code
 ~~~~
 

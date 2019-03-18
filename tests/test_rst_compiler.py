@@ -178,6 +178,23 @@ class YoutubeTestCase(ReSTExtensionTestCase):
                                             "allow": "encrypted-media"})
 
 
+class SlideShareTestCase(ReSTExtensionTestCase):
+    """ SlideShare test case """
+
+    sample = '.. slideshare:: KEY\n   :height: 123\n   :width: 456'
+
+    def test_youtube(self):
+        """ Test Youtube iframe tag generation """
+        self.basic_test()
+        self.assertHTMLContains("iframe",
+                                attributes={"src": "https:www.slideshare.net/slideshow/embed_code/key/KEY",
+                                            "height": "123", "width": "456",
+                                            "frameborder": "0", "marginwidth": 0, "marginheight": 0, "scrolling": "no",
+                                            "style": ("border:1px solid #CCC; border-width:1px; margin-bottom:5px; "
+                                                      "max-width: 100%;"),
+                                            "allowfullscreen": ""})
+
+
 class ListingTestCase(ReSTExtensionTestCase):
     """ Listing test case and CodeBlock alias tests """
 
