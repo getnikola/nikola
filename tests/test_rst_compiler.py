@@ -189,7 +189,7 @@ class SlideShareTestCase(ReSTExtensionTestCase):
         """ Test Youtube iframe tag generation """
         self.basic_test()
         self.assertHTMLContains("iframe",
-                                attributes={"src": "xxxhttps://www.slideshare.net/slideshow/embed_code/key/KEY",
+                                attributes={"src": "https://www.slideshare.net/slideshow/embed_code/key/KEY",
                                             "height": "123", "width": "456", "frameborder": "0", "marginwidth": "0",
                                             "marginheight": "0", "scrolling": "no",
                                             "style": ("border:1px solid #CCC; border-width:1px; margin-bottom:5px; "
