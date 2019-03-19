@@ -116,6 +116,7 @@
 * `Sukil Etxenike <https://github.com/sukiletxe>`_
 * `Ted Timmons <https://github.com/tedder>`_
 * `Thibauld Nion <https://github.com/tibonihoo>`_
+* `Thomas Aglassinger <https://github.com/roskakori>`_
 * `Thomas Burette <https://github.com/tburette>`_
 * `Tim Chase <https://github.com/Gumnos>`_
 * `Timo Kankare <https://github.com/tikank>`_
