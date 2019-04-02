@@ -32,6 +32,7 @@ import io
 import json
 import mimetypes
 import os
+from collections import OrderedDict
 
 try:
     from ruamel.yaml import YAML
@@ -664,7 +665,7 @@ class Galleries(Task, ImageProcessor):
         else:
             img_list, thumbs, img_titles = [], [], []
 
-        photo_info = {}
+        photo_info = OrderedDict()
         for img, thumb, title in zip(img_list, thumbs, img_titles):
             w, h = _image_size_cache.get(thumb, (None, None))
             if w is None:
