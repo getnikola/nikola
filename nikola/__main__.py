@@ -120,7 +120,7 @@ def main(args=None):
                 LOGGER.error("The command could not be executed: You're not in a nikola website.")
                 return 1
             else:
-                LOGGER.info("Website root: '{0}'".format(root))
+                LOGGER.debug("Website root: '{0}'".format(root))
     else:
         needs_config_file = False
 
