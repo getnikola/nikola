@@ -83,6 +83,8 @@ declare module 'popper.js' {
       behavior?: Behavior | Position[],
       padding?: number | Padding,
       boundariesElement?: Boundary | Element,
+      flipVariations?: boolean,
+      flipVariationsByContent?: boolean,
     },
     inner?: BaseModifier,
     hide?: BaseModifier,
@@ -139,6 +141,9 @@ declare module 'popper.js' {
 
   declare class Popper {
     static placements: Placement;
+
+    popper: Element;
+    reference: Element | ReferenceObject;
 
     constructor(
       reference: Element | ReferenceObject,
