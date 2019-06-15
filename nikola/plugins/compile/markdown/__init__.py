@@ -153,7 +153,7 @@ class CompileMarkdown(PageCompiler):
 
     def read_metadata(self, post, lang=None):
         """Read the metadata from a post, and return a metadata dict."""
-        lang = lang or self.site.config.get('DEFAULT_LANGUAGE', 'en')
+        lang = lang or self.site.config['DEFAULT_LANG']
         if not self.supports_metadata:
             return {}
         if Markdown is None:
