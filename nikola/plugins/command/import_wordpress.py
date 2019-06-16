@@ -54,9 +54,14 @@ except ImportError:
 
 from nikola.plugin_categories import Command
 from nikola import utils, hierarchy_utils
+from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN
 from nikola.utils import req_missing, unicode_str
 from nikola.plugins.basic_import import ImportMixin, links
-from nikola.plugins.command.init import SAMPLE_CONF, prepare_config, format_default_translations_config
+from nikola.plugins.command.init import (
+    SAMPLE_CONF, prepare_config,
+    format_default_translations_config,
+    get_default_translations_dict
+)
 
 LOGGER = utils.get_logger('import_wordpress')
 
@@ -154,7 +159,7 @@ class CommandImportWordpress(Command, ImportMixin):
         {
             'name': 'translations_pattern',
             'long': 'translations_pattern',
-            'default': None,
+            'default': DEFAULT_TRANSLATIONS_PATTERN,
             'type': str,
             'help': "The pattern for translation files names",
         },
@@ -375,13 +380,7 @@ class CommandImportWordpress(Command, ImportMixin):
         self._prepare(channel)
         conf_template = self.generate_base_site()
 
-        # If user  has specified a custom pattern for translation files we
-        # need to fix the config
-        if self.translations_pattern:
-            self.context['TRANSLATIONS_PATTERN'] = self.translations_pattern
-
         self.import_posts(channel)
-
         self.context['TRANSLATIONS'] = format_default_translations_config(
             self.extra_languages)
         self.context['REDIRECTIONS'] = self.configure_redirections(
@@ -449,6 +448,10 @@ class CommandImportWordpress(Command, ImportMixin):
         context = SAMPLE_CONF.copy()
         self.lang = get_text_tag(channel, 'language', 'en')[:2]
         context['DEFAULT_LANG'] = self.lang
+        # If user  has specified a custom pattern for translation files we
+        # need to fix the config
+        context['TRANSLATIONS_PATTERN'] = self.translations_pattern
+
         context['BLOG_TITLE'] = get_text_tag(channel, 'title',
                                              'PUT TITLE HERE')
         context['BLOG_DESCRIPTION'] = get_text_tag(
@@ -985,6 +988,13 @@ class CommandImportWordpress(Command, ImportMixin):
             else:
                 content_translations = {"": content}
             default_language = self.context["DEFAULT_LANG"]
+            extra_languages = [lang for lang in content_translations.keys() if lang != default_language]
+            translations_dict = get_default_translations_dict(default_language, extra_languages)
+            current_translations_config = {
+                "DEFAULT_LANG": default_language,
+                "TRANSLATIONS": translations_dict,
+                "TRANSLATIONS_PATTERN": self.context["TRANSLATIONS_PATTERN"]
+            }
             for lang, content in content_translations.items():
                 try:
                     content, extension, rewrite_html = self.transform_content(content, post_format, attachments)
@@ -998,7 +1008,7 @@ class CommandImportWordpress(Command, ImportMixin):
                         out_content_filename = slug + '.' + extension
                     else:
                         out_content_filename \
-                            = utils.get_translation_candidate(self.context,
+                            = utils.get_translation_candidate(current_translations_config,
                                                               slug + "." + extension, lang)
                         self.extra_languages.add(lang)
                     meta_slug = slug

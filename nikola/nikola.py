@@ -292,6 +292,9 @@ TAXONOMY_COMPATIBILITY_PLUGIN_NAME_MAP = {
     "render_tags": ["classify_categories", "classify_tags"],
 }
 
+# Default value for the pattern used to name translated files
+DEFAULT_TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
+
 
 def _enclosure(post, lang):
     """Add an enclosure to RSS."""
@@ -535,7 +538,7 @@ class Nikola(object):
             'THEME_COLOR': '#5670d4',  # light "corporate blue"
             'THEME_CONFIG': {},
             'THUMBNAIL_SIZE': 180,
-            'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}',
+            'TRANSLATIONS_PATTERN': DEFAULT_TRANSLATIONS_PATTERN,
             'URL_TYPE': 'rel_path',
             'USE_BUNDLES': True,
             'USE_CDN': False,

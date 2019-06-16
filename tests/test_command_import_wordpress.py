@@ -185,6 +185,7 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
         self.import_command.transform_to_markdown = False
         self.import_command.transform_to_html = False
         self.import_command.use_wordpress_compiler = False
+        self.import_command.translations_pattern = '{path}.{lang}.{ext}'
         context = self.import_command.populate_context(channel)
 
         for required_key in ('POSTS', 'PAGES', 'COMPILERS'):
@@ -212,6 +213,9 @@ class CommandImportWordpressTest(BasicCommandImportWordpress):
         self.import_command.transform_to_html = False
         self.import_command.use_wordpress_compiler = False
         self.import_command.tag_saniziting_strategy = 'first'
+        self.import_command.separate_qtranslate_content = False
+        self.import_command.translations_pattern = '{path}.{lang}.{ext}'
+
         self.import_command.context = self.import_command.populate_context(
             channel)
 
@@ -334,6 +338,7 @@ Diese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammen
         self.import_command.transform_to_markdown = False
         self.import_command.transform_to_html = False
         self.import_command.use_wordpress_compiler = False
+        self.import_command.translations_pattern = '{path}.{lang}.{ext}'
 
         with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_code', transform_code):
             with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_caption', transform_caption):
