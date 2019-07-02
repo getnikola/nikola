@@ -1094,7 +1094,7 @@ Supported input formats
 Nikola supports multiple input formats.  Out of the box, we have compilers available for:
 
 * reStructuredText (default and pre-configured)
-* `Markdown`_
+* `Markdown`_ (pre-configured since v7.8.7)
 * `Jupyter Notebook`_
 * `HTML`_
 * `PHP`_
@@ -1117,6 +1117,11 @@ Plus, we have specialized compilers in the Plugins Index for:
 * `txt2tags <https://plugins.getnikola.com/#txt2tags>`_
 * `CreoleWiki <https://plugins.getnikola.com/#wiki>`_
 * `WordPress posts <https://plugins.getnikola.com/#wordpress_compiler>`_
+
+To write posts in a different format, you need to configure the compiler and
+paths. To create a post, use ``nikola new_post -f COMPILER_NAME``, eg. ``nikola
+new_post -f markdown``. The default compiler used is the first entry in POSTS
+or PAGES.
 
 Configuring other input formats
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
