@@ -449,5 +449,6 @@ class CommandCheck(Command):
 
         if warn_flag:
             self.logger.warn('Some files or directories have been removed, your site may need rebuilding')
+            return True
 
-        return True
+        return False
