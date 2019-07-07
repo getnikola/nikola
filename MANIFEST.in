@@ -1,4 +1,4 @@
-graft bower_components
+graft npm_assets
 graft docs
 graft logo
 graft nikola

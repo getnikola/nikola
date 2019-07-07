@@ -27,9 +27,9 @@ matrix:
     - python3 -m venv nikola-tests-venv
     - source nikola-tests-venv/bin/activate
     - pip install --upgrade-strategy eager -U pip wheel
-  - python: '3.6'
+  - python: '3.7'
     env: NMODE=flake8
-  - python: '3.6'
+  - python: '3.7'
     env: NMODE=basereq
 env:
   matrix:
