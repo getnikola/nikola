@@ -1494,12 +1494,12 @@ you can't, this will work.
 Configuration
 -------------
 
-You can pass a configuration file to ``nikola`` by using the ``--conf`` command line switch.
-Otherwise the ``conf.py`` file in the root of the Nikola website will be used.
+The configuration file can be used to customize a lot of what Nikola does. Its
+syntax is python, but if you don't know the language, it still should not be
+terribly hard to grasp.
 
-The configuration file can be used to customize a lot of
-what Nikola does. Its syntax is python, but if you don't know the language, it
-still should not be terribly hard to grasp.
+By default, the ``conf.py`` file in the root of the Nikola website will be used.
+You can pass a different configuration file to by using the ``--conf`` command line switch.
 
 The default ``conf.py`` you get with Nikola should be fairly complete, and is quite
 commented.
