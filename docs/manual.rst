@@ -1329,7 +1329,9 @@ media
 
     .. code:: text
 
-        {{% raw %}}{{% media url="https://www.youtube.com/watch?v=Nck6BZga7TQ" %}}{{% /raw %}}
+        {{% raw %}}{{% media url=https://www.youtube.com/watch?v=Nck6BZga7TQ %}}{{% /raw %}}
+
+    Note that the shortcode won’t work if your compiler turns URLs into clickable links.
 
 post-list
     Will show a list of posts, see the `Post List directive for details <#post-list>`__.
