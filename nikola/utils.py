@@ -946,7 +946,7 @@ def extract_all(zipfile, path='themes'):
 def to_datetime(value, tzinfo=None):
     """Convert string to datetime."""
     try:
-        if not isinstance(value, datetime.date):
+        if isinstance(value, datetime.date):
             value = datetime.datetime.combine(value, datetime.datetime.min.time())
         if not isinstance(value, datetime.datetime):
             # dateutil does bad things with TZs like UTC-03:00.
