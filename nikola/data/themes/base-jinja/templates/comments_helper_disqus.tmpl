@@ -30,7 +30,7 @@
 
 {% macro comment_link(link, identifier) %}
     {% if comment_system_id %}
-	<a href="{{ link }}#disqus_thread" data-disqus-identifier="{{ identifier }}">{{ messages("Comments") }}</a>
+    <a href="{{ link }}#disqus_thread" data-disqus-identifier="{{ identifier }}">{{ messages("Comments") }}</a>
     {% endif %}
 {% endmacro %}
 
