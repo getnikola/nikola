@@ -827,7 +827,8 @@ If you set the ``status`` metadata field of a post to ``draft``, it will not be 
 in indexes and feeds. It *will* be compiled, and if you deploy it it *will* be made
 available, so use with care. If you wish your drafts to be not available in your
 deployed site, you can set ``DEPLOY_DRAFTS = False`` in your configuration. This will
-not work if lazily include ``nikola build`` in your ``DEPLOY_COMMANDS``.
+not work if you include ``nikola build`` in your ``DEPLOY_COMMANDS``, as the
+option removes the draft posts before any ``DEPLOY_COMMANDS`` are run.
 
 Also if a post has a date in the future, it will not be shown in indexes until
 you rebuild after that date. This behavior can be disabled by setting
