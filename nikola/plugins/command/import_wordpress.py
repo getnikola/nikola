@@ -573,6 +573,9 @@ class CommandImportWordpress(Command, ImportMixin):
                                     if ignore_zero and value == 0:
                                         return
                                 elif is_float:
+                                    # in some locales (like fr) and for old posts there may be a comma here.
+                                    if isinstance(value, bytes):
+                                        value = value.replace(b",", b".")
                                     value = float(value)
                                     if ignore_zero and value == 0:
                                         return
