@@ -1,3 +1,18 @@
+New in master
+=============
+
+
+Bugfixes
+--------
+
+* import_wordpress plugin doesn't require anymore a translation and
+  can use nikola's default if none provided.
+* wordpress+qtranslate import (--qtranslate option) now works with
+  more recent versions of plugins from the qtranslate family (namely
+  qtranslate-X)
+* fixed a wordpress import exception when image metada has floats
+  formated with ',' instead of '.'
+
 New in v8.0.2
 =============
 
