@@ -25,11 +25,49 @@ class BasicCommandImportWordpress(BaseTestCase):
 
 class TestQTranslateContentSeparation(BasicCommandImportWordpress):
 
+    def test_split_a_simple_modern_two_language_post(self):
+        content = """[:fr]Voila voila[:en]BLA[:]"""
+        content_translations = self.legacy_qtranslate_separate(content)
+        self.assertEqual("Voila voila", content_translations["fr"])
+        self.assertEqual("BLA", content_translations["en"])
+
+    def test_split_a_pre_modern_two_language_post_with_intermission(self):
+        content = """[:fr]Voila voila[:]COMMON[:en]BLA[:]"""
+        content_translations = self.legacy_qtranslate_separate(content)
+        self.assertEqual("Voila voila COMMON", content_translations["fr"])
+        self.assertEqual("COMMON BLA", content_translations["en"])
+
+    def test_modernize_qtranslate_tags(self):
+        content = b"""<!--:fr-->Voila voila<!--:-->COMMON<!--:fr-->MOUF<!--:--><!--:en-->BLA<!--:-->"""
+        output = self.module.modernize_qtranslate_tags(content)
+        expected = b"""[:fr]Voila voila[:]COMMON[:fr]MOUF[:][:en]BLA[:]"""
+        self.assertEqual(expected, output)
+
+    def test_modernize_a_wordpress_export_xml_chunk(self):
+        raw_export_path = os.path.abspath(os.path.join(
+            os.path.dirname(__file__), 'wordpress_qtranslate_item_raw_export.xml'))
+        with open(raw_export_path, 'rb') as raw_xml_chunk_file:
+            content = raw_xml_chunk_file.read()
+        output = self.module.modernize_qtranslate_tags(content)
+        modernized_xml_path = os.path.abspath(os.path.join(
+            os.path.dirname(__file__), 'wordpress_qtranslate_item_modernized.xml'))
+        with open(modernized_xml_path, 'rb') as modernized_chunk_file:
+            expected = modernized_chunk_file.read()
+        self.assertEqual(expected, output)
+
+    def legacy_qtranslate_separate(self, text):
+        """This method helps keeping the legacy tests covering various
+        corner cases, but plugged on the newer methods."""
+        text_bytes = text.encode("utf-8")
+        modern_bytes = self.module.modernize_qtranslate_tags(text_bytes)
+        modern_text = modern_bytes.decode("utf-8")
+        return self.module.separate_qtranslate_tagged_langs(modern_text)
+
     def test_conserves_qtranslate_less_post(self):
         content = """Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
 
 Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !"""
-        content_translations = self.module.separate_qtranslate_content(content)
+        content_translations = self.legacy_qtranslate_separate(content)
         self.assertEqual(1, len(content_translations))
         self.assertEqual(content, content_translations[""])
 
@@ -41,7 +79,7 @@ Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
 
 Comments, questions and suggestions are welcome !
 <!--:-->"""
-        content_translations = self.module.separate_qtranslate_content(content)
+        content_translations = self.legacy_qtranslate_separate(content)
         self.assertEqual(
             """Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
 
@@ -67,7 +105,7 @@ Plus de détails ici !
 <!--:--><!--:en-->
 More details here !
 <!--:-->"""
-        content_translations = self.module.separate_qtranslate_content(content)
+        content_translations = self.legacy_qtranslate_separate(content)
         self.assertEqual(
             """Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
 
@@ -87,19 +125,19 @@ More details here !
 
     def test_split_a_two_language_post_with_intermission(self):
         content = """<!--:fr-->Voila voila<!--:-->COMMON<!--:en-->BLA<!--:-->"""
-        content_translations = self.module.separate_qtranslate_content(content)
+        content_translations = self.legacy_qtranslate_separate(content)
         self.assertEqual("Voila voila COMMON", content_translations["fr"])
         self.assertEqual("COMMON BLA", content_translations["en"])
 
     def test_split_a_two_language_post_with_uneven_repartition(self):
         content = """<!--:fr-->Voila voila<!--:-->COMMON<!--:fr-->MOUF<!--:--><!--:en-->BLA<!--:-->"""
-        content_translations = self.module.separate_qtranslate_content(content)
+        content_translations = self.legacy_qtranslate_separate(content)
         self.assertEqual("Voila voila COMMON MOUF", content_translations["fr"])
         self.assertEqual("COMMON BLA", content_translations["en"])
 
     def test_split_a_two_language_post_with_uneven_repartition_bis(self):
         content = """<!--:fr-->Voila voila<!--:--><!--:en-->BLA<!--:-->COMMON<!--:fr-->MOUF<!--:-->"""
-        content_translations = self.module.separate_qtranslate_content(content)
+        content_translations = self.legacy_qtranslate_separate(content)
         self.assertEqual("Voila voila COMMON MOUF", content_translations["fr"])
         self.assertEqual("BLA COMMON", content_translations["en"])
 

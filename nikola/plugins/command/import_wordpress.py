@@ -376,7 +376,8 @@ class CommandImportWordpress(Command, ImportMixin):
             if phpserialize is None:
                 req_missing(['phpserialize'], 'import WordPress dumps without --no-downloads')
 
-        channel = self.get_channel_from_file(self.wordpress_export_file)
+        export_file_preprocessor = modernize_qtranslate_tags if self.separate_qtranslate_content else None
+        channel = self.get_channel_from_file(self.wordpress_export_file, export_file_preprocessor)
         self._prepare(channel)
         conf_template = self.generate_base_site()
 
@@ -435,9 +436,16 @@ class CommandImportWordpress(Command, ImportMixin):
         return b''.join(xml)
 
     @classmethod
-    def get_channel_from_file(cls, filename):
-        """Get channel from XML file."""
-        tree = etree.fromstring(cls.read_xml_file(filename))
+    def get_channel_from_file(cls, filename, xml_preprocessor=None):
+        """Get channel from XML file.
+
+        An optional 'xml_preprocessor' allows to modify the xml
+        (typically to deal with variations in tags injected by some WP plugin)
+        """
+        xml_string = cls.read_xml_file(filename)
+        if xml_preprocessor:
+            xml_string = xml_preprocessor(xml_string)
+        tree = etree.fromstring(xml_string)
         channel = tree.find('channel')
         return channel
 
@@ -809,6 +817,16 @@ class CommandImportWordpress(Command, ImportMixin):
             write_header_line(fd, "wordpress_user_id", comment["user_id"])
             fd.write(('\n' + comment['content']).encode('utf8'))
 
+    def _create_meta_and_content_filenames(self, slug, extension, lang, default_language, translations_config):
+        out_meta_filename = slug + '.meta'
+        out_content_filename = slug + '.' + extension
+        if lang and lang != default_language:
+            out_meta_filename = utils.get_translation_candidate(translations_config,
+                                                                out_meta_filename, lang)
+            out_content_filename = utils.get_translation_candidate(translations_config,
+                                                                   out_content_filename, lang)
+        return out_meta_filename, out_content_filename
+
     def _create_metadata(self, status, excerpt, tags, categories, post_name=None):
         """Create post metadata."""
         other_meta = {'wp-status': status}
@@ -982,13 +1000,18 @@ class CommandImportWordpress(Command, ImportMixin):
             self.url_map[link] = (self.context['SITE_URL'] +
                                   out_folder.rstrip('/') + '/' + slug +
                                   '.html').replace(os.sep, '/')
-            if hasattr(self, "separate_qtranslate_content") \
-               and self.separate_qtranslate_content:
-                content_translations = separate_qtranslate_content(content)
+            default_language = self.context["DEFAULT_LANG"]
+            if self.separate_qtranslate_content:
+                content_translations = separate_qtranslate_tagged_langs(content)
+                title_translations = separate_qtranslate_tagged_langs(title)
             else:
                 content_translations = {"": content}
-            default_language = self.context["DEFAULT_LANG"]
-            extra_languages = [lang for lang in content_translations.keys() if lang != default_language]
+                title_translations = {"": title}
+            # in case of mistmatch between the languages found in the title and in the content
+            default_title = title_translations.get(default_language, title)
+            extra_languages = [lang for lang in content_translations.keys() if lang not in ("", default_language)]
+            for extra_lang in extra_languages:
+                self.extra_languages.add(extra_lang)
             translations_dict = get_default_translations_dict(default_language, extra_languages)
             current_translations_config = {
                 "DEFAULT_LANG": default_language,
@@ -1002,26 +1025,16 @@ class CommandImportWordpress(Command, ImportMixin):
                     LOGGER.error(('Cannot interpret post "{0}" (language {1}) with post ' +
                                   'format {2}!').format(os.path.join(out_folder, slug), lang, post_format))
                     return False
-                if lang:
-                    out_meta_filename = slug + '.meta'
-                    if lang == default_language:
-                        out_content_filename = slug + '.' + extension
-                    else:
-                        out_content_filename \
-                            = utils.get_translation_candidate(current_translations_config,
-                                                              slug + "." + extension, lang)
-                        self.extra_languages.add(lang)
-                    meta_slug = slug
-                else:
-                    out_meta_filename = slug + '.meta'
-                    out_content_filename = slug + '.' + extension
-                    meta_slug = slug
+
+                out_meta_filename, out_content_filename = self._create_meta_and_content_filenames(
+                    slug, extension, lang, default_language, current_translations_config)
+
                 tags, other_meta = self._create_metadata(status, excerpt, tags, categories,
                                                          post_name=os.path.join(out_folder, slug))
-
+                current_title = title_translations.get(lang, default_title)
                 meta = {
-                    "title": title,
-                    "slug": meta_slug,
+                    "title": current_title,
+                    "slug": slug,
                     "date": post_date,
                     "description": description,
                     "tags": ','.join(tags),
@@ -1040,7 +1053,7 @@ class CommandImportWordpress(Command, ImportMixin):
                 else:
                     self.write_metadata(os.path.join(self.output_folder, out_folder,
                                                      out_meta_filename),
-                                        title, meta_slug, post_date, description, tags, **other_meta)
+                                        current_title, slug, post_date, description, tags, **other_meta)
                     self.write_content(
                         os.path.join(self.output_folder,
                                      out_folder, out_content_filename),
@@ -1140,15 +1153,20 @@ def get_text_tag(tag, name, default):
         return default
 
 
-def separate_qtranslate_content(text):
-    """Parse the content of a wordpress post or page and separate qtranslate languages.
+def separate_qtranslate_tagged_langs(text):
+    """Parse the content of a wordpress post or page and separate languages.
 
-    qtranslate tags: <!--:LL-->blabla<!--:-->
+    For qtranslateX tags: [:LL]blabla[:]
+
+    Note: qtranslate* plugins had a troubled history and used various
+    tags over time, application of the 'modernize_qtranslate_tags'
+    function is required for this function to handle most of the legacy
+    cases.
     """
-    # TODO: uniformize qtranslate tags <!--/en--> => <!--:-->
-    qt_start = "<!--:"
-    qt_end = "-->"
-    qt_end_with_lang_len = 5
+    qt_start = "[:"
+    qt_end = "]"
+    qt_end_len = len(qt_end)
+    qt_end_with_lang_len = qt_end_len + 2
     qt_chunks = text.split(qt_start)
     content_by_lang = {}
     common_txt_list = []
@@ -1160,9 +1178,9 @@ def separate_qtranslate_content(text):
             # be some piece of common text or tags, or just nothing
             lang = ""  # default language
             c = c.lstrip(qt_end)
-            if not c:
+            if not c.strip():
                 continue
-        elif c[2:].startswith(qt_end):
+        elif c[2:qt_end_with_lang_len].startswith(qt_end):
             # a language specific section (with language code at the begining)
             lang = c[:2]
             c = c[qt_end_with_lang_len:]
@@ -1183,3 +1201,24 @@ def separate_qtranslate_content(text):
     for l in content_by_lang.keys():
         content_by_lang[l] = " ".join(content_by_lang[l])
     return content_by_lang
+
+
+def modernize_qtranslate_tags(xml_string):
+    """
+    Uniformize the "tag" used by various version of qtranslate into a single set of tags
+    (namely [:LG] and [:])
+    """
+    old_start_lang = re.compile(b"<!--:?(\\w{2})-->")
+    new_start_lang = b"[:\\1]"
+    old_end_lang = re.compile(b"<!--(/\\w{2}|:)-->")
+    new_end_lang = b"[:]"
+    title_match = re.compile(b"<title>(.*?)</title>")
+    modern_starts = old_start_lang.sub(new_start_lang, xml_string)
+    modernized_string = old_end_lang.sub(new_end_lang, modern_starts)
+
+    def title_escape(match):
+        title = match.group(1)
+        title = title.replace(b"&", b"&amp;").replace(b"<", b"&lt;").replace(b">", b"&gt;")
+        return b"<title>" + title + b"</title>"
+    fixed_string = title_match.sub(title_escape, modernized_string)
+    return fixed_string
