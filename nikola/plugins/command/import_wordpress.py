@@ -1210,22 +1210,24 @@ def separate_qtranslate_tagged_langs(text):
     return content_by_lang
 
 
-def modernize_qtranslate_tags(xml_string):
+def modernize_qtranslate_tags(xml_bytes):
     """
-    Uniformize the "tag" used by various version of qtranslate into a single set of tags
-    (namely [:LG] and [:])
+    Uniformize the "tag" used by various version of qtranslate.
+
+    The resutling byte string will only contain one set of qtranslate tags
+    (namely [:LG] and [:]), older ones being converted to new ones.
     """
     old_start_lang = re.compile(b"<!--:?(\\w{2})-->")
     new_start_lang = b"[:\\1]"
     old_end_lang = re.compile(b"<!--(/\\w{2}|:)-->")
     new_end_lang = b"[:]"
     title_match = re.compile(b"<title>(.*?)</title>")
-    modern_starts = old_start_lang.sub(new_start_lang, xml_string)
-    modernized_string = old_end_lang.sub(new_end_lang, modern_starts)
+    modern_starts = old_start_lang.sub(new_start_lang, xml_bytes)
+    modernized_bytes = old_end_lang.sub(new_end_lang, modern_starts)
 
     def title_escape(match):
         title = match.group(1)
         title = title.replace(b"&", b"&amp;").replace(b"<", b"&lt;").replace(b">", b"&gt;")
         return b"<title>" + title + b"</title>"
-    fixed_string = title_match.sub(title_escape, modernized_string)
-    return fixed_string
+    fixed_bytes = title_match.sub(title_escape, modernized_bytes)
+    return fixed_bytes

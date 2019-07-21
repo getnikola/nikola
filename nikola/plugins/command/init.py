@@ -172,7 +172,7 @@ def format_default_translations_config(additional_languages):
 
 
 def get_default_translations_dict(default_lang, additional_languages):
-    """Generate a TRANSLATIONS dict matching the config from 'format_default_translations_config'"""
+    """Generate a TRANSLATIONS dict matching the config from 'format_default_translations_config'."""
     tr = {default_lang: ''}
     for l in additional_languages:
         tr[l] = './' + l
