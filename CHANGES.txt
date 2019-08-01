@@ -5,6 +5,9 @@ New in master
 Bugfixes
 --------
 
+* Output ``<code>`` tag for double backticks in reST (Issue #3276)
+* Fully switch to HTML5 writer for reST (Issue #3276,
+  getnikola/plugins#294)
 * Make ipynb listings work again
 * Correctly link to listings with spaces in their names
 * import_wordpress plugin doesn't require anymore a translation and

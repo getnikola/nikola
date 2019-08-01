@@ -301,6 +301,41 @@ def add_node(node, visit_function=None, depart_function=None):
         setattr(docutils.writers.html5_polyglot.HTMLTranslator, 'depart_' + node.__name__, depart_function)
 
 
+# Output <code> for ``double backticks``. (Code and extra logic based on html4css1 translator)
+def visit_literal(self, node):
+    # special case: "code" role
+    classes = node.get('classes', [])
+    if 'code' in classes:
+        # filter 'code' from class arguments
+        node['classes'] = [cls for cls in classes if cls != 'code']
+        self.body.append(self.starttag(node, 'code', ''))
+        return
+    self.body.append(
+        self.starttag(node, 'code', '', CLASS='docutils literal'))
+    text = node.astext()
+    for token in self.words_and_spaces.findall(text):
+        if token.strip():
+            # Protect text like "--an-option" and the regular expression
+            # ``[+]?(\d+(\.\d*)?|\.\d+)`` from bad line wrapping
+            if self.in_word_wrap_point.search(token):
+                self.body.append('<span class="pre">%s</span>'
+                                 % self.encode(token))
+            else:
+                self.body.append(self.encode(token))
+        elif token in ('\n', ' '):
+            # Allow breaks at whitespace:
+            self.body.append(token)
+        else:
+            # Protect runs of multiple spaces; the last space can wrap:
+            self.body.append('&nbsp;' * (len(token) - 1) + ' ')
+    self.body.append('</code>')
+    # Content already processed:
+    raise docutils.nodes.SkipNode
+
+
+setattr(docutils.writers.html5_polyglot.HTMLTranslator, 'visit_literal', visit_literal)
+
+
 def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
              destination_path=None, reader=None,
              parser=None, parser_name='restructuredtext', writer=None,
