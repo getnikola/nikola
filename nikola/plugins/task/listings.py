@@ -115,15 +115,17 @@ class Listings(Task):
             needs_ipython_css = False
             if in_name and in_name.endswith('.ipynb'):
                 # Special handling: render ipynbs in listings (Issue #1900)
-                ipynb_compiler = self.site.plugin_manager.getPluginByName("ipynb", "PageCompiler").plugin_object
-                with io.open(in_name, "r", encoding="utf8") as in_file:
+                ipynb_plugin = self.site.plugin_manager.getPluginByName("ipynb", "PageCompiler")
+                if ipynb_plugin is None:
+                    msg = "To use .ipynb files as listings, you must set up the Jupyter compiler in COMPILERS and POSTS/PAGES."
+                    utils.LOGGER.error(msg)
+                    raise ValueError(msg)
+
+                ipynb_compiler = ipynb_plugin.plugin_object
+                with open(in_name, "r", encoding="utf8") as in_file:
                     nb_json = ipynb_compiler._nbformat_read(in_file)
-                    ipynb_raw = ipynb_compiler._compile_string(nb_json)
-                ipynb_html = lxml.html.fromstring(ipynb_raw)
-                # The raw HTML contains garbage (scripts and styles), we can’t leave it in
-                code = lxml.html.tostring(ipynb_html.xpath('//*[@id="notebook"]')[0], encoding='unicode')
+                    code = ipynb_compiler._compile_string(nb_json)
                 title = os.path.basename(in_name)
-                needs_ipython_css = True
             elif in_name:
                 with open(in_name, 'r', encoding='utf-8') as fd:
                     try:

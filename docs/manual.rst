@@ -1170,7 +1170,8 @@ The ``-f`` argument to ``new_post`` should be used in the ``ipynb@KERNEL`` forma
 It defaults to Python in the version used by Nikola if not specified.
 
 Jupyter Notebooks are also supported in stand-alone listings, if Jupyter
-support is enabled site-wide.
+support is enabled site-wide. You must have something for ``.ipynb`` in POSTS
+or PAGES for the feature to work.
 
 HTML
 ````
@@ -2624,7 +2625,8 @@ and also create a ``listings/foo.py.html`` page (or in another directory, depend
 ``LISTINGS_FOLDER``) and the listing will have a title linking to it.
 
 The stand-alone ``listings/`` pages also support Jupyter notebooks, if they are
-supported site-wide.
+supported site-wide. You must have something for ``.ipynb`` in POSTS or PAGES
+for the feature to work.
 
 Listings support the same options `reST includes`__ support (including
 various options for controlling which parts of the file are included), and also
