@@ -303,6 +303,7 @@ def add_node(node, visit_function=None, depart_function=None):
 
 # Output <code> for ``double backticks``. (Code and extra logic based on html4css1 translator)
 def visit_literal(self, node):
+    """Output <code> for double backticks."""
     # special case: "code" role
     classes = node.get('classes', [])
     if 'code' in classes:
