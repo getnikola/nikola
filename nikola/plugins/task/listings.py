@@ -28,9 +28,7 @@
 
 
 from collections import defaultdict
-import io
 import os
-import lxml.html
 
 from pygments import highlight
 from pygments.lexers import get_lexer_for_filename, guess_lexer, TextLexer
