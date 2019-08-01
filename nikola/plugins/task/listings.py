@@ -126,6 +126,7 @@ class Listings(Task):
                     nb_json = ipynb_compiler._nbformat_read(in_file)
                     code = ipynb_compiler._compile_string(nb_json)
                 title = os.path.basename(in_name)
+                needs_ipython_css = True
             elif in_name:
                 with open(in_name, 'r', encoding='utf-8') as fd:
                     try:
