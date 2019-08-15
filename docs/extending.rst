@@ -29,6 +29,9 @@ folder in your site.
 Plugins come in various flavours, aimed at extending different aspects
 of Nikola.
 
+Available Plugin Categories
+===========================
+
 Command Plugins
 ---------------
 
@@ -476,7 +479,7 @@ Currently Nikola emits the following signals:
          'post': # the Post object for the post/page
         }
 
-One example is the `deploy_hooks plugin. <https://github.com/getnikola/plugins/tree/master/v6/deploy_hooks>`__
+One example is the `deploy_hooks plugin. <https://github.com/getnikola/plugins/tree/master/v7/deploy_hooks>`__
 
 ConfigPlugin Plugins
 --------------------
@@ -484,14 +487,24 @@ ConfigPlugin Plugins
 Does nothing specific, can be used to modify the site object (and thus the config).
 
 Put all the magic you want in ``set_site()``, and don’t forget to run the one
-from ``super()``. Example  plugin: `navstories <https://github.com/getnikola/plugins/tree/master/v7/navstories>`__
+from ``super()``. Example plugin: `navstories <https://github.com/getnikola/plugins/tree/master/v7/navstories>`__
+
+Shortcode Plugins
+-----------------
+
+Shortcode Plugins are a simple way to create a custom shortcode handler.
+By default, the ``set_site`` method will register the ``handler`` method as a
+shortcode with the plugin’s ``name`` as the shortcode name.
+
+See the Shortcodes_ section for more details on shortcodes.
 
 PostScanner Plugins
 -------------------
 
 Get posts and pages from "somewhere" to be added to the timeline.
-The only currently existing plugin of this kind reads them from disk.
-
+There are currently two plugins for this: the built-in ``scan_posts``, and
+``pkgindex_scan`` (in the Plugin Index), which is used to treat .plugin/.theme
++ README.md as posts for the Plugin and Theme Indexes.
 
 Plugin Index
 ============
@@ -604,9 +617,10 @@ So, if you are creating a plugin that generates markup, it may be a good idea
 to register it as a shortcode in addition of to restructured text directive or
 markdown extension, thus making it available to all markup formats.
 
-To implement your own shortcodes from a plugin, you can create a plugin inheriting ``ShortcodePlugin`` and
-from its ``set_site`` method,  call
-
+To implement your own shortcodes from a plugin, you can create a plugin inheriting ``ShortcodePlugin``.
+By default, the ``set_site`` method will register the ``handler`` method as a
+shortcode with the plugin’s ``name`` as the shortcode name. To have other
+shortcode names, you can call
 ``Nikola.register_shortcode(name, func)`` with the following arguments:
 
 ``name``:
