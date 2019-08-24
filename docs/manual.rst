@@ -291,6 +291,17 @@ slug
     and default to using a restricted character set (``a-z0-9-_``) because
     other symbols may cause issues in URLs. (required)
 
+    So, if the slug is "the-slug" the page generated would be "the-slug.html" or
+    "the-slug/index.html" (if you have the pretty URLs option enabled) 
+
+    One special case is setting the slug to "index". This means the page generated 
+    would be "som_folder/index.html", which means it will be open for the URL
+    that ends in "some_folder" or "some_folder/".
+
+    This is useful in some cases, in others may cause conflicts with other pages
+    Nikola generates (like blog indexes) and as a side effect it disables 
+    "pretty URLs" for this page. So use with care.
+
 date
     Date of the post, defaults to now. Multiple date formats are accepted.
     Adding a timezone is recommended. (required for posts)
