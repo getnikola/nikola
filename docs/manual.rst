@@ -295,7 +295,7 @@ slug
     "the-slug/index.html" (if you have the pretty URLs option enabled) 
 
     One special case is setting the slug to "index". This means the page generated 
-    would be "som_folder/index.html", which means it will be open for the URL
+    would be "some_folder/index.html", which means it will be open for the URL
     that ends in "some_folder" or "some_folder/".
 
     This is useful in some cases, in others may cause conflicts with other pages
