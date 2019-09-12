@@ -65,6 +65,6 @@ ${parent.extra_head()}
 var jsonContent = ${photo_array_json};
 var thumbnailSize = ${thumbnail_size};
 renderGallery(jsonContent, thumbnailSize);
-window.addEventListener('resize', renderGallery);
+window.addEventListener('resize', function(){renderGallery(jsonContent, thumbnailSize)});
 </script>
 </%block>

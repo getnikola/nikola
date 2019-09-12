@@ -5,6 +5,8 @@ New in master
 Bugfixes
 --------
 
+* Fix galleries in Firefox Mobile and when resizing window
+  (Issue #3258)
 * Output ``<code>`` tag for double backticks in reST (Issue #3276)
 * Fully switch to HTML5 writer for reST (Issue #3276,
   getnikola/plugins#294)
