@@ -51,6 +51,9 @@ from .utils import (LOGGER, STDERR_HANDLER, STRICT_HANDLER,
                     ColorfulStderrHandler, get_root_dir, req_missing,
                     sys_decode)
 
+from . import cli
+
+
 try:
     import readline  # NOQA
 except ImportError:
@@ -65,8 +68,11 @@ config = {}
 _RETURN_DOITNIKOLA = False
 
 
-def main(args=None):
+
+def main(options=None):
     """Run Nikola."""
+    options, args = cli.parse_args(options) if isinstance(options, (list, tuple, None.__class__)) else options
+
     colorful = False
     if sys.stderr.isatty() and os.name != 'nt' and os.getenv('NIKOLA_MONO') is None and os.getenv('TERM') != 'dumb':
         colorful = True
@@ -79,16 +85,8 @@ def main(args=None):
     oargs = args
     args = [sys_decode(arg) for arg in args]
 
-    conf_filename = 'conf.py'
-    conf_filename_changed = False
-    for index, arg in enumerate(args):
-        if arg[:7] == '--conf=':
-            del args[index]
-            del oargs[index]
-            conf_filename = arg[7:]
-            conf_filename_changed = True
-            break
-
+    conf_filename = options.conf_filename or 'conf.py'
+    conf_filename_changed = True if options.conf_filename else False
     quiet = False
     strict = False
     if len(args) > 0 and args[0] == 'build' and '--strict' in args:
@@ -160,6 +158,9 @@ def main(args=None):
     config['__configuration_filename__'] = conf_filename
     config['__cwd__'] = original_cwd
     site = Nikola(**config)
+    for key, value in options.defines:
+        site.config[key] = value
+
     DN = DoitNikola(site, quiet)
     if _RETURN_DOITNIKOLA:
         return DN
@@ -417,4 +418,4 @@ def _print_exception():
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    sys.exit(main() or 0)
