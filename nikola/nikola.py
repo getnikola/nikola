@@ -124,6 +124,7 @@ LEGAL_VALUES = {
         'fa': 'Persian',
         'fi': 'Finnish',
         'fr': 'French',
+        'fur': 'Friulian',
         'gl': 'Galician',
         'he': 'Hebrew',
         'hi': 'Hindi',

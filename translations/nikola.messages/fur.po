@@ -7,165 +7,158 @@
 # Translators:
 # Translators:
 # Translators:
-# Alessandro Pisa <alessandro.pisa@gmail.com>, 2013,2017
-# Chris Warrick, 2014,2019
-# David Paleino <d.paleino@gmail.com>, 2013
-# Giuseppe `ferdy` Miceli <ferdy@ferdy.it>, 2019
-# Nicola Larosa <transifex@teknico.net>, 2015
-# Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
-# Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
-# Stefano Karapetsas <stefano@karapetsas.com>, 2014
+# Chris Warrick, 2019
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2019-10-01 10:34+0000\n"
+"PO-Revision-Date: 2019-10-01 10:54+0000\n"
 "Last-Translator: Chris Warrick\n"
-"Language-Team: Italian (http://www.transifex.com/ralsina/nikola/language/it/)\n"
+"Language-Team: Friulian (http://www.transifex.com/ralsina/nikola/language/fur/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: it\n"
+"Language: fur\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "More posts about %s"
-msgstr "Altri articoli collegati %s"
+msgstr "Altris articui su %s"
 
 #. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "LANGUAGE"
-msgstr "Italiano"
+msgstr "Furlan"
 
 msgid "Tags"
-msgstr "Tag"
+msgstr "Tags"
 
 msgid "Categories"
-msgstr "Categorie"
+msgstr "Categoriis"
 
 msgid "Tags and Categories"
-msgstr "Tag e categorie"
+msgstr "Tags e categoriis"
 
 msgid "Comments"
-msgstr "Commenti"
+msgstr "Coments"
 
 msgid "Read more"
-msgstr "Continua la lettura"
+msgstr "Continue la leture"
 
 msgid "Posts about %s"
-msgstr "Articoli su %s"
+msgstr "Articui su %s"
 
 msgid "Next post"
-msgstr "Articolo successivo"
+msgstr "Prossim articul"
 
 msgid "old posts, page %d"
-msgstr "vecchi articoli, pagina %d"
+msgstr "articui vecjos, pagjine %d"
 
 msgid "page %d"
-msgstr "pagina %d"
+msgstr "pagjine %d"
 
 msgid "Source"
-msgstr "Sorgente"
+msgstr "Document origjinâl"
 
 #. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "Read in English"
-msgstr "Leggi in italiano"
+msgstr "Lei par furlan"
 
 msgid "Posts for year %s"
-msgstr "Articoli per l'anno %s"
+msgstr "Articui par an %s"
 
 msgid "Newer posts"
-msgstr "Articoli più recenti"
+msgstr "Articui plui resints"
 
 msgid "Previous post"
-msgstr "Articolo precedente"
+msgstr "Articul precedent"
 
 msgid "Also available in:"
-msgstr "Disponibile anche in:"
+msgstr "Disponibil ancje in:"
 
 msgid "Languages:"
-msgstr "Lingue:"
+msgstr "Lenghis:"
 
 msgid "Original site"
-msgstr "Sito originale"
+msgstr "Sît originâl"
 
 msgid "Older posts"
-msgstr "Articoli precedenti"
+msgstr "Articui precedents"
 
 msgid "Archive"
-msgstr "Archivio"
+msgstr "Archivi"
 
 msgid "Publication date"
-msgstr "Data di pubblicazione"
+msgstr "Date di publicazion"
 
 msgid "Posted:"
-msgstr "Pubblicato:"
+msgstr "Publicât:"
 
 msgid "Posts for {month_year}"
-msgstr "Articoli per {month_year}"
+msgstr "Articui par {month_year}"
 
 msgid "Posts for {month_day_year}"
-msgstr "Articoli per il {month_day_year}"
+msgstr "Articui par {month_day_year}"
 
 msgid "Nothing found."
-msgstr "Non trovato."
+msgstr "Nol è stât cjatât nuie."
 
 msgid "No posts found."
-msgstr "Nessun articolo trovato."
+msgstr "Nissun articul cjatât."
 
 msgid "RSS feed"
 msgstr "Feed RSS"
 
 msgid "%d min remaining to read"
-msgstr "ulteriori %d minuti di lettura"
+msgstr "a restin altris %d minûts di leture"
 
 msgid "Skip to main content"
-msgstr "Vai al testo principale"
+msgstr "Va al test principâl"
 
 msgid "Subcategories:"
-msgstr "Sottocategorie:"
+msgstr "Subcategoriis:"
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
-msgstr "(attivo)"
+msgstr "(atîf)"
 
 #. Default content for a new post
 msgid "Write your post here."
-msgstr "Scrivi qui il tuo post."
+msgstr "Scrîf ca il to articul."
 
 #. Default content for a new page
 msgid "Write your page here."
-msgstr "Scrivi qui la tua pagina."
+msgstr "Scrîf ca la tô pagjine."
 
 msgid "Uncategorized"
-msgstr "Senza categorie"
+msgstr "Cence categorie"
 
 #. Used for feeds of any format
 msgid "Updates"
-msgstr "Aggiornamenti"
+msgstr "Inzornaments"
 
 msgid "Authors"
-msgstr "Autori"
+msgstr "Autôrs"
 
 msgid "Posts by %s"
-msgstr "Articoli di %s"
+msgstr "Articui di %s"
 
 msgid "Toggle navigation"
-msgstr "Attiva la navigazione"
+msgstr "Ativâ la navigazion"
 
 msgid "Previous"
-msgstr "Precedente"
+msgstr "Precedent"
 
 msgid "Up"
 msgstr "Su"
 
 msgid "Next"
-msgstr "Successivo"
+msgstr "Prossim"
 
 msgid "Atom feed"
 msgstr "Feed Atom"
 
 #. {date} (updated {updated_date})
 msgid "updated"
-msgstr "aggiornato"
+msgstr "inzornât"
