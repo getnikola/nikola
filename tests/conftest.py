@@ -4,6 +4,8 @@ import pytest
 
 @pytest.fixture(autouse=True)
 def ensure_chdir():
-    x = os.getcwd()
-    yield
-    os.chdir(x)
+    old_dir = os.getcwd()
+    try:
+        yield
+    finally:
+        os.chdir(old_dir)
