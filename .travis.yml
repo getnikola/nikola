@@ -29,7 +29,7 @@ matrix:
     - pip install --upgrade-strategy eager -U pip wheel
   - python: '3.8'
     env: NMODE=flake8
-  - python: '3.7'
+  - python: '3.8'
     env: NMODE=basereq
 env:
   matrix:
