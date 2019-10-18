@@ -19,7 +19,7 @@ matrix:
   - os: osx
     language: generic
     env: NMODE=nikola OS=macOS
-    python: '3.7'
+    python: '3.8'
     before_install:
     - brew update
     - brew uninstall gdal postgis
