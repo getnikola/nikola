@@ -57,16 +57,17 @@ Here are some guidelines about how you can contribute to Nikola:
 * **Try writing some tests** if possible — again, following existing tests is
   often easiest, and a good way to tell whether the feature you are modifying is
   easily testable.
-* **Test your code.** If you can, run the test suite. You will find instructions
-  in ``tests/README.rst``. (alternatively, you can push and wait for Travis to pick
-  up and test your changes)
-  
+* **Test your code.** If you can, run the test suite with ``pytest tests/``
+  (you will need to install pytest and some other requirements, see
+  ``requirements-tests.txt``). Alternatively, you can push and wait for Travis
+  to pick up and test your changes.
+
   If running tests is not feasible, please at least confirm that:
-  
+
   * the demo site (created with ``nikola init -qd demosite``) builds without errors
   * the bugs you were trying to fix do not occur anymore (if applicable)
   * the features you added work properly (if applicable)
-  
+
 * There are some quirks to how Nikola’s codebase is structured, and to how
   some things need to be done [2]_ but don’t worry, we’ll guide you!
 

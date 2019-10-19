@@ -6,10 +6,10 @@
 {% if folders or files %}
 <ul>
 {% for name in folders %}
-    <li><a href="{{ name|urlencode }}">📂&nbsp;{{ name|e }}</a>
+    <li><a href="{{ name|e }}">📂&nbsp;{{ name|e }}</a>
 {% endfor %}
 {% for name in files %}
-    <li><a href="{{ name|urlencode }}.html">📄&nbsp;{{ name|e }}</a>
+    <li><a href="{{ name|e }}.html">📄&nbsp;{{ name|e }}</a>
 {% endfor %}
 </ul>
 {% endif %}

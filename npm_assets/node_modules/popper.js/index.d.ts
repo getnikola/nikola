@@ -35,6 +35,18 @@ declare namespace Popper {
 
   export type ModifierFn = (data: Data, options: Object) => Data;
 
+  export interface Attributes {
+    'x-out-of-boundaries': '' | false;
+    'x-placement': Placement;
+  }
+
+  export interface Padding {
+    top?: number,
+    bottom?: number,
+    left?: number,
+    right?: number,
+  }
+
   export interface BaseModifier {
     order?: number;
     enabled?: boolean;
@@ -48,7 +60,7 @@ declare namespace Popper {
     };
     preventOverflow?: BaseModifier & {
       priority?: Position[],
-      padding?: number,
+      padding?: number | Padding,
       boundariesElement?: Boundary | Element,
       escapeWithReference?: boolean
     };
@@ -58,8 +70,10 @@ declare namespace Popper {
     };
     flip?: BaseModifier & {
       behavior?: Behavior | Position[],
-      padding?: number,
+      padding?: number | Padding,
       boundariesElement?: Boundary | Element,
+      flipVariations?: boolean,
+      flipVariationsByContent?: boolean,
     };
     inner?: BaseModifier;
     hide?: BaseModifier;
@@ -92,6 +106,7 @@ declare namespace Popper {
     arrowElement: Element;
     styles: CSSStyleDeclaration;
     arrowStyles: CSSStyleDeclaration;
+    attributes: Attributes;
     boundaries: Object;
     offsets: {
       popper: Offset,
@@ -143,6 +158,8 @@ declare class Popper {
   static Defaults: PopperOptions;
 
   options: PopperOptions;
+  popper: Element;
+  reference: Element | ReferenceObject;
 
   constructor(reference: Element | ReferenceObject, popper: Element, options?: PopperOptions);
 

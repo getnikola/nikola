@@ -7,14 +7,15 @@
 # Translators:
 # Translators:
 # Translators:
+# Abhi Prakash <Apofficial18@gmail.com>, 2019
 # seanpue <a@seanpue.com>, 2014-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2018-08-10 08:02+0000\n"
-"Last-Translator: Chris Warrick\n"
+"PO-Revision-Date: 2019-05-10 08:32+0000\n"
+"Last-Translator: Abhi Prakash <Apofficial18@gmail.com>\n"
 "Language-Team: Hindi (http://www.transifex.com/ralsina/nikola/language/hi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,10 +50,10 @@ msgid "Posts about %s"
 msgstr "%s के बारे में पोस्टें"
 
 msgid "Next post"
-msgstr "अगली पोस्ट"
+msgstr "अगला पोस्ट"
 
 msgid "old posts, page %d"
-msgstr "पुरानी पोस्टें, पृष्‍ठ %d"
+msgstr "पुराने पोस्ट, पृष्‍ठ %d"
 
 msgid "page %d"
 msgstr "पृष्‍ठ %d"
@@ -145,20 +146,20 @@ msgid "Posts by %s"
 msgstr "%s  की पोस्टें"
 
 msgid "Toggle navigation"
-msgstr ""
+msgstr "टॉगल नेविगेशन"
 
 msgid "Previous"
-msgstr ""
+msgstr "पिछला"
 
 msgid "Up"
-msgstr ""
+msgstr "ऊपर"
 
 msgid "Next"
-msgstr ""
+msgstr "अगला"
 
 msgid "Atom feed"
-msgstr ""
+msgstr "Atom फीड"
 
 #. {date} (updated {updated_date})
 msgid "updated"
-msgstr ""
+msgstr "अपडेटेड"

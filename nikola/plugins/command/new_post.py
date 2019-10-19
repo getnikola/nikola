@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2018 Roberto Alsina and others.
+# Copyright © 2012-2019 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -264,7 +264,7 @@ class CommandNewPost(Command):
         if "@" in content_format:
             content_format, content_subformat = content_format.split("@")
 
-        if not content_format and path:
+        if not content_format and path and not os.path.isdir(path):
             # content_format not specified. If path was given, use
             # it to guess (Issue #2798)
             extension = os.path.splitext(path)[-1]
@@ -343,10 +343,10 @@ class CommandNewPost(Command):
                 slug = utils.slugify(os.path.splitext(os.path.basename(path))[0], lang=self.site.default_lang)
 
         if isinstance(author, utils.bytes_str):
-                try:
-                    author = author.decode(sys.stdin.encoding)
-                except (AttributeError, TypeError):  # for tests
-                    author = author.decode('utf-8')
+            try:
+                author = author.decode(sys.stdin.encoding)
+            except (AttributeError, TypeError):  # for tests
+                author = author.decode('utf-8')
 
         # Calculate the date to use for the content
         # SCHEDULE_ALL is post-only (Issue #2921)

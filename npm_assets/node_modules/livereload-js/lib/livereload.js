@@ -1,6 +1,6 @@
 (function() {
   var Connector, LiveReload, Options, ProtocolError, Reloader, Timer,
-    __hasProp = {}.hasOwnProperty;
+    hasProp = {}.hasOwnProperty;
 
   Connector = require('./connector').Connector;
 
@@ -13,9 +13,9 @@
   ProtocolError = require('./protocol').ProtocolError;
 
   exports.LiveReload = LiveReload = (function() {
-    function LiveReload(window) {
-      var k, v, _ref;
-      this.window = window;
+    function LiveReload(window1) {
+      var k, ref, v;
+      this.window = window1;
       this.listeners = {};
       this.plugins = [];
       this.pluginIdentifiers = {};
@@ -32,10 +32,10 @@
       }
       if ('LiveReloadOptions' in window) {
         this.options = new Options();
-        _ref = window['LiveReloadOptions'];
-        for (k in _ref) {
-          if (!__hasProp.call(_ref, k)) continue;
-          v = _ref[k];
+        ref = window['LiveReloadOptions'];
+        for (k in ref) {
+          if (!hasProp.call(ref, k)) continue;
+          v = ref[k];
           this.options.set(k, v);
         }
       } else {
@@ -55,9 +55,9 @@
         })(this),
         connected: (function(_this) {
           return function(protocol) {
-            var _base;
-            if (typeof (_base = _this.listeners).connect === "function") {
-              _base.connect();
+            var base;
+            if (typeof (base = _this.listeners).connect === "function") {
+              base.connect();
             }
             _this.log("LiveReload is connected to " + _this.options.host + ":" + _this.options.port + " (protocol v" + protocol + ").");
             return _this.analyze();
@@ -67,7 +67,7 @@
           return function(e) {
             if (e instanceof ProtocolError) {
               if (typeof console !== "undefined" && console !== null) {
-                return console.log("" + e.message + ".");
+                return console.log(e.message + ".");
               }
             } else {
               if (typeof console !== "undefined" && console !== null) {
@@ -78,9 +78,9 @@
         })(this),
         disconnected: (function(_this) {
           return function(reason, nextDelay) {
-            var _base;
-            if (typeof (_base = _this.listeners).disconnect === "function") {
-              _base.disconnect();
+            var base;
+            if (typeof (base = _this.listeners).disconnect === "function") {
+              base.disconnect();
             }
             switch (reason) {
               case 'cannot-connect':
@@ -123,12 +123,12 @@
     };
 
     LiveReload.prototype.performReload = function(message) {
-      var _ref, _ref1, _ref2;
+      var ref, ref1, ref2;
       this.log("LiveReload received reload request: " + (JSON.stringify(message, null, 2)));
       return this.reloader.reload(message.path, {
-        liveCSS: (_ref = message.liveCSS) != null ? _ref : true,
-        liveImg: (_ref1 = message.liveImg) != null ? _ref1 : true,
-        reloadMissingCSS: (_ref2 = message.reloadMissingCSS) != null ? _ref2 : true,
+        liveCSS: (ref = message.liveCSS) != null ? ref : true,
+        liveImg: (ref1 = message.liveImg) != null ? ref1 : true,
+        reloadMissingCSS: (ref2 = message.reloadMissingCSS) != null ? ref2 : true,
         originalPath: message.originalPath || '',
         overrideURL: message.overrideURL || '',
         serverURL: "http://" + this.options.host + ":" + this.options.port
@@ -140,13 +140,13 @@
     };
 
     LiveReload.prototype.shutDown = function() {
-      var _base;
+      var base;
       if (!this.initialized) {
         return;
       }
       this.connector.disconnect();
       this.log("LiveReload disconnected.");
-      return typeof (_base = this.listeners).shutdown === "function" ? _base.shutdown() : void 0;
+      return typeof (base = this.listeners).shutdown === "function" ? base.shutdown() : void 0;
     };
 
     LiveReload.prototype.hasPlugin = function(identifier) {
@@ -179,7 +179,7 @@
     };
 
     LiveReload.prototype.analyze = function() {
-      var plugin, pluginData, pluginsData, _i, _len, _ref;
+      var i, len, plugin, pluginData, pluginsData, ref;
       if (!this.initialized) {
         return;
       }
@@ -187,9 +187,9 @@
         return;
       }
       pluginsData = {};
-      _ref = this.plugins;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        plugin = _ref[_i];
+      ref = this.plugins;
+      for (i = 0, len = ref.length; i < len; i++) {
+        plugin = ref[i];
         pluginsData[plugin.constructor.identifier] = pluginData = (typeof plugin.analyze === "function" ? plugin.analyze() : void 0) || {};
         pluginData.version = plugin.constructor.version;
       }

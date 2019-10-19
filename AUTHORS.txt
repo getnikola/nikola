@@ -64,6 +64,7 @@
 * `Leandro Poblet <https://github.com/DoctorMalboro>`_
 * `Luis Miguel Morillas <https://github.com/lmorillas>`_
 * `Manuel Kaufmann <https://github.com/humitos>`_
+* `Manuel Thalmann <https://github.com/manuth>`_
 * `Marcelo MD <https://github.com/marcelomd>`_
 * `Marcos Dione <https://github.com/StyXman>`_
 * `Mariano Guerra <https://github.com/marianoguerra>`_
@@ -78,6 +79,7 @@
 * `Michael Joseph <https://github.com/michaeljoseph>`_
 * `Michael McNeil Forbes <https://github.com/mforbes>`_
 * `Michal Petrucha <https://github.com/koniiiik>`_
+* `Mickaël Schoentgen <https://github.com/BoboTiG>`_
 * `Miguel Ángel García <https://github.com/magmax>`_
 * `Mitch Chapman <https://github.com/mchapman87501>`_
 * `mrabbitt <https://github.com/mrabbitt>`_
@@ -112,6 +114,7 @@
 * `Stefan Näwe <https://github.com/snaewe>`_
 * `Stephan Fitzpatrick <https://github.com/knowsuchagency>`_
 * `Sukil Etxenike <https://github.com/sukiletxe>`_
+* `Ted Timmons <https://github.com/tedder>`_
 * `Thibauld Nion <https://github.com/tibonihoo>`_
 * `Thomas Burette <https://github.com/tburette>`_
 * `Tim Chase <https://github.com/Gumnos>`_

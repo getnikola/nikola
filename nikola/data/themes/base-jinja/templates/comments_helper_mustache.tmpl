@@ -1,5 +1,0 @@
-{#  -*- coding: utf-8 -*- #}
-{% import 'comments_helper.tmpl' as comments with context %}
-{% if not post.meta('nocomments') %}
-    {{ comments.comment_form(post.permalink(absolute=True), post.title(), post.base_path) }}
-{% endif %}

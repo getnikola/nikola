@@ -42,12 +42,12 @@
   };
 
   pickBestMatch = function(path, objects, pathFunc) {
-    var bestMatch, object, score, _i, _len;
+    var bestMatch, i, len1, object, score;
     bestMatch = {
       score: 0
     };
-    for (_i = 0, _len = objects.length; _i < _len; _i++) {
-      object = objects[_i];
+    for (i = 0, len1 = objects.length; i < len1; i++) {
+      object = objects[i];
       score = numberOfMatchingSegments(path, pathFunc(object));
       if (score > bestMatch.score) {
         bestMatch = {
@@ -113,14 +113,14 @@
     };
 
     Reloader.prototype.reload = function(path, options) {
-      var plugin, _base, _i, _len, _ref;
+      var base, i, len1, plugin, ref;
       this.options = options;
-      if ((_base = this.options).stylesheetReloadTimeout == null) {
-        _base.stylesheetReloadTimeout = 15000;
+      if ((base = this.options).stylesheetReloadTimeout == null) {
+        base.stylesheetReloadTimeout = 15000;
       }
-      _ref = this.plugins;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        plugin = _ref[_i];
+      ref = this.plugins;
+      for (i = 0, len1 = ref.length; i < len1; i++) {
+        plugin = ref[i];
         if (plugin.reload && plugin.reload(path, options)) {
           return;
         }
@@ -150,55 +150,55 @@
     };
 
     Reloader.prototype.reloadImages = function(path) {
-      var expando, img, selector, styleNames, styleSheet, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1, _ref2, _ref3, _results;
+      var expando, i, img, j, k, len1, len2, len3, len4, m, ref, ref1, ref2, ref3, results1, selector, styleNames, styleSheet;
       expando = this.generateUniqueString();
-      _ref = this.document.images;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        img = _ref[_i];
+      ref = this.document.images;
+      for (i = 0, len1 = ref.length; i < len1; i++) {
+        img = ref[i];
         if (pathsMatch(path, pathFromUrl(img.src))) {
           img.src = this.generateCacheBustUrl(img.src, expando);
         }
       }
       if (this.document.querySelectorAll) {
-        for (_j = 0, _len1 = IMAGE_STYLES.length; _j < _len1; _j++) {
-          _ref1 = IMAGE_STYLES[_j], selector = _ref1.selector, styleNames = _ref1.styleNames;
-          _ref2 = this.document.querySelectorAll("[style*=" + selector + "]");
-          for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
-            img = _ref2[_k];
+        for (j = 0, len2 = IMAGE_STYLES.length; j < len2; j++) {
+          ref1 = IMAGE_STYLES[j], selector = ref1.selector, styleNames = ref1.styleNames;
+          ref2 = this.document.querySelectorAll("[style*=" + selector + "]");
+          for (k = 0, len3 = ref2.length; k < len3; k++) {
+            img = ref2[k];
             this.reloadStyleImages(img.style, styleNames, path, expando);
           }
         }
       }
       if (this.document.styleSheets) {
-        _ref3 = this.document.styleSheets;
-        _results = [];
-        for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
-          styleSheet = _ref3[_l];
-          _results.push(this.reloadStylesheetImages(styleSheet, path, expando));
+        ref3 = this.document.styleSheets;
+        results1 = [];
+        for (m = 0, len4 = ref3.length; m < len4; m++) {
+          styleSheet = ref3[m];
+          results1.push(this.reloadStylesheetImages(styleSheet, path, expando));
         }
-        return _results;
+        return results1;
       }
     };
 
     Reloader.prototype.reloadStylesheetImages = function(styleSheet, path, expando) {
-      var e, rule, rules, styleNames, _i, _j, _len, _len1;
+      var e, error, i, j, len1, len2, rule, rules, styleNames;
       try {
         rules = styleSheet != null ? styleSheet.cssRules : void 0;
-      } catch (_error) {
-        e = _error;
+      } catch (error) {
+        e = error;
       }
       if (!rules) {
         return;
       }
-      for (_i = 0, _len = rules.length; _i < _len; _i++) {
-        rule = rules[_i];
+      for (i = 0, len1 = rules.length; i < len1; i++) {
+        rule = rules[i];
         switch (rule.type) {
           case CSSRule.IMPORT_RULE:
             this.reloadStylesheetImages(rule.styleSheet, path, expando);
             break;
           case CSSRule.STYLE_RULE:
-            for (_j = 0, _len1 = IMAGE_STYLES.length; _j < _len1; _j++) {
-              styleNames = IMAGE_STYLES[_j].styleNames;
+            for (j = 0, len2 = IMAGE_STYLES.length; j < len2; j++) {
+              styleNames = IMAGE_STYLES[j].styleNames;
               this.reloadStyleImages(rule.style, styleNames, path, expando);
             }
             break;
@@ -209,9 +209,9 @@
     };
 
     Reloader.prototype.reloadStyleImages = function(style, styleNames, path, expando) {
-      var newValue, styleName, value, _i, _len;
-      for (_i = 0, _len = styleNames.length; _i < _len; _i++) {
-        styleName = styleNames[_i];
+      var i, len1, newValue, styleName, value;
+      for (i = 0, len1 = styleNames.length; i < len1; i++) {
+        styleName = styleNames[i];
         value = style[styleName];
         if (typeof value === 'string') {
           newValue = value.replace(/\burl\s*\(([^)]*)\)/, (function(_this) {
@@ -231,35 +231,35 @@
     };
 
     Reloader.prototype.reloadStylesheet = function(path) {
-      var imported, link, links, match, style, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1;
+      var i, imported, j, k, len1, len2, len3, len4, link, links, m, match, ref, ref1, style;
       links = (function() {
-        var _i, _len, _ref, _results;
-        _ref = this.document.getElementsByTagName('link');
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          link = _ref[_i];
+        var i, len1, ref, results1;
+        ref = this.document.getElementsByTagName('link');
+        results1 = [];
+        for (i = 0, len1 = ref.length; i < len1; i++) {
+          link = ref[i];
           if (link.rel.match(/^stylesheet$/i) && !link.__LiveReload_pendingRemoval) {
-            _results.push(link);
+            results1.push(link);
           }
         }
-        return _results;
+        return results1;
       }).call(this);
       imported = [];
-      _ref = this.document.getElementsByTagName('style');
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        style = _ref[_i];
+      ref = this.document.getElementsByTagName('style');
+      for (i = 0, len1 = ref.length; i < len1; i++) {
+        style = ref[i];
         if (style.sheet) {
           this.collectImportedStylesheets(style, style.sheet, imported);
         }
       }
-      for (_j = 0, _len1 = links.length; _j < _len1; _j++) {
-        link = links[_j];
+      for (j = 0, len2 = links.length; j < len2; j++) {
+        link = links[j];
         this.collectImportedStylesheets(link, link.sheet, imported);
       }
       if (this.window.StyleFix && this.document.querySelectorAll) {
-        _ref1 = this.document.querySelectorAll('style[data-href]');
-        for (_k = 0, _len2 = _ref1.length; _k < _len2; _k++) {
-          style = _ref1[_k];
+        ref1 = this.document.querySelectorAll('style[data-href]');
+        for (k = 0, len3 = ref1.length; k < len3; k++) {
+          style = ref1[k];
           links.push(style);
         }
       }
@@ -280,8 +280,8 @@
       } else {
         if (this.options.reloadMissingCSS) {
           this.console.log("LiveReload will reload all stylesheets because path '" + path + "' did not match any specific one. To disable this behavior, set 'options.reloadMissingCSS' to 'false'.");
-          for (_l = 0, _len3 = links.length; _l < _len3; _l++) {
-            link = links[_l];
+          for (m = 0, len4 = links.length; m < len4; m++) {
+            link = links[m];
             this.reattachStylesheetLink(link);
           }
         } else {
@@ -292,14 +292,14 @@
     };
 
     Reloader.prototype.collectImportedStylesheets = function(link, styleSheet, result) {
-      var e, index, rule, rules, _i, _len;
+      var e, error, i, index, len1, rule, rules;
       try {
         rules = styleSheet != null ? styleSheet.cssRules : void 0;
-      } catch (_error) {
-        e = _error;
+      } catch (error) {
+        e = error;
       }
       if (rules && rules.length) {
-        for (index = _i = 0, _len = rules.length; _i < _len; index = ++_i) {
+        for (index = i = 0, len1 = rules.length; i < len1; index = ++i) {
           rule = rules[index];
           switch (rule.type) {
             case CSSRule.CHARSET_RULE:
@@ -388,21 +388,21 @@
             additionalWaitingTime = 200;
           }
           return _this.Timer.start(additionalWaitingTime, function() {
-            var _ref;
+            var ref;
             if (!link.parentNode) {
               return;
             }
             link.parentNode.removeChild(link);
             clone.onreadystatechange = null;
-            return (_ref = _this.window.StyleFix) != null ? _ref.link(clone) : void 0;
+            return (ref = _this.window.StyleFix) != null ? ref.link(clone) : void 0;
           });
         };
       })(this));
     };
 
-    Reloader.prototype.reattachImportedRule = function(_arg) {
+    Reloader.prototype.reattachImportedRule = function(arg) {
       var href, index, link, media, newRule, parent, rule, tempLink;
-      rule = _arg.rule, index = _arg.index, link = _arg.link;
+      rule = arg.rule, index = arg.index, link = arg.link;
       parent = rule.parentStyleSheet;
       href = this.generateCacheBustUrl(rule.href);
       media = rule.media.length ? [].join.call(rule.media, ', ') : '';
@@ -443,11 +443,11 @@
     };
 
     Reloader.prototype.generateCacheBustUrl = function(url, expando) {
-      var hash, oldParams, originalUrl, params, _ref;
+      var hash, oldParams, originalUrl, params, ref;
       if (expando == null) {
         expando = this.generateUniqueString();
       }
-      _ref = splitUrl(url), url = _ref.url, hash = _ref.hash, oldParams = _ref.params;
+      ref = splitUrl(url), url = ref.url, hash = ref.hash, oldParams = ref.params;
       if (this.options.overrideURL) {
         if (url.indexOf(this.options.serverURL) < 0) {
           originalUrl = url;
@@ -462,7 +462,7 @@
         if (oldParams.length === 0) {
           params = "?" + expando;
         } else {
-          params = "" + oldParams + "&" + expando;
+          params = oldParams + "&" + expando;
         }
       }
       return url + params + hash;

@@ -83,8 +83,10 @@ def test_format_date_long(localeborg_base):
 
 
 def test_format_date_timezone(localeborg_base):
-    tesla_birthday_dtz = datetime.datetime(1856, 7, 10, 12, 34, 56, tzinfo=dateutil.tz.gettz('America/New_York'))
-    assert LocaleBorg().formatted_date('long', tesla_birthday_dtz) == 'July 10, 1856 at 12:34:56 PM -0400'
+    tesla_150_birthday_dtz = datetime.datetime(2006, 7, 10, 12, 34, 56, tzinfo=dateutil.tz.gettz('America/New_York'))
+    assert LocaleBorg().formatted_date('long', tesla_150_birthday_dtz) == 'July 10, 2006 at 12:34:56 PM -0400'
+    nodst = datetime.datetime(2006, 1, 10, 12, 34, 56, tzinfo=dateutil.tz.gettz('America/New_York'))
+    assert LocaleBorg().formatted_date('long', nodst) == 'January 10, 2006 at 12:34:56 PM -0500'
 
 
 def test_format_date_locale_variants():

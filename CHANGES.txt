@@ -1,3 +1,72 @@
+New in master
+=============
+
+
+Bugfixes
+--------
+
+* Fix galleries in Firefox Mobile and when resizing window
+  (Issue #3258)
+* Output ``<code>`` tag for double backticks in reST (Issue #3276)
+* Fully switch to HTML5 writer for reST (Issue #3276,
+  getnikola/plugins#294)
+* Make ipynb listings work again
+* Correctly link to listings with spaces in their names
+* import_wordpress plugin doesn't require anymore a translation and
+  can use nikola's default if none provided.
+* wordpress+qtranslate import (--qtranslate option) now works with
+  more recent versions of plugins from the qtranslate family (namely
+  qtranslate-X)
+* fixed a wordpress import exception when image metada has floats
+  formated with ',' instead of '.'
+
+Features
+--------
+
+* Add Friulian translation by aoanla
+
+New in v8.0.2
+=============
+
+Features
+--------
+
+* Make ``ARCHIVE_PATH``, ``ARCHIVE_FILENAME`` translatable
+  (Issue #3234)
+* Support configuring Isso via ``GLOBAL_CONTEXT['isso_config']``
+  (Issue #3225)
+* Handle fragments in doc role (Issue #3212)
+* Slugify references in doc role.
+* Add Interlingua translation by Alberto Mardegan
+* Add Afrikaans translation by Friedel Wolff
+* Support for docutils.conf (Issue #3188)
+* Add support for inherited config-files
+
+Bugfixes
+--------
+
+* Avoid random rebuilds with sites whose locales are not fullly
+  supported, and random rebuilds on multilingual sites using Python
+  3.4/3.5 (Issue #3216)
+* Apply modifications to ``default_metadata`` before copying it to
+  other languages
+* Make Commento comments work (Issue #3198)
+* Correctly handle separators in the relative path given to
+  "ignored_assets" key in theme meta files (Issue #3210)
+* Fix error when ``nikola new_post`` receives directory name as
+  path (Issue #3207)
+* Add slashes to paths with query strings in ``nikola serve``
+  only if there isn’t one before ``?``
+* Read listings files as UTF-8
+* Set one-file status basing on default language only (Issue #3191)
+* Don’t warn if post status is set to ``published`` explicitly
+  (Issue #3181)
+* Remove mention of Twitter cards requiring an opt-in.
+  This is not true anymore - anyone can use them.
+* fancydates now workwith listdate items (eg. archives)
+* bootstrap4 and bootblog4 themes no longer load moment.js when
+  fancydates are off. (Issue #3231)
+
 New in v8.0.1
 =============
 

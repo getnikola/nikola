@@ -9,6 +9,7 @@
 # Translators:
 # Alfons Rovira <inclusa@gmail.com>, 2014
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
+# Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>, 2019
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
 # Sergi Almacellas <pokoli@gmail.com>, 2016
 msgid ""
@@ -16,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2018-08-10 08:02+0000\n"
-"Last-Translator: Chris Warrick\n"
+"PO-Revision-Date: 2019-02-14 00:07+0000\n"
+"Last-Translator: Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>\n"
 "Language-Team: Catalan (http://www.transifex.com/ralsina/nikola/language/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +41,7 @@ msgid "Categories"
 msgstr "Categories"
 
 msgid "Tags and Categories"
-msgstr "Etiquetes i Categories"
+msgstr "Etiquetes i categories"
 
 msgid "Comments"
 msgstr "Comentaris"
@@ -72,22 +73,22 @@ msgid "Posts for year %s"
 msgstr "Entrades de l'any %s"
 
 msgid "Newer posts"
-msgstr "Entrades posteriors"
+msgstr "Entrades més recents"
 
 msgid "Previous post"
 msgstr "Entrada anterior"
 
 msgid "Also available in:"
-msgstr "També disponibles en:"
+msgstr "També disponible en:"
 
 msgid "Languages:"
-msgstr "Llenguatges:"
+msgstr "Idiomes:"
 
 msgid "Original site"
 msgstr "Lloc original"
 
 msgid "Older posts"
-msgstr "Entrades anteriors"
+msgstr "Entrades més antigues"
 
 msgid "Archive"
 msgstr "Arxiu"
@@ -111,10 +112,10 @@ msgid "No posts found."
 msgstr "Publicació no trobada"
 
 msgid "RSS feed"
-msgstr "Feed RSS"
+msgstr "Canal RSS"
 
 msgid "%d min remaining to read"
-msgstr "% min recordar per a llegir"
+msgstr "% min restants per a llegir"
 
 msgid "Skip to main content"
 msgstr "Vés al comentari principal"
@@ -128,39 +129,39 @@ msgstr "(actiu)"
 
 #. Default content for a new post
 msgid "Write your post here."
-msgstr "Escribiu la vostra entrada aquí"
+msgstr "Escriviu la vostra entrada aquí."
 
 #. Default content for a new page
 msgid "Write your page here."
-msgstr "Escriviu la vostra pàgina aquí"
+msgstr "Escriviu la vostra pàgina aquí."
 
 msgid "Uncategorized"
-msgstr "Sense Categoria"
+msgstr "Sense categoria"
 
 #. Used for feeds of any format
 msgid "Updates"
 msgstr "Actualitzacions"
 
 msgid "Authors"
-msgstr "Autorss"
+msgstr "Autors"
 
 msgid "Posts by %s"
 msgstr "Entrades per %s"
 
 msgid "Toggle navigation"
-msgstr "Canvia la navegació"
+msgstr "Commuta la navegació"
 
 msgid "Previous"
-msgstr ""
+msgstr "Anterior"
 
 msgid "Up"
-msgstr ""
+msgstr "Amunt"
 
 msgid "Next"
-msgstr ""
+msgstr "Següent"
 
 msgid "Atom feed"
-msgstr ""
+msgstr "Canal Atom"
 
 #. {date} (updated {updated_date})
 msgid "updated"

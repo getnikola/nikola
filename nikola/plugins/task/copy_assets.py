@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2018 Roberto Alsina and others.
+# Copyright © 2012-2019 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -67,7 +67,7 @@ class CopyAssets(Task):
         theme_ini = utils.parse_theme_meta(main_theme)
         if theme_ini:
             ignored_assets = theme_ini.get("Nikola", "ignored_assets", fallback='').split(',')
-            ignored_assets = [asset_name.strip() for asset_name in ignored_assets]
+            ignored_assets = [os.path.normpath(asset_name.strip()) for asset_name in ignored_assets]
         else:
             ignored_assets = []
 

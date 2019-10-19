@@ -29,23 +29,23 @@
   })();
 
   Options.extract = function(document) {
-    var element, keyAndValue, m, mm, options, pair, src, _i, _j, _len, _len1, _ref, _ref1;
-    _ref = document.getElementsByTagName('script');
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      element = _ref[_i];
+    var element, i, j, keyAndValue, len, len1, m, mm, options, pair, ref, ref1, src;
+    ref = document.getElementsByTagName('script');
+    for (i = 0, len = ref.length; i < len; i++) {
+      element = ref[i];
       if ((src = element.src) && (m = src.match(/^[^:]+:\/\/(.*)\/z?livereload\.js(?:\?(.*))?$/))) {
         options = new Options();
         options.https = src.indexOf("https") === 0;
-        if (mm = m[1].match(/^([^\/:]+)(?::(\d+))?$/)) {
+        if (mm = m[1].match(/^([^\/:]+)(?::(\d+))?(\/+.*)?$/)) {
           options.host = mm[1];
           if (mm[2]) {
             options.port = parseInt(mm[2], 10);
           }
         }
         if (m[2]) {
-          _ref1 = m[2].split('&');
-          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-            pair = _ref1[_j];
+          ref1 = m[2].split('&');
+          for (j = 0, len1 = ref1.length; j < len1; j++) {
+            pair = ref1[j];
             if ((keyAndValue = pair.split('=')).length > 1) {
               options.set(keyAndValue[0].replace(/-/g, '_'), keyAndValue.slice(1).join('='));
             }

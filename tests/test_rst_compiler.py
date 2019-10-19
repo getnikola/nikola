@@ -113,13 +113,13 @@ class ReSTExtensionTestCaseTestCase(ReSTExtensionTestCase):
 
 
 class MathTestCase(ReSTExtensionTestCase):
-    sample = ':math:`e^{ix} = \cos x + i\sin x`'
+    sample = r':math:`e^{ix} = \cos x + i\sin x`'
 
     def test_math(self):
         """ Test that math is outputting TeX code."""
         self.basic_test()
         self.assertHTMLContains("span", attributes={"class": "math"},
-                                text="\(e^{ix} = \cos x + i\sin x\)")
+                                text=r"\(e^{ix} = \cos x + i\sin x\)")
 
 
 class SoundCloudTestCase(ReSTExtensionTestCase):

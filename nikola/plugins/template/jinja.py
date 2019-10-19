@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2018 Roberto Alsina and others.
+# Copyright © 2012-2019 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -108,7 +108,7 @@ class JinjaTemplates(TemplateSystem):
         """Find dependencies for a template string."""
         deps = set([])
         ast = self.lookup.parse(text)
-        dep_names = meta.find_referenced_templates(ast)
+        dep_names = [d for d in meta.find_referenced_templates(ast) if d]
         for dep_name in dep_names:
             filename = self.lookup.loader.get_source(self.lookup, dep_name)[1]
             sub_deps = [filename] + self.get_deps(filename)

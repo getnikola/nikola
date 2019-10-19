@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2018 Roberto Alsina and others.
+# Copyright © 2012-2019 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -215,11 +215,11 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
         path = self.translate_path(self.path)
         f = None
         if os.path.isdir(path):
-            if not self.path.endswith('/'):
+            path_parts = list(self.path.partition('?'))
+            if not path_parts[0].endswith('/'):
                 # redirect browser - doing basically what apache does
-                self.send_response(301)
-                path_parts = list(self.path.partition('?'))
                 path_parts[0] += '/'
+                self.send_response(301)
                 self.send_header("Location", ''.join(path_parts))
                 # begin no-cache patch
                 # For redirects.  With redirects, caching is even worse and can
@@ -254,7 +254,7 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
             # Comment out any <base> to allow local resolution of relative URLs.
             data = f.read().decode('utf8')
             f.close()
-            data = re.sub(r'<base\s([^>]*)>', '<!--base \g<1>-->', data, flags=re.IGNORECASE)
+            data = re.sub(r'<base\s([^>]*)>', r'<!--base \g<1>-->', data, flags=re.IGNORECASE)
             data = data.encode('utf8')
             f = StringIO()
             f.write(data)

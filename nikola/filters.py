@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2018 Roberto Alsina and others.
+# Copyright © 2012-2019 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -148,13 +148,13 @@ def yui_compressor(infile, executable=None):
     yuicompressor = executable
     if not yuicompressor:
         try:
-            subprocess.call('yui-compressor', stdout=open(os.devnull, 'w'), stderr=open(os.devnull, 'w'))
+            subprocess.call('yui-compressor', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             yuicompressor = 'yui-compressor'
         except Exception:
             pass
     if not yuicompressor:
         try:
-            subprocess.call('yuicompressor', stdout=open(os.devnull, 'w'), stderr=open(os.devnull, 'w'))
+            subprocess.call('yuicompressor', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             yuicompressor = 'yuicompressor'
         except Exception:
             raise Exception("yui-compressor is not installed.")
@@ -330,7 +330,7 @@ def typogrify_sans_widont(data):
 def php_template_injection(data):
     """Insert PHP code into Nikola templates."""
     import re
-    template = re.search('<\!-- __NIKOLA_PHP_TEMPLATE_INJECTION source\:(.*) checksum\:(.*)__ -->', data)
+    template = re.search(r'<\!-- __NIKOLA_PHP_TEMPLATE_INJECTION source\:(.*) checksum\:(.*)__ -->', data)
     if template:
         source = template.group(1)
         with io.open(source, "r", encoding="utf-8") as in_file:

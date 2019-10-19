@@ -24,24 +24,24 @@
     };
 
     LessPlugin.prototype.reloadLess = function(path) {
-      var link, links, _i, _len;
+      var i, len, link, links;
       links = (function() {
-        var _i, _len, _ref, _results;
-        _ref = document.getElementsByTagName('link');
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          link = _ref[_i];
+        var i, len, ref, results;
+        ref = document.getElementsByTagName('link');
+        results = [];
+        for (i = 0, len = ref.length; i < len; i++) {
+          link = ref[i];
           if (link.href && link.rel.match(/^stylesheet\/less$/i) || (link.rel.match(/stylesheet/i) && link.type.match(/^text\/(x-)?less$/i))) {
-            _results.push(link);
+            results.push(link);
           }
         }
-        return _results;
+        return results;
       })();
       if (links.length === 0) {
         return false;
       }
-      for (_i = 0, _len = links.length; _i < _len; _i++) {
-        link = links[_i];
+      for (i = 0, len = links.length; i < len; i++) {
+        link = links[i];
         link.href = this.host.generateCacheBustUrl(link.href);
       }
       this.host.console.log("LiveReload is asking LESS to recompile all stylesheets");

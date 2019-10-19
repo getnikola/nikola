@@ -34,6 +34,9 @@ standard_exclude = ('*.pyc', '*$py.class', '*~', '.*', '*.bak')
 standard_exclude_directories = ('.*', 'CVS', '_darcs', './build',
                                 './dist', 'EGG-INFO', '*.egg-info')
 
+with open('README.rst') as f:
+    long_description = f.read()
+
 
 def copy_messages():
     themes_directory = os.path.join(
@@ -96,16 +99,16 @@ class nikola_install(install):
 
 
 setup(name='Nikola',
-      version='8.0.1',
+      version='8.0.2',
       description='A modular, fast, simple, static website and blog generator',
-      long_description=open('README.rst').read(),
+      long_description=long_description,
       author='Roberto Alsina and others',
       author_email='ralsina@netmanagers.com.ar',
       url='https://getnikola.com/',
       packages=find_packages(exclude=('tests',)),
       license='MIT',
       keywords='website, blog, static',
-      classifiers=('Development Status :: 5 - Production/Stable',
+      classifiers=['Development Status :: 5 - Production/Stable',
                    'Environment :: Console',
                    'Environment :: Plugins',
                    'Environment :: Web Environment',
@@ -121,9 +124,10 @@ setup(name='Nikola',
                    'Programming Language :: Python :: 3.4',
                    'Programming Language :: Python :: 3.5',
                    'Programming Language :: Python :: 3.6',
+                   'Programming Language :: Python :: 3.7',
                    'Topic :: Internet',
                    'Topic :: Internet :: WWW/HTTP',
-                   'Topic :: Text Processing :: Markup'),
+                   'Topic :: Text Processing :: Markup'],
       install_requires=dependencies,
       extras_require=extras,
       include_package_data=True,

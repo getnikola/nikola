@@ -4,13 +4,8 @@ language: python
 cache:
 - apt
 - pip
-dist: trusty
+dist: xenial
 sudo: false
-addons:
-  apt:
-    packages:
-    - language-pack-en-base
-    - language-pack-pl-base
 python:
 - '3.4'
 - '3.5'
@@ -18,22 +13,23 @@ python:
 matrix:
   include:
   - language: python
-    sudo: required
-    dist: xenial
     python: '3.7'
+  - language: python
+    python: '3.8'
   - os: osx
     language: generic
     env: NMODE=nikola OS=macOS
-    python: '3.7'
+    python: '3.8'
     before_install:
     - brew update
+    - brew uninstall gdal postgis
     - brew upgrade python
     - python3 -m venv nikola-tests-venv
     - source nikola-tests-venv/bin/activate
     - pip install --upgrade-strategy eager -U pip wheel
-  - python: '3.6'
+  - python: '3.8'
     env: NMODE=flake8
-  - python: '3.6'
+  - python: '3.8'
     env: NMODE=basereq
 env:
   matrix:

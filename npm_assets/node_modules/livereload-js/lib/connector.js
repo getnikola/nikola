@@ -1,9 +1,9 @@
 (function() {
-  var Connector, PROTOCOL_6, PROTOCOL_7, Parser, Version, _ref;
+  var Connector, PROTOCOL_6, PROTOCOL_7, Parser, Version, ref;
 
-  _ref = require('./protocol'), Parser = _ref.Parser, PROTOCOL_6 = _ref.PROTOCOL_6, PROTOCOL_7 = _ref.PROTOCOL_7;
+  ref = require('./protocol'), Parser = ref.Parser, PROTOCOL_6 = ref.PROTOCOL_6, PROTOCOL_7 = ref.PROTOCOL_7;
 
-  Version = '2.2.2';
+  Version = process.env.npm_package_version;
 
   exports.Connector = Connector = (function() {
     function Connector(options, WebSocket, Timer, handlers) {
@@ -24,7 +24,7 @@
             _this._handshakeTimeout.stop();
             _this._nextDelay = _this.options.mindelay;
             _this._disconnectionReason = 'broken';
-            return _this.handlers.connected(protocol);
+            return _this.handlers.connected(_this.protocol);
           };
         })(this),
         error: (function(_this) {
@@ -39,7 +39,7 @@
           };
         })(this)
       });
-      this._handshakeTimeout = new Timer((function(_this) {
+      this._handshakeTimeout = new this.Timer((function(_this) {
         return function() {
           if (!_this._isSocketConnected()) {
             return;
@@ -48,7 +48,7 @@
           return _this.socket.close();
         };
       })(this));
-      this._reconnectTimer = new Timer((function(_this) {
+      this._reconnectTimer = new this.Timer((function(_this) {
         return function() {
           if (!_this._connectionDesired) {
             return;

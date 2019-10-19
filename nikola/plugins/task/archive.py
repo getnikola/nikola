@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2018 Roberto Alsina and others.
+# Copyright © 2012-2019 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -126,12 +126,12 @@ class Archive(Taxonomy):
 
     def get_path(self, classification, lang, dest_type='page'):
         """Return a path for the given classification."""
-        components = [self.site.config['ARCHIVE_PATH']]
+        components = [self.site.config['ARCHIVE_PATH'](lang)]
         if classification:
             components.extend(classification)
             add_index = 'always'
         else:
-            components.append(self.site.config['ARCHIVE_FILENAME'])
+            components.append(self.site.config['ARCHIVE_FILENAME'](lang))
             add_index = 'never'
         return [_f for _f in components if _f], add_index
 

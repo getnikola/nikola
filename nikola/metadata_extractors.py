@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2018 Chris Warrick, Roberto Alsina and others.
+# Copyright © 2012-2019 Chris Warrick, Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -30,6 +30,7 @@ import re
 import natsort
 
 from enum import Enum
+from io import StringIO
 from nikola.plugin_categories import MetadataExtractor
 from nikola.utils import unslugify
 
@@ -97,7 +98,7 @@ def classify_extractor(extractor: MetadataExtractor, metadata_extractors_by: dic
     metadata_extractors_by['all'].append(extractor)
 
 
-def load_defaults(site: 'nikola.nikola.Nikola', metadata_extractors_by: dict):
+def load_defaults(site, metadata_extractors_by: dict):
     """Load default metadata extractors."""
     for extractor in _default_extractors:
         extractor.site = site
@@ -185,7 +186,7 @@ class YAMLMetadata(MetadataExtractor):
     name = 'yaml'
     source = MetaSource.text
     conditions = ((MetaCondition.first_line, '---'),)
-    requirements = [('yaml', 'PyYAML', 'YAML')]
+    requirements = [('ruamel.yaml', 'ruamel.yaml', 'YAML')]
     supports_write = True
     split_metadata_re = re.compile('\n---\n')
     map_from = 'yaml'
@@ -193,8 +194,9 @@ class YAMLMetadata(MetadataExtractor):
 
     def _extract_metadata_from_text(self, source_text: str) -> dict:
         """Extract metadata from text."""
-        import yaml
-        meta = yaml.safe_load(source_text[4:])
+        from ruamel.yaml import YAML
+        yaml = YAML(typ='safe')
+        meta = yaml.load(source_text[4:])
         # We expect empty metadata to be '', not None
         for k in meta:
             if meta[k] is None:
@@ -203,8 +205,13 @@ class YAMLMetadata(MetadataExtractor):
 
     def write_metadata(self, metadata: dict, comment_wrap=False) -> str:
         """Write metadata in this extractor’s format."""
-        import yaml
-        return '\n'.join(('---', yaml.safe_dump(metadata, default_flow_style=False).strip(), '---', ''))
+        from ruamel.yaml import YAML
+        yaml = YAML(typ='safe')
+        yaml.default_flow_style = False
+        stream = StringIO()
+        yaml.dump(metadata, stream)
+        stream.seek(0)
+        return '\n'.join(('---', stream.read().strip(), '---', ''))
 
 
 @_register_default

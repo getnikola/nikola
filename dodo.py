@@ -1,7 +1,6 @@
 
 import os
 import fnmatch
-import subprocess
 
 DOIT_CONFIG = {
     'default_tasks': ['flake8', 'test'],
@@ -28,7 +27,7 @@ def task_pydocstyle():
     """pydocstyle -- static check for docstring style"""
     yield {
         'name': os.path.join(os.getcwd(), 'nikola'),
-        'actions': ["pydocstyle --count --match-dir='(?!^\.)(?!data).*' nikola/"],
+        'actions': ["pydocstyle --count --match-dir='(?!^\\.)(?!data).*' nikola/"],
     }
 
 

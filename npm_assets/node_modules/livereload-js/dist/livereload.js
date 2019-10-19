@@ -1,10 +1,10 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 (function() {
-  var Connector, PROTOCOL_6, PROTOCOL_7, Parser, Version, _ref;
+  var Connector, PROTOCOL_6, PROTOCOL_7, Parser, Version, ref;
 
-  _ref = require('./protocol'), Parser = _ref.Parser, PROTOCOL_6 = _ref.PROTOCOL_6, PROTOCOL_7 = _ref.PROTOCOL_7;
+  ref = require('./protocol'), Parser = ref.Parser, PROTOCOL_6 = ref.PROTOCOL_6, PROTOCOL_7 = ref.PROTOCOL_7;
 
-  Version = '2.2.2';
+  Version = "2.4.0";
 
   exports.Connector = Connector = (function() {
     function Connector(options, WebSocket, Timer, handlers) {
@@ -25,7 +25,7 @@
             _this._handshakeTimeout.stop();
             _this._nextDelay = _this.options.mindelay;
             _this._disconnectionReason = 'broken';
-            return _this.handlers.connected(protocol);
+            return _this.handlers.connected(_this.protocol);
           };
         })(this),
         error: (function(_this) {
@@ -40,7 +40,7 @@
           };
         })(this)
       });
-      this._handshakeTimeout = new Timer((function(_this) {
+      this._handshakeTimeout = new this.Timer((function(_this) {
         return function() {
           if (!_this._isSocketConnected()) {
             return;
@@ -49,7 +49,7 @@
           return _this.socket.close();
         };
       })(this));
-      this._reconnectTimer = new Timer((function(_this) {
+      this._reconnectTimer = new this.Timer((function(_this) {
         return function() {
           if (!_this._connectionDesired) {
             return;
@@ -241,24 +241,24 @@
     };
 
     LessPlugin.prototype.reloadLess = function(path) {
-      var link, links, _i, _len;
+      var i, len, link, links;
       links = (function() {
-        var _i, _len, _ref, _results;
-        _ref = document.getElementsByTagName('link');
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          link = _ref[_i];
+        var i, len, ref, results;
+        ref = document.getElementsByTagName('link');
+        results = [];
+        for (i = 0, len = ref.length; i < len; i++) {
+          link = ref[i];
           if (link.href && link.rel.match(/^stylesheet\/less$/i) || (link.rel.match(/stylesheet/i) && link.type.match(/^text\/(x-)?less$/i))) {
-            _results.push(link);
+            results.push(link);
           }
         }
-        return _results;
+        return results;
       })();
       if (links.length === 0) {
         return false;
       }
-      for (_i = 0, _len = links.length; _i < _len; _i++) {
-        link = links[_i];
+      for (i = 0, len = links.length; i < len; i++) {
+        link = links[i];
         link.href = this.host.generateCacheBustUrl(link.href);
       }
       this.host.console.log("LiveReload is asking LESS to recompile all stylesheets");
@@ -281,7 +281,7 @@
 },{}],4:[function(require,module,exports){
 (function() {
   var Connector, LiveReload, Options, ProtocolError, Reloader, Timer,
-    __hasProp = {}.hasOwnProperty;
+    hasProp = {}.hasOwnProperty;
 
   Connector = require('./connector').Connector;
 
@@ -294,9 +294,9 @@
   ProtocolError = require('./protocol').ProtocolError;
 
   exports.LiveReload = LiveReload = (function() {
-    function LiveReload(window) {
-      var k, v, _ref;
-      this.window = window;
+    function LiveReload(window1) {
+      var k, ref, v;
+      this.window = window1;
       this.listeners = {};
       this.plugins = [];
       this.pluginIdentifiers = {};
@@ -313,10 +313,10 @@
       }
       if ('LiveReloadOptions' in window) {
         this.options = new Options();
-        _ref = window['LiveReloadOptions'];
-        for (k in _ref) {
-          if (!__hasProp.call(_ref, k)) continue;
-          v = _ref[k];
+        ref = window['LiveReloadOptions'];
+        for (k in ref) {
+          if (!hasProp.call(ref, k)) continue;
+          v = ref[k];
           this.options.set(k, v);
         }
       } else {
@@ -336,9 +336,9 @@
         })(this),
         connected: (function(_this) {
           return function(protocol) {
-            var _base;
-            if (typeof (_base = _this.listeners).connect === "function") {
-              _base.connect();
+            var base;
+            if (typeof (base = _this.listeners).connect === "function") {
+              base.connect();
             }
             _this.log("LiveReload is connected to " + _this.options.host + ":" + _this.options.port + " (protocol v" + protocol + ").");
             return _this.analyze();
@@ -348,7 +348,7 @@
           return function(e) {
             if (e instanceof ProtocolError) {
               if (typeof console !== "undefined" && console !== null) {
-                return console.log("" + e.message + ".");
+                return console.log(e.message + ".");
               }
             } else {
               if (typeof console !== "undefined" && console !== null) {
@@ -359,9 +359,9 @@
         })(this),
         disconnected: (function(_this) {
           return function(reason, nextDelay) {
-            var _base;
-            if (typeof (_base = _this.listeners).disconnect === "function") {
-              _base.disconnect();
+            var base;
+            if (typeof (base = _this.listeners).disconnect === "function") {
+              base.disconnect();
             }
             switch (reason) {
               case 'cannot-connect':
@@ -404,12 +404,12 @@
     };
 
     LiveReload.prototype.performReload = function(message) {
-      var _ref, _ref1, _ref2;
+      var ref, ref1, ref2;
       this.log("LiveReload received reload request: " + (JSON.stringify(message, null, 2)));
       return this.reloader.reload(message.path, {
-        liveCSS: (_ref = message.liveCSS) != null ? _ref : true,
-        liveImg: (_ref1 = message.liveImg) != null ? _ref1 : true,
-        reloadMissingCSS: (_ref2 = message.reloadMissingCSS) != null ? _ref2 : true,
+        liveCSS: (ref = message.liveCSS) != null ? ref : true,
+        liveImg: (ref1 = message.liveImg) != null ? ref1 : true,
+        reloadMissingCSS: (ref2 = message.reloadMissingCSS) != null ? ref2 : true,
         originalPath: message.originalPath || '',
         overrideURL: message.overrideURL || '',
         serverURL: "http://" + this.options.host + ":" + this.options.port
@@ -421,13 +421,13 @@
     };
 
     LiveReload.prototype.shutDown = function() {
-      var _base;
+      var base;
       if (!this.initialized) {
         return;
       }
       this.connector.disconnect();
       this.log("LiveReload disconnected.");
-      return typeof (_base = this.listeners).shutdown === "function" ? _base.shutdown() : void 0;
+      return typeof (base = this.listeners).shutdown === "function" ? base.shutdown() : void 0;
     };
 
     LiveReload.prototype.hasPlugin = function(identifier) {
@@ -460,7 +460,7 @@
     };
 
     LiveReload.prototype.analyze = function() {
-      var plugin, pluginData, pluginsData, _i, _len, _ref;
+      var i, len, plugin, pluginData, pluginsData, ref;
       if (!this.initialized) {
         return;
       }
@@ -468,9 +468,9 @@
         return;
       }
       pluginsData = {};
-      _ref = this.plugins;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        plugin = _ref[_i];
+      ref = this.plugins;
+      for (i = 0, len = ref.length; i < len; i++) {
+        plugin = ref[i];
         pluginsData[plugin.constructor.identifier] = pluginData = (typeof plugin.analyze === "function" ? plugin.analyze() : void 0) || {};
         pluginData.version = plugin.constructor.version;
       }
@@ -519,23 +519,23 @@
   })();
 
   Options.extract = function(document) {
-    var element, keyAndValue, m, mm, options, pair, src, _i, _j, _len, _len1, _ref, _ref1;
-    _ref = document.getElementsByTagName('script');
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      element = _ref[_i];
+    var element, i, j, keyAndValue, len, len1, m, mm, options, pair, ref, ref1, src;
+    ref = document.getElementsByTagName('script');
+    for (i = 0, len = ref.length; i < len; i++) {
+      element = ref[i];
       if ((src = element.src) && (m = src.match(/^[^:]+:\/\/(.*)\/z?livereload\.js(?:\?(.*))?$/))) {
         options = new Options();
         options.https = src.indexOf("https") === 0;
-        if (mm = m[1].match(/^([^\/:]+)(?::(\d+))?$/)) {
+        if (mm = m[1].match(/^([^\/:]+)(?::(\d+))?(\/+.*)?$/)) {
           options.host = mm[1];
           if (mm[2]) {
             options.port = parseInt(mm[2], 10);
           }
         }
         if (m[2]) {
-          _ref1 = m[2].split('&');
-          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-            pair = _ref1[_j];
+          ref1 = m[2].split('&');
+          for (j = 0, len1 = ref1.length; j < len1; j++) {
+            pair = ref1[j];
             if ((keyAndValue = pair.split('=')).length > 1) {
               options.set(keyAndValue[0].replace(/-/g, '_'), keyAndValue.slice(1).join('='));
             }
@@ -552,7 +552,7 @@
 },{}],6:[function(require,module,exports){
 (function() {
   var PROTOCOL_6, PROTOCOL_7, Parser, ProtocolError,
-    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+    indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   exports.PROTOCOL_6 = PROTOCOL_6 = 'http://livereload.com/protocols/official-6';
 
@@ -578,7 +578,7 @@
     };
 
     Parser.prototype.process = function(data) {
-      var command, e, message, options, _ref;
+      var command, e, error, message, options, ref;
       try {
         if (this.protocol == null) {
           if (data.match(/^!!ver:([\d.]+)$/)) {
@@ -586,9 +586,9 @@
           } else if (message = this._parseMessage(data, ['hello'])) {
             if (!message.protocols.length) {
               throw new ProtocolError("no protocols specified in handshake message");
-            } else if (__indexOf.call(message.protocols, PROTOCOL_7) >= 0) {
+            } else if (indexOf.call(message.protocols, PROTOCOL_7) >= 0) {
               this.protocol = 7;
-            } else if (__indexOf.call(message.protocols, PROTOCOL_6) >= 0) {
+            } else if (indexOf.call(message.protocols, PROTOCOL_6) >= 0) {
               this.protocol = 6;
             } else {
               throw new ProtocolError("no supported protocols found");
@@ -607,14 +607,14 @@
           return this.handlers.message({
             command: 'reload',
             path: options.path,
-            liveCSS: (_ref = options.apply_css_live) != null ? _ref : true
+            liveCSS: (ref = options.apply_css_live) != null ? ref : true
           });
         } else {
           message = this._parseMessage(data, ['reload', 'alert']);
           return this.handlers.message(message);
         }
-      } catch (_error) {
-        e = _error;
+      } catch (error) {
+        e = error;
         if (e instanceof ProtocolError) {
           return this.handlers.error(e);
         } else {
@@ -624,17 +624,17 @@
     };
 
     Parser.prototype._parseMessage = function(data, validCommands) {
-      var e, message, _ref;
+      var e, error, message, ref;
       try {
         message = JSON.parse(data);
-      } catch (_error) {
-        e = _error;
+      } catch (error) {
+        e = error;
         throw new ProtocolError('unparsable JSON', data);
       }
       if (!message.command) {
         throw new ProtocolError('missing "command" key', data);
       }
-      if (_ref = message.command, __indexOf.call(validCommands, _ref) < 0) {
+      if (ref = message.command, indexOf.call(validCommands, ref) < 0) {
         throw new ProtocolError("invalid command '" + message.command + "', only valid commands are: " + (validCommands.join(', ')) + ")", data);
       }
       return message;
@@ -691,12 +691,12 @@
   };
 
   pickBestMatch = function(path, objects, pathFunc) {
-    var bestMatch, object, score, _i, _len;
+    var bestMatch, i, len1, object, score;
     bestMatch = {
       score: 0
     };
-    for (_i = 0, _len = objects.length; _i < _len; _i++) {
-      object = objects[_i];
+    for (i = 0, len1 = objects.length; i < len1; i++) {
+      object = objects[i];
       score = numberOfMatchingSegments(path, pathFunc(object));
       if (score > bestMatch.score) {
         bestMatch = {
@@ -762,14 +762,14 @@
     };
 
     Reloader.prototype.reload = function(path, options) {
-      var plugin, _base, _i, _len, _ref;
+      var base, i, len1, plugin, ref;
       this.options = options;
-      if ((_base = this.options).stylesheetReloadTimeout == null) {
-        _base.stylesheetReloadTimeout = 15000;
+      if ((base = this.options).stylesheetReloadTimeout == null) {
+        base.stylesheetReloadTimeout = 15000;
       }
-      _ref = this.plugins;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        plugin = _ref[_i];
+      ref = this.plugins;
+      for (i = 0, len1 = ref.length; i < len1; i++) {
+        plugin = ref[i];
         if (plugin.reload && plugin.reload(path, options)) {
           return;
         }
@@ -799,55 +799,55 @@
     };
 
     Reloader.prototype.reloadImages = function(path) {
-      var expando, img, selector, styleNames, styleSheet, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1, _ref2, _ref3, _results;
+      var expando, i, img, j, k, len1, len2, len3, len4, m, ref, ref1, ref2, ref3, results1, selector, styleNames, styleSheet;
       expando = this.generateUniqueString();
-      _ref = this.document.images;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        img = _ref[_i];
+      ref = this.document.images;
+      for (i = 0, len1 = ref.length; i < len1; i++) {
+        img = ref[i];
         if (pathsMatch(path, pathFromUrl(img.src))) {
           img.src = this.generateCacheBustUrl(img.src, expando);
         }
       }
       if (this.document.querySelectorAll) {
-        for (_j = 0, _len1 = IMAGE_STYLES.length; _j < _len1; _j++) {
-          _ref1 = IMAGE_STYLES[_j], selector = _ref1.selector, styleNames = _ref1.styleNames;
-          _ref2 = this.document.querySelectorAll("[style*=" + selector + "]");
-          for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
-            img = _ref2[_k];
+        for (j = 0, len2 = IMAGE_STYLES.length; j < len2; j++) {
+          ref1 = IMAGE_STYLES[j], selector = ref1.selector, styleNames = ref1.styleNames;
+          ref2 = this.document.querySelectorAll("[style*=" + selector + "]");
+          for (k = 0, len3 = ref2.length; k < len3; k++) {
+            img = ref2[k];
             this.reloadStyleImages(img.style, styleNames, path, expando);
           }
         }
       }
       if (this.document.styleSheets) {
-        _ref3 = this.document.styleSheets;
-        _results = [];
-        for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
-          styleSheet = _ref3[_l];
-          _results.push(this.reloadStylesheetImages(styleSheet, path, expando));
+        ref3 = this.document.styleSheets;
+        results1 = [];
+        for (m = 0, len4 = ref3.length; m < len4; m++) {
+          styleSheet = ref3[m];
+          results1.push(this.reloadStylesheetImages(styleSheet, path, expando));
         }
-        return _results;
+        return results1;
       }
     };
 
     Reloader.prototype.reloadStylesheetImages = function(styleSheet, path, expando) {
-      var e, rule, rules, styleNames, _i, _j, _len, _len1;
+      var e, error, i, j, len1, len2, rule, rules, styleNames;
       try {
         rules = styleSheet != null ? styleSheet.cssRules : void 0;
-      } catch (_error) {
-        e = _error;
+      } catch (error) {
+        e = error;
       }
       if (!rules) {
         return;
       }
-      for (_i = 0, _len = rules.length; _i < _len; _i++) {
-        rule = rules[_i];
+      for (i = 0, len1 = rules.length; i < len1; i++) {
+        rule = rules[i];
         switch (rule.type) {
           case CSSRule.IMPORT_RULE:
             this.reloadStylesheetImages(rule.styleSheet, path, expando);
             break;
           case CSSRule.STYLE_RULE:
-            for (_j = 0, _len1 = IMAGE_STYLES.length; _j < _len1; _j++) {
-              styleNames = IMAGE_STYLES[_j].styleNames;
+            for (j = 0, len2 = IMAGE_STYLES.length; j < len2; j++) {
+              styleNames = IMAGE_STYLES[j].styleNames;
               this.reloadStyleImages(rule.style, styleNames, path, expando);
             }
             break;
@@ -858,9 +858,9 @@
     };
 
     Reloader.prototype.reloadStyleImages = function(style, styleNames, path, expando) {
-      var newValue, styleName, value, _i, _len;
-      for (_i = 0, _len = styleNames.length; _i < _len; _i++) {
-        styleName = styleNames[_i];
+      var i, len1, newValue, styleName, value;
+      for (i = 0, len1 = styleNames.length; i < len1; i++) {
+        styleName = styleNames[i];
         value = style[styleName];
         if (typeof value === 'string') {
           newValue = value.replace(/\burl\s*\(([^)]*)\)/, (function(_this) {
@@ -880,35 +880,35 @@
     };
 
     Reloader.prototype.reloadStylesheet = function(path) {
-      var imported, link, links, match, style, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1;
+      var i, imported, j, k, len1, len2, len3, len4, link, links, m, match, ref, ref1, style;
       links = (function() {
-        var _i, _len, _ref, _results;
-        _ref = this.document.getElementsByTagName('link');
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          link = _ref[_i];
+        var i, len1, ref, results1;
+        ref = this.document.getElementsByTagName('link');
+        results1 = [];
+        for (i = 0, len1 = ref.length; i < len1; i++) {
+          link = ref[i];
           if (link.rel.match(/^stylesheet$/i) && !link.__LiveReload_pendingRemoval) {
-            _results.push(link);
+            results1.push(link);
           }
         }
-        return _results;
+        return results1;
       }).call(this);
       imported = [];
-      _ref = this.document.getElementsByTagName('style');
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        style = _ref[_i];
+      ref = this.document.getElementsByTagName('style');
+      for (i = 0, len1 = ref.length; i < len1; i++) {
+        style = ref[i];
         if (style.sheet) {
           this.collectImportedStylesheets(style, style.sheet, imported);
         }
       }
-      for (_j = 0, _len1 = links.length; _j < _len1; _j++) {
-        link = links[_j];
+      for (j = 0, len2 = links.length; j < len2; j++) {
+        link = links[j];
         this.collectImportedStylesheets(link, link.sheet, imported);
       }
       if (this.window.StyleFix && this.document.querySelectorAll) {
-        _ref1 = this.document.querySelectorAll('style[data-href]');
-        for (_k = 0, _len2 = _ref1.length; _k < _len2; _k++) {
-          style = _ref1[_k];
+        ref1 = this.document.querySelectorAll('style[data-href]');
+        for (k = 0, len3 = ref1.length; k < len3; k++) {
+          style = ref1[k];
           links.push(style);
         }
       }
@@ -929,8 +929,8 @@
       } else {
         if (this.options.reloadMissingCSS) {
           this.console.log("LiveReload will reload all stylesheets because path '" + path + "' did not match any specific one. To disable this behavior, set 'options.reloadMissingCSS' to 'false'.");
-          for (_l = 0, _len3 = links.length; _l < _len3; _l++) {
-            link = links[_l];
+          for (m = 0, len4 = links.length; m < len4; m++) {
+            link = links[m];
             this.reattachStylesheetLink(link);
           }
         } else {
@@ -941,14 +941,14 @@
     };
 
     Reloader.prototype.collectImportedStylesheets = function(link, styleSheet, result) {
-      var e, index, rule, rules, _i, _len;
+      var e, error, i, index, len1, rule, rules;
       try {
         rules = styleSheet != null ? styleSheet.cssRules : void 0;
-      } catch (_error) {
-        e = _error;
+      } catch (error) {
+        e = error;
       }
       if (rules && rules.length) {
-        for (index = _i = 0, _len = rules.length; _i < _len; index = ++_i) {
+        for (index = i = 0, len1 = rules.length; i < len1; index = ++i) {
           rule = rules[index];
           switch (rule.type) {
             case CSSRule.CHARSET_RULE:
@@ -1037,21 +1037,21 @@
             additionalWaitingTime = 200;
           }
           return _this.Timer.start(additionalWaitingTime, function() {
-            var _ref;
+            var ref;
             if (!link.parentNode) {
               return;
             }
             link.parentNode.removeChild(link);
             clone.onreadystatechange = null;
-            return (_ref = _this.window.StyleFix) != null ? _ref.link(clone) : void 0;
+            return (ref = _this.window.StyleFix) != null ? ref.link(clone) : void 0;
           });
         };
       })(this));
     };
 
-    Reloader.prototype.reattachImportedRule = function(_arg) {
+    Reloader.prototype.reattachImportedRule = function(arg) {
       var href, index, link, media, newRule, parent, rule, tempLink;
-      rule = _arg.rule, index = _arg.index, link = _arg.link;
+      rule = arg.rule, index = arg.index, link = arg.link;
       parent = rule.parentStyleSheet;
       href = this.generateCacheBustUrl(rule.href);
       media = rule.media.length ? [].join.call(rule.media, ', ') : '';
@@ -1092,11 +1092,11 @@
     };
 
     Reloader.prototype.generateCacheBustUrl = function(url, expando) {
-      var hash, oldParams, originalUrl, params, _ref;
+      var hash, oldParams, originalUrl, params, ref;
       if (expando == null) {
         expando = this.generateUniqueString();
       }
-      _ref = splitUrl(url), url = _ref.url, hash = _ref.hash, oldParams = _ref.params;
+      ref = splitUrl(url), url = ref.url, hash = ref.hash, oldParams = ref.params;
       if (this.options.overrideURL) {
         if (url.indexOf(this.options.serverURL) < 0) {
           originalUrl = url;
@@ -1111,7 +1111,7 @@
         if (oldParams.length === 0) {
           params = "?" + expando;
         } else {
-          params = "" + oldParams + "&" + expando;
+          params = oldParams + "&" + expando;
         }
       }
       return url + params + hash;
@@ -1162,8 +1162,8 @@
   var Timer;
 
   exports.Timer = Timer = (function() {
-    function Timer(func) {
-      this.func = func;
+    function Timer(func1) {
+      this.func = func1;
       this.running = false;
       this.id = null;
       this._handler = (function(_this) {

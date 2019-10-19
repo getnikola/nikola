@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2018 Roberto Alsina and others.
+# Copyright © 2012-2019 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -49,14 +49,6 @@ try:
     import pyphen
 except ImportError:
     pyphen = None
-try:
-    import toml
-except ImportError:
-    toml = None
-try:
-    import yaml
-except ImportError:
-    yaml = None
 
 from math import ceil  # for reading time feature
 
@@ -168,20 +160,6 @@ class Post(object):
         self.meta[self.default_lang] = default_metadata
         self.used_extractor[self.default_lang] = default_used_extractor
 
-        for lang in self.translations:
-            if lang != self.default_lang:
-                meta = defaultdict(lambda: '')
-                meta.update(default_metadata)
-                _meta, _extractors = get_meta(self, lang)
-                meta.update(_meta)
-                self.meta[lang] = meta
-                self.used_extractor[lang] = _extractors
-
-        if not self.is_translation_available(self.default_lang):
-            # Special case! (Issue #373)
-            # Fill default_metadata with stuff from the other languages
-            for lang in sorted(self.translated_to):
-                default_metadata.update(self.meta[lang])
         # Compose paths
         if self.folder_base is not None:
             # Use translatable destination folders
@@ -194,12 +172,6 @@ class Post(object):
             # Old behavior (non-translatable destination path, normalized by scanner)
             self.folders = {lang: self.folder_relative for lang in self.config['TRANSLATIONS'].keys()}
         self.folder = self.folders[self.default_lang]
-
-        # Load data field from metadata
-        self.data = Functionary(lambda: None, self.default_lang)
-        for lang in self.translations:
-            if self.meta[lang].get('data') is not None:
-                self.data[lang] = utils.load_data(self.meta[lang]['data'])
 
         if 'date' not in default_metadata and not use_in_feeds:
             # For pages we don't *really* need a date
@@ -236,6 +208,27 @@ class Post(object):
         if 'type' not in default_metadata:
             # default value is 'text'
             default_metadata['type'] = 'text'
+
+        for lang in self.translations:
+            if lang != self.default_lang:
+                meta = defaultdict(lambda: '')
+                meta.update(default_metadata)
+                _meta, _extractors = get_meta(self, lang)
+                meta.update(_meta)
+                self.meta[lang] = meta
+                self.used_extractor[lang] = _extractors
+
+        if not self.is_translation_available(self.default_lang):
+            # Special case! (Issue #373)
+            # Fill default_metadata with stuff from the other languages
+            for lang in sorted(self.translated_to):
+                default_metadata.update(self.meta[lang])
+
+        # Load data field from metadata
+        self.data = Functionary(lambda: None, self.default_lang)
+        for lang in self.translations:
+            if self.meta[lang].get('data') is not None:
+                self.data[lang] = utils.load_data(self.meta[lang]['data'])
 
         for lang, meta in self.meta.items():
             # Migrate section to category
@@ -282,7 +275,7 @@ class Post(object):
             if status:
                 if status == 'published':
                     pass  # already set before, mixing published + something else should result in the other thing
-                if status == 'featured':
+                elif status == 'featured':
                     self.post_status = status
                 elif status == 'private':
                     self.post_status = status
@@ -1029,8 +1022,7 @@ def get_meta(post, lang):
     # If meta file exists, use it
     metafile_meta, used_extractor = get_metadata_from_meta_file(post.metadata_path, post, config, lang, metadata_extractors_by)
 
-    if not metafile_meta:
-        post.is_two_file = False
+    is_two_file = bool(metafile_meta)
 
     # Fetch compiler metadata.
     compiler_meta = {}
@@ -1042,7 +1034,7 @@ def get_meta(post, lang):
         meta.update(compiler_meta)
 
     # Meta files and inter-file metadata override compiler metadata
-    if not post.is_two_file:
+    if not metafile_meta:
         new_meta, used_extractor = get_metadata_from_file(post.source_path, post, config, lang, metadata_extractors_by)
         meta.update(new_meta)
     else:
@@ -1067,6 +1059,10 @@ def get_meta(post, lang):
             # If no title is found, use the filename without extension
             meta['title'] = os.path.splitext(
                 os.path.basename(post.source_path))[0]
+
+    # Set one-file status basing on default language only (Issue #3191)
+    if is_two_file or lang is None:
+        post.is_two_file = is_two_file
 
     return meta, used_extractor
 
