@@ -7,7 +7,7 @@
 .. has_math: true
 .. author: The Nikola Team
 
-:Version: 8.0.1
+:Version: 8.0.2
 
 .. class:: alert alert-primary float-md-right
 
@@ -291,6 +291,17 @@ slug
     and default to using a restricted character set (``a-z0-9-_``) because
     other symbols may cause issues in URLs. (required)
 
+    So, if the slug is "the-slug" the page generated would be "the-slug.html" or
+    "the-slug/index.html" (if you have the pretty URLs option enabled) 
+
+    One special case is setting the slug to "index". This means the page generated 
+    would be "some_folder/index.html", which means it will be open for the URL
+    that ends in "some_folder" or "some_folder/".
+
+    This is useful in some cases, in others may cause conflicts with other pages
+    Nikola generates (like blog indexes) and as a side effect it disables 
+    "pretty URLs" for this page. So use with care.
+
 date
     Date of the post, defaults to now. Multiple date formats are accepted.
     Adding a timezone is recommended. (required for posts)
@@ -531,12 +542,12 @@ and Nikola will hide the docinfo fields in the output if you set
     and considered a title. This is important if you’re mixing metadata
     styles. This can be solved by putting a reST comment before your title.
 
-Markdown metadata
-`````````````````
+Pelican/Markdown metadata
+`````````````````````````
 
-Markdown Metadata only works in Markdown files, and requires the ``markdown.extensions.meta`` extension
+Markdown Metadata (Pelican-style) only works in Markdown files, and requires the ``markdown.extensions.meta`` extension
 (see `MARKDOWN_EXTENSIONS <#markdown>`__). The exact format is described in
-the `markdown metadata extension docs. <https://pythonhosted.org/Markdown/extensions/meta_data.html>`__
+the `markdown metadata extension docs. <https://python-markdown.github.io/extensions/meta_data/>`__
 
 .. code:: text
 
@@ -827,7 +838,8 @@ If you set the ``status`` metadata field of a post to ``draft``, it will not be 
 in indexes and feeds. It *will* be compiled, and if you deploy it it *will* be made
 available, so use with care. If you wish your drafts to be not available in your
 deployed site, you can set ``DEPLOY_DRAFTS = False`` in your configuration. This will
-not work if lazily include ``nikola build`` in your ``DEPLOY_COMMANDS``.
+not work if you include ``nikola build`` in your ``DEPLOY_COMMANDS``, as the
+option removes the draft posts before any ``DEPLOY_COMMANDS`` are run.
 
 Also if a post has a date in the future, it will not be shown in indexes until
 you rebuild after that date. This behavior can be disabled by setting
@@ -1031,7 +1043,7 @@ Please note that tags are case-sensitive and that you cannot have two tags that 
    ERROR: Nikola: Tag Nikola is used in: posts/second-post.rst
    ERROR: Nikola: Tag nikola is used in: posts/1.rst
 
-You can also generate a tag cloud with the `tx3_tag_cloud <https://plugins.getnikola.com/v7/tx3_tag_cloud/>`_ plugin or get a data file for a tag cloud with the `tagcloud <https://plugins.getnikola.com/v7/tagcloud/>`_ plugin.
+You can also generate a tag cloud with the `tx3_tag_cloud <https://plugins.getnikola.com/v7/tx3_tag_cloud/>`_ plugin or get a data file for a tag cloud with the `tagcloud <https://plugins.getnikola.com/v8/tagcloud/>`_ plugin.
 
 Categories
 ``````````
@@ -1094,7 +1106,7 @@ Supported input formats
 Nikola supports multiple input formats.  Out of the box, we have compilers available for:
 
 * reStructuredText (default and pre-configured)
-* `Markdown`_
+* `Markdown`_ (pre-configured since v7.8.7)
 * `Jupyter Notebook`_
 * `HTML`_
 * `PHP`_
@@ -1117,6 +1129,11 @@ Plus, we have specialized compilers in the Plugins Index for:
 * `txt2tags <https://plugins.getnikola.com/#txt2tags>`_
 * `CreoleWiki <https://plugins.getnikola.com/#wiki>`_
 * `WordPress posts <https://plugins.getnikola.com/#wordpress_compiler>`_
+
+To write posts in a different format, you need to configure the compiler and
+paths. To create a post, use ``nikola new_post -f COMPILER_NAME``, eg. ``nikola
+new_post -f markdown``. The default compiler used is the first entry in POSTS
+or PAGES.
 
 Configuring other input formats
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1164,7 +1181,8 @@ The ``-f`` argument to ``new_post`` should be used in the ``ipynb@KERNEL`` forma
 It defaults to Python in the version used by Nikola if not specified.
 
 Jupyter Notebooks are also supported in stand-alone listings, if Jupyter
-support is enabled site-wide.
+support is enabled site-wide. You must have something for ``.ipynb`` in POSTS
+or PAGES for the feature to work.
 
 HTML
 ````
@@ -1324,7 +1342,9 @@ media
 
     .. code:: text
 
-        {{% raw %}}{{% media url="https://www.youtube.com/watch?v=Nck6BZga7TQ" %}}{{% /raw %}}
+        {{% raw %}}{{% media url=https://www.youtube.com/watch?v=Nck6BZga7TQ %}}{{% /raw %}}
+
+    Note that the shortcode won’t work if your compiler turns URLs into clickable links.
 
 post-list
     Will show a list of posts, see the `Post List directive for details <#post-list>`__.
@@ -1487,9 +1507,12 @@ you can't, this will work.
 Configuration
 -------------
 
-The configuration file is called ``conf.py`` and can be used to customize a lot of
-what Nikola does. Its syntax is python, but if you don't know the language, it
-still should not be terribly hard to grasp.
+The configuration file can be used to customize a lot of what Nikola does. Its
+syntax is python, but if you don't know the language, it still should not be
+terribly hard to grasp.
+
+By default, the ``conf.py`` file in the root of the Nikola website will be used.
+You can pass a different configuration file to by using the ``--conf`` command line switch.
 
 The default ``conf.py`` you get with Nikola should be fairly complete, and is quite
 commented.
@@ -1511,10 +1534,33 @@ them.  For those options, two types of values can be provided:
 * a string, which will be used for all languages
 * a dict of language-value pairs, to have different values in each language
 
-.. note:: It is possible to load the configuration from another file by specifying
-          ``--conf=path/to/other.file`` on Nikola's command line. For example, to
-          build your blog using the configuration file ``configurations/test.conf.py``,
-          you have to execute ``nikola build --conf=configurations/test.conf.py``.
+.. note::
+    As of version 8.0.3 it is possible to create configuration files which inherit values from other Python files.
+    This might be useful if you're working with similar environments.
+
+    Example:
+        conf.py:
+            .. code:: python
+
+                BLOG_AUTHOR = "Your Name"
+                BLOG_TITLE = "Demo Site"
+                SITE_URL = "https://yourname.github.io/demo-site
+                BLOG_EMAIL = "joe@demo.site"
+                BLOG_DESCRIPTION = "This is a demo site for Nikola."
+
+        debug.conf.py:
+            .. code:: python
+
+                import conf
+                globals().update(vars(conf))
+                SITE_URL = "http://localhost:8000/"
+
+            or
+
+            .. code:: python
+
+                from conf import *
+                SITE_URL = "http://localhost:8000/"
 
 Customizing Your Site
 ---------------------
@@ -1632,6 +1678,7 @@ For Mako:
 
 .. code:: html
 
+    % if date_fanciness != 0:
     <!-- required scripts -- best handled with bundles -->
     <script src="/assets/js/moment-with-locales.min.js"></script>
     <script src="/assets/js/fancydates.js"></script>
@@ -1642,12 +1689,14 @@ For Mako:
     fancydates(${date_fanciness}, ${js_date_format});
     </script>
     <!-- end fancy dates code -->
+    %endif
 
 
 For Jinja2:
 
 .. code:: html
 
+    {% if date_fanciness != 0 %}
     <!-- required scripts -- best handled with bundles -->
     <script src="/assets/js/moment-with-locales.min.js"></script>
     <script src="/assets/js/fancydates.js"></script>
@@ -1658,6 +1707,7 @@ For Jinja2:
     fancydates({{ date_fanciness }}, {{ js_date_format }});
     </script>
     <!-- end fancy dates code -->
+    {% endif %}
 
 
 Adding Files
@@ -1845,12 +1895,11 @@ are probably expecting: comments.
 
 Nikola supports several third party comment systems:
 
-* `DISQUS <http://disqus.com>`_
-* `IntenseDebate <http://www.intensedebate.com/>`_
-* `LiveFyre <http://www.livefyre.com/>`_
-* `Muut (Formerly moot) <http://muut.com>`_
-* `Facebook <http://facebook.com/>`_
-* `isso <http://posativ.org/isso/>`_
+* `DISQUS <https://disqus.com>`_
+* `IntenseDebate <https://www.intensedebate.com/>`_
+* `Muut (Formerly moot) <https://muut.com/>`_
+* `Facebook <https://facebook.com/>`_
+* `Isso <https://posativ.org/isso/>`_
 * `Commento <https://github.com/adtac/commento>`_
 
 By default it will use DISQUS, but you can change by setting ``COMMENT_SYSTEM``
@@ -1861,17 +1910,17 @@ to one of "disqus", "intensedebate", "livefyre", "moot", "facebook", "isso" or "
    The value of ``COMMENT_SYSTEM_ID`` depends on what comment system you
    are using and you can see it in the system's admin interface.
 
-   * For DISQUS it's called the **shortname**
-   * In IntenseDebate it's the **IntenseDebate site acct**
-   * In LiveFyre it's the **siteId**
-   * In Muut it's your **username**
+   * For DISQUS, it's called the **shortname**
+   * For IntenseDebate, it's the **IntenseDebate site acct**
+   * For Muut, it's your **username**
    * For Facebook, you need to `create an app
      <https://developers.facebook.com/apps>`_ (turn off sandbox mode!)
      and get an **App ID**
-   * For isso, it is the URL of isso (must be world-accessible, encoded with
+   * For Isso, it's the URL of your Isso instance (must be world-accessible, encoded with
      Punycode (if using Internationalized Domain Names) and **have a trailing slash**,
-     default ``http://localhost:8080/``)
-   * For commento it's the URL of the commento instance as required by the ``serverUrl``
+     default ``http://localhost:8080/``). You can add custom config options via
+     GLOBAL_CONTEXT, eg. ``GLOBAL_CONTEXT['isso_config'] = {"require-author": "true"}``
+   * For Commento, it's the URL of the commento instance as required by the ``serverUrl``
      parameter in commento's documentation.
 
 To use comments in a visible site, you should register with the service and
@@ -2587,7 +2636,8 @@ and also create a ``listings/foo.py.html`` page (or in another directory, depend
 ``LISTINGS_FOLDER``) and the listing will have a title linking to it.
 
 The stand-alone ``listings/`` pages also support Jupyter notebooks, if they are
-supported site-wide.
+supported site-wide. You must have something for ``.ipynb`` in POSTS or PAGES
+for the feature to work.
 
 Listings support the same options `reST includes`__ support (including
 various options for controlling which parts of the file are included), and also
@@ -2716,6 +2766,13 @@ and it will produce:
 
     Take a look at :doc:`creating-a-theme` to know how to do it.
 
+The reference in angular brackets should be the `slug` for the target page. It supports a fragment, so
+things like ``<creating-a-theme#starting-from-somewhere>`` should work. You can also use the title, and
+Nikola will slugify it for you, so ``Creating a theme`` is also supported.
+
+Keep in mind that the important thing is the slug. No attempt is made to check if the fragment points to
+an existing location in the page, and references that don't match any page's slugs will cause warnings.
+
 Post List
 ~~~~~~~~~
 
@@ -2832,6 +2889,16 @@ dependency issues.
 If you are using this as a shortcode, flags (``reverse``, ``all``) are meant to be used
 with a ``True`` argument, eg. ``all=True``.
 
+.. sidebar:: Docutils Configuration
+
+   ReStructured Text is "compiled" by docutils, which supports a number of
+   configuration options. It would be difficult to integrate them all into
+   Nikola's configuration, so you can just put a ``docutils.conf`` next
+   to your ``conf.py`` and any settings in its ``[nikola]`` section will be used.
+
+   More information in the `docutils configuration reference <http://docutils.sourceforge.net/docs/user/config.html>`__
+
+
 Importing your WordPress site into Nikola
 -----------------------------------------
 
@@ -2928,11 +2995,6 @@ Twitter Cards enable you to show additional information in Tweets that link
 to your content.
 Nikola supports `Twitter Cards <https://dev.twitter.com/docs/cards>`_.
 They are implemented to use *Open Graph* tags whenever possible.
-
-.. admonition:: Important
-
-    To use Twitter Cards you need to opt-in on Twitter.
-    To do so, please visit https://cards-dev.twitter.com/validator
 
 Images displayed come from the `previewimage` meta tag.
 

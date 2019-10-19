@@ -31,9 +31,9 @@
     <header>
         {{ html_title() }}
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+            <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
                 {% if author_pages_generated %}
-                    <a href="{{ _link('author', post.author()) }}">{{ post.author()|e }}</a>
+                    <a class="u-url" href="{{ _link('author', post.author()) }}">{{ post.author()|e }}</a>
                 {% else %}
                     {{ post.author()|e }}
                 {% endif %}

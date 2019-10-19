@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2018 Roberto Alsina and others.
+# Copyright © 2012-2019 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -102,10 +102,11 @@ LEGAL_VALUES = {
         'facebook',
         'intensedebate',
         'isso',
-        'livefyre',
         'muut',
+        'commento',
     ],
     'TRANSLATIONS': {
+        'af': 'Afrikaans',
         'ar': 'Arabic',
         'az': 'Azerbaijani',
         'bg': 'Bulgarian',
@@ -123,11 +124,13 @@ LEGAL_VALUES = {
         'fa': 'Persian',
         'fi': 'Finnish',
         'fr': 'French',
+        'fur': 'Friulian',
         'gl': 'Galician',
         'he': 'Hebrew',
         'hi': 'Hindi',
         'hr': 'Croatian',
         'hu': 'Hungarian',
+        'ia': 'Interlingua',
         'id': 'Indonesian',
         'it': 'Italian',
         ('ja', '!jp'): 'Japanese',
@@ -169,61 +172,62 @@ LEGAL_VALUES = {
         'sr_latin': 'sr_Latn',
     },
     'RTL_LANGUAGES': ('ar', 'fa', 'he', 'ur'),
-    'MOMENTJS_LOCALES': defaultdict(
-        str,
-        ar='ar',
-        az='az',
-        bg='bg',
-        bn='bn',
-        bs='bs',
-        ca='ca',
-        cs='cs',
-        cz='cs',
-        da='da',
-        de='de',
-        el='el',
-        en='en',
-        eo='eo',
-        es='es',
-        et='et',
-        eu='eu',
-        fa='fa',
-        fi='fi',
-        fr='fr',
-        gl='gl',
-        hi='hi',
-        he='he',
-        hr='hr',
-        hu='hu',
-        id='id',
-        it='it',
-        ja='ja',
-        ko='ko',
-        lt='lt',
-        ml='ml',
-        nb='nb',
-        nl='nl',
-        pa='pa-in',
-        pl='pl',
-        pt='pt',
-        pt_br='pt-br',
-        ru='ru',
-        sk='sk',
-        sl='sl',
-        sq='sq',
-        sr='sr-cyrl',
-        sr_latin='sr',
-        sv='sv',
-        te='te',
-        tr='tr',
-        th='th',
-        uk='uk',
-        ur='ur',
-        vi='vi',
-        zh_cn='zh-cn',
-        zh_tw='zh-tw'
-    ),
+    'MOMENTJS_LOCALES': {
+        'af': 'af',
+        'ar': 'ar',
+        'az': 'az',
+        'bg': 'bg',
+        'bn': 'bn',
+        'bs': 'bs',
+        'ca': 'ca',
+        'cs': 'cs',
+        'cz': 'cs',
+        'da': 'da',
+        'de': 'de',
+        'el': 'el',
+        'en': 'en',
+        'eo': 'eo',
+        'es': 'es',
+        'et': 'et',
+        'eu': 'eu',
+        'fa': 'fa',
+        'fi': 'fi',
+        'fr': 'fr',
+        'gl': 'gl',
+        'hi': 'hi',
+        'he': 'he',
+        'hr': 'hr',
+        'hu': 'hu',
+        'id': 'id',
+        'it': 'it',
+        'ja': 'ja',
+        'ko': 'ko',
+        'lt': 'lt',
+        'ml': 'ml',
+        'nb': 'nb',
+        'nl': 'nl',
+        'pa': 'pa-in',
+        'pl': 'pl',
+        'pt': 'pt',
+        'pt_br': 'pt-br',
+        'ru': 'ru',
+        'sk': 'sk',
+        'sl': 'sl',
+        'sq': 'sq',
+        'sr': 'sr-cyrl',
+        'sr_latin': 'sr',
+        'sv': 'sv',
+        'te': 'te',
+        'tr': 'tr',
+        'th': 'th',
+        'uk': 'uk',
+        'ur': 'ur',
+        'vi': 'vi',
+        'zh_cn': 'zh-cn',
+        'zh_tw': 'zh-tw'
+    },
     'PYPHEN_LOCALES': {
+        'af': 'af',
         'bg': 'bg',
         'ca': 'ca',
         'cs': 'cs',
@@ -253,6 +257,7 @@ LEGAL_VALUES = {
         'uk': 'uk',
     },
     'DOCUTILS_LOCALES': {
+        'af': 'af',
         'ca': 'ca',
         'da': 'da',
         'de': 'de',
@@ -287,6 +292,9 @@ TAXONOMY_COMPATIBILITY_PLUGIN_NAME_MAP = {
     "render_indexes": ["classify_page_index", "classify_sections"],  # "classify_indexes" removed from list (see #2591 and special-case logic below)
     "render_tags": ["classify_categories", "classify_tags"],
 }
+
+# Default value for the pattern used to name translated files
+DEFAULT_TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
 
 
 def _enclosure(post, lang):
@@ -531,7 +539,7 @@ class Nikola(object):
             'THEME_COLOR': '#5670d4',  # light "corporate blue"
             'THEME_CONFIG': {},
             'THUMBNAIL_SIZE': 180,
-            'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}',
+            'TRANSLATIONS_PATTERN': DEFAULT_TRANSLATIONS_PATTERN,
             'URL_TYPE': 'rel_path',
             'USE_BUNDLES': True,
             'USE_CDN': False,
@@ -612,6 +620,8 @@ class Nikola(object):
                                       'INDEXES_PRETTY_PAGE_URL',
                                       'THEME_CONFIG',
                                       # PATH options (Issue #1914)
+                                      'ARCHIVE_PATH',
+                                      'ARCHIVE_FILENAME',
                                       'TAG_PATH',
                                       'TAGS_INDEX_PATH',
                                       'CATEGORY_PATH',
@@ -1164,6 +1174,10 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['date_fanciness'] = self.config.get('DATE_FANCINESS')
         self._GLOBAL_CONTEXT['js_date_format'] = self.config.get('JS_DATE_FORMAT')
         self._GLOBAL_CONTEXT['momentjs_locales'] = LEGAL_VALUES['MOMENTJS_LOCALES']
+        # Patch missing locales into momentjs defaulting to English (Issue #3216)
+        for l in self._GLOBAL_CONTEXT['translations']:
+            if l not in self._GLOBAL_CONTEXT['momentjs_locales']:
+                self._GLOBAL_CONTEXT['momentjs_locales'][l] = ""
         self._GLOBAL_CONTEXT['hidden_tags'] = self.config.get('HIDDEN_TAGS')
         self._GLOBAL_CONTEXT['hidden_categories'] = self.config.get('HIDDEN_CATEGORIES')
         self._GLOBAL_CONTEXT['hidden_authors'] = self.config.get('HIDDEN_AUTHORS')
@@ -1665,6 +1679,8 @@ class Nikola(object):
 
         feed_append_query = None
         if rss_links_append_query:
+            if rss_links_append_query is True:
+                raise ValueError("RSS_LINKS_APPEND_QUERY (or FEED_LINKS_APPEND_QUERY) cannot be True. Valid values are False or a formattable string.")
             feed_append_query = rss_links_append_query.format(
                 feedRelUri='/' + feed_url[len(self.config['BASE_URL']):],
                 feedFormat="rss")

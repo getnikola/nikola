@@ -1,0 +1,164 @@
+# Messages in Nikola
+# Copyright (C) 2012-2016
+# This file is distributed under the same license as the Nikola package.
+# 
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+# Chris Warrick, 2019
+msgid ""
+msgstr ""
+"Project-Id-Version: Nikola\n"
+"Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
+"POT-Creation-Date: 2013-03-15 12:24-0300\n"
+"PO-Revision-Date: 2019-10-01 10:54+0000\n"
+"Last-Translator: Chris Warrick\n"
+"Language-Team: Friulian (http://www.transifex.com/ralsina/nikola/language/fur/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fur\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "More posts about %s"
+msgstr "Altris articui su %s"
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "LANGUAGE"
+msgstr "Furlan"
+
+msgid "Tags"
+msgstr "Tags"
+
+msgid "Categories"
+msgstr "Categoriis"
+
+msgid "Tags and Categories"
+msgstr "Tags e categoriis"
+
+msgid "Comments"
+msgstr "Coments"
+
+msgid "Read more"
+msgstr "Continue la leture"
+
+msgid "Posts about %s"
+msgstr "Articui su %s"
+
+msgid "Next post"
+msgstr "Prossim articul"
+
+msgid "old posts, page %d"
+msgstr "articui vecjos, pagjine %d"
+
+msgid "page %d"
+msgstr "pagjine %d"
+
+msgid "Source"
+msgstr "Document origjinâl"
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "Read in English"
+msgstr "Lei par furlan"
+
+msgid "Posts for year %s"
+msgstr "Articui par an %s"
+
+msgid "Newer posts"
+msgstr "Articui plui resints"
+
+msgid "Previous post"
+msgstr "Articul precedent"
+
+msgid "Also available in:"
+msgstr "Disponibil ancje in:"
+
+msgid "Languages:"
+msgstr "Lenghis:"
+
+msgid "Original site"
+msgstr "Sît originâl"
+
+msgid "Older posts"
+msgstr "Articui precedents"
+
+msgid "Archive"
+msgstr "Archivi"
+
+msgid "Publication date"
+msgstr "Date di publicazion"
+
+msgid "Posted:"
+msgstr "Publicât:"
+
+msgid "Posts for {month_year}"
+msgstr "Articui par {month_year}"
+
+msgid "Posts for {month_day_year}"
+msgstr "Articui par {month_day_year}"
+
+msgid "Nothing found."
+msgstr "Nol è stât cjatât nuie."
+
+msgid "No posts found."
+msgstr "Nissun articul cjatât."
+
+msgid "RSS feed"
+msgstr "Feed RSS"
+
+msgid "%d min remaining to read"
+msgstr "a restin altris %d minûts di leture"
+
+msgid "Skip to main content"
+msgstr "Va al test principâl"
+
+msgid "Subcategories:"
+msgstr "Subcategoriis:"
+
+#. Used for active navigation links, for screen readers only
+msgid "(active)"
+msgstr "(atîf)"
+
+#. Default content for a new post
+msgid "Write your post here."
+msgstr "Scrîf ca il to articul."
+
+#. Default content for a new page
+msgid "Write your page here."
+msgstr "Scrîf ca la tô pagjine."
+
+msgid "Uncategorized"
+msgstr "Cence categorie"
+
+#. Used for feeds of any format
+msgid "Updates"
+msgstr "Inzornaments"
+
+msgid "Authors"
+msgstr "Autôrs"
+
+msgid "Posts by %s"
+msgstr "Articui di %s"
+
+msgid "Toggle navigation"
+msgstr "Ativâ la navigazion"
+
+msgid "Previous"
+msgstr "Precedent"
+
+msgid "Up"
+msgstr "Su"
+
+msgid "Next"
+msgstr "Prossim"
+
+msgid "Atom feed"
+msgstr "Feed Atom"
+
+#. {date} (updated {updated_date})
+msgid "updated"
+msgstr "inzornât"

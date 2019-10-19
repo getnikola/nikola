@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2018 Roberto Alsina and others.
+# Copyright © 2012-2019 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -59,9 +59,9 @@ try:
 except ImportError:
     toml = None
 try:
-    import yaml
+    from ruamel.yaml import YAML
 except ImportError:
-    yaml = None
+    YAML = None
 try:
     import husl
 except ImportError:
@@ -544,6 +544,8 @@ class CustomEncoder(json.JSONEncoder):
         except TypeError:
             if isinstance(obj, (set, frozenset)):
                 return self.encode(sorted(list(obj)))
+            elif isinstance(obj, TranslatableSetting):
+                s = json.dumps(obj._inp, cls=CustomEncoder, sort_keys=True)
             else:
                 s = repr(obj).split('0x', 1)[0]
             return s
@@ -559,6 +561,29 @@ class config_changed(tools.config_changed):
         if identifier is not None:
             self.identifier += ':' + identifier
 
+    # DEBUG (for unexpected rebuilds)
+    @classmethod
+    def _write_into_debug_db(cls, digest: str, data: str) -> None:  # pragma: no cover
+        """Write full values of config_changed into a sqlite3 database."""
+        import sqlite3
+        try:
+            cls.debug_db_cursor
+        except AttributeError:
+            cls.debug_db_conn = sqlite3.connect("cc_debug.sqlite3")
+            cls.debug_db_id = datetime.datetime.now().isoformat()
+            cls.debug_db_cursor = cls.debug_db_conn.cursor()
+            cls.debug_db_cursor.execute("""
+            CREATE TABLE IF NOT EXISTS hashes (hash CHARACTER(32) PRIMARY KEY, json_data TEXT);
+            """)
+            cls.debug_db_conn.commit()
+
+        try:
+            cls.debug_db_cursor.execute("INSERT INTO hashes (hash, json_data) VALUES (?, ?);", (digest, data))
+            cls.debug_db_conn.commit()
+        except sqlite3.IntegrityError:
+            # ON CONFLICT DO NOTHING, except Ubuntu 16.04’s sqlite3 is too ancient for this
+            cls.debug_db_conn.rollback()
+
     def _calc_digest(self):
         """Calculate a config_changed digest."""
         if isinstance(self.config, str):
@@ -570,9 +595,14 @@ class config_changed(tools.config_changed):
             else:
                 byte_data = data
             digest = hashlib.md5(byte_data).hexdigest()
+
+            # DEBUG (for unexpected rebuilds)
+            # self._write_into_debug_db(digest, data)
+            # Alternative (without database):
             # LOGGER.debug('{{"{0}": {1}}}'.format(digest, byte_data))
             # Humanized format:
             # LOGGER.debug('[Digest {0} for {2}]\n{1}\n[Digest {0} for {2}]'.format(digest, byte_data, self.identifier))
+
             return digest
         else:
             raise Exception('Invalid type of config_changed parameter -- got '
@@ -916,6 +946,8 @@ def extract_all(zipfile, path='themes'):
 def to_datetime(value, tzinfo=None):
     """Convert string to datetime."""
     try:
+        if type(value) == datetime.date:
+            value = datetime.datetime.combine(value, datetime.time(0, 0))
         if not isinstance(value, datetime.datetime):
             # dateutil does bad things with TZs like UTC-03:00.
             dateregexp = re.compile(r' UTC([+-][0-9][0-9]:[0-9][0-9])')
@@ -1104,6 +1136,41 @@ class LocaleBorgUninitializedException(Exception):
         super(LocaleBorgUninitializedException, self).__init__("Attempt to use LocaleBorg before initialization")
 
 
+# Customized versions of babel.dates functions that don't do weird stuff with
+# timezones. Without these fixes, DST would follow local settings (because
+# dateutil’s timezones return stuff depending on their input, and datetime.time
+# objects have no year/month/day to base the information on.
+def format_datetime(datetime=None, format='medium',
+                    locale=babel.dates.LC_TIME):
+    """Format a datetime object."""
+    locale = babel.dates.Locale.parse(locale)
+    if format in ('full', 'long', 'medium', 'short'):
+        return babel.dates.get_datetime_format(format, locale=locale) \
+            .replace("'", "") \
+            .replace('{0}', format_time(datetime, format, locale=locale)) \
+            .replace('{1}', babel.dates.format_date(datetime, format, locale=locale))
+    else:
+        return babel.dates.parse_pattern(format).apply(datetime, locale)
+
+
+def format_time(time=None, format='medium', locale=babel.dates.LC_TIME):
+    """Format time. Input can be datetime.time or datetime.datetime."""
+    locale = babel.dates.Locale.parse(locale)
+    if format in ('full', 'long', 'medium', 'short'):
+        format = babel.dates.get_time_format(format, locale=locale)
+    return babel.dates.parse_pattern(format).apply(time, locale)
+
+
+def format_skeleton(skeleton, datetime=None, fo=None, fuzzy=True,
+                    locale=babel.dates.LC_TIME):
+    """Format a datetime based on a skeleton."""
+    locale = babel.dates.Locale.parse(locale)
+    if fuzzy and skeleton not in locale.datetime_skeletons:
+        skeleton = babel.dates.match_skeleton(skeleton, locale.datetime_skeletons)
+    format = locale.datetime_skeletons[skeleton]
+    return format_datetime(datetime, format, locale)
+
+
 class LocaleBorg(object):
     """Provide locale related services and autoritative current_lang.
 
@@ -1209,7 +1276,7 @@ class LocaleBorg(object):
         elif LocaleBorg.datetime_formatter is not None:
             return LocaleBorg.datetime_formatter(date, date_format, lang, locale)
         else:
-            return babel.dates.format_datetime(date, date_format, locale=locale)
+            return format_datetime(date, date_format, locale=locale)
 
     def format_date_in_string(self, message: str, date: datetime.date, lang: 'typing.Optional[str]' = None) -> str:
         """Format date inside a string (message).
@@ -1237,7 +1304,7 @@ class LocaleBorg(object):
             else:
                 function, fmt = modes[mode]
                 if function == 'skeleton':
-                    return babel.dates.format_skeleton(fmt, date, locale=locale)
+                    return format_skeleton(fmt, date, locale=locale)
                 else:
                     return babel.dates.format_date(date, fmt, locale)
 
@@ -1873,11 +1940,11 @@ def load_data(path):
     loader = None
     function = 'load'
     if ext in {'.yml', '.yaml'}:
-        loader = yaml
-        function = 'safe_load'
-        if yaml is None:
-            req_missing(['yaml'], 'use YAML data files')
+        if YAML is None:
+            req_missing(['ruamel.yaml'], 'use YAML data files')
             return {}
+        loader = YAML(typ='safe')
+        function = 'load'
     elif ext in {'.json', '.js'}:
         loader = json
     elif ext in {'.toml', '.tml'}:

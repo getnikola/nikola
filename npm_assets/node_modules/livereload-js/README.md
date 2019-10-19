@@ -18,7 +18,7 @@ The server notifies the client whenever a change is made. Available servers are:
 * [grunt-contrib-watch](https://github.com/gruntjs/grunt-contrib-watch)
 * [python-livereload](https://github.com/lepture/python-livereload)
 * more available on Google :-)
-* you can even write your own; refer to the [LiveReload protocol](http://help.livereload.com/kb/ecosystem/livereload-protocol)
+* you can even write your own; refer to the [LiveReload protocol](http://livereload.com/api/protocol/)
 
 If you are a web developer looking to _use_ LiveReload, you should refer to your LiveReload server/app/tool's documentation, rather that this repository. **You should use the copy of livereload.js script bundled with your server**, because it's guaranteed to be compatible, and may be customized for that server.
 
@@ -154,8 +154,6 @@ The set of supported options is the same for both methods:
 Issues & Limitations
 --------------------
 
-**Serving livereload.js outside of the domain root.** Livereload.js expects to be served from the domain root (i.e. `http://myawesomeblog.com/livereload.js`). Serving from outside the domain root is possible, just add the `host` parameter to the `script` tag (see parameters documentation above). 
-
 **Live reloading of imported stylesheets has a 200ms lag.** Modifying a CSS `@import` rule to reference a not-yet-cached file causes WebKit to lose all document styles, so we have to apply a workaround that causes a lag.
 
 Our workaround is to add a temporary `<link />` element for the imported stylesheet we're trying to reload, wait 200ms to make sure WebKit loads the new file, then remove `<link />` and recreate the `@import` rule. This prevents a flash of unstyled content. (We also wait 200 more milliseconds and recreate the `@import` rule again, in case those initial 200ms were not enough.)
@@ -245,7 +243,7 @@ Version history
 2.1.0 (Jan 16, 2015)
 
 * use case-insensitive matching for `rel` attribute in `<link rel="stylesheet">` tags, to accommodate legacy Rails versions
-* avoid usage of `console` when it's not definited
+* avoid usage of `console` when it's not defined
 * some README changes
 
 2.0.8 (May 22, 2012)

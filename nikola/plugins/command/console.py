@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2018 Chris Warrick, Roberto Alsina and others.
+# Copyright © 2012-2019 Chris Warrick, Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -100,7 +100,7 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
         """Run a bpython shell."""
         try:
             import bpython
-        except ImportError as e:
+        except ImportError:
             if willful:
                 req_missing(['bpython'], 'use the bpython console')
             raise  # That’s how _execute knows whether to try something else.

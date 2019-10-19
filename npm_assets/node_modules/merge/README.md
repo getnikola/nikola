@@ -31,7 +31,7 @@ console.log(merge.recursive(true, original, { x: { z: 2 } }));
 ## Browser Usage
 
 ```html
-<script src="http://files.yeikos.com/merge.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/yeikos/js.merge/merge.js"></script>
 <script>
 	var original, cloned;
 

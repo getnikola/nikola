@@ -16,5 +16,4 @@ assets/js/all.js=
     fancydates.js,
 assets/js/all-nocdn.js=
     baguetteBox.min.js,
-    moment-with-locales.min.js,
     fancydates.js,

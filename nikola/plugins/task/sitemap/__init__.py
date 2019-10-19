@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2018 Roberto Alsina and others.
+# Copyright © 2012-2019 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -175,9 +175,8 @@ class Sitemap(LateTask):
                             continue
 
                         # read in binary mode to make ancient files work
-                        fh = open(real_path, 'rb')
-                        filehead = fh.read(1024)
-                        fh.close()
+                        with open(real_path, 'rb') as fh:
+                            filehead = fh.read(1024)
 
                         if path.endswith('.html') or path.endswith('.htm') or path.endswith('.php'):
                             # Ignores "html" files without doctype

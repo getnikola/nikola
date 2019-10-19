@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2018 Roberto Alsina and others.
+# Copyright © 2012-2019 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -153,7 +153,7 @@ class CompileMarkdown(PageCompiler):
 
     def read_metadata(self, post, lang=None):
         """Read the metadata from a post, and return a metadata dict."""
-        lang = lang or self.site.config.get('DEFAULT_LANGUAGE', 'en')
+        lang = lang or self.site.config['DEFAULT_LANG']
         if not self.supports_metadata:
             return {}
         if Markdown is None:

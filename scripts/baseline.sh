@@ -1,9 +1,9 @@
 #!/bin/bash
 PYVER=$(scripts/getpyver.py short)
-if [[ $PYVER == '3.6' ]]; then
+if [[ $PYVER == '3.8' ]]; then
     if [[ "$1" == "check" ]]; then
         echo -e "\033[36m>> Downloading baseline for $PYVER...\033[0m"
-        # we only support 3.6
+        # we only support 3.8
         wget https://github.com/getnikola/invariant-builds/archive/v$PYVER'.zip'
         unzip -q 'v'$PYVER'.zip'
         rm -rf baseline$PYVER
