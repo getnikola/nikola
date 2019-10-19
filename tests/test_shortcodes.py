@@ -47,7 +47,7 @@ def test_arg_pos(fakesite):
     assert shortcodes.apply_shortcodes(
         'test({{% arg "hello world" %}})', fakesite.shortcode_registry)[0] == "test(arg ('hello world',)/[]/)"
     assert shortcodes.apply_shortcodes(
-        'test({{% arg back\ slash arg2 %}})', fakesite.shortcode_registry)[0] == "test(arg ('back slash', 'arg2')/[]/)"
+        'test({{% arg back\\ slash arg2 %}})', fakesite.shortcode_registry)[0] == "test(arg ('back slash', 'arg2')/[]/)"
     assert shortcodes.apply_shortcodes(
         'test({{% arg "%}}" %}})', fakesite.shortcode_registry)[0] == "test(arg ('%}}',)/[]/)"
 
@@ -57,7 +57,7 @@ def test_arg_keyword(fakesite):
         'test({{% arg 1a=2b %}})', fakesite.shortcode_registry)[0] == "test(arg ()/[('1a', '2b')]/)"
     assert shortcodes.apply_shortcodes(
         'test({{% arg 1a="2b 3c" 4d=5f %}})', fakesite.shortcode_registry)[0] == "test(arg ()/[('1a', '2b 3c'), ('4d', '5f')]/)"
-    assert shortcodes.apply_shortcodes('test({{% arg 1a="2b 3c" 4d=5f back=slash\ slash %}})',
+    assert shortcodes.apply_shortcodes('test({{% arg 1a="2b 3c" 4d=5f back=slash\\ slash %}})',
                                        fakesite.shortcode_registry)[0] == "test(arg ()/[('1a', '2b 3c'), ('4d', '5f'), ('back', 'slash slash')]/)"
 
 
