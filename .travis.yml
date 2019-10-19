@@ -14,10 +14,12 @@ matrix:
   include:
   - language: python
     python: '3.7'
+  - language: python
+    python: '3.8'
   - os: osx
     language: generic
     env: NMODE=nikola OS=macOS
-    python: '3.7'
+    python: '3.8'
     before_install:
     - brew update
     - brew uninstall gdal postgis
@@ -25,9 +27,9 @@ matrix:
     - python3 -m venv nikola-tests-venv
     - source nikola-tests-venv/bin/activate
     - pip install --upgrade-strategy eager -U pip wheel
-  - python: '3.7'
+  - python: '3.8'
     env: NMODE=flake8
-  - python: '3.7'
+  - python: '3.8'
     env: NMODE=basereq
 env:
   matrix:
