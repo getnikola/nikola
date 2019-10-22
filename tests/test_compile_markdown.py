@@ -24,12 +24,12 @@ def compiler(fakesite):
 
 @pytest.fixture
 def input_path(tmpdir):
-    return path.join(tmpdir, 'input.markdown')
+    return path.join(str(tmpdir), 'input.markdown')
 
 
 @pytest.fixture
 def output_path(tmpdir):
-    return path.join(tmpdir, 'output.html')
+    return path.join(str(tmpdir), 'output.html')
 
 
 def markdown_compile(compiler, input_path, output_path, text):
