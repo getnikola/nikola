@@ -85,6 +85,54 @@ def test_modernize_qtranslate_tags():
         assert b"[:fr]Voila voila[:]COMMON[:fr]MOUF[:][:en]BLA[:]" == output
 
 
+def test_split_a_two_language_post():
+    content = """<!--:fr-->Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+
+Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
+<!--:--><!--:en-->If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
+
+Comments, questions and suggestions are welcome !
+<!--:-->"""
+    content_translations = legacy_qtranslate_separate(content)
+
+    assert content_translations["fr"] == """Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+
+Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
+"""
+
+    assert content_translations["en"] == """If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
+
+Comments, questions and suggestions are welcome !
+"""
+
+
+def test_split_a_two_language_post_with_teaser():
+    content = """<!--:fr-->Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+
+Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
+<!--:--><!--:en-->If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
+
+Comments, questions and suggestions are welcome !
+<!--:--><!--more--><!--:fr-->
+Plus de détails ici !
+<!--:--><!--:en-->
+More details here !
+<!--:-->"""
+    content_translations = legacy_qtranslate_separate(content)
+    assert content_translations["fr"] == """Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+
+Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
+ <!--more--> \n\
+Plus de détails ici !
+"""
+    assert content_translations["en"] == """If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
+
+Comments, questions and suggestions are welcome !
+ <!--more--> \n\
+More details here !
+"""
+
+
 class BasicCommandImportWordpress(BaseTestCase):
     def setUp(self):
         self.module = nikola.plugins.command.import_wordpress
@@ -96,61 +144,6 @@ class BasicCommandImportWordpress(BaseTestCase):
     def tearDown(self):
         del self.import_command
         del self.import_filename
-
-
-class TestQTranslateContentSeparation(BasicCommandImportWordpress):
-
-    def test_split_a_two_language_post(self):
-        content = """<!--:fr-->Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
-
-Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
-<!--:--><!--:en-->If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
-
-Comments, questions and suggestions are welcome !
-<!--:-->"""
-        content_translations = legacy_qtranslate_separate(content)
-        self.assertEqual(
-            """Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
-
-Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
-""",
-            content_translations["fr"])
-        self.assertEqual(
-            """If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
-
-Comments, questions and suggestions are welcome !
-""",
-            content_translations["en"])
-
-    def test_split_a_two_language_post_with_teaser(self):
-        content = """<!--:fr-->Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
-
-Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
-<!--:--><!--:en-->If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
-
-Comments, questions and suggestions are welcome !
-<!--:--><!--more--><!--:fr-->
-Plus de détails ici !
-<!--:--><!--:en-->
-More details here !
-<!--:-->"""
-        content_translations = legacy_qtranslate_separate(content)
-        self.assertEqual(
-            """Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
-
-Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
- <!--more--> \n\
-Plus de détails ici !
-""",
-            content_translations["fr"])
-        self.assertEqual(
-            """If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
-
-Comments, questions and suggestions are welcome !
- <!--more--> \n\
-More details here !
-""",
-            content_translations["en"])
 
 
 class CommandImportWordpressRunTest(BasicCommandImportWordpress):
