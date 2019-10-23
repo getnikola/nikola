@@ -30,20 +30,6 @@ def import_filename():
                            'wordpress_export_example.xml'))
 
 
-class BasicCommandImportWordpress(BaseTestCase):
-    def setUp(self):
-        self.module = nikola.plugins.command.import_wordpress
-        self.import_command = self.module.CommandImportWordpress()
-        self.import_command.onefile = False
-        self.import_filename = os.path.abspath(os.path.join(
-            os.path.dirname(__file__), 'wordpress_export_example.xml'))
-
-    def tearDown(self):
-        del self.import_command
-        del self.import_filename
-
-
-
 def legacy_qtranslate_separate(text):
     """This method helps keeping the legacy tests covering various
     corner cases, but plugged on the newer methods."""
@@ -61,6 +47,19 @@ def test_legacy_split_a_two_language_post(content, french_translation, english_t
     content_translations = legacy_qtranslate_separate(content)
     assert french_translation == content_translations["fr"]
     assert english_translation == content_translations["en"]
+
+
+class BasicCommandImportWordpress(BaseTestCase):
+    def setUp(self):
+        self.module = nikola.plugins.command.import_wordpress
+        self.import_command = self.module.CommandImportWordpress()
+        self.import_command.onefile = False
+        self.import_filename = os.path.abspath(os.path.join(
+            os.path.dirname(__file__), 'wordpress_export_example.xml'))
+
+    def tearDown(self):
+        del self.import_command
+        del self.import_filename
 
 
 class TestQTranslateContentSeparation(BasicCommandImportWordpress):
