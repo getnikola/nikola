@@ -80,9 +80,9 @@ def test_modernize_a_wordpress_export_xml_chunk():
 
 
 def test_modernize_qtranslate_tags():
-        content = b"<!--:fr-->Voila voila<!--:-->COMMON<!--:fr-->MOUF<!--:--><!--:en-->BLA<!--:-->"
-        output = modernize_qtranslate_tags(content)
-        assert b"[:fr]Voila voila[:]COMMON[:fr]MOUF[:][:en]BLA[:]" == output
+    content = b"<!--:fr-->Voila voila<!--:-->COMMON<!--:fr-->MOUF<!--:--><!--:en-->BLA<!--:-->"
+    output = modernize_qtranslate_tags(content)
+    assert b"[:fr]Voila voila[:]COMMON[:fr]MOUF[:][:en]BLA[:]" == output
 
 
 def test_split_a_two_language_post():
