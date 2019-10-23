@@ -5,6 +5,8 @@ from unittest import mock
 
 import nikola
 import nikola.plugins.command.import_wordpress
+from nikola.plugins.command.import_wordpress import (
+    modernize_qtranslate_tags, separate_qtranslate_tagged_langs)
 from .base import BaseTestCase
 
 import pytest
@@ -41,19 +43,27 @@ class BasicCommandImportWordpress(BaseTestCase):
         del self.import_filename
 
 
+
+def legacy_qtranslate_separate(text):
+    """This method helps keeping the legacy tests covering various
+    corner cases, but plugged on the newer methods."""
+    text_bytes = text.encode("utf-8")
+    modern_bytes = modernize_qtranslate_tags(text_bytes)
+    modern_text = modern_bytes.decode("utf-8")
+    return separate_qtranslate_tagged_langs(modern_text)
+
+
+@pytest.mark.parametrize("content, french_translation, english_translation", [
+    ("[:fr]Voila voila[:en]BLA[:]", "Voila voila", "BLA"),
+    ("[:fr]Voila voila[:]COMMON[:en]BLA[:]", "Voila voila COMMON", "COMMON BLA"),
+], ids=["simple", "with intermission"])
+def test_legacy_split_a_two_language_post(content, french_translation, english_translation):
+    content_translations = legacy_qtranslate_separate(content)
+    assert french_translation == content_translations["fr"]
+    assert english_translation == content_translations["en"]
+
+
 class TestQTranslateContentSeparation(BasicCommandImportWordpress):
-
-    def test_split_a_simple_modern_two_language_post(self):
-        content = """[:fr]Voila voila[:en]BLA[:]"""
-        content_translations = self.legacy_qtranslate_separate(content)
-        self.assertEqual("Voila voila", content_translations["fr"])
-        self.assertEqual("BLA", content_translations["en"])
-
-    def test_split_a_pre_modern_two_language_post_with_intermission(self):
-        content = """[:fr]Voila voila[:]COMMON[:en]BLA[:]"""
-        content_translations = self.legacy_qtranslate_separate(content)
-        self.assertEqual("Voila voila COMMON", content_translations["fr"])
-        self.assertEqual("COMMON BLA", content_translations["en"])
 
     def test_modernize_qtranslate_tags(self):
         content = b"""<!--:fr-->Voila voila<!--:-->COMMON<!--:fr-->MOUF<!--:--><!--:en-->BLA<!--:-->"""
