@@ -380,10 +380,8 @@ Diese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammen
         'http://some.blog/wp-content/uploads/2012/12/2012-12-19-1355925145_1024x600_scrot-150x150.png']
 
     for link in image_thumbnails:
-        assert link in module.links, 'No link to {!r} found in {map}.'.format(
-                link,
-                map=self.module.links
-            )
+        assert link in module.links
+
 
 def test_transforming_content(import_command):
     """Applying markup conversions to content."""
