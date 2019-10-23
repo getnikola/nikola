@@ -100,14 +100,6 @@ class BasicCommandImportWordpress(BaseTestCase):
 
 class TestQTranslateContentSeparation(BasicCommandImportWordpress):
 
-    def legacy_qtranslate_separate(self, text):
-        """This method helps keeping the legacy tests covering various
-        corner cases, but plugged on the newer methods."""
-        text_bytes = text.encode("utf-8")
-        modern_bytes = modernize_qtranslate_tags(text_bytes)
-        modern_text = modern_bytes.decode("utf-8")
-        return self.module.separate_qtranslate_tagged_langs(modern_text)
-
     def test_split_a_two_language_post(self):
         content = """<!--:fr-->Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
 
@@ -116,7 +108,7 @@ Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
 
 Comments, questions and suggestions are welcome !
 <!--:-->"""
-        content_translations = self.legacy_qtranslate_separate(content)
+        content_translations = legacy_qtranslate_separate(content)
         self.assertEqual(
             """Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
 
@@ -142,7 +134,7 @@ Plus de détails ici !
 <!--:--><!--:en-->
 More details here !
 <!--:-->"""
-        content_translations = self.legacy_qtranslate_separate(content)
+        content_translations = legacy_qtranslate_separate(content)
         self.assertEqual(
             """Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
 
