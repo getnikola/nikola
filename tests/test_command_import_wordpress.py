@@ -67,7 +67,7 @@ class TestQTranslateContentSeparation(BasicCommandImportWordpress):
 
     def test_modernize_qtranslate_tags(self):
         content = b"""<!--:fr-->Voila voila<!--:-->COMMON<!--:fr-->MOUF<!--:--><!--:en-->BLA<!--:-->"""
-        output = self.module.modernize_qtranslate_tags(content)
+        output = modernize_qtranslate_tags(content)
         expected = b"""[:fr]Voila voila[:]COMMON[:fr]MOUF[:][:en]BLA[:]"""
         self.assertEqual(expected, output)
 
@@ -76,7 +76,7 @@ class TestQTranslateContentSeparation(BasicCommandImportWordpress):
             os.path.dirname(__file__), 'wordpress_qtranslate_item_raw_export.xml'))
         with open(raw_export_path, 'rb') as raw_xml_chunk_file:
             content = raw_xml_chunk_file.read()
-        output = self.module.modernize_qtranslate_tags(content)
+        output = modernize_qtranslate_tags(content)
         modernized_xml_path = os.path.abspath(os.path.join(
             os.path.dirname(__file__), 'wordpress_qtranslate_item_modernized.xml'))
         with open(modernized_xml_path, 'rb') as modernized_chunk_file:
@@ -87,7 +87,7 @@ class TestQTranslateContentSeparation(BasicCommandImportWordpress):
         """This method helps keeping the legacy tests covering various
         corner cases, but plugged on the newer methods."""
         text_bytes = text.encode("utf-8")
-        modern_bytes = self.module.modernize_qtranslate_tags(text_bytes)
+        modern_bytes = modernize_qtranslate_tags(text_bytes)
         modern_text = modern_bytes.decode("utf-8")
         return self.module.separate_qtranslate_tagged_langs(modern_text)
 
