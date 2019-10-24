@@ -32,7 +32,7 @@ def test_scale_discarding_icc_profile(test_images, destination_dir):
 @pytest.fixture(params=[True, False], ids=["with icc filename", "without icc filename"])
 def test_images(request, preserve_icc_profiles, source_dir, site):
     image_filename = create_src_image(source_dir, request.param)
-    _run_task(site)
+    run_task(site)
 
     if request.param:
         yield image_filename, PROFILE if preserve_icc_profiles else None
@@ -70,14 +70,14 @@ def destination_dir(tmpdir_factory):
     return tmpdir_factory.mktemp('image_output')
 
 
-def _run_task(site):
-    task_instance = _get_task_instance(site)
+def run_task(site):
+    task_instance = get_task_instance(site)
     for task in task_instance.gen_tasks():
         for action, args in task.get('actions', []):
             action(*args)
 
 
-def _get_task_instance(site):
+def get_task_instance(site):
     result = scale_images.ScaleImage()
     result.set_site(site)
     return result
