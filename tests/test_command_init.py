@@ -76,28 +76,22 @@ class CommandInitCallTest(unittest.TestCase):
         self.assertTrue(self.create_empty_site.called)
 
 
-class InitHelperTests(unittest.TestCase):
-    """Test helper functions provided with the init command."""
 
-    def test_configure_translations_without_additional_languages(self):
-        """
-        Testing the configuration of the translation when no additional language has been found.
-        """
-        translations_cfg = format_default_translations_config(set())
-        self.assertEqual(SAMPLE_CONF["TRANSLATIONS"], translations_cfg)
+def test_configure_translations_without_additional_languages():
+    """
+    Testing the configuration of the translation when no additional language has been found.
+    """
+    translations_cfg = format_default_translations_config(set())
+    assert SAMPLE_CONF["TRANSLATIONS"] == translations_cfg
 
-    def test_configure_translations_with_2_additional_languages(self):
-        """
-        Testing the configuration of the translation when no additional language has been found.
-        """
-        translations_cfg = format_default_translations_config(
-            set(["es", "en"]))
-        self.assertEqual("""{
+
+def test_configure_translations_with_2_additional_languages():
+    """
+    Testing the configuration of the translation when two additional languages are given.
+    """
+    translations_cfg = format_default_translations_config(set(["es", "en"]))
+    assert translations_cfg == """{
     DEFAULT_LANG: "",
     "en": "./en",
     "es": "./es",
-}""", translations_cfg)
-
-
-if __name__ == '__main__':
-    unittest.main()
+}"""
