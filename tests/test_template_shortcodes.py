@@ -52,36 +52,21 @@ kwarg1: spamm
 kwarg2: foo,bar""".strip()
 
 
-@pytest.mark.parametrize("data, expected_result", [
-    ('{{% test1 onearg %}}', 'arg=onearg'),
-    ('{{% test1 "one two" %}}', 'arg=one two'),
+@pytest.mark.parametrize("template, data, expected_result", [
+    # one argument
+    ('arg={{ _args[0] }}', '{{% test1 onearg %}}', 'arg=onearg'),
+    ('arg={{ _args[0] }}', '{{% test1 "one two" %}}', 'arg=one two'),
+    # keyword arguments
+    ('foo={{ foo }}', '{{% test1 foo=bar %}}', 'foo=bar'),
+    ('foo={{ foo }}', '{{% test1 foo="bar baz" %}}', 'foo=bar baz'),
+    ('foo={{ foo }}', '{{% test1 foo="bar baz" spamm=ham %}}', 'foo=bar baz'),
+    # data
+    ('data={{ data }}', '{{% test1 %}}spamm spamm{{% /test1 %}}', 'data=spamm spamm'),
+    ('data={{ data }}', '{{% test1 spamm %}}', 'data='),
+    ('data={{ data }}', '{{% test1 data=dummy %}}', 'data='),
 ])
-def test_onearg(fakesite, data, expected_result):
+def test_applying_shortcode(fakesite, template, data, expected_result):
     fakesite.shortcode_registry['test1'] = \
-        fakesite._make_renderfunc('arg={{ _args[0] }}')
-
-    assert fakesite.apply_shortcodes(data)[0] == expected_result
-
-
-@pytest.mark.parametrize("data, expected_result", [
-    ('{{% test1 foo=bar %}}', 'foo=bar'),
-    ('{{% test1 foo="bar baz" %}}', 'foo=bar baz'),
-    ('{{% test1 foo="bar baz" spamm=ham %}}', 'foo=bar baz'),
-])
-def test_kwarg(fakesite, data, expected_result):
-    fakesite.shortcode_registry['test1'] = \
-        fakesite._make_renderfunc('foo={{ foo }}')
-
-    assert fakesite.apply_shortcodes(data)[0] == expected_result
-
-
-@pytest.mark.parametrize("data, expected_result", [
-    ('{{% test1 %}}spamm spamm{{% /test1 %}}', 'data=spamm spamm'),
-    ('{{% test1 spamm %}}', 'data='),
-    ('{{% test1 data=dummy %}}', 'data='),
-])
-def test_data(fakesite, data, expected_result):
-    fakesite.shortcode_registry['test1'] = \
-        fakesite._make_renderfunc('data={{ data }}')
+        fakesite._make_renderfunc(template)
 
     assert fakesite.apply_shortcodes(data)[0] == expected_result
