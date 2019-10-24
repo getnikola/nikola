@@ -52,29 +52,36 @@ kwarg1: spamm
 kwarg2: foo,bar""".strip()
 
 
-def test_onearg(fakesite):
+@pytest.mark.parametrize("data, expected_result", [
+    ('{{% test1 onearg %}}', 'arg=onearg'),
+    ('{{% test1 "one two" %}}', 'arg=one two'),
+])
+def test_onearg(fakesite, data, expected_result):
     fakesite.shortcode_registry['test1'] = \
         fakesite._make_renderfunc('arg={{ _args[0] }}')
 
-    assert fakesite.apply_shortcodes('{{% test1 onearg %}}')[0] == 'arg=onearg'
-    assert fakesite.apply_shortcodes(
-        '{{% test1 "one two" %}}')[0] == 'arg=one two'
+    assert fakesite.apply_shortcodes(data)[0] == expected_result
 
 
-def test_kwarg(fakesite):
+@pytest.mark.parametrize("data, expected_result", [
+    ('{{% test1 foo=bar %}}', 'foo=bar'),
+    ('{{% test1 foo="bar baz" %}}', 'foo=bar baz'),
+    ('{{% test1 foo="bar baz" spamm=ham %}}', 'foo=bar baz'),
+])
+def test_kwarg(fakesite, data, expected_result):
     fakesite.shortcode_registry['test1'] = \
         fakesite._make_renderfunc('foo={{ foo }}')
 
-    assert fakesite.apply_shortcodes('{{% test1 foo=bar %}}')[0] == 'foo=bar'
-    assert fakesite.apply_shortcodes('{{% test1 foo="bar baz" %}}')[0] == 'foo=bar baz'
-    assert fakesite.apply_shortcodes('{{% test1 foo="bar baz" spamm=ham %}}')[0] == 'foo=bar baz'
+    assert fakesite.apply_shortcodes(data)[0] == expected_result
 
 
-def test_data(fakesite):
+@pytest.mark.parametrize("data, expected_result", [
+    ('{{% test1 %}}spamm spamm{{% /test1 %}}', 'data=spamm spamm'),
+    ('{{% test1 spamm %}}', 'data='),
+    ('{{% test1 data=dummy %}}', 'data='),
+])
+def test_data(fakesite, data, expected_result):
     fakesite.shortcode_registry['test1'] = \
         fakesite._make_renderfunc('data={{ data }}')
 
-    assert fakesite.apply_shortcodes('{{% test1 %}}spamm spamm{{% /test1 %}}')[0] == 'data=spamm spamm'
-    assert fakesite.apply_shortcodes('{{% test1 spamm %}}')[0] == 'data='
-    # surprise!
-    assert fakesite.apply_shortcodes('{{% test1 data=dummy %}}')[0] == 'data='
+    assert fakesite.apply_shortcodes(data)[0] == expected_result
