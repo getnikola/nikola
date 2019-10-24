@@ -31,7 +31,7 @@ def test_handling_icc_profiles(test_images, destination_dir):
 
 @pytest.fixture(params=[True, False], ids=["with icc filename", "without icc filename"])
 def test_images(request, preserve_icc_profiles, source_dir, site):
-    image_filename = create_src_image(source_dir, request.param)
+    image_filename = create_src_image(str(source_dir), request.param)
     run_task(site)
 
     if request.param:
