@@ -10,6 +10,27 @@ import pytest
 from .base import FakeSite
 
 
+@pytest.mark.parametrize("input_str, expected_output", [
+    ('', ''),
+    ("[podcast]https://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3[/podcast]", '<p><audio controls=""><source src="https://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3" type="audio/mpeg"></source></audio></p>'),
+    ('~~striked out text~~', '<p><del>striked out text</del></p>'),
+    ('''\
+    #!python
+    from this
+''', '''\
+<table class="codehilitetable"><tr><td class="linenos">\
+<div class="linenodiv"><pre>1</pre></div>\
+</td><td class="code"><pre class="code literal-block"><span></span>\
+<span class="kn">from</span> <span class="nn">this</span>
+</pre>
+</td></tr></table>
+'''),
+], ids=["empty", "mdx podcast", "strikethrough", "hilite"])
+def test_compiling_markdown(compiler, input_path, output_path, input_str, expected_output):
+    output = markdown_compile(compiler, input_path, output_path, input_str)
+    assert output.strip() == expected_output.strip()
+
+
 @pytest.fixture(scope="module")
 def fakesite():
     return FakeSite()
@@ -40,24 +61,3 @@ def markdown_compile(compiler, input_path, output_path, text):
 
     with io.open(output_path, "r", encoding="utf8") as output_path:
         return output_path.read()
-
-
-@pytest.mark.parametrize("input_str, expected_output", [
-    ('', ''),
-    ("[podcast]https://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3[/podcast]", '<p><audio controls=""><source src="https://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3" type="audio/mpeg"></source></audio></p>'),
-    ('~~striked out text~~', '<p><del>striked out text</del></p>'),
-    ('''\
-    #!python
-    from this
-''', '''\
-<table class="codehilitetable"><tr><td class="linenos">\
-<div class="linenodiv"><pre>1</pre></div>\
-</td><td class="code"><pre class="code literal-block"><span></span>\
-<span class="kn">from</span> <span class="nn">this</span>
-</pre>
-</td></tr></table>
-'''),
-], ids=["empty", "mdx podcast", "strikethrough", "hilite"])
-def test_compiling_markdown(compiler, input_path, output_path, input_str, expected_output):
-    output = markdown_compile(compiler, input_path, output_path, input_str)
-    assert output.strip() == expected_output.strip()
