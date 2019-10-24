@@ -7,7 +7,6 @@ import nikola
 import nikola.plugins.command.import_wordpress
 from nikola.plugins.command.import_wordpress import (
     modernize_qtranslate_tags, separate_qtranslate_tagged_langs)
-from .base import BaseTestCase
 
 import pytest
 
@@ -133,85 +132,61 @@ More details here !
 """
 
 
-class BasicCommandImportWordpress(BaseTestCase):
-    def setUp(self):
-        self.module = nikola.plugins.command.import_wordpress
-        self.import_command = self.module.CommandImportWordpress()
-        self.import_command.onefile = False
-        self.import_filename = os.path.abspath(os.path.join(
-            os.path.dirname(__file__), 'wordpress_export_example.xml'))
-
-    def tearDown(self):
-        del self.import_command
-        del self.import_filename
+@pytest.fixture
+def mocks():
+    "Mocks to be used in `patched_import_command`"
+    return [mock.MagicMock(name="data_import"),
+            mock.MagicMock(name="site_generation"),
+            mock.MagicMock(name="write_urlmap"),
+            mock.MagicMock(name="write_configuration")]
 
 
-class CommandImportWordpressRunTest(BasicCommandImportWordpress):
-    def setUp(self):
-        super(self.__class__, self).setUp()
-        self.data_import = mock.MagicMock()
-        self.site_generation = mock.MagicMock()
-        self.write_urlmap = mock.MagicMock()
-        self.write_configuration = mock.MagicMock()
+@pytest.fixture
+def patched_import_command(import_command, mocks):
+    """
+    Import command with disabled site generation and various functions mocked.
+    """
+    data_import, site_generation, write_urlmap, write_configuration = mocks
 
-        site_generation_patch = mock.patch('os.system', self.site_generation)
-        data_import_patch = mock.patch(
-            'nikola.plugins.command.import_wordpress.CommandImportWordpress.import_posts',
-            self.data_import)
-        write_urlmap_patch = mock.patch(
-            'nikola.plugins.command.import_wordpress.CommandImportWordpress.write_urlmap_csv',
-            self.write_urlmap)
-        write_configuration_patch = mock.patch(
-            'nikola.plugins.command.import_wordpress.CommandImportWordpress.write_configuration',
-            self.write_configuration)
+    with mock.patch('os.system', site_generation):
+        with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.import_posts',
+                        data_import):
+            with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.write_urlmap_csv',
+                            write_urlmap):
+                with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.write_configuration',
+                                write_configuration):
+                    yield import_command
 
-        self.patches = [site_generation_patch, data_import_patch,
-                        write_urlmap_patch, write_configuration_patch]
-        for patch in self.patches:
-            patch.start()
 
-    def tearDown(self):
-        del self.data_import
-        del self.site_generation
-        del self.write_urlmap
-        del self.write_configuration
+@pytest.mark.parametrize("options, additional_args", [
+    (None, None),  # only import filename given
+    ({'output_folder': 'some_folder'}, None),
+    (None, ['folder_argument']),
+])
+def test_create_import(patched_import_command, import_filename, mocks, options, additional_args):
+    arguments = {"args": [import_filename]}
+    if options:
+        arguments["options"] = options
+    if additional_args:
+        arguments["args"].extend(additional_args)
 
-        for patch in self.patches:
-            patch.stop()
-        del self.patches
+    patched_import_command.execute(**arguments)
 
-        super(self.__class__, self).tearDown()
+    for applied_mock in mocks:
+        assert applied_mock.called
 
-    def test_create_import(self):
-        valid_import_arguments = (
-            dict(options={'output_folder': 'some_folder'},
-                 args=[self.import_filename]),
-            dict(args=[self.import_filename]),
-            dict(args=[self.import_filename, 'folder_argument']),
-        )
+    assert patched_import_command.exclude_drafts is False
 
-        for arguments in valid_import_arguments:
-            self.import_command.execute(**arguments)
 
-            self.assertTrue(self.site_generation.called)
-            self.assertTrue(self.data_import.called)
-            self.assertTrue(self.write_urlmap.called)
-            self.assertTrue(self.write_configuration.called)
-            self.assertFalse(self.import_command.exclude_drafts)
+@pytest.mark.parametrize("options", [
+    {'exclude_drafts': True},
+    {'exclude_drafts': True, 'output_folder': 'some_folder'},
+])
+def test_ignoring_drafts_during_import(patched_import_command, import_filename, options):
+    arguments = {"options": options, "args": [import_filename]}
 
-    def test_ignoring_drafts(self):
-        valid_import_arguments = (
-            dict(options={'exclude_drafts': True}, args=[
-                 self.import_filename]),
-            dict(
-                options={'exclude_drafts': True,
-                         'output_folder': 'some_folder'},
-                args=[self.import_filename]),
-        )
-
-        for arguments in valid_import_arguments:
-            self.import_command.execute(**arguments)
-            self.assertTrue(self.import_command.exclude_drafts)
+    patched_import_command.execute(**arguments)
+    assert patched_import_command.exclude_drafts is True
 
 
 def test_create_import_work_without_argument(import_command):
