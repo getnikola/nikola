@@ -9,37 +9,19 @@ from nikola.plugins.task import scale_images
 
 from .base import FakeSite
 
+# These tests don't require valid profiles. They need only to verify
+# that profile data is/isn't saved with images.
+# It would be nice to use PIL.ImageCms to create valid profiles, but
+# in many Pillow distributions ImageCms is a stub.
+# ICC file data format specification:
+# http://www.color.org/icc32.pdf
+PROFILE = b'invalid profile data'
+
 
 class TestCase(unittest.TestCase):
     def setUp(self):
-        # These tests don't require valid profiles.  They need only to verify
-        # that profile data is/isn't saved with images.
-        # It would be nice to use PIL.ImageCms to create valid profiles, but
-        # in many Pillow distributions ImageCms is a stub.
-        # ICC file data format specification:
-        # http://www.color.org/icc32.pdf
-
-        self._profile = b'invalid profile data'
-
-        # Make a white image with a red stripe on the diagonal.
-        w = 64
-        h = 64
-        img = Image.new("RGB", (w, h), (255, 255, 255))
-        draw = ImageDraw.Draw(img)
-        draw.line((0, 0, w, h), fill=(255, 128, 128))
-        draw.line((w, 0, 0, h), fill=(128, 128, 255))
-        self._img = img
-
         self._src_dir = tempfile.TemporaryDirectory()
         self._dest_dir = tempfile.TemporaryDirectory()
-
-    def tearDown(self):
-        pass
-
-    def _tmp_img_name(self, dirname):
-        pathname = tempfile.NamedTemporaryFile(
-            suffix=".jpg", dir=dirname, delete=False)
-        return pathname.name
 
     def _get_site(self, preserve_icc_profiles):
         site = FakeSite()
@@ -59,18 +41,6 @@ class TestCase(unittest.TestCase):
         result.set_site(self._get_site(preserve_icc_profiles))
         return result
 
-    def _create_src_images(self):
-        img = self._img
-        # Test two variants: with and without an associated icc_profile
-        pathname = self._tmp_img_name(self._src_dir.name)
-        img.save(pathname)
-        sans_icc_filename = os.path.basename(pathname)
-
-        pathname = self._tmp_img_name(self._src_dir.name)
-        img.save(pathname, icc_profile=self._profile)
-        with_icc_filename = os.path.basename(pathname)
-        return [sans_icc_filename, with_icc_filename]
-
     def _run_task(self, preserve_icc_profiles):
         task_instance = self._get_task_instance(preserve_icc_profiles)
         for task in task_instance.gen_tasks():
@@ -78,11 +48,11 @@ class TestCase(unittest.TestCase):
                 action(*args)
 
     def test_scale_preserving_icc_profile(self):
-        sans_icc_filename, with_icc_filename = self._create_src_images()
+        sans_icc_filename, with_icc_filename = create_src_images(self._src_dir.name)
         self._run_task(True)
         cases = [
             (sans_icc_filename, None),
-            (with_icc_filename, self._profile),
+            (with_icc_filename, PROFILE),
         ]
         for (filename, expected_profile) in cases:
             pathname = os.path.join(self._dest_dir.name, filename)
@@ -92,7 +62,7 @@ class TestCase(unittest.TestCase):
             self.assertEqual(actual_profile, expected_profile)
 
     def test_scale_discarding_icc_profile(self):
-        sans_icc_filename, with_icc_filename = self._create_src_images()
+        sans_icc_filename, with_icc_filename = create_src_images(self._src_dir.name)
         self._run_task(False)
         cases = [
             (sans_icc_filename, None),
@@ -106,7 +76,35 @@ class TestCase(unittest.TestCase):
             self.assertEqual(actual_profile, expected_profile)
 
 
-main = unittest.main
+def create_src_images(testdir):
+    img = create_test_image()
+    # Test two variants: with and without an associated icc_profile
+    pathname = tmp_img_name(testdir)
+    img.save(pathname)
+    sans_icc_filename = os.path.basename(pathname)
+
+    pathname = tmp_img_name(testdir)
+    img.save(pathname, icc_profile=PROFILE)
+    with_icc_filename = os.path.basename(pathname)
+    return [sans_icc_filename, with_icc_filename]
+
+
+def create_test_image():
+    # Make a white image with a red stripe on the diagonal.
+    width = 64
+    height = 64
+    img = Image.new("RGB", (width, height), (255, 255, 255))
+    draw = ImageDraw.Draw(img)
+    draw.line((0, 0, width, height), fill=(255, 128, 128))
+    draw.line((width, 0, 0, height), fill=(128, 128, 255))
+    return img
+
+
+def tmp_img_name(dirname):
+    pathname = tempfile.NamedTemporaryFile(
+        suffix=".jpg", dir=dirname, delete=False)
+    return pathname.name
+
 
 if __name__ == '__main__':
-    main()
+    unittest.main()
