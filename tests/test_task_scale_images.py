@@ -21,7 +21,7 @@ PROFILE = b'invalid profile data'
 def test_handling_icc_profiles(test_images, destination_dir):
     filename, expected_profile = test_images
 
-    pathname = os.path.join(destination_dir, filename)
+    pathname = os.path.join(str(destination_dir), filename)
     assert os.path.exists(pathname), pathname
 
     img = Image.open(pathname)
