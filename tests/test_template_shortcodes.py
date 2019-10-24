@@ -30,7 +30,7 @@ def fakesite():
 
 
 def test_mixedargs(fakesite):
-    TEST_TMPL = """
+    test_template = """
 arg1: {{ _args[0] }}
 arg2: {{ _args[1] }}
 kwarg1: {{ kwarg1 }}
@@ -38,7 +38,7 @@ kwarg2: {{ kwarg2 }}
 """
 
     fakesite.shortcode_registry['test1'] = \
-        fakesite._make_renderfunc(TEST_TMPL)
+        fakesite._make_renderfunc(test_template)
     fakesite.shortcode_registry['test2'] = \
         fakesite._make_renderfunc('Something completely different')
 
