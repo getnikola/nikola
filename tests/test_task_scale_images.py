@@ -6,8 +6,7 @@ import tempfile
 from PIL import Image, ImageDraw
 
 from nikola.plugins.task import scale_images
-# Import test - should perhaps be moved to a separate module
-import nikola.plugins.task.galleries  # NOQA
+
 from .base import FakeSite
 
 
