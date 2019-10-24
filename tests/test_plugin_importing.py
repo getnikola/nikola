@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 
-import unittest
+
+def test_importing_command_import_wordpress():
+    import nikola.plugins.command.import_wordpress  # NOQA
 
 
-class ImportPluginsTest(unittest.TestCase):
-    def test_importing_command_import_wordpress(self):
-        import nikola.plugins.command.import_wordpress  # NOQA
+def test_importing_compile_rest():
+    import nikola.plugins.compile.rest  # NOQA
 
-    def test_importing_compile_rest(self):
-        import nikola.plugins.compile.rest  # NOQA
 
-    def test_importing_plugin_compile_markdown(self):
-        import nikola.plugins.compile.markdown    # NOQA
+def test_importing_plugin_compile_markdown():
+    import nikola.plugins.compile.markdown    # NOQA
+
+
+def test_importing_plugin_task_galleries():
+    import nikola.plugins.task.galleries  # NOQA
