@@ -9,3 +9,8 @@ def ensure_chdir():
         yield
     finally:
         os.chdir(old_dir)
+
+
+@pytest.fixture
+def test_dir():
+    return os.path.abspath(os.path.dirname(__file__))
