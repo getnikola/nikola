@@ -2,31 +2,8 @@
 # vim: set wrap textwidth=100
 """Test template-based shortcodes."""
 
-
 import pytest
 from nikola import Nikola
-
-
-class ShortcodeFakeSite(Nikola):
-    def _get_template_system(self):
-        if self._template_system is None:
-            # Load template plugin
-            self._template_system = self.plugin_manager.getPluginByName(
-                'jinja', "TemplateSystem").plugin_object
-            self._template_system.set_directories('.', 'cache')
-            self._template_system.set_site(self)
-
-        return self._template_system
-
-    template_system = property(_get_template_system)
-
-
-@pytest.fixture(scope="module")
-def fakesite():
-    s = ShortcodeFakeSite()
-    s.init_plugins()
-    s._template_system = None
-    return s
 
 
 def test_mixedargs(fakesite):
@@ -70,3 +47,25 @@ def test_applying_shortcode(fakesite, template, data, expected_result):
         fakesite._make_renderfunc(template)
 
     assert fakesite.apply_shortcodes(data)[0] == expected_result
+
+
+@pytest.fixture(scope="module")
+def fakesite():
+    s = ShortcodeFakeSite()
+    s.init_plugins()
+    s._template_system = None
+    return s
+
+
+class ShortcodeFakeSite(Nikola):
+    def _get_template_system(self):
+        if self._template_system is None:
+            # Load template plugin
+            self._template_system = self.plugin_manager.getPluginByName(
+                'jinja', "TemplateSystem").plugin_object
+            self._template_system.set_directories('.', 'cache')
+            self._template_system.set_site(self)
+
+        return self._template_system
+
+    template_system = property(_get_template_system)
