@@ -30,9 +30,9 @@ def test_scale_discarding_icc_profile(test_images, destination_dir):
 
 
 @pytest.fixture(params=[True, False], ids=["with icc filename", "without icc filename"])
-def test_images(request, preserve_icc_profiles, source_dir, destination_dir):
+def test_images(request, preserve_icc_profiles, source_dir, site):
     image_filename = create_src_image(source_dir, request.param)
-    _run_task(preserve_icc_profiles, str(source_dir), str(destination_dir))
+    _run_task(site)
 
     if request.param:
         yield image_filename, PROFILE if preserve_icc_profiles else None
@@ -51,27 +51,10 @@ def source_dir(tmpdir_factory):
 
 
 @pytest.fixture
-def destination_dir(tmpdir_factory):
-    return tmpdir_factory.mktemp('image_output')
-
-
-def _run_task(preserve_icc_profiles, image_folder, output_folder):
-    task_instance = _get_task_instance(preserve_icc_profiles, image_folder, output_folder)
-    for task in task_instance.gen_tasks():
-        for action, args in task.get('actions', []):
-            action(*args)
-
-
-def _get_task_instance(preserve_icc_profiles, image_folder, output_folder):
-    result = scale_images.ScaleImage()
-    result.set_site(_get_site(preserve_icc_profiles, image_folder, output_folder))
-    return result
-
-
-def _get_site(preserve_icc_profiles, image_folder, output_folder):
+def site(preserve_icc_profiles, source_dir, destination_dir):
     site = FakeSite()
-    site.config['IMAGE_FOLDERS'] = {image_folder: ''}
-    site.config['OUTPUT_FOLDER'] = output_folder
+    site.config['IMAGE_FOLDERS'] = {str(source_dir): ''}
+    site.config['OUTPUT_FOLDER'] = str(destination_dir)
     site.config['IMAGE_THUMBNAIL_SIZE'] = 128
     site.config['IMAGE_THUMBNAIL_FORMAT'] = '{name}.thumbnail{ext}'
     site.config['MAX_IMAGE_SIZE'] = 512
@@ -80,6 +63,24 @@ def _get_site(preserve_icc_profiles, image_folder, output_folder):
     site.config['EXIF_WHITELIST'] = {}
     site.config['PRESERVE_ICC_PROFILES'] = preserve_icc_profiles
     return site
+
+
+@pytest.fixture
+def destination_dir(tmpdir_factory):
+    return tmpdir_factory.mktemp('image_output')
+
+
+def _run_task(site):
+    task_instance = _get_task_instance(site)
+    for task in task_instance.gen_tasks():
+        for action, args in task.get('actions', []):
+            action(*args)
+
+
+def _get_task_instance(site):
+    result = scale_images.ScaleImage()
+    result.set_site(site)
+    return result
 
 
 def create_src_image(testdir, use_icc_profile):
