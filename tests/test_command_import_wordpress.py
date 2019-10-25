@@ -361,12 +361,13 @@ def import_filename():
 
 
 @pytest.fixture
-def patched_import_command(import_command, mocks):
+def patched_import_command(import_command, testsite, mocks):
     """
     Import command with disabled site generation and various functions mocked.
     """
     data_import, site_generation, write_urlmap, write_configuration = mocks
 
+    import_command.site = testsite
     with mock.patch('os.system', site_generation):
         with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.import_posts',
                         data_import):
@@ -375,6 +376,18 @@ def patched_import_command(import_command, mocks):
                 with mock.patch('nikola.plugins.command.import_wordpress.CommandImportWordpress.write_configuration',
                                 write_configuration):
                     yield import_command
+
+
+@pytest.fixture
+def testsite():
+    return FakeSite()
+
+
+class FakeSite:
+    def link(self, *args, **kwargs):
+        # We need a link function.
+        # Stubbed because there is nothing done with the results.
+        pass
 
 
 @pytest.fixture
