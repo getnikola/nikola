@@ -9,36 +9,6 @@ import pytest
 from .base import cd
 
 
-@pytest.fixture
-def ask_questions():
-    return mock.MagicMock()
-
-
-@pytest.fixture
-def copy_sample_site():
-    return mock.MagicMock()
-
-
-@pytest.fixture
-def create_configuration():
-    return mock.MagicMock()
-
-
-@pytest.fixture
-def create_empty_site():
-    return mock.MagicMock()
-
-
-@pytest.fixture
-def init_command(tmpdir, ask_questions, copy_sample_site, create_configuration, create_empty_site):
-    with mock.patch('nikola.plugins.command.init.CommandInit.ask_questions', ask_questions):
-        with mock.patch('nikola.plugins.command.init.CommandInit.copy_sample_site', copy_sample_site):
-            with mock.patch('nikola.plugins.command.init.CommandInit.create_configuration', create_configuration):
-                with mock.patch('nikola.plugins.command.init.CommandInit.create_empty_site', create_empty_site):
-                    with cd(tmpdir):
-                        yield CommandInit()
-
-
 def test_command_init_with_defaults(init_command, ask_questions, copy_sample_site, create_configuration, create_empty_site):
     init_command.execute()
 
@@ -96,3 +66,33 @@ def test_configure_translations_with_2_additional_languages():
     "en": "./en",
     "es": "./es",
 }"""
+
+
+@pytest.fixture
+def init_command(tmpdir, ask_questions, copy_sample_site, create_configuration, create_empty_site):
+    with mock.patch('nikola.plugins.command.init.CommandInit.ask_questions', ask_questions):
+        with mock.patch('nikola.plugins.command.init.CommandInit.copy_sample_site', copy_sample_site):
+            with mock.patch('nikola.plugins.command.init.CommandInit.create_configuration', create_configuration):
+                with mock.patch('nikola.plugins.command.init.CommandInit.create_empty_site', create_empty_site):
+                    with cd(tmpdir):
+                        yield CommandInit()
+
+
+@pytest.fixture
+def ask_questions():
+    return mock.MagicMock()
+
+
+@pytest.fixture
+def copy_sample_site():
+    return mock.MagicMock()
+
+
+@pytest.fixture
+def create_configuration():
+    return mock.MagicMock()
+
+
+@pytest.fixture
+def create_empty_site():
+    return mock.MagicMock()
