@@ -74,7 +74,7 @@ def init_command(tmpdir, ask_questions, copy_sample_site, create_configuration, 
         with mock.patch('nikola.plugins.command.init.CommandInit.copy_sample_site', copy_sample_site):
             with mock.patch('nikola.plugins.command.init.CommandInit.create_configuration', create_configuration):
                 with mock.patch('nikola.plugins.command.init.CommandInit.create_empty_site', create_empty_site):
-                    with cd(tmpdir):
+                    with cd(str(tmpdir)):
                         yield CommandInit()
 
 
