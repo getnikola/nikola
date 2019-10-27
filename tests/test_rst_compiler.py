@@ -1,4 +1,3 @@
-# coding: utf8
 # Author: Rodrigo Bistolfi
 # Date: 03/2013
 
