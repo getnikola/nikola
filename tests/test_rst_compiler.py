@@ -63,7 +63,6 @@ class ReSTExtensionTestCase(BaseTestCase):
     """ Base class for testing ReST extensions """
 
     sample = 'foo'
-    deps = None
 
     def setUp(self):
         self.compiler = nikola.plugins.compile.rest.CompileRest()
@@ -85,10 +84,6 @@ class ReSTExtensionTestCase(BaseTestCase):
             self.html = f.read()
         os.unlink(inf)
         os.unlink(outf)
-        depfile = [p for p in p._depfile[outf] if p != outf]
-        depfile = '\n'.join(depfile)
-        if depfile:
-            self.assertEqual(self.deps.strip(), depfile)
         os.rmdir(tmpdir)
         self.html_doc = html.parse(StringIO(self.html))
 
