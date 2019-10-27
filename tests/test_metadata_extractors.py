@@ -39,7 +39,7 @@ class FakePost():
         return self.source_path
 
 
-class dummy():
+class dummy:
     pass
 
 
