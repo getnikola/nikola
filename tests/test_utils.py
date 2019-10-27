@@ -11,6 +11,8 @@ from nikola.utils import (
     get_asset_path, get_theme_chain, get_translation_candidate, write_metadata)
 from nikola.plugins.task.sitemap import get_base_path as sitemap_get_base_path
 
+import pytest
+
 
 class dummy(object):
     default_lang = 'en'
@@ -426,27 +428,35 @@ title: Hello, world!
 """)
 
 
-def test_write_metadata_pelican_detection():
-    rest_fake, md_fake, html_fake = dummy(), dummy(), dummy()
-    rest_fake.name = 'rest'
-    md_fake.name = 'markdown'
-    html_fake.name = 'html'
-    data = {'title': 'xx'}
+@pytest.mark.parametrize("post_format, expected_metadata", [
+    ('rest', '==\nxx\n==\n\n'),
+    ('markdown', 'title: xx\n\n'),
+    ('html', '.. title: xx\n\n'),
+])
+def test_write_metadata_pelican_detection(post, post_format, expected_metadata):
+    post.name = post_format
 
-    assert write_metadata(data, 'pelican', compiler=rest_fake) == '==\nxx\n==\n\n'
-    assert write_metadata(data, 'pelican', compiler=md_fake) == 'title: xx\n\n'
-    assert write_metadata(data, 'pelican', compiler=html_fake) == '.. title: xx\n\n'
+    data = {'title': 'xx'}
+    assert write_metadata(data, 'pelican', compiler=post) == expected_metadata
+
+
+def test_write_metadata_pelican_detection_default():
+    data = {'title': 'xx'}
     assert write_metadata(data, 'pelican', compiler=None) == '.. title: xx\n\n'
 
 
-def test_write_metadata_from_site_and_fallbacks():
-    site = dummy()
-    site.config = {'METADATA_FORMAT': 'yaml'}
+def test_write_metadata_from_site_and_fallbacks(post):
+    post.config = {'METADATA_FORMAT': 'yaml'}
     data = {'title': 'xx'}
-    assert write_metadata(data, site=site) == '---\ntitle: xx\n---\n'
+    assert write_metadata(data, site=post) == '---\ntitle: xx\n---\n'
     assert write_metadata(data) == '.. title: xx\n\n'
     assert write_metadata(data, 'foo') == '.. title: xx\n\n'
     assert write_metadata(data, 'filename_regex') == '.. title: xx\n\n'
+
+
+@pytest.fixture
+def post():
+    return dummy()
 
 
 if __name__ == '__main__':
