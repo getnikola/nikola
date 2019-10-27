@@ -24,24 +24,21 @@ always unquoted.
 
 """
 
-import os
-
 import io
-try:
-    from io import StringIO
-except ImportError:
-    from StringIO import StringIO  # NOQA
+import os
 import tempfile
+import unittest
+from io import StringIO
 
 import docutils
 from lxml import html
-import unittest
 
 import nikola.plugins.compile.rest
-from nikola.plugins.compile.rest import vimeo
 import nikola.plugins.compile.rest.listing
+from nikola.plugins.compile.rest import vimeo
 from nikola.plugins.compile.rest.doc import Plugin as DocPlugin
 from nikola.utils import _reload, LocaleBorg
+
 from .base import BaseTestCase, FakeSite, FakePost
 
 import pytest
