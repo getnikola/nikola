@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
 """Test metadata extractors."""
 
-from unittest import mock
 import os
+from unittest import mock
+
 import pytest
-from .base import FakeSite
+
 from nikola.metadata_extractors import default_metadata_extractors_by, load_defaults, MetaCondition, check_conditions
 from nikola.post import get_meta
 from nikola.plugins.compile.rest import CompileRest
 from nikola.plugins.compile.markdown import CompileMarkdown
 from nikola.plugins.compile.ipynb import CompileIPynb
 from nikola.plugins.compile.html import CompileHtml
+
+from .base import FakeSite
 
 
 @pytest.mark.parametrize("filecount, expected, unexpected", [
