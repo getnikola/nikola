@@ -41,8 +41,20 @@ import nikola.plugins.compile.rest
 from nikola.plugins.compile.rest import vimeo
 import nikola.plugins.compile.rest.listing
 from nikola.plugins.compile.rest.doc import Plugin as DocPlugin
-from nikola.utils import _reload
+from nikola.utils import _reload, LocaleBorg
 from .base import BaseTestCase, FakeSite, FakePost
+
+import pytest
+
+
+@pytest.fixture(autouse=True, scope="module")
+def localeborg_base():
+    """A base config of LocaleBorg."""
+    LocaleBorg.reset()
+    assert not LocaleBorg.initialized
+    LocaleBorg.initialize({}, 'en')
+    assert LocaleBorg.initialized
+    assert LocaleBorg().current_lang == 'en'
 
 
 class ReSTExtensionTestCase(BaseTestCase):
