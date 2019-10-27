@@ -70,8 +70,10 @@ def test_youtube_iframe(tmpdir):
                              attributes={"src": ("https://www.youtube-nocookie.com/"
                                                  "embed/YID?rel=0&"
                                                  "wmode=transparent"),
-                                         "height": "400", "width": "600",
-                                         "frameborder": "0", "allowfullscreen": "",
+                                         "height": "400",
+                                         "width": "600",
+                                         "frameborder": "0",
+                                         "allowfullscreen": "",
                                          "allow": "encrypted-media"})
 
 
