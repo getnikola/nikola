@@ -34,7 +34,6 @@ def localeborg_base():
     LocaleBorg.initialize({}, 'en')
     assert LocaleBorg.initialized
     assert LocaleBorg().current_lang == 'en'
-    return None
 
 
 def test_initilalize_failure():
