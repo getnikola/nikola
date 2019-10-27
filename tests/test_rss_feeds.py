@@ -115,7 +115,7 @@ def rss_feed_content(blog_url, config):
                     call[1][0]
                     for call in opener_mock.mock_calls[2:-1]][0]
                 splitted_content = file_content.split('\n')
-                encoding_declaration = splitted_content[0]
+                # encoding_declaration = splitted_content[0]
                 content_without_encoding_declaration = splitted_content[1:]
                 yield '\n'.join(content_without_encoding_declaration)
 
