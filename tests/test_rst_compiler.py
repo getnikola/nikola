@@ -27,11 +27,11 @@ from .base import FakeSite, FakePost
 import pytest
 
 
-def test_ReST_extension(tmpdir):
+def test_ReST_extension(tempdir):
     "Simple test for our base class :)"
 
     sample = '.. raw:: html\n\n   <iframe src="foo" height="bar">spam</iframe>'
-    html = getHtmlFromRst(tmpdir, sample)
+    html = getHtmlFromRst(tempdir, sample)
 
     assertHTMLContains(html, "iframe", attributes={"src": "foo"}, text="spam")
 
@@ -39,20 +39,20 @@ def test_ReST_extension(tmpdir):
         assertHTMLContains("eggs", {})
 
 
-def test_math_extension_outputs_tex(tmpdir):
+def test_math_extension_outputs_tex(tempdir):
     "Test that math is outputting TeX code."
     sample = r':math:`e^{ix} = \cos x + i\sin x`'
-    html = getHtmlFromRst(tmpdir, sample)
+    html = getHtmlFromRst(tempdir, sample)
 
     assertHTMLContains(html, "span", attributes={"class": "math"},
                                      text=r"\(e^{ix} = \cos x + i\sin x\)")
 
 
-def test_soundcloud_iframe(tmpdir):
+def test_soundcloud_iframe(tempdir):
     "Test SoundCloud iframe tag generation"
 
     sample = '.. soundcloud:: SID\n   :height: 400\n   :width: 600'
-    html = getHtmlFromRst(tmpdir, sample)
+    html = getHtmlFromRst(tempdir, sample)
     assertHTMLContains(html, "iframe",
                        attributes={"src": ("https://w.soundcloud.com/player/"
                                            "?url=http://api.soundcloud.com/"
@@ -61,11 +61,11 @@ def test_soundcloud_iframe(tmpdir):
                                    "width": "600"})
 
 
-def test_youtube_iframe(tmpdir):
+def test_youtube_iframe(tempdir):
     "Test Youtube iframe tag generation"
 
     sample = '.. youtube:: YID\n   :height: 400\n   :width: 600'
-    html = getHtmlFromRst(tmpdir, sample)
+    html = getHtmlFromRst(tempdir, sample)
     assertHTMLContains(html, "iframe",
                              attributes={"src": ("https://www.youtube-nocookie.com/"
                                                  "embed/YID?rel=0&"
@@ -77,11 +77,11 @@ def test_youtube_iframe(tmpdir):
                                          "allow": "encrypted-media"})
 
 
-def test_vimeo(disable_vimeo_api_query, tmpdir):
+def test_vimeo(disable_vimeo_api_query, tempdir):
     "Test Vimeo iframe tag generation"
 
     sample = '.. vimeo:: VID\n   :height: 400\n   :width: 600'
-    html = getHtmlFromRst(tmpdir, sample)
+    html = getHtmlFromRst(tempdir, sample)
     assertHTMLContains(html, "iframe",
                              attributes={"src": ("https://player.vimeo.com/"
                                                  "video/VID"),
@@ -93,9 +93,9 @@ def test_vimeo(disable_vimeo_api_query, tmpdir):
     '.. code-block:: python\n\n   import antigravity',
     '.. sourcecode:: python\n\n   import antigravity',
 ])
-def test_rendering_codeblock_alias(tmpdir, sample):
+def test_rendering_codeblock_alias(tempdir, sample):
     """ Test CodeBlock aliases """
-    getHtmlFromRst(tmpdir, sample)
+    getHtmlFromRst(tempdir, sample)
 
 
 def test_doc_doesnt_exist():
@@ -103,16 +103,16 @@ def test_doc_doesnt_exist():
         assertHTMLContains('anything', {})
 
 
-def test_doc(tmpdir):
+def test_doc(tempdir):
     sample = 'Sample for testing my :doc:`fake-post`'
-    html = getHtmlFromRst(tmpdir, sample)
+    html = getHtmlFromRst(tempdir, sample)
     assertHTMLContains(html, 'a', text='Fake post',
                                   attributes={'href': '/posts/fake-post'})
 
 
-def test_doc_titled(tmpdir):
+def test_doc_titled(tempdir):
     sample = 'Sample for testing my :doc:`titled post <fake-post>`'
-    html = getHtmlFromRst(tmpdir, sample)
+    html = getHtmlFromRst(tempdir, sample)
     assertHTMLContains(html, 'a', text='titled post',
                                   attributes={'href': '/posts/fake-post'})
 
@@ -130,6 +130,15 @@ def localeborg_base():
     finally:
         LocaleBorg.reset()
         assert not LocaleBorg.initialized
+
+
+@pytest.fixture
+def tempdir(tmpdir):
+    """
+    Helper fixture to support Python 3.4 & 3.5 who are unable to work
+    with pathlib objects.
+    """
+    return str(tmpdir)
 
 
 def getHtmlFromRst(temp_dir, rst):
