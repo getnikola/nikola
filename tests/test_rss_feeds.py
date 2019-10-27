@@ -10,8 +10,10 @@ import dateutil.tz
 import pytest
 from lxml import etree
 
+from nikola.nikola import Nikola, Post
+from nikola.nikola import utils
+
 from .base import initialize_localeborg
-import nikola
 
 
 def test_feed_is_valid(rss_feed_content):
@@ -85,19 +87,19 @@ def rss_feed_content(blog_url, config):
                         mock.Mock(return_value=True)):
             with mock.patch('nikola.nikola.Post.text',
                             mock.Mock(return_value='some long text')):
-                example_post = nikola.nikola.Post('source.file',
-                                                  config,
-                                                  'blog_folder',
-                                                  True,
-                                                  {'en': ''},
-                                                  'post.tmpl',
-                                                  FakeCompiler())
+                example_post = Post('source.file',
+                                    config,
+                                    'blog_folder',
+                                    True,
+                                    {'en': ''},
+                                    'post.tmpl',
+                                    FakeCompiler())
 
                 filename = 'testfeed.rss'
                 opener_mock = mock.mock_open()
 
                 with mock.patch('nikola.nikola.io.open', opener_mock, create=True):
-                    nikola.nikola.Nikola().generic_rss_renderer(
+                    Nikola().generic_rss_renderer(
                         'en', "blog_title", blog_url,
                         "blog_description", [example_post, ],
                         filename, True, False)
@@ -126,7 +128,7 @@ def config(blog_url):
     fake_conf['DEFAULT_LANG'] = 'en'
     fake_conf['TRANSLATIONS'] = {'en': ''}
     fake_conf['BASE_URL'] = blog_url
-    fake_conf['BLOG_AUTHOR'] = nikola.nikola.utils.TranslatableSetting(
+    fake_conf['BLOG_AUTHOR'] = utils.TranslatableSetting(
         'BLOG_AUTHOR', 'Nikola Tesla', ['en'])
     fake_conf['TRANSLATIONS_PATTERN'] = '{path}.{lang}.{ext}'
 
