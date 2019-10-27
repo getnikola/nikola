@@ -44,8 +44,9 @@ def test_math_extension_outputs_tex(tempdir):
     sample = r':math:`e^{ix} = \cos x + i\sin x`'
     html = getHtmlFromRst(tempdir, sample)
 
-    assertHTMLContains(html, "span", attributes={"class": "math"},
-                                     text=r"\(e^{ix} = \cos x + i\sin x\)")
+    assertHTMLContains(html, "span",
+                       attributes={"class": "math"},
+                       text=r"\(e^{ix} = \cos x + i\sin x\)")
 
 
 def test_soundcloud_iframe(tempdir):
@@ -106,15 +107,17 @@ def test_doc_doesnt_exist():
 def test_doc(tempdir):
     sample = 'Sample for testing my :doc:`fake-post`'
     html = getHtmlFromRst(tempdir, sample)
-    assertHTMLContains(html, 'a', text='Fake post',
-                                  attributes={'href': '/posts/fake-post'})
+    assertHTMLContains(html, 'a',
+                       text='Fake post',
+                       attributes={'href': '/posts/fake-post'})
 
 
 def test_doc_titled(tempdir):
     sample = 'Sample for testing my :doc:`titled post <fake-post>`'
     html = getHtmlFromRst(tempdir, sample)
-    assertHTMLContains(html, 'a', text='titled post',
-                                  attributes={'href': '/posts/fake-post'})
+    assertHTMLContains(html, 'a',
+                       text='titled post',
+                       attributes={'href': '/posts/fake-post'})
 
 
 @pytest.fixture(autouse=True, scope="module")
