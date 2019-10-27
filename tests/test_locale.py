@@ -14,6 +14,18 @@ DT_EN_US = 'July 10, 1856 at 12:34:56 PM UTC'
 DT_PL = '10 lipca 1856 12:34:56 UTC'
 
 
+@pytest.fixture(autouse=True)
+def localeborg_reset():
+    """
+    Reset the LocaleBorg after every test.
+    """
+    try:
+        yield
+    finally:
+        LocaleBorg.reset()
+        assert not LocaleBorg.initialized
+
+
 @pytest.fixture
 def localeborg_base():
     """A base config of LocaleBorg."""
