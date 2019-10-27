@@ -70,10 +70,6 @@ class ReSTExtensionTestCase(BaseTestCase):
         self.compiler.set_site(FakeSite())
         return super(ReSTExtensionTestCase, self).setUp()
 
-    def basic_test(self):
-        """ Parse cls.sample into a HTML document tree """
-        self.setHtmlFromRst(self.sample)
-
     def setHtmlFromRst(self, rst):
         """ Create html output from rst string """
         tmpdir = tempfile.mkdtemp()
@@ -117,21 +113,20 @@ class ReSTExtensionTestCase(BaseTestCase):
 class ReSTExtensionTestCaseTestCase(ReSTExtensionTestCase):
     """ Simple test for our base class :) """
 
-    sample = '.. raw:: html\n\n   <iframe src="foo" height="bar">spam</iframe>'
-
     def test_test(self):
-        self.basic_test()
+        sample = '.. raw:: html\n\n   <iframe src="foo" height="bar">spam</iframe>'
+        self.setHtmlFromRst(sample)
         self.assertHTMLContains("iframe", attributes={"src": "foo"},
                                 text="spam")
         self.assertRaises(Exception, self.assertHTMLContains, "eggs", {})
 
 
 class MathTestCase(ReSTExtensionTestCase):
-    sample = r':math:`e^{ix} = \cos x + i\sin x`'
 
     def test_math(self):
         """ Test that math is outputting TeX code."""
-        self.basic_test()
+        sample = r':math:`e^{ix} = \cos x + i\sin x`'
+        self.setHtmlFromRst(sample)
         self.assertHTMLContains("span", attributes={"class": "math"},
                                 text=r"\(e^{ix} = \cos x + i\sin x\)")
 
@@ -139,11 +134,10 @@ class MathTestCase(ReSTExtensionTestCase):
 class SoundCloudTestCase(ReSTExtensionTestCase):
     """ SoundCloud test case """
 
-    sample = '.. soundcloud:: SID\n   :height: 400\n   :width: 600'
-
     def test_soundcloud(self):
         """ Test SoundCloud iframe tag generation """
-        self.basic_test()
+        sample = '.. soundcloud:: SID\n   :height: 400\n   :width: 600'
+        self.setHtmlFromRst(sample)
         self.assertHTMLContains("iframe",
                                 attributes={"src": ("https://w.soundcloud.com"
                                                     "/player/?url=http://"
@@ -156,9 +150,7 @@ class VimeoTestCase(ReSTExtensionTestCase):
     """Vimeo test.
     Set Vimeo.request_size to False for avoiding querying the Vimeo api
     over the network
-
     """
-    sample = '.. vimeo:: VID\n   :height: 400\n   :width: 600'
 
     def setUp(self):
         """ Disable query of the vimeo api over the wire """
@@ -168,7 +160,8 @@ class VimeoTestCase(ReSTExtensionTestCase):
 
     def test_vimeo(self):
         """ Test Vimeo iframe tag generation """
-        self.basic_test()
+        sample = '.. vimeo:: VID\n   :height: 400\n   :width: 600'
+        self.setHtmlFromRst(sample)
         self.assertHTMLContains("iframe",
                                 attributes={"src": ("https://player.vimeo.com/"
                                                     "video/VID"),
@@ -178,11 +171,10 @@ class VimeoTestCase(ReSTExtensionTestCase):
 class YoutubeTestCase(ReSTExtensionTestCase):
     """ Youtube test case """
 
-    sample = '.. youtube:: YID\n   :height: 400\n   :width: 600'
-
     def test_youtube(self):
         """ Test Youtube iframe tag generation """
-        self.basic_test()
+        sample = '.. youtube:: YID\n   :height: 400\n   :width: 600'
+        self.setHtmlFromRst(sample)
         self.assertHTMLContains("iframe",
                                 attributes={"src": ("https://www.youtube-nocookie.com/"
                                                     "embed/YID?rel=0&"
@@ -195,30 +187,17 @@ class YoutubeTestCase(ReSTExtensionTestCase):
 class ListingTestCase(ReSTExtensionTestCase):
     """ Listing test case and CodeBlock alias tests """
 
-    deps = None
-    sample1 = '.. listing:: nikola.py python\n\n'
-    sample2 = '.. code-block:: python\n\n   import antigravity'
-    sample3 = '.. sourcecode:: python\n\n   import antigravity'
-
-    # def test_listing(self):
-    #     """ Test that we can render a file object contents without errors """
-    #     with cd(os.path.dirname(__file__)):
-    #        self.deps = 'listings/nikola.py'
-    #        self.setHtmlFromRst(self.sample1)
-
     def test_codeblock_alias(self):
         """ Test CodeBlock aliases """
-        self.deps = None
-        self.setHtmlFromRst(self.sample2)
-        self.setHtmlFromRst(self.sample3)
+        sample2 = '.. code-block:: python\n\n   import antigravity'
+        self.setHtmlFromRst(sample2)
+
+        sample3 = '.. sourcecode:: python\n\n   import antigravity'
+        self.setHtmlFromRst(sample3)
 
 
 class DocTestCase(ReSTExtensionTestCase):
     """ Ref role test case """
-
-    sample = 'Sample for testing my :doc:`doesnt-exist-post`'
-    sample1 = 'Sample for testing my :doc:`fake-post`'
-    sample2 = 'Sample for testing my :doc:`titled post <fake-post>`'
 
     def setUp(self):
         # Initialize plugin, register role
@@ -236,13 +215,15 @@ class DocTestCase(ReSTExtensionTestCase):
         self.assertRaises(Exception, self.assertHTMLContains, 'anything', {})
 
     def test_doc(self):
-        self.setHtmlFromRst(self.sample1)
+        sample1 = 'Sample for testing my :doc:`fake-post`'
+        self.setHtmlFromRst(sample1)
         self.assertHTMLContains('a',
                                 text='Fake post',
                                 attributes={'href': '/posts/fake-post'})
 
     def test_doc_titled(self):
-        self.setHtmlFromRst(self.sample2)
+        sample2 = 'Sample for testing my :doc:`titled post <fake-post>`'
+        self.setHtmlFromRst(sample2)
         self.assertHTMLContains('a',
                                 text='titled post',
                                 attributes={'href': '/posts/fake-post'})
