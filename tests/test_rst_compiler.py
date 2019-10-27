@@ -55,6 +55,11 @@ def localeborg_base():
     LocaleBorg.initialize({}, 'en')
     assert LocaleBorg.initialized
     assert LocaleBorg().current_lang == 'en'
+    try:
+        yield
+    finally:
+        LocaleBorg.reset()
+        assert not LocaleBorg.initialized
 
 
 class ReSTExtensionTestCase(BaseTestCase):
