@@ -13,42 +13,6 @@ from nikola.plugins.compile.ipynb import CompileIPynb
 from nikola.plugins.compile.html import CompileHtml
 
 
-@pytest.fixture(name='metadata_extractors_by')
-def f__metadata_extractors_by():
-    m = default_metadata_extractors_by()
-    load_defaults(None, m)
-    return m
-
-
-@pytest.fixture(scope="module")
-def testfiledir():
-    testdir = os.path.abspath(os.path.dirname(__file__))
-    return os.path.join(testdir, 'data', 'metadata_extractors')
-
-
-class FakePost():
-    def __init__(self, source_path, metadata_path, config, compiler, metadata_extractors_by):
-        self.source_path = source_path
-        self.metadata_path = metadata_path
-        self.is_two_file = True
-        self.config = {
-            'TRANSLATIONS': {'en': './'},
-            'DEFAULT_LANG': 'en'
-        }
-        self.config.update(config)
-        self.default_lang = self.config['DEFAULT_LANG']
-        self.metadata_extractors_by = metadata_extractors_by
-        if compiler:
-            self.compiler = compiler
-
-    def translated_source_path(self, _):
-        return self.source_path
-
-
-class dummy:
-    pass
-
-
 @pytest.mark.parametrize("filecount, expected, unexpected", [
     (1, "onefile", "twofile"),
     (2, "twofile", "onefile")
@@ -199,3 +163,39 @@ def test_check_conditions():
         (MetaCondition.never, None),
         (MetaCondition.config_present, 'bar')
     ], config, '')
+
+
+class FakePost():
+    def __init__(self, source_path, metadata_path, config, compiler, metadata_extractors_by):
+        self.source_path = source_path
+        self.metadata_path = metadata_path
+        self.is_two_file = True
+        self.config = {
+            'TRANSLATIONS': {'en': './'},
+            'DEFAULT_LANG': 'en'
+        }
+        self.config.update(config)
+        self.default_lang = self.config['DEFAULT_LANG']
+        self.metadata_extractors_by = metadata_extractors_by
+        if compiler:
+            self.compiler = compiler
+
+    def translated_source_path(self, _):
+        return self.source_path
+
+
+class dummy:
+    pass
+
+
+@pytest.fixture(name='metadata_extractors_by')
+def f__metadata_extractors_by():
+    m = default_metadata_extractors_by()
+    load_defaults(None, m)
+    return m
+
+
+@pytest.fixture(scope="module")
+def testfiledir():
+    testdir = os.path.abspath(os.path.dirname(__file__))
+    return os.path.join(testdir, 'data', 'metadata_extractors')
