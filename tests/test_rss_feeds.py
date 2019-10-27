@@ -11,7 +11,7 @@ import pytest
 from lxml import etree
 
 from nikola.nikola import Nikola, Post
-from nikola.nikola import utils
+from nikola.utils import TranslatableSetting
 
 from .base import initialize_localeborg
 
@@ -128,7 +128,7 @@ def config(blog_url):
     fake_conf['DEFAULT_LANG'] = 'en'
     fake_conf['TRANSLATIONS'] = {'en': ''}
     fake_conf['BASE_URL'] = blog_url
-    fake_conf['BLOG_AUTHOR'] = utils.TranslatableSetting(
+    fake_conf['BLOG_AUTHOR'] = TranslatableSetting(
         'BLOG_AUTHOR', 'Nikola Tesla', ['en'])
     fake_conf['TRANSLATIONS_PATTERN'] = '{path}.{lang}.{ext}'
 
