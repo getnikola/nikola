@@ -109,6 +109,7 @@ def test_doc(tmpdir):
     assertHTMLContains(html, 'a', text='Fake post',
                                   attributes={'href': '/posts/fake-post'})
 
+
 def test_doc_titled(tmpdir):
     sample = 'Sample for testing my :doc:`titled post <fake-post>`'
     html = getHtmlFromRst(tmpdir, sample)
