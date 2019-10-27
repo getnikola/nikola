@@ -20,6 +20,12 @@ def f__metadata_extractors_by():
     return m
 
 
+@pytest.fixture(scope="module")
+def testfiledir():
+    testdir = os.path.abspath(os.path.dirname(__file__))
+    return os.path.join(testdir, 'data', 'metadata_extractors')
+
+
 class FakePost():
     def __init__(self, source_path, metadata_path, config, compiler, metadata_extractors_by):
         self.source_path = source_path
@@ -43,23 +49,26 @@ class dummy:
     pass
 
 
-@pytest.mark.parametrize("meta_twofile", [(1, "onefile", "twofile"), (2, "twofile", "onefile")])
-@pytest.mark.parametrize("meta_format", [('nikola', 'Nikola'), ('toml', 'TOML'), ('yaml', 'YAML')])
-def test_builtin_extractors_rest(metadata_extractors_by, meta_twofile, meta_format):
-    twofile_number, twofile_expected, twofile_unexpected = meta_twofile
-    twofile = twofile_number == 2
-    format_lc, format_friendly = meta_format
+@pytest.mark.parametrize("filecount, expected, unexpected", [
+    (1, "onefile", "twofile"),
+    (2, "twofile", "onefile")
+])
+@pytest.mark.parametrize("format_lc, format_friendly", [
+    ('nikola', 'Nikola'),
+    ('toml', 'TOML'),
+    ('yaml', 'YAML')
+])
+def test_builtin_extractors_rest(metadata_extractors_by, testfiledir, filecount, expected, unexpected, format_lc, format_friendly):
+    is_two_files = filecount == 2
 
-    source_filename = "f-rest-{0}-{1}.rst".format(twofile_number, format_lc)
-    metadata_filename = "f-rest-{0}-{1}.meta".format(twofile_number, format_lc)
-    title = 'T: reST, {0}, {1}'.format(twofile_number, format_friendly)
-    slug = "s-rest-{0}-{1}".format(twofile_number, format_lc)
-    source_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data', 'metadata_extractors', source_filename))
-    metadata_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data', 'metadata_extractors', metadata_filename))
+    source_filename = "f-rest-{0}-{1}.rst".format(filecount, format_lc)
+    metadata_filename = "f-rest-{0}-{1}.meta".format(filecount, format_lc)
+    source_path = os.path.join(testfiledir, source_filename)
+    metadata_path = os.path.join(testfiledir, metadata_filename)
     post = FakePost(source_path, metadata_path, {}, None, metadata_extractors_by)
 
     assert os.path.exists(source_path)
-    if twofile:
+    if is_two_files:
         assert os.path.exists(metadata_path)
 
     meta, extractor = get_meta(post, None)
@@ -67,65 +76,65 @@ def test_builtin_extractors_rest(metadata_extractors_by, meta_twofile, meta_form
     assert meta
     assert extractor is metadata_extractors_by['name'][format_lc]
 
-    assert meta['title'] == title
-    assert meta['slug'] == slug
-    assert twofile_expected in meta['tags']
-    assert twofile_unexpected not in meta['tags']
+    assert meta['title'] == 'T: reST, {0}, {1}'.format(filecount, format_friendly)
+    assert meta['slug'] == "s-rest-{0}-{1}".format(filecount, format_lc)
+    assert expected in meta['tags']
+    assert unexpected not in meta['tags']
     assert 'meta' in meta['tags']
     assert format_friendly in meta['tags']
     assert 'reST' in meta['tags']
     assert meta['date'] == '2017-07-01 00:00:00 UTC'
 
 
-@pytest.mark.parametrize("meta_twofile", [(1, "onefile", "twofile"), (2, "twofile", "onefile")])
-def test_nikola_meta_markdown(metadata_extractors_by, meta_twofile):
-    twofile_number, twofile_expected, twofile_unexpected = meta_twofile
-    twofile = twofile_number == 2
+@pytest.mark.parametrize("filecount, expected, unexpected", [
+    (1, "onefile", "twofile"),
+    (2, "twofile", "onefile")
+])
+def test_nikola_meta_markdown(metadata_extractors_by, testfiledir, filecount, expected, unexpected):
+    is_two_files = filecount == 2
 
-    source_filename = "f-markdown-{0}-nikola.md".format(twofile_number)
-    metadata_filename = "f-markdown-{0}-nikola.meta".format(twofile_number)
-    title = 'T: Markdown, {0}, Nikola'.format(twofile_number)
-    slug = "s-markdown-{0}-nikola".format(twofile_number)
-    source_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data', 'metadata_extractors', source_filename))
-    metadata_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data', 'metadata_extractors', metadata_filename))
+    source_filename = "f-markdown-{0}-nikola.md".format(filecount)
+    metadata_filename = "f-markdown-{0}-nikola.meta".format(filecount)
+    source_path = os.path.join(testfiledir, source_filename)
+    metadata_path = os.path.join(testfiledir, metadata_filename)
     post = FakePost(source_path, metadata_path, {}, None, metadata_extractors_by)
 
     assert os.path.exists(source_path)
-    if twofile:
+    if is_two_files:
         assert os.path.exists(metadata_path)
 
     meta, extractor = get_meta(post, None)
     assert extractor is metadata_extractors_by['name']['nikola']
 
-    assert meta['title'] == title
-    assert meta['slug'] == slug
-    assert twofile_expected in meta['tags']
-    assert twofile_unexpected not in meta['tags']
+    assert meta['title'] == 'T: Markdown, {0}, Nikola'.format(filecount)
+    assert meta['slug'] == "s-markdown-{0}-nikola".format(filecount)
+    assert expected in meta['tags']
+    assert unexpected not in meta['tags']
     assert 'meta' in meta['tags']
     assert 'Nikola' in meta['tags']
     assert 'Markdown' in meta['tags']
     assert meta['date'] == '2017-07-01 00:00:00 UTC'
 
 
-@pytest.mark.parametrize("compiler_data", [
+@pytest.mark.parametrize("compiler, fileextension, compiler_lc, name", [
     (CompileRest, 'rst', 'rest', 'reST'),
     (CompileMarkdown, 'md', 'markdown', 'Markdown'),
     (CompileIPynb, 'ipynb', 'ipynb', 'Jupyter Notebook'),
     (CompileHtml, 'html', 'html', 'HTML'),
 ])
-def test_compiler_metadata(metadata_extractors_by, compiler_data):
-    compiler_cls, compiler_ext, compiler_lc, compiler_name = compiler_data
-    source_filename = "f-{0}-1-compiler.{1}".format(compiler_lc, compiler_ext)
+def test_compiler_metadata(metadata_extractors_by, testfiledir, compiler, fileextension, compiler_lc, name):
+    source_filename = "f-{0}-1-compiler.{1}".format(compiler_lc, fileextension)
     metadata_filename = "f-{0}-1-compiler.meta".format(compiler_lc)
-    title = 'T: {0}, 1, compiler'.format(compiler_name)
+    title = 'T: {0}, 1, compiler'.format(name)
     slug = "s-{0}-1-compiler".format(compiler_lc)
-    source_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data', 'metadata_extractors', source_filename))
-    metadata_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data', 'metadata_extractors', metadata_filename))
+    source_path = os.path.join(testfiledir, source_filename)
+    metadata_path = os.path.join(testfiledir, metadata_filename)
 
-    config = {'USE_REST_DOCINFO_METADATA': True, 'MARKDOWN_EXTENSIONS': ['markdown.extensions.meta']}
+    config = {'USE_REST_DOCINFO_METADATA': True,
+              'MARKDOWN_EXTENSIONS': ['markdown.extensions.meta']}
     site = FakeSite()
     site.config.update(config)
-    compiler_obj = compiler_cls()
+    compiler_obj = compiler()
     compiler_obj.set_site(site)
 
     post = FakePost(source_path, metadata_path, config, compiler_obj, metadata_extractors_by)
@@ -144,7 +153,7 @@ def test_compiler_metadata(metadata_extractors_by, compiler_data):
     assert 'meta' in meta['tags']
     assert 'onefile' in meta['tags']
     assert 'compiler' in meta['tags']
-    assert compiler_name in meta['tags']
+    assert name in meta['tags']
     assert meta['date'] == '2017-07-01 00:00:00 UTC'
 
 
