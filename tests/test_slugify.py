@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-
-u"""Test slugify."""
+"""Test slugify."""
 
 import nikola.utils
 
