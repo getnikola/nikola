@@ -5,61 +5,34 @@ import nikola.utils
 import pytest
 
 
-def test_ascii():
-    """Test an ASCII-only string."""
-    o = nikola.utils.slugify(u'hello', lang='en')
-    assert o == u'hello'
+@pytest.mark.parametrize("title, language, expected_slug", [
+    ('hello', 'en', 'hello'),
+    ('hello-world', 'en', 'hello-world'),
+    ('hello world', 'en', 'hello-world'),
+    ('Hello World', 'en', 'hello-world'),
+    ('The quick brown fox jumps over the lazy dog!-123.456', 'en', 'the-quick-brown-fox-jumps-over-the-lazy-dog-123456'),
+    ('zażółćgęśląjaźń', 'pl', 'zazolcgeslajazn'),
+    ('zażółć-gęślą-jaźń', 'pl', 'zazolc-gesla-jazn'),
+    ('Zażółć gęślą jaźń!-123.456', 'pl', 'zazolc-gesla-jazn-123456')
+], ids=["ASCII", "ASCII with dashes", "ASCII two words", "ASCII uppercase",
+        "ASCII with fancy characters", "Polish diacritical characters",
+        "Polish diacritical characters and dashes",
+        "Polish diacritical characters and fancy characters"])
+def test_slugify(title, language, expected_slug):
+    o = nikola.utils.slugify(title, lang=language)
+    assert o == expected_slug
     assert isinstance(o, nikola.utils.unicode_str)
 
 
-def test_ascii_dash():
-    """Test an ASCII string, with dashes."""
-    o = nikola.utils.slugify(u'hello-world', lang='en')
-    assert o == u'hello-world'
-    assert isinstance(o, nikola.utils.unicode_str)
-
-
-def test_ascii_fancy():
-    """Test an ASCII string, with fancy characters."""
-    o = nikola.utils.slugify(
-        u'The quick brown fox jumps over the lazy dog!-123.456', lang='en')
-    assert o == u'the-quick-brown-fox-jumps-over-the-lazy-dog-123456'
-    assert isinstance(o, nikola.utils.unicode_str)
-
-
-def test_pl():
-    """Test a string with Polish diacritical characters."""
-    o = nikola.utils.slugify(u'zażółćgęśląjaźń', lang='pl')
-    assert o == u'zazolcgeslajazn'
-    assert isinstance(o, nikola.utils.unicode_str)
-
-
-def test_pl_dash():
-    """Test a string with Polish diacritical characters and dashes."""
-    o = nikola.utils.slugify(u'zażółć-gęślą-jaźń', lang='pl')
-    assert o == u'zazolc-gesla-jazn'
-
-
-def test_pl_fancy():
-    """Test a string with Polish diacritical characters and fancy characters."""
-    o = nikola.utils.slugify(u'Zażółć gęślą jaźń!-123.456', lang='pl')
-    assert o == u'zazolc-gesla-jazn-123456'
-    assert isinstance(o, nikola.utils.unicode_str)
-
-
-def test_disarmed(disarm_slugify):
+@pytest.mark.parametrize("title, expected_slug", [
+    (u'Zażółć gęślą jaźń!-123.456', u'Zażółć gęślą jaźń!-123.456'),
+    (u'Zażółć gęślą jaźń!-123.456 "Hello World"?#H<e>l/l\\o:W\'o\rr*l\td|!\n',
+     u'Zażółć gęślą jaźń!-123.456 -Hello World---H-e-l-l-o-W-o-r-l-d-!-'),
+], ids=["polish", "polish with banned characters"])
+def test_disarmed(disarm_slugify, title, expected_slug):
     """Test disarmed slugify."""
-    o = nikola.utils.slugify(u'Zażółć gęślą jaźń!-123.456', lang='pl')
-    assert o == u'Zażółć gęślą jaźń!-123.456'
-    assert isinstance(o, nikola.utils.unicode_str)
-
-
-def test_disarmed_weird(disarm_slugify):
-    """Test disarmed slugify with banned characters."""
-    o = nikola.utils.slugify(
-        u'Zażółć gęślą jaźń!-123.456 "Hello World"?#H<e>l/l\\o:W\'o\rr*l\td|!\n',
-        lang='pl')
-    assert o == u'Zażółć gęślą jaźń!-123.456 -Hello World---H-e-l-l-o-W-o-r-l-d-!-'
+    o = nikola.utils.slugify(title, lang='pl')
+    assert o == expected_slug
     assert isinstance(o, nikola.utils.unicode_str)
 
 
