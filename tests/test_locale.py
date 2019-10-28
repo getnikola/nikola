@@ -8,30 +8,7 @@ from nikola.utils import TranslatableSetting, LocaleBorg, LocaleBorgUninitialize
 TESLA_BIRTHDAY = datetime.date(1856, 7, 10)
 TESLA_BIRTHDAY_DT = datetime.datetime(1856, 7, 10, 12, 34, 56)
 DT_EN_US = 'July 10, 1856 at 12:34:56 PM UTC'
-
 DT_PL = '10 lipca 1856 12:34:56 UTC'
-
-
-@pytest.fixture(autouse=True)
-def localeborg_reset():
-    """
-    Reset the LocaleBorg after every test.
-    """
-    try:
-        yield
-    finally:
-        LocaleBorg.reset()
-        assert not LocaleBorg.initialized
-
-
-@pytest.fixture
-def localeborg_base():
-    """A base config of LocaleBorg."""
-    LocaleBorg.reset()
-    assert not LocaleBorg.initialized
-    LocaleBorg.initialize({}, 'en')
-    assert LocaleBorg.initialized
-    assert LocaleBorg().current_lang == 'en'
 
 
 def test_initilalize_failure():
@@ -149,3 +126,25 @@ def test_locale_base():
     LocaleBorg.initialize(LEGAL_VALUES['LOCALES_BASE'], 'en')
     assert LocaleBorg().formatted_date('long', TESLA_BIRTHDAY_DT, 'sr') == '10. јул 1856. 12:34:56 UTC'
     assert LocaleBorg().formatted_date('long', TESLA_BIRTHDAY_DT, 'sr_latin') == '10. jul 1856. 12:34:56 UTC'
+
+
+@pytest.fixture(autouse=True)
+def localeborg_reset():
+    """
+    Reset the LocaleBorg after every test.
+    """
+    try:
+        yield
+    finally:
+        LocaleBorg.reset()
+        assert not LocaleBorg.initialized
+
+
+@pytest.fixture
+def localeborg_base():
+    """A base config of LocaleBorg."""
+    LocaleBorg.reset()
+    assert not LocaleBorg.initialized
+    LocaleBorg.initialize({}, 'en')
+    assert LocaleBorg.initialized
+    assert LocaleBorg().current_lang == 'en'
