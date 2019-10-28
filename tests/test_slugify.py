@@ -2,6 +2,8 @@
 
 import nikola.utils
 
+import pytest
+
 
 def test_ascii():
     """Test an ASCII-only string."""
@@ -45,21 +47,26 @@ def test_pl_fancy():
     assert isinstance(o, nikola.utils.unicode_str)
 
 
-def test_disarmed():
+def test_disarmed(disarm_slugify):
     """Test disarmed slugify."""
-    nikola.utils.USE_SLUGIFY = False
     o = nikola.utils.slugify(u'Zażółć gęślą jaźń!-123.456', lang='pl')
     assert o == u'Zażółć gęślą jaźń!-123.456'
     assert isinstance(o, nikola.utils.unicode_str)
-    nikola.utils.USE_SLUGIFY = True
 
 
-def test_disarmed_weird():
+def test_disarmed_weird(disarm_slugify):
     """Test disarmed slugify with banned characters."""
-    nikola.utils.USE_SLUGIFY = False
     o = nikola.utils.slugify(
         u'Zażółć gęślą jaźń!-123.456 "Hello World"?#H<e>l/l\\o:W\'o\rr*l\td|!\n',
         lang='pl')
     assert o == u'Zażółć gęślą jaźń!-123.456 -Hello World---H-e-l-l-o-W-o-r-l-d-!-'
     assert isinstance(o, nikola.utils.unicode_str)
-    nikola.utils.USE_SLUGIFY = True
+
+
+@pytest.fixture
+def disarm_slugify():
+    nikola.utils.USE_SLUGIFY = False
+    try:
+        yield
+    finally:
+        nikola.utils.USE_SLUGIFY = True
