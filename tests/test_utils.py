@@ -405,7 +405,6 @@ def test_write_metadata_with_format_toml():
     assert 'a = "1"' in toml
 
 
-
 @pytest.mark.parametrize("wrap, expected_result", [
     (False, """\
 .. title: Hello, world!
