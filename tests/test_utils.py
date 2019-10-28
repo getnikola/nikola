@@ -357,26 +357,40 @@ def test_sitemap_get_base_path():
         'http://some.site/some/sub-path/') == '/some/sub-path/'
 
 
-def test_write_metadata_with_formats():
-    data = {'slug': 'hello-world', 'title': 'Hello, world!', 'b': '2', 'a': '1'}
-    # Nikola: defaults first, then sorted alphabetically
-    # YAML: all sorted alphabetically
-    # TOML: insertion order (py3.6), random (py3.5 or older)
-    assert write_metadata(data, 'nikola') == """\
+@pytest.mark.parametrize("metadata_format, expected_result", [
+    ('nikola', """\
 .. title: Hello, world!
 .. slug: hello-world
 .. a: 1
 .. b: 2
 
-"""
-    assert write_metadata(data, 'yaml') == """\
+"""),
+    ('yaml', """\
 ---
 a: '1'
 b: '2'
 slug: hello-world
 title: Hello, world!
 ---
-"""
+""")
+])
+def test_write_metadata_with_formats(metadata_format, expected_result):
+    data = {'slug': 'hello-world', 'title': 'Hello, world!', 'b': '2', 'a': '1'}
+    # Nikola: defaults first, then sorted alphabetically
+    # YAML: all sorted alphabetically
+    # TOML: insertion order (py3.6), random (py3.5 or older)
+    assert write_metadata(data, metadata_format) == expected_result
+
+
+def test_write_metadata_with_format_toml():
+    """
+    Test writing metadata in TOML format.
+
+    TOML is sorted randomly in Python 3.5 or older and by insertion
+    order since Python 3.6.
+    """
+    data = {'slug': 'hello-world', 'title': 'Hello, world!', 'b': '2', 'a': '1'}
+
     toml = write_metadata(data, 'toml')
     assert toml.startswith('+++\n')
     assert toml.endswith('+++\n')
@@ -386,46 +400,58 @@ title: Hello, world!
     assert 'a = "1"' in toml
 
 
-def test_write_metadata_comment_wrap():
-    data = {'title': 'Hello, world!', 'slug': 'hello-world'}
-    assert write_metadata(data, 'nikola') == """\
+
+@pytest.mark.parametrize("wrap, expected_result", [
+    (False, """\
 .. title: Hello, world!
 .. slug: hello-world
 
-"""
-    assert write_metadata(data, 'nikola', True) == """\
+"""),
+    (True, """\
 <!--
 .. title: Hello, world!
 .. slug: hello-world
 -->
 
-"""
-    assert write_metadata(data, 'nikola', ('111', '222')) == """\
+"""),
+    (('111', '222'), """\
 111
 .. title: Hello, world!
 .. slug: hello-world
 222
 
-"""
-
-
-def test_write_metadata_compiler():
+""")
+])
+def test_write_metadata_comment_wrap(wrap, expected_result):
     data = {'title': 'Hello, world!', 'slug': 'hello-world'}
-    assert write_metadata(data, 'rest_docinfo') == """\
-=============
+    assert write_metadata(data, 'nikola', wrap) == expected_result
+
+
+@pytest.mark.parametrize("metadata_format, expected_results", [
+    ('rest_docinfo', ["""=============
 Hello, world!
 =============
 
 :slug: hello-world
-"""
-    assert write_metadata(data, 'markdown_meta') in ("""\
-title: Hello, world!
+"""]),
+    ('markdown_meta', ["""title: Hello, world!
 slug: hello-world
 
 """, """slug: hello-world
 title: Hello, world!
 
-""")
+"""]),
+
+])
+def test_write_metadata_compiler(metadata_format, expected_results):
+    """
+    Test writing metadata with different formats.
+
+    We test for multiple results because some compilers might produce
+    unordered output.
+    """
+    data = {'title': 'Hello, world!', 'slug': 'hello-world'}
+    assert write_metadata(data, metadata_format) in expected_results
 
 
 @pytest.mark.parametrize("post_format, expected_metadata", [
@@ -445,13 +471,21 @@ def test_write_metadata_pelican_detection_default():
     assert write_metadata(data, 'pelican', compiler=None) == '.. title: xx\n\n'
 
 
-def test_write_metadata_from_site_and_fallbacks(post):
+def test_write_metadata_from_site(post):
     post.config = {'METADATA_FORMAT': 'yaml'}
     data = {'title': 'xx'}
     assert write_metadata(data, site=post) == '---\ntitle: xx\n---\n'
+
+
+def test_write_metadata_default(post):
+    data = {'title': 'xx'}
     assert write_metadata(data) == '.. title: xx\n\n'
-    assert write_metadata(data, 'foo') == '.. title: xx\n\n'
-    assert write_metadata(data, 'filename_regex') == '.. title: xx\n\n'
+
+
+@pytest.mark.parametrize("arg", ['foo', 'filename_regex'])
+def test_write_metadata_fallbacks(post, arg):
+    data = {'title': 'xx'}
+    assert write_metadata(data, arg) == '.. title: xx\n\n'
 
 
 @pytest.fixture
