@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from nikola.plugins.command.version import CommandVersion
 
 

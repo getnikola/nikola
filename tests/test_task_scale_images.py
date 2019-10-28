@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # As prescribed in README.rst:
 import os
 import tempfile
