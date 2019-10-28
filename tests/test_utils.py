@@ -375,10 +375,14 @@ title: Hello, world!
 """)
 ])
 def test_write_metadata_with_formats(metadata_format, expected_result):
+    """
+    Test writing metadata with different formats.
+
+    YAML is expected to be sorted alphabetically.
+    Nikola sorts by putting the defaults first and then sorting the rest
+    alphabetically.
+    """
     data = {'slug': 'hello-world', 'title': 'Hello, world!', 'b': '2', 'a': '1'}
-    # Nikola: defaults first, then sorted alphabetically
-    # YAML: all sorted alphabetically
-    # TOML: insertion order (py3.6), random (py3.5 or older)
     assert write_metadata(data, metadata_format) == expected_result
 
 
