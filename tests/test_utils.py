@@ -348,13 +348,14 @@ def test_TemplateHookRegistry():
     assert r() == 'Hello!\nHello world!'
 
 
-def test_sitemap_get_base_path():
-    assert sitemap_get_base_path('http://some.site') == '/'
-    assert sitemap_get_base_path('http://some.site/') == '/'
-    assert sitemap_get_base_path(
-        'http://some.site/some/sub-path') == '/some/sub-path/'
-    assert sitemap_get_base_path(
-        'http://some.site/some/sub-path/') == '/some/sub-path/'
+@pytest.mark.parametrize("base, expected_path", [
+    ('http://some.site', '/'),
+    ('http://some.site/', '/'),
+    ('http://some.site/some/sub-path', '/some/sub-path/'),
+    ('http://some.site/some/sub-path/', '/some/sub-path/'),
+])
+def test_sitemap_get_base_path(base, expected_path):
+    assert expected_path == sitemap_get_base_path(base)
 
 
 @pytest.mark.parametrize("metadata_format, expected_result", [
