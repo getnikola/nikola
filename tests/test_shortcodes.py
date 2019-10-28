@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # vim: set wrap textwidth=300
 
 u"""Test shortcodes."""

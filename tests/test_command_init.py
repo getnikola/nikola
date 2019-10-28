@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from unittest import mock
 
 from nikola.plugins.command.init import (
