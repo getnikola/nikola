@@ -13,6 +13,7 @@
         {% endif %}
     </header>
     {{ template_hooks['page_header']() }}
+    {% block extra_header %}{% endblock %}
 {% endmacro %}
 
 {% macro html_site_title() %}

@@ -68,6 +68,7 @@
         {% endif %}
         <!--Body content-->
         {{ template_hooks['page_header']() }}
+        {% block extra_header %}{% endblock %}
         {% block content %}{% endblock %}
         <!--End of body content-->
         {% if theme_config.get('sidebar') %}
@@ -77,6 +78,7 @@
         <footer id="footer">
             {{ content_footer }}
             {{ template_hooks['page_footer']() }}
+            {% block extra_footer %}{% endblock %}
         </footer>
     </div>
 </div>

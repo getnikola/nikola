@@ -24,6 +24,8 @@ Features
 --------
 
 * Add Friulian translation by aoanla
+* Add ``extra_header`` and ``extra_footer`` blocks to templates
+  (Issue #3291)
 
 New in v8.0.2
 =============

@@ -68,6 +68,7 @@ ${template_hooks['extra_head']()}
         % endif
         <!--Body content-->
         ${template_hooks['page_header']()}
+        <%block name="extra_header"></%block>
         <%block name="content"></%block>
         <!--End of body content-->
         % if theme_config.get('sidebar'):
@@ -77,7 +78,7 @@ ${template_hooks['extra_head']()}
         <footer id="footer">
             ${content_footer}
             ${template_hooks['page_footer']()}
-            <%block name="extra_footer"></%block> 
+            <%block name="extra_footer"></%block>
         </footer>
     </div>
 </div>
