@@ -561,6 +561,7 @@ class Nikola(object):
             'GITHUB_REMOTE_NAME': 'origin',
             'GITHUB_COMMIT_SOURCE': False,  # WARNING: conf.py.in overrides this with True for backwards compatibility
             'META_GENERATOR_TAG': True,
+            'REST_FILE_INSERTION_ENABLED': True,
         }
 
         # set global_context for template rendering

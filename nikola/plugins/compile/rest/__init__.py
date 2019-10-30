@@ -126,6 +126,7 @@ class CompileRest(PageCompiler):
             'template': default_template_path,
             'language_code': LEGAL_VALUES['DOCUTILS_LOCALES'].get(LocaleBorg().current_lang, 'en'),
             'doctitle_xform': self.site.config.get('USE_REST_DOCINFO_METADATA'),
+            'file_insertion_enabled': self.site.config.get('REST_FILE_INSERTION_ENABLED'),
         }
 
         from nikola import shortcodes as sc
