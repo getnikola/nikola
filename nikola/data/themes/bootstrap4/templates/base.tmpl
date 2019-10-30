@@ -65,12 +65,14 @@ navbar-dark bg-dark
     <div class="body-content">
         <!--Body content-->
         ${template_hooks['page_header']()}
+        <%block name="extra_header"></%block>
         <%block name="content"></%block>
         <!--End of body content-->
 
         <footer id="footer">
             ${content_footer}
             ${template_hooks['page_footer']()}
+            <%block name="extra_footer"></%block>
         </footer>
     </div>
 </div>
