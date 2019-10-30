@@ -1,6 +1,12 @@
 New in master
 =============
 
+Features
+--------
+
+* Add Friulian translation by aoanla
+* Add ``extra_header`` and ``extra_footer`` blocks to templates
+  (Issue #3291)
 
 Bugfixes
 --------
@@ -19,13 +25,6 @@ Bugfixes
   qtranslate-X)
 * fixed a wordpress import exception when image metada has floats
   formated with ',' instead of '.'
-
-Features
---------
-
-* Add Friulian translation by aoanla
-* Add ``extra_header`` and ``extra_footer`` blocks to templates
-  (Issue #3291)
 
 New in v8.0.2
 =============
