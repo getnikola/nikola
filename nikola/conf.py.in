@@ -223,6 +223,11 @@ TIMEZONE = ${TIMEZONE}
 # 'html' assumes the file is HTML and just copies it
 COMPILERS = ${COMPILERS}
 
+# Enable reST directives that insert the contents of external files such
+# as "include" and "raw." This maps directly to the docutils file_insertion_enabled
+# config. See: http://docutils.sourceforge.net/docs/user/config.html#file-insertion-enabled
+# REST_FILE_INSERTION_ENABLED = True
+
 # Create by default posts in one file format?
 # Set to False for two-file posts, with separate metadata.
 # ONE_FILE_POSTS = True

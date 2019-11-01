@@ -7,6 +7,8 @@ Features
 * Add Friulian translation by aoanla
 * Add ``extra_header`` and ``extra_footer`` blocks to templates
   (Issue #3291)
+* Add ``REST_FILE_INSERTION_ENABLED`` config option to enable or disable reST
+  external file inclusion directives. (Issue #3311)
 
 Bugfixes
 --------
