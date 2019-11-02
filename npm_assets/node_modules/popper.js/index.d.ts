@@ -133,6 +133,7 @@ declare namespace Popper {
   export interface ReferenceObject {
     clientHeight: number;
     clientWidth: number;
+    referenceNode?: Node;
 
     getBoundingClientRect(): ClientRect;
   }
@@ -140,6 +141,7 @@ declare namespace Popper {
 
 // Re-export types in the Popper namespace so that they can be accessed as top-level named exports.
 // These re-exports should be removed in 2.x when the "declare namespace Popper" syntax is removed.
+export type Padding = Popper.Padding;
 export type Position = Popper.Position;
 export type Placement = Popper.Placement;
 export type Boundary = Popper.Boundary;

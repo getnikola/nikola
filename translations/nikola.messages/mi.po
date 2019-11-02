@@ -1,0 +1,164 @@
+# Messages in Nikola
+# Copyright (C) 2012-2016
+# This file is distributed under the same license as the Nikola package.
+# 
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+# Ian Stewart <ianstewart56@hotmail.com>, 2019
+msgid ""
+msgstr ""
+"Project-Id-Version: Nikola\n"
+"Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
+"POT-Creation-Date: 2013-03-15 12:24-0300\n"
+"PO-Revision-Date: 2019-05-11 10:41+0000\n"
+"Last-Translator: Ian Stewart <ianstewart56@hotmail.com>\n"
+"Language-Team: Maori (http://www.transifex.com/ralsina/nikola/language/mi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: mi\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "More posts about %s"
+msgstr ""
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "LANGUAGE"
+msgstr " Māori"
+
+msgid "Tags"
+msgstr "Tūtohu"
+
+msgid "Categories"
+msgstr "Kāwai"
+
+msgid "Tags and Categories"
+msgstr "Tūtohu me nga kāwai"
+
+msgid "Comments"
+msgstr "Kōrerohia"
+
+msgid "Read more"
+msgstr ""
+
+msgid "Posts about %s"
+msgstr ""
+
+msgid "Next post"
+msgstr ""
+
+msgid "old posts, page %d"
+msgstr ""
+
+msgid "page %d"
+msgstr "whārangi %d"
+
+msgid "Source"
+msgstr "Matapuna"
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "Read in English"
+msgstr ""
+
+msgid "Posts for year %s"
+msgstr ""
+
+msgid "Newer posts"
+msgstr ""
+
+msgid "Previous post"
+msgstr ""
+
+msgid "Also available in:"
+msgstr ""
+
+msgid "Languages:"
+msgstr "Reo"
+
+msgid "Original site"
+msgstr ""
+
+msgid "Older posts"
+msgstr ""
+
+msgid "Archive"
+msgstr "Pūranga"
+
+msgid "Publication date"
+msgstr ""
+
+msgid "Posted:"
+msgstr ""
+
+msgid "Posts for {month_year}"
+msgstr ""
+
+msgid "Posts for {month_day_year}"
+msgstr ""
+
+msgid "Nothing found."
+msgstr "Kīhai i kitea"
+
+msgid "No posts found."
+msgstr ""
+
+msgid "RSS feed"
+msgstr "Whāngai RSS"
+
+msgid "%d min remaining to read"
+msgstr ""
+
+msgid "Skip to main content"
+msgstr ""
+
+msgid "Subcategories:"
+msgstr ""
+
+#. Used for active navigation links, for screen readers only
+msgid "(active)"
+msgstr "(mātātoa)"
+
+#. Default content for a new post
+msgid "Write your post here."
+msgstr ""
+
+#. Default content for a new page
+msgid "Write your page here."
+msgstr ""
+
+msgid "Uncategorized"
+msgstr ""
+
+#. Used for feeds of any format
+msgid "Updates"
+msgstr "Whakahou"
+
+msgid "Authors"
+msgstr "Kaituhi"
+
+msgid "Posts by %s"
+msgstr ""
+
+msgid "Toggle navigation"
+msgstr ""
+
+msgid "Previous"
+msgstr "Whakamuri"
+
+msgid "Up"
+msgstr "Ki runga"
+
+msgid "Next"
+msgstr "Panuku"
+
+msgid "Atom feed"
+msgstr ""
+
+#. {date} (updated {updated_date})
+msgid "updated"
+msgstr "whakahoutia"
