@@ -21,12 +21,14 @@ def arg(*args, **kwargs):
     return "arg {0}/{1}/{2}".format(args, sorted(kwargs.items()), data)
 
 
-@pytest.fixture(scope="module")
-def fakesite():
+def _fakesite():
     s = FakeSite()
     s.register_shortcode('noargs', noargs)
     s.register_shortcode('arg', arg)
     return s
+
+
+fakesite = pytest.fixture(scope="module")(_fakesite)
 
 
 def test_noargs(fakesite):
