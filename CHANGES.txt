@@ -7,12 +7,13 @@ Features
 * Add Friulian translation by aoanla
 * Add ``extra_header`` and ``extra_footer`` blocks to templates
   (Issue #3291)
-* Add ``REST_FILE_INSERTION_ENABLED`` config option to enable or disable reST
-  external file inclusion directives. (Issue #3311)
+* Add ``REST_FILE_INSERTION_ENABLED`` config option to enable or
+  disable reST external file inclusion directives (Issue #3311)
 
 Bugfixes
 --------
 
+* Support Markdown v3.x (Issue #3173)
 * Fix galleries in Firefox Mobile and when resizing window
   (Issue #3258)
 * Output ``<code>`` tag for double backticks in reST (Issue #3276)
@@ -21,11 +22,11 @@ Bugfixes
 * Make ipynb listings work again
 * Correctly link to listings with spaces in their names
 * import_wordpress plugin doesn't require anymore a translation and
-  can use nikola's default if none provided.
-* wordpress+qtranslate import (--qtranslate option) now works with
+  can use nikola's default if none provided
+* Wordpress+qtranslate import (--qtranslate option) now works with
   more recent versions of plugins from the qtranslate family (namely
   qtranslate-X)
-* fixed a wordpress import exception when image metada has floats
+* Fixed a wordpress import exception when image metadata has floats
   formated with ',' instead of '.'
 
 New in v8.0.2
