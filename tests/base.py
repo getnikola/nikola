@@ -1,17 +1,11 @@
 # Author: Rodrigo Bistolfi
 # Date: 03/2013
 
-
 """ Base class for Nikola test cases """
 
-
-__all__ = ["BaseTestCase", "cd", "initialize_localeborg", "LOCALE_DEFAULT", "LOCALE_OTHER"]
-
-
 import os
-
-from contextlib import contextmanager
 import unittest
+from contextlib import contextmanager
 
 import logbook
 
@@ -30,6 +24,10 @@ from nikola.plugin_categories import (
     MarkdownExtension,
     RestExtension
 )
+
+__all__ = ["BaseTestCase", "cd", "initialize_localeborg", "LOCALE_DEFAULT", "LOCALE_OTHER"]
+
+
 nikola.utils.LOGGER.handlers.append(logbook.TestHandler())
 
 BaseTestCase = unittest.TestCase
