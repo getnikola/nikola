@@ -128,7 +128,7 @@ def test_format_date_in_string_month_day_year_gb(lang, expected_string):
 @pytest.mark.parametrize("message, expected_string", [
     ("Foo {month:'miesiąca' MMMM} Bar", 'Foo miesiąca lipca Bar'),
     ("Foo {month_year:MMMM yyyy} Bar", 'Foo lipca 1856 Bar'),
-    ])
+])
 def test_format_date_in_string_customization(base_config, message, expected_string):
     assert LocaleBorg().format_date_in_string(message, TESLA_BIRTHDAY, 'pl') == expected_string
 
