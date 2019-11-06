@@ -130,45 +130,27 @@ def test_yaml_none_handling(metadata_extractors_by):
     assert meta['slug'] == ''
 
 
-def test_check_conditions():
-    class DummyCompiler:
-        name = 'foo'
-
-    class DummyPost:
-        compiler = DummyCompiler()
-
-    post = DummyPost()
+@pytest.mark.parametrize("conditions", [
+    [(MetaCondition.config_bool, 'baz'),
+     (MetaCondition.config_present, 'quux')],
+    pytest.param([(MetaCondition.config_bool, 'quux')],
+                 marks=pytest.mark.xfail(strict=True)),
+    pytest.param([(MetaCondition.config_present, 'foobar')],
+                 marks=pytest.mark.xfail(strict=True)),
+    [(MetaCondition.extension, 'bar')],
+    pytest.param([(MetaCondition.extension, 'baz')],
+                 marks=pytest.mark.xfail(strict=True)),
+    [(MetaCondition.compiler, 'foo')],
+    pytest.param([(MetaCondition.compiler, 'foobar')],
+                 marks=pytest.mark.xfail(strict=True)),
+    pytest.param([(MetaCondition.never, None),
+                  (MetaCondition.config_present, 'bar')],
+                 marks=pytest.mark.xfail(strict=True)),
+])
+def test_check_conditions(conditions, dummy_post):
     filename = 'foo.bar'
     config = {'baz': True, 'quux': False}
-    assert check_conditions(post, filename, [
-        (MetaCondition.config_bool, 'baz'),
-        (MetaCondition.config_present, 'quux')
-    ], config, '')
-    assert not check_conditions(post, filename, [
-        (MetaCondition.config_bool, 'quux')
-    ], config, '')
-    assert not check_conditions(post, filename, [
-        (MetaCondition.config_present, 'foobar')
-    ], config, '')
-
-    assert check_conditions(post, filename, [
-        (MetaCondition.extension, 'bar')
-    ], config, '')
-    assert not check_conditions(post, filename, [
-        (MetaCondition.extension, 'baz')
-    ], config, '')
-
-    assert check_conditions(post, filename, [
-        (MetaCondition.compiler, 'foo')
-    ], config, '')
-    assert not check_conditions(post, filename, [
-        (MetaCondition.compiler, 'foobar')
-    ], config, '')
-
-    assert not check_conditions(post, filename, [
-        (MetaCondition.never, None),
-        (MetaCondition.config_present, 'bar')
-    ], config, '')
+    assert check_conditions(dummy_post, filename, conditions, config, '')
 
 
 class FakePost():
@@ -201,3 +183,14 @@ def f__metadata_extractors_by():
 def testfiledir():
     testdir = os.path.abspath(os.path.dirname(__file__))
     return os.path.join(testdir, 'data', 'metadata_extractors')
+
+
+@pytest.fixture(scope="module")
+def dummy_post():
+    class DummyCompiler:
+        name = 'foo'
+
+    class DummyPost:
+        compiler = DummyCompiler()
+
+    return DummyPost()
