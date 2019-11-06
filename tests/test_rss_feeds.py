@@ -9,9 +9,7 @@ import pytest
 from lxml import etree
 
 from nikola.nikola import Nikola, Post
-from nikola.utils import TranslatableSetting
-
-from .base import initialize_localeborg
+from nikola.utils import LocaleBorg, TranslatableSetting
 
 
 def test_feed_is_valid(rss_feed_content):
@@ -66,10 +64,22 @@ def test_feed_items_have_valid_URLs(rss_feed_content, blog_url, element):
     assert blog_url in element.text
 
 
+@pytest.fixture(autouse=True)
+def localeborg():
+    """
+    LocaleBorg with default settings
+    """
+    LocaleBorg.reset()
+    default_lang = os.environ.get('NIKOLA_LOCALE_DEFAULT', 'en')
+    LocaleBorg.initialize({}, default_lang)
+    try:
+        yield
+    finally:
+        LocaleBorg.reset()
+
+
 @pytest.fixture
 def rss_feed_content(blog_url, config):
-    initialize_localeborg()
-
     with mock.patch('nikola.post.get_meta',
                     mock.Mock(return_value=(defaultdict(str, {
                               'title': 'post title',
