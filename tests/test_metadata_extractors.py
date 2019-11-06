@@ -131,9 +131,13 @@ def test_yaml_none_handling(metadata_extractors_by):
 
 
 def test_check_conditions():
-    post = dummy()
-    post.compiler = dummy()
-    post.compiler.name = 'foo'
+    class DummyCompiler:
+        name = 'foo'
+
+    class DummyPost:
+        compiler = DummyCompiler()
+
+    post = DummyPost()
     filename = 'foo.bar'
     config = {'baz': True, 'quux': False}
     assert check_conditions(post, filename, [
@@ -184,10 +188,6 @@ class FakePost():
 
     def translated_source_path(self, _):
         return self.source_path
-
-
-class dummy:
-    pass
 
 
 @pytest.fixture(name='metadata_extractors_by')
