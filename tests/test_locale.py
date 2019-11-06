@@ -160,5 +160,3 @@ def localeborg_reset():
 def base_config():
     """A base config of LocaleBorg."""
     LocaleBorg.initialize({}, 'en')
-    assert LocaleBorg.initialized
-    assert LocaleBorg().current_lang == 'en'
