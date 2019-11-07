@@ -122,7 +122,7 @@ class GetMetaTest(unittest.TestCase):
 
 
 class HeaderDemotionTest(unittest.TestCase):
-    def demote_by_zero(self):
+    def test_demote_by_zero(self):
         input_str = '''\
         <h1>header 1</h1>
         <h2>header 2</h2>
@@ -144,7 +144,7 @@ class HeaderDemotionTest(unittest.TestCase):
         demote_headers(doc, 0)
         self.assertEquals(lxml.html.tostring(outdoc), lxml.html.tostring(doc))
 
-    def demote_by_one(self):
+    def test_demote_by_one(self):
         input_str = '''\
         <h1>header 1</h1>
         <h2>header 2</h2>
@@ -166,7 +166,7 @@ class HeaderDemotionTest(unittest.TestCase):
         demote_headers(doc, 1)
         self.assertEquals(lxml.html.tostring(outdoc), lxml.html.tostring(doc))
 
-    def demote_by_two(self):
+    def test_demote_by_two(self):
         input_str = '''\
         <h1>header 1</h1>
         <h2>header 2</h2>
@@ -188,7 +188,7 @@ class HeaderDemotionTest(unittest.TestCase):
         demote_headers(doc, 2)
         self.assertEquals(lxml.html.tostring(outdoc), lxml.html.tostring(doc))
 
-    def demote_by_minus_one(self):
+    def test_demote_by_minus_one(self):
         input_str = '''\
         <h1>header 1</h1>
         <h2>header 2</h2>
