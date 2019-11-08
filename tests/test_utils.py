@@ -312,32 +312,31 @@ def test_get_crumbs():
     assert crumbs[2] == ['#', 'bar']
 
 
-def test_get_translation_candidate():
-    config = {'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}',
+@pytest.mark.parametrize("pattern, path, lang, expected_path", [
+    ('{path}.{lang}.{ext}', '*.rst', 'es', '*.es.rst'),
+    ('{path}.{lang}.{ext}', 'fancy.post.rst', 'es', 'fancy.post.es.rst'),
+    ('{path}.{lang}.{ext}', '*.es.rst', 'es', '*.es.rst'),
+    ('{path}.{lang}.{ext}', '*.es.rst', 'en', '*.rst'),
+    ('{path}.{lang}.{ext}', 'cache/posts/fancy.post.es.html', 'en',
+     'cache/posts/fancy.post.html'),
+    ('{path}.{lang}.{ext}', 'cache/posts/fancy.post.html', 'es',
+     'cache/posts/fancy.post.es.html'),
+    ('{path}.{lang}.{ext}', 'cache/pages/charts.html', 'es',
+     'cache/pages/charts.es.html'),
+    ('{path}.{lang}.{ext}', 'cache/pages/charts.html', 'en',
+     'cache/pages/charts.html'),
+    ('{path}.{ext}.{lang}', '*.rst', 'es', '*.rst.es'),
+    ('{path}.{ext}.{lang}', '*.rst.es', 'es', '*.rst.es'),
+    ('{path}.{ext}.{lang}', '*.rst.es', 'en', '*.rst'),
+    ('{path}.{ext}.{lang}', 'cache/posts/fancy.post.html.es', 'en',
+     'cache/posts/fancy.post.html'),
+    ('{path}.{ext}.{lang}', 'cache/posts/fancy.post.html', 'es',
+     'cache/posts/fancy.post.html.es'),
+])
+def test_get_translation_candidate(pattern, path, lang, expected_path):
+    config = {'TRANSLATIONS_PATTERN': pattern,
               'DEFAULT_LANG': 'en', 'TRANSLATIONS': {'es': '1', 'en': 1}}
-    assert get_translation_candidate(config, '*.rst', 'es') == '*.es.rst'
-    assert get_translation_candidate(
-        config, 'fancy.post.rst', 'es') == 'fancy.post.es.rst'
-    assert get_translation_candidate(config, '*.es.rst', 'es') == '*.es.rst'
-    assert get_translation_candidate(config, '*.es.rst', 'en') == '*.rst'
-    assert get_translation_candidate(
-        config, 'cache/posts/fancy.post.es.html', 'en') == 'cache/posts/fancy.post.html'
-    assert get_translation_candidate(
-        config, 'cache/posts/fancy.post.html', 'es') == 'cache/posts/fancy.post.es.html'
-    assert get_translation_candidate(
-        config, 'cache/pages/charts.html', 'es') == 'cache/pages/charts.es.html'
-    assert get_translation_candidate(
-        config, 'cache/pages/charts.html', 'en') == 'cache/pages/charts.html'
-
-    config = {'TRANSLATIONS_PATTERN': '{path}.{ext}.{lang}',
-              'DEFAULT_LANG': 'en', 'TRANSLATIONS': {'es': '1', 'en': 1}}
-    assert get_translation_candidate(config, '*.rst', 'es') == '*.rst.es'
-    assert get_translation_candidate(config, '*.rst.es', 'es') == '*.rst.es'
-    assert get_translation_candidate(config, '*.rst.es', 'en') == '*.rst'
-    assert get_translation_candidate(
-        config, 'cache/posts/fancy.post.html.es', 'en') == 'cache/posts/fancy.post.html'
-    assert get_translation_candidate(
-        config, 'cache/posts/fancy.post.html', 'es') == 'cache/posts/fancy.post.html.es'
+    assert get_translation_candidate(config, path, lang) == expected_path
 
 
 def test_TemplateHookRegistry():
