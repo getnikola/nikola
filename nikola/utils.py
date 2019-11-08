@@ -1391,7 +1391,7 @@ def demote_headers(doc, level=1):
         if after < 1:
             # html headers can't go lower than 1
             after = 1
-        if after > 6:
+        elif after > 6:
             # html headers go until 6
             after = 6
 
