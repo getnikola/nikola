@@ -282,16 +282,17 @@ class TranslatableSettingsTest(unittest.TestCase):
      'nikola/data/themes/bootstrap4/assets/css/theme.css'),
     ('nikola.py', {'nikola': ''}, 'nikola/nikola.py'),
     ('nikola/nikola.py', {'nikola': 'nikola'}, 'nikola/nikola.py'),
+    ('nikola.py', {'nikola': 'nikola'}, None)
 ])
 def test_get_asset_path(path, files_folders, expected_path_end):
     theme_chain = get_theme_chain('bootstrap4', ['themes'])
     asset_path = get_asset_path(path, theme_chain, files_folders)
-    asset_path = asset_path.replace('\\', '/')
-    assert asset_path.endswith(expected_path_end)
 
-
-def test_get_asset_path_might_return_None():
-    assert get_asset_path('nikola.py', get_theme_chain('bootstrap4', ['themes']), {'nikola': 'nikola'}) is None
+    if expected_path_end:
+        asset_path = asset_path.replace('\\', '/')
+        assert asset_path.endswith(expected_path_end)
+    else:
+        assert asset_path is None
 
 
 @pytest.mark.parametrize("path, is_file, expected_crumbs", [
