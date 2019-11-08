@@ -295,21 +295,18 @@ def test_get_asset_path():
         '\\', '/').endswith('nikola/nikola.py')
 
 
-def test_get_crumbs():
-    crumbs = get_crumbs('galleries')
-    assert len(crumbs) == 1
-    assert crumbs[0] == ['#', 'galleries']
-
-    crumbs = get_crumbs(os.path.join('galleries', 'demo'))
-    assert len(crumbs) == 2
-    assert crumbs[0] == ['..', 'galleries']
-    assert crumbs[1] == ['#', 'demo']
-
-    crumbs = get_crumbs(os.path.join('listings', 'foo', 'bar'), is_file=True)
-    assert len(crumbs) == 3
-    assert crumbs[0] == ['..', 'listings']
-    assert crumbs[1] == ['.', 'foo']
-    assert crumbs[2] == ['#', 'bar']
+@pytest.mark.parametrize("path, is_file, expected_crumbs", [
+    ('galleries', False, [['#', 'galleries']]),
+    (os.path.join('galleries', 'demo'), False,
+     [['..', 'galleries'], ['#', 'demo']]),
+    (os.path.join('listings', 'foo', 'bar'), True,
+     [['..', 'listings'], ['.', 'foo'], ['#', 'bar']])
+])
+def test_get_crumbs(path, is_file, expected_crumbs):
+    crumbs = get_crumbs(path, is_file=is_file)
+    assert len(crumbs) == len(expected_crumbs)
+    for crumb, expected_crumb in zip(crumbs, expected_crumbs):
+        assert crumb == expected_crumb
 
 
 @pytest.mark.parametrize("pattern, path, lang, expected_path", [
