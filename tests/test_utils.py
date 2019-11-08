@@ -284,7 +284,10 @@ class TranslatableSettingsTest(unittest.TestCase):
     ('nikola/nikola.py', {'nikola': 'nikola'}, 'nikola/nikola.py'),
 ])
 def test_get_asset_path(path, files_folders, expected_path_end):
-    assert get_asset_path(path, get_theme_chain('bootstrap4', ['themes']), files_folders).replace('\\', '/').endswith(expected_path_end)
+    theme_chain = get_theme_chain('bootstrap4', ['themes'])
+    asset_path = get_asset_path(path, theme_chain, files_folders)
+    asset_path = asset_path.replace('\\', '/')
+    assert asset_path.endswith(expected_path_end)
 
 
 def test_get_asset_path_might_return_None():
