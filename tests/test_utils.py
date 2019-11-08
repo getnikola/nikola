@@ -275,24 +275,20 @@ class TranslatableSettingsTest(unittest.TestCase):
         self.assertEqual(inp['zz'], cn)
 
 
-def test_get_asset_path():
-    assert get_asset_path('assets/css/nikola_rst.css',
-                          get_theme_chain('bootstrap4', ['themes'])).replace(
-        '\\', '/').endswith('nikola/data/themes/base/assets/css/nikola_rst.css')
-    assert get_asset_path('assets/css/theme.css',
-                          get_theme_chain('bootstrap4', ['themes'])).replace(
-        '\\', '/').endswith(
-        'nikola/data/themes/bootstrap4/assets/css/theme.css')
-    assert get_asset_path(
-        'nikola.py', get_theme_chain('bootstrap4', ['themes']),
-        {'nikola': ''}).replace(
-        '\\', '/').endswith('nikola/nikola.py')
-    assert get_asset_path('nikola.py', get_theme_chain(
-        'bootstrap4', ['themes']), {'nikola': 'nikola'}) is None
-    assert get_asset_path(
-        'nikola/nikola.py', get_theme_chain('bootstrap4', ['themes']),
-        {'nikola': 'nikola'}).replace(
-        '\\', '/').endswith('nikola/nikola.py')
+@pytest.mark.parametrize("path, files_folders, expected_path_end", [
+    ('assets/css/nikola_rst.css', {'files': ''},  # default files_folders
+     'nikola/data/themes/base/assets/css/nikola_rst.css'),
+    ('assets/css/theme.css', {'files': ''},  # default files_folders
+     'nikola/data/themes/bootstrap4/assets/css/theme.css'),
+    ('nikola.py', {'nikola': ''}, 'nikola/nikola.py'),
+    ('nikola/nikola.py', {'nikola': 'nikola'}, 'nikola/nikola.py'),
+])
+def test_get_asset_path(path, files_folders, expected_path_end):
+    assert get_asset_path(path, get_theme_chain('bootstrap4', ['themes']), files_folders).replace('\\', '/').endswith(expected_path_end)
+
+
+def test_get_asset_path_might_return_None():
+    assert get_asset_path('nikola.py', get_theme_chain('bootstrap4', ['themes']), {'nikola': 'nikola'}) is None
 
 
 @pytest.mark.parametrize("path, is_file, expected_crumbs", [
