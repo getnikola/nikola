@@ -10,8 +10,6 @@ from nikola.utils import (
     get_asset_path, get_theme_chain, get_translation_candidate, write_metadata)
 from nikola.plugins.task.sitemap import get_base_path as sitemap_get_base_path
 
-import pytest
-
 
 class dummy(object):
     default_lang = 'en'
