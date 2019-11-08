@@ -1398,9 +1398,9 @@ def demote_headers(doc, level=1):
         if before == after:
             continue
 
-        elements = doc.xpath('//h%i' % before)
+        elements = doc.xpath('//h{}'.format(before))
         for element in elements:
-            element.tag = 'h%i' % after
+            element.tag = 'h{}'.format(after)
 
 
 def get_root_dir():
