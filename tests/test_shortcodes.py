@@ -5,50 +5,6 @@ import pytest
 from nikola import shortcodes
 
 
-def noargs(site, data='', lang=''):
-    return "noargs {0} success!".format(data)
-
-
-def arg(*args, **kwargs):
-    # don’t clutter the kwargs dict
-    kwargs.pop('site')
-    data = kwargs.pop('data')
-    kwargs.pop('lang')
-    return "arg {0}/{1}/{2}".format(args, sorted(kwargs.items()), data)
-
-
-@pytest.fixture(scope="module")
-def site():
-    s = FakeSiteWithShortcodeRegistry()
-    s.register_shortcode('noargs', noargs)
-    s.register_shortcode('arg', arg)
-    return s
-
-
-class FakeSiteWithShortcodeRegistry(object):
-    def __init__(self):
-        self.shortcode_registry = {}
-        self.debug = True
-
-    # this code duplicated in nikola/nikola.py
-    def register_shortcode(self, name, f):
-        """Register function f to handle shortcode "name"."""
-        if name in self.shortcode_registry:
-            nikola.utils.LOGGER.warn('Shortcode name conflict: %s', name)
-            return
-        self.shortcode_registry[name] = f
-
-    def apply_shortcodes(self, data, *a, **kw):
-        """Apply shortcodes from the registry on data."""
-        return nikola.shortcodes.apply_shortcodes(
-            data, self.shortcode_registry, **kw)
-
-    def apply_shortcodes_uuid(self, data, shortcodes, *a, **kw):
-        """Apply shortcodes from the registry on data."""
-        return nikola.shortcodes.apply_shortcodes(
-            data, self.shortcode_registry, **kw)
-
-
 @pytest.mark.parametrize("template, expected_result", [
   ('test({{% noargs %}})', 'test(noargs  success!)'),
   ('test({{% noargs %}}\\hello world/{{% /noargs %}})',
@@ -146,3 +102,47 @@ def test_extract_shortcodes(input, expected, monkeypatch):
     monkeypatch.setattr(shortcodes, '_new_sc_id', i.__next__)
     extracted = shortcodes.extract_shortcodes(input)
     assert extracted == expected
+
+
+@pytest.fixture(scope="module")
+def site():
+    s = FakeSiteWithShortcodeRegistry()
+    s.register_shortcode('noargs', noargs)
+    s.register_shortcode('arg', arg)
+    return s
+
+
+class FakeSiteWithShortcodeRegistry(object):
+    def __init__(self):
+        self.shortcode_registry = {}
+        self.debug = True
+
+    # this code duplicated in nikola/nikola.py
+    def register_shortcode(self, name, f):
+        """Register function f to handle shortcode "name"."""
+        if name in self.shortcode_registry:
+            nikola.utils.LOGGER.warn('Shortcode name conflict: %s', name)
+            return
+        self.shortcode_registry[name] = f
+
+    def apply_shortcodes(self, data, *a, **kw):
+        """Apply shortcodes from the registry on data."""
+        return nikola.shortcodes.apply_shortcodes(
+            data, self.shortcode_registry, **kw)
+
+    def apply_shortcodes_uuid(self, data, shortcodes, *a, **kw):
+        """Apply shortcodes from the registry on data."""
+        return nikola.shortcodes.apply_shortcodes(
+            data, self.shortcode_registry, **kw)
+
+
+def noargs(site, data='', lang=''):
+    return "noargs {0} success!".format(data)
+
+
+def arg(*args, **kwargs):
+    # don’t clutter the kwargs dict
+    kwargs.pop('site')
+    data = kwargs.pop('data')
+    kwargs.pop('lang')
+    return "arg {0}/{1}/{2}".format(args, sorted(kwargs.items()), data)
