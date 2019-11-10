@@ -1,7 +1,4 @@
-# vim: set wrap textwidth=300
-
-u"""Test shortcodes."""
-
+"""Test shortcodes."""
 
 import pytest
 from nikola import shortcodes
