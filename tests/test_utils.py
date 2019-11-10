@@ -1,3 +1,7 @@
+"""
+Testing Nikolas utility functions.
+"""
+
 import os
 from unittest import mock
 
