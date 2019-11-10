@@ -5,7 +5,7 @@ import pytest
 from nikola import Nikola
 
 
-def test_mixedargs(fakesite):
+def test_mixedargs(site):
     test_template = """
 arg1: {{ _args[0] }}
 arg2: {{ _args[1] }}
@@ -13,12 +13,11 @@ kwarg1: {{ kwarg1 }}
 kwarg2: {{ kwarg2 }}
 """
 
-    fakesite.shortcode_registry['test1'] = \
-        fakesite._make_renderfunc(test_template)
-    fakesite.shortcode_registry['test2'] = \
-        fakesite._make_renderfunc('Something completely different')
+    site.shortcode_registry['test1'] = site._make_renderfunc(test_template)
+    site.shortcode_registry['test2'] = \
+        site._make_renderfunc('Something completely different')
 
-    res = fakesite.apply_shortcodes(
+    res = site.apply_shortcodes(
         '{{% test1 kwarg1=spamm arg1 kwarg2=foo,bar arg2 %}}')[0]
 
     assert res.strip() == """
@@ -41,15 +40,14 @@ kwarg2: foo,bar""".strip()
     ('data={{ data }}', '{{% test1 spamm %}}', 'data='),
     ('data={{ data }}', '{{% test1 data=dummy %}}', 'data='),
 ])
-def test_applying_shortcode(fakesite, template, data, expected_result):
-    fakesite.shortcode_registry['test1'] = \
-        fakesite._make_renderfunc(template)
+def test_applying_shortcode(site, template, data, expected_result):
+    site.shortcode_registry['test1'] = site._make_renderfunc(template)
 
-    assert fakesite.apply_shortcodes(data)[0] == expected_result
+    assert site.apply_shortcodes(data)[0] == expected_result
 
 
 @pytest.fixture(scope="module")
-def fakesite():
+def site():
     s = ShortcodeFakeSite()
     s.init_plugins()
     s._template_system = None
