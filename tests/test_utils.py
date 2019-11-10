@@ -11,114 +11,109 @@ from nikola.utils import (
 from nikola.plugins.task.sitemap import get_base_path as sitemap_get_base_path
 
 
-class dummy(object):
-    default_lang = 'en'
-    metadata_extractors_by = metadata_extractors.default_metadata_extractors_by()
-    config = {'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}',
-              'TRANSLATIONS': {'en': './'},
-              'DEFAULT_LANG': 'en'}
+def test_getting_metadata_from_content(post):
+    post.source_path = 'file_with_metadata'
+    post.metadata_path = 'file_with_metadata.meta'
 
-    def __init__(self):
-        metadata_extractors.load_defaults(self, self.metadata_extractors_by)
+    file_content = """\
+.. title: Nikola needs more tests!
+.. slug: write-tests-now
+.. date: 2012/09/15 19:52:05
+.. tags:
+.. link:
+.. description:
+
+Post content
+"""
+    opener_mock = mock.mock_open(read_data=file_content)
+    with mock.patch('nikola.post.io.open', opener_mock, create=True):
+        meta = get_meta(post, None)[0]
+
+    assert 'Nikola needs more tests!' == meta['title']
+    assert 'write-tests-now' == meta['slug']
+    assert '2012/09/15 19:52:05' == meta['date']
+    assert 'tags' not in meta
+    assert 'link' not in meta
+    assert 'description' not in meta
 
 
-class GetMetaTest(unittest.TestCase):
-    def test_getting_metadata_from_content(self):
-        file_metadata = ".. title: Nikola needs more tests!\n"\
-                        ".. slug: write-tests-now\n"\
-                        ".. date: 2012/09/15 19:52:05\n"\
-                        ".. tags:\n"\
-                        ".. link:\n"\
-                        ".. description:\n\n"\
-                        "Post content\n"
+def test_get_title_from_fname(post):
+    post.source_path = 'file_with_metadata'
+    post.metadata_path = 'file_with_metadata.meta'
 
-        opener_mock = mock.mock_open(read_data=file_metadata)
+    file_content = """\
+.. slug: write-tests-now
+.. date: 2012/09/15 19:52:05
+.. tags:
+.. link:
+.. description:
+"""
+    opener_mock = mock.mock_open(read_data=file_content)
+    with mock.patch('nikola.post.io.open', opener_mock, create=True):
+        meta = get_meta(post, None)[0]
 
-        post = dummy()
-        post.source_path = 'file_with_metadata'
-        post.metadata_path = 'file_with_metadata.meta'
+    assert 'file_with_metadata' == meta['title']
+    assert 'write-tests-now' == meta['slug']
+    assert '2012/09/15 19:52:05' == meta['date']
+    assert 'tags' not in meta
+    assert 'link' not in meta
+    assert 'description' not in meta
 
-        with mock.patch('nikola.post.io.open', opener_mock, create=True):
-            meta = get_meta(post, None)[0]
 
-        self.assertEqual('Nikola needs more tests!', meta['title'])
-        self.assertEqual('write-tests-now', meta['slug'])
-        self.assertEqual('2012/09/15 19:52:05', meta['date'])
-        self.assertFalse('tags' in meta)
-        self.assertFalse('link' in meta)
-        self.assertFalse('description' in meta)
+def test_use_filename_as_slug_fallback(post):
+    post.source_path = 'Slugify this'
+    post.metadata_path = 'Slugify this.meta'
 
-    def test_get_title_from_fname(self):
-        file_metadata = ".. slug: write-tests-now\n"\
-                        ".. date: 2012/09/15 19:52:05\n"\
-                        ".. tags:\n"\
-                        ".. link:\n"\
-                        ".. description:\n"
+    file_content = """\
+.. title: Nikola needs more tests!
+.. date: 2012/09/15 19:52:05
+.. tags:
+.. link:
+.. description:
 
-        opener_mock = mock.mock_open(read_data=file_metadata)
+Post content
+"""
+    opener_mock = mock.mock_open(read_data=file_content)
+    with mock.patch('nikola.post.io.open', opener_mock, create=True):
+        meta = get_meta(post, None)[0]
 
-        post = dummy()
-        post.source_path = 'file_with_metadata'
-        post.metadata_path = 'file_with_metadata.meta'
+    assert 'Nikola needs more tests!' == meta['title']
+    assert 'slugify-this' == meta['slug']
+    assert '2012/09/15 19:52:05' == meta['date']
+    assert 'tags' not in meta
+    assert 'link' not in meta
+    assert 'description' not in meta
 
-        with mock.patch('nikola.post.io.open', opener_mock, create=True):
-            meta = get_meta(post, None)[0]
 
-        self.assertEqual('file_with_metadata', meta['title'])
-        self.assertEqual('write-tests-now', meta['slug'])
-        self.assertEqual('2012/09/15 19:52:05', meta['date'])
-        self.assertFalse('tags' in meta)
-        self.assertFalse('link' in meta)
-        self.assertFalse('description' in meta)
+@pytest.mark.parametrize("unslugify, expected_title", [
+    (True, 'Dub dub title'),
+    (False, 'dub_dub_title'),
+])
+def test_extracting_metadata_from_filename(post, unslugify, expected_title):
+    post.source_path = '2013-01-23-the_slug-dub_dub_title.md'
+    post.metadata_path = '2013-01-23-the_slug-dub_dub_title.meta'
 
-    def test_use_filename_as_slug_fallback(self):
-        file_metadata = ".. title: Nikola needs more tests!\n"\
-                        ".. date: 2012/09/15 19:52:05\n"\
-                        ".. tags:\n"\
-                        ".. link:\n"\
-                        ".. description:\n\n"\
-                        "Post content\n"
+    post.config['FILE_METADATA_REGEXP'] = r'(?P<date>\d{4}-\d{2}-\d{2})-(?P<slug>.*)-(?P<title>.*)\.md'
+    post.config['FILE_METADATA_UNSLUGIFY_TITLES'] = unslugify
 
-        opener_mock = mock.mock_open(read_data=file_metadata)
+    no_metadata_opener = mock.mock_open(read_data="No metadata in the file!")
+    with mock.patch('nikola.post.io.open', no_metadata_opener, create=True):
+        meta = get_meta(post, None)[0]
 
-        post = dummy()
-        post.source_path = 'Slugify this'
-        post.metadata_path = 'Slugify this.meta'
+    assert expected_title == meta['title']
+    assert 'the_slug' == meta['slug']
+    assert '2013-01-23' == meta['date']
 
-        with mock.patch('nikola.post.io.open', opener_mock, create=True):
-            meta = get_meta(post, None)[0]
-        self.assertEqual('Nikola needs more tests!', meta['title'])
-        self.assertEqual('slugify-this', meta['slug'])
-        self.assertEqual('2012/09/15 19:52:05', meta['date'])
-        self.assertFalse('tags' in meta)
-        self.assertFalse('link' in meta)
-        self.assertFalse('description' in meta)
 
-    def test_extracting_metadata_from_filename(self):
-        dummy_opener_mock = mock.mock_open(read_data="No metadata in the file!")
+def test_get_meta_slug_only_from_filename(post):
+    post.source_path = 'some/path/the_slug.md'
+    post.metadata_path = 'some/path/the_slug.meta'
 
-        post = dummy()
-        post.source_path = '2013-01-23-the_slug-dub_dub_title.md'
-        post.metadata_path = '2013-01-23-the_slug-dub_dub_title.meta'
-        post.config['FILE_METADATA_REGEXP'] = r'(?P<date>\d{4}-\d{2}-\d{2})-(?P<slug>.*)-(?P<title>.*)\.md'
-        for unslugify, title in ((True, 'Dub dub title'), (False, 'dub_dub_title')):
-            post.config['FILE_METADATA_UNSLUGIFY_TITLES'] = unslugify
-            with mock.patch('nikola.post.io.open', dummy_opener_mock, create=True):
-                meta = get_meta(post, None)[0]
+    no_metadata_opener = mock.mock_open(read_data="No metadata in the file!")
+    with mock.patch('nikola.post.io.open', no_metadata_opener, create=True):
+        meta = get_meta(post, None)[0]
 
-            self.assertEqual(title, meta['title'])
-            self.assertEqual('the_slug', meta['slug'])
-            self.assertEqual('2013-01-23', meta['date'])
-
-    def test_get_meta_slug_only_from_filename(self):
-        dummy_opener_mock = mock.mock_open(read_data="No metadata in the file!")
-        post = dummy()
-        post.source_path = 'some/path/the_slug.md'
-        post.metadata_path = 'some/path/the_slug.meta'
-        with mock.patch('nikola.post.io.open', dummy_opener_mock, create=True):
-            meta = get_meta(post, None)[0]
-
-        self.assertEqual('the_slug', meta['slug'])
+    assert 'the_slug' == meta['slug']
 
 
 @pytest.mark.parametrize("level, input_str, expected_output", [
@@ -466,8 +461,15 @@ def test_write_metadata_fallbacks(post, arg):
 
 @pytest.fixture
 def post():
-    return dummy()
+    return FakePost()
 
 
-if __name__ == '__main__':
-    unittest.main()
+class FakePost:
+    default_lang = 'en'
+    metadata_extractors_by = metadata_extractors.default_metadata_extractors_by()
+    config = {'TRANSLATIONS_PATTERN': '{path}.{lang}.{ext}',
+              'TRANSLATIONS': {'en': './'},
+              'DEFAULT_LANG': 'en'}
+
+    def __init__(self):
+        metadata_extractors.load_defaults(self, self.metadata_extractors_by)
