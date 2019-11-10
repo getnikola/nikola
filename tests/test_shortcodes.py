@@ -4,8 +4,6 @@ import pytest
 
 from nikola import shortcodes
 
-from .base import FakeSite
-
 
 def noargs(site, data='', lang=''):
     return "noargs {0} success!".format(data)
@@ -21,10 +19,34 @@ def arg(*args, **kwargs):
 
 @pytest.fixture(scope="module")
 def site():
-    s = FakeSite()
+    s = FakeSiteWithShortcodeRegistry()
     s.register_shortcode('noargs', noargs)
     s.register_shortcode('arg', arg)
     return s
+
+
+class FakeSiteWithShortcodeRegistry(object):
+    def __init__(self):
+        self.shortcode_registry = {}
+        self.debug = True
+
+    # this code duplicated in nikola/nikola.py
+    def register_shortcode(self, name, f):
+        """Register function f to handle shortcode "name"."""
+        if name in self.shortcode_registry:
+            nikola.utils.LOGGER.warn('Shortcode name conflict: %s', name)
+            return
+        self.shortcode_registry[name] = f
+
+    def apply_shortcodes(self, data, *a, **kw):
+        """Apply shortcodes from the registry on data."""
+        return nikola.shortcodes.apply_shortcodes(
+            data, self.shortcode_registry, **kw)
+
+    def apply_shortcodes_uuid(self, data, shortcodes, *a, **kw):
+        """Apply shortcodes from the registry on data."""
+        return nikola.shortcodes.apply_shortcodes(
+            data, self.shortcode_registry, **kw)
 
 
 @pytest.mark.parametrize("template, expected_result", [
