@@ -1,7 +1,9 @@
 """Test shortcodes."""
 
 import pytest
+
 from nikola import shortcodes
+
 from .base import FakeSite
 
 
