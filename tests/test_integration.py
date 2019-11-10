@@ -1,18 +1,17 @@
-import os
-import sys
-
 import io
+import os
 import shutil
+import sys
 import tempfile
 import unittest
 
 import lxml.html
 
-from nikola import __main__
 import nikola
 import nikola.plugins.command
 import nikola.plugins.command.init
 import nikola.utils
+from nikola import __main__
 
 from .base import BaseTestCase, cd, LOCALE_OTHER, initialize_localeborg
 

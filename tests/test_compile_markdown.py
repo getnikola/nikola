@@ -1,9 +1,9 @@
 import io
 from os import path
 
-from nikola.plugins.compile.markdown import CompileMarkdown
-
 import pytest
+
+from nikola.plugins.compile.markdown import CompileMarkdown
 
 from .base import FakeSite
 

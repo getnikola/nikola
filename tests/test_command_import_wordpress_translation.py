@@ -1,9 +1,9 @@
 import os
 
+import pytest
+
 from nikola.plugins.command.import_wordpress import (
     modernize_qtranslate_tags, separate_qtranslate_tagged_langs)
-
-import pytest
 
 
 def legacy_qtranslate_separate(text):

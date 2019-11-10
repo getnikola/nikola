@@ -1,9 +1,12 @@
 import datetime
 import dateutil
-import pytest
 import unittest.mock
+
+import pytest
+
 from nikola.nikola import LEGAL_VALUES
-from nikola.utils import TranslatableSetting, LocaleBorg, LocaleBorgUninitializedException
+from nikola.utils import (
+    LocaleBorg, LocaleBorgUninitializedException, TranslatableSetting)
 
 TESLA_BIRTHDAY = datetime.date(1856, 7, 10)
 TESLA_BIRTHDAY_DT = datetime.datetime(1856, 7, 10, 12, 34, 56)
