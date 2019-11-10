@@ -1,14 +1,16 @@
-import unittest
-from unittest import mock
 import os
+from unittest import mock
+
 import pytest
 import lxml.html
+
 from nikola import metadata_extractors
+from nikola.plugins.task.sitemap import get_base_path as sitemap_get_base_path
 from nikola.post import get_meta
 from nikola.utils import (
-    demote_headers, TranslatableSetting, get_crumbs, TemplateHookRegistry,
-    get_asset_path, get_theme_chain, get_translation_candidate, write_metadata)
-from nikola.plugins.task.sitemap import get_base_path as sitemap_get_base_path
+    TemplateHookRegistry, TranslatableSetting,
+    demote_headers, get_asset_path, get_crumbs, get_theme_chain,
+    get_translation_candidate, write_metadata)
 
 
 def test_getting_metadata_from_content(post):
