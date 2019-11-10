@@ -5,12 +5,14 @@ from unittest import mock
 
 import pytest
 
-from nikola.metadata_extractors import default_metadata_extractors_by, load_defaults, MetaCondition, check_conditions
-from nikola.post import get_meta
+from nikola.metadata_extractors import (
+    MetaCondition,
+    check_conditions, default_metadata_extractors_by, load_defaults)
 from nikola.plugins.compile.rest import CompileRest
 from nikola.plugins.compile.markdown import CompileMarkdown
 from nikola.plugins.compile.ipynb import CompileIPynb
 from nikola.plugins.compile.html import CompileHtml
+from nikola.post import get_meta
 
 from .base import FakeSite
 

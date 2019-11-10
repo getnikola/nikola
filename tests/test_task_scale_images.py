@@ -1,12 +1,12 @@
-# As prescribed in README.rst:
 import os
 import tempfile
+
+import pytest
 from PIL import Image, ImageDraw
 
 from nikola.plugins.task import scale_images
 
 from .base import FakeSite
-import pytest
 
 # These tests don't require valid profiles. They need only to verify
 # that profile data is/isn't saved with images.

@@ -2,6 +2,7 @@
 """Test template-based shortcodes."""
 
 import pytest
+
 from nikola import Nikola
 
 

@@ -1,9 +1,9 @@
 import os
 from unittest import mock
 
-import nikola.plugins.command.import_wordpress
-
 import pytest
+
+import nikola.plugins.command.import_wordpress
 
 
 def test_create_import_work_without_argument(import_command):

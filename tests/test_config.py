@@ -1,9 +1,9 @@
 import os
 import re
 
-from nikola import __main__ as nikola
-
 import pytest
+
+from nikola import __main__ as nikola
 
 
 def test_simple_config(simple_config, metadata_option):

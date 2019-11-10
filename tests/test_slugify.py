@@ -1,8 +1,8 @@
 """Test slugify."""
 
-import nikola.utils
-
 import pytest
+
+import nikola.utils
 
 
 @pytest.mark.parametrize("title, language, expected_slug", [
