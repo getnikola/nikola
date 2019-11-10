@@ -198,79 +198,58 @@ def test_demoting_headers(level, input_str, expected_output):
     assert lxml.html.tostring(outdoc) == lxml.html.tostring(doc)
 
 
-class TranslatableSettingsTest(unittest.TestCase):
-    """Tests for translatable settings."""
+def test_TranslatableSettingsTest_with_string_input():
+    """Test ing translatable settings with string input."""
+    inp = 'Fancy Blog'
+    setting = TranslatableSetting('TestSetting', inp, {'xx': ''})
+    setting.default_lang = 'xx'
+    setting.lang = 'xx'
 
-    def test_string_input(self):
-        """Tests for string input."""
-        inp = 'Fancy Blog'
-        S = TranslatableSetting('S', inp, {'xx': ''})
-        S.default_lang = 'xx'
-        S.lang = 'xx'
+    assert inp == str(setting)
+    assert inp == setting()  # no language specified
+    assert inp == setting('xx')  # real language specified
+    assert inp == setting('zz')  # fake language specified
+    assert setting.lang == 'xx'
+    assert setting.default_lang == 'xx'
 
-        u = str(S)
 
-        cn = S()      # no language specified
-        cr = S('xx')  # real language specified
-        cf = S('zz')  # fake language specified
+def test_TranslatableSetting_with_dict_input():
+    """Tests for translatable setting with dict input."""
+    inp = {'xx': 'Fancy Blog',
+           'zz': 'Schmancy Blog'}
 
-        self.assertEqual(inp, u)
-        self.assertEqual(inp, cn)
-        self.assertEqual(inp, cr)
-        self.assertEqual(inp, cf)
-        self.assertEqual(S.lang, 'xx')
-        self.assertEqual(S.default_lang, 'xx')
+    setting = TranslatableSetting('TestSetting', inp, {'xx': '', 'zz': ''})
+    setting.default_lang = 'xx'
+    setting.lang = 'xx'
 
-    def test_dict_input(self):
-        """Tests for dict input."""
-        inp = {'xx': 'Fancy Blog',
-               'zz': 'Schmancy Blog'}
+    assert inp['xx'] == str(setting)
+    assert inp['xx'] == setting()  # no language specified
+    assert inp['xx'] == setting('xx')  # real language specified
+    assert inp['zz'] == setting('zz')  # fake language specified
+    assert inp['xx'] == setting('ff')
 
-        S = TranslatableSetting('S', inp, {'xx': '', 'zz': ''})
-        S.default_lang = 'xx'
-        S.lang = 'xx'
 
-        u = str(S)
+def test_TranslatableSetting_with_language_change():
+    """Test translatable setting with language change along the way."""
+    inp = {'xx': 'Fancy Blog',
+           'zz': 'Schmancy Blog'}
 
-        cn = S()
-        cx = S('xx')
-        cz = S('zz')
-        cf = S('ff')
+    setting = TranslatableSetting('TestSetting', inp, {'xx': '', 'zz': ''})
+    setting.default_lang = 'xx'
+    setting.lang = 'xx'
 
-        self.assertEqual(inp['xx'], u)
-        self.assertEqual(inp['xx'], cn)
-        self.assertEqual(inp['xx'], cx)
-        self.assertEqual(inp['zz'], cz)
-        self.assertEqual(inp['xx'], cf)
+    assert inp['xx'] == str(setting)
+    assert inp['xx'] == setting()
 
-    def test_dict_input_lang(self):
-        """Test dict input, with a language change along the way."""
-        inp = {'xx': 'Fancy Blog',
-               'zz': 'Schmancy Blog'}
+    # Change the language.
+    # WARNING: DO NOT set lang locally in real code!  Set it globally
+    #          instead! (TranslatableSetting.lang = ...)
+    # WARNING: TranslatableSetting.lang is used to override the current
+    #          locale settings returned by LocaleBorg!  Use with care!
+    setting.lang = 'zz'
 
-        S = TranslatableSetting('S', inp, {'xx': '', 'zz': ''})
-        S.default_lang = 'xx'
-        S.lang = 'xx'
-
-        u = str(S)
-
-        cn = S()
-
-        self.assertEqual(inp['xx'], u)
-        self.assertEqual(inp['xx'], cn)
-
-        # Change the language.
-        # WARNING: DO NOT set lang locally in real code!  Set it globally
-        #          instead! (TranslatableSetting.lang = ...)
-        # WARNING: TranslatableSetting.lang is used to override the current
-        #          locale settings returned by LocaleBorg!  Use with care!
-        S.lang = 'zz'
-
-        u = str(S)
-        cn = S()
-
-        self.assertEqual(inp['zz'], u)
-        self.assertEqual(inp['zz'], cn)
+    assert inp['zz'] == str(setting)
+    assert inp['zz'] == setting()
 
 
 @pytest.mark.parametrize("path, files_folders, expected_path_end", [
