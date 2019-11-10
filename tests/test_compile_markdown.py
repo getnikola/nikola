@@ -30,14 +30,14 @@ def test_compiling_markdown(compiler, input_path, output_path, input_str, expect
 
 
 @pytest.fixture(scope="module")
-def fakesite():
+def site():
     return FakeSite()
 
 
 @pytest.fixture(scope="module")
-def compiler(fakesite):
+def compiler(site):
     compiler = CompileMarkdown()
-    compiler.set_site(fakesite)
+    compiler.set_site(site)
     return compiler
 
 
