@@ -7,7 +7,7 @@ Test cases for Nikola ReST extensions.
 A sample will be rendered by CompileRest.
 One method is provided for checking the resulting HTML:
 
-    * assertHTMLContains(html, element, attributes=None, text=None)
+    * assert_html_contains(html, element, attributes=None, text=None)
 
 """
 
@@ -32,20 +32,20 @@ def test_ReST_extension(tempdir):
     "Simple test for our base class :)"
 
     sample = '.. raw:: html\n\n   <iframe src="foo" height="bar">spam</iframe>'
-    html = getHtmlFromRst(tempdir, sample)
+    html = get_html_from_rst(tempdir, sample)
 
-    assertHTMLContains(html, "iframe", attributes={"src": "foo"}, text="spam")
+    assert_html_contains(html, "iframe", attributes={"src": "foo"}, text="spam")
 
     with pytest.raises(Exception):
-        assertHTMLContains("eggs", {})
+        assert_html_contains("eggs", {})
 
 
 def test_math_extension_outputs_tex(tempdir):
     "Test that math is outputting TeX code."
     sample = r':math:`e^{ix} = \cos x + i\sin x`'
-    html = getHtmlFromRst(tempdir, sample)
+    html = get_html_from_rst(tempdir, sample)
 
-    assertHTMLContains(html, "span",
+    assert_html_contains(html, "span",
                        attributes={"class": "math"},
                        text=r"\(e^{ix} = \cos x + i\sin x\)")
 
@@ -54,8 +54,8 @@ def test_soundcloud_iframe(tempdir):
     "Test SoundCloud iframe tag generation"
 
     sample = '.. soundcloud:: SID\n   :height: 400\n   :width: 600'
-    html = getHtmlFromRst(tempdir, sample)
-    assertHTMLContains(html, "iframe",
+    html = get_html_from_rst(tempdir, sample)
+    assert_html_contains(html, "iframe",
                        attributes={"src": ("https://w.soundcloud.com/player/"
                                            "?url=http://api.soundcloud.com/"
                                            "tracks/SID"),
@@ -67,8 +67,8 @@ def test_youtube_iframe(tempdir):
     "Test Youtube iframe tag generation"
 
     sample = '.. youtube:: YID\n   :height: 400\n   :width: 600'
-    html = getHtmlFromRst(tempdir, sample)
-    assertHTMLContains(html, "iframe",
+    html = get_html_from_rst(tempdir, sample)
+    assert_html_contains(html, "iframe",
                              attributes={"src": ("https://www.youtube-nocookie.com/"
                                                  "embed/YID?rel=0&"
                                                  "wmode=transparent"),
@@ -83,8 +83,8 @@ def test_vimeo(disable_vimeo_api_query, tempdir):
     "Test Vimeo iframe tag generation"
 
     sample = '.. vimeo:: VID\n   :height: 400\n   :width: 600'
-    html = getHtmlFromRst(tempdir, sample)
-    assertHTMLContains(html, "iframe",
+    html = get_html_from_rst(tempdir, sample)
+    assert_html_contains(html, "iframe",
                              attributes={"src": ("https://player.vimeo.com/"
                                                  "video/VID"),
                                          "height": "400",
@@ -97,26 +97,26 @@ def test_vimeo(disable_vimeo_api_query, tempdir):
 ])
 def test_rendering_codeblock_alias(tempdir, sample):
     """ Test CodeBlock aliases """
-    getHtmlFromRst(tempdir, sample)
+    get_html_from_rst(tempdir, sample)
 
 
 def test_doc_doesnt_exist():
     with pytest.raises(Exception):
-        assertHTMLContains('anything', {})
+        assert_html_contains('anything', {})
 
 
 def test_doc(tempdir):
     sample = 'Sample for testing my :doc:`fake-post`'
-    html = getHtmlFromRst(tempdir, sample)
-    assertHTMLContains(html, 'a',
+    html = get_html_from_rst(tempdir, sample)
+    assert_html_contains(html, 'a',
                        text='Fake post',
                        attributes={'href': '/posts/fake-post'})
 
 
 def test_doc_titled(tempdir):
     sample = 'Sample for testing my :doc:`titled post <fake-post>`'
-    html = getHtmlFromRst(tempdir, sample)
-    assertHTMLContains(html, 'a',
+    html = get_html_from_rst(tempdir, sample)
+    assert_html_contains(html, 'a',
                        text='titled post',
                        attributes={'href': '/posts/fake-post'})
 
@@ -155,7 +155,7 @@ def tempdir(tmpdir):
     return str(tmpdir)
 
 
-def getHtmlFromRst(temp_dir, rst):
+def get_html_from_rst(temp_dir, rst):
     "Create html output from rst string"
 
     infile = os.path.join(temp_dir, 'inf')
@@ -176,7 +176,7 @@ def getHtmlFromRst(temp_dir, rst):
         return rendered_file.read()
 
 
-def assertHTMLContains(html, element, attributes=None, text=None):
+def assert_html_contains(html, element, attributes=None, text=None):
     """
     Test if HTML document includes an element with the given attributes
     and text content.
