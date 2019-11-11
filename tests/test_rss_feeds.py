@@ -60,7 +60,7 @@ def test_feed_items_have_valid_URLs(rss_feed_content, blog_url, element):
     item = channel.find('item')
     element = item.find(element)
 
-    assert is_valid_URL(element.text), 'The following URL is not valid: %s' % element.text
+    assert is_valid_URL(element.text)
     assert blog_url in element.text
 
 
