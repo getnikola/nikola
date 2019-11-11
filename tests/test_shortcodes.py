@@ -7,9 +7,9 @@ from nikola import shortcodes
 
 
 @pytest.mark.parametrize("template, expected_result", [
-  ('test({{% noargs %}})', 'test(noargs  success!)'),
-  ('test({{% noargs %}}\\hello world/{{% /noargs %}})',
-   'test(noargs \\hello world/ success!)'),
+    ('test({{% noargs %}})', 'test(noargs  success!)'),
+    ('test({{% noargs %}}\\hello world/{{% /noargs %}})',
+     'test(noargs \\hello world/ success!)'),
 ])
 def test_noargs(site, template, expected_result):
     assert shortcodes.apply_shortcodes(template, site.shortcode_registry)[0] == expected_result
