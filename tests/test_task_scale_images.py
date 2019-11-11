@@ -6,8 +6,6 @@ from PIL import Image, ImageDraw
 
 from nikola.plugins.task import scale_images
 
-from .base import FakeSite
-
 # These tests don't require valid profiles. They need only to verify
 # that profile data is/isn't saved with images.
 # It would be nice to use PIL.ImageCms to create valid profiles, but
@@ -52,17 +50,24 @@ def source_dir(tmpdir_factory):
 
 @pytest.fixture
 def site(preserve_icc_profiles, source_dir, destination_dir):
-    site = FakeSite()
-    site.config['IMAGE_FOLDERS'] = {str(source_dir): ''}
-    site.config['OUTPUT_FOLDER'] = str(destination_dir)
-    site.config['IMAGE_THUMBNAIL_SIZE'] = 128
-    site.config['IMAGE_THUMBNAIL_FORMAT'] = '{name}.thumbnail{ext}'
-    site.config['MAX_IMAGE_SIZE'] = 512
-    site.config['FILTERS'] = {}
-    site.config['PRESERVE_EXIF_DATA'] = False
-    site.config['EXIF_WHITELIST'] = {}
-    site.config['PRESERVE_ICC_PROFILES'] = preserve_icc_profiles
-    return site
+    config = {
+        'IMAGE_FOLDERS': {str(source_dir): ''},
+        'OUTPUT_FOLDER': str(destination_dir),
+        'IMAGE_THUMBNAIL_SIZE': 128,
+        'IMAGE_THUMBNAIL_FORMAT': '{name}.thumbnail{ext}',
+        'MAX_IMAGE_SIZE': 512,
+        'FILTERS': {},
+        'PRESERVE_EXIF_DATA': False,
+        'EXIF_WHITELIST': {},
+        'PRESERVE_ICC_PROFILES': preserve_icc_profiles,
+    }
+    return FakeSite(config)
+
+
+class FakeSite(object):
+    def __init__(self, config):
+        self.config = config
+        self.debug = True
 
 
 @pytest.fixture
