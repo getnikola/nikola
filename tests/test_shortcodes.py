@@ -2,6 +2,7 @@
 
 import pytest
 
+import nikola.utils
 from nikola import shortcodes
 
 
