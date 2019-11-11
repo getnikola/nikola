@@ -107,7 +107,6 @@ class FakeSite(object):
             FakePost(title='Fake post',
                      slug='fake-post')
         ]
-        self.debug = True
         self.rst_transforms = []
         self.post_per_input_file = {}
         # This is to make plugin initialization happy
