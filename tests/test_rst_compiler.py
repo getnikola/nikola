@@ -29,8 +29,6 @@ import pytest
 
 
 def test_ReST_extension(tempdir):
-    "Simple test for our base class :)"
-
     sample = '.. raw:: html\n\n   <iframe src="foo" height="bar">spam</iframe>'
     html = get_html_from_rst(tempdir, sample)
 
