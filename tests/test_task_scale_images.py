@@ -1,5 +1,5 @@
 import os
-import tempfile
+from tempfile import NamedTemporaryFile
 
 import pytest
 from PIL import Image, ImageDraw
@@ -108,6 +108,5 @@ def create_test_image():
 
 
 def tmp_img_name(dirname):
-    pathname = tempfile.NamedTemporaryFile(
-        suffix=".jpg", dir=dirname, delete=False)
+    pathname = NamedTemporaryFile(suffix=".jpg", dir=dirname, delete=False)
     return pathname.name
