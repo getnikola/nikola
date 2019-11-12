@@ -32,7 +32,9 @@ def test_ReST_extension(tempdir):
     sample = '.. raw:: html\n\n   <iframe src="foo" height="bar">spam</iframe>'
     html = get_html_from_rst(tempdir, sample)
 
-    assert_html_contains(html, "iframe", attributes={"src": "foo"}, text="spam")
+    assert_html_contains(html, "iframe",
+                         attributes={"src": "foo"},
+                         text="spam")
 
     with pytest.raises(Exception):
         assert_html_contains("eggs", {})
@@ -44,8 +46,8 @@ def test_math_extension_outputs_tex(tempdir):
     html = get_html_from_rst(tempdir, sample)
 
     assert_html_contains(html, "span",
-                       attributes={"class": "math"},
-                       text=r"\(e^{ix} = \cos x + i\sin x\)")
+                         attributes={"class": "math"},
+                         text=r"\(e^{ix} = \cos x + i\sin x\)")
 
 
 def test_soundcloud_iframe(tempdir):
@@ -54,11 +56,11 @@ def test_soundcloud_iframe(tempdir):
     sample = '.. soundcloud:: SID\n   :height: 400\n   :width: 600'
     html = get_html_from_rst(tempdir, sample)
     assert_html_contains(html, "iframe",
-                       attributes={"src": ("https://w.soundcloud.com/player/"
-                                           "?url=http://api.soundcloud.com/"
-                                           "tracks/SID"),
-                                   "height": "400",
-                                   "width": "600"})
+                         attributes={"src": ("https://w.soundcloud.com/player/"
+                                             "?url=http://api.soundcloud.com/"
+                                             "tracks/SID"),
+                                     "height": "400",
+                                     "width": "600"})
 
 
 def test_youtube_iframe(tempdir):
@@ -67,14 +69,14 @@ def test_youtube_iframe(tempdir):
     sample = '.. youtube:: YID\n   :height: 400\n   :width: 600'
     html = get_html_from_rst(tempdir, sample)
     assert_html_contains(html, "iframe",
-                             attributes={"src": ("https://www.youtube-nocookie.com/"
-                                                 "embed/YID?rel=0&"
-                                                 "wmode=transparent"),
-                                         "height": "400",
-                                         "width": "600",
-                                         "frameborder": "0",
-                                         "allowfullscreen": "",
-                                         "allow": "encrypted-media"})
+                         attributes={"src": ("https://www.youtube-nocookie.com"
+                                             "/embed/YID?rel=0&"
+                                             "wmode=transparent"),
+                                     "height": "400",
+                                     "width": "600",
+                                     "frameborder": "0",
+                                     "allowfullscreen": "",
+                                     "allow": "encrypted-media"})
 
 
 def test_vimeo(disable_vimeo_api_query, tempdir):
@@ -83,10 +85,10 @@ def test_vimeo(disable_vimeo_api_query, tempdir):
     sample = '.. vimeo:: VID\n   :height: 400\n   :width: 600'
     html = get_html_from_rst(tempdir, sample)
     assert_html_contains(html, "iframe",
-                             attributes={"src": ("https://player.vimeo.com/"
-                                                 "video/VID"),
-                                         "height": "400",
-                                         "width": "600"})
+                         attributes={"src": ("https://player.vimeo.com/"
+                                             "video/VID"),
+                                     "height": "400",
+                                     "width": "600"})
 
 
 @pytest.mark.parametrize("sample", [
@@ -107,16 +109,16 @@ def test_doc(tempdir):
     sample = 'Sample for testing my :doc:`fake-post`'
     html = get_html_from_rst(tempdir, sample)
     assert_html_contains(html, 'a',
-                       text='Fake post',
-                       attributes={'href': '/posts/fake-post'})
+                         text='Fake post',
+                         attributes={'href': '/posts/fake-post'})
 
 
 def test_doc_titled(tempdir):
     sample = 'Sample for testing my :doc:`titled post <fake-post>`'
     html = get_html_from_rst(tempdir, sample)
     assert_html_contains(html, 'a',
-                       text='titled post',
-                       attributes={'href': '/posts/fake-post'})
+                         text='titled post',
+                         attributes={'href': '/posts/fake-post'})
 
 
 @pytest.fixture(autouse=True, scope="module")
