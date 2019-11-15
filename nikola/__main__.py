@@ -120,11 +120,9 @@ def main(args=None):
         needs_config_file = False
 
     old_path = sys.path
-    old_modules = sys.modules
 
     try:
         sys.path = sys.path[:]
-        sys.modules = sys.modules.copy()
         sys.path.insert(0, os.path.dirname(conf_filename))
         with open(conf_filename, "rb") as file:
             config = imp.load_module(conf_filename, file, conf_filename, (None, "rb", imp.PY_SOURCE)).__dict__
@@ -139,7 +137,6 @@ def main(args=None):
             return 1
     finally:
         sys.path = old_path
-        sys.modules = old_modules
 
     if conf_filename_changed:
         LOGGER.info("Using config file '{0}'".format(conf_filename))
