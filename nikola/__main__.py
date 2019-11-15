@@ -129,7 +129,7 @@ def main(args=None):
     except Exception:
         config = {}
         if os.path.exists(conf_filename):
-            msg = traceback.format_exc(0)
+            msg = traceback.format_exc()
             LOGGER.error('"{0}" cannot be parsed.\n{1}'.format(conf_filename, msg))
             return 1
         elif needs_config_file and conf_filename_changed:
