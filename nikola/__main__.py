@@ -26,7 +26,7 @@
 
 """The main function of Nikola."""
 
-import imp
+import importlib.util
 import os
 import shutil
 import sys
@@ -56,6 +56,7 @@ try:
     import readline  # NOQA
 except ImportError:
     pass  # This is only so raw_input/input does nicer things if it's available
+
 
 config = {}
 
@@ -119,15 +120,16 @@ def main(args=None):
     else:
         needs_config_file = False
 
-    old_path = sys.path
-
+    sys.path.insert(0, os.path.dirname(conf_filename))
     try:
-        sys.path = sys.path[:]
-        sys.path.insert(0, os.path.dirname(conf_filename))
-        with open(conf_filename, "rb") as file:
-            config = imp.load_module(conf_filename, file, conf_filename, (None, "rb", imp.PY_SOURCE)).__dict__
+        spec = importlib.util.spec_from_file_location("conf", conf_filename)
+        conf = importlib.util.module_from_spec(spec)
+        # Preserve caching behavior of `import conf` if the filename matches
+        if os.path.splitext(os.path.basename(conf_filename))[0] == "conf":
+            sys.modules["conf"] = conf
+        spec.loader.exec_module(conf)
+        config = conf.__dict__
     except Exception:
-        config = {}
         if os.path.exists(conf_filename):
             msg = traceback.format_exc()
             LOGGER.error('"{0}" cannot be parsed.\n{1}'.format(conf_filename, msg))
@@ -135,8 +137,7 @@ def main(args=None):
         elif needs_config_file and conf_filename_changed:
             LOGGER.error('Cannot find configuration file "{0}".'.format(conf_filename))
             return 1
-    finally:
-        sys.path = old_path
+        config = {}
 
     if conf_filename_changed:
         LOGGER.info("Using config file '{0}'".format(conf_filename))
