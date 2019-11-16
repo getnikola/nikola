@@ -1,6 +1,9 @@
 New in master
 =============
 
+Nikola now supports Python 3.5 or newer. If you are on 3.4, please
+upgrade to a newer release of Python.
+
 Features
 --------
 
