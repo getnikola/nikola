@@ -1,8 +1,8 @@
-# stolen from https://github.com/jakubroztocil/httpie/blob/master/appveyor.yml
+# based on https://github.com/jakubroztocil/httpie/blob/master/appveyor.yml
 build: false
 environment:
   matrix:
-    - PYTHON: "C:/Python37"
+    - PYTHON: "C:/Python38"
 init:
   - "ECHO %PYTHON%"
   - ps: "ls C:/Python*"
