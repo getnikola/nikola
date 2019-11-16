@@ -27,7 +27,7 @@ class ConfigTest(BaseTestCase):
         """Check whether the specified `config` equals the base config."""
         for option in self.simple_config.keys():
             if re.match("^[A-Z]+(_[A-Z]+)*$", option) and option != self.metadata_option:
-                assert self.simple_config[option] == self.complex_config[option]
+                assert self.simple_config[option] == config[option]
 
     def test_simple_config(self):
         """Check whether configuration-files without ineritance are interpreted correctly."""
