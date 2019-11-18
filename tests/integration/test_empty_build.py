@@ -12,7 +12,7 @@ from ..base import cd
 LOCALE_DEFAULT = os.environ.get('NIKOLA_LOCALE_DEFAULT', 'en')
 
 
-def test_build(build, target_dir):
+def test_archive_exists(build, target_dir):
     """Ensure the build did something."""
     index_path = os.path.join(target_dir, "output", "archive.html")
     assert os.path.isfile(index_path)
