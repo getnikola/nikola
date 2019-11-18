@@ -215,7 +215,8 @@ class CommandAuto(Command):
         self.wd_observer.start()
 
         win_sleeper = None
-        if sys.platform == 'win32':
+        # https://bugs.python.org/issue23057 (fixed in Python 3.8)
+        if sys.platform == 'win32' and sys.version_info < (3, 8):
             win_sleeper = asyncio.ensure_future(windows_ctrlc_workaround())
 
         if not self.has_server:
@@ -273,8 +274,7 @@ class CommandAuto(Command):
             self.wd_observer.join()
         loop.close()
 
-    @asyncio.coroutine
-    def run_nikola_build(self, event):
+    async def run_nikola_build(self, event):
         """Rebuild the site."""
         # Move events have a dest_path, some editors like gedit use a
         # move on larger save operations for write protection
@@ -292,58 +292,53 @@ class CommandAuto(Command):
             return
 
         self.logger.debug('Queuing rebuild from {0}'.format(event_path))
-        yield from self.rebuild_queue.put((datetime.datetime.now(), event_path))
+        await self.rebuild_queue.put((datetime.datetime.now(), event_path))
 
-    @asyncio.coroutine
-    def run_rebuild_queue(self):
+    async def run_rebuild_queue(self):
         """Run rebuilds from a queue (Nikola can only build in a single instance)."""
         while True:
-            date, event_path = yield from self.rebuild_queue.get()
+            date, event_path = await self.rebuild_queue.get()
             if date < (self.last_rebuild + self.delta_last_rebuild):
                 self.logger.debug("Skipping rebuild from {0} (within delta)".format(event_path))
                 continue
             self.last_rebuild = datetime.datetime.now()
             self.logger.info('REBUILDING SITE (from {0})'.format(event_path))
-            p = yield from asyncio.create_subprocess_exec(*self.nikola_cmd, stderr=subprocess.PIPE)
-            exit_code = yield from p.wait()
-            error = yield from p.stderr.read()
+            p = await asyncio.create_subprocess_exec(*self.nikola_cmd, stderr=subprocess.PIPE)
+            exit_code = await p.wait()
+            error = await p.stderr.read()
             errord = error.decode('utf-8')
 
             if exit_code != 0:
                 self.logger.error(errord)
-                yield from self.send_to_websockets({'command': 'alert', 'message': errord})
+                await self.send_to_websockets({'command': 'alert', 'message': errord})
             else:
                 self.logger.info("Rebuild successful\n" + errord)
 
-    @asyncio.coroutine
-    def reload_page(self, event):
+    async def reload_page(self, event):
         """Reload the page."""
         # Move events have a dest_path, some editors like gedit use a
         # move on larger save operations for write protection
         event_path = event.dest_path if hasattr(event, 'dest_path') else event.src_path
         p = os.path.relpath(event_path, os.path.abspath(self.site.config['OUTPUT_FOLDER'])).replace(os.sep, '/')
         self.logger.info('REFRESHING: {0}'.format(p))
-        yield from self.send_to_websockets({'command': 'reload', 'path': p, 'liveCSS': True})
+        await self.send_to_websockets({'command': 'reload', 'path': p, 'liveCSS': True})
 
-    @asyncio.coroutine
-    def serve_livereload_js(self, request):
+    async def serve_livereload_js(self, request):
         """Handle requests to /livereload.js and serve the JS file."""
         return FileResponse(LRJS_PATH)
 
-    @asyncio.coroutine
-    def serve_robots_txt(self, request):
+    async def serve_robots_txt(self, request):
         """Handle requests to /robots.txt."""
         return Response(body=b'User-Agent: *\nDisallow: /\n', content_type='text/plain', charset='utf-8')
 
-    @asyncio.coroutine
-    def websocket_handler(self, request):
+    async def websocket_handler(self, request):
         """Handle requests to /livereload and initiate WebSocket communication."""
         ws = web.WebSocketResponse()
-        yield from ws.prepare(request)
+        await ws.prepare(request)
         self.sockets.append(ws)
 
         while True:
-            msg = yield from ws.receive()
+            msg = await ws.receive()
 
             self.logger.debug("Received message: {0}".format(msg))
             if msg.type == aiohttp.WSMsgType.TEXT:
@@ -356,14 +351,14 @@ class CommandAuto(Command):
                         ],
                         'serverName': 'Nikola Auto (livereload)',
                     }
-                    yield from ws.send_json(response)
+                    await ws.send_json(response)
                 elif message['command'] != 'info':
                     self.logger.warn("Unknown command in message: {0}".format(message))
             elif msg.type == aiohttp.WSMsgType.CLOSED:
                 break
             elif msg.type == aiohttp.WSMsgType.CLOSE:
                 self.logger.debug("Closing WebSocket")
-                yield from ws.close()
+                await ws.close()
                 break
             elif msg.type == aiohttp.WSMsgType.ERROR:
                 self.logger.error('WebSocket connection closed with exception {0}'.format(ws.exception()))
@@ -376,8 +371,7 @@ class CommandAuto(Command):
 
         return ws
 
-    @asyncio.coroutine
-    def send_to_websockets(self, message):
+    async def send_to_websockets(self, message):
         """Send a message to all open WebSockets."""
         to_delete = []
         for ws in self.sockets:
@@ -386,7 +380,7 @@ class CommandAuto(Command):
                 continue
 
             try:
-                yield from ws.send_json(message)
+                await ws.send_json(message)
             except RuntimeError as e:
                 if 'closed' in e.args[0]:
                     self.logger.warn("WebSocket {0} closed uncleanly".format(ws))
@@ -398,12 +392,11 @@ class CommandAuto(Command):
             self.sockets.remove(ws)
 
 
-@asyncio.coroutine
-def windows_ctrlc_workaround():
+async def windows_ctrlc_workaround():
     """Work around bpo-23057."""
     # https://bugs.python.org/issue23057
     while True:
-        yield from asyncio.sleep(1)
+        await asyncio.sleep(1)
 
 
 class IndexHtmlStaticResource(StaticResource):
@@ -418,15 +411,13 @@ class IndexHtmlStaticResource(StaticResource):
         self.snippet = snippet
         super().__init__(*args, **kwargs)
 
-    @asyncio.coroutine
-    def _handle(self, request):
+    async def _handle(self, request):
         """Handle incoming requests (pass to handle_file)."""
         filename = request.match_info['filename']
-        ret = yield from self.handle_file(request, filename)
+        ret = await self.handle_file(request, filename)
         return ret
 
-    @asyncio.coroutine
-    def handle_file(self, request, filename, from_index=None):
+    async def handle_file(self, request, filename, from_index=None):
         """Handle file requests."""
         try:
             filepath = self._directory.joinpath(filename).resolve()
@@ -443,7 +434,7 @@ class IndexHtmlStaticResource(StaticResource):
         # on opening a dir, load it's contents if allowed
         if filepath.is_dir():
             if filename.endswith('/') or not filename:
-                ret = yield from self.handle_file(request, filename + 'index.html', from_index=filename)
+                ret = await self.handle_file(request, filename + 'index.html', from_index=filename)
             else:
                 # Redirect and add trailing slash so relative links work (Issue #3140)
                 new_url = request.rel_url.path + '/'
@@ -494,10 +485,9 @@ class NikolaEventHandler:
         self.function = function
         self.loop = loop
 
-    @asyncio.coroutine
-    def on_any_event(self, event):
+    async def on_any_event(self, event):
         """Handle all file events."""
-        yield from self.function(event)
+        await self.function(event)
 
     def dispatch(self, event):
         """Dispatch events to handler."""
@@ -513,8 +503,7 @@ class ConfigEventHandler(NikolaEventHandler):
         self.function = function
         self.loop = loop
 
-    @asyncio.coroutine
-    def on_any_event(self, event):
+    async def on_any_event(self, event):
         """Handle file events if they concern the configuration file."""
         if event._src_path == self.configuration_filename:
-            yield from self.function(event)
+            await self.function(event)
