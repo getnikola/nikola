@@ -3,10 +3,7 @@ import sys
 
 import pytest
 
-import nikola
-import nikola.plugins.command
 import nikola.plugins.command.init
-import nikola.utils
 from nikola import __main__
 from nikola.utils import LocaleBorg
 
@@ -22,8 +19,12 @@ def test_build(build, target_dir):
 
 
 @pytest.fixture
-def build(target_dir, fill_site):
+def build(target_dir):
     """Build the site."""
+    init_command = nikola.plugins.command.init.CommandInit()
+    init_command.create_empty_site(target_dir)
+    init_command.create_configuration(target_dir)
+
     with cd(target_dir):
         __main__.main(["build"])
 
@@ -33,18 +34,6 @@ def target_dir(tmpdir):
     tdir = os.path.join(str(tmpdir), 'target')
     os.mkdir(tdir)
     yield tdir
-
-
-@pytest.fixture
-def fill_site(init_command, target_dir):
-    """Add any needed initial content."""
-    init_command.create_empty_site(target_dir)
-    init_command.create_configuration(target_dir)
-
-
-@pytest.fixture
-def init_command():
-    return nikola.plugins.command.init.CommandInit()
 
 
 @pytest.fixture(autouse=True)
@@ -69,5 +58,3 @@ def localeborg_setup():
         yield
     finally:
         LocaleBorg.reset()
-
-
