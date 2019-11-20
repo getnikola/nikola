@@ -19,8 +19,6 @@ from .base import BaseTestCase, cd, LOCALE_OTHER, initialize_localeborg
 class EmptyBuildTest(BaseTestCase):
     """Basic integration testcase."""
 
-    dataname = None
-
     @classmethod
     def setUpClass(cls):
         """Setup a demo site."""
@@ -39,16 +37,6 @@ class EmptyBuildTest(BaseTestCase):
         """Add any needed initial content."""
         self.init_command.create_empty_site(self.target_dir)
         self.init_command.create_configuration(self.target_dir)
-
-        if self.dataname:
-            src = os.path.join(os.path.dirname(__file__), 'data',
-                               self.dataname)
-            for root, dirs, files in os.walk(src):
-                for src_name in files:
-                    rel_dir = os.path.relpath(root, src)
-                    dst_file = os.path.join(self.target_dir, rel_dir, src_name)
-                    src_file = os.path.join(root, src_name)
-                    shutil.copy2(src_file, dst_file)
 
     @classmethod
     def patch_site(self):
@@ -132,7 +120,20 @@ class RepeatedPostsSetting(DemoBuildTest):
 class TranslatedBuildTest(EmptyBuildTest):
     """Test a site with translated content."""
 
-    dataname = "translated_titles"
+    @classmethod
+    def fill_site(self):
+        """Add any needed initial content."""
+        self.init_command.create_empty_site(self.target_dir)
+        self.init_command.create_configuration(self.target_dir)
+
+        src = os.path.join(os.path.dirname(__file__), 'data',
+                           'translated_titles')
+        for root, dirs, files in os.walk(src):
+            for src_name in files:
+                rel_dir = os.path.relpath(root, src)
+                dst_file = os.path.join(self.target_dir, rel_dir, src_name)
+                src_file = os.path.join(root, src_name)
+                shutil.copy2(src_file, dst_file)
 
     def test_translated_titles(self):
         """Check that translated title is picked up."""
