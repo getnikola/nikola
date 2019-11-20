@@ -16,8 +16,8 @@ from nikola import __main__
 from .base import BaseTestCase, cd, initialize_localeborg
 
 
-class EmptyBuildTest(BaseTestCase):
-    """Basic integration testcase."""
+class DemoBuildTest(BaseTestCase):
+    """Test that a default build of --demo works."""
 
     @classmethod
     def setUpClass(cls):
@@ -34,9 +34,19 @@ class EmptyBuildTest(BaseTestCase):
 
     @classmethod
     def fill_site(self):
-        """Add any needed initial content."""
-        self.init_command.create_empty_site(self.target_dir)
+        """Fill the site with demo content."""
+        self.init_command.copy_sample_site(self.target_dir)
         self.init_command.create_configuration(self.target_dir)
+        src1 = os.path.join(os.path.dirname(__file__), 'data', '1-nolinks.rst')
+        dst1 = os.path.join(self.target_dir, 'posts', '1.rst')
+        shutil.copy(src1, dst1)
+        # File for Issue #374 (empty post text)
+        with io.open(os.path.join(self.target_dir, 'posts', 'empty.txt'), "w+", encoding="utf8") as outf:
+            outf.write(
+                ".. title: foobar\n"
+                ".. slug: foobar\n"
+                ".. date: 2013-03-06 19:08:15\n"
+            )
 
     @classmethod
     def patch_site(self):
@@ -70,26 +80,6 @@ class EmptyBuildTest(BaseTestCase):
         index_path = os.path.join(
             self.target_dir, "output", "archive.html")
         self.assertTrue(os.path.isfile(index_path))
-
-
-class DemoBuildTest(EmptyBuildTest):
-    """Test that a default build of --demo works."""
-
-    @classmethod
-    def fill_site(self):
-        """Fill the site with demo content."""
-        self.init_command.copy_sample_site(self.target_dir)
-        self.init_command.create_configuration(self.target_dir)
-        src1 = os.path.join(os.path.dirname(__file__), 'data', '1-nolinks.rst')
-        dst1 = os.path.join(self.target_dir, 'posts', '1.rst')
-        shutil.copy(src1, dst1)
-        # File for Issue #374 (empty post text)
-        with io.open(os.path.join(self.target_dir, 'posts', 'empty.txt'), "w+", encoding="utf8") as outf:
-            outf.write(
-                ".. title: foobar\n"
-                ".. slug: foobar\n"
-                ".. date: 2013-03-06 19:08:15\n"
-            )
 
     def test_index_in_sitemap(self):
         sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
