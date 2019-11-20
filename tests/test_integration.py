@@ -129,55 +129,6 @@ class RepeatedPostsSetting(DemoBuildTest):
                 '\nPOSTS = (("posts/*.txt", "posts", "post.tmpl"),("posts/*.txt", "posts", "post.tmpl"))\n')
 
 
-class FuturePostTest(EmptyBuildTest):
-    """Test a site with future posts."""
-
-    @classmethod
-    def fill_site(self):
-        import datetime
-        from nikola.utils import current_time
-        self.init_command.copy_sample_site(self.target_dir)
-        self.init_command.create_configuration(self.target_dir)
-
-        # Change COMMENT_SYSTEM_ID to not wait for 5 seconds
-        with io.open(os.path.join(self.target_dir, 'conf.py'), "a+", encoding="utf8") as outf:
-            outf.write('\nCOMMENT_SYSTEM_ID = "nikolatest"\n')
-
-        with io.open(os.path.join(self.target_dir, 'posts', 'empty1.txt'), "w+", encoding="utf8") as outf:
-            outf.write(".. title: foo\n" ".. slug: foo\n" ".. date: %s\n" % (
-                current_time() + datetime.timedelta(-1)).strftime('%Y-%m-%d %H:%M:%S'))
-
-        with io.open(os.path.join(self.target_dir, 'posts', 'empty2.txt'), "w+", encoding="utf8") as outf:
-            outf.write(".. title: bar\n" ".. slug: bar\n" ".. date: %s\n" % (
-                current_time() + datetime.timedelta(1)).strftime('%Y-%m-%d %H:%M:%S'))
-
-    def test_future_post(self):
-        """ Ensure that the future post is not present in the index and sitemap."""
-        index_path = os.path.join(self.target_dir, "output", "index.html")
-        sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
-        foo_path = os.path.join(self.target_dir, "output", "posts", "foo", "index.html")
-        bar_path = os.path.join(self.target_dir, "output", "posts", "bar", "index.html")
-        self.assertTrue(os.path.isfile(index_path))
-        self.assertTrue(os.path.isfile(foo_path))
-        self.assertTrue(os.path.isfile(bar_path))
-        with io.open(index_path, "r", encoding="utf8") as inf:
-            index_data = inf.read()
-        with io.open(sitemap_path, "r", encoding="utf8") as inf:
-            sitemap_data = inf.read()
-        self.assertTrue('foo/' in index_data)
-        self.assertFalse('bar/' in index_data)
-        self.assertTrue('foo/' in sitemap_data)
-        self.assertFalse('bar/' in sitemap_data)
-
-        # Run deploy command to see if future post is deleted
-        with cd(self.target_dir):
-            __main__.main(["deploy"])
-
-        self.assertTrue(os.path.isfile(index_path))
-        self.assertTrue(os.path.isfile(foo_path))
-        self.assertFalse(os.path.isfile(bar_path))
-
-
 class TranslatedBuildTest(EmptyBuildTest):
     """Test a site with translated content."""
 
