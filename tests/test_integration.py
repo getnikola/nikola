@@ -13,7 +13,7 @@ import nikola.plugins.command.init
 import nikola.utils
 from nikola import __main__
 
-from .base import BaseTestCase, cd, LOCALE_OTHER, initialize_localeborg
+from .base import BaseTestCase, cd, initialize_localeborg
 
 
 class EmptyBuildTest(BaseTestCase):
@@ -115,54 +115,6 @@ class RepeatedPostsSetting(DemoBuildTest):
         with io.open(conf_path, "a", encoding="utf8") as outf:
             outf.write(
                 '\nPOSTS = (("posts/*.txt", "posts", "post.tmpl"),("posts/*.txt", "posts", "post.tmpl"))\n')
-
-
-class TranslatedBuildTest(EmptyBuildTest):
-    """Test a site with translated content."""
-
-    @classmethod
-    def fill_site(self):
-        """Add any needed initial content."""
-        self.init_command.create_empty_site(self.target_dir)
-        self.init_command.create_configuration(self.target_dir)
-
-        src = os.path.join(os.path.dirname(__file__), 'data',
-                           'translated_titles')
-        for root, dirs, files in os.walk(src):
-            for src_name in files:
-                rel_dir = os.path.relpath(root, src)
-                dst_file = os.path.join(self.target_dir, rel_dir, src_name)
-                src_file = os.path.join(root, src_name)
-                shutil.copy2(src_file, dst_file)
-
-    def test_translated_titles(self):
-        """Check that translated title is picked up."""
-        en_file = os.path.join(self.target_dir, "output", "pages", "1", "index.html")
-        pl_file = os.path.join(self.target_dir, "output",
-                               LOCALE_OTHER, "pages", "1", "index.html")
-        # Files should be created
-        self.assertTrue(os.path.isfile(en_file))
-        self.assertTrue(os.path.isfile(pl_file))
-        # And now let's check the titles
-        with io.open(en_file, 'r', encoding='utf8') as inf:
-            doc = lxml.html.parse(inf)
-            self.assertEqual(doc.find('//title').text, 'Foo | Demo Site')
-        with io.open(pl_file, 'r', encoding='utf8') as inf:
-            doc = lxml.html.parse(inf)
-            self.assertEqual(doc.find('//title').text, 'Bar | Demo Site')
-
-
-class MissingDefaultLanguageTest(TranslatedBuildTest):
-    """Make sure posts only in secondary languages work."""
-
-    @classmethod
-    def fill_site(self):
-        super(MissingDefaultLanguageTest, self).fill_site()
-        os.unlink(os.path.join(self.target_dir, "pages", "1.txt"))
-
-    def test_translated_titles(self):
-        """Do not test titles as we just removed the translation"""
-        pass
 
 
 class RelativeLinkTest(DemoBuildTest):
