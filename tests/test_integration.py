@@ -152,6 +152,19 @@ class TranslatedBuildTest(EmptyBuildTest):
             self.assertEqual(doc.find('//title').text, 'Bar | Demo Site')
 
 
+class MissingDefaultLanguageTest(TranslatedBuildTest):
+    """Make sure posts only in secondary languages work."""
+
+    @classmethod
+    def fill_site(self):
+        super(MissingDefaultLanguageTest, self).fill_site()
+        os.unlink(os.path.join(self.target_dir, "pages", "1.txt"))
+
+    def test_translated_titles(self):
+        """Do not test titles as we just removed the translation"""
+        pass
+
+
 class TranslationsPatternTest1(TranslatedBuildTest):
     """Check that the path.lang.ext TRANSLATIONS_PATTERN works too"""
 
@@ -168,19 +181,6 @@ class TranslationsPatternTest1(TranslatedBuildTest):
                                 'TRANSLATIONS_PATTERN = "{path}.{ext}.{lang}"')
         with io.open(conf_path, "w+", encoding="utf8") as outf:
             outf.write(data)
-
-
-class MissingDefaultLanguageTest(TranslatedBuildTest):
-    """Make sure posts only in secondary languages work."""
-
-    @classmethod
-    def fill_site(self):
-        super(MissingDefaultLanguageTest, self).fill_site()
-        os.unlink(os.path.join(self.target_dir, "pages", "1.txt"))
-
-    def test_translated_titles(self):
-        """Do not test titles as we just removed the translation"""
-        pass
 
 
 class TranslationsPatternTest2(TranslatedBuildTest):
