@@ -165,42 +165,6 @@ class MissingDefaultLanguageTest(TranslatedBuildTest):
         pass
 
 
-class TranslationsPatternTest1(TranslatedBuildTest):
-    """Check that the path.lang.ext TRANSLATIONS_PATTERN works too"""
-
-    @classmethod
-    def patch_site(self):
-        """Set the TRANSLATIONS_PATTERN to the old v6 default"""
-        os.rename(os.path.join(self.target_dir, "pages", "1.%s.txt" % LOCALE_OTHER),
-                  os.path.join(self.target_dir, "pages", "1.txt.%s" % LOCALE_OTHER)
-                  )
-        conf_path = os.path.join(self.target_dir, "conf.py")
-        with io.open(conf_path, "r", encoding="utf-8") as inf:
-            data = inf.read()
-            data = data.replace('TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"',
-                                'TRANSLATIONS_PATTERN = "{path}.{ext}.{lang}"')
-        with io.open(conf_path, "w+", encoding="utf8") as outf:
-            outf.write(data)
-
-
-class TranslationsPatternTest2(TranslatedBuildTest):
-    """Check that the path_lang.ext TRANSLATIONS_PATTERN works too"""
-
-    @classmethod
-    def patch_site(self):
-        """Set the TRANSLATIONS_PATTERN to the old v6 default"""
-        conf_path = os.path.join(self.target_dir, "conf.py")
-        os.rename(os.path.join(self.target_dir, "pages", "1.%s.txt" % LOCALE_OTHER),
-                  os.path.join(self.target_dir, "pages", "1.txt.%s" % LOCALE_OTHER)
-                  )
-        with io.open(conf_path, "r", encoding="utf-8") as inf:
-            data = inf.read()
-            data = data.replace('TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"',
-                                'TRANSLATIONS_PATTERN = "{path}.{ext}.{lang}"')
-        with io.open(conf_path, "w+", encoding="utf8") as outf:
-            outf.write(data)
-
-
 class RelativeLinkTest(DemoBuildTest):
     """Check that SITE_URL with a path doesn't break links."""
 
