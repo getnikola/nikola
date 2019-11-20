@@ -17,12 +17,12 @@ from ..base import cd
 LOCALE_DEFAULT = os.environ.get('NIKOLA_LOCALE_DEFAULT', 'en')
 
 
-def test_future_post(build, target_dir):
+def test_future_post(build, output_dir, target_dir):
     """ Ensure that the future post is not present in the index and sitemap."""
-    index_path = os.path.join(target_dir, "output", "index.html")
-    sitemap_path = os.path.join(target_dir, "output", "sitemap.xml")
-    foo_path = os.path.join(target_dir, "output", "posts", "foo", "index.html")
-    bar_path = os.path.join(target_dir, "output", "posts", "bar", "index.html")
+    index_path = os.path.join(output_dir, "index.html")
+    sitemap_path = os.path.join(output_dir, "sitemap.xml")
+    foo_path = os.path.join(output_dir, "posts", "foo", "index.html")
+    bar_path = os.path.join(output_dir, "posts", "bar", "index.html")
     assert os.path.isfile(index_path)
     assert os.path.isfile(sitemap_path)
     assert os.path.isfile(foo_path)
@@ -47,9 +47,9 @@ def test_future_post(build, target_dir):
     assert not os.path.isfile(bar_path)
 
 
-def test_archive_exists(build, target_dir):
+def test_archive_exists(build, output_dir):
     """Ensure the build did something."""
-    index_path = os.path.join(target_dir, "output", "archive.html")
+    index_path = os.path.join(output_dir, "archive.html")
     assert os.path.isfile(index_path)
 
 
@@ -74,6 +74,11 @@ def build(target_dir):
 
     with cd(target_dir):
         __main__.main(["build"])
+
+
+@pytest.fixture
+def output_dir(target_dir):
+    return os.path.join(target_dir, "output")
 
 
 @pytest.fixture

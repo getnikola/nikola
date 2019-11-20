@@ -16,14 +16,14 @@ from ..base import cd
 LOCALE_DEFAULT = os.environ.get('NIKOLA_LOCALE_DEFAULT', 'en')
 
 
-def test_page_index(build, target_dir, pretty_urls):
+def test_page_index(build, output_dir, pretty_urls):
     """Test PAGE_INDEX."""
     output_path = partial(_make_output_path, pretty=pretty_urls)
 
-    pages = os.path.join(target_dir, "output", "pages")
-    subdir1 = os.path.join(target_dir, "output", "pages", "subdir1")
-    subdir2 = os.path.join(target_dir, "output", "pages", "subdir2")
-    subdir3 = os.path.join(target_dir, "output", "pages", "subdir3")
+    pages = os.path.join(output_dir, "pages")
+    subdir1 = os.path.join(output_dir, "pages", "subdir1")
+    subdir2 = os.path.join(output_dir, "pages", "subdir2")
+    subdir3 = os.path.join(output_dir, "pages", "subdir3")
 
     # Do all files exist?
     assert os.path.isfile(output_path(pages, 'page0'))
@@ -84,9 +84,9 @@ def _make_output_path(dir, name, pretty):
         return os.path.join(dir, name + '.html')
 
 
-def test_archive_exists(build, target_dir):
+def test_archive_exists(build, output_dir):
     """Ensure the archive has been built."""
-    index_path = os.path.join(target_dir, "output", "archive.html")
+    index_path = os.path.join(output_dir, "archive.html")
     assert os.path.isfile(index_path)
 
 
@@ -133,6 +133,11 @@ def build(target_dir, pretty_urls):
 
     with cd(target_dir):
         __main__.main(["build"])
+
+
+@pytest.fixture
+def output_dir(target_dir):
+    return os.path.join(target_dir, "output")
 
 
 @pytest.fixture

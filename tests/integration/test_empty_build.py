@@ -12,9 +12,9 @@ from ..base import cd
 LOCALE_DEFAULT = os.environ.get('NIKOLA_LOCALE_DEFAULT', 'en')
 
 
-def test_archive_exists(build, target_dir):
+def test_archive_exists(build, output_dir):
     """Ensure the build did something."""
-    index_path = os.path.join(target_dir, "output", "archive.html")
+    index_path = os.path.join(output_dir, "archive.html")
     assert os.path.isfile(index_path)
 
 
@@ -27,6 +27,11 @@ def build(target_dir):
 
     with cd(target_dir):
         __main__.main(["build"])
+
+
+@pytest.fixture
+def output_dir(target_dir):
+    return os.path.join(target_dir, "output")
 
 
 @pytest.fixture

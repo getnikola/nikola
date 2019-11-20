@@ -15,15 +15,15 @@ from ..base import cd
 LOCALE_DEFAULT = os.environ.get('NIKOLA_LOCALE_DEFAULT', 'en')
 
 
-def test_section_index_avoidance(build, target_dir):
+def test_section_index_avoidance(build, output_dir):
     """Test section index."""
 
     def _make_output_path(dir, name):
         """Make a file path to the output."""
         return os.path.join(dir, name + '.html')
 
-    sec1 = os.path.join(target_dir, "output", "sec1")
-    foo = os.path.join(target_dir, "output", "sec1", "post0")
+    sec1 = os.path.join(output_dir, "sec1")
+    foo = os.path.join(output_dir, "sec1", "post0")
 
     # Do all files exist?
     assert os.path.isfile(_make_output_path(sec1, 'index'))
@@ -37,9 +37,9 @@ def test_section_index_avoidance(build, target_dir):
     assert 'This is Post 0' not in page
 
 
-def test_archive_exists(build, target_dir):
+def test_archive_exists(build, output_dir):
     """Ensure the build did something."""
-    index_path = os.path.join(target_dir, "output", "archive.html")
+    index_path = os.path.join(output_dir, "archive.html")
     assert os.path.isfile(index_path)
 
 
@@ -74,6 +74,11 @@ def build(target_dir):
 
     with cd(target_dir):
         __main__.main(["build"])
+
+
+@pytest.fixture
+def output_dir(target_dir):
+    return os.path.join(target_dir, "output")
 
 
 @pytest.fixture
