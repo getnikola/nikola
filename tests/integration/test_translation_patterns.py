@@ -3,22 +3,19 @@
 import io
 import os
 import shutil
-import sys
 
 import lxml.html
 import pytest
 
 import nikola.plugins.command.init
-from nikola.utils import LocaleBorg
 from nikola import __main__
 
+from .helper import target_dir, output_dir, fixIssue438, localeborg_setup  # NOQA
+from .helper import LOCALE_OTHER
 from ..base import cd
 
-LOCALE_DEFAULT = os.environ.get('NIKOLA_LOCALE_DEFAULT', 'en')
-LOCALE_OTHER = os.environ.get('NIKOLA_LOCALE_OTHER', 'pl')
 
-
-def test_translated_titles(build, output_dir):
+def test_translated_titles(build, output_dir):  # NOQA
     """Check that translated title is picked up."""
     en_file = os.path.join(output_dir, "pages", "1", "index.html")
     pl_file = os.path.join(output_dir, LOCALE_OTHER, "pages", "1", "index.html")
@@ -37,14 +34,14 @@ def test_translated_titles(build, output_dir):
         assert doc.find('//title').text == 'Bar | Demo Site'
 
 
-def test_archive_exists(build, output_dir):
+def test_archive_exists(build, output_dir):  # NOQA
     """Ensure the build did something."""
     index_path = os.path.join(output_dir, "archive.html")
     assert os.path.isfile(index_path)
 
 
 @pytest.fixture
-def build(target_dir):
+def build(target_dir):  # NOQA
     """
     Build the site.
 
@@ -76,39 +73,3 @@ def build(target_dir):
 
     with cd(target_dir):
         __main__.main(["build"])
-
-
-@pytest.fixture
-def output_dir(target_dir):
-    return os.path.join(target_dir, "output")
-
-
-@pytest.fixture
-def target_dir(tmpdir):
-    tdir = os.path.join(str(tmpdir), 'target')
-    os.mkdir(tdir)
-    yield tdir
-
-
-@pytest.fixture(autouse=True)
-def fixIssue438():
-    try:
-        yield
-    finally:
-        try:
-            del sys.modules['conf']
-        except KeyError:
-            pass
-
-
-@pytest.fixture(autouse=True)
-def localeborg_setup():
-    """
-    Reset the LocaleBorg before and after every test.
-    """
-    LocaleBorg.reset()
-    LocaleBorg.initialize({}, LOCALE_DEFAULT)
-    try:
-        yield
-    finally:
-        LocaleBorg.reset()
