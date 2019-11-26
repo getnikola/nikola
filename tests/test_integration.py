@@ -348,17 +348,6 @@ class FullArchiveTest(DemoBuildTest):
                     'index.html')))
 
 
-class SubdirRunningTest(DemoBuildTest):
-    """Check that running nikola from subdir works."""
-
-    def test_subdir_run(self):
-        """Check whether build works from posts/"""
-
-        with cd(os.path.join(self.target_dir, 'posts')):
-            result = __main__.main(['build'])
-            self.assertEqual(result, 0)
-
-
 class RedirectionsTest1(TestCheck):
     """Check REDIRECTIONS"""
 
