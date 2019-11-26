@@ -64,5 +64,5 @@ def build(build_dir, target_dir):  # NOQA
 
 
 @pytest.fixture
-def build_dir(target_dir):
+def build_dir(target_dir):  # NOQA
     return os.path.join(target_dir, 'posts')
