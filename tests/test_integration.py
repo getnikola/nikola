@@ -96,17 +96,6 @@ class DemoBuildTest(BaseTestCase):
         self.assertFalse('https://example.com//' in rss_data)
 
 
-class RepeatedPostsSetting(DemoBuildTest):
-    """Duplicate POSTS, should not read each post twice, which causes conflicts."""
-    @classmethod
-    def patch_site(self):
-        """Set the SITE_URL to have a path"""
-        conf_path = os.path.join(self.target_dir, "conf.py")
-        with io.open(conf_path, "a", encoding="utf8") as outf:
-            outf.write(
-                '\nPOSTS = (("posts/*.txt", "posts", "post.tmpl"),("posts/*.txt", "posts", "post.tmpl"))\n')
-
-
 class RelativeLinkTest(DemoBuildTest):
     """Check that SITE_URL with a path doesn't break links."""
 
