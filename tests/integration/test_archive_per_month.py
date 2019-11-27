@@ -1,4 +1,4 @@
-"""Check that full archives build and are correct."""
+"""Check that the monthly archives build and are correct."""
 
 import io
 import os
