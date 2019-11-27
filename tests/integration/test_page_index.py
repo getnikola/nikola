@@ -10,11 +10,10 @@ import nikola.plugins.command.init
 from nikola import __main__
 from nikola.utils import makedirs
 
-from .helper import target_dir, output_dir, fixIssue438, localeborg_setup  # NOQA
 from ..base import cd
 
 
-def test_page_index(build, output_dir, pretty_urls):  # NOQA
+def test_page_index(build, output_dir, pretty_urls):
     """Test PAGE_INDEX."""
     output_path = partial(_make_output_path, pretty=pretty_urls)
 
@@ -82,14 +81,14 @@ def _make_output_path(dir, name, pretty):
         return os.path.join(dir, name + '.html')
 
 
-def test_archive_exists(build, output_dir):  # NOQA
+def test_archive_exists(build, output_dir):
     """Ensure the archive has been built."""
     index_path = os.path.join(output_dir, "archive.html")
     assert os.path.isfile(index_path)
 
 
 @pytest.fixture
-def build(target_dir, pretty_urls):  # NOQA
+def build(target_dir, pretty_urls):
     """Build the site."""
     init_command = nikola.plugins.command.init.CommandInit()
     init_command.create_empty_site(target_dir)

@@ -10,15 +10,13 @@ import pytest
 import nikola.plugins.command.init
 from nikola import __main__
 
-from .helper import target_dir, output_dir, fixIssue438, localeborg_setup  # NOQA
-from .helper import LOCALE_OTHER
 from ..base import cd
 
 
-def test_translated_titles(build, output_dir):  # NOQA
+def test_translated_titles(build, output_dir, other_locale):
     """Check that translated title is picked up."""
     en_file = os.path.join(output_dir, "pages", "1", "index.html")
-    pl_file = os.path.join(output_dir, LOCALE_OTHER, "pages", "1", "index.html")
+    pl_file = os.path.join(output_dir, other_locale, "pages", "1", "index.html")
 
     # Files should be created
     assert os.path.isfile(en_file)
@@ -34,14 +32,14 @@ def test_translated_titles(build, output_dir):  # NOQA
         assert doc.find('//title').text == 'Bar | Demo Site'
 
 
-def test_archive_exists(build, output_dir):  # NOQA
+def test_archive_exists(build, output_dir):
     """Ensure the build did something."""
     index_path = os.path.join(output_dir, "archive.html")
     assert os.path.isfile(index_path)
 
 
 @pytest.fixture
-def build(target_dir):  # NOQA
+def build(target_dir, other_locale):
     """
     Build the site.
 
@@ -60,8 +58,8 @@ def build(target_dir):  # NOQA
             src_file = os.path.join(root, src_name)
             shutil.copy2(src_file, dst_file)
 
-    os.rename(os.path.join(target_dir, "pages", "1.%s.txt" % LOCALE_OTHER),
-              os.path.join(target_dir, "pages", "1.txt.%s" % LOCALE_OTHER))
+    os.rename(os.path.join(target_dir, "pages", "1.%s.txt" % other_locale),
+              os.path.join(target_dir, "pages", "1.txt.%s" % other_locale))
 
     conf_path = os.path.join(target_dir, "conf.py")
     with io.open(conf_path, "r", encoding="utf-8") as inf:

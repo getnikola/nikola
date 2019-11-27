@@ -9,7 +9,6 @@ import pytest
 import nikola.plugins.command.init
 from nikola import __main__
 
-from .helper import target_dir, output_dir, fixIssue438, localeborg_setup  # NOQA
 from ..base import cd
 
 

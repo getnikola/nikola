@@ -9,11 +9,10 @@ import pytest
 import nikola.plugins.command.init
 from nikola import __main__
 
-from .helper import target_dir, output_dir, fixIssue438, localeborg_setup  # NOQA
 from ..base import cd
 
 
-def test_check_links_fail(build, output_dir, target_dir):  # NOQA
+def test_check_links_fail(build, output_dir, target_dir):
     os.unlink(os.path.join(output_dir, "archive.html"))
 
     with cd(target_dir):
@@ -21,7 +20,7 @@ def test_check_links_fail(build, output_dir, target_dir):  # NOQA
         assert result != 0
 
 
-def test_check_files_fail(build, output_dir, target_dir):  # NOQA
+def test_check_files_fail(build, output_dir, target_dir):
     manually_added_file = os.path.join(output_dir, "foobar")
     with io.open(manually_added_file, "w+", encoding="utf8") as outf:
         outf.write("foo")
@@ -31,7 +30,7 @@ def test_check_files_fail(build, output_dir, target_dir):  # NOQA
         assert result != 0
 
 
-def test_index_in_sitemap(build, output_dir):  # NOQA
+def test_index_in_sitemap(build, output_dir):
     sitemap_path = os.path.join(output_dir, "sitemap.xml")
     with io.open(sitemap_path, "r", encoding="utf8") as inf:
         sitemap_data = inf.read()
@@ -39,7 +38,7 @@ def test_index_in_sitemap(build, output_dir):  # NOQA
     assert '<loc>https://example.com/</loc>' in sitemap_data
 
 
-def test_avoid_double_slash_in_rss(build, output_dir):  # NOQA
+def test_avoid_double_slash_in_rss(build, output_dir):
     rss_path = os.path.join(output_dir, "rss.xml")
     with io.open(rss_path, "r", encoding="utf8") as inf:
         rss_data = inf.read()
@@ -47,14 +46,14 @@ def test_avoid_double_slash_in_rss(build, output_dir):  # NOQA
     assert 'https://example.com//' not in rss_data
 
 
-def test_archive_exists(build, output_dir):  # NOQA
+def test_archive_exists(build, output_dir):
     """Ensure the build did something."""
     index_path = os.path.join(output_dir, "archive.html")
     assert os.path.isfile(index_path)
 
 
 @pytest.fixture
-def build(target_dir):  # NOQA
+def build(target_dir):
     """Fill the site with demo content and build it."""
     init_command = nikola.plugins.command.init.CommandInit()
     init_command.copy_sample_site(target_dir)

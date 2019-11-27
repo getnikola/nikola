@@ -10,15 +10,13 @@ import pytest
 import nikola.plugins.command.init
 from nikola import __main__
 
-from .helper import target_dir, output_dir, fixIssue438, localeborg_setup  # NOQA
-from .helper import LOCALE_OTHER
 from ..base import cd
 
 
-def test_translated_titles(build, output_dir):  # NOQA
+def test_translated_titles(build, output_dir, other_locale):
     """Check that translated title is picked up."""
     en_file = os.path.join(output_dir, "pages", "1", "index.html")
-    pl_file = os.path.join(output_dir, LOCALE_OTHER, "pages", "1", "index.html")
+    pl_file = os.path.join(output_dir, other_locale, "pages", "1", "index.html")
 
     # Files should be created
     assert os.path.isfile(en_file)
@@ -34,14 +32,14 @@ def test_translated_titles(build, output_dir):  # NOQA
         assert doc.find('//title').text == 'Bar | Demo Site'
 
 
-def test_archive_exists(build, output_dir):  # NOQA
+def test_archive_exists(build, output_dir):
     """Ensure the build did something."""
     index_path = os.path.join(output_dir, "archive.html")
     assert os.path.isfile(index_path)
 
 
 @pytest.fixture
-def build(target_dir):  # NOQA
+def build(target_dir):
     """Build the site."""
     init_command = nikola.plugins.command.init.CommandInit()
     init_command.create_empty_site(target_dir)

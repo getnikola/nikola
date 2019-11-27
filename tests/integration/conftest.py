@@ -7,8 +7,17 @@ import pytest
 
 from nikola.utils import LocaleBorg
 
-LOCALE_DEFAULT = os.environ.get('NIKOLA_LOCALE_DEFAULT', 'en')
-LOCALE_OTHER = os.environ.get('NIKOLA_LOCALE_OTHER', 'pl')
+from ..conftest import ensure_chdir  # NOQA - autouse fixture
+
+
+@pytest.fixture(scope="session")
+def default_locale():
+    return os.environ.get('NIKOLA_LOCALE_DEFAULT', 'en')
+
+
+@pytest.fixture(scope="session")
+def other_locale():
+    return os.environ.get('NIKOLA_LOCALE_OTHER', 'pl')
 
 
 @pytest.fixture
@@ -34,12 +43,12 @@ def fixIssue438():
 
 
 @pytest.fixture(autouse=True)
-def localeborg_setup():
+def localeborg_setup(default_locale):
     """
     Reset the LocaleBorg before and after every test.
     """
     LocaleBorg.reset()
-    LocaleBorg.initialize({}, LOCALE_DEFAULT)
+    LocaleBorg.initialize({}, default_locale)
     try:
         yield
     finally:

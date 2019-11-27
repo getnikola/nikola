@@ -9,11 +9,10 @@ import nikola.plugins.command.init
 from nikola import __main__
 from nikola.utils import makedirs
 
-from .helper import target_dir, output_dir, fixIssue438, localeborg_setup  # NOQA
 from ..base import cd
 
 
-def test_section_index_avoidance(build, output_dir):  # NOQA
+def test_section_index_avoidance(build, output_dir):
     """Test section index."""
 
     def _make_output_path(dir, name):
@@ -35,14 +34,14 @@ def test_section_index_avoidance(build, output_dir):  # NOQA
     assert 'This is Post 0' not in page
 
 
-def test_archive_exists(build, output_dir):  # NOQA
+def test_archive_exists(build, output_dir):
     """Ensure the build did something."""
     index_path = os.path.join(output_dir, "archive.html")
     assert os.path.isfile(index_path)
 
 
 @pytest.fixture
-def build(target_dir):  # NOQA
+def build(target_dir):
     """
     Add subdirectories and create a post in section "sec1" and a page with the same URL as the section index.
 

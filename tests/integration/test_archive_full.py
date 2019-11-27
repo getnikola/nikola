@@ -9,7 +9,6 @@ import pytest
 import nikola.plugins.command.init
 from nikola import __main__
 
-from .helper import target_dir, output_dir, fixIssue438, localeborg_setup  # NOQA
 from ..base import cd
 
 
@@ -19,14 +18,14 @@ from ..base import cd
     ['2012', '03', 'index.html'],
     ['2012', '03', '30', 'index.html'],
 ], ids=["overall", "year", "month", "day"])
-def test_full_archive(build, output_dir, path):  # NOQA
+def test_full_archive(build, output_dir, path):
     """Check existance of archive pages"""
     path.insert(0, output_dir)
     expected_path = os.path.join(*path)
     assert os.path.isfile(expected_path)
 
 
-def test_index_in_sitemap(build, output_dir):  # NOQA
+def test_index_in_sitemap(build, output_dir):
     sitemap_path = os.path.join(output_dir, "sitemap.xml")
     with io.open(sitemap_path, "r", encoding="utf8") as inf:
         sitemap_data = inf.read()
@@ -34,7 +33,7 @@ def test_index_in_sitemap(build, output_dir):  # NOQA
     assert '<loc>https://example.com/</loc>' in sitemap_data
 
 
-def test_avoid_double_slash_in_rss(build, output_dir):  # NOQA
+def test_avoid_double_slash_in_rss(build, output_dir):
     rss_path = os.path.join(output_dir, "rss.xml")
     with io.open(rss_path, "r", encoding="utf8") as inf:
         rss_data = inf.read()
@@ -42,14 +41,14 @@ def test_avoid_double_slash_in_rss(build, output_dir):  # NOQA
     assert 'https://example.com//' not in rss_data
 
 
-def test_archive_exists(build, output_dir):  # NOQA
+def test_archive_exists(build, output_dir):
     """Ensure the build did something."""
     index_path = os.path.join(output_dir, "archive.html")
     assert os.path.isfile(index_path)
 
 
 @pytest.fixture
-def build(target_dir):  # NOQA
+def build(target_dir):
     """Fill the site with demo content and build it."""
     init_command = nikola.plugins.command.init.CommandInit()
     init_command.copy_sample_site(target_dir)

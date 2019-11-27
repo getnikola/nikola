@@ -11,11 +11,10 @@ import nikola.plugins.command.init
 from nikola.utils import current_time
 from nikola import __main__
 
-from .helper import target_dir, output_dir, fixIssue438, localeborg_setup  # NOQA
 from ..base import cd
 
 
-def test_future_post(build, output_dir, target_dir):  # NOQA
+def test_future_post(build, output_dir, target_dir):
     """ Ensure that the future post is not present in the index and sitemap."""
     index_path = os.path.join(output_dir, "index.html")
     sitemap_path = os.path.join(output_dir, "sitemap.xml")
@@ -45,14 +44,14 @@ def test_future_post(build, output_dir, target_dir):  # NOQA
     assert not os.path.isfile(bar_path)
 
 
-def test_archive_exists(build, output_dir):  # NOQA
+def test_archive_exists(build, output_dir):
     """Ensure the build did something."""
     index_path = os.path.join(output_dir, "archive.html")
     assert os.path.isfile(index_path)
 
 
 @pytest.fixture
-def build(target_dir):  # NOQA
+def build(target_dir):
     """Build the site."""
     init_command = nikola.plugins.command.init.CommandInit()
     init_command.create_empty_site(target_dir)
