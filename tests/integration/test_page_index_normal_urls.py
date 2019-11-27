@@ -9,7 +9,7 @@ import nikola.plugins.command.init
 from nikola import __main__
 from nikola.utils import makedirs
 
-from .test_page_index_normal_urls import check_build_output
+from .test_page_index_pretty_urls import check_build_output
 from ..base import cd
 
 
