@@ -108,57 +108,6 @@ class TestCheck(DemoBuildTest):
             self.assertIsNone(__main__.main(['check', '-f']))
 
 
-class TestCheckAbsoluteSubFolder(TestCheck):
-    """Validate links in a site which is:
-
-    * built in URL_TYPE="absolute"
-    * deployable to a subfolder (BASE_URL="https://example.com/foo/")
-    """
-
-    @classmethod
-    def patch_site(self):
-        conf_path = os.path.join(self.target_dir, "conf.py")
-        with io.open(conf_path, "r", encoding="utf-8") as inf:
-            data = inf.read()
-            data = data.replace('SITE_URL = "https://example.com/"',
-                                'SITE_URL = "https://example.com/foo/"')
-            data = data.replace("# URL_TYPE = 'rel_path'",
-                                "URL_TYPE = 'absolute'")
-        with io.open(conf_path, "w+", encoding="utf8") as outf:
-            outf.write(data)
-            outf.flush()
-
-    def test_index_in_sitemap(self):
-        """Test that the correct path is in sitemap, and not the wrong one."""
-        sitemap_path = os.path.join(self.target_dir, "output", "sitemap.xml")
-        with io.open(sitemap_path, "r", encoding="utf8") as inf:
-            sitemap_data = inf.read()
-        self.assertTrue(
-            '<loc>https://example.com/foo/</loc>'
-            in sitemap_data)
-
-
-class TestCheckFullPathSubFolder(TestCheckAbsoluteSubFolder):
-    """Validate links in a site which is:
-
-    * built in URL_TYPE="full_path"
-    * deployable to a subfolder (BASE_URL="https://example.com/foo/")
-    """
-
-    @classmethod
-    def patch_site(self):
-        conf_path = os.path.join(self.target_dir, "conf.py")
-        with io.open(conf_path, "r", encoding="utf-8") as inf:
-            data = inf.read()
-            data = data.replace('SITE_URL = "https://example.com/"',
-                                'SITE_URL = "https://example.com/foo/"')
-            data = data.replace("# URL_TYPE = 'rel_path'",
-                                "URL_TYPE = 'full_path'")
-        with io.open(conf_path, "w+", encoding="utf8") as outf:
-            outf.write(data)
-            outf.flush()
-
-
 class TestCheckFailure(DemoBuildTest):
     """The demo build should pass 'nikola check'"""
 
