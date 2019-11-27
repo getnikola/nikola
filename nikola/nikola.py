@@ -1321,21 +1321,23 @@ class Nikola(object):
                      len([ext_ for ext_ in exts if source_name.endswith(ext_)]) > 0]
             if len(langs) != 1:
                 if len(set(langs)) > 1:
-                    exit("Your file extension->compiler definition is "
-                         "ambiguous.\nPlease remove one of the file extensions "
-                         "from 'COMPILERS' in conf.py\n(The error is in "
-                         "one of {0})".format(', '.join(langs)))
+                    sys.exit("Your file extension->compiler definition is "
+                             "ambiguous.\nPlease remove one of the file "
+                             "extensions from 'COMPILERS' in conf.py\n(The "
+                             "error is in one of {0})".format(', '.join(langs)))
                 elif len(langs) > 1:
                     langs = langs[:1]
                 else:
-                    exit("COMPILERS in conf.py does not tell me how to "
-                         "handle '{0}' extensions.".format(ext))
+                    sys.exit("COMPILERS in conf.py does not tell me how to "
+                             "handle '{0}' extensions.".format(ext))
 
             lang = langs[0]
             try:
                 compiler = self.compilers[lang]
             except KeyError:
-                exit("Cannot find '{0}' compiler; it might require an extra plugin -- do you have it installed?".format(lang))
+                sys.exit("Cannot find '{0}' compiler; "
+                         "it might require an extra plugin -- "
+                         "do you have it installed?".format(lang))
             self.inverse_compilers[ext] = compiler
 
         return compiler
