@@ -29,7 +29,7 @@ def target_dir(tmpdir_factory):
     yield str(tdir)
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(scope="module", autouse=True)
 def remove_conf_module():
     """
     Remove the module `conf` from `sys.modules` after loading the config.
@@ -45,7 +45,7 @@ def remove_conf_module():
             pass
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(scope="module", autouse=True)
 def localeborg_setup(default_locale):
     """
     Reset the LocaleBorg before and after every test.
