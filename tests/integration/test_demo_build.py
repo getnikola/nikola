@@ -34,7 +34,7 @@ def test_archive_exists(build, output_dir):
     assert os.path.isfile(index_path)
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def build(target_dir):
     """Fill the site with demo content and build it."""
     init_command = nikola.plugins.command.init.CommandInit()

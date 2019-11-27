@@ -40,7 +40,7 @@ def test_archive_exists(build, output_dir):
     assert os.path.isfile(index_path)
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def build(target_dir):
     """
     Add subdirectories and create a post in section "sec1" and a page with the same URL as the section index.

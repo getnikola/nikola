@@ -18,15 +18,15 @@ def other_locale():
     return os.environ.get('NIKOLA_LOCALE_OTHER', 'pl')
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def output_dir(target_dir):
     return os.path.join(target_dir, "output")
 
 
-@pytest.fixture
-def target_dir(tmpdir):
-    tdir = os.path.join(str(tmpdir), 'target')
-    yield tdir
+@pytest.fixture(scope="module")
+def target_dir(tmpdir_factory):
+    tdir = tmpdir_factory.mktemp('integration').join('target')
+    yield str(tdir)
 
 
 @pytest.fixture(autouse=True)
