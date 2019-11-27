@@ -13,7 +13,6 @@ Bugfixes
 * Show tracebacks when ``conf.py`` cannot be imported
 * Fix loading complex config files that import modules (Issue #3314)
 * Fix behavior of header demotion for negative values
-* Fix reference to possibly undefined function ``exit`` in ``nikola.py``
 
 New in v8.0.3
 =============
