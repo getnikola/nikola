@@ -17,14 +17,15 @@ def test_relative_links(build, output_dir):
     """Check that the links in a page are correct"""
     test_path = os.path.join(output_dir, "about-nikola.html")
 
-    flag = False
     with io.open(test_path, "rb") as inf:
         data = inf.read()
-        for _, _, url, _ in lxml.html.iterlinks(data):
-            # Just need to be sure this one is ok
-            if url.endswith("css"):
-                assert not url.startswith("..")
-                flag = True
+
+    flag = False
+    for _, _, url, _ in lxml.html.iterlinks(data):
+        # Just need to be sure this one is ok
+        if url.endswith("css"):
+            assert not url.startswith("..")
+            flag = True
 
     # But I also need to be sure it is there!
     assert flag
