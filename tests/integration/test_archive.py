@@ -20,7 +20,7 @@ from ..base import cd
     ['2012', '03', '30', 'index.html'],
 ], ids=["overall", "year", "month", "day"])
 def test_full_archive(build, output_dir, path):  # NOQA
-    """See that it builds"""
+    """Check existance of archive pages"""
     path.insert(0, output_dir)
     expected_path = os.path.join(*path)
     assert os.path.isfile(expected_path)
