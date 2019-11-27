@@ -158,7 +158,7 @@ class CommandCheck(Command):
         """Check the generated site."""
         if not options['links'] and not options['files'] and not options['clean']:
             print(self.help())
-            return False
+            return 1
         if options['verbose']:
             self.logger.level = logbook.DEBUG
         else:
