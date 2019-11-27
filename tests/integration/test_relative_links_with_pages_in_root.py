@@ -27,6 +27,7 @@ def test_relative_links(build, output_dir):
         if url.endswith("css")
     )
 
+
 def test_index_in_sitemap(build, output_dir):
     """Test that the correct path is in sitemap, and not the wrong one."""
     sitemap_path = os.path.join(output_dir, "sitemap.xml")
