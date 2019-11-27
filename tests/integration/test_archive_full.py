@@ -67,7 +67,6 @@ def build(target_dir):  # NOQA
             ".. date: 2013-03-06 19:08:15\n"
         )
 
-    # Set the SITE_URL to have a path
     conf_path = os.path.join(target_dir, "conf.py")
     with io.open(conf_path, "r", encoding="utf-8") as inf:
         data = inf.read()
