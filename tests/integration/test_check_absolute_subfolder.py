@@ -15,7 +15,7 @@ import nikola.plugins.command.init
 from nikola import __main__
 
 from ..base import cd
-from .helper import patch_config
+from .helper import add_post_without_text, patch_config
 
 
 def test_check_links(build, target_dir):
@@ -66,13 +66,8 @@ def build(target_dir):
                         '..', 'data', '1-nolinks.rst')
     dst1 = os.path.join(target_dir, 'posts', '1.rst')
     shutil.copy(src1, dst1)
-    # File for Issue #374 (empty post text)
-    with io.open(os.path.join(target_dir, 'posts', 'empty.txt'), "w+", encoding="utf8") as outf:
-        outf.write("""\
-.. title: foobar
-.. slug: foobar
-.. date: 2013-03-06 19:08:15
-""")
+
+    add_post_without_text(os.path.join(target_dir, 'posts'))
 
     patch_config(target_dir, ('SITE_URL = "https://example.com/"',
                               'SITE_URL = "https://example.com/foo/"'),
