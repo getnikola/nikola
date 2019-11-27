@@ -40,12 +40,6 @@ def test_avoid_double_slash_in_rss(build, output_dir):
     assert 'https://example.com//' not in rss_data
 
 
-def test_archive_exists(build, output_dir):
-    """Ensure the build did something."""
-    index_path = os.path.join(output_dir, "archive.html")
-    assert os.path.isfile(index_path)
-
-
 @pytest.fixture(scope="module")
 def build(target_dir):
     """Fill the site with demo content and build it."""
