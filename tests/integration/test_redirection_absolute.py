@@ -57,11 +57,11 @@ def build(target_dir):
     shutil.copy(src1, dst1)
     # File for Issue #374 (empty post text)
     with io.open(os.path.join(target_dir, 'posts', 'empty.txt'), "w+", encoding="utf8") as outf:
-        outf.write(
-            ".. title: foobar\n"
-            ".. slug: foobar\n"
-            ".. date: 2013-03-06 19:08:15\n"
-        )
+        outf.write("""\
+.. title: foobar
+.. slug: foobar
+.. date: 2013-03-06 19:08:15
+""")
 
     nikola.utils.makedirs(os.path.join(target_dir, "files", "foo"))
 
