@@ -20,16 +20,11 @@ def test_relative_links(build, output_dir):
     with io.open(test_path, "rb") as inf:
         data = inf.read()
 
-    flag = False
-    for _, _, url, _ in lxml.html.iterlinks(data):
-        # Just need to be sure this one is ok
-        if url.endswith("css"):
-            assert not url.startswith("..")
-            flag = True
-
-    # But I also need to be sure it is there!
-    assert flag
-
+    assert not any(
+        url.startswith("..")
+        for _, _, url, _ in lxml.html.iterlinks(data)
+        if url.endswith("css")
+    )
 
 def test_index_in_sitemap(build, output_dir):
     """Test that the correct path is in sitemap, and not the wrong one."""
