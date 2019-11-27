@@ -1,5 +1,3 @@
-"""Test that a default build of --demo works."""
-
 import os
 import sys
 
