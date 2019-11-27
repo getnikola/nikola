@@ -20,8 +20,7 @@ from ..base import cd
 ], ids=["overall", "year", "month", "day"])
 def test_full_archive(build, output_dir, path):
     """Check existance of archive pages"""
-    path.insert(0, output_dir)
-    expected_path = os.path.join(*path)
+    expected_path = os.path.join(output_dir, *path)
     assert os.path.isfile(expected_path)
 
 
