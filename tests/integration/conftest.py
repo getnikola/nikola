@@ -30,7 +30,12 @@ def target_dir(tmpdir):
 
 
 @pytest.fixture(autouse=True)
-def fixIssue438():
+def remove_conf_module():
+    """
+    Remove the module `conf` from `sys.modules` after loading the config.
+
+    Fixes issue #438
+    """
     try:
         yield
     finally:
