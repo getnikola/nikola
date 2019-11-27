@@ -15,6 +15,7 @@ import nikola.plugins.command.init
 from nikola import __main__
 
 from ..base import cd
+from .helper import patch_config
 
 
 def test_check_links(build, target_dir):
@@ -73,18 +74,10 @@ def build(target_dir):
 .. date: 2013-03-06 19:08:15
 """)
 
-    conf_path = os.path.join(target_dir, "conf.py")
-    with io.open(conf_path, "r", encoding="utf-8") as inf:
-        data = inf.read()
-
-    data = data.replace('SITE_URL = "https://example.com/"',
-                        'SITE_URL = "https://example.com/foo/"')
-    data = data.replace("# URL_TYPE = 'rel_path'",
-                        "URL_TYPE = 'full_path'")
-
-    with io.open(conf_path, "w+", encoding="utf8") as outf:
-        outf.write(data)
-        outf.flush()
+    patch_config(target_dir, ('SITE_URL = "https://example.com/"',
+                              'SITE_URL = "https://example.com/foo/"'),
+                             ("# URL_TYPE = 'rel_path'",
+                              "URL_TYPE = 'full_path'"))
 
     with cd(target_dir):
         __main__.main(["build"])

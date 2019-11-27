@@ -14,6 +14,7 @@ import nikola.plugins.command.init
 from nikola import __main__
 
 from ..base import cd
+from .helper import append_config
 
 
 def test_index_in_sitemap(build, output_dir):
@@ -57,10 +58,10 @@ def build(target_dir):
 .. date: 2013-03-06 19:08:15
 """)
 
-    conf_path = os.path.join(target_dir, "conf.py")
-    with io.open(conf_path, "a", encoding="utf8") as outf:
-        outf.write(
-            '\nPOSTS = (("posts/*.txt", "posts", "post.tmpl"),("posts/*.txt", "posts", "post.tmpl"))\n')
+    append_config(target_dir, '''
+POSTS = (("posts/*.txt", "posts", "post.tmpl"),
+         ("posts/*.txt", "posts", "post.tmpl"))
+''')
 
     with cd(target_dir):
         __main__.main(["build"])

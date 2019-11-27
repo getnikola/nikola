@@ -11,6 +11,7 @@ import nikola.plugins.command.init
 from nikola import __main__
 
 from ..base import cd
+from .helper import append_config, patch_config
 
 
 def test_relative_links(build, output_dir):
@@ -70,21 +71,15 @@ def build(target_dir):
 """)
 
     # Configure our pages to reside in the root
-    conf_path = os.path.join(target_dir, "conf.py")
-    with io.open(conf_path, "r", encoding="utf-8") as inf:
-        data = inf.read()
-
-    data = data.replace('("pages/*.txt", "pages", "page.tmpl"),',
-                        '("pages/*.txt", "", "page.tmpl"),')
-    data = data.replace('("pages/*.rst", "pages", "page.tmpl"),',
-                        '("pages/*.rst", "", "page.tmpl"),')
-    data = data.replace('# INDEX_PATH = ""',
-                        'INDEX_PATH = "blog"')
-    data += "\nPRETTY_URLS = False\nSTRIP_INDEXES = False"
-
-    with io.open(conf_path, "w+", encoding="utf8") as outf:
-        outf.write(data)
-        outf.flush()
+    patch_config(target_dir, ('("pages/*.txt", "pages", "page.tmpl"),',
+                              '("pages/*.txt", "", "page.tmpl"),'),
+                             ('("pages/*.rst", "pages", "page.tmpl"),',
+                              '("pages/*.rst", "", "page.tmpl"),'),
+                             ('# INDEX_PATH = ""', 'INDEX_PATH = "blog"'))
+    append_config(target_dir, """
+PRETTY_URLS = False
+STRIP_INDEXES = False
+""")
 
     with cd(target_dir):
         __main__.main(["build"])

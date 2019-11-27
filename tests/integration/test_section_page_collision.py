@@ -10,6 +10,7 @@ from nikola import __main__
 from nikola.utils import makedirs
 
 from ..base import cd
+from .helper import append_config
 
 
 def test_section_index_avoidance(build, output_dir):
@@ -51,10 +52,6 @@ def build(target_dir):
     init_command.create_empty_site(target_dir)
     init_command.create_configuration(target_dir)
 
-    conf_path = os.path.join(target_dir, "conf.py")
-    with io.open(conf_path, "a", encoding="utf8") as outf:
-        outf.write("""\n\nPOSTS_SECTIONS = True\nPOSTS_SECTIONS_ARE_INDEXES = True\nPRETTY_URLS = True\nPOSTS = (('posts/*.txt', '', 'post.tmpl'),)\nPAGES = (('pages/*.txt', '', 'page.tmpl'),)\n\n""")
-
     pages = os.path.join(target_dir, "pages")
     posts = os.path.join(target_dir, "posts")
     sec1 = os.path.join(posts, "sec1")
@@ -68,6 +65,14 @@ def build(target_dir):
     with io.open(os.path.join(sec1, 'foo.txt'), "w+", encoding="utf8") as outf:
         outf.write(
             ".. title: Post 0\n.. slug: post0\n.. date: 2013-03-06 19:08:15\n\nThis is Post 0.\n")
+
+    append_config(target_dir, """
+POSTS_SECTIONS = True
+POSTS_SECTIONS_ARE_INDEXES = True
+PRETTY_URLS = True
+POSTS = (('posts/*.txt', '', 'post.tmpl'),)
+PAGES = (('pages/*.txt', '', 'page.tmpl'),)
+""")
 
     with cd(target_dir):
         __main__.main(["build"])

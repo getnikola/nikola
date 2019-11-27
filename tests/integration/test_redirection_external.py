@@ -10,6 +10,7 @@ import nikola.plugins.command.init
 from nikola import __main__
 
 from ..base import cd
+from .helper import append_config
 
 
 def test_check_links(build, target_dir):
@@ -63,10 +64,9 @@ def build(target_dir):
 .. date: 2013-03-06 19:08:15
 """)
 
-    conf_path = os.path.join(target_dir, "conf.py")
-    with io.open(conf_path, "a", encoding="utf8") as outf:
-        outf.write(
-            """\n\nREDIRECTIONS = [ ("foo.html", "http://www.example.com/"), ]\n\n""")
+    append_config(target_dir, """
+REDIRECTIONS = [ ("foo.html", "http://www.example.com/"), ]
+""")
 
     with cd(target_dir):
         __main__.main(["build"])

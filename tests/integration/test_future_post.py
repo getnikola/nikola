@@ -12,6 +12,7 @@ from nikola.utils import current_time
 from nikola import __main__
 
 from ..base import cd
+from .helper import append_config
 
 
 def test_future_post(build, output_dir, target_dir):
@@ -58,8 +59,7 @@ def build(target_dir):
     init_command.create_configuration(target_dir)
 
     # Change COMMENT_SYSTEM_ID to not wait for 5 seconds
-    with io.open(os.path.join(target_dir, 'conf.py'), "a+", encoding="utf8") as config_file:
-        config_file.write('\nCOMMENT_SYSTEM_ID = "nikolatest"\n')
+    append_config(target_dir, '\nCOMMENT_SYSTEM_ID = "nikolatest"\n')
 
     with io.open(os.path.join(target_dir, 'posts', 'empty1.txt'), "w+", encoding="utf8") as past_post:
         past_post.write(".. title: foo\n" ".. slug: foo\n" ".. date: %s\n" % (

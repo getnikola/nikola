@@ -10,6 +10,7 @@ from nikola import __main__
 from nikola.utils import makedirs
 
 from ..base import cd
+from .helper import append_config
 
 
 def test_page_index(build, output_dir):
@@ -121,10 +122,11 @@ def build(target_dir):
         outf.write(
             ".. title: Still not the page index\n.. slug: index\n\nThis is not the page index either.\n")
 
-    conf_path = os.path.join(target_dir, "conf.py")
-    with io.open(conf_path, "a", encoding="utf8") as outf:
-        outf.write(
-            """\n\nPAGE_INDEX = True\nPRETTY_URLS = True\nPAGES = PAGES + (('pages/*.php', 'pages', 'page.tmpl'),)\n\n""")
+    append_config(target_dir, """
+PAGE_INDEX = True
+PRETTY_URLS = True
+PAGES = PAGES + (('pages/*.php', 'pages', 'page.tmpl'),)
+""")
 
     with cd(target_dir):
         __main__.main(["build"])

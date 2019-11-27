@@ -10,6 +10,7 @@ import nikola.plugins.command.init
 from nikola import __main__
 
 from ..base import cd
+from .helper import patch_config
 
 
 @pytest.mark.parametrize("path", [
@@ -59,16 +60,8 @@ def build(target_dir):
 .. date: 2013-03-06 19:08:15
 """)
 
-    conf_path = os.path.join(target_dir, "conf.py")
-    with io.open(conf_path, "r", encoding="utf-8") as inf:
-        data = inf.read()
-
-    data = data.replace('# CREATE_FULL_ARCHIVES = False',
-                        'CREATE_FULL_ARCHIVES = True')
-
-    with io.open(conf_path, "w+", encoding="utf8") as outf:
-        outf.write(data)
-        outf.flush()
+    patch_config(target_dir, ('# CREATE_FULL_ARCHIVES = False',
+                              'CREATE_FULL_ARCHIVES = True'))
 
     with cd(target_dir):
         __main__.main(["build"])

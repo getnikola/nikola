@@ -11,6 +11,7 @@ import nikola.plugins.command.init
 from nikola import __main__
 
 from ..base import cd
+from .helper import patch_config
 
 
 def test_translated_titles(build, output_dir, other_locale):
@@ -61,13 +62,8 @@ def build(target_dir, other_locale):
     os.rename(os.path.join(target_dir, "pages", "1.%s.txt" % other_locale),
               os.path.join(target_dir, "pages", "1.txt.%s" % other_locale))
 
-    conf_path = os.path.join(target_dir, "conf.py")
-    with io.open(conf_path, "r", encoding="utf-8") as inf:
-        data = inf.read()
-        data = data.replace('TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"',
-                            'TRANSLATIONS_PATTERN = "{path}.{ext}.{lang}"')
-    with io.open(conf_path, "w+", encoding="utf8") as outf:
-        outf.write(data)
+    patch_config(target_dir, ('TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"',
+                              'TRANSLATIONS_PATTERN = "{path}.{ext}.{lang}"'))
 
     with cd(target_dir):
         __main__.main(["build"])

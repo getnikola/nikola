@@ -10,6 +10,7 @@ import nikola.plugins.command.init
 from nikola import __main__
 
 from ..base import cd
+from .helper import patch_config
 
 
 def test_monthly_archive(build, output_dir):
@@ -58,17 +59,8 @@ def build(target_dir):
 .. date: 2013-03-06 19:08:15
 """)
 
-    # Set the SITE_URL to have a path
-    conf_path = os.path.join(target_dir, "conf.py")
-    with io.open(conf_path, "r", encoding="utf-8") as inf:
-        data = inf.read()
-
-    data = data.replace('# CREATE_MONTHLY_ARCHIVE = False',
-                        'CREATE_MONTHLY_ARCHIVE = True')
-
-    with io.open(conf_path, "w+", encoding="utf8") as outf:
-        outf.write(data)
-        outf.flush()
+    patch_config(target_dir, ('# CREATE_MONTHLY_ARCHIVE = False',
+                              'CREATE_MONTHLY_ARCHIVE = True'))
 
     with cd(target_dir):
         __main__.main(["build"])

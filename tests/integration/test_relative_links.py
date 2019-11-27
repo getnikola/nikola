@@ -11,6 +11,7 @@ import nikola.plugins.command.init
 from nikola import __main__
 
 from ..base import cd
+from .helper import patch_config
 
 
 def test_relative_links(build, output_dir):
@@ -71,15 +72,8 @@ def build(target_dir):
 """)
 
     # Set the SITE_URL to have a path with subfolder
-    conf_path = os.path.join(target_dir, "conf.py")
-    with io.open(conf_path, "r", encoding="utf-8") as inf:
-        data = inf.read()
-
-    data = data.replace('SITE_URL = "https://example.com/"',
-                        'SITE_URL = "https://example.com/foo/bar/"')
-
-    with io.open(conf_path, "w+", encoding="utf8") as outf:
-        outf.write(data)
+    patch_config(target_dir, ('SITE_URL = "https://example.com/"',
+                              'SITE_URL = "https://example.com/foo/bar/"'))
 
     with cd(target_dir):
         __main__.main(["build"])
