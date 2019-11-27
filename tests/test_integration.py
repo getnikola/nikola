@@ -96,18 +96,6 @@ class DemoBuildTest(BaseTestCase):
         self.assertFalse('https://example.com//' in rss_data)
 
 
-class TestCheck(DemoBuildTest):
-    """The demo build should pass 'nikola check'"""
-
-    def test_check_links(self):
-        with cd(self.target_dir):
-            self.assertIsNone(__main__.main(['check', '-l']))
-
-    def test_check_files(self):
-        with cd(self.target_dir):
-            self.assertIsNone(__main__.main(['check', '-f']))
-
-
 class TestCheckFailure(DemoBuildTest):
     """The demo build should pass 'nikola check'"""
 
@@ -210,56 +198,6 @@ class RelativeLinkTest2(DemoBuildTest):
         self.assertTrue(
             '<loc>https://example.com/blog/index.html</loc>'
             in sitemap_data)
-
-
-class RedirectionsTest1(TestCheck):
-    """Check REDIRECTIONS"""
-
-    @classmethod
-    def patch_site(self):
-        """"""
-        conf_path = os.path.join(self.target_dir, "conf.py")
-        with io.open(conf_path, "a", encoding="utf8") as outf:
-            outf.write(
-                """\n\nREDIRECTIONS = [ ("posts/foo.html", "/foo/bar.html"), ]\n\n""")
-
-    @classmethod
-    def fill_site(self):
-        target_path = os.path.join(self.target_dir, "files", "foo", "bar.html")
-        nikola.utils.makedirs(os.path.join(self.target_dir, "files", "foo"))
-        with io.open(target_path, "w+", encoding="utf8") as outf:
-            outf.write("foo")
-
-
-class RedirectionsTest2(TestCheck):
-    """Check external REDIRECTIONS"""
-
-    @classmethod
-    def patch_site(self):
-        """"""
-        conf_path = os.path.join(self.target_dir, "conf.py")
-        with io.open(conf_path, "a", encoding="utf8") as outf:
-            outf.write(
-                """\n\nREDIRECTIONS = [ ("foo.html", "http://www.example.com/"), ]\n\n""")
-
-
-class RedirectionsTest3(TestCheck):
-    """Check relative REDIRECTIONS"""
-
-    @classmethod
-    def patch_site(self):
-        """"""
-        conf_path = os.path.join(self.target_dir, "conf.py")
-        with io.open(conf_path, "a", encoding="utf8") as outf:
-            outf.write(
-                """\n\nREDIRECTIONS = [ ("foo.html", "foo/bar.html"), ]\n\n""")
-
-    @classmethod
-    def fill_site(self):
-        target_path = os.path.join(self.target_dir, "files", "foo", "bar.html")
-        nikola.utils.makedirs(os.path.join(self.target_dir, "files", "foo"))
-        with io.open(target_path, "w+", encoding="utf8") as outf:
-            outf.write("foo")
 
 
 if __name__ == "__main__":
