@@ -360,19 +360,17 @@ class TestCheckFailure(DemoBuildTest):
     def test_check_links_fail(self):
         with cd(self.target_dir):
             os.unlink(os.path.join("output", "archive.html"))
-            try:
-                __main__.main(['check', '-l'])
-            except SystemExit as e:
-                self.assertNotEqual(e.code, 0)
+
+            result = __main__.main(['check', '-l'])
+            assert result != 0
 
     def test_check_files_fail(self):
         with cd(self.target_dir):
             with io.open(os.path.join("output", "foobar"), "w+", encoding="utf8") as outf:
                 outf.write("foo")
-            try:
-                __main__.main(['check', '-f'])
-            except SystemExit as e:
-                self.assertNotEqual(e.code, 0)
+
+            result = __main__.main(['check', '-f'])
+            assert result != 0
 
 
 class RelativeLinkTest2(DemoBuildTest):
