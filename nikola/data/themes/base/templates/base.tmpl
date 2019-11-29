@@ -13,11 +13,11 @@ ${template_hooks['extra_head']()}
 <body>
     <a href="#content" class="sr-only sr-only-focusable">${messages("Skip to main content")}</a>
     <div id="container">
-         ${header.html_header()}
-         <main id="content">
+        ${header.html_header()}
+        <main id="content">
             <%block name="content"></%block>
-         </main>
-         ${footer.html_footer()}
+        </main>
+        ${footer.html_footer()}
     </div>
     ${base.late_load_js()}
     % if date_fanciness != 0:
