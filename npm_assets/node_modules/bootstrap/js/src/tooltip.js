@@ -1,6 +1,6 @@
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v4.3.1): tooltip.js
+ * Bootstrap (v4.4.1): tooltip.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -20,7 +20,7 @@ import Util from './util'
  */
 
 const NAME                  = 'tooltip'
-const VERSION               = '4.3.1'
+const VERSION               = '4.4.1'
 const DATA_KEY              = 'bs.tooltip'
 const EVENT_KEY             = `.${DATA_KEY}`
 const JQUERY_NO_CONFLICT    = $.fn[NAME]
@@ -43,7 +43,8 @@ const DefaultType = {
   boundary          : '(string|element)',
   sanitize          : 'boolean',
   sanitizeFn        : '(null|function)',
-  whiteList         : 'object'
+  whiteList         : 'object',
+  popperConfig      : '(null|object)'
 }
 
 const AttachmentMap = {
@@ -71,7 +72,8 @@ const Default = {
   boundary          : 'scrollParent',
   sanitize          : true,
   sanitizeFn        : null,
-  whiteList         : DefaultWhitelist
+  whiteList         : DefaultWhitelist,
+  popperConfig      : null
 }
 
 const HoverState = {
@@ -119,10 +121,6 @@ const Trigger = {
 
 class Tooltip {
   constructor(element, config) {
-    /**
-     * Check for Popper dependency
-     * Popper - https://popper.js.org
-     */
     if (typeof Popper === 'undefined') {
       throw new TypeError('Bootstrap\'s tooltips require Popper.js (https://popper.js.org/)')
     }
@@ -226,7 +224,7 @@ class Tooltip {
     $.removeData(this.element, this.constructor.DATA_KEY)
 
     $(this.element).off(this.constructor.EVENT_KEY)
-    $(this.element).closest('.modal').off('hide.bs.modal')
+    $(this.element).closest('.modal').off('hide.bs.modal', this._hideModalHandler)
 
     if (this.tip) {
       $(this.tip).remove()
@@ -236,7 +234,7 @@ class Tooltip {
     this._timeout       = null
     this._hoverState    = null
     this._activeTrigger = null
-    if (this._popper !== null) {
+    if (this._popper) {
       this._popper.destroy()
     }
 
@@ -293,27 +291,7 @@ class Tooltip {
 
       $(this.element).trigger(this.constructor.Event.INSERTED)
 
-      this._popper = new Popper(this.element, tip, {
-        placement: attachment,
-        modifiers: {
-          offset: this._getOffset(),
-          flip: {
-            behavior: this.config.fallbackPlacement
-          },
-          arrow: {
-            element: Selector.ARROW
-          },
-          preventOverflow: {
-            boundariesElement: this.config.boundary
-          }
-        },
-        onCreate: (data) => {
-          if (data.originalPlacement !== data.placement) {
-            this._handlePopperPlacementChange(data)
-          }
-        },
-        onUpdate: (data) => this._handlePopperPlacementChange(data)
-      })
+      this._popper = new Popper(this.element, tip, this._getPopperConfig(attachment))
 
       $(tip).addClass(ClassName.SHOW)
 
@@ -468,6 +446,35 @@ class Tooltip {
 
   // Private
 
+  _getPopperConfig(attachment) {
+    const defaultBsConfig = {
+      placement: attachment,
+      modifiers: {
+        offset: this._getOffset(),
+        flip: {
+          behavior: this.config.fallbackPlacement
+        },
+        arrow: {
+          element: Selector.ARROW
+        },
+        preventOverflow: {
+          boundariesElement: this.config.boundary
+        }
+      },
+      onCreate: (data) => {
+        if (data.originalPlacement !== data.placement) {
+          this._handlePopperPlacementChange(data)
+        }
+      },
+      onUpdate: (data) => this._handlePopperPlacementChange(data)
+    }
+
+    return {
+      ...defaultBsConfig,
+      ...this.config.popperConfig
+    }
+  }
+
   _getOffset() {
     const offset = {}
 
@@ -535,13 +542,15 @@ class Tooltip {
       }
     })
 
+    this._hideModalHandler = () => {
+      if (this.element) {
+        this.hide()
+      }
+    }
+
     $(this.element).closest('.modal').on(
       'hide.bs.modal',
-      () => {
-        if (this.element) {
-          this.hide()
-        }
-      }
+      this._hideModalHandler
     )
 
     if (this.config.selector) {

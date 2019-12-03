@@ -1,6 +1,6 @@
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v4.3.1): toast.js
+ * Bootstrap (v4.4.1): toast.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -15,7 +15,7 @@ import Util from './util'
  */
 
 const NAME               = 'toast'
-const VERSION            = '4.3.1'
+const VERSION            = '4.4.1'
 const DATA_KEY           = 'bs.toast'
 const EVENT_KEY          = `.${DATA_KEY}`
 const JQUERY_NO_CONFLICT = $.fn[NAME]
@@ -82,7 +82,12 @@ class Toast {
   // Public
 
   show() {
-    $(this._element).trigger(Event.SHOW)
+    const showEvent = $.Event(Event.SHOW)
+
+    $(this._element).trigger(showEvent)
+    if (showEvent.isDefaultPrevented()) {
+      return
+    }
 
     if (this._config.animation) {
       this._element.classList.add(ClassName.FADE)
@@ -95,11 +100,14 @@ class Toast {
       $(this._element).trigger(Event.SHOWN)
 
       if (this._config.autohide) {
-        this.hide()
+        this._timeout = setTimeout(() => {
+          this.hide()
+        }, this._config.delay)
       }
     }
 
     this._element.classList.remove(ClassName.HIDE)
+    Util.reflow(this._element)
     this._element.classList.add(ClassName.SHOWING)
     if (this._config.animation) {
       const transitionDuration = Util.getTransitionDurationFromElement(this._element)
@@ -112,20 +120,19 @@ class Toast {
     }
   }
 
-  hide(withoutTimeout) {
+  hide() {
     if (!this._element.classList.contains(ClassName.SHOW)) {
       return
     }
 
-    $(this._element).trigger(Event.HIDE)
+    const hideEvent = $.Event(Event.HIDE)
 
-    if (withoutTimeout) {
-      this._close()
-    } else {
-      this._timeout = setTimeout(() => {
-        this._close()
-      }, this._config.delay)
+    $(this._element).trigger(hideEvent)
+    if (hideEvent.isDefaultPrevented()) {
+      return
     }
+
+    this._close()
   }
 
   dispose() {
@@ -165,7 +172,7 @@ class Toast {
     $(this._element).on(
       Event.CLICK_DISMISS,
       Selector.DATA_DISMISS,
-      () => this.hide(true)
+      () => this.hide()
     )
   }
 
