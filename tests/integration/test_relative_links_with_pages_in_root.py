@@ -13,8 +13,7 @@ from nikola import __main__
 from ..base import cd
 from .helper import add_post_without_text, append_config, patch_config
 from .test_empty_build import (  # NOQA
-    test_archive_exists, test_avoid_double_slash_in_rss, test_check_files,
-    test_check_links)
+    test_archive_exists, test_avoid_double_slash_in_rss, test_check_files)
 
 
 def test_relative_links(build, output_dir):
