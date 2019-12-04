@@ -9,9 +9,9 @@ import nikola.plugins.command.init
 from nikola import __main__
 
 from ..base import cd
-from .test_empty_build import test_archive_exists  # NOQA
-from .test_demo_build import (  # NOQA
-    test_index_in_sitemap, test_avoid_double_slash_in_rss)
+from .test_empty_build import (  # NOQA
+    test_archive_exists, test_avoid_double_slash_in_rss, test_check_files,
+    test_check_links, test_index_in_sitemap)
 
 
 @pytest.fixture(scope="module")

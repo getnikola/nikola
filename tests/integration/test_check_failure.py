@@ -11,8 +11,8 @@ from nikola import __main__
 
 from ..base import cd
 from .helper import add_post_without_text
-from .test_demo_build import (  # NOQA
-    test_index_in_sitemap, test_avoid_double_slash_in_rss)
+from .test_empty_build import (  # NOQA
+    test_avoid_double_slash_in_rss, test_index_in_sitemap)
 
 
 def test_check_links_fail(build, output_dir, target_dir):
