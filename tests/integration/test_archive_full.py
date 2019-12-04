@@ -15,7 +15,6 @@ from .test_empty_build import (  # NOQA
     test_index_in_sitemap)
 
 
-
 @pytest.mark.parametrize("path", [
     ['archive.html'],
     ['2012', 'index.html'],
