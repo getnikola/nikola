@@ -18,16 +18,7 @@ from ..base import cd
 from .helper import add_post_without_text, patch_config
 from .test_empty_build import test_archive_exists  # NOQA
 from .test_demo_build import test_avoid_double_slash_in_rss  # NOQA
-
-
-def test_check_links(build, target_dir):
-    with cd(target_dir):
-        assert __main__.main(['check', '-l']) is None
-
-
-def test_check_files(build, target_dir):
-    with cd(target_dir):
-        assert __main__.main(['check', '-f']) is None
+from .test_check import test_check_files, test_check_links  # NOQA
 
 
 def test_index_in_sitemap(build, output_dir):

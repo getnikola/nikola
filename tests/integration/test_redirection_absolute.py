@@ -14,16 +14,7 @@ from .helper import add_post_without_text, append_config
 from .test_empty_build import test_archive_exists  # NOQA
 from .test_demo_build import (  # NOQA
     test_index_in_sitemap, test_avoid_double_slash_in_rss)
-
-
-def test_check_links(build, target_dir):
-    with cd(target_dir):
-        assert __main__.main(['check', '-l']) is None
-
-
-def test_check_files(build, target_dir):
-    with cd(target_dir):
-        assert __main__.main(['check', '-f']) is None
+from .test_check import test_check_files, test_check_links  # NOQA
 
 
 @pytest.fixture(scope="module")
