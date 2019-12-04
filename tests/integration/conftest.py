@@ -1,9 +1,11 @@
 import os
 import sys
 
+import docutils
 import pytest
 
 from nikola.utils import LocaleBorg
+from ..base import FakeSite
 
 
 @pytest.fixture(scope="session")
@@ -49,3 +51,16 @@ def localeborg_setup(default_locale):
         yield
     finally:
         LocaleBorg.reset()
+
+
+@pytest.fixture(autouse=True, scope="module")
+def fix_leaked_state():
+    """Fix leaked state from integration tests"""
+    try:
+        yield
+    finally:
+        try:
+            f = docutils.parsers.rst.roles.role('doc', None, None, None)[0]
+            f.site = FakeSite()
+        except AttributeError:
+            pass
