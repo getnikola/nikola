@@ -5,8 +5,6 @@ import pytest
 
 from nikola.utils import LocaleBorg
 
-from ..conftest import ensure_chdir  # NOQA - autouse fixture
-
 
 @pytest.fixture(scope="session")
 def other_locale():
