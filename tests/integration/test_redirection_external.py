@@ -12,8 +12,8 @@ from ..base import cd
 from .helper import add_post_without_text, append_config
 from .test_empty_build import test_archive_exists  # NOQA
 from .test_demo_build import (  # NOQA
-    test_index_in_sitemap, test_avoid_double_slash_in_rss)
-from .test_check import test_check_files, test_check_links  # NOQA
+    test_avoid_double_slash_in_rss, test_check_files, test_check_links,
+    test_index_in_sitemap)
 
 
 @pytest.fixture(scope="module")

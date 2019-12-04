@@ -14,6 +14,16 @@ from .helper import add_post_without_text
 from .test_empty_build import test_archive_exists  # NOQA
 
 
+def test_check_links(build, target_dir):
+    with cd(target_dir):
+        assert __main__.main(['check', '-l']) is None
+
+
+def test_check_files(build, target_dir):
+    with cd(target_dir):
+        assert __main__.main(['check', '-f']) is None
+
+
 def test_index_in_sitemap(build, output_dir):
     sitemap_path = os.path.join(output_dir, "sitemap.xml")
     with io.open(sitemap_path, "r", encoding="utf8") as inf:

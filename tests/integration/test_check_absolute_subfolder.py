@@ -16,8 +16,8 @@ from nikola import __main__
 
 from ..base import cd
 from .helper import add_post_without_text, patch_config
-from .test_demo_build import test_avoid_double_slash_in_rss  # NOQA
-from .test_check import test_check_files, test_check_links  # NOQA
+from .test_demo_build import (  # NOQA
+    test_avoid_double_slash_in_rss, test_check_files, test_check_links)
 
 
 def test_index_in_sitemap(build, output_dir):
