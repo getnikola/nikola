@@ -1,4 +1,8 @@
-"""Test a site with translated content."""
+"""
+Test a site with translated content.
+
+Do not test titles as we remove the translation.
+"""
 
 import io
 import os
