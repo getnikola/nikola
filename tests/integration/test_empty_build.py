@@ -1,3 +1,5 @@
+"""Performaning the build of an empty site."""
+
 import io
 import os
 
