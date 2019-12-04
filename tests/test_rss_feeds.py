@@ -65,13 +65,12 @@ def test_feed_items_have_valid_URLs(rss_feed_content, blog_url, element):
 
 
 @pytest.fixture(autouse=True)
-def localeborg():
+def localeborg(default_locale):
     """
     LocaleBorg with default settings
     """
     LocaleBorg.reset()
-    default_lang = os.environ.get('NIKOLA_LOCALE_DEFAULT', 'en')
-    LocaleBorg.initialize({}, default_lang)
+    LocaleBorg.initialize({}, default_locale)
     try:
         yield
     finally:
@@ -79,7 +78,7 @@ def localeborg():
 
 
 @pytest.fixture
-def rss_feed_content(blog_url, config):
+def rss_feed_content(blog_url, config, default_locale):
     with mock.patch('nikola.post.get_meta',
                     mock.Mock(return_value=(defaultdict(str, {
                               'title': 'post title',
@@ -108,7 +107,7 @@ def rss_feed_content(blog_url, config):
 
                 with mock.patch('nikola.nikola.io.open', opener_mock, create=True):
                     Nikola().generic_rss_renderer(
-                        'en', "blog_title", blog_url,
+                        default_locale, "blog_title", blog_url,
                         "blog_description", [example_post, ],
                         filename, True, False)
 
@@ -129,15 +128,15 @@ def rss_feed_content(blog_url, config):
 
 
 @pytest.fixture
-def config(blog_url):
+def config(blog_url, default_locale):
     fake_conf = defaultdict(str)
     fake_conf['TIMEZONE'] = 'UTC'
     fake_conf['__tzinfo__'] = dateutil.tz.tzutc()
-    fake_conf['DEFAULT_LANG'] = 'en'
-    fake_conf['TRANSLATIONS'] = {'en': ''}
+    fake_conf['DEFAULT_LANG'] = default_locale
+    fake_conf['TRANSLATIONS'] = {default_locale: ''}
     fake_conf['BASE_URL'] = blog_url
     fake_conf['BLOG_AUTHOR'] = TranslatableSetting(
-        'BLOG_AUTHOR', 'Nikola Tesla', ['en'])
+        'BLOG_AUTHOR', 'Nikola Tesla', [default_locale])
     fake_conf['TRANSLATIONS_PATTERN'] = '{path}.{lang}.{ext}'
 
     return fake_conf

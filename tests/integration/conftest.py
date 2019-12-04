@@ -9,11 +9,6 @@ from ..conftest import ensure_chdir  # NOQA - autouse fixture
 
 
 @pytest.fixture(scope="session")
-def default_locale():
-    return os.environ.get('NIKOLA_LOCALE_DEFAULT', 'en')
-
-
-@pytest.fixture(scope="session")
 def other_locale():
     return os.environ.get('NIKOLA_LOCALE_OTHER', 'pl')
 
