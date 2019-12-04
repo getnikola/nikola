@@ -1,6 +1,5 @@
 """Check that full archives build and are correct."""
 
-import io
 import os
 import shutil
 
@@ -11,6 +10,8 @@ from nikola import __main__
 
 from ..base import cd
 from .helper import add_post_without_text, patch_config
+from .test_demo_build import (  # NOQA
+    test_index_in_sitemap, test_avoid_double_slash_in_rss)
 
 
 @pytest.mark.parametrize("path", [
@@ -23,22 +24,6 @@ def test_full_archive(build, output_dir, path):
     """Check existance of archive pages"""
     expected_path = os.path.join(output_dir, *path)
     assert os.path.isfile(expected_path)
-
-
-def test_index_in_sitemap(build, output_dir):
-    sitemap_path = os.path.join(output_dir, "sitemap.xml")
-    with io.open(sitemap_path, "r", encoding="utf8") as inf:
-        sitemap_data = inf.read()
-
-    assert '<loc>https://example.com/</loc>' in sitemap_data
-
-
-def test_avoid_double_slash_in_rss(build, output_dir):
-    rss_path = os.path.join(output_dir, "rss.xml")
-    with io.open(rss_path, "r", encoding="utf8") as inf:
-        rss_data = inf.read()
-
-    assert 'https://example.com//' not in rss_data
 
 
 @pytest.fixture(scope="module")

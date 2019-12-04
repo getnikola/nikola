@@ -16,6 +16,8 @@ from nikola import __main__
 
 from ..base import cd
 from .helper import add_post_without_text, patch_config
+from .test_empty_build import test_archive_exists  # NOQA
+from .test_demo_build import test_avoid_double_slash_in_rss  # NOQA
 
 
 def test_check_links(build, target_dir):
@@ -39,20 +41,6 @@ def test_index_in_sitemap(build, output_dir):
         sitemap_data = inf.read()
 
     assert '<loc>https://example.com/foo/</loc>' in sitemap_data
-
-
-def test_avoid_double_slash_in_rss(build, output_dir):
-    rss_path = os.path.join(output_dir, "rss.xml")
-    with io.open(rss_path, "r", encoding="utf8") as inf:
-        rss_data = inf.read()
-
-    assert 'https://example.com//' not in rss_data
-
-
-def test_archive_exists(build, output_dir):
-    """Ensure the build did something."""
-    index_path = os.path.join(output_dir, "archive.html")
-    assert os.path.isfile(index_path)
 
 
 @pytest.fixture(scope="module")

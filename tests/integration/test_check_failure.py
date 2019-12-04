@@ -11,6 +11,8 @@ from nikola import __main__
 
 from ..base import cd
 from .helper import add_post_without_text
+from .test_demo_build import (  # NOQA
+    test_index_in_sitemap, test_avoid_double_slash_in_rss)
 
 
 def test_check_links_fail(build, output_dir, target_dir):
@@ -29,22 +31,6 @@ def test_check_files_fail(build, output_dir, target_dir):
     with cd(target_dir):
         result = __main__.main(['check', '-f'])
         assert result != 0
-
-
-def test_index_in_sitemap(build, output_dir):
-    sitemap_path = os.path.join(output_dir, "sitemap.xml")
-    with io.open(sitemap_path, "r", encoding="utf8") as inf:
-        sitemap_data = inf.read()
-
-    assert '<loc>https://example.com/</loc>' in sitemap_data
-
-
-def test_avoid_double_slash_in_rss(build, output_dir):
-    rss_path = os.path.join(output_dir, "rss.xml")
-    with io.open(rss_path, "r", encoding="utf8") as inf:
-        rss_data = inf.read()
-
-    assert 'https://example.com//' not in rss_data
 
 
 @pytest.fixture(scope="module")

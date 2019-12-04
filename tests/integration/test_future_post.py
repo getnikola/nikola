@@ -13,6 +13,9 @@ from nikola import __main__
 
 from ..base import cd
 from .helper import append_config
+from .test_empty_build import test_archive_exists  # NOQA
+from .test_demo_build import (  # NOQA
+    test_index_in_sitemap, test_avoid_double_slash_in_rss)
 
 
 def test_future_post(build, output_dir, target_dir):
@@ -43,12 +46,6 @@ def test_future_post(build, output_dir, target_dir):
     assert os.path.isfile(index_path)
     assert os.path.isfile(foo_path)
     assert not os.path.isfile(bar_path)
-
-
-def test_archive_exists(build, output_dir):
-    """Ensure the build did something."""
-    index_path = os.path.join(output_dir, "archive.html")
-    assert os.path.isfile(index_path)
 
 
 @pytest.fixture(scope="module")

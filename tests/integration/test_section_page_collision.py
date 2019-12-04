@@ -11,6 +11,9 @@ from nikola.utils import makedirs
 
 from ..base import cd
 from .helper import append_config
+from .test_empty_build import test_archive_exists  # NOQA
+from .test_demo_build import (  # NOQA
+    test_index_in_sitemap, test_avoid_double_slash_in_rss)
 
 
 def test_section_index_avoidance(build, output_dir):
@@ -35,16 +38,11 @@ def test_section_index_avoidance(build, output_dir):
     assert 'This is Post 0' not in page
 
 
-def test_archive_exists(build, output_dir):
-    """Ensure the build did something."""
-    index_path = os.path.join(output_dir, "archive.html")
-    assert os.path.isfile(index_path)
-
-
 @pytest.fixture(scope="module")
 def build(target_dir):
     """
-    Add subdirectories and create a post in section "sec1" and a page with the same URL as the section index.
+    Add subdirectories and create a post in section "sec1" and a page
+    with the same URL as the section index.
 
     It also enables post sections.
     """

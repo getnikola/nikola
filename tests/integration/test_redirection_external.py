@@ -1,6 +1,5 @@
 """Check external REDIRECTIONS"""
 
-import io
 import os
 import shutil
 
@@ -11,6 +10,9 @@ from nikola import __main__
 
 from ..base import cd
 from .helper import add_post_without_text, append_config
+from .test_empty_build import test_archive_exists  # NOQA
+from .test_demo_build import (  # NOQA
+    test_index_in_sitemap, test_avoid_double_slash_in_rss)
 
 
 def test_check_links(build, target_dir):
@@ -21,28 +23,6 @@ def test_check_links(build, target_dir):
 def test_check_files(build, target_dir):
     with cd(target_dir):
         assert __main__.main(['check', '-f']) is None
-
-
-def test_index_in_sitemap(build, output_dir):
-    sitemap_path = os.path.join(output_dir, "sitemap.xml")
-    with io.open(sitemap_path, "r", encoding="utf8") as inf:
-        sitemap_data = inf.read()
-
-    assert '<loc>https://example.com/</loc>' in sitemap_data
-
-
-def test_avoid_double_slash_in_rss(build, output_dir):
-    rss_path = os.path.join(output_dir, "rss.xml")
-    with io.open(rss_path, "r", encoding="utf8") as inf:
-        rss_data = inf.read()
-
-    assert 'https://example.com//' not in rss_data
-
-
-def test_archive_exists(build, output_dir):
-    """Ensure the build did something."""
-    index_path = os.path.join(output_dir, "archive.html")
-    assert os.path.isfile(index_path)
 
 
 @pytest.fixture(scope="module")

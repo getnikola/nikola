@@ -11,6 +11,8 @@ from nikola.utils import makedirs
 
 from ..base import cd
 from .helper import append_config
+from .test_empty_build import test_archive_exists  # NOQA
+from .test_demo_build import test_index_in_sitemap  # NOQA
 
 
 def test_page_index(build, output_dir):
@@ -78,12 +80,6 @@ def check_build_output(output_dir, path_func):
     assert 'Page 3' not in subdir3_index
     assert 'Page 4' not in subdir3_index
     assert 'This is not the page index either.' in subdir3_index
-
-
-def test_archive_exists(build, output_dir):
-    """Ensure the archive has been built."""
-    index_path = os.path.join(output_dir, "archive.html")
-    assert os.path.isfile(index_path)
 
 
 @pytest.fixture(scope="module")

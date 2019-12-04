@@ -11,6 +11,7 @@ from nikola import __main__
 
 from ..base import cd
 from .helper import add_post_without_text
+from .test_empty_build import test_archive_exists  # NOQA
 
 
 def test_index_in_sitemap(build, output_dir):
@@ -27,12 +28,6 @@ def test_avoid_double_slash_in_rss(build, output_dir):
         rss_data = inf.read()
 
     assert 'https://example.com//' not in rss_data
-
-
-def test_archive_exists(build, output_dir):
-    """Ensure the build did something."""
-    index_path = os.path.join(output_dir, "archive.html")
-    assert os.path.isfile(index_path)
 
 
 @pytest.fixture(scope="module")

@@ -12,6 +12,9 @@ from nikola.utils import makedirs
 from ..base import cd
 from .helper import append_config
 from .test_page_index_pretty_urls import check_build_output
+from .test_empty_build import test_archive_exists  # NOQA
+from .test_demo_build import (  # NOQA
+    test_index_in_sitemap, test_avoid_double_slash_in_rss)
 
 
 def test_page_index(build, output_dir):
@@ -22,12 +25,6 @@ def test_page_index(build, output_dir):
         return os.path.join(dir, name + '.html')
 
     check_build_output(output_dir, output_path)
-
-
-def test_archive_exists(build, output_dir):
-    """Ensure the archive has been built."""
-    index_path = os.path.join(output_dir, "archive.html")
-    assert os.path.isfile(index_path)
 
 
 @pytest.fixture(scope="module")

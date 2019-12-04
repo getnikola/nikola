@@ -12,6 +12,9 @@ from nikola import __main__
 
 from ..base import cd
 from .helper import patch_config
+from .test_empty_build import test_archive_exists  # NOQA
+from .test_demo_build import (  # NOQA
+    test_index_in_sitemap, test_avoid_double_slash_in_rss)
 
 
 def test_translated_titles(build, output_dir, other_locale):
@@ -31,12 +34,6 @@ def test_translated_titles(build, output_dir, other_locale):
     with io.open(pl_file, 'r', encoding='utf8') as inf:
         doc = lxml.html.parse(inf)
         assert doc.find('//title').text == 'Bar | Demo Site'
-
-
-def test_archive_exists(build, output_dir):
-    """Ensure the build did something."""
-    index_path = os.path.join(output_dir, "archive.html")
-    assert os.path.isfile(index_path)
 
 
 @pytest.fixture(scope="module")
