@@ -37,7 +37,7 @@ def cd(path):
     os.chdir(old_dir)
 
 
-class FakePost(object):
+class FakePost:
 
     def __init__(self, title, slug):
         self._title = title
@@ -56,7 +56,7 @@ class FakePost(object):
         return '/posts/' + self._slug
 
 
-class FakeSite(object):
+class FakeSite:
     def __init__(self):
         self.template_system = self
         self.invariant = False

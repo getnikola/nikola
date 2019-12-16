@@ -155,7 +155,7 @@ def test_check_conditions(conditions, dummy_post):
     assert check_conditions(dummy_post, filename, conditions, config, '')
 
 
-class FakePost():
+class FakePost:
     def __init__(self, source_path, metadata_path, config, compiler, metadata_extractors_by):
         self.source_path = source_path
         self.metadata_path = metadata_path
