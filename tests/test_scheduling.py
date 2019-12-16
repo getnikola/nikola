@@ -31,7 +31,6 @@ def disable_six_modules():
             sys.modules[name] = mod
 
 
-@freeze_time(_NOW)
 def test_get_date(today):
     # NOW does not match rule #########################################
     # No last date
@@ -115,4 +114,5 @@ def test_get_date(today):
 @pytest.fixture
 def today():
     NOW = _NOW.strftime('%Y-%m-%d %H:%M:%S %Z')
-    return dateutil.parser.parse(NOW)
+    with freeze_time(_NOW):
+        yield dateutil.parser.parse(NOW)
