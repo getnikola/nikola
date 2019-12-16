@@ -1,3 +1,10 @@
+"""
+Scheduling tests.
+
+These tests rely on a fixed time to work.
+In order to achieve this the fixture for `now` sets the expected time.
+"""
+
 import datetime
 import sys
 
