@@ -34,6 +34,19 @@ def build(target_dir):
     init_command.create_empty_site(target_dir)
     init_command.create_configuration(target_dir)
 
+    create_pages(target_dir)
+
+    append_config(target_dir, """
+PAGE_INDEX = True
+PRETTY_URLS = False
+PAGES = PAGES + (('pages/*.php', 'pages', 'page.tmpl'),)
+""")
+
+    with cd(target_dir):
+        __main__.main(["build"])
+
+
+def create_pages(target_dir):
     pages = os.path.join(target_dir, "pages")
     subdir1 = os.path.join(target_dir, "pages", "subdir1")
     subdir2 = os.path.join(target_dir, "pages", "subdir2")
@@ -62,12 +75,3 @@ def build(target_dir):
     with io.open(os.path.join(subdir3, 'bar.php'), "w+", encoding="utf8") as outf:
         outf.write(
             ".. title: Still not the page index\n.. slug: index\n\nThis is not the page index either.\n")
-
-    append_config(target_dir, """
-PAGE_INDEX = True
-PRETTY_URLS = False
-PAGES = PAGES + (('pages/*.php', 'pages', 'page.tmpl'),)
-""")
-
-    with cd(target_dir):
-        __main__.main(["build"])
