@@ -4,7 +4,6 @@
 """ Base class for Nikola test cases """
 
 import os
-import unittest
 from contextlib import contextmanager
 
 import logbook
@@ -25,11 +24,9 @@ from nikola.plugin_categories import (
     RestExtension
 )
 
-__all__ = ["BaseTestCase", "cd"]
+__all__ = ["cd"]
 
 nikola.utils.LOGGER.handlers.append(logbook.TestHandler())
-
-BaseTestCase = unittest.TestCase
 
 
 @contextmanager
