@@ -6,7 +6,6 @@ In order to achieve this the fixture for `now` sets the expected time.
 """
 
 import datetime
-import sys
 
 import dateutil.parser
 import dateutil.tz
@@ -134,17 +133,3 @@ def now() -> datetime:
 
     with freeze_time(_NOW):
         yield _NOW
-
-
-@pytest.fixture(autouse=True)
-def disable_six_modules():
-    deleted = {
-        name: sys.modules.pop(name)
-        for name in sys.modules
-        if name.startswith("six.moves.")
-    }
-    try:
-        yield
-    finally:
-        for name, mod in deleted.items():
-            sys.modules[name] = mod
