@@ -38,9 +38,14 @@ def test_page_index(build, output_dir, output_path_func):
     assert os.path.isfile(os.path.join(subdir3, 'index.php'))
     assert not os.path.isfile(os.path.join(subdir3, 'index.html'))
 
-    # Do the indexes only contain the pages the should?
+
+def test_page_index_content_in_pages(build, output_dir):
+    """Do the indexes only contain the pages the should?"""
+    pages = os.path.join(output_dir, "pages")
+
     with io.open(os.path.join(pages, 'index.html'), 'r', encoding='utf-8') as fh:
         pages_index = fh.read()
+
     assert 'Page 0' in pages_index
     assert 'Page 1' not in pages_index
     assert 'Page 2' not in pages_index
@@ -48,8 +53,14 @@ def test_page_index(build, output_dir, output_path_func):
     assert 'Page 4' not in pages_index
     assert 'This is not the page index' not in pages_index
 
+
+def test_page_index_content_in_subdir1(build, output_dir):
+    """Do the indexes only contain the pages the should?"""
+    subdir1 = os.path.join(output_dir, "pages", "subdir1")
+
     with io.open(os.path.join(subdir1, 'index.html'), 'r', encoding='utf-8') as fh:
         subdir1_index = fh.read()
+
     assert 'Page 0' not in subdir1_index
     assert 'Page 1' in subdir1_index
     assert 'Page 2' in subdir1_index
@@ -57,8 +68,14 @@ def test_page_index(build, output_dir, output_path_func):
     assert 'Page 4' not in subdir1_index
     assert 'This is not the page index' not in subdir1_index
 
+
+def test_page_index_content_in_subdir2(build, output_dir):
+    """Do the indexes only contain the pages the should?"""
+    subdir2 = os.path.join(output_dir, "pages", "subdir2")
+
     with io.open(os.path.join(subdir2, 'index.html'), 'r', encoding='utf-8') as fh:
         subdir2_index = fh.read()
+
     assert 'Page 0' not in subdir2_index
     assert 'Page 1' not in subdir2_index
     assert 'Page 2' not in subdir2_index
@@ -66,8 +83,14 @@ def test_page_index(build, output_dir, output_path_func):
     assert 'Page 4' not in subdir2_index
     assert 'This is not the page index.' in subdir2_index
 
+
+def test_page_index_content_in_subdir3(build, output_dir):
+    """Do the indexes only contain the pages the should?"""
+    subdir3 = os.path.join(output_dir, "pages", "subdir3")
+
     with io.open(os.path.join(subdir3, 'index.php'), 'r', encoding='utf-8') as fh:
         subdir3_index = fh.read()
+
     assert 'Page 0' not in subdir3_index
     assert 'Page 1' not in subdir3_index
     assert 'Page 2' not in subdir3_index
