@@ -11,8 +11,11 @@ def ensure_chdir():
         os.chdir(old_dir)
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def test_dir():
+    """
+    Absolute path to the directory with the tests.
+    """
     return os.path.abspath(os.path.dirname(__file__))
 
 

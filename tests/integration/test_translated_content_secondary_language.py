@@ -15,14 +15,13 @@ from .test_empty_build import (  # NOQA
 
 
 @pytest.fixture(scope="module")
-def build(target_dir):
+def build(target_dir, test_dir):
     """Build the site."""
     init_command = nikola.plugins.command.init.CommandInit()
     init_command.create_empty_site(target_dir)
     init_command.create_configuration(target_dir)
 
-    src = os.path.join(os.path.dirname(__file__),
-                       '..', 'data', 'translated_titles')
+    src = os.path.join(test_dir, '..', 'data', 'translated_titles')
     for root, dirs, files in os.walk(src):
         for src_name in files:
             if src_name == '1.txt':  # English post

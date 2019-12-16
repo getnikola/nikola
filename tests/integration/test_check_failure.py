@@ -34,14 +34,13 @@ def test_check_files_fail(build, output_dir, target_dir):
 
 
 @pytest.fixture(scope="module")
-def build(target_dir):
+def build(target_dir, test_dir):
     """Fill the site with demo content and build it."""
     init_command = nikola.plugins.command.init.CommandInit()
     init_command.copy_sample_site(target_dir)
     init_command.create_configuration(target_dir)
 
-    src1 = os.path.join(os.path.dirname(__file__),
-                        '..', 'data', '1-nolinks.rst')
+    src1 = os.path.join(test_dir, '..', 'data', '1-nolinks.rst')
     dst1 = os.path.join(target_dir, 'posts', '1.rst')
     shutil.copy(src1, dst1)
 

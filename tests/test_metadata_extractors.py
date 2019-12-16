@@ -182,9 +182,8 @@ def f__metadata_extractors_by():
 
 
 @pytest.fixture(scope="module")
-def testfiledir():
-    testdir = os.path.abspath(os.path.dirname(__file__))
-    return os.path.join(testdir, 'data', 'metadata_extractors')
+def testfiledir(test_dir):
+    return os.path.join(test_dir, 'data', 'metadata_extractors')
 
 
 @pytest.fixture(scope="module")

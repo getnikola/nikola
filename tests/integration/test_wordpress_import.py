@@ -44,7 +44,6 @@ def build(target_dir, import_file):
 
 
 @pytest.fixture(scope="module")
-def import_file():
+def import_file(test_dir):
     """Path to the Wordpress export file."""
-    test_directory = os.path.dirname(__file__)
-    return os.path.join(test_directory, '..', 'wordpress_export_example.xml')
+    return os.path.join(test_dir, '..', 'wordpress_export_example.xml')

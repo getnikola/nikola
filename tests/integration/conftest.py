@@ -8,6 +8,14 @@ from nikola.utils import LocaleBorg
 from ..base import FakeSite
 
 
+@pytest.fixture(scope="module")
+def test_dir():
+    """
+    Absolute path to the directory with the tests.
+    """
+    return os.path.abspath(os.path.dirname(__file__))
+
+
 @pytest.fixture(scope="session")
 def other_locale():
     return os.environ.get('NIKOLA_LOCALE_OTHER', 'pl')

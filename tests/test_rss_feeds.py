@@ -12,23 +12,29 @@ from nikola.nikola import Nikola, Post
 from nikola.utils import LocaleBorg, TranslatableSetting
 
 
-def test_feed_is_valid(rss_feed_content):
+def test_feed_is_valid(rss_feed_content, rss_schema):
     '''
     A testcase to check if the generated feed is valid.
 
     Validation can be tested with W3 FEED Validator that can be found
     at http://feedvalidator.org
     '''
-    rss_schema_filename = os.path.join(os.path.dirname(__file__),
-                                       'rss-2_0.xsd')
+    document = etree.parse(StringIO(rss_feed_content))
 
+    assert rss_schema.validate(document)
+
+
+@pytest.fixture
+def rss_schema(rss_schema_filename):
     with open(rss_schema_filename, 'r') as rss_schema_file:
         xmlschema_doc = etree.parse(rss_schema_file)
 
-    xmlschema = etree.XMLSchema(xmlschema_doc)
-    document = etree.parse(StringIO(rss_feed_content))
+    return etree.XMLSchema(xmlschema_doc)
 
-    assert xmlschema.validate(document)
+
+@pytest.fixture
+def rss_schema_filename(test_dir):
+    return os.path.join(test_dir, 'rss-2_0.xsd')
 
 
 @pytest.mark.parametrize("element", ["guid", "link"])

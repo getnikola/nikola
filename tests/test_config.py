@@ -24,15 +24,14 @@ def test_config_with_illegal_filename(simple_config, metadata_option, complex_fi
 
 
 @pytest.fixture(scope="module")
-def simple_config(test_dir):
-    nikola.main(["--conf=" + os.path.join(test_dir, "conf.py")])
+def simple_config(data_dir):
+    nikola.main(["--conf=" + os.path.join(data_dir, "conf.py")])
     return nikola.config
 
 
 @pytest.fixture(scope="module")
-def test_dir():
-    script_root = os.path.dirname(__file__)
-    return os.path.join(script_root, "data", "test_config")
+def data_dir(test_dir):
+    return os.path.join(test_dir, "data", "test_config")
 
 
 @pytest.fixture
@@ -41,14 +40,14 @@ def metadata_option():
 
 
 @pytest.fixture(scope="module")
-def complex_config(test_dir):
-    nikola.main(["--conf=" + os.path.join(test_dir, "prod.py")])
+def complex_config(data_dir):
+    nikola.main(["--conf=" + os.path.join(data_dir, "prod.py")])
     return nikola.config
 
 
 @pytest.fixture(scope="module")
-def complex_filename_config(test_dir):
-    nikola.main(["--conf=" + os.path.join(test_dir, "config.with+illegal(module)name.characters.py")])
+def complex_filename_config(data_dir):
+    nikola.main(["--conf=" + os.path.join(data_dir, "config.with+illegal(module)name.characters.py")])
     return nikola.config
 
 

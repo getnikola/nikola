@@ -17,7 +17,7 @@ from .test_translated_content import test_translated_titles  # NOQA
 
 
 @pytest.fixture(scope="module")
-def build(target_dir, other_locale):
+def build(target_dir, test_dir, other_locale):
     """
     Build the site.
 
@@ -27,8 +27,7 @@ def build(target_dir, other_locale):
     init_command.create_empty_site(target_dir)
     init_command.create_configuration(target_dir)
 
-    src = os.path.join(os.path.dirname(__file__),
-                       '..', 'data', 'translated_titles')
+    src = os.path.join(test_dir, '..', 'data', 'translated_titles')
     for root, dirs, files in os.walk(src):
         for src_name in files:
             rel_dir = os.path.relpath(root, src)
