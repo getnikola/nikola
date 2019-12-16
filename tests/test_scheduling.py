@@ -10,8 +10,9 @@ from nikola.plugins.command.new_post import get_date
 freezegun = pytest.importorskip('freezegun')
 freeze_time = freezegun.freeze_time
 
+UTC = dateutil.tz.tzutc()
 _NOW = datetime.datetime(  # Thursday
-    2013, 8, 22, 10, 0, 0, tzinfo=dateutil.tz.tzutc())
+    2013, 8, 22, 10, 0, 0, tzinfo=UTC)
 
 
 @pytest.fixture(autouse=True)
@@ -35,7 +36,6 @@ def test_get_date():
     TODAY = dateutil.parser.parse(NOW)
     RULE_TH = 'RRULE:FREQ=WEEKLY;BYDAY=TH'
     RULE_FR = 'RRULE:FREQ=WEEKLY;BYDAY=FR'
-    UTC = dateutil.tz.tzutc()
 
     # NOW does not match rule #########################################
     # No last date
