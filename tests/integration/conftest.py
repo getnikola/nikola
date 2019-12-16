@@ -17,7 +17,7 @@ def test_dir():
 
 
 @pytest.fixture(scope="session")
-def other_locale():
+def other_locale() -> str:
     return os.environ.get('NIKOLA_LOCALE_OTHER', 'pl')
 
 
