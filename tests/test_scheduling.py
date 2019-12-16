@@ -13,6 +13,8 @@ freeze_time = freezegun.freeze_time
 UTC = dateutil.tz.tzutc()
 _NOW = datetime.datetime(  # Thursday
     2013, 8, 22, 10, 0, 0, tzinfo=UTC)
+RULE_TH = 'RRULE:FREQ=WEEKLY;BYDAY=TH'
+RULE_FR = 'RRULE:FREQ=WEEKLY;BYDAY=FR'
 
 
 @pytest.fixture(autouse=True)
@@ -33,8 +35,6 @@ def disable_six_modules():
 def test_get_date():
     NOW = _NOW.strftime('%Y-%m-%d %H:%M:%S %Z')
     TODAY = dateutil.parser.parse(NOW)
-    RULE_TH = 'RRULE:FREQ=WEEKLY;BYDAY=TH'
-    RULE_FR = 'RRULE:FREQ=WEEKLY;BYDAY=FR'
 
     # NOW does not match rule #########################################
     # No last date
