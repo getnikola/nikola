@@ -353,7 +353,7 @@ def module():
 
 @pytest.fixture
 def import_filename(test_dir):
-    return os.path.abspath(os.path.join(test_dir,
+    return os.path.abspath(os.path.join(test_dir, 'data', 'wordpress_import',
                                         'wordpress_export_example.xml'))
 
 

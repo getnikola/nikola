@@ -38,14 +38,14 @@ Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !"
 
 
 def test_modernize_a_wordpress_export_xml_chunk(test_dir):
-    raw_export_path = os.path.join(test_dir,
+    raw_export_path = os.path.join(test_dir, 'data', 'wordpress_import',
                                    'wordpress_qtranslate_item_raw_export.xml')
     with open(raw_export_path, 'rb') as raw_xml_chunk_file:
         content = raw_xml_chunk_file.read()
 
     output = modernize_qtranslate_tags(content)
 
-    modernized_xml_path = os.path.join(test_dir,
+    modernized_xml_path = os.path.join(test_dir, 'data', 'wordpress_import',
                                        'wordpress_qtranslate_item_modernized.xml')
     with open(modernized_xml_path, 'rb') as modernized_chunk_file:
         expected = modernized_chunk_file.read()

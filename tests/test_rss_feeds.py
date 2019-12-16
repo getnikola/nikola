@@ -34,7 +34,7 @@ def rss_schema(rss_schema_filename):
 
 @pytest.fixture
 def rss_schema_filename(test_dir):
-    return os.path.join(test_dir, 'rss-2_0.xsd')
+    return os.path.join(test_dir, 'data', 'rss-2_0.xsd')
 
 
 @pytest.mark.parametrize("element", ["guid", "link"])
