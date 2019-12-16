@@ -32,34 +32,31 @@ def disable_six_modules():
 
 
 @freeze_time(_NOW)
-def test_get_date():
-    NOW = _NOW.strftime('%Y-%m-%d %H:%M:%S %Z')
-    TODAY = dateutil.parser.parse(NOW)
-
+def test_get_date(today):
     # NOW does not match rule #########################################
     # No last date
-    expected = TODAY.replace(day=23)
+    expected = today.replace(day=23)
     assert expected == get_date(True, RULE_FR, tz=UTC)[1]
     assert expected == get_date(True, RULE_FR, tz=UTC)[1]
 
     # Last date in the past; doesn't match rule
-    date = TODAY.replace(hour=7)
-    expected = TODAY.replace(day=23, hour=7)
+    date = today.replace(hour=7)
+    expected = today.replace(day=23, hour=7)
     assert expected == get_date(True, RULE_FR, date, tz=UTC)[1]
 
     # Last date in the future; doesn't match rule
-    date = TODAY.replace(day=24, hour=7)
-    expected = TODAY.replace(day=30, hour=7)
+    date = today.replace(day=24, hour=7)
+    expected = today.replace(day=30, hour=7)
     assert expected == get_date(True, RULE_FR, date, tz=UTC)[1]
 
     # Last date in the past; matches rule
-    date = TODAY.replace(day=16, hour=8)
-    expected = TODAY.replace(day=23, hour=8)
+    date = today.replace(day=16, hour=8)
+    expected = today.replace(day=23, hour=8)
     assert expected == get_date(True, RULE_FR, date, tz=UTC)[1]
 
     # Last date in the future; matches rule
-    date = TODAY.replace(day=23, hour=18)
-    expected = TODAY.replace(day=30, hour=18)
+    date = today.replace(day=23, hour=18)
+    expected = today.replace(day=30, hour=18)
     assert expected == get_date(True, RULE_FR, date, tz=UTC)[1]
 
     # NOW matches rule ################################################
@@ -72,44 +69,50 @@ def test_get_date():
 
     # Last date in the past; doesn't match rule
     # Corresponding time has already passed, today
-    date = TODAY.replace(day=21, hour=7)
-    expected = TODAY.replace(day=29, hour=7)
+    date = today.replace(day=21, hour=7)
+    expected = today.replace(day=29, hour=7)
     assert expected == get_date(True, RULE_TH, date, tz=UTC)[1]
     # Corresponding time has not passed today
-    date = TODAY.replace(day=21, hour=18)
-    expected = TODAY.replace(day=22, hour=18)
+    date = today.replace(day=21, hour=18)
+    expected = today.replace(day=22, hour=18)
     assert expected == get_date(True, RULE_TH, date, tz=UTC)[1]
 
     # Last date in the future; doesn't match rule
     # Corresponding time has already passed, today
-    date = TODAY.replace(day=24, hour=7)
-    expected = TODAY.replace(day=29, hour=7)
+    date = today.replace(day=24, hour=7)
+    expected = today.replace(day=29, hour=7)
     assert expected == get_date(True, RULE_TH, date, tz=UTC)[1]
     # Corresponding time has not passed today
-    date = TODAY.replace(day=24, hour=18)
-    expected = TODAY.replace(day=29, hour=18)
+    date = today.replace(day=24, hour=18)
+    expected = today.replace(day=29, hour=18)
     assert expected == get_date(True, RULE_TH, date, tz=UTC)[1]
 
     # Last date in the past; matches rule
     # Corresponding time has already passed, today
-    date = TODAY.replace(day=15, hour=7)
-    expected = TODAY.replace(day=29, hour=7)
+    date = today.replace(day=15, hour=7)
+    expected = today.replace(day=29, hour=7)
     assert expected == get_date(True, RULE_TH, date, tz=UTC)[1]
     # Corresponding time has already passed, today; rule specifies HOUR
-    date = TODAY.replace(day=15, hour=7)
-    expected = TODAY.replace(day=29, hour=9)
+    date = today.replace(day=15, hour=7)
+    expected = today.replace(day=29, hour=9)
     assert expected == get_date(True, RULE_TH + ';BYHOUR=9', date, tz=UTC)[1]
     # Corresponding time has not passed today
-    date = TODAY.replace(day=15, hour=18)
-    expected = TODAY.replace(day=22, hour=18)
+    date = today.replace(day=15, hour=18)
+    expected = today.replace(day=22, hour=18)
     assert expected == get_date(True, RULE_TH, date, tz=UTC)[1]
 
     # Last date in the future; matches rule
     # Corresponding time has already passed, today
-    date = TODAY.replace(day=29, hour=7)
-    expected = TODAY.replace(day=5, month=9, hour=7)
+    date = today.replace(day=29, hour=7)
+    expected = today.replace(day=5, month=9, hour=7)
     assert expected == get_date(True, RULE_TH, date, tz=UTC)[1]
     # Corresponding time has not passed today
-    date = TODAY.replace(day=22, hour=18)
-    expected = TODAY.replace(day=29, hour=18)
+    date = today.replace(day=22, hour=18)
+    expected = today.replace(day=29, hour=18)
     assert expected == get_date(True, RULE_TH, date, tz=UTC)[1]
+
+
+@pytest.fixture
+def today():
+    NOW = _NOW.strftime('%Y-%m-%d %H:%M:%S %Z')
+    return dateutil.parser.parse(NOW)
