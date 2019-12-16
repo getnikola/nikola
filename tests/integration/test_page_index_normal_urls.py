@@ -18,20 +18,8 @@ from .test_empty_build import (  # NOQA
 
 def test_page_index(build, output_dir, output_path_func):
     """Test PAGE_INDEX."""
+    path_func = output_path_func
 
-    check_build_output(output_dir, output_path_func)
-
-
-@pytest.fixture(scope="module")
-def output_path_func():
-    def output_path(dir, name):
-        """Make a file path to the output."""
-        return os.path.join(dir, name + '.html')
-
-    return output_path
-
-
-def check_build_output(output_dir, path_func):
     pages = os.path.join(output_dir, "pages")
     subdir1 = os.path.join(output_dir, "pages", "subdir1")
     subdir2 = os.path.join(output_dir, "pages", "subdir2")
@@ -86,6 +74,15 @@ def check_build_output(output_dir, path_func):
     assert 'Page 3' not in subdir3_index
     assert 'Page 4' not in subdir3_index
     assert 'This is not the page index either.' in subdir3_index
+
+
+@pytest.fixture(scope="module")
+def output_path_func():
+    def output_path(dir, name):
+        """Make a file path to the output."""
+        return os.path.join(dir, name + '.html')
+
+    return output_path
 
 
 @pytest.fixture(scope="module")

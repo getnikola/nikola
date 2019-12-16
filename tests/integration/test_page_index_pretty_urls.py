@@ -12,7 +12,7 @@ from .helper import append_config
 from .test_empty_build import (  # NOQA
     test_archive_exists, test_avoid_double_slash_in_rss, test_check_files,
     test_check_links, test_index_in_sitemap)
-from .test_page_index_normal_urls import check_build_output, create_pages
+from .test_page_index_normal_urls import create_pages
 from .test_page_index_normal_urls import test_page_index  # NOQA
 
 
