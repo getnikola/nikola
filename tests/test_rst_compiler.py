@@ -22,7 +22,7 @@ import nikola.plugins.compile.rest.listing
 from nikola.plugins.compile.rest import vimeo
 from nikola.utils import _reload, LocaleBorg
 
-from .base import FakeSite, FakePost
+from .base import FakeSite
 
 import pytest
 
@@ -153,16 +153,19 @@ def get_html_from_rst(temp_dir, rst):
     with io.open(infile, 'w+', encoding='utf8') as post_file:
         post_file.write(rst)
 
-    post = FakePost('', '')
-    post._depfile[outfile] = []
-
     compiler = nikola.plugins.compile.rest.CompileRest()
     compiler.set_site(FakeSite())
-    compiler.site.post_per_input_file[infile] = post
+    compiler.site.post_per_input_file[infile] = FakePost(outfile)
     compiler.compile(infile, outfile)
 
     with io.open(outfile, 'r', encoding='utf8') as rendered_file:
         return rendered_file.read()
+
+
+class FakePost:
+
+    def __init__(self, outfile):
+        self._depfile = {outfile: []}
 
 
 def assert_html_contains(html, element, attributes=None, text=None):
