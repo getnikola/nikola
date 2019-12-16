@@ -18,26 +18,15 @@ from .test_empty_build import (  # NOQA
     test_check_links, test_index_in_sitemap)
 
 
-def test_future_post(build, output_dir, target_dir):
-    """ Ensure that the future post is not present in the index and sitemap."""
+def test_future_post_deployment(build, output_dir, target_dir):
+    """ Ensure that the future post is deleted upon deploying. """
     index_path = os.path.join(output_dir, "index.html")
-    sitemap_path = os.path.join(output_dir, "sitemap.xml")
     foo_path = os.path.join(output_dir, "posts", "foo", "index.html")
     bar_path = os.path.join(output_dir, "posts", "bar", "index.html")
+
     assert os.path.isfile(index_path)
-    assert os.path.isfile(sitemap_path)
     assert os.path.isfile(foo_path)
     assert os.path.isfile(bar_path)
-
-    with io.open(index_path, "r", encoding="utf8") as inf:
-        index_data = inf.read()
-    assert 'foo/' in index_data
-    assert 'bar/' not in index_data
-
-    with io.open(sitemap_path, "r", encoding="utf8") as inf:
-        sitemap_data = inf.read()
-    assert 'foo/' in sitemap_data
-    assert 'bar/' not in sitemap_data
 
     # Run deploy command to see if future post is deleted
     with cd(target_dir):
@@ -46,6 +35,18 @@ def test_future_post(build, output_dir, target_dir):
     assert os.path.isfile(index_path)
     assert os.path.isfile(foo_path)
     assert not os.path.isfile(bar_path)
+
+
+@pytest.mark.parametrize("filename", ["index.html", "sitemap.xml"])
+def test_future_post_not_in_indexes(build, output_dir, filename):
+    """ Ensure that the future post is not present in the index and sitemap."""
+    filepath = os.path.join(output_dir, filename)
+    assert os.path.isfile(filepath)
+
+    with io.open(filepath, "r", encoding="utf8") as inf:
+        content = inf.read()
+    assert 'foo/' in content
+    assert 'bar/' not in content
 
 
 @pytest.fixture(scope="module")
