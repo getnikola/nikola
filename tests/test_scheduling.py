@@ -22,8 +22,8 @@ RULE_TH = 'RRULE:FREQ=WEEKLY;BYDAY=TH'
 RULE_FR = 'RRULE:FREQ=WEEKLY;BYDAY=FR'
 
 
-def test_get_date(today):
-    # NOW does not match rule #########################################
+def test_current_time_not_matching_rule(today):
+    """`today` does not match rule."""
     # No last date
     expected = today.replace(day=23)
     assert expected == get_date(True, RULE_FR, tz=UTC)[1]
