@@ -27,7 +27,8 @@ def test_import_created_files(build, target_dir):
 def test_filled_directories(build, target_dir, dirname):
     folder = os.path.join(target_dir, dirname)
     assert os.path.isdir(folder)
-    assert glob(os.path.join(folder, '*'))
+    content = glob(os.path.join(folder, '**'), recursive=True)
+    assert any(os.path.isfile(element) for element in content)
 
 
 @pytest.fixture(scope="module")
