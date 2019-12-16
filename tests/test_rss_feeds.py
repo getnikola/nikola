@@ -153,7 +153,7 @@ def blog_url():
     return "http://some.blog"
 
 
-class FakeCompiler(object):
+class FakeCompiler:
     demote_headers = False
     compile_html = None
     compile = None

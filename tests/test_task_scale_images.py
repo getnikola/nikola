@@ -64,7 +64,7 @@ def site(preserve_icc_profiles, source_dir, destination_dir):
     return FakeSite(config)
 
 
-class FakeSite(object):
+class FakeSite:
     def __init__(self, config):
         self.config = config
         self.debug = True

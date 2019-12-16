@@ -113,7 +113,7 @@ def site():
     return s
 
 
-class FakeSiteWithShortcodeRegistry(object):
+class FakeSiteWithShortcodeRegistry:
     def __init__(self):
         self.shortcode_registry = {}
         self.debug = True
