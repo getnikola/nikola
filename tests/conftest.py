@@ -14,3 +14,8 @@ def ensure_chdir():
 @pytest.fixture
 def test_dir():
     return os.path.abspath(os.path.dirname(__file__))
+
+
+@pytest.fixture(scope="session")
+def default_locale():
+    return os.environ.get('NIKOLA_LOCALE_DEFAULT', 'en')

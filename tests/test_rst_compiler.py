@@ -15,7 +15,6 @@ import io
 import os
 from io import StringIO
 
-import docutils
 from lxml import html as lxml_html
 
 import nikola.plugins.compile.rest
@@ -134,16 +133,6 @@ def localeborg_base():
     finally:
         LocaleBorg.reset()
         assert not LocaleBorg.initialized
-
-
-@pytest.fixture(autouse=True, scope="module")
-def fix_leaked_state():
-    # Hack to fix leaked state from integration tests
-    try:
-        f = docutils.parsers.rst.roles.role('doc', None, None, None)[0]
-        f.site = FakeSite()
-    except AttributeError:
-        pass
 
 
 @pytest.fixture

@@ -25,8 +25,7 @@ from nikola.plugin_categories import (
     RestExtension
 )
 
-__all__ = ["BaseTestCase", "cd", "initialize_localeborg", "LOCALE_DEFAULT", "LOCALE_OTHER"]
-
+__all__ = ["BaseTestCase", "cd"]
 
 nikola.utils.LOGGER.handlers.append(logbook.TestHandler())
 
@@ -39,15 +38,6 @@ def cd(path):
     os.chdir(path)
     yield
     os.chdir(old_dir)
-
-
-LOCALE_DEFAULT = os.environ.get('NIKOLA_LOCALE_DEFAULT', 'en')
-LOCALE_OTHER = os.environ.get('NIKOLA_LOCALE_OTHER', 'pl')
-
-
-def initialize_localeborg():
-    nikola.utils.LocaleBorg.reset()
-    nikola.utils.LocaleBorg.initialize({}, LOCALE_DEFAULT)
 
 
 class FakePost(object):
