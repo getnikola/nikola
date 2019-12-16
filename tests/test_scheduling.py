@@ -50,14 +50,14 @@ def test_current_time_not_matching_rule(today):
     assert expected == get_date(True, RULE_FR, date, tz=UTC)[1]
 
 
-def test_current_time_matching_rule(now):
-    # NOW matches rule ################################################
-    # Not scheduling should return NOW
-    assert now == get_date(False, RULE_TH, tz=UTC)[1]
+@pytest.mark.parametrize("scheduling", [True, False])
+def test_current_time_matching_rule(now, scheduling):
+    """
+    No last date given means we should always get the current time.
 
-    # No last date
-    assert now == get_date(True, RULE_TH, tz=UTC)[1]
-    assert now == get_date(True, RULE_TH, tz=UTC)[1]
+    `now` matches the rule.
+    """
+    assert now == get_date(scheduling, RULE_TH, tz=UTC)[1]
 
 
 def test_last_date_in_the_past_not_matching_rule(today):
