@@ -21,20 +21,20 @@ from .test_empty_build import (  # NOQA
 def test_future_post_deployment(build, output_dir, target_dir):
     """ Ensure that the future post is deleted upon deploying. """
     index_path = os.path.join(output_dir, "index.html")
-    foo_path = os.path.join(output_dir, "posts", "foo", "index.html")
-    bar_path = os.path.join(output_dir, "posts", "bar", "index.html")
+    post_in_past = os.path.join(output_dir, "posts", "foo", "index.html")
+    post_in_future = os.path.join(output_dir, "posts", "bar", "index.html")
 
     assert os.path.isfile(index_path)
-    assert os.path.isfile(foo_path)
-    assert os.path.isfile(bar_path)
+    assert os.path.isfile(post_in_past)
+    assert os.path.isfile(post_in_future)
 
     # Run deploy command to see if future post is deleted
     with cd(target_dir):
         __main__.main(["deploy"])
 
     assert os.path.isfile(index_path)
-    assert os.path.isfile(foo_path)
-    assert not os.path.isfile(bar_path)
+    assert os.path.isfile(post_in_past)
+    assert not os.path.isfile(post_in_future)
 
 
 @pytest.mark.parametrize("filename", ["index.html", "sitemap.xml"])
