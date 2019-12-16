@@ -16,14 +16,19 @@ from .test_empty_build import (  # NOQA
     test_check_links, test_index_in_sitemap)
 
 
-def test_page_index(build, output_dir):
+def test_page_index(build, output_dir, output_path_func):
     """Test PAGE_INDEX."""
 
+    check_build_output(output_dir, output_path_func)
+
+
+@pytest.fixture(scope="module")
+def output_path_func():
     def output_path(dir, name):
         """Make a file path to the output."""
         return os.path.join(dir, name + '.html')
 
-    check_build_output(output_dir, output_path)
+    return output_path
 
 
 def check_build_output(output_dir, path_func):

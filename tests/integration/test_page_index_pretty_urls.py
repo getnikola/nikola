@@ -13,16 +13,16 @@ from .test_empty_build import (  # NOQA
     test_archive_exists, test_avoid_double_slash_in_rss, test_check_files,
     test_check_links, test_index_in_sitemap)
 from .test_page_index_normal_urls import check_build_output, create_pages
+from .test_page_index_normal_urls import test_page_index  # NOQA
 
 
-def test_page_index(build, output_dir):
-    """Test PAGE_INDEX."""
-
+@pytest.fixture(scope="module")
+def output_path_func():
     def output_path(dir, name):
         """Make a file path to the output."""
         return os.path.join(dir, name + '/index.html')
 
-    check_build_output(output_dir, output_path)
+    return output_path
 
 
 @pytest.fixture(scope="module")
