@@ -31,8 +31,7 @@ def disable_six_modules():
 
 @freeze_time(_NOW)
 def test_get_date():
-    FMT = '%Y-%m-%d %H:%M:%S %Z'
-    NOW = _NOW.strftime(FMT)
+    NOW = _NOW.strftime('%Y-%m-%d %H:%M:%S %Z')
     TODAY = dateutil.parser.parse(NOW)
     RULE_TH = 'RRULE:FREQ=WEEKLY;BYDAY=TH'
     RULE_FR = 'RRULE:FREQ=WEEKLY;BYDAY=FR'
