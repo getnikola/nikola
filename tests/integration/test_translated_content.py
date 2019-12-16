@@ -22,19 +22,20 @@ from .test_empty_build import (  # NOQA
 
 def test_translated_titles(build, output_dir, other_locale):
     """Check that translated title is picked up."""
-    en_file = os.path.join(output_dir, "pages", "1", "index.html")
-    pl_file = os.path.join(output_dir, other_locale, "pages", "1", "index.html")
+    normal_file = os.path.join(output_dir, "pages", "1", "index.html")
+    translated_file = os.path.join(output_dir, other_locale,
+                                   "pages", "1", "index.html")
 
     # Files should be created
-    assert os.path.isfile(en_file)
-    assert os.path.isfile(pl_file)
+    assert os.path.isfile(normal_file)
+    assert os.path.isfile(translated_file)
 
     # And now let's check the titles
-    with io.open(en_file, 'r', encoding='utf8') as inf:
+    with io.open(normal_file, 'r', encoding='utf8') as inf:
         doc = lxml.html.parse(inf)
         assert doc.find('//title').text == 'Foo | Demo Site'
 
-    with io.open(pl_file, 'r', encoding='utf8') as inf:
+    with io.open(translated_file, 'r', encoding='utf8') as inf:
         doc = lxml.html.parse(inf)
         assert doc.find('//title').text == 'Bar | Demo Site'
 

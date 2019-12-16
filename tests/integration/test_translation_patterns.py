@@ -1,10 +1,8 @@
 """Check that the path.lang.ext TRANSLATIONS_PATTERN works too"""
 
-import io
 import os
 import shutil
 
-import lxml.html
 import pytest
 
 import nikola.plugins.command.init
@@ -15,26 +13,7 @@ from .helper import patch_config
 from .test_empty_build import (  # NOQA
     test_archive_exists, test_avoid_double_slash_in_rss, test_check_files,
     test_check_links, test_index_in_sitemap)
-
-
-def test_translated_titles(build, output_dir, other_locale):
-    """Check that translated title is picked up."""
-    normal_file = os.path.join(output_dir, "pages", "1", "index.html")
-    translated_file = os.path.join(output_dir, other_locale,
-                                   "pages", "1", "index.html")
-
-    # Files should be created
-    assert os.path.isfile(normal_file)
-    assert os.path.isfile(translated_file)
-
-    # And now let's check the titles
-    with io.open(normal_file, 'r', encoding='utf8') as inf:
-        doc = lxml.html.parse(inf)
-        assert doc.find('//title').text == 'Foo | Demo Site'
-
-    with io.open(translated_file, 'r', encoding='utf8') as inf:
-        doc = lxml.html.parse(inf)
-        assert doc.find('//title').text == 'Bar | Demo Site'
+from .test_translated_content import test_translated_titles  # NOQA
 
 
 @pytest.fixture(scope="module")
