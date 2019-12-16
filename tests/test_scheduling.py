@@ -15,20 +15,6 @@ RULE_TH = 'RRULE:FREQ=WEEKLY;BYDAY=TH'
 RULE_FR = 'RRULE:FREQ=WEEKLY;BYDAY=FR'
 
 
-@pytest.fixture(autouse=True)
-def disable_six_modules():
-    deleted = {
-        name: sys.modules.pop(name)
-        for name in sys.modules
-        if name.startswith("six.moves.")
-    }
-    try:
-        yield
-    finally:
-        for name, mod in deleted.items():
-            sys.modules[name] = mod
-
-
 def test_get_date(today):
     # NOW does not match rule #########################################
     # No last date
@@ -140,3 +126,17 @@ def now() -> datetime:
 
     with freeze_time(_NOW):
         yield _NOW
+
+
+@pytest.fixture(autouse=True)
+def disable_six_modules():
+    deleted = {
+        name: sys.modules.pop(name)
+        for name in sys.modules
+        if name.startswith("six.moves.")
+    }
+    try:
+        yield
+    finally:
+        for name, mod in deleted.items():
+            sys.modules[name] = mod
