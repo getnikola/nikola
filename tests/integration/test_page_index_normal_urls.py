@@ -17,7 +17,7 @@ from .test_empty_build import (  # NOQA
 
 
 def test_page_index(build, output_dir, output_path_func):
-    """Test PAGE_INDEX."""
+    """Test PAGE_INDEX - Do all files exist?"""
     path_func = output_path_func
 
     pages = os.path.join(output_dir, "pages")
@@ -25,7 +25,6 @@ def test_page_index(build, output_dir, output_path_func):
     subdir2 = os.path.join(output_dir, "pages", "subdir2")
     subdir3 = os.path.join(output_dir, "pages", "subdir3")
 
-    # Do all files exist?
     assert os.path.isfile(path_func(pages, 'page0'))
     assert os.path.isfile(path_func(subdir1, 'page1'))
     assert os.path.isfile(path_func(subdir1, 'page2'))
