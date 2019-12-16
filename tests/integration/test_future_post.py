@@ -1,8 +1,8 @@
 """Test a site with future posts."""
 
-import datetime
 import io
 import os
+from datetime import timedelta
 
 import pytest
 
@@ -59,13 +59,24 @@ def build(target_dir):
     # Change COMMENT_SYSTEM_ID to not wait for 5 seconds
     append_config(target_dir, '\nCOMMENT_SYSTEM_ID = "nikolatest"\n')
 
-    with io.open(os.path.join(target_dir, 'posts', 'empty1.txt'), "w+", encoding="utf8") as past_post:
-        past_post.write(".. title: foo\n" ".. slug: foo\n" ".. date: %s\n" % (
-            current_time() + datetime.timedelta(-1)).strftime('%Y-%m-%d %H:%M:%S'))
+    def format_datetime(dt):
+        return dt.strftime('%Y-%m-%d %H:%M:%S')
 
+    past_datetime = format_datetime(current_time() + timedelta(days=-1))
+    with io.open(os.path.join(target_dir, 'posts', 'empty1.txt'), "w+", encoding="utf8") as past_post:
+        past_post.write("""\
+.. title: foo
+.. slug: foo
+.. date: %s
+""" % past_datetime)
+
+    future_datetime = format_datetime(current_time() + timedelta(days=1))
     with io.open(os.path.join(target_dir, 'posts', 'empty2.txt'), "w+", encoding="utf8") as future_post:
-        future_post.write(".. title: bar\n" ".. slug: bar\n" ".. date: %s\n" % (
-            current_time() + datetime.timedelta(1)).strftime('%Y-%m-%d %H:%M:%S'))
+        future_post.write("""\
+.. title: bar
+.. slug: bar
+.. date: %s
+""" % future_datetime)
 
     with cd(target_dir):
         __main__.main(["build"])
