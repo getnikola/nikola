@@ -61,11 +61,12 @@ def test_current_time_matching_rule(now, scheduling):
 
 
 def test_last_date_in_the_past_not_matching_rule(today):
-    # Last date in the past; doesn't match rule
+    """Last date in the past; doesn't match rule"""
     # Corresponding time has already passed, today
     date = today.replace(day=21, hour=7)
     expected = today.replace(day=29, hour=7)
     assert expected == get_date(True, RULE_TH, date, tz=UTC)[1]
+
     # Corresponding time has not passed today
     date = today.replace(day=21, hour=18)
     expected = today.replace(day=22, hour=18)
