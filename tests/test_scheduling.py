@@ -11,8 +11,6 @@ freezegun = pytest.importorskip('freezegun')
 freeze_time = freezegun.freeze_time
 
 UTC = dateutil.tz.tzutc()
-_NOW = datetime.datetime(  # Thursday
-    2013, 8, 22, 10, 0, 0, tzinfo=UTC)
 RULE_TH = 'RRULE:FREQ=WEEKLY;BYDAY=TH'
 RULE_FR = 'RRULE:FREQ=WEEKLY;BYDAY=FR'
 
@@ -58,13 +56,16 @@ def test_get_date(today):
     expected = today.replace(day=30, hour=18)
     assert expected == get_date(True, RULE_FR, date, tz=UTC)[1]
 
+
+def test_current_time_matching_rule(now):
     # NOW matches rule ################################################
     # Not scheduling should return NOW
-    assert _NOW == get_date(False, RULE_TH, tz=UTC)[1]
+    assert now == get_date(False, RULE_TH, tz=UTC)[1]
 
     # No last date
-    assert _NOW == get_date(True, RULE_TH, tz=UTC)[1]
-    assert _NOW == get_date(True, RULE_TH, tz=UTC)[1]
+    assert now == get_date(True, RULE_TH, tz=UTC)[1]
+    assert now == get_date(True, RULE_TH, tz=UTC)[1]
+
 
 def test_last_date_in_the_past_not_matching_rule(today):
     # Last date in the past; doesn't match rule
@@ -123,7 +124,19 @@ def test_last_date_in_the_future_matching_rule(today):
 
 
 @pytest.fixture
-def today():
-    NOW = _NOW.strftime('%Y-%m-%d %H:%M:%S %Z')
+def today(now):
+    current_time = now.strftime('%Y-%m-%d %H:%M:%S %Z')
+    yield dateutil.parser.parse(current_time)
+
+
+@pytest.fixture
+def now() -> datetime:
+    """
+    Get the current time.
+
+    datetime is frozen to this point in time.
+    """
+    _NOW = datetime.datetime(2013, 8, 22, 10, 0, 0, tzinfo=UTC)  # Thursday
+
     with freeze_time(_NOW):
-        yield dateutil.parser.parse(NOW)
+        yield _NOW
