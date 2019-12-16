@@ -37,25 +37,6 @@ def cd(path):
     os.chdir(old_dir)
 
 
-class FakePost:
-
-    def __init__(self, title, slug):
-        self._title = title
-        self._slug = slug
-        self._meta = {'slug': slug}
-        self.default_lang = 'en'
-        self._depfile = {}
-
-    def title(self):
-        return self._title
-
-    def meta(self, key):
-        return self._meta[key]
-
-    def permalink(self):
-        return '/posts/' + self._slug
-
-
 class FakeSite:
     def __init__(self):
         self.template_system = self
@@ -134,3 +115,22 @@ class FakeSite:
         """Apply shortcodes from the registry on data."""
         return nikola.shortcodes.apply_shortcodes(
             data, self.shortcode_registry, **kw)
+
+
+class FakePost:
+
+    def __init__(self, title, slug):
+        self._title = title
+        self._slug = slug
+        self._meta = {'slug': slug}
+        self.default_lang = 'en'
+        self._depfile = {}
+
+    def title(self):
+        return self._title
+
+    def meta(self, key):
+        return self._meta[key]
+
+    def permalink(self):
+        return '/posts/' + self._slug
