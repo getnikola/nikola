@@ -6,8 +6,8 @@ It will do create a new site with the import_wordpress command
 and use that newly created site to make a build.
 """
 
-import os
 import os.path
+from glob import glob
 
 import pytest
 
@@ -22,8 +22,12 @@ def test_import_created_files(build, target_dir):
     assert os.path.exists(target_dir)
     assert os.path.exists(os.path.join(target_dir, 'conf.py'))
 
-    pages = os.path.join(target_dir, 'pages')
-    assert os.path.isdir(pages)
+
+@pytest.mark.parametrize("dirname", ["pages", "posts"])
+def test_filled_directories(build, target_dir, dirname):
+    folder = os.path.join(target_dir, dirname)
+    assert os.path.isdir(folder)
+    assert glob(os.path.join(folder, '*'))
 
 
 @pytest.fixture(scope="module")
