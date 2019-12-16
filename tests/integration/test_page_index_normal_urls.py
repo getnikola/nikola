@@ -154,21 +154,57 @@ def create_pages(target_dir):
     makedirs(subdir3)
 
     with io.open(os.path.join(pages, 'page0.txt'), "w+", encoding="utf8") as outf:
-        outf.write(".. title: Page 0\n.. slug: page0\n\nThis is page 0.\n")
+        outf.write("""\
+.. title: Page 0
+.. slug: page0
+
+This is page 0.
+""")
 
     with io.open(os.path.join(subdir1, 'page1.txt'), "w+", encoding="utf8") as outf:
-        outf.write(".. title: Page 1\n.. slug: page1\n\nThis is page 1.\n")
+        outf.write("""\
+.. title: Page 1
+.. slug: page1
+
+This is page 1.
+""")
+
     with io.open(os.path.join(subdir1, 'page2.txt'), "w+", encoding="utf8") as outf:
-        outf.write(".. title: Page 2\n.. slug: page2\n\nThis is page 2.\n")
+        outf.write("""\
+.. title: Page 2
+.. slug: page2
+
+This is page 2.
+""")
 
     with io.open(os.path.join(subdir2, 'page3.txt'), "w+", encoding="utf8") as outf:
-        outf.write(".. title: Page 3\n.. slug: page3\n\nThis is page 3.\n")
+        outf.write("""\
+.. title: Page 3
+.. slug: page3
+
+This is page 3.
+""")
+
     with io.open(os.path.join(subdir2, 'foo.txt'), "w+", encoding="utf8") as outf:
-        outf.write(
-            ".. title: Not the page index\n.. slug: index\n\nThis is not the page index.\n")
+        outf.write("""\
+.. title: Not the page index
+.. slug: index
+
+This is not the page index.
+""")
 
     with io.open(os.path.join(subdir3, 'page4.txt'), "w+", encoding="utf8") as outf:
-        outf.write(".. title: Page 4\n.. slug: page4\n\nThis is page 4.\n")
+        outf.write("""\
+.. title: Page 4
+.. slug: page4
+
+This is page 4.
+""")
+
     with io.open(os.path.join(subdir3, 'bar.php'), "w+", encoding="utf8") as outf:
-        outf.write(
-            ".. title: Still not the page index\n.. slug: index\n\nThis is not the page index either.\n")
+        outf.write("""\
+.. title: Still not the page index
+.. slug: index
+
+This is not the page index either.
+""")

@@ -58,11 +58,21 @@ def build(target_dir):
     makedirs(sec1)
 
     with io.open(os.path.join(pages, 'sec1.txt'), "w+", encoding="utf8") as outf:
-        outf.write(".. title: Page 0\n.. slug: sec1\n\nThis is Page 0.\n")
+        outf.write("""\
+.. title: Page 0
+.. slug: sec1
+
+This is Page 0.
+""")
 
     with io.open(os.path.join(sec1, 'foo.txt'), "w+", encoding="utf8") as outf:
-        outf.write(
-            ".. title: Post 0\n.. slug: post0\n.. date: 2013-03-06 19:08:15\n\nThis is Post 0.\n")
+        outf.write("""\
+.. title: Post 0
+.. slug: post0
+.. date: 2013-03-06 19:08:15
+
+This is Post 0.
+""")
 
     append_config(target_dir, """
 POSTS_SECTIONS = True
