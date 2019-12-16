@@ -16,26 +16,52 @@ from .test_empty_build import (  # NOQA
     test_check_links, test_index_in_sitemap)
 
 
-def test_page_index(build, output_dir, output_path_func):
+def get_last_folder_as_id(value):
+    """Use the last part of the directories as test identifier."""
+    if isinstance(value, (tuple, )):
+        return value[-1]
+
+    return value
+
+
+@pytest.mark.parametrize("dirs, expected_file", [
+    (("pages", ), "page0"),
+    (("pages", "subdir1"), "page1"),
+    (("pages", "subdir1"), "page2"),
+    (("pages", "subdir2"), "page3"),
+    (("pages", "subdir3"), "page4"),
+], ids=get_last_folder_as_id)
+def test_page_index(build, output_dir, dirs, expected_file, output_path_func):
     """Test PAGE_INDEX - Do all files exist?"""
     path_func = output_path_func
 
-    pages = os.path.join(output_dir, "pages")
-    subdir1 = os.path.join(output_dir, "pages", "subdir1")
-    subdir2 = os.path.join(output_dir, "pages", "subdir2")
-    subdir3 = os.path.join(output_dir, "pages", "subdir3")
+    checkdir = os.path.join(output_dir, *dirs)
 
-    assert os.path.isfile(path_func(pages, 'page0'))
-    assert os.path.isfile(path_func(subdir1, 'page1'))
-    assert os.path.isfile(path_func(subdir1, 'page2'))
-    assert os.path.isfile(path_func(subdir2, 'page3'))
-    assert os.path.isfile(path_func(subdir3, 'page4'))
+    assert os.path.isfile(path_func(checkdir, expected_file))
 
-    assert os.path.isfile(os.path.join(pages, 'index.html'))
-    assert os.path.isfile(os.path.join(subdir1, 'index.html'))
-    assert os.path.isfile(os.path.join(subdir2, 'index.html'))
-    assert os.path.isfile(os.path.join(subdir3, 'index.php'))
-    assert not os.path.isfile(os.path.join(subdir3, 'index.html'))
+
+@pytest.mark.parametrize("dirs, expected_index_file", [
+    (("pages", ), "index.html"),
+    (("pages", "subdir1"), "index.html"),
+    (("pages", "subdir2"), "index.html"),
+    (("pages", "subdir3"), "index.php"),
+], ids=get_last_folder_as_id)
+def test_page_index_in_subdir(build, output_dir, dirs, expected_index_file):
+    """Test PAGE_INDEX - Do index files in subdir exist?"""
+    checkdir = os.path.join(output_dir, *dirs)
+
+    assert os.path.isfile(os.path.join(checkdir, expected_index_file))
+    if expected_index_file == 'index.php':
+        assert not os.path.isfile(os.path.join(checkdir, 'index.html'))
+
+
+@pytest.fixture(scope="module")
+def output_path_func():
+    def output_path(dir, name):
+        """Make a file path to the output."""
+        return os.path.join(dir, name + '.html')
+
+    return output_path
 
 
 def test_page_index_content_in_pages(build, output_dir):
@@ -96,15 +122,6 @@ def test_page_index_content_in_subdir3(build, output_dir):
     assert 'Page 3' not in subdir3_index
     assert 'Page 4' not in subdir3_index
     assert 'This is not the page index either.' in subdir3_index
-
-
-@pytest.fixture(scope="module")
-def output_path_func():
-    def output_path(dir, name):
-        """Make a file path to the output."""
-        return os.path.join(dir, name + '.html')
-
-    return output_path
 
 
 @pytest.fixture(scope="module")

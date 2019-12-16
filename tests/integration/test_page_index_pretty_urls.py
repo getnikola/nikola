@@ -14,9 +14,9 @@ from .test_empty_build import (  # NOQA
     test_check_links, test_index_in_sitemap)
 from .test_page_index_normal_urls import create_pages
 from .test_page_index_normal_urls import (  # NOQA
-    test_page_index, test_page_index_content_in_pages,
-    test_page_index_content_in_subdir1, test_page_index_content_in_subdir2,
-    test_page_index_content_in_subdir3)
+    test_page_index, test_page_index_in_subdir,
+    test_page_index_content_in_pages, test_page_index_content_in_subdir1,
+    test_page_index_content_in_subdir2, test_page_index_content_in_subdir3)
 
 
 @pytest.fixture(scope="module")
