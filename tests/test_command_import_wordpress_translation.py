@@ -15,14 +15,39 @@ def legacy_qtranslate_separate(text):
     return separate_qtranslate_tagged_langs(modern_text)
 
 
-@pytest.mark.parametrize("content, french_translation, english_translation", [
-    ("[:fr]Voila voila[:en]BLA[:]", "Voila voila", "BLA"),
-    ("[:fr]Voila voila[:]COMMON[:en]BLA[:]", "Voila voila COMMON", "COMMON BLA"),
-    ("<!--:fr-->Voila voila<!--:-->COMMON<!--:en-->BLA<!--:-->", "Voila voila COMMON", "COMMON BLA"),
-    ("<!--:fr-->Voila voila<!--:-->COMMON<!--:fr-->MOUF<!--:--><!--:en-->BLA<!--:-->", "Voila voila COMMON MOUF", "COMMON BLA"),
-    ("<!--:fr-->Voila voila<!--:--><!--:en-->BLA<!--:-->COMMON<!--:fr-->MOUF<!--:-->", "Voila voila COMMON MOUF", "BLA COMMON"),
-], ids=["simple", "pre modern with intermission", "withintermission", "with uneven repartition", "with uneven repartition bis"])
-def test_legacy_split_a_two_language_post(content, french_translation, english_translation):
+@pytest.mark.parametrize(
+    "content, french_translation, english_translation",
+    [
+        pytest.param("[:fr]Voila voila[:en]BLA[:]", "Voila voila", "BLA", id="simple"),
+        pytest.param(
+            "[:fr]Voila voila[:]COMMON[:en]BLA[:]",
+            "Voila voila COMMON",
+            "COMMON BLA",
+            id="pre modern with intermission",
+        ),
+        pytest.param(
+            "<!--:fr-->Voila voila<!--:-->COMMON<!--:en-->BLA<!--:-->",
+            "Voila voila COMMON",
+            "COMMON BLA",
+            id="withintermission",
+        ),
+        pytest.param(
+            "<!--:fr-->Voila voila<!--:-->COMMON<!--:fr-->MOUF<!--:--><!--:en-->BLA<!--:-->",
+            "Voila voila COMMON MOUF",
+            "COMMON BLA",
+            id="with uneven repartition",
+        ),
+        pytest.param(
+            "<!--:fr-->Voila voila<!--:--><!--:en-->BLA<!--:-->COMMON<!--:fr-->MOUF<!--:-->",
+            "Voila voila COMMON MOUF",
+            "BLA COMMON",
+            id="with uneven repartition bis",
+        ),
+    ],
+)
+def test_legacy_split_a_two_language_post(
+    content, french_translation, english_translation
+):
     content_translations = legacy_qtranslate_separate(content)
     assert french_translation == content_translations["fr"]
     assert english_translation == content_translations["en"]

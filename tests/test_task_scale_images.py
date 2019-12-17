@@ -26,8 +26,12 @@ def test_handling_icc_profiles(test_images, destination_dir):
     assert actual_profile == expected_profile
 
 
-@pytest.fixture(params=[True, False],
-                ids=["with icc filename", "without icc filename"])
+@pytest.fixture(
+    params=[
+        pytest.param(True, id="with icc filename"),
+        pytest.param(False, id="without icc filename"),
+    ]
+)
 def test_images(request, preserve_icc_profiles, source_dir, site):
     image_filename = create_src_image(str(source_dir), request.param)
     run_task(site)
@@ -38,7 +42,12 @@ def test_images(request, preserve_icc_profiles, source_dir, site):
         yield image_filename, None
 
 
-@pytest.fixture(params=[True, False], ids=["profiles preserved", "profiles not preserved"])
+@pytest.fixture(
+    params=[
+        pytest.param(True, id="profiles preserved"),
+        pytest.param(False, id="profiles not preserved"),
+    ]
+)
 def preserve_icc_profiles(request):
     return request.param
 

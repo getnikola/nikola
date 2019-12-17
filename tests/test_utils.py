@@ -122,76 +122,91 @@ def test_get_meta_slug_only_from_filename(post):
     assert 'the_slug' == meta['slug']
 
 
-@pytest.mark.parametrize("level, input_str, expected_output", [
-    (0,
-     '''
+@pytest.mark.parametrize(
+    "level, input_str, expected_output",
+    [
+        pytest.param(
+            0,
+            """
      <h1>header 1</h1>
      <h2>header 2</h2>
      <h3>header 3</h3>
      <h4>header 4</h4>
      <h5>header 5</h5>
      <h6>header 6</h6>
-     ''',
-     '''
+     """,
+            """
      <h1>header 1</h1>
      <h2>header 2</h2>
      <h3>header 3</h3>
      <h4>header 4</h4>
      <h5>header 5</h5>
      <h6>header 6</h6>
-     '''),
-    (1,
-     '''
+     """,
+            id="by zero",
+        ),
+        pytest.param(
+            1,
+            """
      <h1>header 1</h1>
      <h2>header 2</h2>
      <h3>header 3</h3>
      <h4>header 4</h4>
      <h5>header 5</h5>
      <h6>header 6</h6>
-     ''',
-     '''
+     """,
+            """
      <h2>header 1</h2>
      <h3>header 2</h3>
      <h4>header 3</h4>
      <h5>header 4</h5>
      <h6>header 5</h6>
      <h6>header 6</h6>
-     '''),
-    (2,
-     '''
+     """,
+            id="by one",
+        ),
+        pytest.param(
+            2,
+            """
      <h1>header 1</h1>
      <h2>header 2</h2>
      <h3>header 3</h3>
      <h4>header 4</h4>
      <h5>header 5</h5>
      <h6>header 6</h6>
-     ''',
-     '''
+     """,
+            """
      <h3>header 1</h3>
      <h4>header 2</h4>
      <h5>header 3</h5>
      <h6>header 4</h6>
      <h6>header 5</h6>
      <h6>header 6</h6>
-     '''),
-    (-1,
-     '''
+     """,
+            id="by two",
+        ),
+        pytest.param(
+            -1,
+            """
      <h1>header 1</h1>
      <h2>header 2</h2>
      <h3>header 3</h3>
      <h4>header 4</h4>
      <h5>header 5</h5>
      <h6>header 6</h6>
-     ''',
-     '''
+     """,
+            """
      <h1>header 1</h1>
      <h1>header 2</h1>
      <h2>header 3</h2>
      <h3>header 4</h3>
      <h4>header 5</h4>
      <h5>header 6</h5>
-     ''')
-], ids=["by zero", "by one", "by two", "by minus one"])
+     """,
+            id="by minus one",
+        ),
+    ],
+)
 def test_demoting_headers(level, input_str, expected_output):
     doc = lxml.html.fromstring(input_str)
     outdoc = lxml.html.fromstring(expected_output)

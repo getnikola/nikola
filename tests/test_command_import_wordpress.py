@@ -307,15 +307,20 @@ def test_configure_redirections(import_command):
     redirections = import_command.configure_redirections(url_map)
 
     assert 1 == len(redirections)
-    assert ('somewhere/else/index.html', '/posts/somewhereelse.html') in redirections
+    assert ("somewhere/else/index.html", "/posts/somewhereelse.html") in redirections
 
 
-@pytest.mark.parametrize("options, additional_args", [
-    (None, None),  # only import filename given
-    ({'output_folder': 'some_folder'}, None),
-    (None, ['folder_argument']),
-])
-def test_create_import(patched_import_command, import_filename, mocks, options, additional_args):
+@pytest.mark.parametrize(
+    "options, additional_args",
+    [
+        pytest.param(None, None, id="only import filename"),
+        ({"output_folder": "some_folder"}, None),
+        (None, ["folder_argument"]),
+    ],
+)
+def test_create_import(
+    patched_import_command, import_filename, mocks, options, additional_args
+):
     arguments = {"args": [import_filename]}
     if options:
         arguments["options"] = options

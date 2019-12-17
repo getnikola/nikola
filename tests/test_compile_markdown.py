@@ -8,11 +8,22 @@ from nikola.plugins.compile.markdown import CompileMarkdown
 from .base import FakeSite
 
 
-@pytest.mark.parametrize("input_str, expected_output", [
-    ('', ''),
-    ("[podcast]https://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3[/podcast]", '<p><audio controls=""><source src="https://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3" type="audio/mpeg"></source></audio></p>'),
-    ('~~striked out text~~', '<p><del>striked out text</del></p>'),
-    ('''\
+@pytest.mark.parametrize(
+    "input_str, expected_output",
+    [
+        pytest.param("", "", id="empty"),
+        pytest.param(
+            "[podcast]https://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3[/podcast]",
+            '<p><audio controls=""><source src="https://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3" type="audio/mpeg"></source></audio></p>',
+            id="mdx podcast",
+        ),
+        pytest.param(
+            "~~striked out text~~",
+            "<p><del>striked out text</del></p>",
+            id="strikethrough",
+        ),
+        pytest.param(
+            """\
     #!python
     from this
 ''', '''\
@@ -22,9 +33,14 @@ from .base import FakeSite
 <span class="kn">from</span> <span class="nn">this</span>
 </pre>
 </td></tr></table>
-'''),
-], ids=["empty", "mdx podcast", "strikethrough", "hilite"])
-def test_compiling_markdown(compiler, input_path, output_path, input_str, expected_output):
+""",
+            id="hilite",
+        ),
+    ],
+)
+def test_compiling_markdown(
+    compiler, input_path, output_path, input_str, expected_output
+):
     output = markdown_compile(compiler, input_path, output_path, input_str)
     assert output.strip() == expected_output.strip()
 
