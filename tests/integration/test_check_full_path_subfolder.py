@@ -5,7 +5,6 @@ Validate links in a site which is:
 * deployable to a subfolder (BASE_URL="https://example.com/foo/")
 """
 
-import io
 import os
 import shutil
 
@@ -15,22 +14,10 @@ import nikola.plugins.command.init
 from nikola import __main__
 
 from .helper import add_post_without_text, cd, patch_config
+from .test_check_absolute_subfolder import test_index_in_sitemap  # NOQA
 from .test_empty_build import (  # NOQA
     test_archive_exists, test_avoid_double_slash_in_rss, test_check_files,
     test_check_links)
-
-
-def test_index_in_sitemap(build, output_dir):
-    """
-    Test that the correct path is in sitemap, and not the wrong one.
-
-    The correct path ends in /foo/ because this is where we deploy to.
-    """
-    sitemap_path = os.path.join(output_dir, "sitemap.xml")
-    with io.open(sitemap_path, "r", encoding="utf8") as inf:
-        sitemap_data = inf.read()
-
-    assert '<loc>https://example.com/foo/</loc>' in sitemap_data
 
 
 @pytest.fixture(scope="module")
