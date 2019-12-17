@@ -64,7 +64,7 @@ def build(target_dir):
 This is Page 0.
 """)
 
-    with io.open(os.path.join(sec1, 'foo.txt'), "w+", encoding="utf8") as outf:
+    with io.open(os.path.join(sec1, 'colliding.txt'), "w+", encoding="utf8") as outf:
         outf.write("""\
 .. title: Post 0
 .. slug: post0
