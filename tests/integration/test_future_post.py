@@ -58,8 +58,8 @@ def build(target_dir):
     # Change COMMENT_SYSTEM_ID to not wait for 5 seconds
     append_config(target_dir, '\nCOMMENT_SYSTEM_ID = "nikolatest"\n')
 
-    def format_datetime(dt):
-        return dt.strftime('%Y-%m-%d %H:%M:%S')
+    def format_datetime(datetime):
+        return datetime.strftime('%Y-%m-%d %H:%M:%S')
 
     past_datetime = format_datetime(current_time() + timedelta(days=-1))
     with io.open(os.path.join(target_dir, 'posts', 'empty1.txt'), "w+", encoding="utf8") as past_post:

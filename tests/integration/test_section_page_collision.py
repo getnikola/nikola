@@ -23,11 +23,11 @@ def test_section_index_avoidance(build, output_dir):
         return os.path.join(dir, name + '.html')
 
     sec1 = os.path.join(output_dir, "sec1")
-    foo = os.path.join(output_dir, "sec1", "post0")
+    colliding = os.path.join(output_dir, "sec1", "post0")
 
     # Do all files exist?
     assert os.path.isfile(_make_output_path(sec1, 'index'))
-    assert os.path.isfile(_make_output_path(foo, 'index'))
+    assert os.path.isfile(_make_output_path(colliding, 'index'))
 
     # Is it really a page?
     with io.open(os.path.join(sec1, 'index.html'), 'r', encoding='utf-8') as fh:
