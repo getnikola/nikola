@@ -52,7 +52,7 @@ def test_current_time_matching_rule(today):
 
 
 @pytest.mark.parametrize("scheduling", [True, False])
-def test_current_time_matching_rule(now, scheduling):
+def test_current_time_matching_rule_no_given_date(now, scheduling):
     """
     No last date given means we should always get the current time.
 
