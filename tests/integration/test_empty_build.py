@@ -13,12 +13,12 @@ from .helper import cd
 
 def test_check_links(build, target_dir):
     with cd(target_dir):
-        assert __main__.main(['check', '-l']) is None
+        assert __main__.main(["check", "-l"]) is None
 
 
 def test_check_files(build, target_dir):
     with cd(target_dir):
-        assert __main__.main(['check', '-f']) is None
+        assert __main__.main(["check", "-f"]) is None
 
 
 def test_index_in_sitemap(build, output_dir):
@@ -26,7 +26,7 @@ def test_index_in_sitemap(build, output_dir):
     with io.open(sitemap_path, "r", encoding="utf8") as inf:
         sitemap_data = inf.read()
 
-    assert '<loc>https://example.com/</loc>' in sitemap_data
+    assert "<loc>https://example.com/</loc>" in sitemap_data
 
 
 def test_avoid_double_slash_in_rss(build, output_dir):
@@ -34,7 +34,7 @@ def test_avoid_double_slash_in_rss(build, output_dir):
     with io.open(rss_path, "r", encoding="utf8") as inf:
         rss_data = inf.read()
 
-    assert 'https://example.com//' not in rss_data
+    assert "https://example.com//" not in rss_data
 
 
 def test_archive_exists(build, output_dir):

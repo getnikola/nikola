@@ -39,14 +39,15 @@ def build(target_dir, test_dir):
     init_command.copy_sample_site(target_dir)
     init_command.create_configuration(target_dir)
 
-    src1 = os.path.join(test_dir, '..', 'data', '1-nolinks.rst')
-    dst1 = os.path.join(target_dir, 'posts', '1.rst')
+    src1 = os.path.join(test_dir, "..", "data", "1-nolinks.rst")
+    dst1 = os.path.join(target_dir, "posts", "1.rst")
     shutil.copy(src1, dst1)
 
-    add_post_without_text(os.path.join(target_dir, 'posts'))
+    add_post_without_text(os.path.join(target_dir, "posts"))
 
-    patch_config(target_dir, ('# CREATE_FULL_ARCHIVES = False',
-                              'CREATE_FULL_ARCHIVES = True'))
+    patch_config(
+        target_dir, ("# CREATE_FULL_ARCHIVES = False", "CREATE_FULL_ARCHIVES = True")
+    )
 
     with cd(target_dir):
         __main__.main(["build"])

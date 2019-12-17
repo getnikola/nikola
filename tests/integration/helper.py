@@ -8,13 +8,15 @@ __all__ = ["add_post_without_text", "append_config", "cd", "patch_config"]
 
 def add_post_without_text(directory):
     # File for Issue #374 (empty post text)
-    path = os.path.join(directory, 'empty.txt')
+    path = os.path.join(directory, "empty.txt")
     with io.open(path, "w+", encoding="utf8") as outf:
-        outf.write("""\
+        outf.write(
+            """
 .. title: foobar
 .. slug: foobar
 .. date: 2013-03-06 19:08:15
-""")
+"""
+        )
 
 
 def append_config(config_dir, appendix):

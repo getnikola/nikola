@@ -28,9 +28,7 @@ def test_ReST_extension(tempdir):
     sample = '.. raw:: html\n\n   <iframe src="foo" height="bar">spam</iframe>'
     html = get_html_from_rst(tempdir, sample)
 
-    assert_html_contains(html, "iframe",
-                         attributes={"src": "foo"},
-                         text="spam")
+    assert_html_contains(html, "iframe", attributes={"src": "foo"}, text="spam")
 
     with pytest.raises(Exception):
         assert_html_contains("eggs", {})
@@ -38,59 +36,83 @@ def test_ReST_extension(tempdir):
 
 def test_math_extension_outputs_tex(tempdir):
     """Test that math is outputting TeX code."""
-    sample = r':math:`e^{ix} = \cos x + i\sin x`'
+    sample = r":math:`e^{ix} = \cos x + i\sin x`"
     html = get_html_from_rst(tempdir, sample)
 
-    assert_html_contains(html, "span",
-                         attributes={"class": "math"},
-                         text=r"\(e^{ix} = \cos x + i\sin x\)")
+    assert_html_contains(
+        html,
+        "span",
+        attributes={"class": "math"},
+        text=r"\(e^{ix} = \cos x + i\sin x\)",
+    )
 
 
 def test_soundcloud_iframe(tempdir):
     """Test SoundCloud iframe tag generation"""
 
-    sample = '.. soundcloud:: SID\n   :height: 400\n   :width: 600'
+    sample = ".. soundcloud:: SID\n   :height: 400\n   :width: 600"
     html = get_html_from_rst(tempdir, sample)
-    assert_html_contains(html, "iframe",
-                         attributes={"src": ("https://w.soundcloud.com/player/"
-                                             "?url=http://api.soundcloud.com/"
-                                             "tracks/SID"),
-                                     "height": "400",
-                                     "width": "600"})
+    assert_html_contains(
+        html,
+        "iframe",
+        attributes={
+            "src": (
+                "https://w.soundcloud.com/player/"
+                "?url=http://api.soundcloud.com/"
+                "tracks/SID"
+            ),
+            "height": "400",
+            "width": "600",
+        },
+    )
 
 
 def test_youtube_iframe(tempdir):
     """Test Youtube iframe tag generation"""
 
-    sample = '.. youtube:: YID\n   :height: 400\n   :width: 600'
+    sample = ".. youtube:: YID\n   :height: 400\n   :width: 600"
     html = get_html_from_rst(tempdir, sample)
-    assert_html_contains(html, "iframe",
-                         attributes={"src": ("https://www.youtube-nocookie.com"
-                                             "/embed/YID?rel=0&"
-                                             "wmode=transparent"),
-                                     "height": "400",
-                                     "width": "600",
-                                     "frameborder": "0",
-                                     "allowfullscreen": "",
-                                     "allow": "encrypted-media"})
+    assert_html_contains(
+        html,
+        "iframe",
+        attributes={
+            "src": (
+                "https://www.youtube-nocookie.com"
+                "/embed/YID?rel=0&"
+                "wmode=transparent"
+            ),
+            "height": "400",
+            "width": "600",
+            "frameborder": "0",
+            "allowfullscreen": "",
+            "allow": "encrypted-media",
+        },
+    )
 
 
 def test_vimeo(disable_vimeo_api_query, tempdir):
     """Test Vimeo iframe tag generation"""
 
-    sample = '.. vimeo:: VID\n   :height: 400\n   :width: 600'
+    sample = ".. vimeo:: VID\n   :height: 400\n   :width: 600"
     html = get_html_from_rst(tempdir, sample)
-    assert_html_contains(html, "iframe",
-                         attributes={"src": ("https://player.vimeo.com/"
-                                             "video/VID"),
-                                     "height": "400",
-                                     "width": "600"})
+    assert_html_contains(
+        html,
+        "iframe",
+        attributes={
+            "src": ("https://player.vimeo.com/" "video/VID"),
+            "height": "400",
+            "width": "600",
+        },
+    )
 
 
-@pytest.mark.parametrize("sample", [
-    '.. code-block:: python\n\n   import antigravity',
-    '.. sourcecode:: python\n\n   import antigravity',
-])
+@pytest.mark.parametrize(
+    "sample",
+    [
+        ".. code-block:: python\n\n   import antigravity",
+        ".. sourcecode:: python\n\n   import antigravity",
+    ],
+)
 def test_rendering_codeblock_alias(tempdir, sample):
     """Test CodeBlock aliases"""
     get_html_from_rst(tempdir, sample)
@@ -98,23 +120,23 @@ def test_rendering_codeblock_alias(tempdir, sample):
 
 def test_doc_doesnt_exist():
     with pytest.raises(Exception):
-        assert_html_contains('anything', {})
+        assert_html_contains("anything", {})
 
 
 def test_doc(tempdir):
-    sample = 'Sample for testing my :doc:`fake-post`'
+    sample = "Sample for testing my :doc:`fake-post`"
     html = get_html_from_rst(tempdir, sample)
-    assert_html_contains(html, 'a',
-                         text='Fake post',
-                         attributes={'href': '/posts/fake-post'})
+    assert_html_contains(
+        html, "a", text="Fake post", attributes={"href": "/posts/fake-post"}
+    )
 
 
 def test_doc_titled(tempdir):
-    sample = 'Sample for testing my :doc:`titled post <fake-post>`'
+    sample = "Sample for testing my :doc:`titled post <fake-post>`"
     html = get_html_from_rst(tempdir, sample)
-    assert_html_contains(html, 'a',
-                         text='titled post',
-                         attributes={'href': '/posts/fake-post'})
+    assert_html_contains(
+        html, "a", text="titled post", attributes={"href": "/posts/fake-post"}
+    )
 
 
 @pytest.fixture(autouse=True, scope="module")
@@ -122,9 +144,9 @@ def localeborg_base():
     """A base config of LocaleBorg."""
     LocaleBorg.reset()
     assert not LocaleBorg.initialized
-    LocaleBorg.initialize({}, 'en')
+    LocaleBorg.initialize({}, "en")
     assert LocaleBorg.initialized
-    assert LocaleBorg().current_lang == 'en'
+    assert LocaleBorg().current_lang == "en"
     try:
         yield
     finally:
@@ -144,10 +166,10 @@ def tempdir(tmpdir):
 def get_html_from_rst(temp_dir, rst):
     """Create html output from rst string"""
 
-    infile = os.path.join(temp_dir, 'inf')
-    outfile = os.path.join(temp_dir, 'outf')
+    infile = os.path.join(temp_dir, "inf")
+    outfile = os.path.join(temp_dir, "outf")
 
-    with io.open(infile, 'w+', encoding='utf8') as post_file:
+    with io.open(infile, "w+", encoding="utf8") as post_file:
         post_file.write(rst)
 
     compiler = nikola.plugins.compile.rest.CompileRest()
@@ -155,12 +177,11 @@ def get_html_from_rst(temp_dir, rst):
     compiler.site.post_per_input_file[infile] = FakePost(outfile)
     compiler.compile(infile, outfile)
 
-    with io.open(outfile, 'r', encoding='utf8') as rendered_file:
+    with io.open(outfile, "r", encoding="utf8") as rendered_file:
         return rendered_file.read()
 
 
 class FakePost:
-
     def __init__(self, outfile):
         self._depfile = {outfile: []}
 

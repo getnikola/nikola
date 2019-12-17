@@ -59,7 +59,7 @@ def test_slugify(title, language, expected_slug):
 )
 def test_disarmed(disarm_slugify, title, expected_slug):
     """Test disarmed slugify."""
-    o = nikola.utils.slugify(title, lang='pl')
+    o = nikola.utils.slugify(title, lang="pl")
     assert o == expected_slug
     assert isinstance(o, nikola.utils.unicode_str)
 

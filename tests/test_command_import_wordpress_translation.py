@@ -3,7 +3,9 @@ import os
 import pytest
 
 from nikola.plugins.command.import_wordpress import (
-    modernize_qtranslate_tags, separate_qtranslate_tagged_langs)
+    modernize_qtranslate_tags,
+    separate_qtranslate_tagged_langs,
+)
 
 
 def legacy_qtranslate_separate(text):
@@ -63,16 +65,18 @@ Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !"
 
 
 def test_modernize_a_wordpress_export_xml_chunk(test_dir):
-    raw_export_path = os.path.join(test_dir, 'data', 'wordpress_import',
-                                   'wordpress_qtranslate_item_raw_export.xml')
-    with open(raw_export_path, 'rb') as raw_xml_chunk_file:
+    raw_export_path = os.path.join(
+        test_dir, "data", "wordpress_import", "wordpress_qtranslate_item_raw_export.xml"
+    )
+    with open(raw_export_path, "rb") as raw_xml_chunk_file:
         content = raw_xml_chunk_file.read()
 
     output = modernize_qtranslate_tags(content)
 
-    modernized_xml_path = os.path.join(test_dir, 'data', 'wordpress_import',
-                                       'wordpress_qtranslate_item_modernized.xml')
-    with open(modernized_xml_path, 'rb') as modernized_chunk_file:
+    modernized_xml_path = os.path.join(
+        test_dir, "data", "wordpress_import", "wordpress_qtranslate_item_modernized.xml"
+    )
+    with open(modernized_xml_path, "rb") as modernized_chunk_file:
         expected = modernized_chunk_file.read()
 
     assert expected == output
@@ -94,15 +98,21 @@ Comments, questions and suggestions are welcome !
 <!--:-->"""
     content_translations = legacy_qtranslate_separate(content)
 
-    assert content_translations["fr"] == """Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+    assert (
+        content_translations["fr"]
+        == """Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
 
 Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
 """
+    )
 
-    assert content_translations["en"] == """If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
+    assert (
+        content_translations["en"]
+        == """If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
 
 Comments, questions and suggestions are welcome !
 """
+    )
 
 
 def test_split_a_two_language_post_with_teaser():
@@ -118,15 +128,21 @@ Plus de détails ici !
 More details here !
 <!--:-->"""
     content_translations = legacy_qtranslate_separate(content)
-    assert content_translations["fr"] == """Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+    assert (
+        content_translations["fr"]
+        == """Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
 
 Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
  <!--more--> \n\
 Plus de détails ici !
 """
-    assert content_translations["en"] == """If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
+    )
+    assert (
+        content_translations["en"]
+        == """If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
 
 Comments, questions and suggestions are welcome !
  <!--more--> \n\
 More details here !
 """
+    )

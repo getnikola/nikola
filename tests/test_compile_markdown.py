@@ -26,7 +26,8 @@ from .base import FakeSite
             """\
     #!python
     from this
-''', '''\
+""",
+            """\
 <table class="codehilitetable"><tr><td class="linenos">\
 <div class="linenodiv"><pre>1</pre></div>\
 </td><td class="code"><pre class="code literal-block"><span></span>\
@@ -59,19 +60,19 @@ def compiler(site):
 
 @pytest.fixture
 def input_path(tmpdir):
-    return path.join(str(tmpdir), 'input.markdown')
+    return path.join(str(tmpdir), "input.markdown")
 
 
 @pytest.fixture
 def output_path(tmpdir):
-    return path.join(str(tmpdir), 'output.html')
+    return path.join(str(tmpdir), "output.html")
 
 
 def markdown_compile(compiler, input_path, output_path, text):
     with io.open(input_path, "w+", encoding="utf8") as input_file:
         input_file.write(text)
 
-    compiler.compile(input_path, output_path, lang='en')
+    compiler.compile(input_path, output_path, lang="en")
 
     with io.open(output_path, "r", encoding="utf8") as output_path:
         return output_path.read()

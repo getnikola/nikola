@@ -13,8 +13,12 @@ from nikola import __main__
 
 from .helper import append_config, cd
 from .test_empty_build import (  # NOQA
-    test_archive_exists, test_avoid_double_slash_in_rss, test_check_files,
-    test_check_links, test_index_in_sitemap)
+    test_archive_exists,
+    test_avoid_double_slash_in_rss,
+    test_check_files,
+    test_check_links,
+    test_index_in_sitemap,
+)
 
 
 def test_future_post_deployment(build, output_dir, target_dir):
@@ -44,8 +48,8 @@ def test_future_post_not_in_indexes(build, output_dir, filename):
 
     with io.open(filepath, "r", encoding="utf8") as inf:
         content = inf.read()
-    assert 'foo/' in content
-    assert 'bar/' not in content
+    assert "foo/" in content
+    assert "bar/" not in content
 
 
 @pytest.fixture(scope="module")
@@ -59,23 +63,33 @@ def build(target_dir):
     append_config(target_dir, '\nCOMMENT_SYSTEM_ID = "nikolatest"\n')
 
     def format_datetime(datetime):
-        return datetime.strftime('%Y-%m-%d %H:%M:%S')
+        return datetime.strftime("%Y-%m-%d %H:%M:%S")
 
     past_datetime = format_datetime(current_time() + timedelta(days=-1))
-    with io.open(os.path.join(target_dir, 'posts', 'empty1.txt'), "w+", encoding="utf8") as past_post:
-        past_post.write("""\
+    with io.open(
+        os.path.join(target_dir, "posts", "empty1.txt"), "w+", encoding="utf8"
+    ) as past_post:
+        past_post.write(
+            """\
 .. title: foo
 .. slug: foo
 .. date: %s
-""" % past_datetime)
+"""
+            % past_datetime
+        )
 
     future_datetime = format_datetime(current_time() + timedelta(days=1))
-    with io.open(os.path.join(target_dir, 'posts', 'empty2.txt'), "w+", encoding="utf8") as future_post:
-        future_post.write("""\
+    with io.open(
+        os.path.join(target_dir, "posts", "empty2.txt"), "w+", encoding="utf8"
+    ) as future_post:
+        future_post.write(
+            """\
 .. title: bar
 .. slug: bar
 .. date: %s
-""" % future_datetime)
+"""
+            % future_datetime
+        )
 
     with cd(target_dir):
         __main__.main(["build"])

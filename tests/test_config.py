@@ -17,7 +17,9 @@ def test_inherited_config(simple_config, metadata_option, complex_config):
     assert complex_config[metadata_option]["ID"] == "prod"
 
 
-def test_config_with_illegal_filename(simple_config, metadata_option, complex_filename_config):
+def test_config_with_illegal_filename(
+    simple_config, metadata_option, complex_filename_config
+):
     """Check whether files with illegal module-name characters can be set as config-files, too."""
     check_base_equality(simple_config, metadata_option, complex_filename_config)
     assert complex_filename_config[metadata_option]["ID"] == "illegal"
@@ -47,7 +49,12 @@ def complex_config(data_dir):
 
 @pytest.fixture(scope="module")
 def complex_filename_config(data_dir):
-    nikola.main(["--conf=" + os.path.join(data_dir, "config.with+illegal(module)name.characters.py")])
+    nikola.main(
+        [
+            "--conf="
+            + os.path.join(data_dir, "config.with+illegal(module)name.characters.py")
+        ]
+    )
     return nikola.config
 
 

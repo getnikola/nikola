@@ -18,7 +18,7 @@ def test_dir():
 
 @pytest.fixture(scope="session")
 def other_locale() -> str:
-    return os.environ.get('NIKOLA_LOCALE_OTHER', 'pl')
+    return os.environ.get("NIKOLA_LOCALE_OTHER", "pl")
 
 
 @pytest.fixture(scope="module")
@@ -28,7 +28,7 @@ def output_dir(target_dir):
 
 @pytest.fixture(scope="module")
 def target_dir(tmpdir_factory):
-    tdir = tmpdir_factory.mktemp('integration').join('target')
+    tdir = tmpdir_factory.mktemp("integration").join("target")
     yield str(tdir)
 
 
@@ -43,7 +43,7 @@ def remove_conf_module():
         yield
     finally:
         try:
-            del sys.modules['conf']
+            del sys.modules["conf"]
         except KeyError:
             pass
 
@@ -68,7 +68,7 @@ def fix_leaked_state():
         yield
     finally:
         try:
-            func = docutils.parsers.rst.roles.role('doc', None, None, None)[0]
+            func = docutils.parsers.rst.roles.role("doc", None, None, None)[0]
             func.site = FakeSite()
         except AttributeError:
             pass

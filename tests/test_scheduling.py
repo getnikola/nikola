@@ -13,12 +13,12 @@ import pytest
 
 from nikola.plugins.command.new_post import get_date
 
-freezegun = pytest.importorskip('freezegun')
+freezegun = pytest.importorskip("freezegun")
 freeze_time = freezegun.freeze_time
 
 UTC = dateutil.tz.tzutc()
-RULE_THURSDAYS = 'RRULE:FREQ=WEEKLY;BYDAY=TH'
-RULE_FRIDAYS = 'RRULE:FREQ=WEEKLY;BYDAY=FR'
+RULE_THURSDAYS = "RRULE:FREQ=WEEKLY;BYDAY=TH"
+RULE_FRIDAYS = "RRULE:FREQ=WEEKLY;BYDAY=FR"
 
 
 def test_current_time_not_matching_rule(today):
@@ -97,7 +97,7 @@ def test_last_date_in_the_past_matching_rule(today):
     # Corresponding time has already passed, today; rule specifies HOUR
     date = today.replace(day=15, hour=7)
     expected = today.replace(day=29, hour=9)
-    assert expected == get_date(True, RULE_THURSDAYS + ';BYHOUR=9', date, tz=UTC)[1]
+    assert expected == get_date(True, RULE_THURSDAYS + ";BYHOUR=9", date, tz=UTC)[1]
 
     # Corresponding time has not passed today
     date = today.replace(day=15, hour=18)
@@ -120,7 +120,7 @@ def test_last_date_in_the_future_matching_rule(today):
 
 @pytest.fixture
 def today(now):
-    current_time = now.strftime('%Y-%m-%d %H:%M:%S %Z')
+    current_time = now.strftime("%Y-%m-%d %H:%M:%S %Z")
     yield dateutil.parser.parse(current_time)
 
 
