@@ -11,8 +11,7 @@ import nikola.plugins.command.init
 from nikola.utils import current_time
 from nikola import __main__
 
-from ..base import cd
-from .helper import append_config
+from .helper import append_config, cd
 from .test_empty_build import (  # NOQA
     test_archive_exists, test_avoid_double_slash_in_rss, test_check_files,
     test_check_links, test_index_in_sitemap)

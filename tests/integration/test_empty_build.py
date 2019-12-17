@@ -8,7 +8,7 @@ import pytest
 import nikola.plugins.command.init
 from nikola import __main__
 
-from ..base import cd
+from .helper import cd
 
 
 def test_check_links(build, target_dir):

@@ -24,7 +24,7 @@ from nikola.plugin_categories import (
     RestExtension
 )
 
-__all__ = ["cd"]
+__all__ = ["cd", "FakeSite"]
 
 nikola.utils.LOGGER.handlers.append(logbook.TestHandler())
 

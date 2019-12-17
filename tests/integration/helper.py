@@ -1,6 +1,10 @@
 import io
 import os
 
+from ..base import cd
+
+__all__ = ["add_post_without_text", "append_config", "cd", "patch_config"]
+
 
 def add_post_without_text(directory):
     # File for Issue #374 (empty post text)
