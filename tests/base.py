@@ -9,11 +9,10 @@ import os
 from contextlib import contextmanager
 
 import logbook
+from yapsy.PluginManager import PluginManager
 
 import nikola.utils
 import nikola.shortcodes
-
-from yapsy.PluginManager import PluginManager
 from nikola.plugin_categories import (
     Command,
     Task,
