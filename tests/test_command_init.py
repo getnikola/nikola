@@ -1,9 +1,10 @@
 from unittest import mock
 
+import pytest
+
 from nikola.plugins.command.init import (
     SAMPLE_CONF, CommandInit, format_default_translations_config)
 
-import pytest
 from .base import cd
 
 

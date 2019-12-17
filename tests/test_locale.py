@@ -1,7 +1,7 @@
 import datetime
-import dateutil
 import unittest.mock
 
+import dateutil
 import pytest
 
 from nikola.nikola import LEGAL_VALUES
