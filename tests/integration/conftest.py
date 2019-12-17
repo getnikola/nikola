@@ -68,7 +68,7 @@ def fix_leaked_state():
         yield
     finally:
         try:
-            f = docutils.parsers.rst.roles.role('doc', None, None, None)[0]
-            f.site = FakeSite()
+            func = docutils.parsers.rst.roles.role('doc', None, None, None)[0]
+            func.site = FakeSite()
         except AttributeError:
             pass
