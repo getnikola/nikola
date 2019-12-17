@@ -155,12 +155,10 @@ def blog_url():
 
 class FakeCompiler:
     demote_headers = False
-    compile_html = None
     compile = None
 
     def extension(self):
         return '.html'
-    name = "fake"
 
     def read_metadata(*args, **kwargs):
         return {}
