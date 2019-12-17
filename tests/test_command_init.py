@@ -85,14 +85,11 @@ def test_configure_translations_with_2_additional_languages():
     Testing the configuration of the translation when two additional languages are given.
     """
     translations_cfg = format_default_translations_config(set(["es", "en"]))
-    assert (
-        translations_cfg
-        == """{
+    assert translations_cfg == """{
     DEFAULT_LANG: "",
     "en": "./en",
     "es": "./es",
 }"""
-    )
 
 
 @pytest.fixture

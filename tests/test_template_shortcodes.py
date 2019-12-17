@@ -22,14 +22,11 @@ kwarg2: {{ kwarg2 }}
         0
     ]
 
-    assert (
-        res.strip()
-        == """
+    assert res.strip() == """
 arg1: arg1
 arg2: arg2
 kwarg1: spamm
 kwarg2: foo,bar""".strip()
-    )
 
 
 @pytest.mark.parametrize(

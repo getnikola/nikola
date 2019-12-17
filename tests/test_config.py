@@ -49,12 +49,10 @@ def complex_config(data_dir):
 
 @pytest.fixture(scope="module")
 def complex_filename_config(data_dir):
-    nikola.main(
-        [
-            "--conf="
-            + os.path.join(data_dir, "config.with+illegal(module)name.characters.py")
-        ]
+    config_path = os.path.join(
+        data_dir, "config.with+illegal(module)name.characters.py"
     )
+    nikola.main(["--conf=" + config_path])
     return nikola.config
 
 

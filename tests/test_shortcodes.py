@@ -17,10 +17,8 @@ from nikola import shortcodes
     ],
 )
 def test_noargs(site, template, expected_result):
-    assert (
-        shortcodes.apply_shortcodes(template, site.shortcode_registry)[0]
-        == expected_result
-    )
+    applied_shortcode = shortcodes.apply_shortcodes(template, site.shortcode_registry)[0]
+    assert applied_shortcode == expected_result
 
 
 @pytest.mark.parametrize(
@@ -34,10 +32,8 @@ def test_noargs(site, template, expected_result):
     ],
 )
 def test_positional_arguments(site, template, expected_result):
-    assert (
-        shortcodes.apply_shortcodes(template, site.shortcode_registry)[0]
-        == expected_result
-    )
+    applied_shortcode = shortcodes.apply_shortcodes(template, site.shortcode_registry)[0]
+    assert applied_shortcode == expected_result
 
 
 @pytest.mark.parametrize(
@@ -55,10 +51,8 @@ def test_positional_arguments(site, template, expected_result):
     ],
 )
 def test_arg_keyword(site, template, expected_result):
-    assert (
-        shortcodes.apply_shortcodes(template, site.shortcode_registry)[0]
-        == expected_result
-    )
+    applied_shortcode = shortcodes.apply_shortcodes(template, site.shortcode_registry)[0]
+    assert applied_shortcode == expected_result
 
 
 @pytest.mark.parametrize(
@@ -80,10 +74,8 @@ def test_arg_keyword(site, template, expected_result):
     ],
 )
 def test_data(site, template, expected_result):
-    assert (
-        shortcodes.apply_shortcodes(template, site.shortcode_registry)[0]
-        == expected_result
-    )
+    applied_shortcode = shortcodes.apply_shortcodes(template, site.shortcode_registry)[0]
+    assert applied_shortcode == expected_result
 
 
 @pytest.mark.parametrize(

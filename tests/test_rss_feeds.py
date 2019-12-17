@@ -124,7 +124,7 @@ def rss_feed_content(blog_url, config, default_locale):
                         "blog_title",
                         blog_url,
                         "blog_description",
-                        [example_post,],
+                        [example_post, ],
                         filename,
                         True,
                         False,

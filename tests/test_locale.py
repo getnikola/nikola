@@ -59,20 +59,18 @@ def test_set_locale_for_template():
 
 def test_format_date_webiso_basic(base_config):
     with unittest.mock.patch("babel.dates.format_datetime") as m:
-        assert (
-            LocaleBorg().formatted_date("webiso", TESLA_BIRTHDAY_DT)
-            == "1856-07-10T12:34:56"
-        )
+        formatted_date = LocaleBorg().formatted_date("webiso", TESLA_BIRTHDAY_DT)
+        assert formatted_date == "1856-07-10T12:34:56"
         m.assert_not_called()
 
 
 @pytest.mark.parametrize("lang", ["en", "pl"])
 def test_format_date_basic(base_config, lang):
     LocaleBorg.initialize({}, lang)
-    assert (
-        LocaleBorg().formatted_date("YYYY-MM-dd HH:mm:ss", TESLA_BIRTHDAY_DT)
-        == "1856-07-10 12:34:56"
+    formatted_date = LocaleBorg().formatted_date(
+        "YYYY-MM-dd HH:mm:ss", TESLA_BIRTHDAY_DT
     )
+    assert formatted_date == "1856-07-10 12:34:56"
 
 
 def test_format_date_long(base_config):
@@ -88,17 +86,14 @@ def test_format_date_timezone(base_config):
     tesla_150_birthday_dtz = datetime.datetime(
         2006, 7, 10, 12, 34, 56, tzinfo=dateutil.tz.gettz("America/New_York")
     )
-    assert (
-        LocaleBorg().formatted_date("long", tesla_150_birthday_dtz)
-        == "July 10, 2006 at 12:34:56 PM -0400"
-    )
+    formatted_date = LocaleBorg().formatted_date("long", tesla_150_birthday_dtz)
+    assert formatted_date == "July 10, 2006 at 12:34:56 PM -0400"
+
     nodst = datetime.datetime(
         2006, 1, 10, 12, 34, 56, tzinfo=dateutil.tz.gettz("America/New_York")
     )
-    assert (
-        LocaleBorg().formatted_date("long", nodst)
-        == "January 10, 2006 at 12:34:56 PM -0500"
-    )
+    formatted_date = LocaleBorg().formatted_date("long", nodst)
+    assert formatted_date == "January 10, 2006 at 12:34:56 PM -0500"
 
 
 @pytest.mark.parametrize(
@@ -131,10 +126,10 @@ def test_format_date_translatablesetting(base_config, lang, expected_string):
     ],
 )
 def test_format_date_in_string_month(base_config, lang, expected_string):
-    assert (
-        LocaleBorg().format_date_in_string("Foo {month} Bar", TESLA_BIRTHDAY, lang)
-        == expected_string
+    formatted_date = LocaleBorg().format_date_in_string(
+        "Foo {month} Bar", TESLA_BIRTHDAY, lang
     )
+    assert formatted_date == expected_string
 
 
 @pytest.mark.parametrize(
@@ -145,10 +140,10 @@ def test_format_date_in_string_month(base_config, lang, expected_string):
     ],
 )
 def test_format_date_in_string_month_year(base_config, lang, expected_string):
-    assert (
-        LocaleBorg().format_date_in_string("Foo {month_year} Bar", TESLA_BIRTHDAY, lang)
-        == expected_string
+    formatted_date = LocaleBorg().format_date_in_string(
+        "Foo {month_year} Bar", TESLA_BIRTHDAY, lang
     )
+    assert formatted_date == expected_string
 
 
 @pytest.mark.parametrize(
@@ -159,12 +154,10 @@ def test_format_date_in_string_month_year(base_config, lang, expected_string):
     ],
 )
 def test_format_date_in_string_month_day_year(base_config, lang, expected_string):
-    assert (
-        LocaleBorg().format_date_in_string(
-            "Foo {month_day_year} Bar", TESLA_BIRTHDAY, lang
-        )
-        == expected_string
+    formatted_date = LocaleBorg().format_date_in_string(
+        "Foo {month_day_year} Bar", TESLA_BIRTHDAY, lang
     )
+    assert formatted_date == expected_string
 
 
 @pytest.mark.parametrize(
@@ -176,12 +169,10 @@ def test_format_date_in_string_month_day_year(base_config, lang, expected_string
 )
 def test_format_date_in_string_month_day_year_gb(lang, expected_string):
     LocaleBorg.initialize({"en": "en_GB"}, "en")
-    assert (
-        LocaleBorg().format_date_in_string(
-            "Foo {month_day_year} Bar", TESLA_BIRTHDAY, lang
-        )
-        == expected_string
+    formatted_date = LocaleBorg().format_date_in_string(
+        "Foo {month_day_year} Bar", TESLA_BIRTHDAY, lang
     )
+    assert formatted_date == expected_string
 
 
 @pytest.mark.parametrize(
@@ -192,10 +183,8 @@ def test_format_date_in_string_month_day_year_gb(lang, expected_string):
     ],
 )
 def test_format_date_in_string_customization(base_config, message, expected_string):
-    assert (
-        LocaleBorg().format_date_in_string(message, TESLA_BIRTHDAY, "pl")
-        == expected_string
-    )
+    formatted_date = LocaleBorg().format_date_in_string(message, TESLA_BIRTHDAY, "pl")
+    assert formatted_date == expected_string
 
 
 @pytest.mark.parametrize(
@@ -204,9 +193,8 @@ def test_format_date_in_string_customization(base_config, message, expected_stri
 )
 def test_locale_base(lang, expected_format):
     LocaleBorg.initialize(LEGAL_VALUES["LOCALES_BASE"], "en")
-    assert (
-        LocaleBorg().formatted_date("long", TESLA_BIRTHDAY_DT, lang) == expected_format
-    )
+    formatted_date = LocaleBorg().formatted_date("long", TESLA_BIRTHDAY_DT, lang)
+    assert formatted_date == expected_format
 
 
 @pytest.fixture(autouse=True)

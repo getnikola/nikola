@@ -98,7 +98,7 @@ Post content
 
 
 @pytest.mark.parametrize(
-    "unslugify, expected_title", [(True, "Dub dub title"), (False, "dub_dub_title"),]
+    "unslugify, expected_title", [(True, "Dub dub title"), (False, "dub_dub_title")]
 )
 def test_extracting_metadata_from_filename(post, unslugify, expected_title):
     post.source_path = "2013-01-23-the_slug-dub_dub_title.md"

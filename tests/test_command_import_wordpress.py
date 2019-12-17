@@ -176,16 +176,16 @@ Diese Daten sind f\xfcr mich nicht bestimmten Personen zuordenbar. Eine Zusammen
     assert len(import_command.url_map) > 0
 
     assert (
-        "http://some.blog/posts/2007/04/hoert.html"
-        == import_command.url_map["http://some.blog/2007/04/hoert/"]
+        "http://some.blog/posts/2007/04/hoert.html" ==
+        import_command.url_map["http://some.blog/2007/04/hoert/"]
     )
     assert (
-        "http://some.blog/posts/2008/07/arzt-und-pfusch-s-i-c-k.html"
-        == import_command.url_map["http://some.blog/2008/07/arzt-und-pfusch-s-i-c-k/"]
+        "http://some.blog/posts/2008/07/arzt-und-pfusch-s-i-c-k.html" ==
+        import_command.url_map["http://some.blog/2008/07/arzt-und-pfusch-s-i-c-k/"]
     )
     assert (
-        "http://some.blog/pages/kontakt.html"
-        == import_command.url_map["http://some.blog/kontakt/"]
+        "http://some.blog/pages/kontakt.html" ==
+        import_command.url_map["http://some.blog/kontakt/"]
     )
 
     image_thumbnails = [

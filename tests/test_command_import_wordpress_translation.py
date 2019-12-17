@@ -99,16 +99,14 @@ Comments, questions and suggestions are welcome !
     content_translations = legacy_qtranslate_separate(content)
 
     assert (
-        content_translations["fr"]
-        == """Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+        content_translations["fr"] == """Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
 
 Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
 """
     )
 
     assert (
-        content_translations["en"]
-        == """If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
+        content_translations["en"] == """If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
 
 Comments, questions and suggestions are welcome !
 """
@@ -129,8 +127,7 @@ More details here !
 <!--:-->"""
     content_translations = legacy_qtranslate_separate(content)
     assert (
-        content_translations["fr"]
-        == """Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
+        content_translations["fr"] == """Si vous préférez savoir à qui vous parlez commencez par visiter l'<a title="À propos" href="http://some.blog/about/">À propos</a>.
 
 Quoiqu'il en soit, commentaires, questions et suggestions sont les bienvenues !
  <!--more--> \n\
@@ -138,8 +135,7 @@ Plus de détails ici !
 """
     )
     assert (
-        content_translations["en"]
-        == """If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
+        content_translations["en"] == """If you'd like to know who you're talking to, please visit the <a title="À propos" href="http://some.blog/about/">about page</a>.
 
 Comments, questions and suggestions are welcome !
  <!--more--> \n\
