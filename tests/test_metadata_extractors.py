@@ -174,8 +174,8 @@ class FakePost:
         return self.source_path
 
 
-@pytest.fixture(name='metadata_extractors_by')
-def f__metadata_extractors_by():
+@pytest.fixture
+def metadata_extractors_by():
     m = default_metadata_extractors_by()
     load_defaults(None, m)
     return m
