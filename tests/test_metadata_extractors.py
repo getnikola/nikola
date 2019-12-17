@@ -176,9 +176,9 @@ class FakePost:
 
 @pytest.fixture
 def metadata_extractors_by():
-    m = default_metadata_extractors_by()
-    load_defaults(None, m)
-    return m
+    metadata_extractors = default_metadata_extractors_by()
+    load_defaults(None, metadata_extractors)
+    return metadata_extractors
 
 
 @pytest.fixture(scope="module")
