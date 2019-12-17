@@ -38,6 +38,8 @@ def test_current_time_not_matching_rule(today):
     expected = today.replace(day=30, hour=7)
     assert expected == get_date(True, RULE_FRIDAYS, date, tz=UTC)[1]
 
+
+def test_current_time_matching_rule(today):
     # Last date in the past; matches rule
     date = today.replace(day=16, hour=8)
     expected = today.replace(day=23, hour=8)
