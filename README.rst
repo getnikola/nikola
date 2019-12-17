@@ -70,7 +70,7 @@ For optional features::
 
     pip install "Nikola[extras]"
 
-For tests (see tests/README.rst for more details)::
+For tests::
 
     pip install "Nikola[extras,tests]"
 
