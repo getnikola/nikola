@@ -46,10 +46,11 @@ def build(target_dir, test_dir):
 
     add_post_without_text(os.path.join(target_dir, 'posts'))
 
-    patch_config(target_dir, ('SITE_URL = "https://example.com/"',
-                              'SITE_URL = "https://example.com/foo/"'),
-                             ("# URL_TYPE = 'rel_path'",
-                              "URL_TYPE = 'full_path'"))
+    patch_config(target_dir,
+                 ('SITE_URL = "https://example.com/"',
+                  'SITE_URL = "https://example.com/foo/"'),
+                 ("# URL_TYPE = 'rel_path'",
+                  "URL_TYPE = 'full_path'"))
 
     with cd(target_dir):
         __main__.main(["build"])

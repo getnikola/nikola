@@ -53,11 +53,12 @@ def build(target_dir, test_dir):
     add_post_without_text(os.path.join(target_dir, 'posts'))
 
     # Configure our pages to reside in the root
-    patch_config(target_dir, ('("pages/*.txt", "pages", "page.tmpl"),',
-                              '("pages/*.txt", "", "page.tmpl"),'),
-                             ('("pages/*.rst", "pages", "page.tmpl"),',
-                              '("pages/*.rst", "", "page.tmpl"),'),
-                             ('# INDEX_PATH = ""', 'INDEX_PATH = "blog"'))
+    patch_config(target_dir,
+                 ('("pages/*.txt", "pages", "page.tmpl"),',
+                  '("pages/*.txt", "", "page.tmpl"),'),
+                 ('("pages/*.rst", "pages", "page.tmpl"),',
+                  '("pages/*.rst", "", "page.tmpl"),'),
+                 ('# INDEX_PATH = ""', 'INDEX_PATH = "blog"'))
     append_config(target_dir, """
 PRETTY_URLS = False
 STRIP_INDEXES = False
