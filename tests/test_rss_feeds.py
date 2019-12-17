@@ -85,17 +85,19 @@ def localeborg(default_locale):
 
 @pytest.fixture
 def rss_feed_content(blog_url, config, default_locale):
-    with mock.patch('nikola.post.get_meta',
-                    mock.Mock(return_value=(defaultdict(str, {
-                              'title': 'post title',
-                              'slug': 'awesome_article',
-                              'date': '2012-10-01 22:41',
-                              'author': None,
-                              'tags': 'tags',
-                              'link': 'link',
-                              'description': 'description',
-                              'enclosure': 'http://www.example.org/foo.mp3',
-                              'enclosure_length': '5'}), None))):
+    default_post = {
+        'title': 'post title',
+        'slug': 'awesome_article',
+        'date': '2012-10-01 22:41',
+        'author': None,
+        'tags': 'tags',
+        'link': 'link',
+        'description': 'description',
+        'enclosure': 'http://www.example.org/foo.mp3',
+        'enclosure_length': '5'
+    }
+    meta_mock = mock.Mock(return_value=(defaultdict(str, default_post), None))
+    with mock.patch('nikola.post.get_meta', meta_mock):
         with mock.patch('nikola.nikola.utils.os.path.isdir',
                         mock.Mock(return_value=True)):
             with mock.patch('nikola.nikola.Post.text',
