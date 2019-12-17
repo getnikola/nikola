@@ -1,6 +1,3 @@
-# Author: Rodrigo Bistolfi
-# Date: 03/2013
-
 """
 Test cases for Nikola ReST extensions.
 
@@ -40,7 +37,7 @@ def test_ReST_extension(tempdir):
 
 
 def test_math_extension_outputs_tex(tempdir):
-    "Test that math is outputting TeX code."
+    """Test that math is outputting TeX code."""
     sample = r':math:`e^{ix} = \cos x + i\sin x`'
     html = get_html_from_rst(tempdir, sample)
 
@@ -50,7 +47,7 @@ def test_math_extension_outputs_tex(tempdir):
 
 
 def test_soundcloud_iframe(tempdir):
-    "Test SoundCloud iframe tag generation"
+    """Test SoundCloud iframe tag generation"""
 
     sample = '.. soundcloud:: SID\n   :height: 400\n   :width: 600'
     html = get_html_from_rst(tempdir, sample)
@@ -63,7 +60,7 @@ def test_soundcloud_iframe(tempdir):
 
 
 def test_youtube_iframe(tempdir):
-    "Test Youtube iframe tag generation"
+    """Test Youtube iframe tag generation"""
 
     sample = '.. youtube:: YID\n   :height: 400\n   :width: 600'
     html = get_html_from_rst(tempdir, sample)
@@ -79,7 +76,7 @@ def test_youtube_iframe(tempdir):
 
 
 def test_vimeo(disable_vimeo_api_query, tempdir):
-    "Test Vimeo iframe tag generation"
+    """Test Vimeo iframe tag generation"""
 
     sample = '.. vimeo:: VID\n   :height: 400\n   :width: 600'
     html = get_html_from_rst(tempdir, sample)
@@ -95,7 +92,7 @@ def test_vimeo(disable_vimeo_api_query, tempdir):
     '.. sourcecode:: python\n\n   import antigravity',
 ])
 def test_rendering_codeblock_alias(tempdir, sample):
-    """ Test CodeBlock aliases """
+    """Test CodeBlock aliases"""
     get_html_from_rst(tempdir, sample)
 
 
@@ -145,7 +142,7 @@ def tempdir(tmpdir):
 
 
 def get_html_from_rst(temp_dir, rst):
-    "Create html output from rst string"
+    """Create html output from rst string"""
 
     infile = os.path.join(temp_dir, 'inf')
     outfile = os.path.join(temp_dir, 'outf')

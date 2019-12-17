@@ -1,7 +1,9 @@
-# Author: Rodrigo Bistolfi
-# Date: 03/2013
+"""
+Base classes and utilities for Nikola tests.
 
-""" Base class for Nikola test cases """
+Alongside a contextmanager to switch directories this module contains
+a Site substitute for rendering tests.
+"""
 
 import os
 from contextlib import contextmanager

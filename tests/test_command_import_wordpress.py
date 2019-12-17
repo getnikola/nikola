@@ -7,8 +7,10 @@ import nikola.plugins.command.import_wordpress
 
 
 def test_create_import_work_without_argument(import_command):
-    # Running this without an argument must not fail.
-    # It should show the proper usage of the command.
+    """
+    Running import command without an argument must not fail.
+    It should show the proper usage of the command.
+    """
     import_command.execute()
 
 
