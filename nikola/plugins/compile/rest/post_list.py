@@ -31,8 +31,6 @@ from docutils.parsers.rst import Directive, directives
 from nikola import utils
 from nikola.plugin_categories import RestExtension
 
-# from nikola.plugins.shortcode.post_list import _do_post_list
-
 # WARNING: the directive name is post-list
 #          (with a DASH instead of an UNDERSCORE)
 
