@@ -42,6 +42,7 @@ import socket
 import subprocess
 import sys
 import threading
+import typing
 from urllib.parse import quote as urlquote
 from urllib.parse import unquote as urlunquote
 from urllib.parse import urlparse, urlunparse
@@ -64,11 +65,6 @@ try:
 except ImportError:
     husl = None
 
-try:
-    import typing  # NOQA
-    import typing.re  # NOQA
-except ImportError:
-    pass
 
 from blinker import signal
 from collections import defaultdict, OrderedDict
@@ -1290,7 +1286,7 @@ class LocaleBorg(object):
             lang = self.current_lang
         locale = self.locales.get(lang, lang)
 
-        def date_formatter(match: 'typing.re.Match') -> str:
+        def date_formatter(match: typing.Match) -> str:
             """Format a date as requested."""
             mode, custom_format = match.groups()
             if LocaleBorg.in_string_formatter is not None:
