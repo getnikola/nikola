@@ -36,16 +36,14 @@ import piexif
 
 from nikola import utils
 
-Image = None
 try:
     from PIL import ExifTags, Image  # NOQA
 except ImportError:
     try:
         import ExifTags
-        import Image as _Image
-        Image = _Image
+        import Image
     except ImportError:
-        pass
+        Image = None
 
 EXIF_TAG_NAMES = {}
 
