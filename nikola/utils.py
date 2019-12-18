@@ -43,6 +43,7 @@ import subprocess
 import sys
 import threading
 import typing
+from html import unescape as html_unescape
 from urllib.parse import quote as urlquote
 from urllib.parse import unquote as urlunquote
 from urllib.parse import urlparse, urlunparse
@@ -1961,19 +1962,6 @@ def load_data(path):
         return
     with io.open(path, 'r', encoding='utf8') as inf:
         return getattr(loader, function)(inf)
-
-
-# see http://stackoverflow.com/a/2087433
-try:
-    import html  # Python 3.4 and newer
-    html_unescape = html.unescape
-except (AttributeError, ImportError):
-    from html.parser import HTMLParser  # Python 3.4 and older
-
-    def html_unescape(s):
-        """Convert all named and numeric character references in the string s to the corresponding unicode characters."""
-        h = HTMLParser()
-        return h.unescape(s)
 
 
 def rss_writer(rss_obj, output_path):
