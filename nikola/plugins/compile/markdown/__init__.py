@@ -26,11 +26,14 @@
 
 """Page compiler plugin for Markdown."""
 
-
 import io
+import json
 import os
 import threading
-import json
+
+from nikola import shortcodes as sc
+from nikola.plugin_categories import PageCompiler
+from nikola.utils import makedirs, req_missing, write_metadata, LocaleBorg, map_metadata
 
 try:
     from markdown import Markdown
@@ -39,10 +42,6 @@ except ImportError:
     nikola_extension = None
     gist_extension = None
     podcast_extension = None
-
-from nikola import shortcodes as sc
-from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs, req_missing, write_metadata, LocaleBorg, map_metadata
 
 
 class ThreadLocalMarkdown(threading.local):

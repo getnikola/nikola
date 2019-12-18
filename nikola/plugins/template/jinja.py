@@ -24,20 +24,20 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-
 """Jinja template handler."""
 
-import os
 import io
 import json
+import os
+
+from nikola.plugin_categories import TemplateSystem
+from nikola.utils import makedirs, req_missing, sort_posts, _smartjoin_filter
+
 try:
     import jinja2
     from jinja2 import meta
 except ImportError:
     jinja2 = None  # NOQA
-
-from nikola.plugin_categories import TemplateSystem
-from nikola.utils import makedirs, req_missing, sort_posts, _smartjoin_filter
 
 
 class JinjaTemplates(TemplateSystem):

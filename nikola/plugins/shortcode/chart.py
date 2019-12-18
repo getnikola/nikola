@@ -27,13 +27,13 @@
 
 from ast import literal_eval
 
+from nikola.plugin_categories import ShortcodePlugin
+from nikola.utils import req_missing, load_data
+
 try:
     import pygal
 except ImportError:
     pygal = None  # NOQA
-
-from nikola.plugin_categories import ShortcodePlugin
-from nikola.utils import req_missing, load_data
 
 _site = None
 

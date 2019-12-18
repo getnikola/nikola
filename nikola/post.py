@@ -26,31 +26,25 @@
 
 """The Post class."""
 
-
 import io
-from collections import defaultdict
 import datetime
 import hashlib
 import json
 import os
 import re
+from collections import defaultdict
+from math import ceil  # for reading time feature
 from urllib.parse import urljoin
 
-from . import utils
-
-from blinker import signal
 import dateutil.tz
 import lxml.html
 import natsort
-try:
-    import pyphen
-except ImportError:
-    pyphen = None
-
-from math import ceil  # for reading time feature
+from blinker import signal
 
 # for tearDown with _reload we cannot use 'from import' to get forLocaleBorg
 import nikola.utils
+from . import metadata_extractors
+from . import utils
 from .utils import (
     current_time,
     Functionary,
@@ -63,7 +57,12 @@ from .utils import (
     get_translation_candidate,
     map_metadata
 )
-from nikola import metadata_extractors
+
+try:
+    import pyphen
+except ImportError:
+    pyphen = None
+
 
 __all__ = ('Post',)
 

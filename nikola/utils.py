@@ -26,10 +26,8 @@
 
 """Utility functions."""
 
-import babel.dates
 import configparser
 import datetime
-import dateutil.tz
 import hashlib
 import io
 import logging
@@ -43,45 +41,49 @@ import subprocess
 import sys
 import threading
 import typing
+import warnings
+from collections import defaultdict, OrderedDict
+from collections.abc import Callable, Iterable
 from html import unescape as html_unescape
+from importlib import reload as _reload
+from unicodedata import normalize as unicodenormalize
 from urllib.parse import quote as urlquote
 from urllib.parse import unquote as urlunquote
 from urllib.parse import urlparse, urlunparse
+from zipfile import ZipFile as zipf
 
+import babel.dates
 import dateutil.parser
 import dateutil.tz
 import logbook
-import warnings
 import PyRSS2Gen as rss
+from blinker import signal
+from doit import tools
+from doit.cmdparse import CmdParse
+from logbook.compat import redirect_logging
+from logbook.more import ExceptionHandler, ColorizedStderrHandler
+from pkg_resources import resource_filename
+from pygments.formatters import HtmlFormatter
+from unidecode import unidecode
+
+from nikola import DEBUG
+from .hierarchy_utils import TreeNode, clone_treenode, flatten_tree_structure, sort_classifications
+from .hierarchy_utils import join_hierarchical_category_path, parse_escaped_hierarchical_category_name
+
 try:
     import toml
 except ImportError:
     toml = None
+
 try:
     from ruamel.yaml import YAML
 except ImportError:
     YAML = None
+
 try:
     import husl
 except ImportError:
     husl = None
-
-
-from blinker import signal
-from collections import defaultdict, OrderedDict
-from collections.abc import Callable, Iterable
-from importlib import reload as _reload
-from logbook.compat import redirect_logging
-from logbook.more import ExceptionHandler, ColorizedStderrHandler
-from pygments.formatters import HtmlFormatter
-from zipfile import ZipFile as zipf
-from doit import tools
-from unidecode import unidecode
-from unicodedata import normalize as unicodenormalize
-from pkg_resources import resource_filename
-from doit.cmdparse import CmdParse
-
-from nikola import DEBUG
 
 __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real',
            'get_theme_chain', 'load_messages', 'copy_tree', 'copy_file',
@@ -101,9 +103,6 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real',
            'TreeNode', 'clone_treenode', 'flatten_tree_structure',
            'sort_classifications', 'join_hierarchical_category_path',
            'parse_escaped_hierarchical_category_name',)
-
-from .hierarchy_utils import TreeNode, clone_treenode, flatten_tree_structure, sort_classifications
-from .hierarchy_utils import join_hierarchical_category_path, parse_escaped_hierarchical_category_name
 
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).

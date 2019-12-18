@@ -26,17 +26,17 @@
 
 """Check the generated site."""
 
-from collections import defaultdict
 import os
 import re
 import sys
 import time
-import logbook
+from collections import defaultdict
 from urllib.parse import unquote, urlparse, urljoin, urldefrag
 
-from doit.loader import generate_tasks
+import logbook
 import lxml.html
 import requests
+from doit.loader import generate_tasks
 
 from nikola.plugin_categories import Command
 

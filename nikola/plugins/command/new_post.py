@@ -34,8 +34,8 @@ import shutil
 import subprocess
 import sys
 
-from blinker import signal
 import dateutil.tz
+from blinker import signal
 
 from nikola.plugin_categories import Command
 from nikola import utils

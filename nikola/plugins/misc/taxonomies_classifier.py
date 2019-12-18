@@ -26,13 +26,13 @@
 
 """Render the taxonomy overviews, classification pages and feeds."""
 
-import blinker
 import functools
-import natsort
 import os
 import sys
-
 from collections import defaultdict
+
+import blinker
+import natsort
 
 from nikola.plugin_categories import SignalHandler
 from nikola import utils, hierarchy_utils

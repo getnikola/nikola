@@ -26,16 +26,17 @@
 
 """Render the taxonomy overviews, classification pages and feeds."""
 
-import blinker
 import os
-import natsort
 from collections import defaultdict
 from copy import copy
 from urllib.parse import urljoin
 
-from nikola.plugin_categories import Task
+import blinker
+import natsort
+
 from nikola import utils, hierarchy_utils
 from nikola.nikola import _enclosure
+from nikola.plugin_categories import Task
 
 
 class RenderTaxonomies(Task):

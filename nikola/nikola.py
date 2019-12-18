@@ -26,37 +26,32 @@
 
 """The main Nikola site object."""
 
-import io
-from collections import defaultdict
-from copy import copy
-from pkg_resources import resource_filename
 import datetime
+import io
+import json
 import functools
+import logging
 import operator
 import os
-import json
 import sys
-import natsort
 import mimetypes
+from collections import defaultdict
+from copy import copy
 from urllib.parse import urlparse, urlsplit, urlunsplit, urljoin, unquote, parse_qs  # NOQA
 
-try:
-    import pyphen
-except ImportError:
-    pyphen = None
-
 import dateutil.tz
-import logging
-import PyRSS2Gen as rss
 import lxml.etree
 import lxml.html
-from yapsy.PluginManager import PluginManager
+import natsort
+import PyRSS2Gen as rss
+from pkg_resources import resource_filename
 from blinker import signal
+from yapsy.PluginManager import PluginManager
 
-
-from .post import Post  # NOQA
-from .state import Persistor
 from . import DEBUG, SHOW_TRACEBACKS, filters, utils, hierarchy_utils, shortcodes
+from . import metadata_extractors
+from .metadata_extractors import default_metadata_extractors_by
+from .post import Post  # NOQA
 from .plugin_categories import (
     Command,
     LateTask,
@@ -74,8 +69,12 @@ from .plugin_categories import (
     PostScanner,
     Taxonomy,
 )
-from . import metadata_extractors
-from .metadata_extractors import default_metadata_extractors_by
+from .state import Persistor
+
+try:
+    import pyphen
+except ImportError:
+    pyphen = None
 
 if DEBUG:
     logging.basicConfig(level=logging.DEBUG)

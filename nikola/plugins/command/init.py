@@ -26,12 +26,12 @@
 
 """Create a new site."""
 
-import os
-import shutil
+import datetime
 import io
 import json
+import os
+import shutil
 import textwrap
-import datetime
 import unidecode
 from urllib.parse import urlsplit, urlunsplit
 

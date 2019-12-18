@@ -30,11 +30,11 @@ import io
 import csv
 import datetime
 import os
-from pkg_resources import resource_filename
 from urllib.parse import urlparse
 
 from lxml import etree, html
 from mako.template import Template
+from pkg_resources import resource_filename
 
 from nikola import utils
 

@@ -31,6 +31,9 @@
 """
 
 import re
+
+from nikola.plugin_categories import MarkdownExtension
+
 try:
     from markdown.postprocessors import Postprocessor
     from markdown.inlinepatterns import SimpleTagPattern
@@ -39,8 +42,6 @@ except ImportError:
     # No need to catch this, if you try to use this without Markdown,
     # the markdown compiler will fail first
     Postprocessor = SimpleTagPattern = Extension = object
-
-from nikola.plugin_categories import MarkdownExtension
 
 
 CODERE = re.compile('<div class="codehilite"><pre>(.*?)</pre></div>', flags=re.MULTILINE | re.DOTALL)

@@ -29,24 +29,25 @@
 All filters defined in this module are registered in Nikola.__init__.
 """
 
-from functools import wraps
-import os
 import io
 import json
+import os
 import re
 import shutil
+import shlex
 import subprocess
 import tempfile
-import shlex
+from functools import wraps
 
 import lxml
+import requests
+
+from .utils import req_missing, LOGGER, slugify
+
 try:
     import typogrify.filters as typo
 except ImportError:
     typo = None  # NOQA
-import requests
-
-from .utils import req_missing, LOGGER, slugify
 
 
 class _ConfigurableFilter(object):

@@ -26,9 +26,9 @@
 
 """Thumbnail shortcode (equivalent to reST’s thumbnail directive)."""
 
-from nikola.plugin_categories import ShortcodePlugin
-
 import os.path
+
+from nikola.plugin_categories import ShortcodePlugin
 
 
 class ThumbnailShortcode(ShortcodePlugin):

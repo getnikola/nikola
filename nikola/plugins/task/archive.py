@@ -27,9 +27,11 @@
 """Classify the posts in archives."""
 
 import datetime
-import natsort
-import nikola.utils
 from collections import defaultdict
+
+import natsort
+
+import nikola.utils
 from nikola.plugin_categories import Taxonomy
 
 

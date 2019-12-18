@@ -27,11 +27,11 @@
 """Process images."""
 
 import datetime
-import os
-import lxml
-import re
 import gzip
+import os
+import re
 
+import lxml
 import piexif
 
 from nikola import utils

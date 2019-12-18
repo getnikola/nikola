@@ -26,15 +26,15 @@
 
 """Manage themes."""
 
+import configparser
 import io
 import json.decoder
 import os
-import sys
 import shutil
+import sys
 import time
-import requests
-import configparser
 
+import requests
 import pygments
 from pygments.lexers import PythonLexer
 from pygments.formatters import TerminalFormatter

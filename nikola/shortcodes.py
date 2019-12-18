@@ -26,11 +26,10 @@
 
 """Support for Hugo-style shortcodes."""
 
-
+import sys
 import uuid
 
 from .utils import LOGGER
-import sys
 
 
 class ParsingError(Exception):

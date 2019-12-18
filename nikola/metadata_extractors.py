@@ -27,10 +27,11 @@
 """Default metadata extractors and helper functions."""
 
 import re
-import natsort
-
 from enum import Enum
 from io import StringIO
+
+import natsort
+
 from nikola.plugin_categories import MetadataExtractor
 from nikola.utils import unslugify
 
