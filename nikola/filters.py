@@ -33,6 +33,7 @@ from functools import wraps
 import os
 import io
 import json
+import re
 import shutil
 import subprocess
 import tempfile
@@ -329,7 +330,6 @@ def typogrify_sans_widont(data):
 @apply_to_text_file
 def php_template_injection(data):
     """Insert PHP code into Nikola templates."""
-    import re
     template = re.search(r'<\!-- __NIKOLA_PHP_TEMPLATE_INJECTION source\:(.*) checksum\:(.*)__ -->', data)
     if template:
         source = template.group(1)

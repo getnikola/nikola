@@ -41,6 +41,7 @@ import shutil
 import socket
 import subprocess
 import sys
+import threading
 from urllib.parse import quote as urlquote
 from urllib.parse import unquote as urlunquote
 from urllib.parse import urlparse, urlunparse
@@ -1227,7 +1228,6 @@ class LocaleBorg(object):
 
         Used in testing to prevent leaking state between tests.
         """
-        import threading
         cls.__thread_local = threading.local()
         cls.__thread_lock = threading.Lock()
 
