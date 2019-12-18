@@ -31,10 +31,7 @@ import os
 import natsort
 from collections import defaultdict
 from copy import copy
-try:
-    from urlparse import urljoin
-except ImportError:
-    from urllib.parse import urljoin  # NOQA
+from urllib.parse import urljoin
 
 from nikola.plugin_categories import Task
 from nikola import utils, hierarchy_utils

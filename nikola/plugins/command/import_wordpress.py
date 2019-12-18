@@ -35,17 +35,12 @@ import json
 import requests
 from lxml import etree
 from collections import defaultdict
+from urllib.parse import urlparse, unquote
 
 try:
     import html2text
 except ImportError:
     html2text = None
-
-try:
-    from urlparse import urlparse
-    from urllib import unquote
-except ImportError:
-    from urllib.parse import urlparse, unquote  # NOQA
 
 try:
     import phpserialize

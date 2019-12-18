@@ -39,10 +39,7 @@ try:
 except ImportError:
     YAML = None  # NOQA
 
-try:
-    from urlparse import urljoin
-except ImportError:
-    from urllib.parse import urljoin  # NOQA
+from urllib.parse import urljoin
 
 import natsort
 try:

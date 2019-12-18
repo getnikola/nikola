@@ -31,10 +31,7 @@
 import io
 import os
 import uuid
-try:
-    from urlparse import urlunsplit
-except ImportError:
-    from urllib.parse import urlunsplit  # NOQA
+from urllib.parse import urlunsplit
 
 import docutils.parsers.rst.directives.body
 import docutils.parsers.rst.directives.misc

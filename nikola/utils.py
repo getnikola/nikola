@@ -41,17 +41,13 @@ import shutil
 import socket
 import subprocess
 import sys
+from urllib.parse import quote as urlquote
+from urllib.parse import unquote as urlunquote
+from urllib.parse import urlparse, urlunparse
+
 import dateutil.parser
 import dateutil.tz
 import logbook
-try:
-    from urllib import quote as urlquote
-    from urllib import unquote as urlunquote
-    from urlparse import urlparse, urlunparse
-except ImportError:
-    from urllib.parse import quote as urlquote  # NOQA
-    from urllib.parse import unquote as urlunquote  # NOQA
-    from urllib.parse import urlparse, urlunparse  # NOQA
 import warnings
 import PyRSS2Gen as rss
 try:

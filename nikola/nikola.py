@@ -38,10 +38,7 @@ import json
 import sys
 import natsort
 import mimetypes
-try:
-    from urlparse import urlparse, urlsplit, urlunsplit, urljoin, unquote, parse_qs
-except ImportError:
-    from urllib.parse import urlparse, urlsplit, urlunsplit, urljoin, unquote, parse_qs  # NOQA
+from urllib.parse import urlparse, urlsplit, urlunsplit, urljoin, unquote, parse_qs  # NOQA
 
 try:
     import pyphen

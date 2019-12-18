@@ -32,11 +32,7 @@ import re
 import sys
 import time
 import logbook
-try:
-    from urllib import unquote
-    from urlparse import urlparse, urljoin, urldefrag
-except ImportError:
-    from urllib.parse import unquote, urlparse, urljoin, urldefrag  # NOQA
+from urllib.parse import unquote, urlparse, urljoin, urldefrag
 
 from doit.loader import generate_tasks
 import lxml.html

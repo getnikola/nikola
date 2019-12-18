@@ -34,10 +34,7 @@ import hashlib
 import json
 import os
 import re
-try:
-    from urlparse import urljoin
-except ImportError:
-    from urllib.parse import urljoin  # NOQA
+from urllib.parse import urljoin
 
 from . import utils
 
