@@ -33,13 +33,15 @@ import json
 import textwrap
 import datetime
 import unidecode
+from urllib.parse import urlsplit, urlunsplit
+
 import dateutil.tz
 import dateutil.zoneinfo
 from mako.template import Template
 from pkg_resources import resource_filename
 
 import nikola
-from nikola.nikola import DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_FEED_READ_MORE_LINK, LEGAL_VALUES, urlsplit, urlunsplit
+from nikola.nikola import DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_FEED_READ_MORE_LINK, LEGAL_VALUES
 from nikola.plugin_categories import Command
 from nikola.utils import ask, ask_yesno, get_logger, makedirs, load_messages
 from nikola.packages.tzlocal import get_localzone
