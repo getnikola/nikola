@@ -38,12 +38,9 @@ from yapsy.IPlugin import IPlugin
 
 from .utils import LOGGER, first_line, get_logger, req_missing
 
-try:
-    if typing.TYPE_CHECKING:  # NOQA
-        import nikola  # NOQA
-        import nikola.post  # NOQA
-except ImportError:
-    pass
+if typing.TYPE_CHECKING:  # NOQA
+    import nikola  # NOQA
+    import nikola.post  # NOQA
 
 __all__ = (
     'Command',
