@@ -37,16 +37,12 @@ from urllib.parse import urljoin
 
 import natsort
 import PyRSS2Gen as rss
+from PIL import Image
 
 from nikola.plugin_categories import Task
 from nikola import utils
 from nikola.image_processing import ImageProcessor
 from nikola.post import Post
-
-try:
-    from PIL import Image  # NOQA
-except ImportError:
-    import Image
 
 try:
     from ruamel.yaml import YAML
