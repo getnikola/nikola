@@ -10,6 +10,7 @@ One method is provided for checking the resulting HTML:
 
 from io import StringIO
 
+import pytest
 from lxml import html as lxml_html
 
 import nikola.plugins.compile.rest
@@ -18,8 +19,6 @@ from nikola.plugins.compile.rest import vimeo
 from nikola.utils import _reload, LocaleBorg
 
 from .base import FakeSite
-
-import pytest
 
 
 def test_ReST_extension():
