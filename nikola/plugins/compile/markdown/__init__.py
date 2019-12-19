@@ -39,9 +39,6 @@ try:
     from markdown import Markdown
 except ImportError:
     Markdown = None
-    nikola_extension = None
-    gist_extension = None
-    podcast_extension = None
 
 
 class ThreadLocalMarkdown(threading.local):
