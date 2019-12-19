@@ -47,7 +47,7 @@ from .utils import req_missing, LOGGER, slugify
 try:
     import typogrify.filters as typo
 except ImportError:
-    typo = None  # NOQA
+    typo = None
 
 
 class _ConfigurableFilter(object):

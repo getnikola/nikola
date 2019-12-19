@@ -33,7 +33,7 @@ from nikola.plugin_categories import RestExtension
 try:
     import pygal
 except ImportError:
-    pygal = None  # NOQA
+    pygal = None
 
 _site = None
 

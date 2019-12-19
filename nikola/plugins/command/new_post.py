@@ -89,7 +89,7 @@ def get_date(schedule=False, rule=None, last_date=None, tz=None, iso8601=False):
         except ImportError:
             LOGGER.error('To use the --schedule switch of new_post, '
                          'you have to install the "dateutil" package.')
-            rrule = None  # NOQA
+            rrule = None
     if schedule and rrule and rule:
         try:
             rule_ = rrule.rrulestr(rule, dtstart=last_date or date)

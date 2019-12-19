@@ -425,7 +425,7 @@ class Post(object):
             rv = rv._prev_post
         return rv
 
-    @prev_post.setter  # NOQA
+    @prev_post.setter
     def prev_post(self, v):
         """Set previous post."""
         self._prev_post = v
@@ -443,7 +443,7 @@ class Post(object):
             rv = rv._next_post
         return rv
 
-    @next_post.setter  # NOQA
+    @next_post.setter
     def next_post(self, v):
         """Set next post."""
         self._next_post = v

@@ -37,7 +37,7 @@ import sys
 import mimetypes
 from collections import defaultdict
 from copy import copy
-from urllib.parse import urlparse, urlsplit, urlunsplit, urljoin, unquote, parse_qs  # NOQA
+from urllib.parse import urlparse, urlsplit, urlunsplit, urljoin, unquote, parse_qs
 
 import dateutil.tz
 import lxml.etree

@@ -57,7 +57,7 @@ except ImportError:
 try:
     import phpserialize
 except ImportError:
-    phpserialize = None  # NOQA
+    phpserialize = None
 
 LOGGER = utils.get_logger('import_wordpress')
 

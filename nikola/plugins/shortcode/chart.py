@@ -33,7 +33,7 @@ from nikola.utils import req_missing, load_data
 try:
     import pygal
 except ImportError:
-    pygal = None  # NOQA
+    pygal = None
 
 _site = None
 

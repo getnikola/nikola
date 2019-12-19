@@ -38,7 +38,7 @@ from nikola.utils import makedirs, req_missing, write_metadata, LocaleBorg, map_
 try:
     from markdown import Markdown
 except ImportError:
-    Markdown = None  # NOQA
+    Markdown = None
     nikola_extension = None
     gist_extension = None
     podcast_extension = None

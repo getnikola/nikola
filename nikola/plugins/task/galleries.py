@@ -47,7 +47,7 @@ from nikola.post import Post
 try:
     from ruamel.yaml import YAML
 except ImportError:
-    YAML = None  # NOQA
+    YAML = None
 
 _image_size_cache = {}
 

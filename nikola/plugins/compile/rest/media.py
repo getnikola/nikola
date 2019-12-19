@@ -35,7 +35,7 @@ from nikola.utils import req_missing
 try:
     import micawber
 except ImportError:
-    micawber = None  # NOQA
+    micawber = None
 
 
 class Plugin(RestExtension):

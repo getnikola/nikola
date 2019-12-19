@@ -37,7 +37,7 @@ try:
     import jinja2
     from jinja2 import meta
 except ImportError:
-    jinja2 = None  # NOQA
+    jinja2 = None
 
 
 class JinjaTemplates(TemplateSystem):
