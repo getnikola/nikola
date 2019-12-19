@@ -8,8 +8,6 @@ One method is provided for checking the resulting HTML:
 
 """
 
-import io
-import os
 from io import StringIO
 
 from lxml import html as lxml_html
@@ -24,9 +22,9 @@ from .base import FakeSite
 import pytest
 
 
-def test_ReST_extension(tempdir):
+def test_ReST_extension():
     sample = '.. raw:: html\n\n   <iframe src="foo" height="bar">spam</iframe>'
-    html = get_html_from_rst(tempdir, sample)
+    html = get_html_from_rst(sample)
 
     assert_html_contains(html, "iframe", attributes={"src": "foo"}, text="spam")
 
@@ -34,10 +32,10 @@ def test_ReST_extension(tempdir):
         assert_html_contains("eggs", {})
 
 
-def test_math_extension_outputs_tex(tempdir):
+def test_math_extension_outputs_tex():
     """Test that math is outputting TeX code."""
     sample = r":math:`e^{ix} = \cos x + i\sin x`"
-    html = get_html_from_rst(tempdir, sample)
+    html = get_html_from_rst(sample)
 
     assert_html_contains(
         html,
@@ -47,11 +45,11 @@ def test_math_extension_outputs_tex(tempdir):
     )
 
 
-def test_soundcloud_iframe(tempdir):
+def test_soundcloud_iframe():
     """Test SoundCloud iframe tag generation"""
 
     sample = ".. soundcloud:: SID\n   :height: 400\n   :width: 600"
-    html = get_html_from_rst(tempdir, sample)
+    html = get_html_from_rst(sample)
     assert_html_contains(
         html,
         "iframe",
@@ -67,11 +65,11 @@ def test_soundcloud_iframe(tempdir):
     )
 
 
-def test_youtube_iframe(tempdir):
+def test_youtube_iframe():
     """Test Youtube iframe tag generation"""
 
     sample = ".. youtube:: YID\n   :height: 400\n   :width: 600"
-    html = get_html_from_rst(tempdir, sample)
+    html = get_html_from_rst(sample)
     assert_html_contains(
         html,
         "iframe",
@@ -90,11 +88,11 @@ def test_youtube_iframe(tempdir):
     )
 
 
-def test_vimeo(disable_vimeo_api_query, tempdir):
+def test_vimeo(disable_vimeo_api_query):
     """Test Vimeo iframe tag generation"""
 
     sample = ".. vimeo:: VID\n   :height: 400\n   :width: 600"
-    html = get_html_from_rst(tempdir, sample)
+    html = get_html_from_rst(sample)
     assert_html_contains(
         html,
         "iframe",
@@ -113,9 +111,9 @@ def test_vimeo(disable_vimeo_api_query, tempdir):
         ".. sourcecode:: python\n\n   import antigravity",
     ],
 )
-def test_rendering_codeblock_alias(tempdir, sample):
+def test_rendering_codeblock_alias(sample):
     """Test CodeBlock aliases"""
-    get_html_from_rst(tempdir, sample)
+    get_html_from_rst(sample)
 
 
 def test_doc_doesnt_exist():
@@ -123,17 +121,17 @@ def test_doc_doesnt_exist():
         assert_html_contains("anything", {})
 
 
-def test_doc(tempdir):
+def test_doc():
     sample = "Sample for testing my :doc:`fake-post`"
-    html = get_html_from_rst(tempdir, sample)
+    html = get_html_from_rst(sample)
     assert_html_contains(
         html, "a", text="Fake post", attributes={"href": "/posts/fake-post"}
     )
 
 
-def test_doc_titled(tempdir):
+def test_doc_titled():
     sample = "Sample for testing my :doc:`titled post <fake-post>`"
-    html = get_html_from_rst(tempdir, sample)
+    html = get_html_from_rst(sample)
     assert_html_contains(
         html, "a", text="titled post", attributes={"href": "/posts/fake-post"}
     )
@@ -154,31 +152,12 @@ def localeborg_base():
         assert not LocaleBorg.initialized
 
 
-@pytest.fixture
-def tempdir(tmpdir):
-    """
-    Helper fixture to support Python 3.4 & 3.5 who are unable to work
-    with pathlib objects.
-    """
-    return str(tmpdir)
-
-
-def get_html_from_rst(temp_dir, rst):
+def get_html_from_rst(rst):
     """Create html output from rst string"""
-
-    infile = os.path.join(temp_dir, "inf")
-    outfile = os.path.join(temp_dir, "outf")
-
-    with io.open(infile, "w+", encoding="utf8") as post_file:
-        post_file.write(rst)
 
     compiler = nikola.plugins.compile.rest.CompileRest()
     compiler.set_site(FakeSite())
-    compiler.site.post_per_input_file[infile] = FakePost(outfile)
-    compiler.compile(infile, outfile)
-
-    with io.open(outfile, "r", encoding="utf8") as rendered_file:
-        return rendered_file.read()
+    return compiler.compile_string(rst)[0]
 
 
 class FakePost:
