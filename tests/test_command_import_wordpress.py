@@ -71,23 +71,19 @@ def test_importing_posts_and_attachments(module, import_command, import_filename
     with mock.patch(
         "nikola.plugins.command.import_wordpress.CommandImportWordpress.write_content",
         write_content,
+    ), mock.patch(
+        "nikola.plugins.command.import_wordpress.CommandImportWordpress.write_metadata",
+        write_metadata,
+    ), mock.patch(
+        "nikola.plugins.command.import_wordpress.CommandImportWordpress.download_url_content_to_file",
+        download_mock,
+    ), mock.patch(
+        "nikola.plugins.command.import_wordpress.CommandImportWordpress.write_attachments_info",
+        write_attachments_info,
+    ), mock.patch(
+        "nikola.plugins.command.import_wordpress.os.makedirs"
     ):
-        with mock.patch(
-            "nikola.plugins.command.import_wordpress.CommandImportWordpress.write_metadata",
-            write_metadata,
-        ):
-            with mock.patch(
-                "nikola.plugins.command.import_wordpress.CommandImportWordpress.download_url_content_to_file",
-                download_mock,
-            ):
-                with mock.patch(
-                    "nikola.plugins.command.import_wordpress.CommandImportWordpress.write_attachments_info",
-                    write_attachments_info,
-                ):
-                    with mock.patch(
-                        "nikola.plugins.command.import_wordpress.os.makedirs"
-                    ):
-                        import_command.import_posts(channel)
+        import_command.import_posts(channel)
 
     assert download_mock.called
     qpath = "new_site/files/wp-content/uploads/2008/07/arzt_und_pfusch-sick-cover.png"
@@ -220,16 +216,14 @@ def test_transforming_content(import_command):
     with mock.patch(
         "nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_code",
         transform_code,
+    ), mock.patch(
+        "nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_caption",
+        transform_caption,
+    ), mock.patch(
+        "nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_multiple_newlines",
+        transform_newlines,
     ):
-        with mock.patch(
-            "nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_caption",
-            transform_caption,
-        ):
-            with mock.patch(
-                "nikola.plugins.command.import_wordpress.CommandImportWordpress.transform_multiple_newlines",
-                transform_newlines,
-            ):
-                import_command.transform_content("random content", "wp", None)
+        import_command.transform_content("random content", "wp", None)
 
     assert transform_code.called
     assert transform_caption.called
@@ -440,20 +434,17 @@ def patched_import_command(import_command, testsite, mocks):
     data_import, site_generation, write_urlmap, write_configuration = mocks
 
     import_command.site = testsite
-    with mock.patch("os.system", site_generation):
-        with mock.patch(
-            "nikola.plugins.command.import_wordpress.CommandImportWordpress.import_posts",
-            data_import,
-        ):
-            with mock.patch(
-                "nikola.plugins.command.import_wordpress.CommandImportWordpress.write_urlmap_csv",
-                write_urlmap,
-            ):
-                with mock.patch(
-                    "nikola.plugins.command.import_wordpress.CommandImportWordpress.write_configuration",
-                    write_configuration,
-                ):
-                    yield import_command
+    with mock.patch("os.system", site_generation), mock.patch(
+        "nikola.plugins.command.import_wordpress.CommandImportWordpress.import_posts",
+        data_import,
+    ), mock.patch(
+        "nikola.plugins.command.import_wordpress.CommandImportWordpress.write_urlmap_csv",
+        write_urlmap,
+    ), mock.patch(
+        "nikola.plugins.command.import_wordpress.CommandImportWordpress.write_configuration",
+        write_configuration,
+    ):
+        yield import_command
 
 
 @pytest.fixture
