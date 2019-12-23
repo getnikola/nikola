@@ -26,13 +26,12 @@
 
 """Render code listings."""
 
-
-from collections import defaultdict
 import os
+from collections import defaultdict
 
+import natsort
 from pygments import highlight
 from pygments.lexers import get_lexer_for_filename, guess_lexer, TextLexer
-import natsort
 
 from nikola.plugin_categories import Task
 from nikola import utils

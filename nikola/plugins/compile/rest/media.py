@@ -29,14 +29,13 @@
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 
+from nikola.plugin_categories import RestExtension
+from nikola.utils import req_missing
+
 try:
     import micawber
 except ImportError:
-    micawber = None  # NOQA
-
-
-from nikola.plugin_categories import RestExtension
-from nikola.utils import req_missing
+    micawber = None
 
 
 class Plugin(RestExtension):

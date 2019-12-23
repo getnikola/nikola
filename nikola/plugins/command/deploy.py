@@ -27,14 +27,14 @@
 """Deploy site."""
 
 import io
-from datetime import datetime
-from dateutil.tz import gettz
-import dateutil
 import os
 import subprocess
 import time
+from datetime import datetime
 
+import dateutil
 from blinker import signal
+from dateutil.tz import gettz
 
 from nikola.plugin_categories import Command
 from nikola.utils import clean_before_deployment

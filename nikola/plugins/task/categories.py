@@ -26,8 +26,8 @@
 
 """Render the category pages and feeds."""
 
-
 import os
+
 from nikola.plugin_categories import Taxonomy
 from nikola import utils, hierarchy_utils
 

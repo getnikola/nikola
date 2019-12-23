@@ -26,10 +26,8 @@
 
 """Utility functions."""
 
-import babel.dates
 import configparser
 import datetime
-import dateutil.tz
 import hashlib
 import io
 import logging
@@ -41,53 +39,51 @@ import shutil
 import socket
 import subprocess
 import sys
+import threading
+import typing
+import warnings
+from collections import defaultdict, OrderedDict
+from collections.abc import Callable, Iterable
+from html import unescape as html_unescape
+from importlib import reload as _reload
+from unicodedata import normalize as unicodenormalize
+from urllib.parse import quote as urlquote
+from urllib.parse import unquote as urlunquote
+from urllib.parse import urlparse, urlunparse
+from zipfile import ZipFile as zipf
+
+import babel.dates
 import dateutil.parser
 import dateutil.tz
 import logbook
-try:
-    from urllib import quote as urlquote
-    from urllib import unquote as urlunquote
-    from urlparse import urlparse, urlunparse
-except ImportError:
-    from urllib.parse import quote as urlquote  # NOQA
-    from urllib.parse import unquote as urlunquote  # NOQA
-    from urllib.parse import urlparse, urlunparse  # NOQA
-import warnings
 import PyRSS2Gen as rss
+from blinker import signal
+from doit import tools
+from doit.cmdparse import CmdParse
+from logbook.compat import redirect_logging
+from logbook.more import ExceptionHandler, ColorizedStderrHandler
+from pkg_resources import resource_filename
+from pygments.formatters import HtmlFormatter
+from unidecode import unidecode
+
+from nikola import DEBUG
+from .hierarchy_utils import TreeNode, clone_treenode, flatten_tree_structure, sort_classifications
+from .hierarchy_utils import join_hierarchical_category_path, parse_escaped_hierarchical_category_name
+
 try:
     import toml
 except ImportError:
     toml = None
+
 try:
     from ruamel.yaml import YAML
 except ImportError:
     YAML = None
+
 try:
     import husl
 except ImportError:
     husl = None
-
-try:
-    import typing  # NOQA
-    import typing.re  # NOQA
-except ImportError:
-    pass
-
-from blinker import signal
-from collections import defaultdict, OrderedDict
-from collections.abc import Callable, Iterable
-from importlib import reload as _reload
-from logbook.compat import redirect_logging
-from logbook.more import ExceptionHandler, ColorizedStderrHandler
-from pygments.formatters import HtmlFormatter
-from zipfile import ZipFile as zipf
-from doit import tools
-from unidecode import unidecode
-from unicodedata import normalize as unicodenormalize
-from pkg_resources import resource_filename
-from doit.cmdparse import CmdParse
-
-from nikola import DEBUG
 
 __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real',
            'get_theme_chain', 'load_messages', 'copy_tree', 'copy_file',
@@ -107,9 +103,6 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real',
            'TreeNode', 'clone_treenode', 'flatten_tree_structure',
            'sort_classifications', 'join_hierarchical_category_path',
            'parse_escaped_hierarchical_category_name',)
-
-from .hierarchy_utils import TreeNode, clone_treenode, flatten_tree_structure, sort_classifications
-from .hierarchy_utils import join_hierarchical_category_path, parse_escaped_hierarchical_category_name
 
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
@@ -1231,7 +1224,6 @@ class LocaleBorg(object):
 
         Used in testing to prevent leaking state between tests.
         """
-        import threading
         cls.__thread_local = threading.local()
         cls.__thread_lock = threading.Lock()
 
@@ -1294,7 +1286,7 @@ class LocaleBorg(object):
             lang = self.current_lang
         locale = self.locales.get(lang, lang)
 
-        def date_formatter(match: 'typing.re.Match') -> str:
+        def date_formatter(match: typing.Match) -> str:
             """Format a date as requested."""
             mode, custom_format = match.groups()
             if LocaleBorg.in_string_formatter is not None:
@@ -1969,19 +1961,6 @@ def load_data(path):
         return
     with io.open(path, 'r', encoding='utf8') as inf:
         return getattr(loader, function)(inf)
-
-
-# see http://stackoverflow.com/a/2087433
-try:
-    import html  # Python 3.4 and newer
-    html_unescape = html.unescape
-except (AttributeError, ImportError):
-    from html.parser import HTMLParser  # Python 3.4 and older
-
-    def html_unescape(s):
-        """Convert all named and numeric character references in the string s to the corresponding unicode characters."""
-        h = HTMLParser()
-        return h.unescape(s)
 
 
 def rss_writer(rss_obj, output_path):

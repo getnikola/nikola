@@ -26,14 +26,21 @@
 
 """Automatic rebuilds for Nikola."""
 
-import mimetypes
-import datetime
-import re
-import os
-import stat
-import sys
-import subprocess
 import asyncio
+import datetime
+import mimetypes
+import os
+import re
+import stat
+import subprocess
+import sys
+
+import webbrowser
+import pkg_resources
+
+from nikola.plugin_categories import Command
+from nikola.utils import dns_sd, req_missing, get_theme_path
+
 try:
     import aiohttp
     from aiohttp import web
@@ -50,11 +57,6 @@ try:
 except ImportError:
     Observer = None
 
-import webbrowser
-import pkg_resources
-
-from nikola.plugin_categories import Command
-from nikola.utils import dns_sd, req_missing, get_theme_path
 LRJS_PATH = os.path.join(os.path.dirname(__file__), 'livereload.js')
 
 if sys.platform == 'win32':

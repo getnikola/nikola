@@ -28,10 +28,7 @@
 
 import io
 import os
-try:
-    from urlparse import urljoin, urlparse
-except ImportError:
-    from urllib.parse import urljoin, urlparse  # NOQA
+from urllib.parse import urljoin, urlparse
 
 from nikola.plugin_categories import LateTask
 from nikola import utils

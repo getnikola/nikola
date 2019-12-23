@@ -26,31 +26,17 @@
 
 """Import a WordPress dump."""
 
-import os
-import re
-import sys
 import datetime
 import io
 import json
+import os
+import re
+import sys
+from collections import defaultdict
+from urllib.parse import urlparse, unquote
+
 import requests
 from lxml import etree
-from collections import defaultdict
-
-try:
-    import html2text
-except ImportError:
-    html2text = None
-
-try:
-    from urlparse import urlparse
-    from urllib import unquote
-except ImportError:
-    from urllib.parse import urlparse, unquote  # NOQA
-
-try:
-    import phpserialize
-except ImportError:
-    phpserialize = None  # NOQA
 
 from nikola.plugin_categories import Command
 from nikola import utils, hierarchy_utils
@@ -62,6 +48,16 @@ from nikola.plugins.command.init import (
     format_default_translations_config,
     get_default_translations_dict
 )
+
+try:
+    import html2text
+except ImportError:
+    html2text = None
+
+try:
+    import phpserialize
+except ImportError:
+    phpserialize = None
 
 LOGGER = utils.get_logger('import_wordpress')
 

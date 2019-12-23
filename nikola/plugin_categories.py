@@ -29,6 +29,7 @@
 import io
 import os
 import sys
+import typing
 
 import doit
 import logbook
@@ -37,13 +38,9 @@ from yapsy.IPlugin import IPlugin
 
 from .utils import LOGGER, first_line, get_logger, req_missing
 
-try:
-    import typing  # NOQA
-    if typing.TYPE_CHECKING:  # NOQA
-        import nikola  # NOQA
-        import nikola.post  # NOQA
-except ImportError:
-    pass
+if typing.TYPE_CHECKING:
+    import nikola
+    import nikola.post
 
 __all__ = (
     'Command',

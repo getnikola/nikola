@@ -27,25 +27,15 @@
 """Process images."""
 
 import datetime
-import os
-import lxml
-import re
 import gzip
+import os
+import re
 
+import lxml
 import piexif
+from PIL import ExifTags, Image
 
 from nikola import utils
-
-Image = None
-try:
-    from PIL import ExifTags, Image  # NOQA
-except ImportError:
-    try:
-        import ExifTags
-        import Image as _Image
-        Image = _Image
-    except ImportError:
-        pass
 
 EXIF_TAG_NAMES = {}
 
@@ -93,9 +83,10 @@ class ImageProcessor(object):
 
     def resize_image(self, src, dst, max_size, bigger_panoramas=True, preserve_exif_data=False, exif_whitelist={}, preserve_icc_profiles=False):
         """Make a copy of the image in the requested size."""
-        if not Image or os.path.splitext(src)[1] in ['.svg', '.svgz']:
+        if os.path.splitext(src)[1] in ['.svg', '.svgz']:
             self.resize_svg(src, dst, max_size, bigger_panoramas)
             return
+
         im = Image.open(src)
 
         if hasattr(im, 'n_frames') and im.n_frames > 1:

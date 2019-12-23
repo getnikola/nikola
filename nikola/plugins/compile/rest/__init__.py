@@ -28,8 +28,6 @@
 
 import io
 import os
-import logbook
-import logbook.base
 
 import docutils.core
 import docutils.nodes
@@ -40,6 +38,9 @@ import docutils.readers.standalone
 import docutils.writers.html5_polyglot
 import docutils.parsers.rst.directives
 from docutils.parsers.rst import roles
+
+import logbook
+import logbook.base
 
 from nikola.nikola import LEGAL_VALUES
 from nikola.metadata_extractors import MetaCondition

@@ -26,34 +26,25 @@
 
 """The Post class."""
 
-
 import io
-from collections import defaultdict
 import datetime
 import hashlib
 import json
 import os
 import re
-try:
-    from urlparse import urljoin
-except ImportError:
-    from urllib.parse import urljoin  # NOQA
+from collections import defaultdict
+from math import ceil  # for reading time feature
+from urllib.parse import urljoin
 
-from . import utils
-
-from blinker import signal
 import dateutil.tz
 import lxml.html
 import natsort
-try:
-    import pyphen
-except ImportError:
-    pyphen = None
-
-from math import ceil  # for reading time feature
+from blinker import signal
 
 # for tearDown with _reload we cannot use 'from import' to get forLocaleBorg
 import nikola.utils
+from . import metadata_extractors
+from . import utils
 from .utils import (
     current_time,
     Functionary,
@@ -66,7 +57,12 @@ from .utils import (
     get_translation_candidate,
     map_metadata
 )
-from nikola import metadata_extractors
+
+try:
+    import pyphen
+except ImportError:
+    pyphen = None
+
 
 __all__ = ('Post',)
 
@@ -429,7 +425,7 @@ class Post(object):
             rv = rv._prev_post
         return rv
 
-    @prev_post.setter  # NOQA
+    @prev_post.setter
     def prev_post(self, v):
         """Set previous post."""
         self._prev_post = v
@@ -447,7 +443,7 @@ class Post(object):
             rv = rv._next_post
         return rv
 
-    @next_post.setter  # NOQA
+    @next_post.setter
     def next_post(self, v):
         """Set next post."""
         self._next_post = v

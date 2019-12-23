@@ -34,8 +34,8 @@ import shutil
 import subprocess
 import sys
 
-from blinker import signal
 import dateutil.tz
+from blinker import signal
 
 from nikola.plugin_categories import Command
 from nikola import utils
@@ -89,7 +89,7 @@ def get_date(schedule=False, rule=None, last_date=None, tz=None, iso8601=False):
         except ImportError:
             LOGGER.error('To use the --schedule switch of new_post, '
                          'you have to install the "dateutil" package.')
-            rrule = None  # NOQA
+            rrule = None
     if schedule and rrule and rule:
         try:
             rule_ = rrule.rrulestr(rule, dtstart=last_date or date)
