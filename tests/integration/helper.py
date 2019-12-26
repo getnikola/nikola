@@ -1,5 +1,6 @@
 import io
 import os
+import shutil
 
 from ..base import cd
 
@@ -17,6 +18,13 @@ def add_post_without_text(directory):
 .. date: 2013-03-06 19:08:15
 """
         )
+
+
+def copy_example_post(destination_dir):
+    test_dir = os.path.abspath(os.path.dirname(__file__))
+    source_file = os.path.join(test_dir, "..", "data", "1-nolinks.rst")
+    destination = os.path.join(destination_dir, "1.rst")
+    shutil.copy(source_file, destination)
 
 
 def append_config(config_dir, appendix):
