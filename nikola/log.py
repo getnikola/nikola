@@ -78,16 +78,16 @@ class ColorfulFormatter(logging.Formatter):
 
 def get_logger(name: str, handlers=None) -> logging.Logger:
     """Get a logger with handlers attached."""
-    l = logging.getLogger(name)
+    logger = logging.getLogger(name)
     if handlers is not None:
         for h in handlers:
-            l.addHandler(h)
-    return l
+            logger.addHandler(h)
+    return patch_notice_level(logger)
 
 
 # For compatibility with old code written with Logbook in mind
 # TODO remove in v8
-def patch_notice_level(logger: logging.Logger):
+def patch_notice_level(logger: logging.Logger) -> logging.Logger:
     """Patch logger to issue WARNINGs with logger.notice."""
     logger.notice = logger.warning
     return logger
