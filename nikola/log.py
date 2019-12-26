@@ -37,7 +37,7 @@ __all__ = (
     "LOGGER",
 )
 
-
+# Handlers/formatters
 class ApplicationWarning(Exception):
     """An application warning, raised in strict mode."""
 
@@ -76,26 +76,7 @@ class ColorfulFormatter(logging.Formatter):
         return "\033[37m{}\033[0m"
 
 
-def get_logger(name: str, handlers=None) -> logging.Logger:
-    """Get a logger with handlers attached."""
-    logger = logging.getLogger(name)
-    if handlers is not None:
-        for h in handlers:
-            logger.addHandler(h)
-    return patch_notice_level(logger)
-
-
-# For compatibility with old code written with Logbook in mind
-# TODO remove in v8
-def patch_notice_level(logger: logging.Logger) -> logging.Logger:
-    """Patch logger to issue WARNINGs with logger.notice."""
-    logger.notice = logger.warning
-    return logger
-
-
-LOGGER = get_logger("Nikola")
-
-
+# Initial configuration
 class LoggingMode(enum.Enum):
     """Logging mode options."""
 
@@ -105,7 +86,10 @@ class LoggingMode(enum.Enum):
 
 
 def configure_logging(logging_mode: LoggingMode = LoggingMode.NORMAL) -> None:
-    """Configure logging for Nikola."""
+    """Configure logging for Nikola.
+
+    This method can be called multiple times, previous configuration will be overridden.
+    """
     if DEBUG:
         logging.root.level = logging.DEBUG
     else:
@@ -131,7 +115,27 @@ def configure_logging(logging_mode: LoggingMode = LoggingMode.NORMAL) -> None:
 
 configure_logging()
 
+# Loggers for use
+def get_logger(name: str, handlers=None) -> logging.Logger:
+    """Get a logger with handlers attached."""
+    logger = logging.getLogger(name)
+    if handlers is not None:
+        for h in handlers:
+            logger.addHandler(h)
+    return patch_notice_level(logger)
 
+
+# For compatibility with old code written with Logbook in mind
+# TODO remove in v8
+def patch_notice_level(logger: logging.Logger) -> logging.Logger:
+    """Patch logger to issue WARNINGs with logger.notice."""
+    logger.notice = logger.warning
+    return logger
+
+
+LOGGER = get_logger("Nikola")
+
+# Push warnings to logging
 def showwarning(message, category, filename, lineno, file=None, line=None):
     """Show a warning (from the warnings module) to the user."""
     try:
