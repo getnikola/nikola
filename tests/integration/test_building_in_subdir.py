@@ -23,7 +23,7 @@ from .test_empty_build import (  # NOQA
 
 
 @pytest.fixture(scope="module")
-def build(build_dir, target_dir, test_dir):
+def build(target_dir, test_dir):
     """Fill the site with demo content and build it."""
     init_command = nikola.plugins.command.init.CommandInit()
     init_command.copy_sample_site(target_dir)
@@ -35,11 +35,8 @@ def build(build_dir, target_dir, test_dir):
 
     add_post_without_text(os.path.join(target_dir, "posts"))
 
+    build_dir = os.path.join(target_dir, "posts")
+
     with cd(build_dir):
         result = __main__.main(["build"])
         assert result == 0
-
-
-@pytest.fixture(scope="module")
-def build_dir(target_dir):
-    return os.path.join(target_dir, "posts")
