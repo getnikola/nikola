@@ -37,6 +37,7 @@ __all__ = (
     "LOGGER",
 )
 
+
 # Handlers/formatters
 class ApplicationWarning(Exception):
     """An application warning, raised in strict mode."""
@@ -115,15 +116,6 @@ def configure_logging(logging_mode: LoggingMode = LoggingMode.NORMAL) -> None:
 
 configure_logging()
 
-# Loggers for use
-def get_logger(name: str, handlers=None) -> logging.Logger:
-    """Get a logger with handlers attached."""
-    logger = logging.getLogger(name)
-    if handlers is not None:
-        for h in handlers:
-            logger.addHandler(h)
-    return patch_notice_level(logger)
-
 
 # For compatibility with old code written with Logbook in mind
 # TODO remove in v8
@@ -133,7 +125,18 @@ def patch_notice_level(logger: logging.Logger) -> logging.Logger:
     return logger
 
 
+# User-facing loggers
+def get_logger(name: str, handlers=None) -> logging.Logger:
+    """Get a logger with handlers attached."""
+    logger = logging.getLogger(name)
+    if handlers is not None:
+        for h in handlers:
+            logger.addHandler(h)
+    return patch_notice_level(logger)
+
+
 LOGGER = get_logger("Nikola")
+
 
 # Push warnings to logging
 def showwarning(message, category, filename, lineno, file=None, line=None):
