@@ -88,7 +88,7 @@ class CommandDeploy(Command):
         # Remove drafts and future posts if requested
         undeployed_posts = clean_before_deployment(self.site)
         if undeployed_posts:
-            self.logger.notice("Deleted {0} posts due to DEPLOY_* settings".format(len(undeployed_posts)))
+            self.logger.warning("Deleted {0} posts due to DEPLOY_* settings".format(len(undeployed_posts)))
 
         if args:
             presets = args

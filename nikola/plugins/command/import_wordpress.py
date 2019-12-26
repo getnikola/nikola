@@ -64,7 +64,7 @@ LOGGER = utils.get_logger('import_wordpress')
 
 def install_plugin(site, plugin_name, output_dir=None, show_install_notes=False):
     """Install a Nikola plugin."""
-    LOGGER.notice("Installing plugin '{0}'".format(plugin_name))
+    LOGGER.info("Installing plugin '{0}'".format(plugin_name))
     # Get hold of the 'plugin' plugin
     plugin_installer_info = site.plugin_manager.getPluginByName('plugin', 'Command')
     if plugin_installer_info is None:
@@ -993,10 +993,10 @@ to
                 post_format = 'wp'
 
         if is_draft and self.exclude_drafts:
-            LOGGER.notice('Draft "{0}" will not be imported.'.format(title))
+            LOGGER.warning('Draft "{0}" will not be imported.'.format(title))
             return False
         elif is_private and self.exclude_privates:
-            LOGGER.notice('Private post "{0}" will not be imported.'.format(title))
+            LOGGER.warning('Private post "{0}" will not be imported.'.format(title))
             return False
         elif content.strip() or self.import_empty_items:
             # If no content is found, no files are written.

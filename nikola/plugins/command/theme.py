@@ -202,7 +202,7 @@ class CommandTheme(Command):
                 self.do_install(parent_name, data)
                 name = parent_name
         if installstatus:
-            LOGGER.notice('Remember to set THEME="{0}" in conf.py to use this theme.'.format(origname))
+            LOGGER.info('Remember to set THEME="{0}" in conf.py to use this theme.'.format(origname))
 
     def do_install(self, name, data):
         """Download and install a theme."""
@@ -235,7 +235,7 @@ class CommandTheme(Command):
 
         confpypath = os.path.join(dest_path, 'conf.py.sample')
         if os.path.exists(confpypath):
-            LOGGER.notice('This theme has a sample config file.  Integrate it with yours in order to make this theme work!')
+            LOGGER.warning('This theme has a sample config file.  Integrate it with yours in order to make this theme work!')
             print('Contents of the conf.py.sample file:\n')
             with io.open(confpypath, 'r', encoding='utf-8') as fh:
                 if self.site.colorful:
@@ -370,7 +370,7 @@ class CommandTheme(Command):
                 LOGGER.info("Created file {0}".format(os.path.join(themedir, 'engine')))
 
         LOGGER.info("Theme {0} created successfully.".format(themedir))
-        LOGGER.notice('Remember to set THEME="{0}" in conf.py to use this theme.'.format(name))
+        LOGGER.info('Remember to set THEME="{0}" in conf.py to use this theme.'.format(name))
 
     def get_json(self, url):
         """Download the JSON file with all plugins."""

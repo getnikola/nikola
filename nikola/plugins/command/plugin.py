@@ -137,7 +137,7 @@ class CommandPlugin(Command):
             self.output_dir = options.get('output_dir')
         else:
             if not self.site.configured and not user_mode and install:
-                LOGGER.notice('No site found, assuming --user')
+                LOGGER.warning('No site found, assuming --user')
                 user_mode = True
 
             if user_mode:
@@ -249,7 +249,7 @@ class CommandPlugin(Command):
 
         reqpath = os.path.join(dest_path, 'requirements.txt')
         if os.path.exists(reqpath):
-            LOGGER.notice('This plugin has Python dependencies.')
+            LOGGER.warning('This plugin has Python dependencies.')
             LOGGER.info('Installing dependencies with pip...')
             try:
                 subprocess.check_call((sys.executable, '-m', 'pip', 'install', '-r', reqpath))
@@ -265,7 +265,7 @@ class CommandPlugin(Command):
 
         reqnpypath = os.path.join(dest_path, 'requirements-nonpy.txt')
         if os.path.exists(reqnpypath):
-            LOGGER.notice('This plugin has third-party '
+            LOGGER.warning('This plugin has third-party '
                           'dependencies you need to install '
                           'manually.')
             print('Contents of the requirements-nonpy.txt file:\n')
@@ -281,7 +281,7 @@ class CommandPlugin(Command):
 
         req_plug_path = os.path.join(dest_path, 'requirements-plugins.txt')
         if os.path.exists(req_plug_path):
-            LOGGER.notice('This plugin requires other Nikola plugins.')
+            LOGGER.info('This plugin requires other Nikola plugins.')
             LOGGER.info('Installing plugins...')
             plugin_failure = False
             try:
@@ -301,7 +301,7 @@ class CommandPlugin(Command):
 
         confpypath = os.path.join(dest_path, 'conf.py.sample')
         if os.path.exists(confpypath) and show_install_notes:
-            LOGGER.notice('This plugin has a sample config file.  Integrate it with yours in order to make this plugin work!')
+            LOGGER.warning('This plugin has a sample config file.  Integrate it with yours in order to make this plugin work!')
             print('Contents of the conf.py.sample file:\n')
             with io.open(confpypath, 'r', encoding='utf-8') as fh:
                 if self.site.colorful:

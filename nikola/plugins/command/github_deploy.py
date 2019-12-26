@@ -96,7 +96,7 @@ class CommandGitHubDeploy(Command):
         # Remove drafts and future posts if requested (Issue #2406)
         undeployed_posts = clean_before_deployment(self.site)
         if undeployed_posts:
-            self.logger.notice("Deleted {0} posts due to DEPLOY_* settings".format(len(undeployed_posts)))
+            self.logger.warning("Deleted {0} posts due to DEPLOY_* settings".format(len(undeployed_posts)))
 
         # Commit and push
         self._commit_and_push(options['commit_message'])
@@ -139,7 +139,7 @@ class CommandGitHubDeploy(Command):
                 if e != 0:
                     self._run_command(['git', 'commit', '-am', commit_message])
                 else:
-                    self.logger.notice('Nothing to commit to source branch.')
+                    self.logger.info('Nothing to commit to source branch.')
 
             try:
                 source_commit = uni_check_output(['git', 'rev-parse', source])

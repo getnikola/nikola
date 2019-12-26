@@ -135,7 +135,7 @@ class CompileIPynb(PageCompiler):
 
             if kernel is None:
                 kernel = self.default_kernel
-                self.logger.notice('No kernel specified, assuming "{0}".'.format(kernel))
+                self.logger.warning('No kernel specified, assuming "{0}".'.format(kernel))
 
             IPYNB_KERNELS = {}
             ksm = kernelspec.KernelSpecManager()

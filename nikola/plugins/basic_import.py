@@ -95,8 +95,8 @@ class ImportMixin(object):
             os.system('nikola init -q ' + self.output_folder)
         else:
             self.import_into_existing_site = True
-            utils.LOGGER.notice('The folder {0} already exists - assuming that this is a '
-                                'already existing Nikola site.'.format(self.output_folder))
+            utils.LOGGER.warning('The folder {0} already exists - assuming that this is a '
+                                 'already existing Nikola site.'.format(self.output_folder))
 
         filename = resource_filename('nikola', 'conf.py.in')
         # The 'strict_undefined=True' will give the missing symbol name if any,

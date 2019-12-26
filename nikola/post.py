@@ -234,7 +234,7 @@ class Post(object):
                     LOGGER.warn("Post {0} has both 'category' and 'section' metadata. Section will be ignored.".format(source_path))
                 else:
                     meta['category'] = meta['section']
-                    LOGGER.notice("Post {0} uses 'section' metadata, setting its value to 'category'".format(source_path))
+                    LOGGER.info("Post {0} uses 'section' metadata, setting its value to 'category'".format(source_path))
 
             # Handle CATEGORY_DESTPATH_AS_DEFAULT
             if 'category' not in meta and self.config['CATEGORY_DESTPATH_AS_DEFAULT']:
@@ -649,7 +649,7 @@ class Post(object):
         })
 
         if self.publish_later:
-            LOGGER.notice('{0} is scheduled to be published in the future ({1})'.format(
+            LOGGER.info('{0} is scheduled to be published in the future ({1})'.format(
                 self.source_path, self.date))
 
     def fragment_deps(self, lang):

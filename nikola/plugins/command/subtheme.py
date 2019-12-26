@@ -146,5 +146,5 @@ class CommandSubTheme(Command):
             cp['Family'] = {'family': cp['Family']['family']}
             cp.write(output)
 
-        LOGGER.notice(
+        LOGGER.info(
             'Theme created.  Change the THEME setting to "{0}" to use it.'.format(name))
