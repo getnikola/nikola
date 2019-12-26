@@ -26,8 +26,8 @@
 
 """reStructuredText compiler for Nikola."""
 
-import logging
 import io
+import logging
 import os
 
 import docutils.core

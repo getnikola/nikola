@@ -62,9 +62,9 @@ class ColorfulFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
         """Format a message and add colors to it."""
         message = super().format(record)
-        return self.get_wrap_string(record).format(message)
+        return self.wrap_in_color(record).format(message)
 
-    def get_wrap_string(self, record: logging.LogRecord) -> str:
+    def wrap_in_color(self, record: logging.LogRecord) -> str:
         """Return the colorized string for this record."""
         if not self._colorful:
             return "{}"
@@ -96,6 +96,10 @@ def configure_logging(logging_mode: LoggingMode = LoggingMode.NORMAL) -> None:
     else:
         logging.root.level = logging.INFO
 
+    if logging_mode == LoggingMode.QUIET:
+        logging.root.handlers = []
+        return
+
     handler = logging.StreamHandler()
     handler.setFormatter(
         ColorfulFormatter(
@@ -103,9 +107,6 @@ def configure_logging(logging_mode: LoggingMode = LoggingMode.NORMAL) -> None:
             datefmt="%Y-%m-%dT%H:%M:%SZ",
         )
     )
-    if logging_mode == LoggingMode.QUIET:
-        logging.root.handlers = []
-        return
 
     handlers = [handler]
     if logging_mode == LoggingMode.STRICT:
