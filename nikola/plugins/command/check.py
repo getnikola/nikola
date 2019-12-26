@@ -158,7 +158,7 @@ class CommandCheck(Command):
         if options['verbose']:
             self.logger.level = logging.DEBUG
         else:
-            self.logger.level = logging.warning
+            self.logger.level = logging.WARNING
         failure = False
         if options['links']:
             failure |= self.scan_links(options['find_sources'], options['remote'])
