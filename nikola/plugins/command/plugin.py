@@ -266,8 +266,8 @@ class CommandPlugin(Command):
         reqnpypath = os.path.join(dest_path, 'requirements-nonpy.txt')
         if os.path.exists(reqnpypath):
             LOGGER.warning('This plugin has third-party '
-                          'dependencies you need to install '
-                          'manually.')
+                           'dependencies you need to install '
+                           'manually.')
             print('Contents of the requirements-nonpy.txt file:\n')
             with io.open(reqnpypath, 'r', encoding='utf-8') as fh:
                 for l in fh.readlines():

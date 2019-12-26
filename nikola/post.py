@@ -281,7 +281,7 @@ class Post(object):
                     self.is_draft = True
                 else:
                     LOGGER.warning(('The post "{0}" has the unknown status "{1}". '
-                                 'Valid values are "published", "featured", "private" and "draft".').format(self.source_path, status))
+                                    'Valid values are "published", "featured", "private" and "draft".').format(self.source_path, status))
 
             if self.config['WARN_ABOUT_TAG_METADATA']:
                 show_warning = False
@@ -296,10 +296,10 @@ class Post(object):
                     show_warning = True
                 if show_warning:
                     LOGGER.warning('It is suggested that you convert special tags to metadata and set '
-                                'USE_TAG_METADATA to False. You can use the upgrade_metadata_v8 '
-                                'command plugin for conversion (install with: nikola plugin -i '
-                                'upgrade_metadata_v8). Change the WARN_ABOUT_TAG_METADATA '
-                                'configuration to disable this warning.')
+                                   'USE_TAG_METADATA to False. You can use the upgrade_metadata_v8 '
+                                   'command plugin for conversion (install with: nikola plugin -i '
+                                   'upgrade_metadata_v8). Change the WARN_ABOUT_TAG_METADATA '
+                                   'configuration to disable this warning.')
             if self.config['USE_TAG_METADATA']:
                 if 'draft' in [_.lower() for _ in self._tags[lang]]:
                     self.is_draft = True

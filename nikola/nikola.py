@@ -767,7 +767,7 @@ class Nikola(object):
         # Make sure we have pyphen installed if we are using it
         if self.config.get('HYPHENATE') and pyphen is None:
             utils.LOGGER.warning('To use the hyphenation, you have to install '
-                              'the "pyphen" package.')
+                                 'the "pyphen" package.')
             utils.LOGGER.warning('Setting HYPHENATE to False.')
             self.config['HYPHENATE'] = False
 
@@ -2413,8 +2413,8 @@ class Nikola(object):
             entry_author_name = lxml.etree.SubElement(entry_author, "name")
             entry_author_name.text = post.author(lang)
             entry_root.append(atom_link("alternate", "text/html",
-                              post.permalink(lang, absolute=True,
-                                             query=feed_append_query)))
+                                        post.permalink(lang, absolute=True,
+                                                       query=feed_append_query)))
             entry_summary = lxml.etree.SubElement(entry_root, "summary")
             if not self.config["FEED_PLAIN"]:
                 entry_summary.set("type", "html")
@@ -2645,11 +2645,11 @@ class Nikola(object):
             "task_dep": ['render_posts'],
             "targets": [output_name],
             "actions": [(self.atom_feed_renderer,
-                        (lang,
-                         post_list,
-                         output_name,
-                         kw['filters'],
-                         context,))],
+                         (lang,
+                          post_list,
+                          output_name,
+                          kw['filters'],
+                          context,))],
             "clean": True,
             "uptodate": [utils.config_changed(kw, 'nikola.nikola.Nikola.atom_feed_renderer')] + additional_dependencies
         }

@@ -87,11 +87,9 @@ def main(args=None):
             break
 
     quiet = False
-    strict = False
     if len(args) > 0 and args[0] == 'build' and '--strict' in args:
         LOGGER.info('Running in strict mode')
         configure_logging(LoggingMode.STRICT)
-        strict = True
     elif len(args) > 0 and args[0] == 'build' and '-q' in args or '--quiet' in args:
         configure_logging(LoggingMode.QUIET)
         quiet = True

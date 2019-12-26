@@ -266,8 +266,8 @@ to
 
         if args:
             LOGGER.warning('You specified additional arguments ({0}). Please consider '
-                        'putting these arguments before the filename if you '
-                        'are running into problems.'.format(args))
+                           'putting these arguments before the filename if you '
+                           'are running into problems.'.format(args))
 
         self.onefile = options.get('one_file', False)
 
@@ -847,7 +847,7 @@ to
                 other_meta['category'] = cats[0]
                 if len(cats) > 1:
                     LOGGER.warning(('Post "{0}" has more than one category! ' +
-                                 'Will only use the first one.').format(post_name))
+                                    'Will only use the first one.').format(post_name))
             tags_cats = [utils.html_unescape(tag) for tag in tags]
         else:
             tags_cats = [utils.html_unescape(tag) for tag in tags + categories]
@@ -1077,7 +1077,7 @@ to
             return (out_folder, slug)
         else:
             LOGGER.warning(('Not going to import "{0}" because it seems to contain'
-                         ' no content.').format(title))
+                            ' no content.').format(title))
             return False
 
     def _extract_item_info(self, item):
@@ -1142,7 +1142,7 @@ to
         # Assign attachments to posts
         for post_id in self.attachments:
             LOGGER.warning(("Found attachments for post or page #{0}, but didn't find post or page. " +
-                         "(Attachments: {1})").format(post_id, [e['files'][0] for e in self.attachments[post_id].values()]))
+                            "(Attachments: {1})").format(post_id, [e['files'][0] for e in self.attachments[post_id].values()]))
 
 
 def get_text_tag(tag, name, default):
