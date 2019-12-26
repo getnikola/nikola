@@ -109,6 +109,10 @@ bytes_str = bytes
 unicode_str = str
 unichr = chr
 
+# For compatibility with old logging setups.
+# TODO remove in v9?
+STDERR_HANDLER = None
+
 
 USE_SLUGIFY = True
 
