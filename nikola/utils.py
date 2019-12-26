@@ -30,7 +30,6 @@ import configparser
 import datetime
 import hashlib
 import io
-import logging
 import operator
 import os
 import re
@@ -41,7 +40,6 @@ import subprocess
 import sys
 import threading
 import typing
-import warnings
 from collections import defaultdict, OrderedDict
 from collections.abc import Callable, Iterable
 from html import unescape as html_unescape
@@ -55,19 +53,17 @@ from zipfile import ZipFile as zipf
 import babel.dates
 import dateutil.parser
 import dateutil.tz
-import logbook
 import PyRSS2Gen as rss
 from blinker import signal
 from doit import tools
 from doit.cmdparse import CmdParse
-from logbook.compat import redirect_logging
-from logbook.more import ExceptionHandler, ColorizedStderrHandler
 from pkg_resources import resource_filename
 from pygments.formatters import HtmlFormatter
 from unidecode import unidecode
 
-from nikola import DEBUG
-from .log import LOGGER, get_logger
+# Renames
+from nikola import DEBUG  # NOQA
+from .log import LOGGER, get_logger  # NOQA
 from .hierarchy_utils import TreeNode, clone_treenode, flatten_tree_structure, sort_classifications
 from .hierarchy_utils import join_hierarchical_category_path, parse_escaped_hierarchical_category_name
 

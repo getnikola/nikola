@@ -14,8 +14,6 @@ import os
 from contextlib import contextmanager
 import unittest
 
-import logbook
-
 import nikola.utils
 import nikola.shortcodes
 
@@ -31,7 +29,6 @@ from nikola.plugin_categories import (
     MarkdownExtension,
     RestExtension
 )
-nikola.utils.LOGGER.handlers.append(logbook.TestHandler())
 
 BaseTestCase = unittest.TestCase
 

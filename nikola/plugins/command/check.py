@@ -26,6 +26,7 @@
 
 """Check the generated site."""
 
+import logging
 import os
 import re
 import sys
@@ -33,7 +34,6 @@ import time
 from collections import defaultdict
 from urllib.parse import unquote, urlparse, urljoin, urldefrag
 
-import logbook
 import lxml.html
 import requests
 from doit.loader import generate_tasks
@@ -156,9 +156,9 @@ class CommandCheck(Command):
             print(self.help())
             return 1
         if options['verbose']:
-            self.logger.level = logbook.DEBUG
+            self.logger.level = logging.DEBUG
         else:
-            self.logger.level = logbook.NOTICE
+            self.logger.level = logging.warning
         failure = False
         if options['links']:
             failure |= self.scan_links(options['find_sources'], options['remote'])
@@ -197,7 +197,7 @@ class CommandCheck(Command):
                 # Do not look at links in the cache, which are not parsed by
                 # anyone and may result in false positives.  Problems arise
                 # with galleries, for example.  Full rationale: (Issue #1447)
-                self.logger.notice("Ignoring {0} (in cache, links may be incorrect)".format(filename))
+                self.logger.warning("Ignoring {0} (in cache, links may be incorrect)".format(filename))
                 return False
 
             if not os.path.exists(fname):
