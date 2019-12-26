@@ -305,11 +305,9 @@ class CommandPlugin(Command):
             print('Contents of the conf.py.sample file:\n')
             with io.open(confpypath, 'r', encoding='utf-8') as fh:
                 if self.site.colorful:
-                    print(utils.indent(pygments.highlight(
-                        fh.read(), PythonLexer(), TerminalFormatter()),
-                        4 * ' '))
+                    print(pygments.highlight(fh.read(), PythonLexer(), TerminalFormatter()))
                 else:
-                    print(utils.indent(fh.read(), 4 * ' '))
+                    print(fh.read())
         return 0
 
     def do_uninstall(self, name):
