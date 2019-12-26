@@ -67,6 +67,7 @@ from pygments.formatters import HtmlFormatter
 from unidecode import unidecode
 
 from nikola import DEBUG
+from .log import LOGGER, get_logger
 from .hierarchy_utils import TreeNode, clone_treenode, flatten_tree_structure, sort_classifications
 from .hierarchy_utils import join_hierarchical_category_path, parse_escaped_hierarchical_category_name
 
@@ -113,56 +114,7 @@ unicode_str = str
 unichr = chr
 
 
-class ApplicationWarning(Exception):
-    pass
-
-
-class ColorfulStderrHandler(ColorizedStderrHandler):
-    """Stream handler with colors."""
-
-    _colorful = False
-
-    def should_colorize(self, record):
-        """Inform about colorization using the value obtained from Nikola."""
-        return self._colorful
-
-
-def get_logger(name, handlers=None):
-    """Get a logger with handlers attached."""
-    l = logbook.Logger(name)
-    l.handlers += STDERR_HANDLER
-    return l
-
-
-STDERR_HANDLER = [ColorfulStderrHandler(
-    level=logbook.INFO if not DEBUG else logbook.DEBUG,
-    format_string=u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: {record.channel}: {record.message}'
-)]
-
-
-LOGGER = get_logger('Nikola')
-STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')
-
 USE_SLUGIFY = True
-
-redirect_logging()
-
-if DEBUG:
-    logging.basicConfig(level=logging.DEBUG)
-else:
-    logging.basicConfig(level=logging.INFO)
-
-
-def showwarning(message, category, filename, lineno, file=None, line=None):
-    """Show a warning (from the warnings module) to the user."""
-    try:
-        n = category.__name__
-    except AttributeError:
-        n = str(category)
-    get_logger(n).warn('{0}:{1}: {2}'.format(filename, lineno, message))
-
-
-warnings.showwarning = showwarning
 
 
 def req_missing(names, purpose, python=True, optional=False):
