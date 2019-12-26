@@ -64,13 +64,15 @@ class ColorfulFormatter(logging.Formatter):
         return self.get_wrap_string(record).format(message)
 
     def get_wrap_string(self, record: logging.LogRecord) -> str:
-        """Returns the colorized string for this record."""
+        """Return the colorized string for this record."""
         if not self._colorful:
             return "{}"
         if record.levelno >= logging.ERROR:
             return "\033[1;31m{}\033[0m"
         elif record.levelno >= logging.WARNING:
             return "\033[1;33m{}\033[0m"
+        elif record.levelno >= logging.INFO:
+            return "\033[1m{}\033[0m"
         return "\033[37m{}\033[0m"
 
 
