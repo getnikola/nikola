@@ -295,7 +295,7 @@ class CommandInit(Command):
     @classmethod
     def create_empty_site(cls, target):
         """Create an empty site with directories only."""
-        for folder in ('files', 'galleries', 'listings', 'posts', 'pages'):
+        for folder in ('files', 'galleries', 'images', 'listings', 'posts', 'pages'):
             makedirs(os.path.join(target, folder))
 
     @staticmethod
