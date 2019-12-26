@@ -250,13 +250,13 @@ class CommandCheck(Command):
 
                 # Warn about links from https to http (mixed-security)
                 if base_url.netloc == parsed.netloc and base_url.scheme == "https" and parsed.scheme == "http":
-                    self.logger.warn("Mixed-content security for link in {0}: {1}".format(filename, target))
+                    self.logger.warning("Mixed-content security for link in {0}: {1}".format(filename, target))
 
                 # Link to an internal REDIRECTIONS page
                 if target in self.internal_redirects:
                     redir_status_code = 301
                     redir_target = [_dest for _target, _dest in self.site.config['REDIRECTIONS'] if urljoin('/', _target) == target][0]
-                    self.logger.warn("Remote link moved PERMANENTLY to \"{0}\" and should be updated in {1}: {2} [HTTP: 301]".format(redir_target, filename, target))
+                    self.logger.warning("Remote link moved PERMANENTLY to \"{0}\" and should be updated in {1}: {2} [HTTP: 301]".format(redir_target, filename, target))
 
                 # Absolute links to other domains, skip
                 # Absolute links when using only paths, skip.
@@ -266,7 +266,7 @@ class CommandCheck(Command):
                         continue
                     if target in self.checked_remote_targets:  # already checked this exact target
                         if self.checked_remote_targets[target] in [301, 308]:
-                            self.logger.warn("Remote link PERMANENTLY redirected in {0}: {1} [Error {2}]".format(filename, target, self.checked_remote_targets[target]))
+                            self.logger.warning("Remote link PERMANENTLY redirected in {0}: {1} [Error {2}]".format(filename, target, self.checked_remote_targets[target]))
                         elif self.checked_remote_targets[target] in [302, 307]:
                             self.logger.debug("Remote link temporarily redirected in {0}: {1} [HTTP: {2}]".format(filename, target, self.checked_remote_targets[target]))
                         elif self.checked_remote_targets[target] > 399:
@@ -294,7 +294,7 @@ class CommandCheck(Command):
                         resp = requests.get(target, headers=req_headers, allow_redirects=True)
                         # Permanent redirects should be updated
                         if redir_status_code in [301, 308]:
-                            self.logger.warn("Remote link moved PERMANENTLY to \"{0}\" and should be updated in {1}: {2} [HTTP: {3}]".format(resp.url, filename, target, redir_status_code))
+                            self.logger.warning("Remote link moved PERMANENTLY to \"{0}\" and should be updated in {1}: {2} [HTTP: {3}]".format(resp.url, filename, target, redir_status_code))
                         if redir_status_code in [302, 307]:
                             self.logger.debug("Remote link temporarily redirected to \"{0}\" in {1}: {2} [HTTP: {3}]".format(resp.url, filename, target, redir_status_code))
                         self.checked_remote_targets[resp.url] = resp.status_code
@@ -308,7 +308,7 @@ class CommandCheck(Command):
                     elif resp.status_code <= 399:  # The address leads *somewhere* that is not an error
                         self.logger.debug("Successfully checked remote link in {0}: {1} [HTTP: {2}]".format(filename, target, resp.status_code))
                         continue
-                    self.logger.warn("Could not check remote link in {0}: {1} [Unknown problem]".format(filename, target))
+                    self.logger.warning("Could not check remote link in {0}: {1} [Unknown problem]".format(filename, target))
                     continue
 
                 if url_type == 'rel_path':
@@ -357,11 +357,11 @@ class CommandCheck(Command):
                         self.existing_targets.add(target_filename)
                     else:
                         rv = True
-                        self.logger.warn("Broken link in {0}: {1}".format(filename, target))
+                        self.logger.warning("Broken link in {0}: {1}".format(filename, target))
                         if find_sources:
-                            self.logger.warn("Possible sources:")
-                            self.logger.warn("\n".join(deps[filename]))
-                            self.logger.warn("===============================\n")
+                            self.logger.warning("Possible sources:")
+                            self.logger.warning("\n".join(deps[filename]))
+                            self.logger.warning("===============================\n")
         except Exception as exc:
             self.logger.error(u"Error with: {0} {1}".format(filename, exc))
         return rv
@@ -407,15 +407,15 @@ class CommandCheck(Command):
 
         if only_on_output:
             only_on_output.sort()
-            self.logger.warn("Files from unknown origins (orphans):")
+            self.logger.warning("Files from unknown origins (orphans):")
             for f in only_on_output:
-                self.logger.warn(f)
+                self.logger.warning(f)
             failure = True
         if only_on_input:
             only_on_input.sort()
-            self.logger.warn("Files not generated:")
+            self.logger.warning("Files not generated:")
             for f in only_on_input:
-                self.logger.warn(f)
+                self.logger.warning(f)
         if not failure:
             self.logger.debug("All files checked.")
         return failure
@@ -444,7 +444,7 @@ class CommandCheck(Command):
                 pass
 
         if warn_flag:
-            self.logger.warn('Some files or directories have been removed, your site may need rebuilding')
+            self.logger.warning('Some files or directories have been removed, your site may need rebuilding')
             return True
 
         return False

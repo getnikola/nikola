@@ -135,7 +135,7 @@ class FakeSite(object):
     def register_shortcode(self, name, f):
         """Register function f to handle shortcode "name"."""
         if name in self.shortcode_registry:
-            nikola.utils.LOGGER.warn('Shortcode name conflict: %s', name)
+            nikola.utils.LOGGER.warning('Shortcode name conflict: %s', name)
             return
         self.shortcode_registry[name] = f
 

@@ -150,7 +150,7 @@ def req_missing(names, purpose, python=True, optional=False):
             purpose, pnames, whatarethey_p)
 
     if optional:
-        LOGGER.warn(msg)
+        LOGGER.warning(msg)
     else:
         LOGGER.error(msg)
         LOGGER.error('Exiting due to missing dependencies.')
@@ -710,7 +710,7 @@ def load_messages(themes, translations, default_lang, themes_dirs):
         raise LanguageNotFoundError(lang, last_exception)
     for lang, status in completion_status.items():
         if not status and lang not in INCOMPLETE_LANGUAGES_WARNED:
-            LOGGER.warn("Incomplete translation for language '{0}'.".format(lang))
+            LOGGER.warning("Incomplete translation for language '{0}'.".format(lang))
             INCOMPLETE_LANGUAGES_WARNED.add(lang)
 
     return messages
@@ -1457,9 +1457,9 @@ def write_metadata(data, metadata_format=None, comment_wrap=False, site=None, co
         extractor.check_requirements()
         return extractor.write_metadata(data, comment_wrap)
     elif extractor and metadata_format not in default_meta:
-        LOGGER.warn('Writing METADATA_FORMAT {} is not supported, using "nikola" format'.format(metadata_format))
+        LOGGER.warning('Writing METADATA_FORMAT {} is not supported, using "nikola" format'.format(metadata_format))
     elif metadata_format not in default_meta:
-        LOGGER.warn('Unknown METADATA_FORMAT {}, using "nikola" format'.format(metadata_format))
+        LOGGER.warning('Unknown METADATA_FORMAT {}, using "nikola" format'.format(metadata_format))
 
     if metadata_format == 'rest_docinfo':
         title = data['title']
