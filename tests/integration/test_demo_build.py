@@ -1,4 +1,11 @@
-"""Test that a default build of --demo works."""
+"""
+Test that a default build of a new site based on the demo site works.
+
+This module also is one place where green path tests (working as
+expected) for the `check` command are tested.
+In this case these are tested against the demo site with default
+settings.
+"""
 
 import os
 

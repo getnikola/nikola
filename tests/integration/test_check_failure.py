@@ -1,4 +1,9 @@
-"""The demo build should pass 'nikola check' and fail with missing files."""
+"""
+The demo build should pass 'nikola check' and fail with missing files.
+
+This tests the red path (failures) for the `check` command.
+Green path tests (working as expected) can be found in `test_demo_build`.
+"""
 
 import io
 import os
