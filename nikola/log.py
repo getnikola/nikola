@@ -119,7 +119,7 @@ configure_logging()
 
 
 # For compatibility with old code written with Logbook in mind
-# TODO remove in v8
+# TODO remove in v9
 def patch_notice_level(logger: logging.Logger) -> logging.Logger:
     """Patch logger to issue WARNINGs with logger.notice."""
     logger.notice = logger.warning
