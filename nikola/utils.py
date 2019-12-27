@@ -30,7 +30,6 @@ import configparser
 import datetime
 import hashlib
 import io
-import logging
 import operator
 import os
 import re
@@ -41,7 +40,6 @@ import subprocess
 import sys
 import threading
 import typing
-import warnings
 from collections import defaultdict, OrderedDict
 from collections.abc import Callable, Iterable
 from html import unescape as html_unescape
@@ -55,18 +53,17 @@ from zipfile import ZipFile as zipf
 import babel.dates
 import dateutil.parser
 import dateutil.tz
-import logbook
 import PyRSS2Gen as rss
 from blinker import signal
 from doit import tools
 from doit.cmdparse import CmdParse
-from logbook.compat import redirect_logging
-from logbook.more import ExceptionHandler, ColorizedStderrHandler
 from pkg_resources import resource_filename
 from pygments.formatters import HtmlFormatter
 from unidecode import unidecode
 
-from nikola import DEBUG
+# Renames
+from nikola import DEBUG  # NOQA
+from .log import LOGGER, get_logger  # NOQA
 from .hierarchy_utils import TreeNode, clone_treenode, flatten_tree_structure, sort_classifications
 from .hierarchy_utils import join_hierarchical_category_path, parse_escaped_hierarchical_category_name
 
@@ -112,57 +109,12 @@ bytes_str = bytes
 unicode_str = str
 unichr = chr
 
+# For compatibility with old logging setups.
+# TODO remove in v9?
+STDERR_HANDLER = None
 
-class ApplicationWarning(Exception):
-    pass
-
-
-class ColorfulStderrHandler(ColorizedStderrHandler):
-    """Stream handler with colors."""
-
-    _colorful = False
-
-    def should_colorize(self, record):
-        """Inform about colorization using the value obtained from Nikola."""
-        return self._colorful
-
-
-def get_logger(name, handlers=None):
-    """Get a logger with handlers attached."""
-    l = logbook.Logger(name)
-    l.handlers += STDERR_HANDLER
-    return l
-
-
-STDERR_HANDLER = [ColorfulStderrHandler(
-    level=logbook.INFO if not DEBUG else logbook.DEBUG,
-    format_string=u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: {record.channel}: {record.message}'
-)]
-
-
-LOGGER = get_logger('Nikola')
-STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')
 
 USE_SLUGIFY = True
-
-redirect_logging()
-
-if DEBUG:
-    logging.basicConfig(level=logging.DEBUG)
-else:
-    logging.basicConfig(level=logging.INFO)
-
-
-def showwarning(message, category, filename, lineno, file=None, line=None):
-    """Show a warning (from the warnings module) to the user."""
-    try:
-        n = category.__name__
-    except AttributeError:
-        n = str(category)
-    get_logger(n).warn('{0}:{1}: {2}'.format(filename, lineno, message))
-
-
-warnings.showwarning = showwarning
 
 
 def req_missing(names, purpose, python=True, optional=False):
@@ -202,7 +154,7 @@ def req_missing(names, purpose, python=True, optional=False):
             purpose, pnames, whatarethey_p)
 
     if optional:
-        LOGGER.warn(msg)
+        LOGGER.warning(msg)
     else:
         LOGGER.error(msg)
         LOGGER.error('Exiting due to missing dependencies.')
@@ -762,7 +714,7 @@ def load_messages(themes, translations, default_lang, themes_dirs):
         raise LanguageNotFoundError(lang, last_exception)
     for lang, status in completion_status.items():
         if not status and lang not in INCOMPLETE_LANGUAGES_WARNED:
-            LOGGER.warn("Incomplete translation for language '{0}'.".format(lang))
+            LOGGER.warning("Incomplete translation for language '{0}'.".format(lang))
             INCOMPLETE_LANGUAGES_WARNED.add(lang)
 
     return messages
@@ -1509,9 +1461,9 @@ def write_metadata(data, metadata_format=None, comment_wrap=False, site=None, co
         extractor.check_requirements()
         return extractor.write_metadata(data, comment_wrap)
     elif extractor and metadata_format not in default_meta:
-        LOGGER.warn('Writing METADATA_FORMAT {} is not supported, using "nikola" format'.format(metadata_format))
+        LOGGER.warning('Writing METADATA_FORMAT {} is not supported, using "nikola" format'.format(metadata_format))
     elif metadata_format not in default_meta:
-        LOGGER.warn('Unknown METADATA_FORMAT {}, using "nikola" format'.format(metadata_format))
+        LOGGER.warning('Unknown METADATA_FORMAT {}, using "nikola" format'.format(metadata_format))
 
     if metadata_format == 'rest_docinfo':
         title = data['title']

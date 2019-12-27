@@ -302,7 +302,7 @@ def _enclosure(post, lang):
         except KeyError:
             length = 0
         except ValueError:
-            utils.LOGGER.warn("Invalid enclosure length for post {0}".format(post.source_path))
+            utils.LOGGER.warning("Invalid enclosure length for post {0}".format(post.source_path))
             length = 0
         url = enclosure
         mime = mimetypes.guess_type(url)[0]
@@ -677,48 +677,48 @@ class Nikola(object):
 
         # A EXIF_WHITELIST implies you want to keep EXIF data
         if self.config['EXIF_WHITELIST'] and not self.config['PRESERVE_EXIF_DATA']:
-            utils.LOGGER.warn('Setting EXIF_WHITELIST implies PRESERVE_EXIF_DATA is set to True')
+            utils.LOGGER.warning('Setting EXIF_WHITELIST implies PRESERVE_EXIF_DATA is set to True')
             self.config['PRESERVE_EXIF_DATA'] = True
 
         # Setting PRESERVE_EXIF_DATA with an empty EXIF_WHITELIST implies 'keep everything'
         if self.config['PRESERVE_EXIF_DATA'] and not self.config['EXIF_WHITELIST']:
-            utils.LOGGER.warn('You are setting PRESERVE_EXIF_DATA and not EXIF_WHITELIST so EXIF data is not really kept.')
+            utils.LOGGER.warning('You are setting PRESERVE_EXIF_DATA and not EXIF_WHITELIST so EXIF data is not really kept.')
 
         if 'UNSLUGIFY_TITLES' in self.config:
-            utils.LOGGER.warn('The UNSLUGIFY_TITLES setting was renamed to FILE_METADATA_UNSLUGIFY_TITLES.')
+            utils.LOGGER.warning('The UNSLUGIFY_TITLES setting was renamed to FILE_METADATA_UNSLUGIFY_TITLES.')
             self.config['FILE_METADATA_UNSLUGIFY_TITLES'] = self.config['UNSLUGIFY_TITLES']
 
         if 'TAG_PAGES_TITLES' in self.config:
-            utils.LOGGER.warn('The TAG_PAGES_TITLES setting was renamed to TAG_TITLES.')
+            utils.LOGGER.warning('The TAG_PAGES_TITLES setting was renamed to TAG_TITLES.')
             self.config['TAG_TITLES'] = self.config['TAG_PAGES_TITLES']
 
         if 'TAG_PAGES_DESCRIPTIONS' in self.config:
-            utils.LOGGER.warn('The TAG_PAGES_DESCRIPTIONS setting was renamed to TAG_DESCRIPTIONS.')
+            utils.LOGGER.warning('The TAG_PAGES_DESCRIPTIONS setting was renamed to TAG_DESCRIPTIONS.')
             self.config['TAG_DESCRIPTIONS'] = self.config['TAG_PAGES_DESCRIPTIONS']
 
         if 'CATEGORY_PAGES_TITLES' in self.config:
-            utils.LOGGER.warn('The CATEGORY_PAGES_TITLES setting was renamed to CATEGORY_TITLES.')
+            utils.LOGGER.warning('The CATEGORY_PAGES_TITLES setting was renamed to CATEGORY_TITLES.')
             self.config['CATEGORY_TITLES'] = self.config['CATEGORY_PAGES_TITLES']
 
         if 'CATEGORY_PAGES_DESCRIPTIONS' in self.config:
-            utils.LOGGER.warn('The CATEGORY_PAGES_DESCRIPTIONS setting was renamed to CATEGORY_DESCRIPTIONS.')
+            utils.LOGGER.warning('The CATEGORY_PAGES_DESCRIPTIONS setting was renamed to CATEGORY_DESCRIPTIONS.')
             self.config['CATEGORY_DESCRIPTIONS'] = self.config['CATEGORY_PAGES_DESCRIPTIONS']
 
         if 'DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED' in self.config:
-            utils.LOGGER.warn('The DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED setting was renamed and split to DISABLE_INDEXES and DISABLE_MAIN_ATOM_FEED.')
+            utils.LOGGER.warning('The DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED setting was renamed and split to DISABLE_INDEXES and DISABLE_MAIN_ATOM_FEED.')
             self.config['DISABLE_INDEXES'] = self.config['DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED']
             self.config['DISABLE_MAIN_ATOM_FEED'] = self.config['DISABLE_INDEXES_PLUGIN_INDEX_AND_ATOM_FEED']
 
         if 'DISABLE_INDEXES_PLUGIN_RSS_FEED' in self.config:
-            utils.LOGGER.warn('The DISABLE_INDEXES_PLUGIN_RSS_FEED setting was renamed to DISABLE_MAIN_RSS_FEED.')
+            utils.LOGGER.warning('The DISABLE_INDEXES_PLUGIN_RSS_FEED setting was renamed to DISABLE_MAIN_RSS_FEED.')
             self.config['DISABLE_MAIN_RSS_FEED'] = self.config['DISABLE_INDEXES_PLUGIN_RSS_FEED']
 
         for val in self.config['DATE_FORMAT'].values.values():
             if '%' in val:
                 utils.LOGGER.error('The DATE_FORMAT setting needs to be upgraded.')
-                utils.LOGGER.notice("Nikola now uses CLDR-style date strings. http://cldr.unicode.org/translation/date-time")
-                utils.LOGGER.notice("Example: %Y-%m-%d %H:%M ==> YYYY-MM-dd HH:mm")
-                utils.LOGGER.notice("(note it’s different to what moment.js uses!)")
+                utils.LOGGER.warning("Nikola now uses CLDR-style date strings. http://cldr.unicode.org/translation/date-time")
+                utils.LOGGER.warning("Example: %Y-%m-%d %H:%M ==> YYYY-MM-dd HH:mm")
+                utils.LOGGER.warning("(note it’s different to what moment.js uses!)")
                 sys.exit(1)
 
         # Silently upgrade LOCALES (remove encoding)
@@ -730,8 +730,8 @@ class Nikola(object):
         self.config['LOCALES'] = locales
 
         if self.config.get('POSTS_SECTIONS'):
-            utils.LOGGER.warn("The sections feature has been removed and its functionality has been merged into categories.")
-            utils.LOGGER.warn("For more information on how to migrate, please read: https://getnikola.com/blog/upgrading-to-nikola-v8.html#sections-were-replaced-by-categories")
+            utils.LOGGER.warning("The sections feature has been removed and its functionality has been merged into categories.")
+            utils.LOGGER.warning("For more information on how to migrate, please read: https://getnikola.com/blog/upgrading-to-nikola-v8.html#sections-were-replaced-by-categories")
 
             for section_config_suffix, cat_config_suffix in (
                 ('DESCRIPTIONS', 'DESCRIPTIONS'),
@@ -766,9 +766,9 @@ class Nikola(object):
 
         # Make sure we have pyphen installed if we are using it
         if self.config.get('HYPHENATE') and pyphen is None:
-            utils.LOGGER.warn('To use the hyphenation, you have to install '
-                              'the "pyphen" package.')
-            utils.LOGGER.warn('Setting HYPHENATE to False.')
+            utils.LOGGER.warning('To use the hyphenation, you have to install '
+                                 'the "pyphen" package.')
+            utils.LOGGER.warning('Setting HYPHENATE to False.')
             self.config['HYPHENATE'] = False
 
         # FIXME: Internally, we still use post_pages because it's a pain to change it
@@ -786,25 +786,25 @@ class Nikola(object):
                     if plugin_name not in self.config['DISABLED_PLUGINS']:
                         missing_plugins.append(plugin_name)
                 if missing_plugins:
-                    utils.LOGGER.warn('The "{}" plugin was replaced by several taxonomy plugins (see PR #2535): {}'.format(old_plugin_name, ', '.join(new_plugin_names)))
-                    utils.LOGGER.warn('You are currently disabling "{}", but not the following new taxonomy plugins: {}'.format(old_plugin_name, ', '.join(missing_plugins)))
-                    utils.LOGGER.warn('Please also disable these new plugins or remove "{}" from the DISABLED_PLUGINS list.'.format(old_plugin_name))
+                    utils.LOGGER.warning('The "{}" plugin was replaced by several taxonomy plugins (see PR #2535): {}'.format(old_plugin_name, ', '.join(new_plugin_names)))
+                    utils.LOGGER.warning('You are currently disabling "{}", but not the following new taxonomy plugins: {}'.format(old_plugin_name, ', '.join(missing_plugins)))
+                    utils.LOGGER.warning('Please also disable these new plugins or remove "{}" from the DISABLED_PLUGINS list.'.format(old_plugin_name))
                     self.config['DISABLED_PLUGINS'].extend(missing_plugins)
         # Special-case logic for "render_indexes" to fix #2591
         if 'render_indexes' in self.config['DISABLED_PLUGINS']:
             if 'generate_rss' in self.config['DISABLED_PLUGINS'] or self.config['GENERATE_RSS'] is False:
                 if 'classify_indexes' not in self.config['DISABLED_PLUGINS']:
-                    utils.LOGGER.warn('You are disabling the "render_indexes" plugin, as well as disabling the "generate_rss" plugin or setting GENERATE_RSS to False. To achieve the same effect, please disable the "classify_indexes" plugin in the future.')
+                    utils.LOGGER.warning('You are disabling the "render_indexes" plugin, as well as disabling the "generate_rss" plugin or setting GENERATE_RSS to False. To achieve the same effect, please disable the "classify_indexes" plugin in the future.')
                     self.config['DISABLED_PLUGINS'].append('classify_indexes')
             else:
                 if not self.config['DISABLE_INDEXES']:
-                    utils.LOGGER.warn('You are disabling the "render_indexes" plugin, but not the generation of RSS feeds. Please put "DISABLE_INDEXES = True" into your configuration instead.')
+                    utils.LOGGER.warning('You are disabling the "render_indexes" plugin, but not the generation of RSS feeds. Please put "DISABLE_INDEXES = True" into your configuration instead.')
                     self.config['DISABLE_INDEXES'] = True
 
         # Disable RSS.  For a successful disable, we must have both the option
         # false and the plugin disabled through the official means.
         if 'generate_rss' in self.config['DISABLED_PLUGINS'] and self.config['GENERATE_RSS'] is True:
-            utils.LOGGER.warn('Please use GENERATE_RSS to disable RSS feed generation, instead of mentioning generate_rss in DISABLED_PLUGINS.')
+            utils.LOGGER.warning('Please use GENERATE_RSS to disable RSS feed generation, instead of mentioning generate_rss in DISABLED_PLUGINS.')
             self.config['GENERATE_RSS'] = False
             self.config['DISABLE_MAIN_RSS_FEED'] = True
 
@@ -830,7 +830,7 @@ class Nikola(object):
             self.config['BASE_URL'] = self.config.get('SITE_URL')
         # BASE_URL should *always* end in /
         if self.config['BASE_URL'] and self.config['BASE_URL'][-1] != '/':
-            utils.LOGGER.warn("Your BASE_URL doesn't end in / -- adding it, but please fix it in your config file!")
+            utils.LOGGER.warning("Your BASE_URL doesn't end in / -- adding it, but please fix it in your config file!")
             self.config['BASE_URL'] += '/'
 
         try:
@@ -853,7 +853,7 @@ class Nikola(object):
         if config.get('METADATA_FORMAT', 'nikola').lower() == 'pelican':
             if 'markdown.extensions.meta' not in config.get('MARKDOWN_EXTENSIONS', []) \
                     and 'markdown' in self.config['COMPILERS']:
-                utils.LOGGER.warn(
+                utils.LOGGER.warning(
                     'To use the Pelican metadata format, you need to add '
                     '"markdown.extensions.meta" to your MARKDOWN_EXTENSIONS setting.')
 
@@ -861,7 +861,7 @@ class Nikola(object):
         try:
             self.tzinfo = dateutil.tz.gettz(self.config['TIMEZONE'])
         except Exception as exc:
-            utils.LOGGER.warn("Error getting TZ: {}", exc)
+            utils.LOGGER.warning("Error getting TZ: {}", exc)
             self.tzinfo = dateutil.tz.gettz()
         self.config['__tzinfo__'] = self.tzinfo
 
@@ -1230,7 +1230,7 @@ class Nikola(object):
                 self._THEMES = utils.get_theme_chain(self.config['THEME'], self.themes_dirs)
             except Exception:
                 if self.config['THEME'] != LEGAL_VALUES['DEFAULT_THEME']:
-                    utils.LOGGER.warn('''Cannot load theme "{0}", using '{1}' instead.'''.format(
+                    utils.LOGGER.warning('''Cannot load theme "{0}", using '{1}' instead.'''.format(
                         self.config['THEME'], LEGAL_VALUES['DEFAULT_THEME']))
                     self.config['THEME'] = LEGAL_VALUES['DEFAULT_THEME']
                     return self._get_themes()
@@ -1240,7 +1240,7 @@ class Nikola(object):
                 bootstrap_path = utils.get_asset_path(os.path.join(
                     'assets', 'css', 'bootstrap.min.css'), self._THEMES)
                 if bootstrap_path and bootstrap_path.split(os.sep)[-4] not in ['bootstrap', 'bootstrap3', 'bootstrap4']:
-                    utils.LOGGER.warn('The USE_CDN option may be incompatible with your theme, because it uses a hosted version of bootstrap.')
+                    utils.LOGGER.warning('The USE_CDN option may be incompatible with your theme, because it uses a hosted version of bootstrap.')
 
         return self._THEMES
 
@@ -1618,7 +1618,7 @@ class Nikola(object):
     def register_shortcode(self, name, f):
         """Register function f to handle shortcode "name"."""
         if name in self.shortcode_registry:
-            utils.LOGGER.warn('Shortcode name conflict: {}', name)
+            utils.LOGGER.warning('Shortcode name conflict: {}', name)
             return
         self.shortcode_registry[name] = f
 
@@ -1788,7 +1788,7 @@ class Nikola(object):
         try:
             path = self.path_handlers[kind](name, lang, **kwargs)
         except KeyError:
-            utils.LOGGER.warn("Unknown path request of kind: {0}".format(kind))
+            utils.LOGGER.warning("Unknown path request of kind: {0}".format(kind))
             return ""
 
         # If path handler returns a string we consider it to be an absolute URL not requiring any
@@ -1928,7 +1928,7 @@ class Nikola(object):
         one argument (the filename).
         """
         if filter_name in self.filters:
-            utils.LOGGER.warn('''The filter "{0}" is defined more than once.'''.format(filter_name))
+            utils.LOGGER.warning('''The filter "{0}" is defined more than once.'''.format(filter_name))
         self.filters[filter_name] = filter_definition
 
     def file_exists(self, path, not_empty=False):
@@ -2413,8 +2413,8 @@ class Nikola(object):
             entry_author_name = lxml.etree.SubElement(entry_author, "name")
             entry_author_name.text = post.author(lang)
             entry_root.append(atom_link("alternate", "text/html",
-                              post.permalink(lang, absolute=True,
-                                             query=feed_append_query)))
+                                        post.permalink(lang, absolute=True,
+                                                       query=feed_append_query)))
             entry_summary = lxml.etree.SubElement(entry_root, "summary")
             if not self.config["FEED_PLAIN"]:
                 entry_summary.set("type", "html")
@@ -2645,11 +2645,11 @@ class Nikola(object):
             "task_dep": ['render_posts'],
             "targets": [output_name],
             "actions": [(self.atom_feed_renderer,
-                        (lang,
-                         post_list,
-                         output_name,
-                         kw['filters'],
-                         context,))],
+                         (lang,
+                          post_list,
+                          output_name,
+                          kw['filters'],
+                          context,))],
             "clean": True,
             "uptodate": [utils.config_changed(kw, 'nikola.nikola.Nikola.atom_feed_renderer')] + additional_dependencies
         }

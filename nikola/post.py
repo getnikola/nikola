@@ -231,10 +231,10 @@ class Post(object):
             # TODO: remove in v9
             if 'section' in meta:
                 if 'category' in meta:
-                    LOGGER.warn("Post {0} has both 'category' and 'section' metadata. Section will be ignored.".format(source_path))
+                    LOGGER.warning("Post {0} has both 'category' and 'section' metadata. Section will be ignored.".format(source_path))
                 else:
                     meta['category'] = meta['section']
-                    LOGGER.notice("Post {0} uses 'section' metadata, setting its value to 'category'".format(source_path))
+                    LOGGER.info("Post {0} uses 'section' metadata, setting its value to 'category'".format(source_path))
 
             # Handle CATEGORY_DESTPATH_AS_DEFAULT
             if 'category' not in meta and self.config['CATEGORY_DESTPATH_AS_DEFAULT']:
@@ -280,26 +280,26 @@ class Post(object):
                     self.post_status = status
                     self.is_draft = True
                 else:
-                    LOGGER.warn(('The post "{0}" has the unknown status "{1}". '
-                                 'Valid values are "published", "featured", "private" and "draft".').format(self.source_path, status))
+                    LOGGER.warning(('The post "{0}" has the unknown status "{1}". '
+                                    'Valid values are "published", "featured", "private" and "draft".').format(self.source_path, status))
 
             if self.config['WARN_ABOUT_TAG_METADATA']:
                 show_warning = False
                 if 'draft' in [_.lower() for _ in self._tags[lang]]:
-                    LOGGER.warn('The post "{0}" uses the "draft" tag.'.format(self.source_path))
+                    LOGGER.warning('The post "{0}" uses the "draft" tag.'.format(self.source_path))
                     show_warning = True
                 if 'private' in self._tags[lang]:
-                    LOGGER.warn('The post "{0}" uses the "private" tag.'.format(self.source_path))
+                    LOGGER.warning('The post "{0}" uses the "private" tag.'.format(self.source_path))
                     show_warning = True
                 if 'mathjax' in self._tags[lang]:
-                    LOGGER.warn('The post "{0}" uses the "mathjax" tag.'.format(self.source_path))
+                    LOGGER.warning('The post "{0}" uses the "mathjax" tag.'.format(self.source_path))
                     show_warning = True
                 if show_warning:
-                    LOGGER.warn('It is suggested that you convert special tags to metadata and set '
-                                'USE_TAG_METADATA to False. You can use the upgrade_metadata_v8 '
-                                'command plugin for conversion (install with: nikola plugin -i '
-                                'upgrade_metadata_v8). Change the WARN_ABOUT_TAG_METADATA '
-                                'configuration to disable this warning.')
+                    LOGGER.warning('It is suggested that you convert special tags to metadata and set '
+                                   'USE_TAG_METADATA to False. You can use the upgrade_metadata_v8 '
+                                   'command plugin for conversion (install with: nikola plugin -i '
+                                   'upgrade_metadata_v8). Change the WARN_ABOUT_TAG_METADATA '
+                                   'configuration to disable this warning.')
             if self.config['USE_TAG_METADATA']:
                 if 'draft' in [_.lower() for _ in self._tags[lang]]:
                     self.is_draft = True
@@ -649,7 +649,7 @@ class Post(object):
         })
 
         if self.publish_later:
-            LOGGER.notice('{0} is scheduled to be published in the future ({1})'.format(
+            LOGGER.info('{0} is scheduled to be published in the future ({1})'.format(
                 self.source_path, self.date))
 
     def fragment_deps(self, lang):

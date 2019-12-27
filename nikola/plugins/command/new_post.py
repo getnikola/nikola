@@ -377,7 +377,7 @@ class CommandNewPost(Command):
             meta_path = os.path.join(output_path, slug + ".meta")
         else:
             if date_path_opt:
-                LOGGER.warn("A path has been specified, ignoring -d")
+                LOGGER.warning("A path has been specified, ignoring -d")
             txt_path = os.path.join(self.site.original_cwd, path)
             meta_path = os.path.splitext(txt_path)[0] + ".meta"
 
@@ -412,7 +412,7 @@ class CommandNewPost(Command):
         # Override onefile if not really supported.
         if not compiler_plugin.supports_onefile and onefile:
             onefile = False
-            LOGGER.warn('This compiler does not support one-file posts.')
+            LOGGER.warning('This compiler does not support one-file posts.')
 
         if onefile and import_file:
             with io.open(import_file, 'r', encoding='utf-8') as fh:

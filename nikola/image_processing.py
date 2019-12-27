@@ -139,8 +139,8 @@ class ImageProcessor(object):
             else:
                 im.save(dst, icc_profile=icc_profile)
         except Exception as e:
-            self.logger.warn("Can't process {0}, using original "
-                             "image! ({1})".format(src, e))
+            self.logger.warning("Can't process {0}, using original "
+                                "image! ({1})".format(src, e))
             utils.copy_file(src, dst)
 
     def resize_svg(self, src, dst, max_size, bigger_panoramas):
@@ -182,7 +182,7 @@ class ImageProcessor(object):
             op.write(lxml.etree.tostring(tree))
             op.close()
         except (KeyError, AttributeError) as e:
-            self.logger.warn("No width/height in %s. Original exception: %s" % (src, e))
+            self.logger.warning("No width/height in %s. Original exception: %s" % (src, e))
             utils.copy_file(src, dst)
 
     def image_date(self, src):

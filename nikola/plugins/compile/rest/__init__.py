@@ -27,6 +27,7 @@
 """reStructuredText compiler for Nikola."""
 
 import io
+import logging
 import os
 
 import docutils.core
@@ -38,9 +39,6 @@ import docutils.readers.standalone
 import docutils.writers.html5_polyglot
 import docutils.parsers.rst.directives
 from docutils.parsers.rst import roles
-
-import logbook
-import logbook.base
 
 from nikola.nikola import LEGAL_VALUES
 from nikola.metadata_extractors import MetaCondition
@@ -72,8 +70,8 @@ class CompileRest(PageCompiler):
 
         # Silence reST errors, some of which are due to a different
         # environment. Real issues will be reported while compiling.
-        null_logger = logbook.Logger('NULL')
-        null_logger.handlers = [logbook.NullHandler()]
+        null_logger = logging.getLogger('NULL')
+        null_logger.setLevel(1000)
         with io.open(source_path, 'r', encoding='utf-8') as inf:
             data = inf.read()
             _, _, _, document = rst2html(data, logger=null_logger, source_path=source_path, transforms=self.site.rst_transforms)
@@ -192,7 +190,7 @@ class CompileRest(PageCompiler):
             plugin_info.plugin_object.short_help = plugin_info.description
 
         if not site.debug:
-            self.logger.level = logbook.base.WARNING
+            self.logger.level = logging.WARNING
 
 
 def get_observer(settings):
@@ -203,7 +201,7 @@ def get_observer(settings):
         Error code mapping:
 
         +----------+----------+
-        | docutils |  logbook |
+        | docutils |  logging |
         +----------+----------+
         |    DEBUG |    DEBUG |
         |     INFO |     INFO |
@@ -213,11 +211,11 @@ def get_observer(settings):
         +----------+----------+
         """
         errormap = {
-            docutils.utils.Reporter.DEBUG_LEVEL: logbook.base.DEBUG,
-            docutils.utils.Reporter.INFO_LEVEL: logbook.base.INFO,
-            docutils.utils.Reporter.WARNING_LEVEL: logbook.base.WARNING,
-            docutils.utils.Reporter.ERROR_LEVEL: logbook.base.ERROR,
-            docutils.utils.Reporter.SEVERE_LEVEL: logbook.base.CRITICAL
+            docutils.utils.Reporter.DEBUG_LEVEL: logging.DEBUG,
+            docutils.utils.Reporter.INFO_LEVEL: logging.INFO,
+            docutils.utils.Reporter.WARNING_LEVEL: logging.WARNING,
+            docutils.utils.Reporter.ERROR_LEVEL: logging.ERROR,
+            docutils.utils.Reporter.SEVERE_LEVEL: logging.CRITICAL
         }
         text = docutils.nodes.Element.astext(msg)
         line = msg['line'] + settings['add_ln'] if 'line' in msg else ''

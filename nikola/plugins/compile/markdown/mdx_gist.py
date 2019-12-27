@@ -166,7 +166,7 @@ class GistPattern(Pattern):
             pre_elem.text = AtomicString(raw_gist)
 
         except GistFetchException as e:
-            LOGGER.warn(e.message)
+            LOGGER.warning(e.message)
             warning_comment = etree.Comment(' WARNING: {0} '.format(e.message))
             noscript_elem.append(warning_comment)
 

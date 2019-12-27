@@ -90,7 +90,7 @@ def doc_role(name, rawtext, text, lineno, inliner, options={}, content=[]):
         if twin_slugs:
             inliner.reporter.warning(
                 'More than one post with the same slug. Using "{0}"'.format(permalink))
-            LOGGER.warn(
+            LOGGER.warning(
                 'More than one post with the same slug. Using "{0}" for doc role'.format(permalink))
         node = make_link_node(rawtext, title, permalink, options)
         return [node], []
@@ -108,7 +108,7 @@ def doc_shortcode(*args, **kwargs):
     success, twin_slugs, title, permalink, slug = _doc_link(text, text, LOGGER)
     if success:
         if twin_slugs:
-            LOGGER.warn(
+            LOGGER.warning(
                 'More than one post with the same slug. Using "{0}" for doc shortcode'.format(permalink))
         return '<a href="{0}">{1}</a>'.format(permalink, title)
     else:
