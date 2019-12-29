@@ -23,7 +23,7 @@ def build(target_dir):
     append_config(
         target_dir,
         """
-REDIRECTIONS = [ ("foo.html", "http://www.example.com/"), ]
+REDIRECTIONS = [ ("external.html", "http://www.example.com/"), ]
 """,
     )
 
