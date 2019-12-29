@@ -1,5 +1,7 @@
 """Check external REDIRECTIONS"""
 
+import os
+
 import pytest
 
 from nikola import __main__
@@ -13,6 +15,17 @@ from .test_empty_build import (  # NOQA
     test_check_links,
     test_index_in_sitemap,
 )
+
+
+def test_external_redirection(build, output_dir):
+    ext_link = os.path.join(output_dir, 'external.html')
+
+    assert os.path.exists(ext_link)
+    with open(ext_link) as ext_link_fd:
+        ext_link_content = ext_link_fd.read()
+
+    redirect_tag = '<meta http-equiv="refresh" content="0; url=http://www.example.com/">'
+    assert redirect_tag in ext_link_content
 
 
 @pytest.fixture(scope="module")
