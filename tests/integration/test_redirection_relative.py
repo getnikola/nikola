@@ -24,16 +24,17 @@ def build(target_dir):
     """Fill the site with demo content and build it."""
     prepare_demo_site(target_dir)
 
-    nikola.utils.makedirs(os.path.join(target_dir, "files", "foo"))
+    redirects_dir = os.path.join(target_dir, "files", "redirects")
+    nikola.utils.makedirs(redirects_dir)
 
-    target_path = os.path.join(target_dir, "files", "foo", "bar.html")
+    target_path = os.path.join(redirects_dir, "rel_src.html")
     with io.open(target_path, "w+", encoding="utf8") as outf:
-        outf.write("foo")
+        outf.write("relative")
 
     append_config(
         target_dir,
         """
-REDIRECTIONS = [ ("foo.html", "foo/bar.html"), ]
+REDIRECTIONS = [ ("relative.html", "redirects/rel_src.html"), ]
 """,
     )
 
