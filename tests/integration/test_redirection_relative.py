@@ -19,6 +19,24 @@ from .test_empty_build import (  # NOQA
 )
 
 
+def test_relative_redirection(build, output_dir):
+    rel_destination = os.path.join(output_dir, 'relative.html')
+    assert os.path.exists(rel_destination)
+    rel_source = os.path.join(output_dir, 'redirects', 'rel_src.html')
+    assert os.path.exists(rel_source)
+
+    with open(rel_destination) as rel_destination_fd:
+        rel_destination_content = rel_destination_fd.read()
+
+    redirect_tag = '<meta http-equiv="refresh" content="0; url=redirects/rel_src.html">'
+    assert redirect_tag in rel_destination_content
+
+    with open(rel_source) as rel_source_fd:
+        rel_source_content = rel_source_fd.read()
+
+    assert rel_source_content == 'relative'
+
+
 @pytest.fixture(scope="module")
 def build(target_dir):
     """Fill the site with demo content and build it."""
