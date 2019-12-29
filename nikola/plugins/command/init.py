@@ -26,20 +26,22 @@
 
 """Create a new site."""
 
-import os
-import shutil
+import datetime
 import io
 import json
+import os
+import shutil
 import textwrap
-import datetime
 import unidecode
+from urllib.parse import urlsplit, urlunsplit
+
 import dateutil.tz
 import dateutil.zoneinfo
 from mako.template import Template
 from pkg_resources import resource_filename
 
 import nikola
-from nikola.nikola import DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_FEED_READ_MORE_LINK, LEGAL_VALUES, urlsplit, urlunsplit
+from nikola.nikola import DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_FEED_READ_MORE_LINK, LEGAL_VALUES
 from nikola.plugin_categories import Command
 from nikola.utils import ask, ask_yesno, get_logger, makedirs, load_messages
 from nikola.packages.tzlocal import get_localzone
@@ -293,7 +295,7 @@ class CommandInit(Command):
     @classmethod
     def create_empty_site(cls, target):
         """Create an empty site with directories only."""
-        for folder in ('files', 'galleries', 'listings', 'posts', 'pages'):
+        for folder in ('files', 'galleries', 'images', 'listings', 'posts', 'pages'):
             makedirs(os.path.join(target, folder))
 
     @staticmethod

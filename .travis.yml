@@ -20,6 +20,7 @@ matrix:
     before_install:
     - brew update
     - brew uninstall gdal postgis
+    - brew unlink python@2
     - brew upgrade python
     - python3 -m venv nikola-tests-venv
     - source nikola-tests-venv/bin/activate

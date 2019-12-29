@@ -26,13 +26,12 @@
 
 """Render code listings."""
 
-
-from collections import defaultdict
 import os
+from collections import defaultdict
 
+import natsort
 from pygments import highlight
 from pygments.lexers import get_lexer_for_filename, guess_lexer, TextLexer
-import natsort
 
 from nikola.plugin_categories import Task
 from nikola import utils
@@ -302,7 +301,7 @@ class Listings(Task):
                     utils.LOGGER.error("Using non-unique listing name '{0}', which maps to more than one listing name ({1})!".format(name, str(self.improper_input_file_mapping[name])))
                     return ["ERROR"]
                 if len(self.site.config['LISTINGS_FOLDERS']) > 1:
-                    utils.LOGGER.notice("Using listings names in site.link() without input directory prefix while configuration's LISTINGS_FOLDERS has more than one entry.")
+                    utils.LOGGER.warning("Using listings names in site.link() without input directory prefix while configuration's LISTINGS_FOLDERS has more than one entry.")
                 name = list(self.improper_input_file_mapping[name])[0]
                 break
         else:

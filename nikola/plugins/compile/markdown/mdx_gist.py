@@ -75,6 +75,10 @@ Error Case: non-existent file:
     [:gist: 4747847 doesntexist.py]
 """
 
+import requests
+
+from nikola.plugin_categories import MarkdownExtension
+from nikola.utils import get_logger
 
 try:
     from markdown.extensions import Extension
@@ -86,10 +90,6 @@ except ImportError:
     # the markdown compiler will fail first
     Extension = Pattern = object
 
-from nikola.plugin_categories import MarkdownExtension
-from nikola.utils import get_logger
-
-import requests
 
 LOGGER = get_logger('compile_markdown.mdx_gist')
 
@@ -166,7 +166,7 @@ class GistPattern(Pattern):
             pre_elem.text = AtomicString(raw_gist)
 
         except GistFetchException as e:
-            LOGGER.warn(e.message)
+            LOGGER.warning(e.message)
             warning_comment = etree.Comment(' WARNING: {0} '.format(e.message))
             noscript_elem.append(warning_comment)
 

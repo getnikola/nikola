@@ -43,14 +43,12 @@ from doit.cmd_run import Run as DoitRun
 from doit.doit_cmd import DoitMain
 from doit.loader import generate_tasks
 from doit.reporter import ExecutedOnlyReporter
-from logbook import NullHandler
 
 from . import __version__
 from .nikola import Nikola
 from .plugin_categories import Command
-from .utils import (LOGGER, STDERR_HANDLER, STRICT_HANDLER,
-                    ColorfulStderrHandler, get_root_dir, req_missing,
-                    sys_decode)
+from .log import configure_logging, LOGGER, ColorfulFormatter, LoggingMode
+from .utils import get_root_dir, req_missing, sys_decode
 
 try:
     import readline  # NOQA
@@ -70,7 +68,7 @@ def main(args=None):
     if sys.stderr.isatty() and os.name != 'nt' and os.getenv('NIKOLA_MONO') is None and os.getenv('TERM') != 'dumb':
         colorful = True
 
-    ColorfulStderrHandler._colorful = colorful
+    ColorfulFormatter._colorful = colorful
 
     if args is None:
         args = sys.argv[1:]
@@ -89,17 +87,14 @@ def main(args=None):
             break
 
     quiet = False
-    strict = False
     if len(args) > 0 and args[0] == 'build' and '--strict' in args:
-        LOGGER.notice('Running in strict mode')
-        STRICT_HANDLER.push_application()
-        strict = True
-    if len(args) > 0 and args[0] == 'build' and '-q' in args or '--quiet' in args:
-        NullHandler().push_application()
+        LOGGER.info('Running in strict mode')
+        configure_logging(LoggingMode.STRICT)
+    elif len(args) > 0 and args[0] == 'build' and '-q' in args or '--quiet' in args:
+        configure_logging(LoggingMode.QUIET)
         quiet = True
-    if not quiet and not strict:
-        NullHandler().push_application()
-        STDERR_HANDLER[0].push_application()
+    else:
+        configure_logging()
 
     global config
 
@@ -417,7 +412,7 @@ def _print_exception():
     """Print an exception in a friendlier, shorter style."""
     etype, evalue, _ = sys.exc_info()
     LOGGER.error(''.join(traceback.format_exception(etype, evalue, None, limit=0, chain=False)).strip())
-    LOGGER.notice("To see more details, run Nikola in debug mode (set environment variable NIKOLA_DEBUG=1) or use NIKOLA_SHOW_TRACEBACKS=1")
+    LOGGER.warning("To see more details, run Nikola in debug mode (set environment variable NIKOLA_DEBUG=1) or use NIKOLA_SHOW_TRACEBACKS=1")
 
 
 if __name__ == "__main__":

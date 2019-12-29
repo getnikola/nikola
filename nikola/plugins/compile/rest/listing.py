@@ -31,22 +31,18 @@
 import io
 import os
 import uuid
-try:
-    from urlparse import urlunsplit
-except ImportError:
-    from urllib.parse import urlunsplit  # NOQA
+from urllib.parse import urlunsplit
 
 import docutils.parsers.rst.directives.body
 import docutils.parsers.rst.directives.misc
+import pygments
+import pygments.util
 from docutils import core
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 from docutils.parsers.rst.roles import set_classes
 from docutils.parsers.rst.directives.misc import Include
-
 from pygments.lexers import get_lexer_by_name
-import pygments
-import pygments.util
 
 from nikola import utils
 from nikola.plugin_categories import RestExtension

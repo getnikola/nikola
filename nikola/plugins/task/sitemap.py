@@ -26,16 +26,13 @@
 
 """Generate a sitemap."""
 
-import io
 import datetime
-import dateutil.tz
+import io
 import os
-try:
-    from urlparse import urljoin, urlparse
-    import robotparser as robotparser
-except ImportError:
-    from urllib.parse import urljoin, urlparse  # NOQA
-    import urllib.robotparser as robotparser  # NOQA
+import urllib.robotparser as robotparser
+from urllib.parse import urljoin, urlparse
+
+import dateutil.tz
 
 from nikola.plugin_categories import LateTask
 from nikola.utils import apply_filters, config_changed, encodelink

@@ -26,34 +26,25 @@
 
 """The Post class."""
 
-
 import io
-from collections import defaultdict
 import datetime
 import hashlib
 import json
 import os
 import re
-try:
-    from urlparse import urljoin
-except ImportError:
-    from urllib.parse import urljoin  # NOQA
+from collections import defaultdict
+from math import ceil  # for reading time feature
+from urllib.parse import urljoin
 
-from . import utils
-
-from blinker import signal
 import dateutil.tz
 import lxml.html
 import natsort
-try:
-    import pyphen
-except ImportError:
-    pyphen = None
-
-from math import ceil  # for reading time feature
+from blinker import signal
 
 # for tearDown with _reload we cannot use 'from import' to get forLocaleBorg
 import nikola.utils
+from . import metadata_extractors
+from . import utils
 from .utils import (
     current_time,
     Functionary,
@@ -66,7 +57,12 @@ from .utils import (
     get_translation_candidate,
     map_metadata
 )
-from nikola import metadata_extractors
+
+try:
+    import pyphen
+except ImportError:
+    pyphen = None
+
 
 __all__ = ('Post',)
 
@@ -235,10 +231,10 @@ class Post(object):
             # TODO: remove in v9
             if 'section' in meta:
                 if 'category' in meta:
-                    LOGGER.warn("Post {0} has both 'category' and 'section' metadata. Section will be ignored.".format(source_path))
+                    LOGGER.warning("Post {0} has both 'category' and 'section' metadata. Section will be ignored.".format(source_path))
                 else:
                     meta['category'] = meta['section']
-                    LOGGER.notice("Post {0} uses 'section' metadata, setting its value to 'category'".format(source_path))
+                    LOGGER.info("Post {0} uses 'section' metadata, setting its value to 'category'".format(source_path))
 
             # Handle CATEGORY_DESTPATH_AS_DEFAULT
             if 'category' not in meta and self.config['CATEGORY_DESTPATH_AS_DEFAULT']:
@@ -284,26 +280,26 @@ class Post(object):
                     self.post_status = status
                     self.is_draft = True
                 else:
-                    LOGGER.warn(('The post "{0}" has the unknown status "{1}". '
-                                 'Valid values are "published", "featured", "private" and "draft".').format(self.source_path, status))
+                    LOGGER.warning(('The post "{0}" has the unknown status "{1}". '
+                                    'Valid values are "published", "featured", "private" and "draft".').format(self.source_path, status))
 
             if self.config['WARN_ABOUT_TAG_METADATA']:
                 show_warning = False
                 if 'draft' in [_.lower() for _ in self._tags[lang]]:
-                    LOGGER.warn('The post "{0}" uses the "draft" tag.'.format(self.source_path))
+                    LOGGER.warning('The post "{0}" uses the "draft" tag.'.format(self.source_path))
                     show_warning = True
                 if 'private' in self._tags[lang]:
-                    LOGGER.warn('The post "{0}" uses the "private" tag.'.format(self.source_path))
+                    LOGGER.warning('The post "{0}" uses the "private" tag.'.format(self.source_path))
                     show_warning = True
                 if 'mathjax' in self._tags[lang]:
-                    LOGGER.warn('The post "{0}" uses the "mathjax" tag.'.format(self.source_path))
+                    LOGGER.warning('The post "{0}" uses the "mathjax" tag.'.format(self.source_path))
                     show_warning = True
                 if show_warning:
-                    LOGGER.warn('It is suggested that you convert special tags to metadata and set '
-                                'USE_TAG_METADATA to False. You can use the upgrade_metadata_v8 '
-                                'command plugin for conversion (install with: nikola plugin -i '
-                                'upgrade_metadata_v8). Change the WARN_ABOUT_TAG_METADATA '
-                                'configuration to disable this warning.')
+                    LOGGER.warning('It is suggested that you convert special tags to metadata and set '
+                                   'USE_TAG_METADATA to False. You can use the upgrade_metadata_v8 '
+                                   'command plugin for conversion (install with: nikola plugin -i '
+                                   'upgrade_metadata_v8). Change the WARN_ABOUT_TAG_METADATA '
+                                   'configuration to disable this warning.')
             if self.config['USE_TAG_METADATA']:
                 if 'draft' in [_.lower() for _ in self._tags[lang]]:
                     self.is_draft = True
@@ -429,7 +425,7 @@ class Post(object):
             rv = rv._prev_post
         return rv
 
-    @prev_post.setter  # NOQA
+    @prev_post.setter
     def prev_post(self, v):
         """Set previous post."""
         self._prev_post = v
@@ -447,7 +443,7 @@ class Post(object):
             rv = rv._next_post
         return rv
 
-    @next_post.setter  # NOQA
+    @next_post.setter
     def next_post(self, v):
         """Set next post."""
         self._next_post = v
@@ -653,7 +649,7 @@ class Post(object):
         })
 
         if self.publish_later:
-            LOGGER.notice('{0} is scheduled to be published in the future ({1})'.format(
+            LOGGER.info('{0} is scheduled to be published in the future ({1})'.format(
                 self.source_path, self.date))
 
     def fragment_deps(self, lang):

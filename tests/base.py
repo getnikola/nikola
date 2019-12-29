@@ -8,7 +8,6 @@ a Site substitute for rendering tests.
 import os
 from contextlib import contextmanager
 
-import logbook
 from yapsy.PluginManager import PluginManager
 
 import nikola.utils
@@ -26,8 +25,6 @@ from nikola.plugin_categories import (
 )
 
 __all__ = ["cd", "FakeSite"]
-
-nikola.utils.LOGGER.handlers.append(logbook.TestHandler())
 
 
 @contextmanager
@@ -105,7 +102,7 @@ class FakeSite:
     def register_shortcode(self, name, f):
         """Register function f to handle shortcode "name"."""
         if name in self.shortcode_registry:
-            nikola.utils.LOGGER.warn("Shortcode name conflict: %s", name)
+            nikola.utils.LOGGER.warning('Shortcode name conflict: %s', name)
             return
         self.shortcode_registry[name] = f
 

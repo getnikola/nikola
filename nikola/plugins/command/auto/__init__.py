@@ -26,14 +26,21 @@
 
 """Automatic rebuilds for Nikola."""
 
-import mimetypes
-import datetime
-import re
-import os
-import stat
-import sys
-import subprocess
 import asyncio
+import datetime
+import mimetypes
+import os
+import re
+import stat
+import subprocess
+import sys
+
+import webbrowser
+import pkg_resources
+
+from nikola.plugin_categories import Command
+from nikola.utils import dns_sd, req_missing, get_theme_path
+
 try:
     import aiohttp
     from aiohttp import web
@@ -50,11 +57,6 @@ try:
 except ImportError:
     Observer = None
 
-import webbrowser
-import pkg_resources
-
-from nikola.plugin_categories import Command
-from nikola.utils import dns_sd, req_missing, get_theme_path
 LRJS_PATH = os.path.join(os.path.dirname(__file__), 'livereload.js')
 
 if sys.platform == 'win32':
@@ -353,7 +355,7 @@ class CommandAuto(Command):
                     }
                     await ws.send_json(response)
                 elif message['command'] != 'info':
-                    self.logger.warn("Unknown command in message: {0}".format(message))
+                    self.logger.warning("Unknown command in message: {0}".format(message))
             elif msg.type == aiohttp.WSMsgType.CLOSED:
                 break
             elif msg.type == aiohttp.WSMsgType.CLOSE:
@@ -364,7 +366,7 @@ class CommandAuto(Command):
                 self.logger.error('WebSocket connection closed with exception {0}'.format(ws.exception()))
                 break
             else:
-                self.logger.warn("Received unknown message: {0}".format(msg))
+                self.logger.warning("Received unknown message: {0}".format(msg))
 
         self.sockets.remove(ws)
         self.logger.debug("WebSocket connection closed: {0}".format(ws))
@@ -383,7 +385,7 @@ class CommandAuto(Command):
                 await ws.send_json(message)
             except RuntimeError as e:
                 if 'closed' in e.args[0]:
-                    self.logger.warn("WebSocket {0} closed uncleanly".format(ws))
+                    self.logger.warning("WebSocket {0} closed uncleanly".format(ws))
                     to_delete.append(ws)
                 else:
                     raise

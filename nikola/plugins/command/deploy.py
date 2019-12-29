@@ -27,14 +27,14 @@
 """Deploy site."""
 
 import io
-from datetime import datetime
-from dateutil.tz import gettz
-import dateutil
 import os
 import subprocess
 import time
+from datetime import datetime
 
+import dateutil
 from blinker import signal
+from dateutil.tz import gettz
 
 from nikola.plugin_categories import Command
 from nikola.utils import clean_before_deployment
@@ -77,18 +77,18 @@ class CommandDeploy(Command):
             clean = False
 
         if self.site.config['COMMENT_SYSTEM'] and self.site.config['COMMENT_SYSTEM_ID'] == 'nikolademo':
-            self.logger.warn("\nWARNING WARNING WARNING WARNING\n"
-                             "You are deploying using the nikolademo Disqus account.\n"
-                             "That means you will not be able to moderate the comments in your own site.\n"
-                             "And is probably not what you want to do.\n"
-                             "Think about it for 5 seconds, I'll wait :-)\n"
-                             "(press Ctrl+C to abort)\n")
+            self.logger.warning("\nWARNING WARNING WARNING WARNING\n"
+                                "You are deploying using the nikolademo Disqus account.\n"
+                                "That means you will not be able to moderate the comments in your own site.\n"
+                                "And is probably not what you want to do.\n"
+                                "Think about it for 5 seconds, I'll wait :-)\n"
+                                "(press Ctrl+C to abort)\n")
             time.sleep(5)
 
         # Remove drafts and future posts if requested
         undeployed_posts = clean_before_deployment(self.site)
         if undeployed_posts:
-            self.logger.notice("Deleted {0} posts due to DEPLOY_* settings".format(len(undeployed_posts)))
+            self.logger.warning("Deleted {0} posts due to DEPLOY_* settings".format(len(undeployed_posts)))
 
         if args:
             presets = args

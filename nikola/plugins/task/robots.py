@@ -28,10 +28,7 @@
 
 import io
 import os
-try:
-    from urlparse import urljoin, urlparse
-except ImportError:
-    from urllib.parse import urljoin, urlparse  # NOQA
+from urllib.parse import urljoin, urlparse
 
 from nikola.plugin_categories import LateTask
 from nikola import utils
@@ -58,7 +55,7 @@ class RobotsFile(LateTask):
 
         def write_robots():
             if kw["site_url"] != urljoin(kw["site_url"], "/"):
-                utils.LOGGER.warn('robots.txt not ending up in server root, will be useless')
+                utils.LOGGER.warning('robots.txt not ending up in server root, will be useless')
                 utils.LOGGER.info('Add "robots" to DISABLED_PLUGINS to disable this warning and robots.txt generation.')
 
             with io.open(robots_path, 'w+', encoding='utf8') as outf:
@@ -82,6 +79,6 @@ class RobotsFile(LateTask):
                 "task_dep": ["sitemap"]
             }, kw["filters"])
         elif kw["robots_exclusions"]:
-            utils.LOGGER.warn('Did not generate robots.txt as one already exists in FILES_FOLDERS. ROBOTS_EXCLUSIONS will not have any affect on the copied file.')
+            utils.LOGGER.warning('Did not generate robots.txt as one already exists in FILES_FOLDERS. ROBOTS_EXCLUSIONS will not have any affect on the copied file.')
         else:
             utils.LOGGER.debug('Did not generate robots.txt as one already exists in FILES_FOLDERS.')

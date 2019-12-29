@@ -33,30 +33,21 @@ import json
 import mimetypes
 import os
 from collections import OrderedDict
-
-try:
-    from ruamel.yaml import YAML
-except ImportError:
-    YAML = None  # NOQA
-
-try:
-    from urlparse import urljoin
-except ImportError:
-    from urllib.parse import urljoin  # NOQA
+from urllib.parse import urljoin
 
 import natsort
-try:
-    from PIL import Image  # NOQA
-except ImportError:
-    import Image as _Image
-    Image = _Image
-
 import PyRSS2Gen as rss
+from PIL import Image
 
 from nikola.plugin_categories import Task
 from nikola import utils
 from nikola.image_processing import ImageProcessor
 from nikola.post import Post
+
+try:
+    from ruamel.yaml import YAML
+except ImportError:
+    YAML = None
 
 _image_size_cache = {}
 

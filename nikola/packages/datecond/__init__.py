@@ -34,7 +34,6 @@
 
 """Date range parser."""
 
-from __future__ import print_function, unicode_literals
 import datetime
 import dateutil.parser
 import re

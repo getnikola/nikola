@@ -17,6 +17,14 @@ Bugfixes
 * Fix loading complex config files that import modules (Issue #3314)
 * Fix behavior of header demotion for negative values
 
+Other compatibility information
+-------------------------------
+
+1. Nikola no longer requires logbook.  You may need to upgrade plugins.
+2. If you receive an error stating that *sitemap is not a package*,
+   you need to remove a leftover ``nikola/plugins/task/sitemap``
+   directory (the full path is in the error message).
+
 New in v8.0.3
 =============
 

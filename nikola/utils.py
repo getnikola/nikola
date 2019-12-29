@@ -26,13 +26,10 @@
 
 """Utility functions."""
 
-import babel.dates
 import configparser
 import datetime
-import dateutil.tz
 import hashlib
 import io
-import logging
 import operator
 import os
 import re
@@ -41,53 +38,49 @@ import shutil
 import socket
 import subprocess
 import sys
+import threading
+import typing
+from collections import defaultdict, OrderedDict
+from collections.abc import Callable, Iterable
+from html import unescape as html_unescape
+from importlib import reload as _reload
+from unicodedata import normalize as unicodenormalize
+from urllib.parse import quote as urlquote
+from urllib.parse import unquote as urlunquote
+from urllib.parse import urlparse, urlunparse
+from zipfile import ZipFile as zipf
+
+import babel.dates
 import dateutil.parser
 import dateutil.tz
-import logbook
-try:
-    from urllib import quote as urlquote
-    from urllib import unquote as urlunquote
-    from urlparse import urlparse, urlunparse
-except ImportError:
-    from urllib.parse import quote as urlquote  # NOQA
-    from urllib.parse import unquote as urlunquote  # NOQA
-    from urllib.parse import urlparse, urlunparse  # NOQA
-import warnings
 import PyRSS2Gen as rss
+from blinker import signal
+from doit import tools
+from doit.cmdparse import CmdParse
+from pkg_resources import resource_filename
+from pygments.formatters import HtmlFormatter
+from unidecode import unidecode
+
+# Renames
+from nikola import DEBUG  # NOQA
+from .log import LOGGER, get_logger  # NOQA
+from .hierarchy_utils import TreeNode, clone_treenode, flatten_tree_structure, sort_classifications
+from .hierarchy_utils import join_hierarchical_category_path, parse_escaped_hierarchical_category_name
+
 try:
     import toml
 except ImportError:
     toml = None
+
 try:
     from ruamel.yaml import YAML
 except ImportError:
     YAML = None
+
 try:
     import husl
 except ImportError:
     husl = None
-
-try:
-    import typing  # NOQA
-    import typing.re  # NOQA
-except ImportError:
-    pass
-
-from blinker import signal
-from collections import defaultdict, OrderedDict
-from collections.abc import Callable, Iterable
-from importlib import reload as _reload
-from logbook.compat import redirect_logging
-from logbook.more import ExceptionHandler, ColorizedStderrHandler
-from pygments.formatters import HtmlFormatter
-from zipfile import ZipFile as zipf
-from doit import tools
-from unidecode import unidecode
-from unicodedata import normalize as unicodenormalize
-from pkg_resources import resource_filename
-from doit.cmdparse import CmdParse
-
-from nikola import DEBUG
 
 __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real',
            'get_theme_chain', 'load_messages', 'copy_tree', 'copy_file',
@@ -108,9 +101,6 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real',
            'sort_classifications', 'join_hierarchical_category_path',
            'parse_escaped_hierarchical_category_name',)
 
-from .hierarchy_utils import TreeNode, clone_treenode, flatten_tree_structure, sort_classifications
-from .hierarchy_utils import join_hierarchical_category_path, parse_escaped_hierarchical_category_name
-
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
 
@@ -119,57 +109,12 @@ bytes_str = bytes
 unicode_str = str
 unichr = chr
 
+# For compatibility with old logging setups.
+# TODO remove in v9?
+STDERR_HANDLER = None
 
-class ApplicationWarning(Exception):
-    pass
-
-
-class ColorfulStderrHandler(ColorizedStderrHandler):
-    """Stream handler with colors."""
-
-    _colorful = False
-
-    def should_colorize(self, record):
-        """Inform about colorization using the value obtained from Nikola."""
-        return self._colorful
-
-
-def get_logger(name, handlers=None):
-    """Get a logger with handlers attached."""
-    l = logbook.Logger(name)
-    l.handlers += STDERR_HANDLER
-    return l
-
-
-STDERR_HANDLER = [ColorfulStderrHandler(
-    level=logbook.INFO if not DEBUG else logbook.DEBUG,
-    format_string=u'[{record.time:%Y-%m-%dT%H:%M:%SZ}] {record.level_name}: {record.channel}: {record.message}'
-)]
-
-
-LOGGER = get_logger('Nikola')
-STRICT_HANDLER = ExceptionHandler(ApplicationWarning, level='WARNING')
 
 USE_SLUGIFY = True
-
-redirect_logging()
-
-if DEBUG:
-    logging.basicConfig(level=logging.DEBUG)
-else:
-    logging.basicConfig(level=logging.INFO)
-
-
-def showwarning(message, category, filename, lineno, file=None, line=None):
-    """Show a warning (from the warnings module) to the user."""
-    try:
-        n = category.__name__
-    except AttributeError:
-        n = str(category)
-    get_logger(n).warn('{0}:{1}: {2}'.format(filename, lineno, message))
-
-
-warnings.showwarning = showwarning
 
 
 def req_missing(names, purpose, python=True, optional=False):
@@ -209,7 +154,7 @@ def req_missing(names, purpose, python=True, optional=False):
             purpose, pnames, whatarethey_p)
 
     if optional:
-        LOGGER.warn(msg)
+        LOGGER.warning(msg)
     else:
         LOGGER.error(msg)
         LOGGER.error('Exiting due to missing dependencies.')
@@ -769,7 +714,7 @@ def load_messages(themes, translations, default_lang, themes_dirs):
         raise LanguageNotFoundError(lang, last_exception)
     for lang, status in completion_status.items():
         if not status and lang not in INCOMPLETE_LANGUAGES_WARNED:
-            LOGGER.warn("Incomplete translation for language '{0}'.".format(lang))
+            LOGGER.warning("Incomplete translation for language '{0}'.".format(lang))
             INCOMPLETE_LANGUAGES_WARNED.add(lang)
 
     return messages
@@ -1231,7 +1176,6 @@ class LocaleBorg(object):
 
         Used in testing to prevent leaking state between tests.
         """
-        import threading
         cls.__thread_local = threading.local()
         cls.__thread_lock = threading.Lock()
 
@@ -1294,7 +1238,7 @@ class LocaleBorg(object):
             lang = self.current_lang
         locale = self.locales.get(lang, lang)
 
-        def date_formatter(match: 'typing.re.Match') -> str:
+        def date_formatter(match: typing.Match) -> str:
             """Format a date as requested."""
             mode, custom_format = match.groups()
             if LocaleBorg.in_string_formatter is not None:
@@ -1517,9 +1461,9 @@ def write_metadata(data, metadata_format=None, comment_wrap=False, site=None, co
         extractor.check_requirements()
         return extractor.write_metadata(data, comment_wrap)
     elif extractor and metadata_format not in default_meta:
-        LOGGER.warn('Writing METADATA_FORMAT {} is not supported, using "nikola" format'.format(metadata_format))
+        LOGGER.warning('Writing METADATA_FORMAT {} is not supported, using "nikola" format'.format(metadata_format))
     elif metadata_format not in default_meta:
-        LOGGER.warn('Unknown METADATA_FORMAT {}, using "nikola" format'.format(metadata_format))
+        LOGGER.warning('Unknown METADATA_FORMAT {}, using "nikola" format'.format(metadata_format))
 
     if metadata_format == 'rest_docinfo':
         title = data['title']
@@ -1969,19 +1913,6 @@ def load_data(path):
         return
     with io.open(path, 'r', encoding='utf8') as inf:
         return getattr(loader, function)(inf)
-
-
-# see http://stackoverflow.com/a/2087433
-try:
-    import html  # Python 3.4 and newer
-    html_unescape = html.unescape
-except (AttributeError, ImportError):
-    from html.parser import HTMLParser  # Python 3.4 and older
-
-    def html_unescape(s):
-        """Convert all named and numeric character references in the string s to the corresponding unicode characters."""
-        h = HTMLParser()
-        return h.unescape(s)
 
 
 def rss_writer(rss_obj, output_path):

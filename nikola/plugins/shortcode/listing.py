@@ -27,15 +27,11 @@
 """Listing shortcode (equivalent to reST’s listing directive)."""
 
 import os
+from urllib.parse import urlunsplit
 
 import pygments
 
 from nikola.plugin_categories import ShortcodePlugin
-
-try:
-    from urlparse import urlunsplit
-except ImportError:
-    from urllib.parse import urlunsplit  # NOQA
 
 
 class Plugin(ShortcodePlugin):

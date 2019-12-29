@@ -27,25 +27,15 @@
 """Process images."""
 
 import datetime
-import os
-import lxml
-import re
 import gzip
+import os
+import re
 
+import lxml
 import piexif
+from PIL import ExifTags, Image
 
 from nikola import utils
-
-Image = None
-try:
-    from PIL import ExifTags, Image  # NOQA
-except ImportError:
-    try:
-        import ExifTags
-        import Image as _Image
-        Image = _Image
-    except ImportError:
-        pass
 
 EXIF_TAG_NAMES = {}
 
@@ -93,9 +83,10 @@ class ImageProcessor(object):
 
     def resize_image(self, src, dst, max_size, bigger_panoramas=True, preserve_exif_data=False, exif_whitelist={}, preserve_icc_profiles=False):
         """Make a copy of the image in the requested size."""
-        if not Image or os.path.splitext(src)[1] in ['.svg', '.svgz']:
+        if os.path.splitext(src)[1] in ['.svg', '.svgz']:
             self.resize_svg(src, dst, max_size, bigger_panoramas)
             return
+
         im = Image.open(src)
 
         if hasattr(im, 'n_frames') and im.n_frames > 1:
@@ -148,8 +139,8 @@ class ImageProcessor(object):
             else:
                 im.save(dst, icc_profile=icc_profile)
         except Exception as e:
-            self.logger.warn("Can't process {0}, using original "
-                             "image! ({1})".format(src, e))
+            self.logger.warning("Can't process {0}, using original "
+                                "image! ({1})".format(src, e))
             utils.copy_file(src, dst)
 
     def resize_svg(self, src, dst, max_size, bigger_panoramas):
@@ -191,7 +182,7 @@ class ImageProcessor(object):
             op.write(lxml.etree.tostring(tree))
             op.close()
         except (KeyError, AttributeError) as e:
-            self.logger.warn("No width/height in %s. Original exception: %s" % (src, e))
+            self.logger.warning("No width/height in %s. Original exception: %s" % (src, e))
             utils.copy_file(src, dst)
 
     def image_date(self, src):

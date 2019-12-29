@@ -29,23 +29,25 @@
 All filters defined in this module are registered in Nikola.__init__.
 """
 
-from functools import wraps
-import os
 import io
 import json
+import os
+import re
 import shutil
+import shlex
 import subprocess
 import tempfile
-import shlex
+from functools import wraps
 
 import lxml
-try:
-    import typogrify.filters as typo
-except ImportError:
-    typo = None  # NOQA
 import requests
 
 from .utils import req_missing, LOGGER, slugify
+
+try:
+    import typogrify.filters as typo
+except ImportError:
+    typo = None
 
 
 class _ConfigurableFilter(object):
@@ -329,7 +331,6 @@ def typogrify_sans_widont(data):
 @apply_to_text_file
 def php_template_injection(data):
     """Insert PHP code into Nikola templates."""
-    import re
     template = re.search(r'<\!-- __NIKOLA_PHP_TEMPLATE_INJECTION source\:(.*) checksum\:(.*)__ -->', data)
     if template:
         source = template.group(1)

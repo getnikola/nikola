@@ -32,18 +32,9 @@ import re
 import signal
 import socket
 import webbrowser
-try:
-    from BaseHTTPServer import HTTPServer
-    from SimpleHTTPServer import SimpleHTTPRequestHandler
-except ImportError:
-    from http.server import HTTPServer  # NOQA
-    from http.server import SimpleHTTPRequestHandler  # NOQA
-
-try:
-    from StringIO import StringIO
-except ImportError:
-    from io import BytesIO as StringIO  # NOQA
-
+from http.server import HTTPServer
+from http.server import SimpleHTTPRequestHandler
+from io import BytesIO as StringIO
 
 from nikola.plugin_categories import Command
 from nikola.utils import dns_sd

@@ -26,31 +26,17 @@
 
 """Import a WordPress dump."""
 
-import os
-import re
-import sys
 import datetime
 import io
 import json
+import os
+import re
+import sys
+from collections import defaultdict
+from urllib.parse import urlparse, unquote
+
 import requests
 from lxml import etree
-from collections import defaultdict
-
-try:
-    import html2text
-except ImportError:
-    html2text = None
-
-try:
-    from urlparse import urlparse
-    from urllib import unquote
-except ImportError:
-    from urllib.parse import urlparse, unquote  # NOQA
-
-try:
-    import phpserialize
-except ImportError:
-    phpserialize = None  # NOQA
 
 from nikola.plugin_categories import Command
 from nikola import utils, hierarchy_utils
@@ -63,12 +49,22 @@ from nikola.plugins.command.init import (
     get_default_translations_dict
 )
 
+try:
+    import html2text
+except ImportError:
+    html2text = None
+
+try:
+    import phpserialize
+except ImportError:
+    phpserialize = None
+
 LOGGER = utils.get_logger('import_wordpress')
 
 
 def install_plugin(site, plugin_name, output_dir=None, show_install_notes=False):
     """Install a Nikola plugin."""
-    LOGGER.notice("Installing plugin '{0}'".format(plugin_name))
+    LOGGER.info("Installing plugin '{0}'".format(plugin_name))
     # Get hold of the 'plugin' plugin
     plugin_installer_info = site.plugin_manager.getPluginByName('plugin', 'Command')
     if plugin_installer_info is None:
@@ -269,9 +265,9 @@ to
             options['output_folder'] = args.pop(0)
 
         if args:
-            LOGGER.warn('You specified additional arguments ({0}). Please consider '
-                        'putting these arguments before the filename if you '
-                        'are running into problems.'.format(args))
+            LOGGER.warning('You specified additional arguments ({0}). Please consider '
+                           'putting these arguments before the filename if you '
+                           'are running into problems.'.format(args))
 
         self.onefile = options.get('one_file', False)
 
@@ -317,7 +313,7 @@ to
             LOGGER.error("You can use at most one of the options --html2text, --transform-to-html and --transform-to-markdown.")
             return False
         if (self.html2text or self.transform_to_html or self.transform_to_markdown) and self.use_wordpress_compiler:
-            LOGGER.warn("It does not make sense to combine --use-wordpress-compiler with any of --html2text, --transform-to-html and --transform-to-markdown, as the latter convert all posts to HTML and the first option then affects zero posts.")
+            LOGGER.warning("It does not make sense to combine --use-wordpress-compiler with any of --html2text, --transform-to-html and --transform-to-markdown, as the latter convert all posts to HTML and the first option then affects zero posts.")
 
         if (self.html2text or self.transform_to_markdown) and not html2text:
             LOGGER.error("You need to install html2text via 'pip install html2text' before you can use the --html2text and --transform-to-markdown options.")
@@ -425,9 +421,9 @@ to
                 if not install_plugin(self.site, 'wordpress_compiler', output_dir=os.path.join(self.output_folder, 'plugins')):
                     return False
             else:
-                LOGGER.warn("Make sure to install the WordPress page compiler via")
-                LOGGER.warn("    nikola plugin -i wordpress_compiler")
-                LOGGER.warn("in your imported blog's folder ({0}), if you haven't installed it system-wide or user-wide. Otherwise, your newly imported blog won't compile.".format(self.output_folder))
+                LOGGER.warning("Make sure to install the WordPress page compiler via")
+                LOGGER.warning("    nikola plugin -i wordpress_compiler")
+                LOGGER.warning("in your imported blog's folder ({0}), if you haven't installed it system-wide or user-wide. Otherwise, your newly imported blog won't compile.".format(self.output_folder))
 
     @classmethod
     def read_xml_file(cls, filename):
@@ -518,12 +514,12 @@ to
         try:
             request = requests.get(url, auth=self.auth)
             if request.status_code >= 400:
-                LOGGER.warn("Downloading {0} to {1} failed with HTTP status code {2}".format(url, dst_path, request.status_code))
+                LOGGER.warning("Downloading {0} to {1} failed with HTTP status code {2}".format(url, dst_path, request.status_code))
                 return
             with open(dst_path, 'wb+') as fd:
                 fd.write(request.content)
         except requests.exceptions.ConnectionError as err:
-            LOGGER.warn("Downloading {0} to {1} failed: {2}".format(url, dst_path, err))
+            LOGGER.warning("Downloading {0} to {1} failed: {2}".format(url, dst_path, err))
 
     def import_attachment(self, item, wordpress_namespace):
         """Import an attachment to the site."""
@@ -786,7 +782,7 @@ to
         elif approved == 'spam' or approved == 'trash':
             pass
         else:
-            LOGGER.warn("Unknown comment approved status: {0}".format(approved))
+            LOGGER.warning("Unknown comment approved status: {0}".format(approved))
         parent = int(get_text_tag(comment, "{{{0}}}comment_parent".format(wordpress_namespace), 0))
         if parent == 0:
             parent = None
@@ -850,8 +846,8 @@ to
             if len(cats) > 0:
                 other_meta['category'] = cats[0]
                 if len(cats) > 1:
-                    LOGGER.warn(('Post "{0}" has more than one category! ' +
-                                 'Will only use the first one.').format(post_name))
+                    LOGGER.warning(('Post "{0}" has more than one category! ' +
+                                    'Will only use the first one.').format(post_name))
             tags_cats = [utils.html_unescape(tag) for tag in tags]
         else:
             tags_cats = [utils.html_unescape(tag) for tag in tags + categories]
@@ -868,7 +864,7 @@ to
         previous = self._tag_sanitize_map[is_category][tag.lower()]
         if self.tag_saniziting_strategy == 'first':
             if tag != previous[0]:
-                LOGGER.warn("Changing spelling of {0} name '{1}' to {2}.".format('category' if is_category else 'tag', tag, previous[0]))
+                LOGGER.warning("Changing spelling of {0} name '{1}' to {2}.".format('category' if is_category else 'tag', tag, previous[0]))
             return previous[0]
         else:
             LOGGER.error("Unknown tag sanitizing strategy '{0}'!".format(self.tag_saniziting_strategy))
@@ -949,7 +945,7 @@ to
         post_status = 'published'
         has_math = "no"
         if status == 'trash':
-            LOGGER.warn('Trashed post "{0}" will not be imported.'.format(title))
+            LOGGER.warning('Trashed post "{0}" will not be imported.'.format(title))
             return False
         elif status == 'private':
             is_draft = False
@@ -997,10 +993,10 @@ to
                 post_format = 'wp'
 
         if is_draft and self.exclude_drafts:
-            LOGGER.notice('Draft "{0}" will not be imported.'.format(title))
+            LOGGER.warning('Draft "{0}" will not be imported.'.format(title))
             return False
         elif is_private and self.exclude_privates:
-            LOGGER.notice('Private post "{0}" will not be imported.'.format(title))
+            LOGGER.warning('Private post "{0}" will not be imported.'.format(title))
             return False
         elif content.strip() or self.import_empty_items:
             # If no content is found, no files are written.
@@ -1080,8 +1076,8 @@ to
 
             return (out_folder, slug)
         else:
-            LOGGER.warn(('Not going to import "{0}" because it seems to contain'
-                         ' no content.').format(title))
+            LOGGER.warning(('Not going to import "{0}" because it seems to contain'
+                            ' no content.').format(title))
             return False
 
     def _extract_item_info(self, item):
@@ -1107,7 +1103,7 @@ to
             if parent_id is not None and int(parent_id) != 0:
                 self.attachments[int(parent_id)][post_id] = data
             else:
-                LOGGER.warn("Attachment #{0} ({1}) has no parent!".format(post_id, data['files']))
+                LOGGER.warning("Attachment #{0} ({1}) has no parent!".format(post_id, data['files']))
 
     def write_attachments_info(self, path, attachments):
         """Write attachments info file."""
@@ -1145,8 +1141,8 @@ to
             self.process_item_if_post_or_page(item)
         # Assign attachments to posts
         for post_id in self.attachments:
-            LOGGER.warn(("Found attachments for post or page #{0}, but didn't find post or page. " +
-                         "(Attachments: {1})").format(post_id, [e['files'][0] for e in self.attachments[post_id].values()]))
+            LOGGER.warning(("Found attachments for post or page #{0}, but didn't find post or page. " +
+                            "(Attachments: {1})").format(post_id, [e['files'][0] for e in self.attachments[post_id].values()]))
 
 
 def get_text_tag(tag, name, default):

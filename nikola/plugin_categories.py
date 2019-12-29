@@ -27,23 +27,20 @@
 """Nikola plugin categories."""
 
 import io
+import logging
 import os
 import sys
+import typing
 
 import doit
-import logbook
 from doit.cmd_base import Command as DoitCommand
 from yapsy.IPlugin import IPlugin
 
 from .utils import LOGGER, first_line, get_logger, req_missing
 
-try:
-    import typing  # NOQA
-    if typing.TYPE_CHECKING:  # NOQA
-        import nikola  # NOQA
-        import nikola.post  # NOQA
-except ImportError:
-    pass
+if typing.TYPE_CHECKING:
+    import nikola
+    import nikola.post
 
 __all__ = (
     'Command',
@@ -73,7 +70,7 @@ class BasePlugin(IPlugin):
         self.inject_templates()
         self.logger = get_logger(self.name)
         if not site.debug:
-            self.logger.level = logbook.base.INFO
+            self.logger.level = logging.INFO
 
     def inject_templates(self):
         """Inject 'templates/<engine>' (if exists) very early in the theme chain."""
