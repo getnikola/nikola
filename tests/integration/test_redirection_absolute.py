@@ -19,6 +19,25 @@ from .test_empty_build import (  # NOQA
 )
 
 
+def test_absolute_redirection(build, output_dir):
+    abs_source = os.path.join(output_dir, "redirects", "absolute_source.html")
+    assert os.path.exists(abs_source)
+
+    abs_destination = os.path.join(output_dir, "posts", "absolute.html")
+    assert os.path.exists(abs_destination)
+
+    with open(abs_destination) as abs_destination_fd:
+        abs_destination_content = abs_destination_fd.read()
+
+    redirect_tag = '<meta http-equiv="refresh" content="0; url=/redirects/absolute_source.html">'
+    assert redirect_tag in abs_destination_content
+
+    with open(abs_source) as abs_source_fd:
+        absolute_source_content = abs_source_fd.read()
+
+    assert absolute_source_content == 'absolute'
+
+
 @pytest.fixture(scope="module")
 def build(target_dir):
     """Fill the site with demo content and build it."""
