@@ -29,5 +29,4 @@ def build(target_dir):
     build_dir = os.path.join(target_dir, "posts")
 
     with cd(build_dir):
-        result = __main__.main(["build"])
-        assert result == 0
+        __main__.main(["build"])
