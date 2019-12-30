@@ -9,14 +9,20 @@ __all__ = ["add_post_without_text", "append_config", "cd", "patch_config"]
 
 def add_post_without_text(directory):
     # File for Issue #374 (empty post text)
-    path = os.path.join(directory, "empty.txt")
+    create_simple_post(directory, "empty.txt", "foobar")
+
+
+def create_simple_post(directory, filename, title_slug, text='', date='2013-03-06 19:08:15'):
+    """Create a simple post in a given directory."""
+    path = os.path.join(directory, filename)
+    text_processed = '\n' + text if text else ''
     with io.open(path, "w+", encoding="utf8") as outf:
         outf.write(
             """
-.. title: foobar
-.. slug: foobar
-.. date: 2013-03-06 19:08:15
-"""
+.. title: {0}
+.. slug: {0}
+.. date: {1}
+{2}""".format(title_slug, date, text_processed)
         )
 
 
