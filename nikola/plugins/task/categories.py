@@ -232,7 +232,7 @@ link://category_rss/dogs => /categories/dogs.xml""",
             # In destpath mode, allow users to replace the default category index with a custom page.
             classification_hierarchy = self.extract_hierarchy(classification)
             dest_list, _ = self.get_path(classification_hierarchy, lang)
-            short_destination = "/".join(dest_list + [self.site.config["INDEX_FILE"]])
+            short_destination = os.sep.join(dest_list + [self.site.config["INDEX_FILE"]])
             if short_destination in self.site.post_per_file:
                 return False
         return True
