@@ -18,7 +18,7 @@ import nikola.plugins.compile.rest.listing
 from nikola.plugins.compile.rest import vimeo
 from nikola.utils import _reload, LocaleBorg
 
-from .base import FakeSite
+from .helper import FakeSite
 
 
 def test_ReST_extension():

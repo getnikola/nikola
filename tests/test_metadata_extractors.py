@@ -17,7 +17,7 @@ from nikola.plugins.compile.ipynb import CompileIPynb
 from nikola.plugins.compile.html import CompileHtml
 from nikola.post import get_meta
 
-from .base import FakeSite
+from .helper import FakeSite
 
 
 @pytest.mark.parametrize(

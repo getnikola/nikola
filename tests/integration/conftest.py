@@ -5,7 +5,7 @@ import docutils
 import pytest
 
 from nikola.utils import LocaleBorg
-from ..base import FakeSite
+from ..helper import FakeSite
 
 
 @pytest.fixture(scope="module")

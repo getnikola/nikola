@@ -2,7 +2,7 @@ import io
 import os
 import shutil
 
-from ..base import cd
+from ..helper import cd
 
 __all__ = ["add_post_without_text", "append_config", "cd", "patch_config"]
 

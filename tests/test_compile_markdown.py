@@ -5,7 +5,7 @@ import pytest
 
 from nikola.plugins.compile.markdown import CompileMarkdown
 
-from .base import FakeSite
+from .helper import FakeSite
 
 
 @pytest.mark.parametrize(

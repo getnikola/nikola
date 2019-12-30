@@ -1,5 +1,5 @@
 """
-Base classes and utilities for Nikola tests.
+Helper utilities and classes for Nikola tests.
 
 Alongside a contextmanager to switch directories this module contains
 a Site substitute for rendering tests.

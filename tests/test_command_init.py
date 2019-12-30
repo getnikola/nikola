@@ -8,7 +8,7 @@ from nikola.plugins.command.init import (
     format_default_translations_config,
 )
 
-from .base import cd
+from .helper import cd
 
 
 def test_command_init_with_defaults(
