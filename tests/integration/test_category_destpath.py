@@ -9,7 +9,6 @@ from nikola import __main__
 from nikola.utils import makedirs
 
 from .helper import append_config, cd, create_simple_post
-# noinspection PyUnresolvedReferences
 from .test_empty_build import (  # NOQA
     test_archive_exists,
     test_avoid_double_slash_in_rss,
