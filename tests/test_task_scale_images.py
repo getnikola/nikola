@@ -1,113 +1,126 @@
-# -*- coding: utf-8 -*-
-# As prescribed in README.rst:
 import os
-import unittest
-import tempfile
+from tempfile import NamedTemporaryFile
+
+import pytest
 from PIL import Image, ImageDraw
 
 from nikola.plugins.task import scale_images
-# Import test - should perhaps be moved to a separate module
-import nikola.plugins.task.galleries  # NOQA
-from .base import FakeSite
+
+# These tests don't require valid profiles. They need only to verify
+# that profile data is/isn't saved with images.
+# It would be nice to use PIL.ImageCms to create valid profiles, but
+# in many Pillow distributions ImageCms is a stub.
+# ICC file data format specification:
+# http://www.color.org/icc32.pdf
+PROFILE = b"invalid profile data"
 
 
-class TestCase(unittest.TestCase):
-    def setUp(self):
-        # These tests don't require valid profiles.  They need only to verify
-        # that profile data is/isn't saved with images.
-        # It would be nice to use PIL.ImageCms to create valid profiles, but
-        # in many Pillow distributions ImageCms is a stub.
-        # ICC file data format specification:
-        # http://www.color.org/icc32.pdf
+def test_handling_icc_profiles(test_images, destination_dir):
+    filename, expected_profile = test_images
 
-        self._profile = b'invalid profile data'
+    pathname = os.path.join(str(destination_dir), filename)
+    assert os.path.exists(pathname), pathname
 
-        # Make a white image with a red stripe on the diagonal.
-        w = 64
-        h = 64
-        img = Image.new("RGB", (w, h), (255, 255, 255))
-        draw = ImageDraw.Draw(img)
-        draw.line((0, 0, w, h), fill=(255, 128, 128))
-        draw.line((w, 0, 0, h), fill=(128, 128, 255))
-        self._img = img
+    img = Image.open(pathname)
+    actual_profile = img.info.get("icc_profile")
+    assert actual_profile == expected_profile
 
-        self._src_dir = tempfile.TemporaryDirectory()
-        self._dest_dir = tempfile.TemporaryDirectory()
 
-    def tearDown(self):
-        pass
+@pytest.fixture(
+    params=[
+        pytest.param(True, id="with icc filename"),
+        pytest.param(False, id="without icc filename"),
+    ]
+)
+def test_images(request, preserve_icc_profiles, source_dir, site):
+    image_filename = create_src_image(str(source_dir), request.param)
+    run_task(site)
 
-    def _tmp_img_name(self, dirname):
-        pathname = tempfile.NamedTemporaryFile(
-            suffix=".jpg", dir=dirname, delete=False)
-        return pathname.name
+    if request.param:
+        yield image_filename, PROFILE if preserve_icc_profiles else None
+    else:
+        yield image_filename, None
 
-    def _get_site(self, preserve_icc_profiles):
-        site = FakeSite()
-        site.config['IMAGE_FOLDERS'] = {self._src_dir.name: ''}
-        site.config['OUTPUT_FOLDER'] = self._dest_dir.name
-        site.config['IMAGE_THUMBNAIL_SIZE'] = 128
-        site.config['IMAGE_THUMBNAIL_FORMAT'] = '{name}.thumbnail{ext}'
-        site.config['MAX_IMAGE_SIZE'] = 512
-        site.config['FILTERS'] = {}
-        site.config['PRESERVE_EXIF_DATA'] = False
-        site.config['EXIF_WHITELIST'] = {}
-        site.config['PRESERVE_ICC_PROFILES'] = preserve_icc_profiles
-        return site
 
-    def _get_task_instance(self, preserve_icc_profiles):
-        result = scale_images.ScaleImage()
-        result.set_site(self._get_site(preserve_icc_profiles))
-        return result
+@pytest.fixture(
+    params=[
+        pytest.param(True, id="profiles preserved"),
+        pytest.param(False, id="profiles not preserved"),
+    ]
+)
+def preserve_icc_profiles(request):
+    return request.param
 
-    def _create_src_images(self):
-        img = self._img
-        # Test two variants: with and without an associated icc_profile
-        pathname = self._tmp_img_name(self._src_dir.name)
+
+@pytest.fixture
+def source_dir(tmpdir_factory):
+    return tmpdir_factory.mktemp("image_source")
+
+
+@pytest.fixture
+def site(preserve_icc_profiles, source_dir, destination_dir):
+    config = {
+        "IMAGE_FOLDERS": {str(source_dir): ""},
+        "OUTPUT_FOLDER": str(destination_dir),
+        "IMAGE_THUMBNAIL_SIZE": 128,
+        "IMAGE_THUMBNAIL_FORMAT": "{name}.thumbnail{ext}",
+        "MAX_IMAGE_SIZE": 512,
+        "FILTERS": {},
+        "PRESERVE_EXIF_DATA": False,
+        "EXIF_WHITELIST": {},
+        "PRESERVE_ICC_PROFILES": preserve_icc_profiles,
+    }
+    return FakeSite(config)
+
+
+class FakeSite:
+    def __init__(self, config):
+        self.config = config
+        self.debug = True
+
+
+@pytest.fixture
+def destination_dir(tmpdir_factory):
+    return tmpdir_factory.mktemp("image_output")
+
+
+def run_task(site):
+    task_instance = get_task_instance(site)
+    for task in task_instance.gen_tasks():
+        for action, args in task.get("actions", []):
+            action(*args)
+
+
+def get_task_instance(site):
+    result = scale_images.ScaleImage()
+    result.set_site(site)
+    return result
+
+
+def create_src_image(testdir, use_icc_profile):
+    img = create_test_image()
+    pathname = tmp_img_name(testdir)
+
+    # Test two variants: with and without an associated icc_profile
+    if use_icc_profile:
+        img.save(pathname, icc_profile=PROFILE)
+    else:
         img.save(pathname)
-        sans_icc_filename = os.path.basename(pathname)
 
-        pathname = self._tmp_img_name(self._src_dir.name)
-        img.save(pathname, icc_profile=self._profile)
-        with_icc_filename = os.path.basename(pathname)
-        return [sans_icc_filename, with_icc_filename]
-
-    def _run_task(self, preserve_icc_profiles):
-        task_instance = self._get_task_instance(preserve_icc_profiles)
-        for task in task_instance.gen_tasks():
-            for action, args in task.get('actions', []):
-                action(*args)
-
-    def test_scale_preserving_icc_profile(self):
-        sans_icc_filename, with_icc_filename = self._create_src_images()
-        self._run_task(True)
-        cases = [
-            (sans_icc_filename, None),
-            (with_icc_filename, self._profile),
-        ]
-        for (filename, expected_profile) in cases:
-            pathname = os.path.join(self._dest_dir.name, filename)
-            self.assertTrue(os.path.exists(pathname), pathname)
-            img = Image.open(pathname)
-            actual_profile = img.info.get('icc_profile')
-            self.assertEqual(actual_profile, expected_profile)
-
-    def test_scale_discarding_icc_profile(self):
-        sans_icc_filename, with_icc_filename = self._create_src_images()
-        self._run_task(False)
-        cases = [
-            (sans_icc_filename, None),
-            (with_icc_filename, None),
-        ]
-        for (filename, expected_profile) in cases:
-            pathname = os.path.join(self._dest_dir.name, filename)
-            self.assertTrue(os.path.exists(pathname), pathname)
-            img = Image.open(pathname)
-            actual_profile = img.info.get('icc_profile')
-            self.assertEqual(actual_profile, expected_profile)
+    return os.path.basename(pathname)
 
 
-main = unittest.main
+def create_test_image():
+    # Make a white image with a red stripe on the diagonal.
+    width = 64
+    height = 64
+    img = Image.new("RGB", (width, height), (255, 255, 255))
+    draw = ImageDraw.Draw(img)
+    draw.line((0, 0, width, height), fill=(255, 128, 128))
+    draw.line((width, 0, 0, height), fill=(128, 128, 255))
+    return img
 
-if __name__ == '__main__':
-    main()
+
+def tmp_img_name(dirname):
+    pathname = NamedTemporaryFile(suffix=".jpg", dir=dirname, delete=False)
+    return pathname.name

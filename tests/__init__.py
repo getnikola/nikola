@@ -1,1 +1,1 @@
-# Tests for Nikola.
+"""Tests for Nikola."""

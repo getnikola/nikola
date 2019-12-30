@@ -1,103 +1,134 @@
-# -*- coding: utf-8 -*-
-
-import unittest
 from unittest import mock
 
-import nikola
-from nikola.plugins.command.init import SAMPLE_CONF
-from nikola.plugins.command.init import format_default_translations_config
+import pytest
+
+from nikola.plugins.command.init import (
+    SAMPLE_CONF,
+    CommandInit,
+    format_default_translations_config,
+)
+
+from .helper import cd
 
 
-class CommandInitCallTest(unittest.TestCase):
-    def setUp(self):
-        self.ask_questions = mock.MagicMock()
-        self.copy_sample_site = mock.MagicMock()
-        self.create_configuration = mock.MagicMock()
-        self.create_empty_site = mock.MagicMock()
-        ask_questions_patch = mock.patch(
-            'nikola.plugins.command.init.CommandInit.ask_questions', self.ask_questions)
-        copy_sample_site_patch = mock.patch(
-            'nikola.plugins.command.init.CommandInit.copy_sample_site', self.copy_sample_site)
-        create_configuration_patch = mock.patch(
-            'nikola.plugins.command.init.CommandInit.create_configuration',
-            self.create_configuration)
-        create_empty_site_patch = mock.patch(
-            'nikola.plugins.command.init.CommandInit.create_empty_site', self.create_empty_site)
+def test_command_init_with_defaults(
+    init_command,
+    ask_questions,
+    copy_sample_site,
+    create_configuration,
+    create_empty_site,
+):
+    init_command.execute()
 
-        self.patches = [ask_questions_patch, copy_sample_site_patch,
-                        create_configuration_patch, create_empty_site_patch]
-        for patch in self.patches:
-            patch.start()
-
-        self.init_command = nikola.plugins.command.init.CommandInit()
-
-    def tearDown(self):
-        for patch in self.patches:
-            patch.stop()
-        del self.patches
-
-        del self.copy_sample_site
-        del self.create_configuration
-        del self.create_empty_site
-
-    def test_init_default(self):
-        self.init_command.execute()
-
-        self.assertTrue(self.ask_questions.called)
-        self.assertTrue(self.create_configuration.called)
-        self.assertFalse(self.copy_sample_site.called)
-        self.assertTrue(self.create_empty_site.called)
-
-    def test_init_args(self):
-        arguments = dict(
-            options={'demo': True, 'quiet': True},
-            args=['destination'])
-        self.init_command.execute(**arguments)
-
-        self.assertFalse(self.ask_questions.called)
-        self.assertTrue(self.create_configuration.called)
-        self.assertTrue(self.copy_sample_site.called)
-        self.assertFalse(self.create_empty_site.called)
-
-    def test_init_called_without_target_quiet(self):
-        self.init_command.execute(**dict(options={'quiet': True}))
-
-        self.assertFalse(self.ask_questions.called)
-        self.assertFalse(self.create_configuration.called)
-        self.assertFalse(self.copy_sample_site.called)
-        self.assertFalse(self.create_empty_site.called)
-
-    def test_init_empty_dir(self):
-        self.init_command.execute(args=['destination'])
-
-        self.assertTrue(self.ask_questions.called)
-        self.assertTrue(self.create_configuration.called)
-        self.assertFalse(self.copy_sample_site.called)
-        self.assertTrue(self.create_empty_site.called)
+    assert ask_questions.called
+    assert create_configuration.called
+    assert not copy_sample_site.called
+    assert create_empty_site.called
 
 
-class InitHelperTests(unittest.TestCase):
-    """Test helper functions provided with the init command."""
+def test_command_init_with_arguments(
+    init_command,
+    ask_questions,
+    copy_sample_site,
+    create_configuration,
+    create_empty_site,
+):
+    arguments = dict(options={"demo": True, "quiet": True}, args=["destination"])
+    init_command.execute(**arguments)
 
-    def test_configure_translations_without_additional_languages(self):
-        """
-        Testing the configuration of the translation when no additional language has been found.
-        """
-        translations_cfg = format_default_translations_config(set())
-        self.assertEqual(SAMPLE_CONF["TRANSLATIONS"], translations_cfg)
+    assert not ask_questions.called
+    assert create_configuration.called
+    assert copy_sample_site.called
+    assert not create_empty_site.called
 
-    def test_configure_translations_with_2_additional_languages(self):
-        """
-        Testing the configuration of the translation when no additional language has been found.
-        """
-        translations_cfg = format_default_translations_config(
-            set(["es", "en"]))
-        self.assertEqual("""{
+
+def test_init_called_without_target_quiet(
+    init_command,
+    ask_questions,
+    copy_sample_site,
+    create_configuration,
+    create_empty_site,
+):
+    init_command.execute(**{"options": {"quiet": True}})
+
+    assert not ask_questions.called
+    assert not create_configuration.called
+    assert not copy_sample_site.called
+    assert not create_empty_site.called
+
+
+def test_command_init_with_empty_dir(
+    init_command,
+    ask_questions,
+    copy_sample_site,
+    create_configuration,
+    create_empty_site,
+):
+    init_command.execute(args=["destination"])
+
+    assert ask_questions.called
+    assert create_configuration.called
+    assert not copy_sample_site.called
+    assert create_empty_site.called
+
+
+def test_configure_translations_without_additional_languages():
+    """
+    Testing the configuration of the translation when no additional language has been found.
+    """
+    translations_cfg = format_default_translations_config(set())
+    assert SAMPLE_CONF["TRANSLATIONS"] == translations_cfg
+
+
+def test_configure_translations_with_2_additional_languages():
+    """
+    Testing the configuration of the translation when two additional languages are given.
+    """
+    translations_cfg = format_default_translations_config(set(["es", "en"]))
+    assert translations_cfg == """{
     DEFAULT_LANG: "",
     "en": "./en",
     "es": "./es",
-}""", translations_cfg)
+}"""
 
 
-if __name__ == '__main__':
-    unittest.main()
+@pytest.fixture
+def init_command(
+    tmpdir, ask_questions, copy_sample_site, create_configuration, create_empty_site
+):
+    with mock.patch(
+        "nikola.plugins.command.init.CommandInit.ask_questions", ask_questions
+    ):
+        with mock.patch(
+            "nikola.plugins.command.init.CommandInit.copy_sample_site", copy_sample_site
+        ):
+            with mock.patch(
+                "nikola.plugins.command.init.CommandInit.create_configuration",
+                create_configuration,
+            ):
+                with mock.patch(
+                    "nikola.plugins.command.init.CommandInit.create_empty_site",
+                    create_empty_site,
+                ):
+                    with cd(str(tmpdir)):
+                        yield CommandInit()
+
+
+@pytest.fixture
+def ask_questions():
+    return mock.MagicMock()
+
+
+@pytest.fixture
+def copy_sample_site():
+    return mock.MagicMock()
+
+
+@pytest.fixture
+def create_configuration():
+    return mock.MagicMock()
+
+
+@pytest.fixture
+def create_empty_site():
+    return mock.MagicMock()

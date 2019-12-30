@@ -9,3 +9,16 @@ def ensure_chdir():
         yield
     finally:
         os.chdir(old_dir)
+
+
+@pytest.fixture(scope="module")
+def test_dir():
+    """
+    Absolute path to the directory with the tests.
+    """
+    return os.path.abspath(os.path.dirname(__file__))
+
+
+@pytest.fixture(scope="session")
+def default_locale() -> str:
+    return os.environ.get("NIKOLA_LOCALE_DEFAULT", "en")

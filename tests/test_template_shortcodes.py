@@ -1,49 +1,26 @@
-# -*- coding: utf-8 -*-
-# vim: set wrap textwidth=100
 """Test template-based shortcodes."""
 
-
 import pytest
+
 from nikola import Nikola
 
 
-class ShortcodeFakeSite(Nikola):
-    def _get_template_system(self):
-        if self._template_system is None:
-            # Load template plugin
-            self._template_system = self.plugin_manager.getPluginByName(
-                'jinja', "TemplateSystem").plugin_object
-            self._template_system.set_directories('.', 'cache')
-            self._template_system.set_site(self)
-
-        return self._template_system
-
-    template_system = property(_get_template_system)
-
-
-@pytest.fixture(scope="module")
-def fakesite():
-    s = ShortcodeFakeSite()
-    s.init_plugins()
-    s._template_system = None
-    return s
-
-
-def test_mixedargs(fakesite):
-    TEST_TMPL = """
+def test_mixedargs(site):
+    test_template = """
 arg1: {{ _args[0] }}
 arg2: {{ _args[1] }}
 kwarg1: {{ kwarg1 }}
 kwarg2: {{ kwarg2 }}
 """
 
-    fakesite.shortcode_registry['test1'] = \
-        fakesite._make_renderfunc(TEST_TMPL)
-    fakesite.shortcode_registry['test2'] = \
-        fakesite._make_renderfunc('Something completely different')
+    site.shortcode_registry["test1"] = site._make_renderfunc(test_template)
+    site.shortcode_registry["test2"] = site._make_renderfunc(
+        "Something completely different"
+    )
 
-    res = fakesite.apply_shortcodes(
-        '{{% test1 kwarg1=spamm arg1 kwarg2=foo,bar arg2 %}}')[0]
+    res = site.apply_shortcodes("{{% test1 kwarg1=spamm arg1 kwarg2=foo,bar arg2 %}}")[
+        0
+    ]
 
     assert res.strip() == """
 arg1: arg1
@@ -52,29 +29,50 @@ kwarg1: spamm
 kwarg2: foo,bar""".strip()
 
 
-def test_onearg(fakesite):
-    fakesite.shortcode_registry['test1'] = \
-        fakesite._make_renderfunc('arg={{ _args[0] }}')
+@pytest.mark.parametrize(
+    "template, data, expected_result",
+    [
+        # one argument
+        ("arg={{ _args[0] }}", "{{% test1 onearg %}}", "arg=onearg"),
+        ("arg={{ _args[0] }}", '{{% test1 "one two" %}}', "arg=one two"),
+        # keyword arguments
+        ("foo={{ foo }}", "{{% test1 foo=bar %}}", "foo=bar"),
+        ("foo={{ foo }}", '{{% test1 foo="bar baz" %}}', "foo=bar baz"),
+        ("foo={{ foo }}", '{{% test1 foo="bar baz" spamm=ham %}}', "foo=bar baz"),
+        # data
+        (
+            "data={{ data }}",
+            "{{% test1 %}}spamm spamm{{% /test1 %}}",
+            "data=spamm spamm",
+        ),
+        ("data={{ data }}", "{{% test1 spamm %}}", "data="),
+        ("data={{ data }}", "{{% test1 data=dummy %}}", "data="),
+    ],
+)
+def test_applying_shortcode(site, template, data, expected_result):
+    site.shortcode_registry["test1"] = site._make_renderfunc(template)
 
-    assert fakesite.apply_shortcodes('{{% test1 onearg %}}')[0] == 'arg=onearg'
-    assert fakesite.apply_shortcodes(
-        '{{% test1 "one two" %}}')[0] == 'arg=one two'
+    assert site.apply_shortcodes(data)[0] == expected_result
 
 
-def test_kwarg(fakesite):
-    fakesite.shortcode_registry['test1'] = \
-        fakesite._make_renderfunc('foo={{ foo }}')
+@pytest.fixture(scope="module")
+def site():
+    s = ShortcodeFakeSite()
+    s.init_plugins()
+    s._template_system = None
+    return s
 
-    assert fakesite.apply_shortcodes('{{% test1 foo=bar %}}')[0] == 'foo=bar'
-    assert fakesite.apply_shortcodes('{{% test1 foo="bar baz" %}}')[0] == 'foo=bar baz'
-    assert fakesite.apply_shortcodes('{{% test1 foo="bar baz" spamm=ham %}}')[0] == 'foo=bar baz'
 
+class ShortcodeFakeSite(Nikola):
+    def _get_template_system(self):
+        if self._template_system is None:
+            # Load template plugin
+            self._template_system = self.plugin_manager.getPluginByName(
+                "jinja", "TemplateSystem"
+            ).plugin_object
+            self._template_system.set_directories(".", "cache")
+            self._template_system.set_site(self)
 
-def test_data(fakesite):
-    fakesite.shortcode_registry['test1'] = \
-        fakesite._make_renderfunc('data={{ data }}')
+        return self._template_system
 
-    assert fakesite.apply_shortcodes('{{% test1 %}}spamm spamm{{% /test1 %}}')[0] == 'data=spamm spamm'
-    assert fakesite.apply_shortcodes('{{% test1 spamm %}}')[0] == 'data='
-    # surprise!
-    assert fakesite.apply_shortcodes('{{% test1 data=dummy %}}')[0] == 'data='
+    template_system = property(_get_template_system)

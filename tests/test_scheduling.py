@@ -1,133 +1,137 @@
-# -*- coding: utf-8 -*-
+"""
+Scheduling tests.
+
+These tests rely on a fixed time to work.
+In order to achieve this the fixture for `now` sets the expected time.
+"""
 
 import datetime
-import sys
 
 import dateutil.parser
 import dateutil.tz
 import pytest
 
-from .base import BaseTestCase
+from nikola.plugins.command.new_post import get_date
 
-try:
-    from freezegun import freeze_time
-    _freeze_time = True
-except ImportError:
-    _freeze_time = False
+freezegun = pytest.importorskip("freezegun")
+freeze_time = freezegun.freeze_time
 
-    def freeze_time(x):
-        return lambda y: y
-
-_NOW = datetime.datetime(  # Thursday
-    2013, 8, 22, 10, 0, 0, tzinfo=dateutil.tz.tzutc())
+UTC = dateutil.tz.tzutc()
+RULE_THURSDAYS = "RRULE:FREQ=WEEKLY;BYDAY=TH"
+RULE_FRIDAYS = "RRULE:FREQ=WEEKLY;BYDAY=FR"
 
 
-@pytest.mark.skipif(not _freeze_time, reason="freezegun not installed.")
-class TestScheduling(BaseTestCase):
+def test_current_time_not_matching_rule(today):
+    """`today` does not match rule."""
+    # No last date
+    expected = today.replace(day=23)
+    assert expected == get_date(True, RULE_FRIDAYS, tz=UTC)[1]
+    assert expected == get_date(True, RULE_FRIDAYS, tz=UTC)[1]
 
-    @classmethod
-    def setUp(cls):
-        d = [name for name in sys.modules if name.startswith("six.moves.")]
-        cls.deleted = {}
-        for name in d:
-            cls.deleted[name] = sys.modules[name]
-            del sys.modules[name]
+    # Last date in the past; doesn't match rule
+    date = today.replace(hour=7)
+    expected = today.replace(day=23, hour=7)
+    assert expected == get_date(True, RULE_FRIDAYS, date, tz=UTC)[1]
 
-    @classmethod
-    def tearDown(cls):
-        for name, mod in cls.deleted.items():
-            sys.modules[name] = mod
-
-    @freeze_time(_NOW)
-    def test_get_date(self):
-        from nikola.plugins.command.new_post import get_date
-
-        FMT = '%Y-%m-%d %H:%M:%S %Z'
-        NOW = _NOW.strftime(FMT)
-        TODAY = dateutil.parser.parse(NOW)
-        RULE_TH = 'RRULE:FREQ=WEEKLY;BYDAY=TH'
-        RULE_FR = 'RRULE:FREQ=WEEKLY;BYDAY=FR'
-        UTC = dateutil.tz.tzutc()
-
-        # NOW does not match rule #########################################
-        # No last date
-        expected = TODAY.replace(day=23)
-        self.assertEqual(expected, get_date(True, RULE_FR, tz=UTC)[1])
-        self.assertEqual(expected, get_date(True, RULE_FR, tz=UTC)[1])
-
-        # Last date in the past; doesn't match rule
-        date = TODAY.replace(hour=7)
-        expected = TODAY.replace(day=23, hour=7)
-        self.assertEqual(expected, get_date(True, RULE_FR, date, tz=UTC)[1])
-
-        # Last date in the future; doesn't match rule
-        date = TODAY.replace(day=24, hour=7)
-        expected = TODAY.replace(day=30, hour=7)
-        self.assertEqual(expected, get_date(True, RULE_FR, date, tz=UTC)[1])
-
-        # Last date in the past; matches rule
-        date = TODAY.replace(day=16, hour=8)
-        expected = TODAY.replace(day=23, hour=8)
-        self.assertEqual(expected, get_date(True, RULE_FR, date, tz=UTC)[1])
-
-        # Last date in the future; matches rule
-        date = TODAY.replace(day=23, hour=18)
-        expected = TODAY.replace(day=30, hour=18)
-        self.assertEqual(expected, get_date(True, RULE_FR, date, tz=UTC)[1])
-
-        # NOW matches rule ################################################
-        # Not scheduling should return NOW
-        self.assertEqual(_NOW, get_date(False, RULE_TH, tz=UTC)[1])
-        # No last date
-        self.assertEqual(_NOW, get_date(True, RULE_TH, tz=UTC)[1])
-        self.assertEqual(_NOW, get_date(True, RULE_TH, tz=UTC)[1])
-
-        # Last date in the past; doesn't match rule
-        # Corresponding time has already passed, today
-        date = TODAY.replace(day=21, hour=7)
-        expected = TODAY.replace(day=29, hour=7)
-        self.assertEqual(expected, get_date(True, RULE_TH, date, tz=UTC)[1])
-        # Corresponding time has not passed today
-        date = TODAY.replace(day=21, hour=18)
-        expected = TODAY.replace(day=22, hour=18)
-        self.assertEqual(expected, get_date(True, RULE_TH, date, tz=UTC)[1])
-
-        # Last date in the future; doesn't match rule
-        # Corresponding time has already passed, today
-        date = TODAY.replace(day=24, hour=7)
-        expected = TODAY.replace(day=29, hour=7)
-        self.assertEqual(expected, get_date(True, RULE_TH, date, tz=UTC)[1])
-        # Corresponding time has not passed today
-        date = TODAY.replace(day=24, hour=18)
-        expected = TODAY.replace(day=29, hour=18)
-        self.assertEqual(expected, get_date(True, RULE_TH, date, tz=UTC)[1])
-
-        # Last date in the past; matches rule
-        # Corresponding time has already passed, today
-        date = TODAY.replace(day=15, hour=7)
-        expected = TODAY.replace(day=29, hour=7)
-        self.assertEqual(expected, get_date(True, RULE_TH, date, tz=UTC)[1])
-        # Corresponding time has already passed, today; rule specifies HOUR
-        date = TODAY.replace(day=15, hour=7)
-        expected = TODAY.replace(day=29, hour=9)
-        self.assertEqual(expected, get_date(
-            True, RULE_TH + ';BYHOUR=9', date, tz=UTC)[1])
-        # Corresponding time has not passed today
-        date = TODAY.replace(day=15, hour=18)
-        expected = TODAY.replace(day=22, hour=18)
-        self.assertEqual(expected, get_date(True, RULE_TH, date, tz=UTC)[1])
-
-        # Last date in the future; matches rule
-        # Corresponding time has already passed, today
-        date = TODAY.replace(day=29, hour=7)
-        expected = TODAY.replace(day=5, month=9, hour=7)
-        self.assertEqual(expected, get_date(True, RULE_TH, date, tz=UTC)[1])
-        # Corresponding time has not passed today
-        date = TODAY.replace(day=22, hour=18)
-        expected = TODAY.replace(day=29, hour=18)
-        self.assertEqual(expected, get_date(True, RULE_TH, date, tz=UTC)[1])
+    # Last date in the future; doesn't match rule
+    date = today.replace(day=24, hour=7)
+    expected = today.replace(day=30, hour=7)
+    assert expected == get_date(True, RULE_FRIDAYS, date, tz=UTC)[1]
 
 
-if __name__ == '__main__':
-    import unittest
-    unittest.main()
+def test_current_time_matching_rule(today):
+    # Last date in the past; matches rule
+    date = today.replace(day=16, hour=8)
+    expected = today.replace(day=23, hour=8)
+    assert expected == get_date(True, RULE_FRIDAYS, date, tz=UTC)[1]
+
+    # Last date in the future; matches rule
+    date = today.replace(day=23, hour=18)
+    expected = today.replace(day=30, hour=18)
+    assert expected == get_date(True, RULE_FRIDAYS, date, tz=UTC)[1]
+
+
+@pytest.mark.parametrize("scheduling", [True, False])
+def test_current_time_matching_rule_no_given_date(now, scheduling):
+    """
+    No last date given means we should always get the current time.
+
+    `now` matches the rule.
+    """
+    assert now == get_date(scheduling, RULE_THURSDAYS, tz=UTC)[1]
+
+
+def test_last_date_in_the_past_not_matching_rule(today):
+    """Last date in the past; doesn't match rule."""
+    # Corresponding time has already passed, today
+    date = today.replace(day=21, hour=7)
+    expected = today.replace(day=29, hour=7)
+    assert expected == get_date(True, RULE_THURSDAYS, date, tz=UTC)[1]
+
+    # Corresponding time has not passed today
+    date = today.replace(day=21, hour=18)
+    expected = today.replace(day=22, hour=18)
+    assert expected == get_date(True, RULE_THURSDAYS, date, tz=UTC)[1]
+
+
+def test_last_date_in_the_future_not_matching_rule(today):
+    """Last date in the future; doesn't match rule."""
+    # Corresponding time has already passed, today
+    date = today.replace(day=24, hour=7)
+    expected = today.replace(day=29, hour=7)
+    assert expected == get_date(True, RULE_THURSDAYS, date, tz=UTC)[1]
+
+    # Corresponding time has not passed today
+    date = today.replace(day=24, hour=18)
+    expected = today.replace(day=29, hour=18)
+    assert expected == get_date(True, RULE_THURSDAYS, date, tz=UTC)[1]
+
+
+def test_last_date_in_the_past_matching_rule(today):
+    """Last date in the past; matches rule."""
+    # Corresponding time has already passed, today
+    date = today.replace(day=15, hour=7)
+    expected = today.replace(day=29, hour=7)
+    assert expected == get_date(True, RULE_THURSDAYS, date, tz=UTC)[1]
+
+    # Corresponding time has already passed, today; rule specifies HOUR
+    date = today.replace(day=15, hour=7)
+    expected = today.replace(day=29, hour=9)
+    assert expected == get_date(True, RULE_THURSDAYS + ";BYHOUR=9", date, tz=UTC)[1]
+
+    # Corresponding time has not passed today
+    date = today.replace(day=15, hour=18)
+    expected = today.replace(day=22, hour=18)
+    assert expected == get_date(True, RULE_THURSDAYS, date, tz=UTC)[1]
+
+
+def test_last_date_in_the_future_matching_rule(today):
+    """Last date in the future; matches rule."""
+    # Corresponding time has already passed, today
+    date = today.replace(day=29, hour=7)
+    expected = today.replace(day=5, month=9, hour=7)
+    assert expected == get_date(True, RULE_THURSDAYS, date, tz=UTC)[1]
+
+    # Corresponding time has not passed today
+    date = today.replace(day=22, hour=18)
+    expected = today.replace(day=29, hour=18)
+    assert expected == get_date(True, RULE_THURSDAYS, date, tz=UTC)[1]
+
+
+@pytest.fixture
+def today(now):
+    current_time = now.strftime("%Y-%m-%d %H:%M:%S %Z")
+    yield dateutil.parser.parse(current_time)
+
+
+@pytest.fixture
+def now() -> datetime:
+    """
+    Get the current time.
+
+    datetime is frozen to this point in time.
+    """
+    _NOW = datetime.datetime(2013, 8, 22, 10, 0, 0, tzinfo=UTC)  # Thursday
+
+    with freeze_time(_NOW):
+        yield _NOW
