@@ -1,4 +1,4 @@
-"""Test if section indexes avoid pages."""
+"""Test if category destpath indexes avoid pages."""
 
 import os
 
@@ -28,22 +28,27 @@ def test_destpath_with_avoidance(build, output_dir):
     cat1 = os.path.join(output_dir, "posts", "cat1")
     cat2 = os.path.join(output_dir, "posts", "cat2")
 
+    index1 = _make_output_path(cat1, "index")
+    index2 = _make_output_path(cat2, "index")
+
     # Do all files exist?
-    assert os.path.isfile(_make_output_path(cat1, "index"))
-    assert os.path.isfile(_make_output_path(cat2, "index"))
+    assert os.path.isfile(index1)
+    assert os.path.isfile(index2)
 
     # Are their contents correct?
-    with open(_make_output_path(cat1, "index"), "r", encoding="utf-8") as fh:
+    with open(index1, "r", encoding="utf-8") as fh:
         page = fh.read()
-        assert "Posts about cat1" in page
-        assert "test-destpath-p1" in page
-        assert "test-destpath-p2" in page
-        assert "test-destpath-p3" not in page
 
-    with open(_make_output_path(cat2, "index"), "r", encoding="utf-8") as fh:
+    assert "Posts about cat1" in page
+    assert "test-destpath-p1" in page
+    assert "test-destpath-p2" in page
+    assert "test-destpath-p3" not in page
+
+    with open(index2, "r", encoding="utf-8") as fh:
         page = fh.read()
-        assert "Posts about cat2" not in page
-        assert "This is a post that conflicts with cat2." in page
+
+    assert "Posts about cat2" not in page
+    assert "This is a post that conflicts with cat2." in page
 
 
 @pytest.fixture(scope="module")

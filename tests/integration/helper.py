@@ -4,7 +4,7 @@ import shutil
 
 from ..helper import cd
 
-__all__ = ["add_post_without_text", "create_simple_post", "append_config", "cd", "patch_config"]
+__all__ = ["add_post_without_text", "append_config", "cd", "create_simple_post", "patch_config"]
 
 
 def add_post_without_text(directory):
