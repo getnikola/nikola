@@ -755,6 +755,6 @@ class Galleries(Task, ImageProcessor):
         utils.makedirs(dst_dir)
         with io.open(output_path, "w+", encoding="utf-8") as rss_file:
             data = rss_obj.to_xml(encoding='utf-8')
-            if isinstance(data, utils.bytes_str):
+            if isinstance(data, bytes):
                 data = data.decode('utf-8')
             rss_file.write(data)

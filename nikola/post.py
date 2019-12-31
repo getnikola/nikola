@@ -52,7 +52,6 @@ from .utils import (
     LocaleBorg,
     slugify,
     to_datetime,
-    unicode_str,
     demote_headers,
     get_translation_candidate,
     map_metadata
@@ -339,7 +338,7 @@ class Post(object):
         # Calculate a hash that represents most data about the post
         m = hashlib.md5()
         # source_path modification date (to avoid reading it)
-        m.update(utils.unicode_str(os.stat(self.source_path).st_mtime).encode('utf-8'))
+        m.update(str(os.stat(self.source_path).st_mtime).encode('utf-8'))
         clean_meta = {}
         for k, v in self.meta.items():
             sub_meta = {}
@@ -347,7 +346,7 @@ class Post(object):
             for kk, vv in v.items():
                 if vv:
                     sub_meta[kk] = vv
-        m.update(utils.unicode_str(json.dumps(clean_meta, cls=utils.CustomEncoder, sort_keys=True)).encode('utf-8'))
+        m.update(str(json.dumps(clean_meta, cls=utils.CustomEncoder, sort_keys=True)).encode('utf-8'))
         return '<Post: {0!r} {1}>'.format(self.source_path, m.hexdigest())
 
     def has_pretty_url(self, lang):
@@ -1048,8 +1047,8 @@ def get_meta(post, lang):
         # Only perform these checks for the default language
         if 'slug' not in meta:
             # If no slug is found in the metadata use the filename
-            meta['slug'] = slugify(unicode_str(os.path.splitext(
-                os.path.basename(post.source_path))[0]), post.default_lang)
+            meta['slug'] = slugify(os.path.splitext(
+                os.path.basename(post.source_path))[0], post.default_lang)
 
         if 'title' not in meta:
             # If no title is found, use the filename without extension

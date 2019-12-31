@@ -86,8 +86,8 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real',
            'get_theme_chain', 'load_messages', 'copy_tree', 'copy_file',
            'slugify', 'unslugify', 'to_datetime', 'apply_filters',
            'config_changed', 'get_crumbs', 'get_tzname', 'get_asset_path',
-           '_reload', 'unicode_str', 'bytes_str', 'unichr', 'Functionary',
-           'TranslatableSetting', 'TemplateHookRegistry', 'LocaleBorg',
+           '_reload', 'Functionary', 'TranslatableSetting',
+           'TemplateHookRegistry', 'LocaleBorg',
            'sys_encode', 'sys_decode', 'makedirs', 'get_parent_theme_name',
            'demote_headers', 'get_translation_candidate', 'write_metadata',
            'ask', 'ask_yesno', 'options2docstring', 'os_path_split',
@@ -103,11 +103,6 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real',
 
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
-
-# Aliases, previously for Python 2/3 compatibility.
-bytes_str = bytes
-unicode_str = str
-unichr = chr
 
 # For compatibility with old logging setups.
 # TODO remove in v9?
@@ -168,14 +163,14 @@ ENCODING = sys.getfilesystemencoding() or sys.stdin.encoding
 
 def sys_encode(thing):
     """Return bytes encoded in the system's encoding."""
-    if isinstance(thing, unicode_str):
+    if isinstance(thing, str):
         return thing.encode(ENCODING)
     return thing
 
 
 def sys_decode(thing):
     """Return Unicode."""
-    if isinstance(thing, bytes_str):
+    if isinstance(thing, bytes):
         return thing.decode(ENCODING)
     return thing
 
@@ -809,12 +804,12 @@ def slugify(value, lang=None, force=False):
     >>> print(slugify('foo bar', lang='en'))
     foo-bar
     """
-    if not isinstance(value, unicode_str):
+    if not isinstance(value, str):
         raise ValueError("Not a unicode object: {0}".format(value))
     if USE_SLUGIFY or force:
         # This is the standard state of slugify, which actually does some work.
         # It is the preferred style, especially for Western languages.
-        value = unicode_str(unidecode(value))
+        value = str(unidecode(value))
         value = _slugify_strip_re.sub('', value).strip().lower()
         return _slugify_hyphenate_re.sub('-', value)
     else:
@@ -944,7 +939,7 @@ def apply_filters(task, filters, skip_ext=None):
             if isinstance(key, (tuple, list)):
                 if ext in key:
                     return value
-            elif isinstance(key, (bytes_str, unicode_str)):
+            elif isinstance(key, (bytes, str)):
                 if ext == key:
                     return value
             else:
@@ -1667,7 +1662,7 @@ def adjust_name_for_index_path_list(path_list, i, displayed_i, lang, site, force
             path_list.append(index_file)
         if site.config["PRETTY_URLS"] and site.config["INDEXES_PRETTY_PAGE_URL"](lang) and path_list[-1] == index_file:
             path_schema = site.config["INDEXES_PRETTY_PAGE_URL"](lang)
-            if isinstance(path_schema, (bytes_str, unicode_str)):
+            if isinstance(path_schema, (bytes, str)):
                 path_schema = [path_schema]
         else:
             path_schema = None
@@ -1858,7 +1853,7 @@ def smartjoin(join_char: str, string_or_iterable) -> str:
     >>> smartjoin(' to ', ['count', 42])
     'count to 42'
     """
-    if isinstance(string_or_iterable, (unicode_str, bytes_str)):
+    if isinstance(string_or_iterable, (str, bytes)):
         return string_or_iterable
     elif isinstance(string_or_iterable, Iterable):
         return join_char.join([str(e) for e in string_or_iterable])
@@ -1921,7 +1916,7 @@ def rss_writer(rss_obj, output_path):
     makedirs(dst_dir)
     with io.open(output_path, "w+", encoding="utf-8") as rss_file:
         data = rss_obj.to_xml(encoding='utf-8')
-        if isinstance(data, bytes_str):
+        if isinstance(data, bytes):
             data = data.decode('utf-8')
         rss_file.write(data)
 

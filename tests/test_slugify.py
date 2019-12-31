@@ -41,7 +41,7 @@ import nikola.utils
 def test_slugify(title, language, expected_slug):
     o = nikola.utils.slugify(title, lang=language)
     assert o == expected_slug
-    assert isinstance(o, nikola.utils.unicode_str)
+    assert isinstance(o, str)
 
 
 @pytest.mark.parametrize(
@@ -61,7 +61,7 @@ def test_disarmed(disarm_slugify, title, expected_slug):
     """Test disarmed slugify."""
     o = nikola.utils.slugify(title, lang="pl")
     assert o == expected_slug
-    assert isinstance(o, nikola.utils.unicode_str)
+    assert isinstance(o, str)
 
 
 @pytest.fixture

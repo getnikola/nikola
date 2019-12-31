@@ -144,7 +144,7 @@ class ImportMixin(object):
                 content = html.tostring(doc, encoding='utf8')
             except etree.ParserError:
                 pass
-        if isinstance(content, utils.bytes_str):
+        if isinstance(content, bytes):
             content = content.decode('utf-8')
         compiler.create_post(
             filename,
