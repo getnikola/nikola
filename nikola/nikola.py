@@ -422,7 +422,7 @@ class Nikola(object):
             'CREATE_SINGLE_ARCHIVE': False,
             'CREATE_FULL_ARCHIVES': False,
             'CREATE_DAILY_ARCHIVE': False,
-            'DATE_FORMAT': 'YYYY-MM-dd HH:mm',
+            'DATE_FORMAT': 'yyyy-MM-dd HH:mm',
             'DISABLE_INDEXES': False,
             'DISABLE_MAIN_ATOM_FEED': False,
             'DISABLE_MAIN_RSS_FEED': False,
@@ -717,7 +717,7 @@ class Nikola(object):
             if '%' in val:
                 utils.LOGGER.error('The DATE_FORMAT setting needs to be upgraded.')
                 utils.LOGGER.warning("Nikola now uses CLDR-style date strings. http://cldr.unicode.org/translation/date-time")
-                utils.LOGGER.warning("Example: %Y-%m-%d %H:%M ==> YYYY-MM-dd HH:mm")
+                utils.LOGGER.warning("Example: %Y-%m-%d %H:%M ==> yyyy-MM-dd HH:mm")
                 utils.LOGGER.warning("(note it’s different to what moment.js uses!)")
                 sys.exit(1)
 

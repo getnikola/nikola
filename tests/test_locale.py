@@ -68,7 +68,7 @@ def test_format_date_webiso_basic(base_config):
 def test_format_date_basic(base_config, lang):
     LocaleBorg.initialize({}, lang)
     formatted_date = LocaleBorg().formatted_date(
-        "YYYY-MM-dd HH:mm:ss", TESLA_BIRTHDAY_DT
+        "yyyy-MM-dd HH:mm:ss", TESLA_BIRTHDAY_DT
     )
     assert formatted_date == "1856-07-10 12:34:56"
 
