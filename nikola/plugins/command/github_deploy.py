@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2014-2019 Puneeth Chaganti and others.
+# Copyright © 2014-2020 Puneeth Chaganti and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
