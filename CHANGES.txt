@@ -10,6 +10,8 @@ Features
 Bugfixes
 --------
 
+* Fix handling of conflicts between posts/pages and indexes generated
+  by ``CATEGORY_PAGES_FOLLOW_DESTPATH``
 * Remove ``extra_header`` and ``extra_footer`` from ``base`` theme
   due to incompatibility with Mako. The blocks are still available
   in ``bootstrap4`` and ``bootblog4``. (Issue #3319 via #3291)
