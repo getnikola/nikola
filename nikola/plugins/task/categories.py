@@ -225,3 +225,22 @@ link://category_rss/dogs => /categories/dogs.xml""",
     def postprocess_posts_per_classification(self, posts_per_classification_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
         """Rearrange, modify or otherwise use the list of posts per classification and per language."""
         self.translation_manager.read_from_config(self.site, 'CATEGORY', posts_per_classification_per_language, False)
+
+    def should_generate_classification_page(self, classification, post_list, lang):
+        """Only generates list of posts for classification if this function returns True."""
+        if self.site.config["CATEGORY_PAGES_FOLLOW_DESTPATH"]:
+            # In destpath mode, allow users to replace the default category index with a custom page.
+            classification_hierarchy = self.extract_hierarchy(classification)
+            dest_list, _ = self.get_path(classification_hierarchy, lang)
+            short_destination = os.sep.join(dest_list + [self.site.config["INDEX_FILE"]])
+            if short_destination in self.site.post_per_file:
+                return False
+        return True
+
+    def should_generate_atom_for_classification_page(self, classification, post_list, lang):
+        """Only generates Atom feed for list of posts for classification if this function returns True."""
+        return True
+
+    def should_generate_rss_for_classification_page(self, classification, post_list, lang):
+        """Only generates RSS feed for list of posts for classification if this function returns True."""
+        return True

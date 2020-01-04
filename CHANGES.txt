@@ -10,6 +10,8 @@ Features
 Bugfixes
 --------
 
+* Fix handling of conflicts between posts/pages and indexes generated
+  by ``CATEGORY_PAGES_FOLLOW_DESTPATH``
 * Fix default date format to ``yyyy-MM-dd`` to avoid bug with ISO
   years (Issue #3337)
 * Remove ``extra_header`` and ``extra_footer`` from ``base`` theme
