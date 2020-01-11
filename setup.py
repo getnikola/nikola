@@ -23,8 +23,8 @@ with open('requirements-tests.txt', 'r') as fh:
 # ########## platform specific stuff #############
 if sys.version_info[0] == 2:
     raise Exception('Python 2 is not supported')
-elif sys.version_info[0] == 3 and sys.version_info[1] < 4:
-    raise Exception('Python 3 version < 3.4 is not supported')
+elif sys.version_info[0] == 3 and sys.version_info[1] < 5:
+    raise Exception('Python 3 version < 3.5 is not supported')
 
 ##################################################
 
@@ -131,7 +131,7 @@ setup(name='Nikola',
       install_requires=dependencies,
       extras_require=extras,
       include_package_data=True,
-      python_requires='>=3.4',
+      python_requires='>=3.5',
       cmdclass={'install': nikola_install},
       data_files=[
               ('share/doc/nikola', [
