@@ -65,6 +65,7 @@
 * `Luis Miguel Morillas <https://github.com/lmorillas>`_
 * `Manuel Kaufmann <https://github.com/humitos>`_
 * `Manuel Thalmann <https://github.com/manuth>`_
+* `Marcel Stimberg <https://github.com/mstimberg>`_
 * `Marcelo MD <https://github.com/marcelomd>`_
 * `Marcos Dione <https://github.com/StyXman>`_
 * `Mariano Guerra <https://github.com/marianoguerra>`_

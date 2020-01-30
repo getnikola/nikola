@@ -10,6 +10,7 @@ Features
 Bugfixes
 --------
 
+* Pass the correct parameters to shortcodes in jupyter notebooks
 * Fix handling of conflicts between posts/pages and indexes generated
   by ``CATEGORY_PAGES_FOLLOW_DESTPATH``
 * Fix default date format to ``yyyy-MM-dd`` to avoid bug with ISO
