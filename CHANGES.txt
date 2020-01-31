@@ -21,6 +21,8 @@ Bugfixes
 * Show tracebacks when ``conf.py`` cannot be imported
 * Fix loading complex config files that import modules (Issue #3314)
 * Fix behavior of header demotion for negative values
+* If ``FILE_METADATA_REGEXP`` is set, load metadata from the filename
+  first, then continue with the other sources (Issue #3344)
 
 Other compatibility information
 -------------------------------
