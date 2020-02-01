@@ -1020,7 +1020,15 @@ def get_meta(post, lang):
 
     is_two_file = bool(metafile_meta)
 
-    # Fetch compiler metadata.
+    # Filename-based metadata extractors (priority 1).
+    if config.get('FILE_METADATA_REGEXP'):
+        extractors = metadata_extractors_by['source'].get(metadata_extractors.MetaSource.filename, [])
+        for extractor in extractors:
+            if not metadata_extractors.check_conditions(post, post.source_path, extractor.conditions, config, None):
+                continue
+            meta.update(extractor.extract_filename(post.source_path, lang))
+
+    # Fetch compiler metadata (priority 2, overrides filename-based metadata).
     compiler_meta = {}
 
     if (getattr(post, 'compiler', None) and post.compiler.supports_metadata and
@@ -1029,20 +1037,12 @@ def get_meta(post, lang):
         used_extractor = post.compiler
         meta.update(compiler_meta)
 
-    # Meta files and inter-file metadata override compiler metadata
+    # Meta files and inter-file metadata (priority 3, overrides compiler and filename-based metadata).
     if not metafile_meta:
         new_meta, used_extractor = get_metadata_from_file(post.source_path, post, config, lang, metadata_extractors_by)
         meta.update(new_meta)
     else:
         meta.update(metafile_meta)
-
-    # Filename-based metadata extractors (fallback only)
-    if not meta:
-        extractors = metadata_extractors_by['source'].get(metadata_extractors.MetaSource.filename, [])
-        for extractor in extractors:
-            if not metadata_extractors.check_conditions(post, post.source_path, extractor.conditions, config, None):
-                continue
-            meta.update(extractor.extract_filename(post.source_path, lang))
 
     if lang is None:
         # Only perform these checks for the default language
