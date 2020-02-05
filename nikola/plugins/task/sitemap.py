@@ -164,7 +164,7 @@ class Sitemap(LateTask):
                         continue  # We already mapped the folder
                     if os.path.splitext(fname)[-1] in mapped_exts:
                         real_path = os.path.join(root, fname)
-                        path = os.path.relpath(real_path, output)
+                        path = syspath = os.path.relpath(real_path, output)
                         if path.endswith(kw['index_file']) and kw['strip_indexes']:
                             # ignore index files when stripping urls
                             continue

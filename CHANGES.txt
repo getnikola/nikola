@@ -10,6 +10,8 @@ Features
 Bugfixes
 --------
 
+* Fix hiding future posts in sitemaps for posts without pretty URLs
+  (Issue #3339)
 * Pass the correct parameters to shortcodes in jupyter notebooks
 * Fix handling of conflicts between posts/pages and indexes generated
   by ``CATEGORY_PAGES_FOLLOW_DESTPATH``

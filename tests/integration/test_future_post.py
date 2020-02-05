@@ -50,6 +50,7 @@ def test_future_post_not_in_indexes(build, output_dir, filename):
         content = inf.read()
     assert "foo/" in content
     assert "bar/" not in content
+    assert "baz" not in content
 
 
 @pytest.fixture(scope="module")
@@ -87,6 +88,19 @@ def build(target_dir):
 .. title: bar
 .. slug: bar
 .. date: %s
+"""
+            % future_datetime
+        )
+
+    with io.open(
+        os.path.join(target_dir, "posts", "empty3.txt"), "w+", encoding="utf8"
+    ) as future_post:
+        future_post.write(
+            """\
+.. title: baz
+.. slug: baz
+.. date: %s
+.. pretty_url: false
 """
             % future_datetime
         )
