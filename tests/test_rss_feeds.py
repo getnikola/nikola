@@ -99,12 +99,14 @@ def rss_feed_content(blog_url, config, default_locale):
     }
     meta_mock = mock.Mock(return_value=(defaultdict(str, default_post), None))
     with mock.patch("nikola.post.get_meta", meta_mock):
-        with mock.patch(
-            "nikola.nikola.utils.os.path.isdir", mock.Mock(return_value=True)
-        ):
+        with \
+                mock.patch(
+                    "nikola.nikola.utils.os.path.isdir", mock.Mock(return_value=True)), \
+                mock.patch(
+                    "nikola.nikola.Post.text", mock.Mock(return_value="some long text")
+                ):
             with mock.patch(
-                "nikola.nikola.Post.text", mock.Mock(return_value="some long text")
-            ):
+                    "nikola.post.os.path.isfile", mock.Mock(return_value=True)):
                 example_post = Post(
                     "source.file",
                     config,
@@ -115,32 +117,32 @@ def rss_feed_content(blog_url, config, default_locale):
                     FakeCompiler(),
                 )
 
-                filename = "testfeed.rss"
-                opener_mock = mock.mock_open()
+            filename = "testfeed.rss"
+            opener_mock = mock.mock_open()
 
-                with mock.patch("nikola.nikola.io.open", opener_mock, create=True):
-                    Nikola().generic_rss_renderer(
-                        default_locale,
-                        "blog_title",
-                        blog_url,
-                        "blog_description",
-                        [example_post, ],
-                        filename,
-                        True,
-                        False,
-                    )
+            with mock.patch("nikola.nikola.io.open", opener_mock, create=True):
+                Nikola().generic_rss_renderer(
+                    default_locale,
+                    "blog_title",
+                    blog_url,
+                    "blog_description",
+                    [example_post, ],
+                    filename,
+                    True,
+                    False,
+                )
 
-                opener_mock.assert_called_once_with(filename, "w+", encoding="utf-8")
+            opener_mock.assert_called_once_with(filename, "w+", encoding="utf-8")
 
-                # Python 3 / unicode strings workaround
-                # lxml will complain if the encoding is specified in the
-                # xml when running with unicode strings.
-                # We do not include this in our content.
-                file_content = [call[1][0] for call in opener_mock.mock_calls[2:-1]][0]
-                splitted_content = file_content.split("\n")
-                # encoding_declaration = splitted_content[0]
-                content_without_encoding_declaration = splitted_content[1:]
-                yield "\n".join(content_without_encoding_declaration)
+            # Python 3 / unicode strings workaround
+            # lxml will complain if the encoding is specified in the
+            # xml when running with unicode strings.
+            # We do not include this in our content.
+            file_content = [call[1][0] for call in opener_mock.mock_calls[2:-1]][0]
+            splitted_content = file_content.split("\n")
+            # encoding_declaration = splitted_content[0]
+            content_without_encoding_declaration = splitted_content[1:]
+            yield "\n".join(content_without_encoding_declaration)
 
 
 @pytest.fixture
