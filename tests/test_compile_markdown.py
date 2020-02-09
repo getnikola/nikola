@@ -31,8 +31,8 @@ from .helper import FakeSite
 <table class="codehilitetable"><tr><td class="linenos">\
 <div class="linenodiv"><pre>1</pre></div>\
 </td><td class="code"><pre class="code literal-block"><span></span>\
-<span class="kn">from</span> <span class="nn">this</span>
-</pre>
+<code><span class="kn">from</span> <span class="nn">this</span>
+</code></pre>
 </td></tr></table>
 """,
             id="hilite",
