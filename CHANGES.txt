@@ -1,5 +1,5 @@
 New in master
-============
+=============
 
 Features
 --------
@@ -7,6 +7,8 @@ Features
 Bugfixes
 --------
 
+* Output a more informative error when files are missing due to
+  broken symlinks or incorrect ``TRANSLATIONS_PATTERN`` values
 * Avoid installing ``tests`` package to site-packages, remove it from
   your environment if it was inadvertently added (Issue #3348)
 

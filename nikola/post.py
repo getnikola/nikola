@@ -149,6 +149,14 @@ class Post(object):
             if os.path.isfile(get_translation_candidate(self.config, self.source_path, lang)):
                 self.translated_to.add(lang)
 
+        # If we don't have anything in translated_to, the file does not exist
+        if not self.translated_to and os.path.isfile(self.source_path):
+            raise Exception(("Could not find translations for {}, check your "
+                            "TRANSLATIONS_PATTERN").format(self.source_path))
+        elif not self.translated_to:
+            raise Exception(("Cannot use {} (not a file, perhaps a broken "
+                            "symbolic link?)").format(self.source_path))
+
         default_metadata, default_used_extractor = get_meta(self, lang=None)
 
         self.meta = Functionary(lambda: None, self.default_lang)
