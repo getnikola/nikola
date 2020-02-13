@@ -131,9 +131,10 @@ class MakoTemplates(TemplateSystem):
             dep_filenames = self.get_deps(template.filename)
             deps = [template.filename]
             for fname in dep_filenames:
-                deps += [fname] + self.get_deps(fname)
-            self.cache[template_name] = deps
-        return list(self.cache[template_name])
+                # yes, it uses forward slashes on Windows
+                deps += self.template_deps(fname.split('/')[-1])
+            self.cache[template_name] = list(set(deps))
+        return self.cache[template_name]
 
     def get_template_path(self, template_name):
         """Get the path to a template or return None."""

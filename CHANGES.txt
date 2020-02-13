@@ -7,6 +7,8 @@ Features
 Bugfixes
 --------
 
+* Handle multiple level of inherit/import nesting in Mako templates
+  correctly (Issue #3349)
 * Output a more informative error when files are missing due to
   broken symlinks or incorrect ``TRANSLATIONS_PATTERN`` values
 * Avoid installing ``tests`` package to site-packages, remove it from
