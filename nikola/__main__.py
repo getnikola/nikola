@@ -36,8 +36,8 @@ import doit.cmd_base
 from collections import defaultdict
 
 from blinker import signal
-from doit.cmd_base import TaskLoader, _wrap
 from doit.cmd_auto import Auto as DoitAuto
+from doit.cmd_base import TaskLoader, _wrap
 from doit.cmd_clean import Clean as DoitClean
 from doit.cmd_completion import TabCompletion
 from doit.cmd_help import Help as DoitHelp
