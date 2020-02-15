@@ -84,8 +84,7 @@ class CommandPlugin(Command):
             'short': 'u',
             'long': 'url',
             'type': str,
-            'help': "URL for the plugin repository (default: "
-                    "https://plugins.getnikola.com/v8/plugins.json)",
+            'help': "URL for the plugin repository",
             'default': 'https://plugins.getnikola.com/v8/plugins.json'
         },
         {

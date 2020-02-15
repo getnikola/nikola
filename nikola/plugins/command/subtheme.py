@@ -58,7 +58,7 @@ class CommandSubTheme(Command):
             'long': 'name',
             'default': 'custom',
             'type': str,
-            'help': 'New theme name (default: custom)',
+            'help': 'New theme name',
         },
         {
             'name': 'swatch',
@@ -72,7 +72,7 @@ class CommandSubTheme(Command):
             'short': 'p',
             'long': 'parent',
             'default': 'bootstrap4',
-            'help': 'Parent theme name (default: bootstrap4)',
+            'help': 'Parent theme name',
         },
     ]
 

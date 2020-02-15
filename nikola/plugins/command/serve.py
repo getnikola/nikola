@@ -61,7 +61,7 @@ class CommandServe(Command):
             'long': 'port',
             'default': 8000,
             'type': int,
-            'help': 'Port number (default: 8000)',
+            'help': 'Port number',
         },
         {
             'name': 'address',
@@ -69,7 +69,7 @@ class CommandServe(Command):
             'long': 'address',
             'type': str,
             'default': '',
-            'help': 'Address to bind (default: 0.0.0.0 -- all local IPv4 interfaces)',
+            'help': 'Address to bind, defaults to all local IPv4 interfaces',
         },
         {
             'name': 'detach',
