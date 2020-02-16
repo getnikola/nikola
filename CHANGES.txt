@@ -4,6 +4,9 @@ New in master
 Features
 --------
 
+* Make RSS links show the current language feed first so readers
+  prefer it (Issue #3248)
+
 Bugfixes
 --------
 

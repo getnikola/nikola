@@ -42,7 +42,7 @@
                 <link rel="alternate" type="application/rss+xml" title="RSS for ${kind} ${name|h} (${language})" hreflang="${language}" href="${_link(kind + "_rss", classification, language)}">
             % endfor
         % else:
-            % for language in sorted(translations):
+            % for language in translations_feedorder:
                 % if (classification or classification == '') and kind != 'index':
                     ${_head_feed_link('application/rss+xml', 'RSS for ' + kind + ' ' + classification, 'rss', classification, kind, language)}
                 % else:
@@ -60,7 +60,7 @@
                 <link rel="alternate" type="application/atom+xml" title="Atom for ${kind} ${name|h} (${language})" hreflang="${language}" href="${_link(kind + "_atom", classification, language)}">
             % endfor
         % else:
-            % for language in sorted(translations):
+            % for language in translations_feedorder:
                 % if (classification or classification == '') and kind != 'index':
                     ${_head_feed_link('application/atom+xml', 'Atom for ' + kind + ' ' + classification, 'atom', classification, kind, language)}
                 % else:
@@ -98,7 +98,7 @@
                 </p>
             % endfor
         % else:
-            % for language in sorted(translations):
+            % for language in translations_feedorder:
                 <p class="feedlink">
                     % if generate_atom:
                         ${_html_feed_link('application/atom+xml', 'Atom feed', 'atom', classification, kind, language)}
