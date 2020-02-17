@@ -1361,6 +1361,10 @@ class Nikola(object):
             local_context[k] = local_context[k](local_context['lang'])
         local_context['is_rtl'] = local_context['lang'] in LEGAL_VALUES['RTL_LANGUAGES']
         local_context['url_type'] = self.config['URL_TYPE'] if url_type is None else url_type
+        local_context["translations_feedorder"] = sorted(
+            local_context["translations"],
+            key=lambda x: (int(x != local_context['lang']), x)
+        )
         # string, arguments
         local_context["formatmsg"] = lambda s, *a: s % a
         for h in local_context['template_hooks'].values():
