@@ -73,7 +73,7 @@ class CommandGitHubDeploy(Command):
             'long': 'message',
             'default': 'Nikola auto commit.',
             'type': str,
-            'help': 'Commit message (default: Nikola auto commit.)',
+            'help': 'Commit message',
         },
     ]
 

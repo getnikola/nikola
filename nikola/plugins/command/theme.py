@@ -91,8 +91,7 @@ class CommandTheme(Command):
             'short': 'u',
             'long': 'url',
             'type': str,
-            'help': "URL for the theme repository (default: "
-                    "https://themes.getnikola.com/v8/themes.json)",
+            'help': "URL for the theme repository",
             'default': 'https://themes.getnikola.com/v8/themes.json'
         },
         {
@@ -124,14 +123,14 @@ class CommandTheme(Command):
             'long': 'engine',
             'type': str,
             'default': 'mako',
-            'help': 'Engine to use for new theme (mako or jinja -- default: mako)',
+            'help': 'Engine to use for new theme (mako or jinja)',
         },
         {
             'name': 'new_parent',
             'long': 'parent',
             'type': str,
             'default': 'base',
-            'help': 'Parent to use for new theme (default: base)',
+            'help': 'Parent to use for new theme',
         },
         {
             'name': 'new_legacy_meta',

@@ -30,12 +30,14 @@ import importlib.util
 import os
 import shutil
 import sys
+import textwrap
 import traceback
+import doit.cmd_base
 from collections import defaultdict
 
 from blinker import signal
 from doit.cmd_auto import Auto as DoitAuto
-from doit.cmd_base import TaskLoader
+from doit.cmd_base import TaskLoader, _wrap
 from doit.cmd_clean import Clean as DoitClean
 from doit.cmd_completion import TabCompletion
 from doit.cmd_help import Help as DoitHelp
@@ -378,6 +380,53 @@ class DoitNikola(DoitMain):
     def print_version():
         """Print Nikola version."""
         print("Nikola v" + __version__)
+
+
+# Override Command.help() to make it more readable and to remove
+# some doit-specific stuff. Based on doit's implementation.
+# (see Issue #3342)
+def _command_help(self: Command):
+    """Return help text for a command."""
+    text = []
+
+    usage = "{} {} {}".format(self.bin_name, self.name, self.doc_usage)
+    text.extend(textwrap.wrap(usage, subsequent_indent='  '))
+    text.extend(_wrap(self.doc_purpose, 4))
+
+    text.append("\nOptions:")
+    options = defaultdict(list)
+    for opt in self.cmdparser.options:
+        options[opt.section].append(opt)
+    for section, opts in sorted(options.items()):
+        if section:
+            section_name = '\n{}'.format(section)
+            text.extend(_wrap(section_name, 2))
+        for opt in opts:
+            # ignore option that cant be modified on cmd line
+            if not (opt.short or opt.long):
+                continue
+            text.extend(_wrap(opt.help_param(), 4))
+            opt_help = opt.help
+            if '%(default)s' in opt_help:
+                opt_help = opt.help % {'default': opt.default}
+            elif opt.default != '' and opt.default is not False and opt.default is not None:
+                opt_help += ' [default: {}]'.format(opt.default)
+            opt_choices = opt.help_choices()
+            desc = '{} {}'.format(opt_help, opt_choices)
+            text.extend(_wrap(desc, 8))
+
+            # print bool inverse option
+            if opt.inverse:
+                text.extend(_wrap('--{}'.format(opt.inverse), 4))
+                text.extend(_wrap('opposite of --{}'.format(opt.long), 8))
+
+    if self.doc_description is not None:
+        text.append("\n\nDescription:")
+        text.extend(_wrap(self.doc_description, 4))
+    return "\n".join(text)
+
+
+doit.cmd_base.Command.help = _command_help
 
 
 def levenshtein(s1, s2):
