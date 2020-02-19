@@ -104,6 +104,12 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real',
 # Are you looking for 'generic_rss_renderer'?
 # It's defined in nikola.nikola.Nikola (the site object).
 
+# Aliases, previously for Python 2/3 compatibility.
+# TODO remove in v9
+bytes_str = bytes
+unicode_str = str
+unichr = chr
+
 # For compatibility with old logging setups.
 # TODO remove in v9?
 STDERR_HANDLER = None
