@@ -41,7 +41,7 @@ from lxml import etree
 from nikola.plugin_categories import Command
 from nikola import utils, hierarchy_utils
 from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN
-from nikola.utils import req_missing, unicode_str
+from nikola.utils import req_missing
 from nikola.plugins.basic_import import ImportMixin, links
 from nikola.plugins.command.init import (
     SAMPLE_CONF, prepare_config,
@@ -398,7 +398,7 @@ to
         # Add tag redirects
         for tag in self.all_tags:
             try:
-                if isinstance(tag, utils.bytes_str):
+                if isinstance(tag, bytes):
                     tag_str = tag.decode('utf8', 'replace')
                 else:
                     tag_str = tag
@@ -803,7 +803,7 @@ to
             """Write comment header line."""
             if header_content is None:
                 return
-            header_content = unicode_str(header_content).replace('\n', ' ')
+            header_content = str(header_content).replace('\n', ' ')
             line = '.. ' + header_field + ': ' + header_content + '\n'
             fd.write(line.encode('utf8'))
 
@@ -890,7 +890,7 @@ to
         path = unquote(parsed.path.strip('/'))
 
         try:
-            if isinstance(path, utils.bytes_str):
+            if isinstance(path, bytes):
                 path = path.decode('utf8', 'replace')
             else:
                 path = path

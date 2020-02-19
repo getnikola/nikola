@@ -1475,7 +1475,7 @@ class Nikola(object):
                         # python 3: already unicode
                         pass
                     nl = nl.encode('idna')
-                    if isinstance(nl, utils.bytes_str):
+                    if isinstance(nl, bytes):
                         nl = nl.decode('latin-1')  # so idna stays unchanged
                     dst = urlunsplit((dst_url.scheme,
                                       nl,
@@ -2441,7 +2441,7 @@ class Nikola(object):
         utils.makedirs(dst_dir)
         with io.open(output_path, "w+", encoding="utf-8") as atom_file:
             data = lxml.etree.tostring(feed_root.getroottree(), encoding="UTF-8", pretty_print=True, xml_declaration=True)
-            if isinstance(data, utils.bytes_str):
+            if isinstance(data, bytes):
                 data = data.decode('utf-8')
             atom_file.write(data)
 

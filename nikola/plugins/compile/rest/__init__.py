@@ -44,7 +44,6 @@ from nikola.nikola import LEGAL_VALUES
 from nikola.metadata_extractors import MetaCondition
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import (
-    unicode_str,
     makedirs,
     write_metadata,
     LocaleBorg,
@@ -134,7 +133,7 @@ class CompileRest(PageCompiler):
             self.site.rst_transforms.append(RemoveDocinfo)
         output, error_level, deps, _ = rst2html(
             new_data, settings_overrides=settings_overrides, logger=self.logger, source_path=source_path, l_add_ln=add_ln, transforms=self.site.rst_transforms)
-        if not isinstance(output, unicode_str):
+        if not isinstance(output, str):
             # To prevent some weird bugs here or there.
             # Original issue: empty files.  `output` became a bytestring.
             output = output.decode('utf-8')

@@ -318,7 +318,7 @@ class CommandNewPost(Command):
             while not title:
                 title = utils.ask('Title')
 
-        if isinstance(title, utils.bytes_str):
+        if isinstance(title, bytes):
             try:
                 title = title.decode(sys.stdin.encoding)
             except (AttributeError, TypeError):  # for tests
@@ -328,7 +328,7 @@ class CommandNewPost(Command):
         if not path:
             slug = utils.slugify(title, lang=self.site.default_lang)
         else:
-            if isinstance(path, utils.bytes_str):
+            if isinstance(path, bytes):
                 try:
                     path = path.decode(sys.stdin.encoding)
                 except (AttributeError, TypeError):  # for tests
@@ -342,7 +342,7 @@ class CommandNewPost(Command):
             else:
                 slug = utils.slugify(os.path.splitext(os.path.basename(path))[0], lang=self.site.default_lang)
 
-        if isinstance(author, utils.bytes_str):
+        if isinstance(author, bytes):
             try:
                 author = author.decode(sys.stdin.encoding)
             except (AttributeError, TypeError):  # for tests
