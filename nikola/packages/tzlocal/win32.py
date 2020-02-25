@@ -1,12 +1,8 @@
-"""tzlocal for Windows."""
-
+"""Windows support for tzlocal."""
 try:
     import _winreg as winreg
 except ImportError:
-    try:
-        import winreg
-    except ImportError:
-        pass  # not windows
+    import winreg
 
 from .windows_tz import win_tz
 
@@ -24,7 +20,7 @@ def valuestodict(key):
 
 
 def get_localzone_name():
-    """Get local time zone name."""
+    """Get local zone name."""
     # Windows is special. It has unique time zone names (in several
     # meanings of the word) available, but unfortunately, they can be
     # translated to the language of the operating system, so we need to
@@ -36,18 +32,19 @@ def get_localzone_name():
     localtz = winreg.OpenKey(handle, TZLOCALKEYNAME)
     keyvalues = valuestodict(localtz)
     localtz.Close()
-    if 'TimeZoneKeyName' in keyvalues:
+
+    if "TimeZoneKeyName" in keyvalues:
         # Windows 7 (and Vista?)
 
         # For some reason this returns a string with loads of NUL bytes at
         # least on some systems. I don't know if this is a bug somewhere, I
         # just work around it.
-        tzkeyname = keyvalues['TimeZoneKeyName'].split('\x00', 1)[0]
+        tzkeyname = keyvalues["TimeZoneKeyName"].split("\x00", 1)[0]
     else:
         # Windows 2000 or XP
 
         # This is the localized name:
-        tzwin = keyvalues['StandardName']
+        tzwin = keyvalues["StandardName"]
 
         # Open the list of timezones to look up the real name:
         TZKEYNAME = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Time Zones"
@@ -60,15 +57,20 @@ def get_localzone_name():
             sub = winreg.OpenKey(tzkey, subkey)
             data = valuestodict(sub)
             sub.Close()
-            if data['Std'] == tzwin:
-                tzkeyname = subkey
-                break
+            try:
+                if data["Std"] == tzwin:
+                    tzkeyname = subkey
+                    break
+            except KeyError:
+                # This timezone didn't have proper configuration.
+                # Ignore it.
+                pass
 
         tzkey.Close()
         handle.Close()
 
     if tzkeyname is None:
-        raise LookupError('Can not find Windows timezone configuration')
+        raise LookupError("Can not find Windows timezone configuration")
 
     timezone = win_tz.get(tzkeyname)
     if timezone is None:
@@ -85,6 +87,7 @@ def get_localzone():
     global _cache_tz
     if _cache_tz is None:
         _cache_tz = get_localzone_name()
+
     return _cache_tz
 
 
