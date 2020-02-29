@@ -10,6 +10,8 @@ Features
 Bugfixes
 --------
 
+* Fix RTL mirroring in base theme (``:dir()`` pseudo-class is Firefox only)
+  (Issue #3353)
 * Work around Bootstrap 4 alignment bug for RTL languages
   (Issue #3353)
 * Handle multiple level of inherit/import nesting in Mako templates

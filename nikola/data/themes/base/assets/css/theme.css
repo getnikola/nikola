@@ -67,9 +67,9 @@ body {
 	margin-right: 1.5em;
 }
 
-#menu ul li:dir(rtl),
-#toptranslations ul li:dir(rtl),
-#toptranslations h2:dir(rtl) {
+html[dir="rtl"] #menu ul li,
+html[dir="rtl"] #toptranslations ul li,
+html[dir="rtl"] #toptranslations h2 {
 	margin-left: 1.5em;
 	margin-right: 0;
 }
@@ -79,7 +79,7 @@ body {
 	float: right;
 }
 
-#toptranslations:dir(rtl) {
+html[dir="rtl"] #toptranslations {
 	text-align: left;
 	float: left;
 }
@@ -140,19 +140,24 @@ body {
 .archivenav .pager .next:after {
 	content: " →";
 }
-.postpromonav .pager .previous:dir(rtl):after,
-.archivenav .pager .previous:dir(rtl):after {
+html[dir="rtl"] .postpromonav .pager .previous:after,
+html[dir="rtl"] .archivenav .pager .previous:after {
 	content: " →";
 }
 .postpromonav .pager .previous:before,
 .archivenav .pager .previous:before {
 	content: "← ";
 }
-.postpromonav .pager .next:dir(rtl):before,
-.archivenav .pager .next:dir(rtl):before {
+html[dir="rtl"] .postpromonav .pager .next:before,
+html[dir="rtl"] .archivenav .pager .next:before {
 	content: "← ";
 }
-
+html[dir="rtl"] .postpromonav .pager .next:after,
+html[dir="rtl"] .archivenav .pager .next:after,
+html[dir="rtl"] .postpromonav .pager .previous:before,
+html[dir="rtl"] .archivenav .pager .previous:before {
+	content: "";
+}
 .metadata p:first-of-type:before,
 .postpromonav .tags li:first-of-type:before,
 .translationslist p:first-of-type:before {
@@ -174,8 +179,8 @@ body {
 .archivenav .pager .next {
 	float: right;
 }
-.postpromonav .pager .next:dir(rtl),
-.archivenav .pager .next:dir(rtl) {
+html[dir="rtl"] .postpromonav .pager .next,
+html[dir="rtl"] .archivenav .pager .next {
 	float: left;
 }
 
@@ -183,16 +188,16 @@ body {
 .archivenav .pager .previous {
 	float: left;
 }
-.postpromonav .pager .previous:dir(rtl),
-.archivenav .pager .previous:dir(rtl) {
+html[dir="rtl"] .postpromonav .pager .previous,
+html[dir="rtl"] .archivenav .pager .previous {
 	float: right;
 }
 
 .archivenav .pager .disabled,
 .archivenav .pager .disabled a,
 .archivenav .pager .disabled:link {
-    color: #888;
-    cursor: not-allowed;
+	color: #888;
+	cursor: not-allowed;
 }
 
 .metadata p,
