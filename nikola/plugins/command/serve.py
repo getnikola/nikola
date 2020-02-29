@@ -132,13 +132,14 @@ class CommandServe(Command):
             sa = httpd.socket.getsockname()
             if ipv6:
                 server_url = "http://[{0}]:{1}/".format(*sa)
-            elif sa[0] == '0.0.0.0':
-                server_url = "http://127.0.0.1:{1}/".format(*sa)
             else:
                 server_url = "http://{0}:{1}/".format(*sa)
             self.logger.info("Serving on {0} ...".format(server_url))
 
             if options['browser']:
+                # Some browsers fail to load 0.0.0.0 (Issue #2755)
+                if sa[0] == '0.0.0.0':
+                    server_url = "http://127.0.0.1:{1}/".format(*sa)
                 self.logger.info("Opening {0} in the default web browser...".format(server_url))
                 webbrowser.open(server_url)
             if options['detach']:

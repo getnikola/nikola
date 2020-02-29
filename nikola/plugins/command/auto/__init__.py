@@ -248,8 +248,11 @@ class CommandAuto(Command):
         self.logger.info("Serving on {0} ...".format(server_url))
 
         if browser:
+            # Some browsers fail to load 0.0.0.0 (Issue #2755)
+            if host == '0.0.0.0':
+                server_url = "http://127.0.0.1:{1}/".format(host, port)
             self.logger.info("Opening {0} in the default web browser...".format(server_url))
-            webbrowser.open('http://{0}:{1}'.format(host, port))
+            webbrowser.open(server_url)
 
         # Run the event loop forever and handle shutdowns.
         try:
