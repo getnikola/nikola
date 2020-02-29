@@ -21,7 +21,7 @@ navbar-dark bg-dark
 {% endif %}
 ">
     <div class="container"><!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="{{ abs_link(_link("root", None, lang)) }}">
+        <a class="navbar-brand" href="{{ _link("root", None, lang) }}">
         {% if logo_url %}
             <img src="{{ logo_url }}" alt="{{ blog_title|e }}" id="logo" class="d-inline-block align-top">
         {% endif %}

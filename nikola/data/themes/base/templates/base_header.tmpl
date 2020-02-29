@@ -16,7 +16,7 @@
 </%def>
 
 <%def name="html_site_title()">
-    <h1 id="brand"><a href="${abs_link(_link("root", None, lang))}" title="${blog_title|h}" rel="home">
+    <h1 id="brand"><a href="${_link("root", None, lang)}" title="${blog_title|h}" rel="home">
     %if logo_url:
         <img src="${logo_url}" alt="${blog_title|h}" id="logo">
     %endif
