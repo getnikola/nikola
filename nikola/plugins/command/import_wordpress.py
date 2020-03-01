@@ -1210,7 +1210,7 @@ def modernize_qtranslate_tags(xml_bytes):
     """
     Uniformize the "tag" used by various version of qtranslate.
 
-    The resutling byte string will only contain one set of qtranslate tags
+    The resulting byte string will only contain one set of qtranslate tags
     (namely [:LG] and [:]), older ones being converted to new ones.
     """
     old_start_lang = re.compile(b"<!--:?(\\w{2})-->")
