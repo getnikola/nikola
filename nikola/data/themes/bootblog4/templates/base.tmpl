@@ -24,7 +24,7 @@ ${template_hooks['extra_head']()}
             </div>
         </div>
           <div class="col-md-6 col-xs-10 col-sm-10 bootblog4-brand" style="width: auto;">
-            <a class="navbar-brand blog-header-logo text-dark" href="${abs_link(_link("root", None, lang))}">
+            <a class="navbar-brand blog-header-logo text-dark" href="${_link("root", None, lang)}">
         %if logo_url:
             <img src="${logo_url}" alt="${blog_title|h}" id="logo" class="d-inline-block align-top">
         %endif

@@ -157,7 +157,7 @@ lang="${lang}">
 <%def name="html_translations()">
     %for langname in sorted(translations):
         %if langname != lang:
-            <li class="nav-item"><a href="${abs_link(_link("root", None, langname))}" rel="alternate" hreflang="${langname}" class="nav-link">${messages("LANGUAGE", langname)}</a></li>
+            <li class="nav-item"><a href="${_link("root", None, langname)}" rel="alternate" hreflang="${langname}" class="nav-link">${messages("LANGUAGE", langname)}</a></li>
         %endif
     %endfor
 </%def>

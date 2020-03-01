@@ -10,6 +10,7 @@ Features
 Bugfixes
 --------
 
+* Don’t force absolute links for brand/languages (Issue #3229)
 * Fix RTL mirroring in base theme (``:dir()`` pseudo-class is Firefox only)
   (Issue #3353)
 * Work around Bootstrap 4 alignment bug for RTL languages

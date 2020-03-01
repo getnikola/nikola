@@ -16,7 +16,7 @@
 {% endmacro %}
 
 {% macro html_site_title() %}
-    <h1 id="brand"><a href="{{ abs_link(_link("root", None, lang)) }}" title="{{ blog_title|e }}" rel="home">
+    <h1 id="brand"><a href="{{ _link("root", None, lang) }}" title="{{ blog_title|e }}" rel="home">
     {% if logo_url %}
         <img src="{{ logo_url }}" alt="{{ blog_title|e }}" id="logo">
     {% endif %}

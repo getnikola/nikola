@@ -123,7 +123,7 @@ lang="{{ lang }}">
     <ul class="translations">
     {% for langname in translations|sort %}
         {% if langname != lang %}
-            <li><a href="{{ abs_link(_link("root", None, langname)) }}" rel="alternate" hreflang="{{ langname }}">{{ messages("LANGUAGE", langname) }}</a></li>
+            <li><a href="{{ _link("root", None, langname) }}" rel="alternate" hreflang="{{ langname }}">{{ messages("LANGUAGE", langname) }}</a></li>
         {% endif %}
     {% endfor %}
     </ul>
