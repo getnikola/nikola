@@ -218,6 +218,10 @@ ul.pager li a {
     border-bottom-left-radius: 0.5rem;
 }
 
+pre.code {
+    white-space: pre-wrap;
+}
+
 /* Override incorrect Bootstrap 4 default */
 html[dir="rtl"] body {
     text-align: right;
