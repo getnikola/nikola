@@ -133,14 +133,6 @@ article.post-micro {
     border-top: 1px solid #e5e5e5;
 }
 
-.codetable {
-    table-layout: fixed;
-}
-
-.codetable pre {
-    overflow-x: scroll;
-}
-
 /* hat tip bootstrap/html5 boilerplate */
 @media print {
     *, *:before, *:after {
@@ -214,23 +206,16 @@ ul.pager li a {
     border-radius: .25rem;
 }
 
-.codetable td {
-    padding: 0;
-    margin: 0;
-    border-radius: 0;
+.codetable {
+    border-radius: 0.5rem;
 }
 
-.codetable td.linenos pre {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-right: none;
+.codetable tr:first-child td.linenos {
+    border-top-left-radius: 0.5rem;
 }
 
-.codetable td.code pre.code {
-    margin-left: 0;
-    margin-right: 0;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+.codetable tr:last-child td.linenos {
+    border-bottom-left-radius: 0.5rem;
 }
 
 /* Override incorrect Bootstrap 4 default */
