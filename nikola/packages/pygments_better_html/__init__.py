@@ -7,7 +7,7 @@ Portions copyright © 2006-2019, the Pygments authors. (2-clause BSD).
 """
 
 __all__ = ["BetterHtmlFormatter"]
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 import enum
 import re
@@ -64,7 +64,7 @@ class BetterHtmlFormatter(HtmlFormatter):
         """
         base = super().get_style_defs(arg)
         new_styles = (
-            ("{0} table, {0} tr, {0} td", "border-spacing: 0; border-collapse: collapse"),
+            ("{0} table, {0} tr, {0} td", "border-spacing: 0; border-collapse: separate; padding: 0"),
             ("{0} pre", "white-space: pre-wrap; line-height: normal"),
             (
                 "{0}table td.linenos",

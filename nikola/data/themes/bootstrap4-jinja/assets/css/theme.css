@@ -162,10 +162,22 @@ article.post-micro {
     }
 }
 
-pre {
+pre, .codetable {
     border: 1px solid #ccc;
     border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+pre {
     padding: 0.75rem;
+}
+
+.codetable tr:first-child td.linenos {
+    border-top-left-radius: 0.25rem;
+}
+
+.codetable tr:last-child td.linenos {
+    border-bottom-left-radius: 0.25rem;
 }
 
 .postindexpager {
@@ -204,18 +216,6 @@ ul.pager li a {
     line-height: 1.25;
     border: 1px solid #ddd;
     border-radius: .25rem;
-}
-
-.codetable {
-    border-radius: 0.5rem;
-}
-
-.codetable tr:first-child td.linenos {
-    border-top-left-radius: 0.5rem;
-}
-
-.codetable tr:last-child td.linenos {
-    border-bottom-left-radius: 0.5rem;
 }
 
 pre.code {
