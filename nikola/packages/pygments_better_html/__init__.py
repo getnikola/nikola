@@ -7,12 +7,19 @@ Portions copyright © 2006-2019, the Pygments authors. (2-clause BSD).
 """
 
 __all__ = ["BetterHtmlFormatter"]
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 import enum
+import re
 import warnings
 
 from pygments.formatters.html import HtmlFormatter
+
+MANY_SPACES = re.compile("(  +)")
+
+
+def _sp_to_nbsp(m):
+    return "&nbsp;" * (m.end() - m.start())
 
 
 class BetterLinenos(enum.Enum):
@@ -66,7 +73,10 @@ class BetterHtmlFormatter(HtmlFormatter):
             # Hack for Safari (user-select does not affect copy-paste)
             ("{0}table td.linenos code:before", "content: attr(data-line-number)"),
             ("{0}table td.code", "overflow-wrap: normal; border-collapse: collapse"),
-            ("{0}table td.code code", "white-space: pre-wrap"),
+            (
+                "{0}table td.code code",
+                "overflow: unset; border: none; padding: 0; margin: 0; white-space: pre-wrap; line-height: unset; background: none",
+            ),
             ("{0} .lineno.nonumber", "list-style: none"),
         )
         new_styles_code = []
@@ -130,21 +140,21 @@ class BetterHtmlFormatter(HtmlFormatter):
         )
         for lndata, cl in zip(lines, codelines):
             ln_b, ln, ln_a = lndata
+            cl = MANY_SPACES.sub(_sp_to_nbsp, cl.rstrip("\n"))
             if nocls:
                 yield 0, (
-                    '<tr><td class="linenos linenodiv" style="background-color: #f0f0f0; padding-right: 10px">' +
-                    ln_b + '<code data-line-number="' + ln + '"></code>' + ln_a + '</td><td class="code"><code>' +
-                    cl.rstrip("\n") + "</code></td></tr>"
+                    '<tr><td class="linenos linenodiv" style="background-color: #f0f0f0; padding-right: 10px">' + ln_b +
+                    '<code data-line-number="' + ln + '"></code>' + ln_a + '</td><td class="code"><code>' + cl + "</code></td></tr>"
                 )
             else:
                 yield 0, (
-                    '<tr><td class="linenos linenodiv">' + ln_b + '<code data-line-number="' + ln + '"></code>' +
-                    ln_a + '</td><td class="code"><code>' + cl.rstrip("\n") + "</code></td></tr>"
+                    '<tr><td class="linenos linenodiv">' + ln_b + '<code data-line-number="' + ln +
+                    '"></code>' + ln_a + '</td><td class="code"><code>' + cl + "</code></td></tr>"
                 )
         yield 0, "</table></div>"
 
     def _wrap_inlinelinenos(self, inner):
-        # Override with preferred method
+        # Override with new method
         return self._wrap_ollineos(self, inner)
 
     def _wrap_ollinenos(self, inner):
