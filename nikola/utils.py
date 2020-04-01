@@ -53,12 +53,14 @@ from zipfile import ZipFile as zipf
 import babel.dates
 import dateutil.parser
 import dateutil.tz
+import pygments.formatters
+import pygments.formatters._mapping
 import PyRSS2Gen as rss
 from blinker import signal
 from doit import tools
 from doit.cmdparse import CmdParse
 from pkg_resources import resource_filename
-from pygments.formatters import HtmlFormatter
+from nikola.packages.pygments_better_html import BetterHtmlFormatter
 from unidecode import unidecode
 
 # Renames
@@ -1615,17 +1617,23 @@ def options2docstring(name, options):
     return '\n'.join(result)
 
 
-class NikolaPygmentsHTML(HtmlFormatter):
+class NikolaPygmentsHTML(BetterHtmlFormatter):
     """A Nikola-specific modification of Pygments' HtmlFormatter."""
 
-    def __init__(self, anchor_ref, classes=None, linenos='table', linenostart=1):
+    def __init__(self, anchor_ref=None, classes=None, **kwargs):
         """Initialize formatter."""
         if classes is None:
             classes = ['code', 'literal-block']
+        if anchor_ref:
+            kwargs['lineanchors'] = slugify(
+                anchor_ref, lang=LocaleBorg().current_lang, force=True)
         self.nclasses = classes
-        super(NikolaPygmentsHTML, self).__init__(
-            cssclass='code', linenos=linenos, linenostart=linenostart, nowrap=False,
-            lineanchors=slugify(anchor_ref, lang=LocaleBorg().current_lang, force=True), anchorlinenos=True)
+        kwargs['cssclass'] = 'code'
+        if kwargs.get('linenos') not in {'table', 'inline', 'ol', False}:
+            kwargs['linenos'] = 'table'
+        kwargs['anchorlinenos'] = kwargs['linenos'] == 'table'
+        kwargs['nowrap'] = False
+        super(NikolaPygmentsHTML, self).__init__(**kwargs)
 
     def wrap(self, source, outfile):
         """Wrap the ``source``, which is a generator yielding individual lines, in custom generators."""
@@ -1641,6 +1649,10 @@ class NikolaPygmentsHTML(HtmlFormatter):
         for tup in source:
             yield tup
         yield 0, '</pre>'
+
+
+# For consistency, override the default formatter.
+pygments.formatters._formatter_cache['HTML'] = NikolaPygmentsHTML
 
 
 def get_displayed_page_number(i, num_pages, site):

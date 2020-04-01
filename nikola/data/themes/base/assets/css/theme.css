@@ -282,10 +282,6 @@ img {
 	margin-right: 0;
 }
 
-.codetable .linenos {
-	padding-right: 10px;
-}
-
 .sr-only {
 	position: absolute;
 	width: 1px;
@@ -308,7 +304,7 @@ img {
 }
 
 pre.code, code {
-	white-space: pre;
+	white-space: pre-wrap;
 	word-wrap: normal;
 	overflow: auto;
 }
