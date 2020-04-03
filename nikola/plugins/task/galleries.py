@@ -571,7 +571,10 @@ class Galleries(Task, ImageProcessor):
             ],
             'clean': True,
             'uptodate': [utils.config_changed({
-                1: self.kw['thumbnail_size']
+                1: self.kw['thumbnail_size'],
+                2: self.kw['preserve_exif_data'],
+                3: self.kw['exif_whitelist'],
+                4: self.kw['preserve_icc_profiles'],
             }, 'nikola.plugins.task.galleries:resize_thumb')],
         }, self.kw['filters'])
 
@@ -587,7 +590,10 @@ class Galleries(Task, ImageProcessor):
             ],
             'clean': True,
             'uptodate': [utils.config_changed({
-                1: self.kw['max_image_size']
+                1: self.kw['max_image_size'],
+                2: self.kw['preserve_exif_data'],
+                3: self.kw['exif_whitelist'],
+                4: self.kw['preserve_icc_profiles'],
             }, 'nikola.plugins.task.galleries:resize_max')],
         }, self.kw['filters'])
 
