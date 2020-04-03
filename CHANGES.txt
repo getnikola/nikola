@@ -23,6 +23,8 @@ Bugfixes
   broken symlinks or incorrect ``TRANSLATIONS_PATTERN`` values
 * Avoid installing ``tests`` package to site-packages, remove it from
   your environment if it was inadvertently added (Issue #3348)
+* Mark gallery images as "dirty" if EXIF configuration changes (Issue
+  #3357)
 
 New in v8.0.4
 =============
