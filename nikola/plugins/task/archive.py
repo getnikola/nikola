@@ -74,7 +74,7 @@ class Archive(Taxonomy):
         # Finish setup
         self.show_list_as_subcategories_list = not site.config['CREATE_FULL_ARCHIVES']
         self.show_list_as_index = site.config['ARCHIVES_ARE_INDEXES']
-        self.template_for_single_list = "archiveindex.tmpl" if site.config['ARCHIVES_ARE_INDEXES'] else "list_post.tmpl"
+        self.template_for_single_list = "archiveindex.tmpl" if site.config['ARCHIVES_ARE_INDEXES'] else "archive.tmpl"
         # Determine maximum hierarchy height
         if site.config['CREATE_DAILY_ARCHIVE'] or site.config['CREATE_FULL_ARCHIVES']:
             self.max_levels = 3
