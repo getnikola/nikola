@@ -27,6 +27,8 @@ Bugfixes
   (Issue #3362)
 * Mark gallery images as "dirty" if EXIF configuration changes (Issue
   #3357)
+* Make gallery indexes depend on destination images to avoid
+  multithreading race condition (Issue #3361)
 
 New in v8.0.4
 =============
