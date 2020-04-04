@@ -504,7 +504,6 @@ class Galleries(Task, ImageProcessor):
             # (warning: galleries titled index and filenamed differently
             #  may break)
             if post.title() == 'index':
-                from doit.tools import set_trace; set_trace()
                 for lang in post.meta.keys():
                     post.meta[lang]['title'] = os.path.split(gallery)[1]
             # Register the post (via #2417)
