@@ -25,6 +25,8 @@ Bugfixes
   your environment if it was inadvertently added (Issue #3348)
 * Sometimes hyphenation added hyphens at the beginning of words
   (Issue #3362)
+* Mark gallery images as "dirty" if EXIF configuration changes (Issue
+  #3357)
 
 New in v8.0.4
 =============
