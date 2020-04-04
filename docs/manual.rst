@@ -382,7 +382,7 @@ previewimage
 
        .. previewimage: /images/looks_great_on_facebook.png
 
-    If a post has no `previewimage` it will try ti use the `DEFAULT_PREVIEW_IMAGE`
+    If a post has no `previewimage` it will try to use the `DEFAULT_PREVIEW_IMAGE`
     option from the configuration.
 
     The image can be of any size and dimension (services will crop and adapt)
