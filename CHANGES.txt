@@ -29,6 +29,7 @@ Bugfixes
   #3357)
 * Make gallery indexes depend on destination images to avoid
   multithreading race condition (Issue #3361)
+* Mark gallery thumbnails as lazy loading (Issue #2918)
 
 New in v8.0.4
 =============
