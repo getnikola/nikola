@@ -448,6 +448,8 @@ class Nikola(object):
             'FRONT_INDEX_HEADER': '',
             'GALLERY_FOLDERS': {'galleries': 'galleries'},
             'GALLERY_SORT_BY_DATE': True,
+            'GALLERIES_USE_THUMBNAIL': False,
+            'GALLERIES_DEFAULT_THUMBNAIL': None,
             'GLOBAL_CONTEXT_FILLER': [],
             'GZIP_COMMAND': None,
             'GZIP_FILES': False,
