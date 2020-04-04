@@ -27,6 +27,8 @@ Bugfixes
   (Issue #3362)
 * Mark gallery images as "dirty" if EXIF configuration changes (Issue
   #3357)
+* Fix regression in gallery titles being "index" if there was a
+  index.txt and no title (Issue #3360)
 * Make gallery indexes depend on destination images to avoid
   multithreading race condition (Issue #3361)
 * Mark gallery thumbnails as lazy loading (Issue #2918)
