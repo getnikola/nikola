@@ -138,6 +138,7 @@ class Post(object):
         self._dependency_uptodate_fragment = defaultdict(list)
         self._dependency_uptodate_page = defaultdict(list)
         self._depfile = defaultdict(list)
+        self._default_preview_image = self.config['DEFAULT_PREVIEW_IMAGE']
         if metadata_extractors_by is None:
             self.metadata_extractors_by = {'priority': {}, 'source': {}}
         else:
@@ -931,9 +932,8 @@ class Post(object):
             lang = nikola.utils.LocaleBorg().current_lang
 
         image_path = self.meta[lang]['previewimage']
-
         if not image_path:
-            return None
+            return self._default_preview_image
 
         # This is further parsed by the template, because we don’t have access
         # to the URL replacer here.  (Issue #1473)
