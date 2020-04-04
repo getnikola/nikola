@@ -28,7 +28,7 @@
 <ul class="thumbnails">
     %for image in photo_array:
         <li><a href="${image['url']}" class="thumbnail image-reference" title="${image['title']|h}">
-            <img src="${image['url_thumb']}" alt="${image['title']|h}" /></a>
+            <img src="${image['url_thumb']}" alt="${image['title']|h}" loading="lazy" /></a>
     %endfor
 </ul>
 </noscript>
