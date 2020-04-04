@@ -475,6 +475,7 @@ class Nikola(object):
             'LINK_CHECK_WHITELIST': [],
             'LISTINGS_FOLDERS': {'listings': 'listings'},
             'LOGO_URL': '',
+            'DEFAULT_PREVIEW_IMAGE': None,
             'NAVIGATION_LINKS': {},
             'NAVIGATION_ALT_LINKS': {},
             'MARKDOWN_EXTENSIONS': ['fenced_code', 'codehilite', 'extra'],
