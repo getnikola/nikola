@@ -308,7 +308,7 @@ class Galleries(Task, ImageProcessor):
                 yield utils.apply_filters({
                     'basename': self.name,
                     'name': dst,
-                    'file_dep': file_dep,
+                    'file_dep': file_dep + dest_img_list,
                     'targets': [dst],
                     'actions': [
                         (self.render_gallery_index, (
