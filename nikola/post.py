@@ -1115,8 +1115,14 @@ def insert_hyphens(node, hyphenator):
         text = getattr(node, attr)
         if not text:
             continue
-        new_data = ' '.join([hyphenator.inserted(w, hyphen='\u00AD')
-                             for w in text.split(' ')])
+
+        lines = text.splitlines()
+        new_data = "\n".join(
+            [
+                " ".join([hyphenator.inserted(w, hyphen="\u00AD") for w in line.split(" ")])
+                for line in lines
+            ]
+        )
         # Spaces are trimmed, we have to add them manually back
         if text[0].isspace():
             new_data = ' ' + new_data

@@ -23,6 +23,8 @@ Bugfixes
   broken symlinks or incorrect ``TRANSLATIONS_PATTERN`` values
 * Avoid installing ``tests`` package to site-packages, remove it from
   your environment if it was inadvertently added (Issue #3348)
+* Sometimes hyphenation added hyphens at the beginning of words
+  (Issue #3362)
 * Mark gallery images as "dirty" if EXIF configuration changes (Issue
   #3357)
 
