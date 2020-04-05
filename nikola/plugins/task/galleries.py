@@ -515,10 +515,9 @@ class Galleries(Task, ImageProcessor):
             # index.txt file would be errorneously named `index`
             # (warning: galleries titled index and filenamed differently
             #  may break)
-            if post.title == 'index':
-                post.title = os.path.split(gallery)[1]
-            # Separate default preview image for galleries
-            post._default_preview_image = self.kw['galleries_default_thumbnail']
+            if post.title() == 'index':
+                for lang in post.meta.keys():
+                    post.meta[lang]['title'] = os.path.split(gallery)[1]
             # Register the post (via #2417)
             self.site.post_per_input_file[index_path] = post
         else:
