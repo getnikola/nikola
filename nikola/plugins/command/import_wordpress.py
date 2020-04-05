@@ -499,11 +499,11 @@ to
         context['POSTS'] = POSTS
         context['PAGES'] = PAGES
         COMPILERS = '{\n'
-        COMPILERS += '''    "rest": ('.txt', '.rst'),''' + '\n'
-        COMPILERS += '''    "markdown": ('.md', '.mdown', '.markdown'),''' + '\n'
-        COMPILERS += '''    "html": ('.html', '.htm'),''' + '\n'
+        COMPILERS += '''    "rest": ['.txt', '.rst'],''' + '\n'
+        COMPILERS += '''    "markdown": ['.md', '.mdown', '.markdown'],''' + '\n'
+        COMPILERS += '''    "html": ['.html', '.htm'],''' + '\n'
         if self.use_wordpress_compiler:
-            COMPILERS += '''    "wordpress": ('.wp'),''' + '\n'
+            COMPILERS += '''    "wordpress": ['.wp'],''' + '\n'
         COMPILERS += '}'
         context['COMPILERS'] = COMPILERS
 
