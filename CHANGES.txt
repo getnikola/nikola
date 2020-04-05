@@ -8,6 +8,7 @@ Features
   numbers and improve appearance
 * Put the current language’s feed links first so that feed readers
   prefer it (Issue #3248)
+* Added support for default preview image for posts (Issue #3326)
 
 Bugfixes
 --------

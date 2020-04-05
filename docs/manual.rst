@@ -292,14 +292,14 @@ slug
     other symbols may cause issues in URLs. (required)
 
     So, if the slug is "the-slug" the page generated would be "the-slug.html" or
-    "the-slug/index.html" (if you have the pretty URLs option enabled) 
+    "the-slug/index.html" (if you have the pretty URLs option enabled)
 
-    One special case is setting the slug to "index". This means the page generated 
+    One special case is setting the slug to "index". This means the page generated
     would be "some_folder/index.html", which means it will be open for the URL
     that ends in "some_folder" or "some_folder/".
 
     This is useful in some cases, in others may cause conflicts with other pages
-    Nikola generates (like blog indexes) and as a side effect it disables 
+    Nikola generates (like blog indexes) and as a side effect it disables
     "pretty URLs" for this page. So use with care.
 
 date
@@ -381,6 +381,9 @@ previewimage
     .. code:: restructuredtext
 
        .. previewimage: /images/looks_great_on_facebook.png
+
+    If a post has no `previewimage` it will try to use the `DEFAULT_PREVIEW_IMAGE`
+    option from the configuration.
 
     The image can be of any size and dimension (services will crop and adapt)
     but should less than 1 MB and be larger than 300x300 (ideally 600x600).
