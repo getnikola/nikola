@@ -15,12 +15,26 @@
     </p>
     {% endif %}
     {% if folders %}
-    <ul>
-    {% for folder, ftitle in folders %}
-        <li><a href="{{ folder }}"><i
-        class="icon-folder-open"></i>&nbsp;{{ ftitle|e }}</a></li>
-    {% endfor %}
-    </ul>
+        {% if galleries_use_thumbnail %}
+            {% for (folder, ftitle, fpost) in folders %}
+            <div class="thumnbnail-container">
+                <a href="{{ folder }}" class="thumbnail image-reference" title="{{ ftitle|e }}">\
+                    {% if fpost and fpost.previewimage %}
+                        <img src="{{ fpost.previewimage }}" alt="{{ ftitle|e }}" loading="lazy" style="max-width:{{ thumbnail_size }}px; max-height:{{ thumbnail_size }}px;" />
+                    {% else %}
+                        <div style="height: {{ thumbnail_size }}px; width: {{ thumbnail_size }}px; background-color: #eee;"></div>
+                    {% endif %}
+                <p class="thumbnail-caption">{{ ftitle|e }}</p>
+                </a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <ul>
+            {% for folder, ftitle in folders %}
+                <li><a href="{{ folder }}">📂&nbsp;{{ ftitle|e }}</a></li>
+            {% endfor %}
+            </ul>
+        {% endif %}
     {% endif %}
 
 <div id="gallery_container"></div>

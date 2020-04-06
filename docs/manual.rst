@@ -2037,6 +2037,15 @@ The ``conf.py`` options affecting images and gallery pages are these:
     USE_FILENAME_AS_TITLE = True
     EXTRA_IMAGE_EXTENSIONS = []
 
+    # Use a thumbnail (defined by ".. previewimage:" in the gallery's index) in
+    # list of galleries for each gallery
+    GALLERIES_USE_THUMBNAIL = False
+
+    # Image to use as thumbnail for those galleries that don't have one
+    # None: show a grey square
+    # '/url/to/file': show the image in that url
+    GALLERIES_DEFAULT_THUMBNAIL = None
+
     # If set to False, it will sort by filename instead. Defaults to True
     GALLERY_SORT_BY_DATE = True
 
@@ -2056,7 +2065,8 @@ The ``conf.py`` options affecting images and gallery pages are these:
 
 If you add a reST file in ``galleries/gallery_name/index.txt`` its contents will be
 converted to HTML and inserted above the images in the gallery page. The
-format is the same as for posts.
+format is the same as for posts. You can use the ``title`` and ``previewimage``
+metadata fields to change how the gallery is shown.
 
 If you add some image filenames in ``galleries/gallery_name/exclude.meta``, they
 will be excluded in the gallery page.

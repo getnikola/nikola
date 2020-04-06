@@ -86,6 +86,8 @@ class Galleries(Task, ImageProcessor):
             'preserve_icc_profiles': site.config['PRESERVE_ICC_PROFILES'],
             'index_path': site.config['INDEX_PATH'],
             'disable_indexes': site.config['DISABLE_INDEXES'],
+            'galleries_use_thumbnail': site.config['GALLERIES_USE_THUMBNAIL'],
+            'galleries_default_thumbnail': site.config['GALLERIES_DEFAULT_THUMBNAIL'],
         }
 
         # Verify that no folder in GALLERY_FOLDERS appears twice
@@ -264,6 +266,7 @@ class Galleries(Task, ImageProcessor):
                 folders = []
 
                 # Generate friendly gallery names
+                fpost_list = []
                 for path, folder in folder_list:
                     fpost = self.parse_index(path, input_folder, output_folder)
                     if fpost:
@@ -272,7 +275,15 @@ class Galleries(Task, ImageProcessor):
                         ft = folder
                     if not folder.endswith('/'):
                         folder += '/'
-                    folders.append((folder, ft))
+
+                    # TODO: This is to keep compatibility with user's custom gallery.tmpl
+                    # To be removed in v9 someday
+                    if self.kw['galleries_use_thumbnail']:
+                        folders.append((folder, ft, fpost))
+                        if fpost:
+                            fpost_list.append(fpost.source_path)
+                    else:
+                        folders.append((folder, ft))
 
                 context["gallery_path"] = gallery
                 context["folders"] = natsort.natsorted(
@@ -282,6 +293,7 @@ class Galleries(Task, ImageProcessor):
                 context["enable_comments"] = self.kw['comments_in_galleries']
                 context["thumbnail_size"] = self.kw["thumbnail_size"]
                 context["pagekind"] = ["gallery_front"]
+                context["galleries_use_thumbnail"] = self.kw['galleries_use_thumbnail']
 
                 if post:
                     yield {
@@ -308,7 +320,7 @@ class Galleries(Task, ImageProcessor):
                 yield utils.apply_filters({
                     'basename': self.name,
                     'name': dst,
-                    'file_dep': file_dep + dest_img_list,
+                    'file_dep': file_dep + dest_img_list + fpost_list,
                     'targets': [dst],
                     'actions': [
                         (self.render_gallery_index, (
