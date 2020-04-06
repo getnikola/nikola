@@ -83,13 +83,15 @@ class ImageProcessor(object):
 
     def resize_image(self, src, dst, max_size, bigger_panoramas=True, preserve_exif_data=False, exif_whitelist={}, preserve_icc_profiles=False):
         """Make a copy of the image in the requested size."""
-        if os.path.splitext(src)[1] in ['.svg', '.svgz']:
+        extension = os.path.splitext(src)[1].lower()
+        if extension in {'.svg', '.svgz'}:
             self.resize_svg(src, dst, max_size, bigger_panoramas)
             return
 
         im = Image.open(src)
 
-        if hasattr(im, 'n_frames') and im.n_frames > 1:
+        # The jpg exclusion is Issue #3332
+        if hasattr(im, 'n_frames') and im.n_frames > 1 and extension not in {'.jpg', '.jpeg'}:
             # Animated gif, leave as-is
             utils.copy_file(src, dst)
             return
