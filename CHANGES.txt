@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Allow preview images to be relative to posts for bootblog4 featured
+  posts
 * Change the listings formatting to support word wrap with line
   numbers and improve appearance
 * Put the current language’s feed links first so that feed readers
