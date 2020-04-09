@@ -496,9 +496,8 @@ class Galleries(Task, ImageProcessor):
     def parse_index(self, gallery, input_folder, output_folder):
         """Return a Post object if there is an index.txt."""
         index_path = os.path.join(gallery, "index.txt")
-        destination = os.path.join(
-            self.kw["output_folder"], output_folder,
-            os.path.relpath(gallery, input_folder))
+        destination = os.path.join(output_folder,
+                                   os.path.relpath(gallery, input_folder))
         if os.path.isfile(index_path):
             post = Post(
                 index_path,
