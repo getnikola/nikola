@@ -103,23 +103,19 @@ class ImageProcessor(object):
             max_sizes = [max_size]
         if len(max_sizes) != len(dst_paths):
             raise ValueError('resize_image called with incompatible arguments: {} / {}'.format(dst_paths, max_sizes))
+        extension = os.path.splitext(src)[1].lower()
+        if extension in {'.svg', '.svgz'}:
+            self.resize_svg(src, dst_paths, max_sizes, bigger_panoramas)
+            return
 
-        im = None
+        im = Image.open(src)
 
         for dst, max_size in zip(dst_paths, max_sizes):
-            extension = os.path.splitext(src)[1].lower()
-            if extension in {'.svg', '.svgz'}:
-                self.resize_svg(src, dst, max_size, bigger_panoramas)
-                return
-
-            if im is None:  # Move this out of the loop after resize_svg is refactored
-                im = Image.open(src)
-
             # The jpg exclusion is Issue #3332
             if hasattr(im, 'n_frames') and im.n_frames > 1 and extension not in {'.jpg', '.jpeg'}:
                 # Animated gif, leave as-is
                 utils.copy_file(src, dst)
-                return
+                continue
 
             size = w, h = im.size
             if w > max_size or h > max_size:
@@ -170,47 +166,49 @@ class ImageProcessor(object):
                                     "image! ({1})".format(src, e))
                 utils.copy_file(src, dst)
 
-    def resize_svg(self, src, dst, max_size, bigger_panoramas):
-        """Make a copy of an svg at the requested size."""
-        try:
-            # Resize svg based on viewport hacking.
-            # note that this can also lead to enlarged svgs
-            if src.endswith('.svgz'):
-                with gzip.GzipFile(src, 'rb') as op:
-                    xml = op.read()
-            else:
-                with open(src, 'rb') as op:
-                    xml = op.read()
-            tree = lxml.etree.XML(xml)
-            width = tree.attrib['width']
-            height = tree.attrib['height']
-            w = int(re.search("[0-9]+", width).group(0))
-            h = int(re.search("[0-9]+", height).group(0))
-            # calculate new size preserving aspect ratio.
-            ratio = float(w) / h
-            # Panoramas get larger thumbnails because they look *awful*
-            if bigger_panoramas and w > 2 * h:
-                max_size = max_size * 4
-            if w > h:
-                w = max_size
-                h = max_size / ratio
-            else:
-                w = max_size * ratio
-                h = max_size
-            w = int(w)
-            h = int(h)
-            tree.attrib.pop("width")
-            tree.attrib.pop("height")
-            tree.attrib['viewport'] = "0 0 %ipx %ipx" % (w, h)
-            if dst.endswith('.svgz'):
-                op = gzip.GzipFile(dst, 'wb')
-            else:
-                op = open(dst, 'wb')
-            op.write(lxml.etree.tostring(tree))
-            op.close()
-        except (KeyError, AttributeError) as e:
-            self.logger.warning("No width/height in %s. Original exception: %s" % (src, e))
-            utils.copy_file(src, dst)
+    def resize_svg(self, src, dst_paths, max_sizes, bigger_panoramas):
+        """Make a copy of an svg at the requested sizes."""
+        # Resize svg based on viewport hacking.
+        # note that this can also lead to enlarged svgs
+        if src.endswith('.svgz'):
+            with gzip.GzipFile(src, 'rb') as op:
+                xml = op.read()
+        else:
+            with open(src, 'rb') as op:
+                xml = op.read()
+
+        for dst, max_size in zip(dst_paths, max_sizes):
+            try:
+                tree = lxml.etree.XML(xml)
+                width = tree.attrib['width']
+                height = tree.attrib['height']
+                w = int(re.search("[0-9]+", width).group(0))
+                h = int(re.search("[0-9]+", height).group(0))
+                # calculate new size preserving aspect ratio.
+                ratio = float(w) / h
+                # Panoramas get larger thumbnails because they look *awful*
+                if bigger_panoramas and w > 2 * h:
+                    max_size = max_size * 4
+                if w > h:
+                    w = max_size
+                    h = max_size / ratio
+                else:
+                    w = max_size * ratio
+                    h = max_size
+                w = int(w)
+                h = int(h)
+                tree.attrib.pop("width")
+                tree.attrib.pop("height")
+                tree.attrib['viewport'] = "0 0 %ipx %ipx" % (w, h)
+                if dst.endswith('.svgz'):
+                    op = gzip.GzipFile(dst, 'wb')
+                else:
+                    op = open(dst, 'wb')
+                op.write(lxml.etree.tostring(tree))
+                op.close()
+            except (KeyError, AttributeError) as e:
+                self.logger.warning("No width/height in %s. Original exception: %s" % (src, e))
+                utils.copy_file(src, dst)
 
     def image_date(self, src):
         """Try to figure out the date of the image."""
