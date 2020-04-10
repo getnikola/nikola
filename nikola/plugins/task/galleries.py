@@ -584,10 +584,7 @@ class Galleries(Task, ImageProcessor):
                         'bigger_panoramas': True,
                         'preserve_exif_data': self.kw['preserve_exif_data'],
                         'exif_whitelist': self.kw['exif_whitelist'],
-                        'preserve_icc_profiles': self.kw['preserve_icc_profiles'],
-                    }
-                )
-            ],
+                        'preserve_icc_profiles': self.kw['preserve_icc_profiles']})],
             'clean': True,
             'uptodate': [utils.config_changed({
                 1: self.kw['thumbnail_size'],
