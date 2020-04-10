@@ -32,7 +32,6 @@ from nikola.plugin_categories import Task
 from nikola.image_processing import ImageProcessor
 from nikola import utils
 
-SRCSET_IMAGE_SIZES=(400,1200,2400)
 
 class ScaleImage(Task, ImageProcessor):
     """Resize images and create thumbnails for them."""
