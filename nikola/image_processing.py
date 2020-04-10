@@ -102,7 +102,7 @@ class ImageProcessor(object):
         if max_sizes is None:
             max_sizes = [max_size]
         if len(max_sizes) != len(dst_paths):
-            raise ValueError(f'resize_image called with incompatible arguments: {dst_paths} / {max_sizes}')
+            raise ValueError('resize_image called with incompatible arguments: {} / {}'.format(dst_paths, max_sizes))
 
         im = None
 
