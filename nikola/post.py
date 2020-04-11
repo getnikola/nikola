@@ -703,16 +703,19 @@ class Post(object):
         return get_translation_candidate(self.config, self.base_path, lang)
 
     def _translated_file_path(self, lang):
-        """Return path to the translation's file, or to the original."""
+        """Return path to the translation's file, or to the original,
+        plus "real" language of the text."""
+
         if lang in self.translated_to:
             if lang == self.default_lang:
-                return self.base_path
+                return self.base_path, lang
             else:
-                return get_translation_candidate(self.config, self.base_path, lang)
+                return get_translation_candidate(self.config, self.base_path, lang), lang
         elif lang != self.default_lang:
-            return self.base_path
+            return self.base_path, self.default_lang
         else:
-            return get_translation_candidate(self.config, self.base_path, sorted(self.translated_to)[0])
+            real_lang = sorted(self.translated_to)[0]
+            return get_translation_candidate(self.config, self.base_path, real_lang), real_lang
 
     def text(self, lang=None, teaser_only=False, strip_html=False, show_read_more_link=True,
              feed_read_more_link=False, feed_links_append_query=None):
@@ -729,7 +732,7 @@ class Post(object):
         """
         if lang is None:
             lang = nikola.utils.LocaleBorg().current_lang
-        file_name = self._translated_file_path(lang)
+        file_name, real_lang = self._translated_file_path(lang)
 
         # Yes, we compile it and screw it.
         # This may be controversial, but the user (or someone) is asking for the post text
@@ -754,7 +757,7 @@ class Post(object):
         document.make_links_absolute(base_url)
 
         if self.hyphenate:
-            hyphenate(document, lang)
+            hyphenate(document, real_lang)
 
         try:
             data = lxml.html.tostring(document.body, encoding='unicode')
@@ -837,7 +840,7 @@ class Post(object):
         if self._paragraph_count is None:
             # duplicated with Post.text()
             lang = nikola.utils.LocaleBorg().current_lang
-            file_name = self._translated_file_path(lang)
+            file_name, _ = self._translated_file_path(lang)
             with io.open(file_name, "r", encoding="utf8") as post_file:
                 data = post_file.read().strip()
             try:
