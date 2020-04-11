@@ -706,8 +706,8 @@ class Post(object):
         """Get path to a post's translation.
 
         Returns path to the translation's file, or to as good a file as it can
-        plus "real" language of the text."""
-
+        plus "real" language of the text.
+        """
         if lang in self.translated_to:
             if lang == self.default_lang:
                 return self.base_path, lang
