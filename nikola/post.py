@@ -703,7 +703,9 @@ class Post(object):
         return get_translation_candidate(self.config, self.base_path, lang)
 
     def _translated_file_path(self, lang):
-        """Return path to the translation's file, or to the original,
+        """Get path to a post's translation.
+
+        Returns path to the translation's file, or to as good a file as it can
         plus "real" language of the text."""
 
         if lang in self.translated_to:
