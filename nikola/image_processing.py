@@ -96,7 +96,6 @@ class ImageProcessor(object):
         * Either max_size or max_sizes should be set
         * Either dst or dst_paths should be set
         """
-
         if dst_paths is None:
             dst_paths = [dst]
         if max_sizes is None:
