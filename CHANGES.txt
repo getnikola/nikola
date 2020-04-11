@@ -38,6 +38,8 @@ Bugfixes
 * Mark gallery thumbnails as lazy loading (Issue #2918)
 * Don't consider JPEG images with EXIF thumbnails as animated (Issue
   #3332)
+* Use correct language for hyphenation in posts that are not
+  translated to all languages (Issue #3377)
 
 New in v8.0.4
 =============
