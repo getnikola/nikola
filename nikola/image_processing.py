@@ -107,14 +107,15 @@ class ImageProcessor(object):
             self.resize_svg(src, dst_paths, max_sizes, bigger_panoramas)
             return
 
-        im = Image.open(src)
+        _im = Image.open(src)
 
         for dst, max_size in zip(dst_paths, max_sizes):
             # The jpg exclusion is Issue #3332
-            if hasattr(im, 'n_frames') and im.n_frames > 1 and extension not in {'.jpg', '.jpeg'}:
+            if hasattr(_im, 'n_frames') and _im.n_frames > 1 and extension not in {'.jpg', '.jpeg'}:
                 # Animated gif, leave as-is
                 utils.copy_file(src, dst)
                 continue
+            im = _im.copy()
 
             size = w, h = im.size
             if w > max_size or h > max_size:
