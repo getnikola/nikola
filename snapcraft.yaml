@@ -51,7 +51,7 @@ parts:
             - notebook
             - ipykernel
         build-packages: [libjpeg-dev]
-        install: |
+        override-build: |
             snapcraftctl build
             find $SNAPCRAFT_PART_INSTALL -name '*.a'  -print0 | xargs -0r rm
             find $SNAPCRAFT_PART_INSTALL -name 'terminado' -type d -print0 | xargs -0r rm -rf
