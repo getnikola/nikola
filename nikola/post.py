@@ -275,7 +275,6 @@ class Post(object):
 
     def _set_folders(self, destination, destination_base):
         """Compose destination paths."""
-
         self.folder_relative = destination
         self.folder_base = destination_base
 
