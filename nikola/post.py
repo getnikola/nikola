@@ -352,7 +352,6 @@ class Post(object):
             self.folders = {lang: self.folder_relative for lang in self.config['TRANSLATIONS'].keys()}
         self.folder = self.folders[self.default_lang]
 
-
     def _get_hyphenate(self):
         return bool(self.config['HYPHENATE'] or self.meta('hyphenate'))
 
