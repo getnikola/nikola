@@ -109,43 +109,46 @@ class ImageProcessor(object):
 
         _im = Image.open(src)
 
+        is_animated = hasattr(_im, 'n_frames') and _im.n_frames > 1 and extension not in {'.jpg', '.jpeg'}
+
+        try:
+            exif = piexif.load(im.info["exif"])
+        except KeyError:
+            exif = None
+        # Inside this if, we can manipulate exif as much as
+        # we want/need and it will be preserved if required
+        if exif is not None:
+            # Rotate according to EXIF
+            value = exif['0th'].get(piexif.ImageIFD.Orientation, 1)
+            if value in (3, 4):
+                im = im.transpose(Image.ROTATE_180)
+            elif value in (5, 6):
+                im = im.transpose(Image.ROTATE_270)
+            elif value in (7, 8):
+                im = im.transpose(Image.ROTATE_90)
+            if value in (2, 4, 5, 7):
+                im = im.transpose(Image.FLIP_LEFT_RIGHT)
+            exif['0th'][piexif.ImageIFD.Orientation] = 1
+            exif = self.filter_exif(exif, exif_whitelist)
+
+        icc_profile = im.info.get('icc_profile') if preserve_icc_profiles else None
+
         for dst, max_size in zip(dst_paths, max_sizes):
             # The jpg exclusion is Issue #3332
-            if hasattr(_im, 'n_frames') and _im.n_frames > 1 and extension not in {'.jpg', '.jpeg'}:
+            if is_animated:
                 # Animated gif, leave as-is
                 utils.copy_file(src, dst)
                 continue
+
             im = _im.copy()
 
             size = w, h = im.size
             if w > max_size or h > max_size:
                 size = max_size, max_size
-
                 # Panoramas get larger thumbnails because they look *awful*
                 if bigger_panoramas and w > 2 * h:
                     size = min(w, max_size * 4), min(w, max_size * 4)
-
             try:
-                exif = piexif.load(im.info["exif"])
-            except KeyError:
-                exif = None
-            # Inside this if, we can manipulate exif as much as
-            # we want/need and it will be preserved if required
-            if exif is not None:
-                # Rotate according to EXIF
-                value = exif['0th'].get(piexif.ImageIFD.Orientation, 1)
-                if value in (3, 4):
-                    im = im.transpose(Image.ROTATE_180)
-                elif value in (5, 6):
-                    im = im.transpose(Image.ROTATE_270)
-                elif value in (7, 8):
-                    im = im.transpose(Image.ROTATE_90)
-                if value in (2, 4, 5, 7):
-                    im = im.transpose(Image.FLIP_LEFT_RIGHT)
-                exif['0th'][piexif.ImageIFD.Orientation] = 1
-
-            try:
-                icc_profile = im.info.get('icc_profile') if preserve_icc_profiles else None
                 im.thumbnail(size, Image.ANTIALIAS)
                 if exif is not None and preserve_exif_data:
                     # Put right size in EXIF data
@@ -157,7 +160,6 @@ class ImageProcessor(object):
                         exif["Exif"][piexif.ExifIFD.PixelXDimension] = w
                         exif["Exif"][piexif.ExifIFD.PixelYDimension] = h
                     # Filter EXIF data as required
-                    exif = self.filter_exif(exif, exif_whitelist)
                     im.save(dst, exif=piexif.dump(exif), icc_profile=icc_profile)
                 else:
                     im.save(dst, icc_profile=icc_profile)
