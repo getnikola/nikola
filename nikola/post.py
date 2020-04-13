@@ -106,14 +106,14 @@ class Post(object):
         self._set_paths(source_path)
 
         self.compiler = compiler
-        self.compiler_contexts = {}
-        self.compile_html = self.compiler.compile
-        self.demote_headers = self.compiler.demote_headers and self.config['DEMOTE_HEADERS']
-        self.translated_to = set([])
+        self.is_post = use_in_feeds
         self.folder_relative = destination
         self.folder_base = destination_base
         self.messages = messages
         self._template_name = template_name
+        self.compile_html = self.compiler.compile
+        self.demote_headers = self.compiler.demote_headers and self.config['DEMOTE_HEADERS']
+        self.translated_to = set([])
         self._dependency_file_fragment = defaultdict(list)
         self._dependency_file_page = defaultdict(list)
         self._dependency_uptodate_fragment = defaultdict(list)
@@ -240,8 +240,6 @@ class Post(object):
 
         self.publish_later = False if self.current_time is None else self.date >= self.current_time
 
-        self.is_draft = False
-        self.is_private = False
         self.post_status = 'published'
         self._tags = {}
         self.has_oldstyle_metadata_tags = False
@@ -307,7 +305,6 @@ class Post(object):
                     self.has_oldstyle_metadata_tags = True
 
         # While draft comes from the tags, it's not really a tag
-        self.is_post = use_in_feeds
         self.use_in_feeds = self.is_post and not self.is_draft and not self.is_private and not self.publish_later
 
         # Allow overriding URL_TYPE via meta
