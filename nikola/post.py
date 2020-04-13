@@ -92,25 +92,17 @@ class Post(object):
         destination_base must be None or a TranslatableSetting instance. If
         specified, it will be prepended to the destination path.
         """
-        self.config = config
+        self._load_config(config)
+
         self.compiler = compiler
         self.compiler_contexts = {}
         self.compile_html = self.compiler.compile
         self.demote_headers = self.compiler.demote_headers and self.config['DEMOTE_HEADERS']
-        tzinfo = self.config['__tzinfo__']
-        if self.config['FUTURE_IS_NOW']:
-            self.current_time = None
-        else:
-            self.current_time = current_time(tzinfo)
         self.translated_to = set([])
         self._prev_post = None
         self._next_post = None
-        self.base_url = self.config['BASE_URL']
         self.is_draft = False
         self.is_private = False
-        self.strip_indexes = self.config['STRIP_INDEXES']
-        self.index_file = self.config['INDEX_FILE']
-        self.pretty_urls = self.config['PRETTY_URLS']
         self.source_path = source_path  # posts/blah.txt
         self.post_name = os.path.splitext(source_path)[0]  # posts/blah
         _relpath = os.path.relpath(self.post_name)
@@ -123,10 +115,7 @@ class Post(object):
         self.metadata_path = self.post_name + ".meta"  # posts/blah.meta
         self.folder_relative = destination
         self.folder_base = destination_base
-        self.default_lang = self.config['DEFAULT_LANG']
-        self.translations = self.config['TRANSLATIONS']
         self.messages = messages
-        self.skip_untranslated = not self.config['SHOW_UNTRANSLATED_POSTS']
         self._template_name = template_name
         self.is_two_file = True
         self._reading_time = None
@@ -138,7 +127,6 @@ class Post(object):
         self._dependency_uptodate_fragment = defaultdict(list)
         self._dependency_uptodate_page = defaultdict(list)
         self._depfile = defaultdict(list)
-        self._default_preview_image = self.config['DEFAULT_PREVIEW_IMAGE']
         if metadata_extractors_by is None:
             self.metadata_extractors_by = {'priority': {}, 'source': {}}
         else:
@@ -180,14 +168,14 @@ class Post(object):
         if 'date' not in default_metadata and not use_in_feeds:
             # For pages we don't *really* need a date
             if self.config['__invariant__']:
-                default_metadata['date'] = datetime.datetime(2013, 12, 31, 23, 59, 59, tzinfo=tzinfo)
+                default_metadata['date'] = datetime.datetime(2013, 12, 31, 23, 59, 59, tzinfo=self.config['__tzinfo__'])
             else:
                 default_metadata['date'] = datetime.datetime.utcfromtimestamp(
-                    os.stat(self.source_path).st_ctime).replace(tzinfo=dateutil.tz.tzutc()).astimezone(tzinfo)
+                    os.stat(self.source_path).st_ctime).replace(tzinfo=dateutil.tz.tzutc()).astimezone(self.config['__tzinfo__'])
 
         # If time zone is set, build localized datetime.
         try:
-            self.date = to_datetime(self.meta[self.default_lang]['date'], tzinfo)
+            self.date = to_datetime(self.meta[self.default_lang]['date'], self.config['__tzinfo__'])
         except ValueError:
             if not self.meta[self.default_lang]['date']:
                 msg = 'Missing date in file {}'.format(source_path)
@@ -199,7 +187,7 @@ class Post(object):
         if 'updated' not in default_metadata:
             default_metadata['updated'] = default_metadata.get('date', None)
 
-        self.updated = to_datetime(default_metadata['updated'], tzinfo)
+        self.updated = to_datetime(default_metadata['updated'], self.config['__tzinfo__'])
 
         if 'title' not in default_metadata or 'slug' not in default_metadata \
                 or 'date' not in default_metadata:
@@ -336,6 +324,22 @@ class Post(object):
         self.url_type = self.meta('url_type') or None
         # Register potential extra dependencies
         self.compiler.register_extra_dependencies(self)
+
+    def _load_config(self, config):
+        """Set members to configured values."""
+        self.config = config
+        if self.config['FUTURE_IS_NOW']:
+            self.current_time = None
+        else:
+            self.current_time = current_time(self.config['__tzinfo__'])
+        self.base_url = self.config['BASE_URL']
+        self.strip_indexes = self.config['STRIP_INDEXES']
+        self.index_file = self.config['INDEX_FILE']
+        self.pretty_urls = self.config['PRETTY_URLS']
+        self.default_lang = self.config['DEFAULT_LANG']
+        self.translations = self.config['TRANSLATIONS']
+        self.skip_untranslated = not self.config['SHOW_UNTRANSLATED_POSTS']
+        self._default_preview_image = self.config['DEFAULT_PREVIEW_IMAGE']
 
     def _get_hyphenate(self):
         return bool(self.config['HYPHENATE'] or self.meta('hyphenate'))
