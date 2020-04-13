@@ -3,12 +3,13 @@ version: 8.0.4
 summary: A static website generator
 description: A static website generator
 confinement: strict
+base: core18
 grade: stable
 
 apps:
     nikola:
          command: nikola.sh
-         plugs: [network, network-bind, home]
+         plugs: [network, network-bind, home, removable-media]
 
 parts:
     nikola-script:
@@ -21,35 +22,37 @@ parts:
             - libc-bin
         plugin: python
         python-packages:
-            - Markdown>=2.4.0
-            - Jinja2>=2.7.2
-            - pyphen>=0.9.1
-            - micawber>=0.3.0
-            - pygal>=2.0.0
-            - typogrify>=2.0.4
-            - phpserialize>=1.3
-            - ghp-import2>=1.0.0
-            - ws4py==0.3.5
-            - watchdog==0.8.3
-            - doit>=0.30.1
-            - Pygments>=1.6
-            - python-dateutil>=2.4.0
-            - docutils>=0.12
-            - mako>=1.0.0
-            - unidecode>=0.04.16
-            - lxml>=3.3.5
-            - Yapsy>=1.11.223
-            - PyRSS2Gen>=1.1
-            - blinker>=1.3
-            - setuptools>=5.4.1
-            - natsort>=3.5.2
-            - requests>=2.2.0
-            - husl>=4.0.2
-            - piexif>=1.0.3
-            - notebook>=4.0.0
-            - ipykernel>=4.0.0
+            - feedparser
+            - Markdown
+            - Jinja2
+            - pyphen
+            - micawber
+            - pygal
+            - typogrify
+            - phpserialize
+            - ghp-import2
+            - ws4py
+            - watchdog
+            - doit
+            - Pygments
+            - python-dateutil
+            - docutils
+            - mako
+            - unidecode
+            - lxml
+            - Yapsy
+            - PyRSS2Gen
+            - blinker
+            - setuptools
+            - natsort
+            - requests
+            - husl
+            - piexif
+            - notebook
+            - ipykernel
         build-packages: [libjpeg-dev]
         install: |
+            snapcraftctl build
             find $SNAPCRAFT_PART_INSTALL -name '*.a'  -print0 | xargs -0r rm
             find $SNAPCRAFT_PART_INSTALL -name 'terminado' -type d -print0 | xargs -0r rm -rf
             find $SNAPCRAFT_PART_INSTALL -name 'tornado' -type d -print0 | xargs -0r rm -rf
