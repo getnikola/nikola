@@ -113,11 +113,6 @@ class ImageProcessor(object):
 
         try:
             exif = piexif.load(im.info["exif"])
-        except KeyError:
-            exif = None
-        # Inside this if, we can manipulate exif as much as
-        # we want/need and it will be preserved if required
-        if exif is not None:
             # Rotate according to EXIF
             value = exif['0th'].get(piexif.ImageIFD.Orientation, 1)
             if value in (3, 4):
@@ -130,6 +125,8 @@ class ImageProcessor(object):
                 im = im.transpose(Image.FLIP_LEFT_RIGHT)
             exif['0th'][piexif.ImageIFD.Orientation] = 1
             exif = self.filter_exif(exif, exif_whitelist)
+        except KeyError:
+            exif = None
 
         icc_profile = im.info.get('icc_profile') if preserve_icc_profiles else None
 
