@@ -16,6 +16,8 @@ Features
 Bugfixes
 --------
 
+* Refactored scale_image causing performance increasing in image
+  resizing.
 * Don’t force absolute links for brand/languages (Issue #3229)
 * Fix RTL mirroring in base theme (``:dir()`` pseudo-class is Firefox only)
   (Issue #3353)
