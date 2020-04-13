@@ -107,8 +107,6 @@ class Post(object):
 
         self.compiler = compiler
         self.is_post = use_in_feeds
-        self.folder_relative = destination
-        self.folder_base = destination_base
         self.messages = messages
         self._template_name = template_name
         self.compile_html = self.compiler.compile
@@ -124,6 +122,7 @@ class Post(object):
             self.metadata_extractors_by = metadata_extractors_by
 
         self._set_translated_to()
+        self._set_folders(destination, destination_base)
 
         default_metadata, default_used_extractor = get_meta(self, lang=None)
 
@@ -131,19 +130,6 @@ class Post(object):
         self.used_extractor = Functionary(lambda: None, self.default_lang)
         self.meta[self.default_lang] = default_metadata
         self.used_extractor[self.default_lang] = default_used_extractor
-
-        # Compose paths
-        if self.folder_base is not None:
-            # Use translatable destination folders
-            self.folders = {}
-            for lang in self.config['TRANSLATIONS'].keys():
-                if os.path.isabs(self.folder_base(lang)):  # Issue 2982
-                    self.folder_base[lang] = os.path.relpath(self.folder_base(lang), '/')
-                self.folders[lang] = os.path.normpath(os.path.join(self.folder_base(lang), self.folder_relative))
-        else:
-            # Old behavior (non-translatable destination path, normalized by scanner)
-            self.folders = {lang: self.folder_relative for lang in self.config['TRANSLATIONS'].keys()}
-        self.folder = self.folders[self.default_lang]
 
         if 'date' not in default_metadata and not use_in_feeds:
             # For pages we don't *really* need a date
@@ -348,6 +334,24 @@ class Post(object):
         elif not self.translated_to:
             raise Exception(("Cannot use {} (not a file, perhaps a broken "
                             "symbolic link?)").format(self.source_path))
+
+    def _set_folders(self, destination, destination_base):
+        """Compose destination paths."""
+
+        self.folder_relative = destination
+        self.folder_base = destination_base
+
+        if self.folder_base is not None:
+            # Use translatable destination folders
+            self.folders = {}
+            for lang in self.config['TRANSLATIONS']:
+                if os.path.isabs(self.folder_base(lang)):  # Issue 2982
+                    self.folder_base[lang] = os.path.relpath(self.folder_base(lang), '/')
+                self.folders[lang] = os.path.normpath(os.path.join(self.folder_base(lang), self.folder_relative))
+        else:
+            # Old behavior (non-translatable destination path, normalized by scanner)
+            self.folders = {lang: self.folder_relative for lang in self.config['TRANSLATIONS'].keys()}
+        self.folder = self.folders[self.default_lang]
 
 
     def _get_hyphenate(self):
