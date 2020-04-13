@@ -137,10 +137,9 @@ class Post(object):
 
         # These are the required metadata fields
         if 'title' not in default_metadata or 'slug' not in default_metadata:
-            raise ValueError("You must set a title (found '{0}'), a slug (found '{1}') and a date (found '{2}')! "
-                             "[in file {3}]".format(default_metadata.get('title', None),
+            raise ValueError("You must set a title (found '{0}') and a slug (found '{1}')! "
+                             "[in file {2}]".format(default_metadata.get('title', None),
                                                     default_metadata.get('slug', None),
-                                                    default_metadata.get('date', None),
                                                     source_path))
 
         if 'type' not in default_metadata:
