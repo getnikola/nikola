@@ -81,6 +81,7 @@ class Post(object):
     _paragraph_count = None
     _remaining_paragraph_count = None
     post_status = 'published'
+    has_oldstyle_metadata_tags = False
 
     def __init__(
         self,
@@ -152,7 +153,6 @@ class Post(object):
         self.publish_later = False if self.current_time is None else self.date >= self.current_time
 
         self._tags = {}
-        self.has_oldstyle_metadata_tags = False
         for lang in self.translated_to:
             if isinstance(self.meta[lang]['tags'], (list, tuple, set)):
                 _tag_list = self.meta[lang]['tags']
