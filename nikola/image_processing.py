@@ -112,22 +112,21 @@ class ImageProcessor(object):
         # The jpg exclusion is Issue #3332
         is_animated = hasattr(_im, 'n_frames') and _im.n_frames > 1 and extension not in {'.jpg', '.jpeg'}
 
-        try:
+        if "exif" in _im.info:
             exif = piexif.load(_im.info["exif"])
             # Rotate according to EXIF
-            value = exif['0th'].get(piexif.ImageIFD.Orientation, 1)
-            if value in (3, 4):
-                _im = _im.transpose(Image.ROTATE_180)
-            elif value in (5, 6):
-                _im = _im.transpose(Image.ROTATE_270)
-            elif value in (7, 8):
-                _im = _im.transpose(Image.ROTATE_90)
-            if value in (2, 4, 5, 7):
-                _im = _im.transpose(Image.FLIP_LEFT_RIGHT)
-            exif['0th'][piexif.ImageIFD.Orientation] = 1
+            if "0th" in exif:
+                value = exif['0th'].get(piexif.ImageIFD.Orientation, 1)
+                if value in (3, 4):
+                    _im = _im.transpose(Image.ROTATE_180)
+                elif value in (5, 6):
+                    _im = _im.transpose(Image.ROTATE_270)
+                elif value in (7, 8):
+                    _im = _im.transpose(Image.ROTATE_90)
+                if value in (2, 4, 5, 7):
+                    _im = _im.transpose(Image.FLIP_LEFT_RIGHT)
+                exif['0th'][piexif.ImageIFD.Orientation] = 1
             exif = self.filter_exif(exif, exif_whitelist)
-        except KeyError:
-            exif = None
 
         icc_profile = _im.info.get('icc_profile') if preserve_icc_profiles else None
 
