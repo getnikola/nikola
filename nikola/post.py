@@ -71,6 +71,16 @@ TEASER_REGEXP = re.compile(r'<!--\s*(TEASER_END|END_TEASER)(:(.+))?\s*-->', re.I
 class Post(object):
     """Represent a blog post or site page."""
 
+    _prev_post = None
+    _next_post = None
+    is_draft = False
+    is_private = False
+    is_two_file = True
+    _reading_time = None
+    _remaining_reading_time = None
+    _paragraph_count = None
+    _remaining_paragraph_count = None
+
     def __init__(
         self,
         source_path,
@@ -100,19 +110,10 @@ class Post(object):
         self.compile_html = self.compiler.compile
         self.demote_headers = self.compiler.demote_headers and self.config['DEMOTE_HEADERS']
         self.translated_to = set([])
-        self._prev_post = None
-        self._next_post = None
-        self.is_draft = False
-        self.is_private = False
         self.folder_relative = destination
         self.folder_base = destination_base
         self.messages = messages
         self._template_name = template_name
-        self.is_two_file = True
-        self._reading_time = None
-        self._remaining_reading_time = None
-        self._paragraph_count = None
-        self._remaining_paragraph_count = None
         self._dependency_file_fragment = defaultdict(list)
         self._dependency_file_page = defaultdict(list)
         self._dependency_uptodate_fragment = defaultdict(list)
