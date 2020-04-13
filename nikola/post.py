@@ -146,6 +146,7 @@ class Post(object):
 
         self._load_translated_metadata(default_metadata)
         self._load_data()
+        self.__migrate_section_to_category()
 
         self.publish_later = False if self.current_time is None else self.date >= self.current_time
 
