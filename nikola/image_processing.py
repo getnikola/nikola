@@ -112,6 +112,7 @@ class ImageProcessor(object):
         # The jpg exclusion is Issue #3332
         is_animated = hasattr(_im, 'n_frames') and _im.n_frames > 1 and extension not in {'.jpg', '.jpeg'}
 
+        exif = None
         if "exif" in _im.info:
             exif = piexif.load(_im.info["exif"])
             # Rotate according to EXIF
