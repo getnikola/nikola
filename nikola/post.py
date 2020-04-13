@@ -149,6 +149,7 @@ class Post(object):
         self._load_translated_metadata(default_metadata)
         self._load_data()
         self.__migrate_section_to_category()
+        self._set_tags()
 
         self.publish_later = False if self.current_time is None else self.date >= self.current_time
 
@@ -157,7 +158,7 @@ class Post(object):
 
         # Allow overriding URL_TYPE via meta
         # The check is done here so meta dicts won’t change inside of
-        # generic_post_rendere
+        # generic_post_renderer
         self.url_type = self.meta('url_type') or None
         # Register potential extra dependencies
         self.compiler.register_extra_dependencies(self)
