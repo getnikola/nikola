@@ -109,6 +109,7 @@ class ImageProcessor(object):
 
         _im = Image.open(src)
 
+        # The jpg exclusion is Issue #3332
         is_animated = hasattr(_im, 'n_frames') and _im.n_frames > 1 and extension not in {'.jpg', '.jpeg'}
 
         try:
@@ -131,9 +132,7 @@ class ImageProcessor(object):
         icc_profile = _im.info.get('icc_profile') if preserve_icc_profiles else None
 
         for dst, max_size in zip(dst_paths, max_sizes):
-            # The jpg exclusion is Issue #3332
-            if is_animated:
-                # Animated gif, leave as-is
+            if is_animated:  # Animated gif, leave as-is
                 utils.copy_file(src, dst)
                 continue
 
