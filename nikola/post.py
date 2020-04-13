@@ -144,20 +144,7 @@ class Post(object):
             # default value is 'text'
             default_metadata['type'] = 'text'
 
-        for lang in self.translations:
-            if lang != self.default_lang:
-                meta = defaultdict(lambda: '')
-                meta.update(default_metadata)
-                _meta, _extractors = get_meta(self, lang)
-                meta.update(_meta)
-                self.meta[lang] = meta
-                self.used_extractor[lang] = _extractors
-
-        if not self.is_translation_available(self.default_lang):
-            # Special case! (Issue #373)
-            # Fill default_metadata with stuff from the other languages
-            for lang in sorted(self.translated_to):
-                default_metadata.update(self.meta[lang])
+        self._load_translated_metadata(default_metadata)
 
         # Load data field from metadata
         self.data = Functionary(lambda: None, self.default_lang)
@@ -329,6 +316,23 @@ class Post(object):
             # Old behavior (non-translatable destination path, normalized by scanner)
             self.folders = {lang: self.folder_relative for lang in self.config['TRANSLATIONS'].keys()}
         self.folder = self.folders[self.default_lang]
+
+    def _load_translated_metadata(self, default_metadata):
+        """Load metadata from all translation sources."""
+        for lang in self.translations:
+            if lang != self.default_lang:
+                meta = defaultdict(lambda: '')
+                meta.update(default_metadata)
+                _meta, _extractors = get_meta(self, lang)
+                meta.update(_meta)
+                self.meta[lang] = meta
+                self.used_extractor[lang] = _extractors
+
+        if not self.is_translation_available(self.default_lang):
+            # Special case! (Issue #373)
+            # Fill default_metadata with stuff from the other languages
+            for lang in sorted(self.translated_to):
+                default_metadata.update(self.meta[lang])
 
     def _set_date(self, default_metadata):
         """Set post date/updated based on metadata and configuration."""
