@@ -116,19 +116,19 @@ class ImageProcessor(object):
             # Rotate according to EXIF
             value = exif['0th'].get(piexif.ImageIFD.Orientation, 1)
             if value in (3, 4):
-                im = im.transpose(Image.ROTATE_180)
+                _im = _im.transpose(Image.ROTATE_180)
             elif value in (5, 6):
-                im = im.transpose(Image.ROTATE_270)
+                _im = _im.transpose(Image.ROTATE_270)
             elif value in (7, 8):
-                im = im.transpose(Image.ROTATE_90)
+                _im = _im.transpose(Image.ROTATE_90)
             if value in (2, 4, 5, 7):
-                im = im.transpose(Image.FLIP_LEFT_RIGHT)
+                _im = _im.transpose(Image.FLIP_LEFT_RIGHT)
             exif['0th'][piexif.ImageIFD.Orientation] = 1
             exif = self.filter_exif(exif, exif_whitelist)
         except KeyError:
             exif = None
 
-        icc_profile = im.info.get('icc_profile') if preserve_icc_profiles else None
+        icc_profile = _im.info.get('icc_profile') if preserve_icc_profiles else None
 
         for dst, max_size in zip(dst_paths, max_sizes):
             # The jpg exclusion is Issue #3332
