@@ -133,6 +133,7 @@ class Post(object):
 
         self._set_date(default_metadata)
 
+        # These are the required metadata fields
         if 'title' not in default_metadata or 'slug' not in default_metadata:
             raise ValueError("You must set a title (found '{0}'), a slug (found '{1}') and a date (found '{2}')! "
                              "[in file {3}]".format(default_metadata.get('title', None),
@@ -141,40 +142,10 @@ class Post(object):
                                                     source_path))
 
         if 'type' not in default_metadata:
-            # default value is 'text'
             default_metadata['type'] = 'text'
 
         self._load_translated_metadata(default_metadata)
-
-        # Load data field from metadata
-        self.data = Functionary(lambda: None, self.default_lang)
-        for lang in self.translations:
-            if self.meta[lang].get('data') is not None:
-                self.data[lang] = utils.load_data(self.meta[lang]['data'])
-
-        for lang, meta in self.meta.items():
-            # Migrate section to category
-            # TODO: remove in v9
-            if 'section' in meta:
-                if 'category' in meta:
-                    LOGGER.warning("Post {0} has both 'category' and 'section' metadata. Section will be ignored.".format(source_path))
-                else:
-                    meta['category'] = meta['section']
-                    LOGGER.info("Post {0} uses 'section' metadata, setting its value to 'category'".format(source_path))
-
-            # Handle CATEGORY_DESTPATH_AS_DEFAULT
-            if 'category' not in meta and self.config['CATEGORY_DESTPATH_AS_DEFAULT']:
-                self.category_from_destpath = True
-                if self.config['CATEGORY_DESTPATH_TRIM_PREFIX'] and self.folder_relative != '.':
-                    category = self.folder_relative
-                else:
-                    category = self.folders[lang]
-                category = category.replace(os.sep, '/')
-                if self.config['CATEGORY_DESTPATH_FIRST_DIRECTORY_ONLY']:
-                    category = category.split('/')[0]
-                meta['category'] = self.config['CATEGORY_DESTPATH_NAMES'](lang).get(category, category)
-            else:
-                self.category_from_destpath = False
+        self._load_data()
 
         self.publish_later = False if self.current_time is None else self.date >= self.current_time
 
@@ -316,6 +287,39 @@ class Post(object):
             # Old behavior (non-translatable destination path, normalized by scanner)
             self.folders = {lang: self.folder_relative for lang in self.config['TRANSLATIONS'].keys()}
         self.folder = self.folders[self.default_lang]
+
+    def __migrate_section_to_category(self):
+        """TODO: remove in v9."""
+        for lang, meta in self.meta.items():
+            # Migrate section to category
+            # TODO: remove in v9
+            if 'section' in meta:
+                if 'category' in meta:
+                    LOGGER.warning("Post {0} has both 'category' and 'section' metadata. Section will be ignored.".format(self.source_path))
+                else:
+                    meta['category'] = meta['section']
+                    LOGGER.info("Post {0} uses 'section' metadata, setting its value to 'category'".format(self.source_path))
+
+            # Handle CATEGORY_DESTPATH_AS_DEFAULT
+            if 'category' not in meta and self.config['CATEGORY_DESTPATH_AS_DEFAULT']:
+                self.category_from_destpath = True
+                if self.config['CATEGORY_DESTPATH_TRIM_PREFIX'] and self.folder_relative != '.':
+                    category = self.folder_relative
+                else:
+                    category = self.folders[lang]
+                category = category.replace(os.sep, '/')
+                if self.config['CATEGORY_DESTPATH_FIRST_DIRECTORY_ONLY']:
+                    category = category.split('/')[0]
+                meta['category'] = self.config['CATEGORY_DESTPATH_NAMES'](lang).get(category, category)
+            else:
+                self.category_from_destpath = False
+
+    def _load_data(self):
+        """Load data field from metadata."""
+        self.data = Functionary(lambda: None, self.default_lang)
+        for lang in self.translations:
+            if self.meta[lang].get('data') is not None:
+                self.data[lang] = utils.load_data(self.meta[lang]['data'])
 
     def _load_translated_metadata(self, default_metadata):
         """Load metadata from all translation sources."""
