@@ -124,36 +124,14 @@ class Post(object):
         self._set_translated_to()
         self._set_folders(destination, destination_base)
 
+        # Load default metadata
         default_metadata, default_used_extractor = get_meta(self, lang=None)
-
         self.meta = Functionary(lambda: None, self.default_lang)
         self.used_extractor = Functionary(lambda: None, self.default_lang)
         self.meta[self.default_lang] = default_metadata
         self.used_extractor[self.default_lang] = default_used_extractor
 
-        if 'date' not in default_metadata and not use_in_feeds:
-            # For pages we don't *really* need a date
-            if self.config['__invariant__']:
-                default_metadata['date'] = datetime.datetime(2013, 12, 31, 23, 59, 59, tzinfo=self.config['__tzinfo__'])
-            else:
-                default_metadata['date'] = datetime.datetime.utcfromtimestamp(
-                    os.stat(self.source_path).st_ctime).replace(tzinfo=dateutil.tz.tzutc()).astimezone(self.config['__tzinfo__'])
-
-        # If time zone is set, build localized datetime.
-        try:
-            self.date = to_datetime(self.meta[self.default_lang]['date'], self.config['__tzinfo__'])
-        except ValueError:
-            if not self.meta[self.default_lang]['date']:
-                msg = 'Missing date in file {}'.format(source_path)
-            else:
-                msg = "Invalid date '{0}' in file {1}".format(self.meta[self.default_lang]['date'], source_path)
-            LOGGER.error(msg)
-            raise ValueError(msg)
-
-        if 'updated' not in default_metadata:
-            default_metadata['updated'] = default_metadata.get('date', None)
-
-        self.updated = to_datetime(default_metadata['updated'], self.config['__tzinfo__'])
+        self._set_date(default_metadata)
 
         if 'title' not in default_metadata or 'slug' not in default_metadata \
                 or 'date' not in default_metadata:
@@ -337,6 +315,7 @@ class Post(object):
 
     def _set_folders(self, destination, destination_base):
         """Compose destination paths."""
+
         self.folder_relative = destination
         self.folder_base = destination_base
 
@@ -351,6 +330,32 @@ class Post(object):
             # Old behavior (non-translatable destination path, normalized by scanner)
             self.folders = {lang: self.folder_relative for lang in self.config['TRANSLATIONS'].keys()}
         self.folder = self.folders[self.default_lang]
+
+    def _set_date(self, default_metadata):
+        """Set post date/updated based on metadata and configuration."""
+        if 'date' not in default_metadata and not self.is_post:
+            # For pages we don't *really* need a date
+            if self.config['__invariant__']:
+                default_metadata['date'] = datetime.datetime(2013, 12, 31, 23, 59, 59, tzinfo=self.config['__tzinfo__'])
+            else:
+                default_metadata['date'] = datetime.datetime.utcfromtimestamp(
+                    os.stat(self.source_path).st_ctime).replace(tzinfo=dateutil.tz.tzutc()).astimezone(self.config['__tzinfo__'])
+
+        # If time zone is set, build localized datetime.
+        try:
+            self.date = to_datetime(self.meta[self.default_lang]['date'], self.config['__tzinfo__'])
+        except ValueError:
+            if not self.meta[self.default_lang]['date']:
+                msg = 'Missing date in file {}'.format(self.source_path)
+            else:
+                msg = "Invalid date '{0}' in file {1}".format(self.meta[self.default_lang]['date'], self.source_path)
+            LOGGER.error(msg)
+            raise ValueError(msg)
+
+        if 'updated' not in default_metadata:
+            default_metadata['updated'] = default_metadata.get('date', None)
+
+        self.updated = to_datetime(default_metadata['updated'], self.config['__tzinfo__'])
 
     def _get_hyphenate(self):
         return bool(self.config['HYPHENATE'] or self.meta('hyphenate'))
