@@ -112,7 +112,7 @@ class ImageProcessor(object):
         is_animated = hasattr(_im, 'n_frames') and _im.n_frames > 1 and extension not in {'.jpg', '.jpeg'}
 
         try:
-            exif = piexif.load(im.info["exif"])
+            exif = piexif.load(_im.info["exif"])
             # Rotate according to EXIF
             value = exif['0th'].get(piexif.ImageIFD.Orientation, 1)
             if value in (3, 4):
