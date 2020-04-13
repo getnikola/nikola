@@ -113,7 +113,6 @@ class Post(object):
         self._template_name = template_name
         self.compile_html = self.compiler.compile
         self.demote_headers = self.compiler.demote_headers and self.config['DEMOTE_HEADERS']
-        self.translated_to = set([])
         self._dependency_file_fragment = defaultdict(list)
         self._dependency_file_page = defaultdict(list)
         self._dependency_uptodate_fragment = defaultdict(list)
@@ -124,18 +123,7 @@ class Post(object):
         else:
             self.metadata_extractors_by = metadata_extractors_by
 
-        # Load internationalized metadata
-        for lang in self.translations:
-            if os.path.isfile(get_translation_candidate(self.config, self.source_path, lang)):
-                self.translated_to.add(lang)
-
-        # If we don't have anything in translated_to, the file does not exist
-        if not self.translated_to and os.path.isfile(self.source_path):
-            raise Exception(("Could not find translations for {}, check your "
-                            "TRANSLATIONS_PATTERN").format(self.source_path))
-        elif not self.translated_to:
-            raise Exception(("Cannot use {} (not a file, perhaps a broken "
-                            "symbolic link?)").format(self.source_path))
+        self._set_translated_to()
 
         default_metadata, default_used_extractor = get_meta(self, lang=None)
 
@@ -345,6 +333,22 @@ class Post(object):
         # cache/posts/blah.html
         self._base_path = self.base_path.replace('\\', '/')
         self.metadata_path = self.post_name + ".meta"  # posts/blah.meta
+
+    def _set_translated_to(self):
+        """Find post's translations."""
+        self.translated_to = set([])
+        for lang in self.translations:
+            if os.path.isfile(get_translation_candidate(self.config, self.source_path, lang)):
+                self.translated_to.add(lang)
+
+        # If we don't have anything in translated_to, the file does not exist
+        if not self.translated_to and os.path.isfile(self.source_path):
+            raise Exception(("Could not find translations for {}, check your "
+                            "TRANSLATIONS_PATTERN").format(self.source_path))
+        elif not self.translated_to:
+            raise Exception(("Cannot use {} (not a file, perhaps a broken "
+                            "symbolic link?)").format(self.source_path))
+
 
     def _get_hyphenate(self):
         return bool(self.config['HYPHENATE'] or self.meta('hyphenate'))
