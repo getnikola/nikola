@@ -152,6 +152,34 @@ class Post(object):
 
         self.publish_later = False if self.current_time is None else self.date >= self.current_time
 
+        # While draft comes from the tags, it's not really a tag
+        self.use_in_feeds = self.is_post and not self.is_draft and not self.is_private and not self.publish_later
+
+        # Allow overriding URL_TYPE via meta
+        # The check is done here so meta dicts won’t change inside of
+        # generic_post_rendere
+        self.url_type = self.meta('url_type') or None
+        # Register potential extra dependencies
+        self.compiler.register_extra_dependencies(self)
+
+    def _load_config(self, config):
+        """Set members to configured values."""
+        self.config = config
+        if self.config['FUTURE_IS_NOW']:
+            self.current_time = None
+        else:
+            self.current_time = current_time(self.config['__tzinfo__'])
+        self.base_url = self.config['BASE_URL']
+        self.strip_indexes = self.config['STRIP_INDEXES']
+        self.index_file = self.config['INDEX_FILE']
+        self.pretty_urls = self.config['PRETTY_URLS']
+        self.default_lang = self.config['DEFAULT_LANG']
+        self.translations = self.config['TRANSLATIONS']
+        self.skip_untranslated = not self.config['SHOW_UNTRANSLATED_POSTS']
+        self._default_preview_image = self.config['DEFAULT_PREVIEW_IMAGE']
+
+    def _set_tags(self):
+        """Set post tags."""
         self._tags = {}
         for lang in self.translated_to:
             if isinstance(self.meta[lang]['tags'], (list, tuple, set)):
@@ -213,32 +241,6 @@ class Post(object):
 
                 if 'mathjax' in self._tags[lang]:
                     self.has_oldstyle_metadata_tags = True
-
-        # While draft comes from the tags, it's not really a tag
-        self.use_in_feeds = self.is_post and not self.is_draft and not self.is_private and not self.publish_later
-
-        # Allow overriding URL_TYPE via meta
-        # The check is done here so meta dicts won’t change inside of
-        # generic_post_rendere
-        self.url_type = self.meta('url_type') or None
-        # Register potential extra dependencies
-        self.compiler.register_extra_dependencies(self)
-
-    def _load_config(self, config):
-        """Set members to configured values."""
-        self.config = config
-        if self.config['FUTURE_IS_NOW']:
-            self.current_time = None
-        else:
-            self.current_time = current_time(self.config['__tzinfo__'])
-        self.base_url = self.config['BASE_URL']
-        self.strip_indexes = self.config['STRIP_INDEXES']
-        self.index_file = self.config['INDEX_FILE']
-        self.pretty_urls = self.config['PRETTY_URLS']
-        self.default_lang = self.config['DEFAULT_LANG']
-        self.translations = self.config['TRANSLATIONS']
-        self.skip_untranslated = not self.config['SHOW_UNTRANSLATED_POSTS']
-        self._default_preview_image = self.config['DEFAULT_PREVIEW_IMAGE']
 
     def _set_paths(self, source_path):
         """Set the various paths and the post_name.
