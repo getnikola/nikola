@@ -573,40 +573,26 @@ class Galleries(Task, ImageProcessor):
         orig_dest_path = os.path.join(output_gallery, img_name)
         yield utils.apply_filters({
             'basename': self.name,
-            'name': thumb_path,
+            'name': orig_dest_path,
             'file_dep': [img],
-            'targets': [thumb_path],
+            'targets': [thumb_path, orig_dest_path],
             'actions': [
                 (self.resize_image,
-                    (img, thumb_path, self.kw['thumbnail_size'], True, self.kw['preserve_exif_data'],
-                     self.kw['exif_whitelist'], self.kw['preserve_icc_profiles']))
-            ],
+                    [img], {
+                        'dst_paths': [thumb_path, orig_dest_path],
+                        'max_sizes': [self.kw['thumbnail_size'], self.kw['max_image_size']],
+                        'bigger_panoramas': True,
+                        'preserve_exif_data': self.kw['preserve_exif_data'],
+                        'exif_whitelist': self.kw['exif_whitelist'],
+                        'preserve_icc_profiles': self.kw['preserve_icc_profiles']})],
             'clean': True,
             'uptodate': [utils.config_changed({
                 1: self.kw['thumbnail_size'],
-                2: self.kw['preserve_exif_data'],
-                3: self.kw['exif_whitelist'],
-                4: self.kw['preserve_icc_profiles'],
+                2: self.kw['max_image_size'],
+                3: self.kw['preserve_exif_data'],
+                4: self.kw['exif_whitelist'],
+                5: self.kw['preserve_icc_profiles'],
             }, 'nikola.plugins.task.galleries:resize_thumb')],
-        }, self.kw['filters'])
-
-        yield utils.apply_filters({
-            'basename': self.name,
-            'name': orig_dest_path,
-            'file_dep': [img],
-            'targets': [orig_dest_path],
-            'actions': [
-                (self.resize_image,
-                    (img, orig_dest_path, self.kw['max_image_size'], True, self.kw['preserve_exif_data'],
-                     self.kw['exif_whitelist'], self.kw['preserve_icc_profiles']))
-            ],
-            'clean': True,
-            'uptodate': [utils.config_changed({
-                1: self.kw['max_image_size'],
-                2: self.kw['preserve_exif_data'],
-                3: self.kw['exif_whitelist'],
-                4: self.kw['preserve_icc_profiles'],
-            }, 'nikola.plugins.task.galleries:resize_max')],
         }, self.kw['filters'])
 
     def remove_excluded_image(self, img, input_folder):
