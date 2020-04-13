@@ -93,6 +93,7 @@ class Post(object):
         specified, it will be prepended to the destination path.
         """
         self._load_config(config)
+        self._set_paths(source_path)
 
         self.compiler = compiler
         self.compiler_contexts = {}
@@ -103,16 +104,6 @@ class Post(object):
         self._next_post = None
         self.is_draft = False
         self.is_private = False
-        self.source_path = source_path  # posts/blah.txt
-        self.post_name = os.path.splitext(source_path)[0]  # posts/blah
-        _relpath = os.path.relpath(self.post_name)
-        if _relpath != self.post_name:
-            self.post_name = _relpath.replace('..' + os.sep, '_..' + os.sep)
-        # cache[\/]posts[\/]blah.html
-        self.base_path = os.path.join(self.config['CACHE_FOLDER'], self.post_name + ".html")
-        # cache/posts/blah.html
-        self._base_path = self.base_path.replace('\\', '/')
-        self.metadata_path = self.post_name + ".meta"  # posts/blah.meta
         self.folder_relative = destination
         self.folder_base = destination_base
         self.messages = messages
@@ -340,6 +331,22 @@ class Post(object):
         self.translations = self.config['TRANSLATIONS']
         self.skip_untranslated = not self.config['SHOW_UNTRANSLATED_POSTS']
         self._default_preview_image = self.config['DEFAULT_PREVIEW_IMAGE']
+
+    def _set_paths(self, source_path):
+        """Set the various paths and the post_name.
+
+        TODO: WTF is all this.
+        """
+        self.source_path = source_path  # posts/blah.txt
+        self.post_name = os.path.splitext(source_path)[0]  # posts/blah
+        _relpath = os.path.relpath(self.post_name)
+        if _relpath != self.post_name:
+            self.post_name = _relpath.replace('..' + os.sep, '_..' + os.sep)
+        # cache[\/]posts[\/]blah.html
+        self.base_path = os.path.join(self.config['CACHE_FOLDER'], self.post_name + ".html")
+        # cache/posts/blah.html
+        self._base_path = self.base_path.replace('\\', '/')
+        self.metadata_path = self.post_name + ".meta"  # posts/blah.meta
 
     def _get_hyphenate(self):
         return bool(self.config['HYPHENATE'] or self.meta('hyphenate'))
