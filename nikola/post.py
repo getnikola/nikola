@@ -80,6 +80,7 @@ class Post(object):
     _remaining_reading_time = None
     _paragraph_count = None
     _remaining_paragraph_count = None
+    post_status = 'published'
 
     def __init__(
         self,
@@ -150,7 +151,6 @@ class Post(object):
 
         self.publish_later = False if self.current_time is None else self.date >= self.current_time
 
-        self.post_status = 'published'
         self._tags = {}
         self.has_oldstyle_metadata_tags = False
         for lang in self.translated_to:
