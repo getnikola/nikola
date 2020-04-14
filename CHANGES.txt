@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Use Luxon instead of Moment for fancy dates to make it more
+  lightweight, going from 328k to 68k (Issue #3232)
 * Allow preview images to be relative to posts for bootblog4 featured
   posts
 * Change the listings formatting to support word wrap with line

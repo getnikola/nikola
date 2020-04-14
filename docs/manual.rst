@@ -1663,8 +1663,11 @@ Nikola can use various styles for presenting dates.
 DATE_FORMAT
     The date format to use if there is no JS or fancy dates are off.  `Compatible with CLDR syntax. <http://cldr.unicode.org/translation/date-time>`_
 
-JS_DATE_FORMAT
-    The date format to use if fancy dates are on.  Compatible with ``moment.js`` syntax.
+LUXON_DATE_FORMAT
+    The date format to use with Luxon. A dictionary of dictionaries: the top level is languages, and the subdictionaries are of the format ``{'preset': False, 'format': 'yyyy-MM-dd HH:mm'}``. `Used by Luxon <https://moment.github.io/luxon/docs/manual/formatting>`_ (format can be the preset name, eg. ``'DATE_LONG'``).
+
+MOMENTJS_DATE_FORMAT (formerly JS_DATE_FORMAT)
+    The date format to use if fancy dates are on, and the theme is using Moment.js.
 
 DATE_FANCINESS = 0
     Fancy dates are off, and DATE_FORMAT is used.
@@ -1682,14 +1685,18 @@ For Mako:
 .. code:: html
 
     % if date_fanciness != 0:
+    %if date_fanciness == 2:
+        <!-- Polyfill for relative dates in Safari -- best handled with a CDN -->
+        <script src="https://polyfill.io/v3/polyfill.js?features=Intl.RelativeTimeFormat.%7Elocale.${luxon_locales[lang]}"></script>
+    %endif
     <!-- required scripts -- best handled with bundles -->
-    <script src="/assets/js/moment-with-locales.min.js"></script>
+    <script src="/assets/js/luxon.min.js"></script>
     <script src="/assets/js/fancydates.js"></script>
 
     <!-- fancy dates code -->
     <script>
-    moment.locale("${momentjs_locales[lang]}");
-    fancydates(${date_fanciness}, ${js_date_format});
+    luxon.Settings.defaultLocale = "${luxon_locales[lang]}";
+    fancydates(${date_fanciness}, ${luxon_date_format});
     </script>
     <!-- end fancy dates code -->
     %endif
@@ -1700,14 +1707,18 @@ For Jinja2:
 .. code:: html
 
     {% if date_fanciness != 0 %}
+    {% if date_fanciness == 2 %}
+        <!-- Polyfill for relative dates in Safari -- best handled with a CDN -->
+        <script src="https://polyfill.io/v3/polyfill.js?features=Intl.RelativeTimeFormat.%7Elocale.{{ luxon_locales[lang] }}"></script>
+    {% endif %}
     <!-- required scripts -- best handled with bundles -->
-    <script src="/assets/js/moment-with-locales.min.js"></script>
+    <script src="/assets/js/luxon.min.js"></script>
     <script src="/assets/js/fancydates.js"></script>
 
     <!-- fancy dates code -->
     <script>
-    moment.locale("{{ momentjs_locales[lang] }}");
-    fancydates({{ date_fanciness }}, {{ js_date_format }});
+    luxon.Settings.defaultLocale = "{{ luxon_locales[lang] }}";
+    fancydates({{ date_fanciness }}, {{ luxon_date_format }});
     </script>
     <!-- end fancy dates code -->
     {% endif %}
