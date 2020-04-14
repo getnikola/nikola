@@ -481,7 +481,7 @@ class ShortcodePlugin(BasePlugin):
         """Set Nikola site."""
         self.site = site
         site.register_shortcode(self.name, self.handler)
-        return super(ShortcodePlugin, self).set_site(site)
+        return super().set_site(site)
 
 
 class Importer(Command):

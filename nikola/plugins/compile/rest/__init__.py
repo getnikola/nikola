@@ -182,7 +182,7 @@ class CompileRest(PageCompiler):
 
     def set_site(self, site):
         """Set Nikola site."""
-        super(CompileRest, self).set_site(site)
+        super().set_site(site)
         self.config_dependencies = []
         for plugin_info in self.get_compiler_extensions():
             self.config_dependencies.append(plugin_info.name)
@@ -276,7 +276,7 @@ def add_node(node, visit_function=None, depart_function=None):
                 self.site = site
                 directives.register_directive('math', MathDirective)
                 add_node(MathBlock, visit_Math, depart_Math)
-                return super(Plugin, self).set_site(site)
+                return super().set_site(site)
 
         class MathDirective(Directive):
             def run(self):

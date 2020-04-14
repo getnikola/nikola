@@ -101,7 +101,7 @@ class Listings(Task):
                     # Register file names in the mapping.
                     self.register_output_name(input_folder, rel_name, rel_output_name)
 
-        return super(Listings, self).set_site(site)
+        return super().set_site(site)
 
     def gen_tasks(self):
         """Render pretty code listings."""

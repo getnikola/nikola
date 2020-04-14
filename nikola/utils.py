@@ -206,7 +206,7 @@ class Functionary(defaultdict):
 
     def __init__(self, default, default_lang):
         """Initialize a functionary."""
-        super(Functionary, self).__init__(default)
+        super().__init__(default)
         self.default_lang = default_lang
 
     def __call__(self, key, lang=None):
@@ -243,7 +243,7 @@ class TranslatableSetting(object):
     def __getattribute__(self, attr):
         """Return attributes, falling back to string attributes."""
         try:
-            return super(TranslatableSetting, self).__getattribute__(attr)
+            return super().__getattribute__(attr)
         except AttributeError:
             return self().__getattribute__(attr)
 
@@ -488,7 +488,7 @@ class CustomEncoder(json.JSONEncoder):
     def default(self, obj):
         """Create default encoding handler."""
         try:
-            return super(CustomEncoder, self).default(obj)
+            return super().default(obj)
         except TypeError:
             if isinstance(obj, (set, frozenset)):
                 return self.encode(sorted(list(obj)))
@@ -504,7 +504,7 @@ class config_changed(tools.config_changed):
 
     def __init__(self, config, identifier=None):
         """Initialize config_changed."""
-        super(config_changed, self).__init__(config)
+        super().__init__(config)
         self.identifier = '_config_changed'
         if identifier is not None:
             self.identifier += ':' + identifier
@@ -1081,7 +1081,7 @@ class LocaleBorgUninitializedException(Exception):
 
     def __init__(self):
         """Initialize exception."""
-        super(LocaleBorgUninitializedException, self).__init__("Attempt to use LocaleBorg before initialization")
+        super().__init__("Attempt to use LocaleBorg before initialization")
 
 
 # Customized versions of babel.dates functions that don't do weird stuff with
@@ -1633,7 +1633,7 @@ class NikolaPygmentsHTML(BetterHtmlFormatter):
             kwargs['linenos'] = 'table'
         kwargs['anchorlinenos'] = kwargs['linenos'] == 'table'
         kwargs['nowrap'] = False
-        super(NikolaPygmentsHTML, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def wrap(self, source, outfile):
         """Wrap the ``source``, which is a generator yielding individual lines, in custom generators."""

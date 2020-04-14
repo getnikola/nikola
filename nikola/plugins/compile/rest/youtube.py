@@ -42,7 +42,7 @@ class Plugin(RestExtension):
         """Set Nikola site."""
         self.site = site
         directives.register_directive('youtube', Youtube)
-        return super(Plugin, self).set_site(site)
+        return super().set_site(site)
 
 
 CODE = """\

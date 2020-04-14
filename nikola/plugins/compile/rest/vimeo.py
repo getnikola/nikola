@@ -45,7 +45,7 @@ class Plugin(RestExtension):
         """Set Nikola site."""
         self.site = site
         directives.register_directive('vimeo', Vimeo)
-        return super(Plugin, self).set_site(site)
+        return super().set_site(site)
 
 
 CODE = """<div class="vimeo-video{align}">

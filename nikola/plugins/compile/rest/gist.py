@@ -19,7 +19,7 @@ class Plugin(RestExtension):
         """Set Nikola site."""
         self.site = site
         directives.register_directive('gist', GitHubGist)
-        return super(Plugin, self).set_site(site)
+        return super().set_site(site)
 
 
 class GitHubGist(Directive):

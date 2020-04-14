@@ -60,7 +60,7 @@ class Galleries(Task, ImageProcessor):
 
     def set_site(self, site):
         """Set Nikola site."""
-        super(Galleries, self).set_site(site)
+        super().set_site(site)
         site.register_path_handler('gallery', self.gallery_path)
         site.register_path_handler('gallery_global', self.gallery_global_path)
         site.register_path_handler('gallery_rss', self.gallery_rss_path)

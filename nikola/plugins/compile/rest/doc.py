@@ -44,7 +44,7 @@ class Plugin(RestExtension):
         roles.register_canonical_role('doc', doc_role)
         self.site.register_shortcode('doc', doc_shortcode)
         doc_role.site = site
-        return super(Plugin, self).set_site(site)
+        return super().set_site(site)
 
 
 def _doc_link(rawtext, text, options={}, content=[]):

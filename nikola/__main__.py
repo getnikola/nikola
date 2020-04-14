@@ -229,7 +229,7 @@ class Build(DoitRun):
             }
         )
         self.cmd_options = tuple(opts)
-        super(Build, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
 
 
 class Clean(DoitClean):
@@ -298,7 +298,7 @@ class DoitNikola(DoitMain):
 
     def __init__(self, nikola, quiet=False):
         """Initialzie DoitNikola."""
-        super(DoitNikola, self).__init__()
+        super().__init__()
         self.nikola = nikola
         nikola.doit = self
         self.task_loader = self.TASK_LOADER(nikola, quiet)
@@ -368,7 +368,7 @@ class DoitNikola(DoitMain):
                              "existing Nikola site.")
                 return 3
         try:
-            return super(DoitNikola, self).run(cmd_args)
+            return super().run(cmd_args)
         except Exception:
             LOGGER.error('An unhandled exception occurred.')
             if self.nikola.debug or self.nikola.show_tracebacks:
