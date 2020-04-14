@@ -40,10 +40,10 @@ from copy import copy
 from urllib.parse import urlparse, urlsplit, urlunsplit, urljoin, unquote, parse_qs
 
 import dateutil.tz
+import feedgenerator
 import lxml.etree
 import lxml.html
 import natsort
-import PyRSS2Gen as rss
 from pkg_resources import resource_filename
 from blinker import signal
 from yapsy.PluginManager import PluginManager
@@ -1662,26 +1662,32 @@ class Nikola(object):
                          rss_teasers, rss_plain, feed_length=10, feed_url=None,
                          enclosure=_enclosure, rss_links_append_query=None, copyright_=None):
         """Generate an ExtendedRSS2 feed object for later use."""
-        rss_obj = utils.ExtendedRSS2(
-            title=title,
-            link=utils.encodelink(link),
-            description=description,
-            lastBuildDate=datetime.datetime.utcnow(),
-            generator='Nikola (getnikola.com)',
-            language=lang
-        )
+        rss_info = {
+            'title': title,
+            'description': description or title,
+            'generator': 'Nikola (getnikola.com)',
+            'language': lang,
+            'id': feed_url,
+        }
 
         if copyright_ is None:
             copyright_ = self._get_rss_copyright(lang, rss_plain)
         # Use the configured or specified copyright string if present.
         if copyright_:
-            rss_obj.copyright = copyright_
+            rss_info['copyright'] = copyright_
+
+        rss_obj = utils.NikolaFeedGenerator()
+        rss_obj.link(
+            {"href": utils.encodelink(feed_url), "rel": "self", "type": "application/rss+xml"}
+        )
+        rss_obj.link({"href": utils.encodelink(link)})
+
+        for k, v in rss_info.items():
+            getattr(rss_obj, k)(v)
 
         if feed_url:
             absurl = '/' + feed_url[len(self.config['BASE_URL']):]
             rss_obj.xsl_stylesheet_href = self.url_replacer(absurl, "/assets/xml/rss.xsl")
-
-        items = []
 
         feed_append_query = None
         if rss_links_append_query:
@@ -1717,31 +1723,31 @@ class Nikola(object):
                             raise
             args = {
                 'title': post.title(lang),
-                'link': post.permalink(lang, absolute=True, query=feed_append_query),
+                'link': {'href': post.permalink(lang, absolute=True, query=feed_append_query)},
                 'description': data,
-                # PyRSS2Gen's pubDate is GMT time.
-                'pubDate': (post.date if post.date.tzinfo is None else
-                            post.date.astimezone(dateutil.tz.tzutc())),
-                'categories': post._tags.get(lang, []),
-                'creator': post.author(lang),
-                'guid': post.guid(lang),
+                'pubDate': post.date,
+                'category': [{'term': t} for t in post._tags.get(lang, [])],
             }
 
-            if post.author(lang):
-                rss_obj.rss_attrs["xmlns:dc"] = "http://purl.org/dc/elements/1.1/"
 
             if enclosure:
                 # enclosure callback returns None if post has no enclosure, or a
                 # 3-tuple of (url, length (0 is valid), mimetype)
                 enclosure_details = enclosure(post=post, lang=lang)
                 if enclosure_details is not None:
-                    args['enclosure'] = rss.Enclosure(*enclosure_details)
+                    enclosure_url, enclosure_length, enclosure_type = enclosure_details
+                    args['enclosure'] = {
+                        'url': enclosure_url,
+                        'length': enclosure_length,
+                        'type': enclosure_type
+                    }
 
-            items.append(utils.ExtendedItem(**args))
+            item = rss_obj.add_entry()
+            for k, v in args.items():
+                getattr(item, k)(v)
+            item.guid(guid=post.guid(lang), permalink=post._guid_is_permalink(lang))
+            item.nikola_author_name = post.author(lang)
 
-        rss_obj.items = items
-        rss_obj.self_url = feed_url
-        rss_obj.rss_attrs["xmlns:atom"] = "http://www.w3.org/2005/Atom"
         return rss_obj
 
     def generic_rss_renderer(self, lang, title, link, description, timeline, output_path,

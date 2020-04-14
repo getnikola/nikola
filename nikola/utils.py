@@ -53,9 +53,10 @@ from zipfile import ZipFile as zipf
 import babel.dates
 import dateutil.parser
 import dateutil.tz
+import feedgen.entry
+import feedgen.feed
 import pygments.formatters
 import pygments.formatters._mapping
-import PyRSS2Gen as rss
 from blinker import signal
 from doit import tools
 from doit.cmdparse import CmdParse
@@ -1258,44 +1259,47 @@ class LocaleBorg(object):
         return re.sub(r'{(.*?)(?::(.*?))?}', date_formatter, message)
 
 
-class ExtendedRSS2(rss.RSS2):
-    """Extended RSS class."""
+class NikolaFeedGenerator(feedgen.feed.FeedGenerator):
+    """Nikola-modified feed generator."""
 
     xsl_stylesheet_href = None
 
-    def publish(self, handler):
-        """Publish a feed."""
+    def xml_declarations(self):
+        """Return the XML declarations for this feed."""
+        declarations = '<?xml version="1.0" encoding="utf-8"?>\n'
         if self.xsl_stylesheet_href:
-            handler.processingInstruction("xml-stylesheet", 'type="text/xsl" href="{0}" media="all"'.format(self.xsl_stylesheet_href))
-        super().publish(handler)
+            declarations += '<?xml-stylesheet type="text/xsl" href="{0}" media="all"?>\n'.format(
+                self.xsl_stylesheet_href)
+        return declarations.encode('utf-8')
 
-    def publish_extensions(self, handler):
-        """Publish extensions."""
-        if self.self_url:
-            handler.startElement("atom:link", {
-                'href': self.self_url,
-                'rel': "self",
-                'type': "application/rss+xml"
-            })
-            handler.endElement("atom:link")
+    def rss_str(self, pretty=False, extensions=True):
+        """Generate an RSS feed and return the feed XML as string."""
+        rss = super().rss_str(pretty=pretty, extensions=extensions, encoding='UTF-8', xml_declaration=False)
+        return self.xml_declarations() + rss
+
+    def rss_file(self, filename, extensions=True, pretty=False):
+        """Generate an RSS feed and write it to a file."""
+        if isinstance(filename, (str, bytes)):
+            with open(filename, "wb") as fh:
+                fh.write(self.rss_str(pretty=pretty, extensions=extensions))
+
+    def add_entry(self, feedEntry=None, order='prepend'):
+        """Add a new entry to the RSS feed."""
+        if feedEntry is None:
+            feedEntry = NikolaFeedEntry()
+        return super().add_entry(feedEntry, order)
 
 
-class ExtendedItem(rss.RSSItem):
-    """Extended RSS item."""
+class NikolaFeedEntry(feedgen.entry.FeedEntry):
+    nikola_author_name = None
 
-    def __init__(self, **kw):
-        """Initialize RSS item."""
-        self.creator = kw.pop('creator', None)
-
-        # It's an old style class
-        rss.RSSItem.__init__(self, **kw)
-
-    def publish_extensions(self, handler):
-        """Publish extensions."""
-        if self.creator:
-            handler.startElement("dc:creator", {})
-            handler.characters(self.creator)
-            handler.endElement("dc:creator")
+    def rss_entry(self, extensions=True):
+        """Create a RSS item and return it."""
+        entry = super().rss_entry(extensions)
+        if self.nikola_author_name:
+            creator = feedgen.entry.xml_elem('{http://purl.org/dc/elements/1.1/}creator', entry)
+            creator.text = self.nikola_author_name
+        return entry
 
 
 # \x00 means the "<" was backslash-escaped
@@ -1928,15 +1932,12 @@ def load_data(path):
         return getattr(loader, function)(inf)
 
 
-def rss_writer(rss_obj, output_path):
+def rss_writer(rss_obj: 'NikolaFeedGenerator', output_path):
     """Write an RSS object to an xml file."""
     dst_dir = os.path.dirname(output_path)
     makedirs(dst_dir)
-    with io.open(output_path, "w+", encoding="utf-8") as rss_file:
-        data = rss_obj.to_xml(encoding='utf-8')
-        if isinstance(data, bytes):
-            data = data.decode('utf-8')
-        rss_file.write(data)
+    with io.open(output_path, "w+b") as rss_file:
+        rss_file.write(rss_obj.rss_str())
 
 
 def map_metadata(meta, key, config):

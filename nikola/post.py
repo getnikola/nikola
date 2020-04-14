@@ -512,6 +512,12 @@ class Post(object):
 
         return guid
 
+    def _guid_is_permalink(self, lang=None):
+        """Check if this GUID is a permalink."""
+        if lang is None:
+            lang = nikola.utils.LocaleBorg().current_lang
+        return not bool(self.meta[lang]['guid'])
+
     def add_dependency(self, dependency, add='both', lang=None):
         """Add a file dependency for tasks using that post.
 
