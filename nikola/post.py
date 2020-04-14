@@ -71,6 +71,18 @@ TEASER_REGEXP = re.compile(r'<!--\s*(TEASER_END|END_TEASER)(:(.+))?\s*-->', re.I
 class Post(object):
     """Represent a blog post or site page."""
 
+    _prev_post = None
+    _next_post = None
+    is_draft = False
+    is_private = False
+    is_two_file = True
+    _reading_time = None
+    _remaining_reading_time = None
+    _paragraph_count = None
+    _remaining_paragraph_count = None
+    post_status = 'published'
+    has_oldstyle_metadata_tags = False
+
     def __init__(
         self,
         source_path,
@@ -92,179 +104,83 @@ class Post(object):
         destination_base must be None or a TranslatableSetting instance. If
         specified, it will be prepended to the destination path.
         """
-        self.config = config
+        self._load_config(config)
+        self._set_paths(source_path)
+
         self.compiler = compiler
-        self.compiler_contexts = {}
+        self.is_post = use_in_feeds
+        self.messages = messages
+        self._template_name = template_name
         self.compile_html = self.compiler.compile
         self.demote_headers = self.compiler.demote_headers and self.config['DEMOTE_HEADERS']
-        tzinfo = self.config['__tzinfo__']
-        if self.config['FUTURE_IS_NOW']:
-            self.current_time = None
-        else:
-            self.current_time = current_time(tzinfo)
-        self.translated_to = set([])
-        self._prev_post = None
-        self._next_post = None
-        self.base_url = self.config['BASE_URL']
-        self.is_draft = False
-        self.is_private = False
-        self.strip_indexes = self.config['STRIP_INDEXES']
-        self.index_file = self.config['INDEX_FILE']
-        self.pretty_urls = self.config['PRETTY_URLS']
-        self.source_path = source_path  # posts/blah.txt
-        self.post_name = os.path.splitext(source_path)[0]  # posts/blah
-        _relpath = os.path.relpath(self.post_name)
-        if _relpath != self.post_name:
-            self.post_name = _relpath.replace('..' + os.sep, '_..' + os.sep)
-        # cache[\/]posts[\/]blah.html
-        self.base_path = os.path.join(self.config['CACHE_FOLDER'], self.post_name + ".html")
-        # cache/posts/blah.html
-        self._base_path = self.base_path.replace('\\', '/')
-        self.metadata_path = self.post_name + ".meta"  # posts/blah.meta
-        self.folder_relative = destination
-        self.folder_base = destination_base
-        self.default_lang = self.config['DEFAULT_LANG']
-        self.translations = self.config['TRANSLATIONS']
-        self.messages = messages
-        self.skip_untranslated = not self.config['SHOW_UNTRANSLATED_POSTS']
-        self._template_name = template_name
-        self.is_two_file = True
-        self._reading_time = None
-        self._remaining_reading_time = None
-        self._paragraph_count = None
-        self._remaining_paragraph_count = None
         self._dependency_file_fragment = defaultdict(list)
         self._dependency_file_page = defaultdict(list)
         self._dependency_uptodate_fragment = defaultdict(list)
         self._dependency_uptodate_page = defaultdict(list)
         self._depfile = defaultdict(list)
-        self._default_preview_image = self.config['DEFAULT_PREVIEW_IMAGE']
         if metadata_extractors_by is None:
             self.metadata_extractors_by = {'priority': {}, 'source': {}}
         else:
             self.metadata_extractors_by = metadata_extractors_by
 
-        # Load internationalized metadata
-        for lang in self.translations:
-            if os.path.isfile(get_translation_candidate(self.config, self.source_path, lang)):
-                self.translated_to.add(lang)
+        self._set_translated_to()
+        self._set_folders(destination, destination_base)
 
-        # If we don't have anything in translated_to, the file does not exist
-        if not self.translated_to and os.path.isfile(self.source_path):
-            raise Exception(("Could not find translations for {}, check your "
-                            "TRANSLATIONS_PATTERN").format(self.source_path))
-        elif not self.translated_to:
-            raise Exception(("Cannot use {} (not a file, perhaps a broken "
-                            "symbolic link?)").format(self.source_path))
-
+        # Load default metadata
         default_metadata, default_used_extractor = get_meta(self, lang=None)
-
         self.meta = Functionary(lambda: None, self.default_lang)
         self.used_extractor = Functionary(lambda: None, self.default_lang)
         self.meta[self.default_lang] = default_metadata
         self.used_extractor[self.default_lang] = default_used_extractor
 
-        # Compose paths
-        if self.folder_base is not None:
-            # Use translatable destination folders
-            self.folders = {}
-            for lang in self.config['TRANSLATIONS'].keys():
-                if os.path.isabs(self.folder_base(lang)):  # Issue 2982
-                    self.folder_base[lang] = os.path.relpath(self.folder_base(lang), '/')
-                self.folders[lang] = os.path.normpath(os.path.join(self.folder_base(lang), self.folder_relative))
-        else:
-            # Old behavior (non-translatable destination path, normalized by scanner)
-            self.folders = {lang: self.folder_relative for lang in self.config['TRANSLATIONS'].keys()}
-        self.folder = self.folders[self.default_lang]
+        self._set_date(default_metadata)
 
-        if 'date' not in default_metadata and not use_in_feeds:
-            # For pages we don't *really* need a date
-            if self.config['__invariant__']:
-                default_metadata['date'] = datetime.datetime(2013, 12, 31, 23, 59, 59, tzinfo=tzinfo)
-            else:
-                default_metadata['date'] = datetime.datetime.utcfromtimestamp(
-                    os.stat(self.source_path).st_ctime).replace(tzinfo=dateutil.tz.tzutc()).astimezone(tzinfo)
-
-        # If time zone is set, build localized datetime.
-        try:
-            self.date = to_datetime(self.meta[self.default_lang]['date'], tzinfo)
-        except ValueError:
-            if not self.meta[self.default_lang]['date']:
-                msg = 'Missing date in file {}'.format(source_path)
-            else:
-                msg = "Invalid date '{0}' in file {1}".format(self.meta[self.default_lang]['date'], source_path)
-            LOGGER.error(msg)
-            raise ValueError(msg)
-
-        if 'updated' not in default_metadata:
-            default_metadata['updated'] = default_metadata.get('date', None)
-
-        self.updated = to_datetime(default_metadata['updated'], tzinfo)
-
-        if 'title' not in default_metadata or 'slug' not in default_metadata \
-                or 'date' not in default_metadata:
-            raise ValueError("You must set a title (found '{0}'), a slug (found '{1}') and a date (found '{2}')! "
-                             "[in file {3}]".format(default_metadata.get('title', None),
+        # These are the required metadata fields
+        if 'title' not in default_metadata or 'slug' not in default_metadata:
+            raise ValueError("You must set a title (found '{0}') and a slug (found '{1}')! "
+                             "[in file {2}]".format(default_metadata.get('title', None),
                                                     default_metadata.get('slug', None),
-                                                    default_metadata.get('date', None),
                                                     source_path))
 
         if 'type' not in default_metadata:
-            # default value is 'text'
             default_metadata['type'] = 'text'
 
-        for lang in self.translations:
-            if lang != self.default_lang:
-                meta = defaultdict(lambda: '')
-                meta.update(default_metadata)
-                _meta, _extractors = get_meta(self, lang)
-                meta.update(_meta)
-                self.meta[lang] = meta
-                self.used_extractor[lang] = _extractors
-
-        if not self.is_translation_available(self.default_lang):
-            # Special case! (Issue #373)
-            # Fill default_metadata with stuff from the other languages
-            for lang in sorted(self.translated_to):
-                default_metadata.update(self.meta[lang])
-
-        # Load data field from metadata
-        self.data = Functionary(lambda: None, self.default_lang)
-        for lang in self.translations:
-            if self.meta[lang].get('data') is not None:
-                self.data[lang] = utils.load_data(self.meta[lang]['data'])
-
-        for lang, meta in self.meta.items():
-            # Migrate section to category
-            # TODO: remove in v9
-            if 'section' in meta:
-                if 'category' in meta:
-                    LOGGER.warning("Post {0} has both 'category' and 'section' metadata. Section will be ignored.".format(source_path))
-                else:
-                    meta['category'] = meta['section']
-                    LOGGER.info("Post {0} uses 'section' metadata, setting its value to 'category'".format(source_path))
-
-            # Handle CATEGORY_DESTPATH_AS_DEFAULT
-            if 'category' not in meta and self.config['CATEGORY_DESTPATH_AS_DEFAULT']:
-                self.category_from_destpath = True
-                if self.config['CATEGORY_DESTPATH_TRIM_PREFIX'] and self.folder_relative != '.':
-                    category = self.folder_relative
-                else:
-                    category = self.folders[lang]
-                category = category.replace(os.sep, '/')
-                if self.config['CATEGORY_DESTPATH_FIRST_DIRECTORY_ONLY']:
-                    category = category.split('/')[0]
-                meta['category'] = self.config['CATEGORY_DESTPATH_NAMES'](lang).get(category, category)
-            else:
-                self.category_from_destpath = False
+        self._load_translated_metadata(default_metadata)
+        self._load_data()
+        self.__migrate_section_to_category()
+        self._set_tags()
 
         self.publish_later = False if self.current_time is None else self.date >= self.current_time
 
-        self.is_draft = False
-        self.is_private = False
-        self.post_status = 'published'
+        # While draft comes from the tags, it's not really a tag
+        self.use_in_feeds = self.is_post and not self.is_draft and not self.is_private and not self.publish_later
+
+        # Allow overriding URL_TYPE via meta
+        # The check is done here so meta dicts won’t change inside of
+        # generic_post_renderer
+        self.url_type = self.meta('url_type') or None
+        # Register potential extra dependencies
+        self.compiler.register_extra_dependencies(self)
+
+    def _load_config(self, config):
+        """Set members to configured values."""
+        self.config = config
+        if self.config['FUTURE_IS_NOW']:
+            self.current_time = None
+        else:
+            self.current_time = current_time(self.config['__tzinfo__'])
+        self.base_url = self.config['BASE_URL']
+        self.strip_indexes = self.config['STRIP_INDEXES']
+        self.index_file = self.config['INDEX_FILE']
+        self.pretty_urls = self.config['PRETTY_URLS']
+        self.default_lang = self.config['DEFAULT_LANG']
+        self.translations = self.config['TRANSLATIONS']
+        self.skip_untranslated = not self.config['SHOW_UNTRANSLATED_POSTS']
+        self._default_preview_image = self.config['DEFAULT_PREVIEW_IMAGE']
+
+    def _set_tags(self):
+        """Set post tags."""
         self._tags = {}
-        self.has_oldstyle_metadata_tags = False
         for lang in self.translated_to:
             if isinstance(self.meta[lang]['tags'], (list, tuple, set)):
                 _tag_list = self.meta[lang]['tags']
@@ -326,16 +242,129 @@ class Post(object):
                 if 'mathjax' in self._tags[lang]:
                     self.has_oldstyle_metadata_tags = True
 
-        # While draft comes from the tags, it's not really a tag
-        self.is_post = use_in_feeds
-        self.use_in_feeds = self.is_post and not self.is_draft and not self.is_private and not self.publish_later
+    def _set_paths(self, source_path):
+        """Set the various paths and the post_name.
 
-        # Allow overriding URL_TYPE via meta
-        # The check is done here so meta dicts won’t change inside of
-        # generic_post_rendere
-        self.url_type = self.meta('url_type') or None
-        # Register potential extra dependencies
-        self.compiler.register_extra_dependencies(self)
+        TODO: WTF is all this.
+        """
+        self.source_path = source_path  # posts/blah.txt
+        self.post_name = os.path.splitext(source_path)[0]  # posts/blah
+        _relpath = os.path.relpath(self.post_name)
+        if _relpath != self.post_name:
+            self.post_name = _relpath.replace('..' + os.sep, '_..' + os.sep)
+        # cache[\/]posts[\/]blah.html
+        self.base_path = os.path.join(self.config['CACHE_FOLDER'], self.post_name + ".html")
+        # cache/posts/blah.html
+        self._base_path = self.base_path.replace('\\', '/')
+        self.metadata_path = self.post_name + ".meta"  # posts/blah.meta
+
+    def _set_translated_to(self):
+        """Find post's translations."""
+        self.translated_to = set([])
+        for lang in self.translations:
+            if os.path.isfile(get_translation_candidate(self.config, self.source_path, lang)):
+                self.translated_to.add(lang)
+
+        # If we don't have anything in translated_to, the file does not exist
+        if not self.translated_to and os.path.isfile(self.source_path):
+            raise Exception(("Could not find translations for {}, check your "
+                            "TRANSLATIONS_PATTERN").format(self.source_path))
+        elif not self.translated_to:
+            raise Exception(("Cannot use {} (not a file, perhaps a broken "
+                            "symbolic link?)").format(self.source_path))
+
+    def _set_folders(self, destination, destination_base):
+        """Compose destination paths."""
+        self.folder_relative = destination
+        self.folder_base = destination_base
+
+        if self.folder_base is not None:
+            # Use translatable destination folders
+            self.folders = {}
+            for lang in self.config['TRANSLATIONS']:
+                if os.path.isabs(self.folder_base(lang)):  # Issue 2982
+                    self.folder_base[lang] = os.path.relpath(self.folder_base(lang), '/')
+                self.folders[lang] = os.path.normpath(os.path.join(self.folder_base(lang), self.folder_relative))
+        else:
+            # Old behavior (non-translatable destination path, normalized by scanner)
+            self.folders = {lang: self.folder_relative for lang in self.config['TRANSLATIONS'].keys()}
+        self.folder = self.folders[self.default_lang]
+
+    def __migrate_section_to_category(self):
+        """TODO: remove in v9."""
+        for lang, meta in self.meta.items():
+            # Migrate section to category
+            # TODO: remove in v9
+            if 'section' in meta:
+                if 'category' in meta:
+                    LOGGER.warning("Post {0} has both 'category' and 'section' metadata. Section will be ignored.".format(self.source_path))
+                else:
+                    meta['category'] = meta['section']
+                    LOGGER.info("Post {0} uses 'section' metadata, setting its value to 'category'".format(self.source_path))
+
+            # Handle CATEGORY_DESTPATH_AS_DEFAULT
+            if 'category' not in meta and self.config['CATEGORY_DESTPATH_AS_DEFAULT']:
+                self.category_from_destpath = True
+                if self.config['CATEGORY_DESTPATH_TRIM_PREFIX'] and self.folder_relative != '.':
+                    category = self.folder_relative
+                else:
+                    category = self.folders[lang]
+                category = category.replace(os.sep, '/')
+                if self.config['CATEGORY_DESTPATH_FIRST_DIRECTORY_ONLY']:
+                    category = category.split('/')[0]
+                meta['category'] = self.config['CATEGORY_DESTPATH_NAMES'](lang).get(category, category)
+            else:
+                self.category_from_destpath = False
+
+    def _load_data(self):
+        """Load data field from metadata."""
+        self.data = Functionary(lambda: None, self.default_lang)
+        for lang in self.translations:
+            if self.meta[lang].get('data') is not None:
+                self.data[lang] = utils.load_data(self.meta[lang]['data'])
+
+    def _load_translated_metadata(self, default_metadata):
+        """Load metadata from all translation sources."""
+        for lang in self.translations:
+            if lang != self.default_lang:
+                meta = defaultdict(lambda: '')
+                meta.update(default_metadata)
+                _meta, _extractors = get_meta(self, lang)
+                meta.update(_meta)
+                self.meta[lang] = meta
+                self.used_extractor[lang] = _extractors
+
+        if not self.is_translation_available(self.default_lang):
+            # Special case! (Issue #373)
+            # Fill default_metadata with stuff from the other languages
+            for lang in sorted(self.translated_to):
+                default_metadata.update(self.meta[lang])
+
+    def _set_date(self, default_metadata):
+        """Set post date/updated based on metadata and configuration."""
+        if 'date' not in default_metadata and not self.is_post:
+            # For pages we don't *really* need a date
+            if self.config['__invariant__']:
+                default_metadata['date'] = datetime.datetime(2013, 12, 31, 23, 59, 59, tzinfo=self.config['__tzinfo__'])
+            else:
+                default_metadata['date'] = datetime.datetime.utcfromtimestamp(
+                    os.stat(self.source_path).st_ctime).replace(tzinfo=dateutil.tz.tzutc()).astimezone(self.config['__tzinfo__'])
+
+        # If time zone is set, build localized datetime.
+        try:
+            self.date = to_datetime(self.meta[self.default_lang]['date'], self.config['__tzinfo__'])
+        except ValueError:
+            if not self.meta[self.default_lang]['date']:
+                msg = 'Missing date in file {}'.format(self.source_path)
+            else:
+                msg = "Invalid date '{0}' in file {1}".format(self.meta[self.default_lang]['date'], self.source_path)
+            LOGGER.error(msg)
+            raise ValueError(msg)
+
+        if 'updated' not in default_metadata:
+            default_metadata['updated'] = default_metadata.get('date', None)
+
+        self.updated = to_datetime(default_metadata['updated'], self.config['__tzinfo__'])
 
     def _get_hyphenate(self):
         return bool(self.config['HYPHENATE'] or self.meta('hyphenate'))
