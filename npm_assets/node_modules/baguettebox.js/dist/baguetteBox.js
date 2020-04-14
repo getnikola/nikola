@@ -1,7 +1,7 @@
 /*!
  * baguetteBox.js
  * @author  feimosi
- * @version 1.11.0
+ * @version 1.11.1
  * @url https://github.com/feimosi/baguetteBox.js
  */
 
@@ -317,27 +317,31 @@
     }
 
     function bindEvents() {
-        var options = supports.passiveEvents ? { passive: true } : null;
+        var passiveEvent = supports.passiveEvents ? { passive: false } : null;
+        var nonPassiveEvent = supports.passiveEvents ? { passive: true } : null;
+
         bind(overlay, 'click', overlayClickHandler);
         bind(previousButton, 'click', previousButtonClickHandler);
         bind(nextButton, 'click', nextButtonClickHandler);
         bind(closeButton, 'click', closeButtonClickHandler);
         bind(slider, 'contextmenu', contextmenuHandler);
-        bind(overlay, 'touchstart', touchstartHandler, options);
-        bind(overlay, 'touchmove', touchmoveHandler, options);
+        bind(overlay, 'touchstart', touchstartHandler, nonPassiveEvent);
+        bind(overlay, 'touchmove', touchmoveHandler, passiveEvent);
         bind(overlay, 'touchend', touchendHandler);
         bind(document, 'focus', trapFocusInsideOverlay, true);
     }
 
     function unbindEvents() {
-        var options = supports.passiveEvents ? { passive: true } : null;
+        var passiveEvent = supports.passiveEvents ? { passive: false } : null;
+        var nonPassiveEvent = supports.passiveEvents ? { passive: true } : null;
+
         unbind(overlay, 'click', overlayClickHandler);
         unbind(previousButton, 'click', previousButtonClickHandler);
         unbind(nextButton, 'click', nextButtonClickHandler);
         unbind(closeButton, 'click', closeButtonClickHandler);
         unbind(slider, 'contextmenu', contextmenuHandler);
-        unbind(overlay, 'touchstart', touchstartHandler, options);
-        unbind(overlay, 'touchmove', touchmoveHandler, options);
+        unbind(overlay, 'touchstart', touchstartHandler, nonPassiveEvent);
+        unbind(overlay, 'touchmove', touchmoveHandler, passiveEvent);
         unbind(overlay, 'touchend', touchendHandler);
         unbind(document, 'focus', trapFocusInsideOverlay, true);
     }
