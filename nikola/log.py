@@ -104,7 +104,7 @@ def configure_logging(logging_mode: LoggingMode = LoggingMode.NORMAL) -> None:
     handler.setFormatter(
         ColorfulFormatter(
             fmt="[%(asctime)s] %(levelname)s: %(name)s: %(message)s",
-            datefmt="%Y-%m-%dT%H:%M:%SZ",
+            datefmt="%Y-%m-%d %H:%M:%S",
         )
     )
 
