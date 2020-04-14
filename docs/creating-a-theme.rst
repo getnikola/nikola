@@ -646,7 +646,7 @@ So, it looks like we will have to fix ``html_site_title`` after all:
 
     <%def name="html_site_title()">
         <h3 id="brand" class="masthead-title">
-        <a href="${abs_link(_link("root", None, lang))}" title="${blog_title}" rel="home">${blog_title}</a>
+        <a href="${_link("root", None, lang)}" title="${blog_title}" rel="home">${blog_title}</a>
         </h3>
     </%def>
 
