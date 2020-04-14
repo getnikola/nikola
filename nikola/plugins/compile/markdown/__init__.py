@@ -75,7 +75,7 @@ class CompileMarkdown(PageCompiler):
 
     def set_site(self, site):
         """Set Nikola site."""
-        super(CompileMarkdown, self).set_site(site)
+        super().set_site(site)
         self.config_dependencies = []
         extensions = []
         for plugin_info in self.get_compiler_extensions():

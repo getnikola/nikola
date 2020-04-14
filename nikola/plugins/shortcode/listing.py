@@ -43,7 +43,7 @@ class Plugin(ShortcodePlugin):
         """Set Nikola site."""
         self.site = site
         Plugin.folders = site.config['LISTINGS_FOLDERS']
-        return super(Plugin, self).set_site(site)
+        return super().set_site(site)
 
     def handler(self, fname, language='text', linenumbers=False, filename=None, site=None, data=None, lang=None, post=None):
         """Create HTML for a listing."""

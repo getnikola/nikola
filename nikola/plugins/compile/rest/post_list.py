@@ -46,7 +46,7 @@ class Plugin(RestExtension):
         directives.register_directive('post-list', PostListDirective)
         directives.register_directive('post_list', PostListDirective)
         PostListDirective.site = site
-        return super(Plugin, self).set_site(site)
+        return super().set_site(site)
 
 
 class PostListDirective(Directive):

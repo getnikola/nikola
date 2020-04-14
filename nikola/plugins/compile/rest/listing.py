@@ -138,7 +138,7 @@ class Plugin(RestExtension):
         directives.register_directive('sourcecode', CodeBlock)
         directives.register_directive('listing', Listing)
         Listing.folders = site.config['LISTINGS_FOLDERS']
-        return super(Plugin, self).set_site(site)
+        return super().set_site(site)
 
 
 # Add sphinx compatibility option
@@ -196,7 +196,7 @@ class Listing(Include):
 
     def get_code_from_file(self, data):
         """Create CodeBlock nodes from file object content."""
-        return super(Listing, self).run()
+        return super().run()
 
     def assert_has_content(self):
         """Override check from superclass with nothing.

@@ -48,7 +48,7 @@ class Plugin(RestExtension):
         self.site = site
         directives.register_directive('media', Media)
         self.site.register_shortcode('media', _gen_media_embed)
-        return super(Plugin, self).set_site(site)
+        return super().set_site(site)
 
 
 class Media(Directive):

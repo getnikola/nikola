@@ -84,7 +84,7 @@ class Archive(Taxonomy):
             self.max_levels = 0
         else:
             self.max_levels = 1
-        return super(Archive, self).set_site(site)
+        return super().set_site(site)
 
     def get_implicit_classifications(self, lang):
         """Return a list of classification strings which should always appear in posts_per_classification."""
@@ -228,7 +228,7 @@ class Archive(Taxonomy):
                 for k, v in self.archive_navigation[lang].items():
                     self.archive_navigation[lang][k] = natsort.natsorted(v, alg=natsort.ns.F | natsort.ns.IC)
 
-        return super(Archive, self).postprocess_posts_per_classification(posts_per_classification_per_language, flat_hierarchy_per_lang, hierarchy_lookup_per_lang)
+        return super().postprocess_posts_per_classification(posts_per_classification_per_language, flat_hierarchy_per_lang, hierarchy_lookup_per_lang)
 
     def should_generate_classification_page(self, classification, post_list, lang):
         """Only generates list of posts for classification if this function returns True."""

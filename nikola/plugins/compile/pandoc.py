@@ -47,7 +47,7 @@ class CompilePandoc(PageCompiler):
     def set_site(self, site):
         """Set Nikola site."""
         self.config_dependencies = [str(site.config['PANDOC_OPTIONS'])]
-        super(CompilePandoc, self).set_site(site)
+        super().set_site(site)
 
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""

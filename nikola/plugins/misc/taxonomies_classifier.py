@@ -327,7 +327,7 @@ class TaxonomiesClassifier(SignalHandler):
 
     def set_site(self, site):
         """Set site, which is a Nikola instance."""
-        super(TaxonomiesClassifier, self).set_site(site)
+        super().set_site(site)
         # Add hook for after post scanning
         blinker.signal("scanned").connect(self._do_classification)
         # Register path handlers

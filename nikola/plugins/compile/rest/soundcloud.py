@@ -43,7 +43,7 @@ class Plugin(RestExtension):
         self.site = site
         directives.register_directive('soundcloud', SoundCloud)
         directives.register_directive('soundcloud_playlist', SoundCloudPlaylist)
-        return super(Plugin, self).set_site(site)
+        return super().set_site(site)
 
 
 CODE = """\
