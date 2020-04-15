@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* New ``nikola console -s script.py`` option to run scripts that
+  access your site (Issue #3385)
 * Allow preview images to be relative to posts for bootblog4 featured
   posts
 * Change the listings formatting to support word wrap with line
