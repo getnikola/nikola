@@ -47,6 +47,12 @@ Bugfixes
 * Use correct language for hyphenation in posts that are not
   translated to all languages (Issue #3377)
 
+Internal
+--------
+
+* Added Post.source() method to get a Post's object unprocessed 
+  contents.
+
 New in v8.0.4
 =============
 
