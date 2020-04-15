@@ -748,9 +748,24 @@ class Post(object):
             real_lang = sorted(self.translated_to)[0]
             return get_translation_candidate(self.config, self.base_path, real_lang), real_lang
 
+    def source(self, lang=None):
+        """Read the post and return its source."""
+        if lang is None:
+            lang = nikola.utils.LocaleBorg().current_lang
+
+        source = self.translated_source_path(lang)
+        with open(source, encoding='utf-8') as inf:
+            data = inf.read()
+        if self.is_two_file:  # Metadata is not here
+            source_data = data
+        else:
+            source_data = self.compiler.split_metadata(data, self, lang)[1]
+        return source_data
+
+
     def text(self, lang=None, teaser_only=False, strip_html=False, show_read_more_link=True,
              feed_read_more_link=False, feed_links_append_query=None):
-        """Read the post file for that language and return its contents.
+        """Read the post file for that language and return its compiled contents.
 
         teaser_only=True breaks at the teaser marker and returns only the teaser.
         strip_html=True removes HTML tags
@@ -986,6 +1001,24 @@ class Post(object):
             return '.src' + ext
         else:
             return ext
+
+    def write_post(self):
+        """Do a best effort to write down the current post state, including metadata.
+
+        It will save in either 2-file or 1-file format, in the format indicated by
+        METADATA_FORMAT.
+
+        This has caveats:
+
+        * If you are extracting metadata from filename?
+        * If you are extracting metadata from document contents?
+
+        Because of how it's going to be written, that's not going to be used anymore.
+        """
+        breakpoint()
+        for lang in self.translated_to:
+            metadata = self.meta[lang]
+
 
 
 def get_metadata_from_file(source_path, post, config, lang, metadata_extractors_by):

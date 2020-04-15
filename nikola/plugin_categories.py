@@ -349,8 +349,8 @@ class PageCompiler(BasePlugin):
 
         if isinstance(extractor, MetadataExtractor):
             return extractor.split_metadata_from_text(data)
-        else:
-            return data, data
+        # Ouch!
+        return data, data
 
     def get_compiler_extensions(self) -> list:
         """Activate all the compiler extension plugins for a given compiler and return them."""
