@@ -1002,24 +1002,6 @@ class Post(object):
         else:
             return ext
 
-    def write_post(self):
-        """Do a best effort to write down the current post state, including metadata.
-
-        It will save in either 2-file or 1-file format, in the format indicated by
-        METADATA_FORMAT.
-
-        This has caveats:
-
-        * If you are extracting metadata from filename?
-        * If you are extracting metadata from document contents?
-
-        Because of how it's going to be written, that's not going to be used anymore.
-        """
-        breakpoint()
-        for lang in self.translated_to:
-            metadata = self.meta[lang]
-
-
 
 def get_metadata_from_file(source_path, post, config, lang, metadata_extractors_by):
     """Extract metadata from the file itself, by parsing contents."""
