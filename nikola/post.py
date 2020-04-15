@@ -762,7 +762,6 @@ class Post(object):
             source_data = self.compiler.split_metadata(data, self, lang)[1]
         return source_data
 
-
     def text(self, lang=None, teaser_only=False, strip_html=False, show_read_more_link=True,
              feed_read_more_link=False, feed_links_append_query=None):
         """Read the post file for that language and return its compiled contents.
