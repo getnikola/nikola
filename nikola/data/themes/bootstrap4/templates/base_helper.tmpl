@@ -83,10 +83,13 @@ lang="${lang}">
         %endif
     %endif
     %if date_fanciness != 0:
+        %if date_fanciness == 2:
+            <script src="https://polyfill.io/v3/polyfill.js?features=Intl.RelativeTimeFormat.%7Elocale.${luxon_locales[lang]}"></script>
+        %endif
         %if use_cdn:
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js" integrity="sha256-AdQN98MVZs44Eq2yTwtoKufhnU+uZ7v2kXnD5vqzZVo=" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/luxon@1.23.0/build/global/luxon.min.js" integrity="sha256-YOyhQydrbKaJNB0uRhAtfMUXkVU/+KcGH+ruDrm/BUk=" crossorigin="anonymous"></script>
         %else:
-            <script src="/assets/js/moment-with-locales.min.js"></script>
+            <script src="/assets/js/luxon.min.js"></script>
         %endif
         %if not use_bundles:
             <script src="/assets/js/fancydates.min.js"></script>

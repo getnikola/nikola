@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Use Luxon instead of Moment for fancy dates to make it more
+  lightweight, going from 328k to 68k (Issue #3232)
 * New ``nikola console -s script.py`` option to run scripts that
   access your site (Issue #3385)
 * Allow preview images to be relative to posts for bootblog4 featured

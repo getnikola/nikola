@@ -21,7 +21,7 @@ nikola/data/themes/base/assets/js/baguetteBox.min.js
 nikola/data/themes/base/assets/js/html5.js
 nikola/data/themes/base/assets/js/html5shiv-printshiv.min.js
 nikola/data/themes/base/assets/js/justified-layout.min.js
-nikola/data/themes/base/assets/js/moment-with-locales.min.js
+nikola/data/themes/base/assets/js/luxon.min.js
 nikola/data/themes/base/messages/messages_cz.py
 nikola/data/themes/bootblog4-jinja/assets/css/bootblog.css
 nikola/data/themes/bootblog4-jinja/bundles

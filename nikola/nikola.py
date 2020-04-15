@@ -168,6 +168,61 @@ LEGAL_VALUES = {
         'sr_latin': 'sr_Latn',
     },
     'RTL_LANGUAGES': ('ar', 'fa', 'he', 'ur'),
+    'LUXON_LOCALES': {
+        'af': 'af',
+        'ar': 'ar',
+        'az': 'az',
+        'bg': 'bg',
+        'bn': 'bn',
+        'bs': 'bs',
+        'ca': 'ca',
+        'cs': 'cs',
+        'cz': 'cs',
+        'da': 'da',
+        'de': 'de',
+        'el': 'el',
+        'en': 'en',
+        'eo': 'eo',
+        'es': 'es',
+        'et': 'et',
+        'eu': 'eu',
+        'fa': 'fa',
+        'fi': 'fi',
+        'fr': 'fr',
+        'gl': 'gl',
+        'hi': 'hi',
+        'he': 'he',
+        'hr': 'hr',
+        'hu': 'hu',
+        'id': 'id',
+        'it': 'it',
+        'ja': 'ja',
+        'ko': 'ko',
+        'lt': 'lt',
+        'ml': 'ml',
+        'nb': 'nb',
+        'nl': 'nl',
+        'pa': 'pa',
+        'pl': 'pl',
+        'pt': 'pt',
+        'pt_br': 'pt-BR',
+        'ru': 'ru',
+        'sk': 'sk',
+        'sl': 'sl',
+        'sq': 'sq',
+        'sr': 'sr-Cyrl',
+        'sr_latin': 'sr-Latn',
+        'sv': 'sv',
+        'te': 'te',
+        'tr': 'tr',
+        'th': 'th',
+        'uk': 'uk',
+        'ur': 'ur',
+        'vi': 'vi',
+        'zh_cn': 'zh-CN',
+        'zh_tw': 'zh-TW'
+    },
+    # TODO: remove in v9
     'MOMENTJS_LOCALES': {
         'af': 'af',
         'ar': 'ar',
@@ -426,7 +481,8 @@ class Nikola(object):
             'DISABLE_INDEXES': False,
             'DISABLE_MAIN_ATOM_FEED': False,
             'DISABLE_MAIN_RSS_FEED': False,
-            'JS_DATE_FORMAT': 'YYYY-MM-DD HH:mm',
+            'MOMENTJS_DATE_FORMAT': 'YYYY-MM-DD HH:mm',
+            'LUXON_DATE_FORMAT': {},
             'DATE_FANCINESS': 0,
             'DEFAULT_LANG': "en",
             'DEPLOY_COMMANDS': {'default': []},
@@ -634,7 +690,8 @@ class Nikola(object):
                                       'ATOM_FILENAME_BASE',
                                       'AUTHOR_PATH',
                                       'DATE_FORMAT',
-                                      'JS_DATE_FORMAT',
+                                      'LUXON_DATE_FORMAT',
+                                      'MOMENTJS_DATE_FORMAT',  # TODO: remove in v9
                                       'RSS_COPYRIGHT',
                                       'RSS_COPYRIGHT_PLAIN',
                                       # Issue #2970
@@ -652,6 +709,7 @@ class Nikola(object):
                                              'extra_head_data',
                                              'date_format',
                                              'js_date_format',
+                                             'luxon_date_format',
                                              'front_index_header',
                                              'theme_config',
                                              )
@@ -664,13 +722,27 @@ class Nikola(object):
         # WARNING: navigation_(alt_)links SHOULD NOT be added to the list above.
         #          Themes ask for [lang] there and we should provide it.
 
-        # We first have to massage JS_DATE_FORMAT, otherwise we run into trouble
+        # Luxon setup is a dict of dicts, so we need to set up the default here.
+        if not self.config['LUXON_DATE_FORMAT']:
+            self.config['LUXON_DATE_FORMAT'] = {self.config['DEFAULT_LANG']: {'preset': False, 'format': 'yyyy-MM-dd HH:mm'}}
+        # TODO: remove Moment.js stuff in v9
         if 'JS_DATE_FORMAT' in self.config:
-            if isinstance(self.config['JS_DATE_FORMAT'], dict):
-                for k in self.config['JS_DATE_FORMAT']:
-                    self.config['JS_DATE_FORMAT'][k] = json.dumps(self.config['JS_DATE_FORMAT'][k])
+            utils.LOGGER.warning("Moment.js was replaced by Luxon in the default themes, which uses different date formats.")
+            utils.LOGGER.warning("If you’re using a built-in theme, set LUXON_DATE_FORMAT. If your theme uses Moment.js, you can silence this warning by renaming JS_DATE_FORMAT to MOMENTJS_DATE_FORMAT.")
+            utils.LOGGER.warning("Sample Luxon config: LUXON_DATE_FORMAT = " + str(self.config['LUXON_DATE_FORMAT']))
+            self.config['MOMENTJS_DATE_FORMAT'] = self.config['LUXON_DATE_FORMAT']
+
+        # We first have to massage MOMENTJS_DATE_FORMAT and LUXON_DATE_FORMAT, otherwise we run into trouble
+        if 'MOMENTJS_DATE_FORMAT' in self.config:
+            if isinstance(self.config['MOMENTJS_DATE_FORMAT'], dict):
+                for k in self.config['MOMENTJS_DATE_FORMAT']:
+                    self.config['MOMENTJS_DATE_FORMAT'][k] = json.dumps(self.config['MOMENTJS_DATE_FORMAT'][k])
             else:
-                self.config['JS_DATE_FORMAT'] = json.dumps(self.config['JS_DATE_FORMAT'])
+                self.config['MOMENTJS_DATE_FORMAT'] = json.dumps(self.config['MOMENTJS_DATE_FORMAT'])
+
+        if 'LUXON_DATE_FORMAT' in self.config:
+            for k in self.config['LUXON_DATE_FORMAT']:
+                self.config['LUXON_DATE_FORMAT'][k] = json.dumps(self.config['LUXON_DATE_FORMAT'][k])
 
         for i in self.TRANSLATABLE_SETTINGS:
             try:
@@ -1172,7 +1244,10 @@ class Nikola(object):
             'SHOW_SOURCELINK')
         self._GLOBAL_CONTEXT['extra_head_data'] = self.config.get('EXTRA_HEAD_DATA')
         self._GLOBAL_CONTEXT['date_fanciness'] = self.config.get('DATE_FANCINESS')
-        self._GLOBAL_CONTEXT['js_date_format'] = self.config.get('JS_DATE_FORMAT')
+        self._GLOBAL_CONTEXT['luxon_locales'] = LEGAL_VALUES['LUXON_LOCALES']
+        self._GLOBAL_CONTEXT['luxon_date_format'] = self.config.get('LUXON_DATE_FORMAT')
+        # TODO: remove in v9
+        self._GLOBAL_CONTEXT['js_date_format'] = self.config.get('MOMENTJS_DATE_FORMAT')
         self._GLOBAL_CONTEXT['momentjs_locales'] = LEGAL_VALUES['MOMENTJS_LOCALES']
         # Patch missing locales into momentjs defaulting to English (Issue #3216)
         for l in self._GLOBAL_CONTEXT['translations']:

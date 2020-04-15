@@ -35,8 +35,8 @@ assets
 
     The included themes use `Bootstrap <https://getbootstrap.com/>`_,
     `baguetteBox <https://feimosi.github.io/baguetteBox.js/>`_, `Justified Layout by Flickr
-    <http://flickr.github.io/justified-layout/>`_ and `Moment.js
-    <https://momentjs.com/>`_, so they are in assets, along with CSS files for
+    <http://flickr.github.io/justified-layout/>`_ and `Luxon
+    <https://moment.github.io/luxon/>`_, so they are in assets, along with CSS files for
     syntax highlighting, reStructuredText and Jupyter, as well as a minified
     copy of jQuery.
 

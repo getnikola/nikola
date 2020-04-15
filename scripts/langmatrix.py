@@ -2,8 +2,8 @@
 """A matrix! Of languages!"""
 import nikola.nikola
 
-keys = ['MOMENTJS_LOCALES', 'PYPHEN_LOCALES', 'DOCUTILS_LOCALES']
-keys_short = ['language', 'moment', 'pyphen', 'docutils']
+keys = ['LUXON_LOCALES', 'MOMENTJS_LOCALES', 'PYPHEN_LOCALES', 'DOCUTILS_LOCALES']
+keys_short = ['language', 'luxon', 'moment', 'pyphen', 'docutils']
 print('\t'.join(keys_short))
 
 for tr in nikola.nikola.LEGAL_VALUES['TRANSLATIONS']:
