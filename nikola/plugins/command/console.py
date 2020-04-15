@@ -79,6 +79,14 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
             'default': None,
             'help': 'Run a single command',
         },
+        {
+            'name': 'script',
+            'short': 's',
+            'long': 'script',
+            'type': str,
+            'default': None,
+            'help': 'Execute a python script in the console context',
+        },
     ]
 
     def ipython(self, willful=True):
@@ -143,6 +151,10 @@ If there is no console to use specified (as -b, -i, -p) it tries IPython, then f
         }
         if options['command']:
             exec(options['command'], None, self.context)
+        elif options['script']:
+            with open(options['script']) as inf:
+                code = compile(inf.read(), options['script'], 'exec')
+            exec(code, None, self.context)
         elif options['bpython']:
             self.bpython(True)
         elif options['ipython']:
