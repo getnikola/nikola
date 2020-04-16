@@ -4,15 +4,14 @@ language: python
 cache:
 - apt
 - pip
-dist: xenial
-sudo: false
-python:
-- '3.5'
-- '3.6'
-- '3.7'
-- '3.8'
+dist: bionic
 matrix:
   include:
+  - python: '3.5'
+    dist: xenial
+  - python: '3.6'
+  - python: '3.7'
+  - python: '3.8'
   - os: osx
     language: generic
     env: NMODE=nikola OS=macOS
