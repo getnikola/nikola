@@ -748,6 +748,33 @@ class Post(object):
             real_lang = sorted(self.translated_to)[0]
             return get_translation_candidate(self.config, self.base_path, real_lang), real_lang
 
+    def write_metadata(self, lang=None):
+        """Save the post's metadata.
+
+        Keep in mind that this will save either in the
+        post file or in a .meta file, depending on self.is_two_file.
+
+        metadata obtained from filenames or document contents will
+        be superseded by this, and becomes inaccessible.
+
+        Post contents will **not** be modified.
+
+        If you write to a language not in self.translated_to
+        an exception will be raised.
+
+        Remember to scan_posts(really=True) after you update metadata if
+        you want the rest of the system to know about the change.
+        """
+        if lang is None:
+            lang = nikola.utils.LocaleBorg().current_lang
+        if lang not in self.translated_to:
+            raise ValueError("Can't save post metadata to language [{}] it's not translated to.".format(lang))
+
+        source = self.source(lang)
+        source_path = self.translated_source_path(lang)
+        metadata = self.meta[lang]
+        self.compiler.create_post(source_path, content=source, onefile=not self.is_two_file, is_page=not self.is_post, **metadata)
+
     def source(self, lang=None):
         """Read the post and return its source."""
         if lang is None:
