@@ -368,10 +368,12 @@ class Post(object):
 
     @property
     def hyphenate(self):
+        "Should this post be hyphenated?"
         return bool(self.config['HYPHENATE'] or self.meta('hyphenate'))
 
     @property
     def is_two_file(self):
+        "Does this post have a separate .meta file?"
         if self._is_two_file is None:
             return True
         return self._is_two_file
