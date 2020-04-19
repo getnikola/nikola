@@ -75,7 +75,7 @@ class Post(object):
     _next_post = None
     is_draft = False
     is_private = False
-    is_two_file = True
+    _is_two_file = None
     _reading_time = None
     _remaining_reading_time = None
     _paragraph_count = None
@@ -366,10 +366,22 @@ class Post(object):
 
         self.updated = to_datetime(default_metadata['updated'], self.config['__tzinfo__'])
 
-    def _get_hyphenate(self):
+    @property
+    def hyphenate(self):
         return bool(self.config['HYPHENATE'] or self.meta('hyphenate'))
 
-    hyphenate = property(_get_hyphenate)
+    @property
+    def is_two_file(self):
+        if self._is_two_file is None:
+            return True
+        return self._is_two_file
+
+    @is_two_file.setter
+    def is_two_file(self, value):
+        if self._is_two_file is None:
+            self._is_two_file = value
+        else:
+            raise(RuntimeError("Can't set is_two_file after post creation. (See Issue #3392)"))
 
     def __repr__(self):
         """Provide a representation of the post object."""
