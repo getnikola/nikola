@@ -368,12 +368,12 @@ class Post(object):
 
     @property
     def hyphenate(self):
-        """The post is hyphenated."""
+        """Post is hyphenated."""
         return bool(self.config['HYPHENATE'] or self.meta('hyphenate'))
 
     @property
     def is_two_file(self):
-        """The post has a separate .meta file."""
+        """Post has a separate .meta file."""
         if self._is_two_file is None:
             return True
         return self._is_two_file
