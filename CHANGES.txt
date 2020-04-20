@@ -52,6 +52,8 @@ Internal
 
 * Added Post.source() method to get a Post's object unprocessed 
   contents.
+* Added Post.save() method to modify Post contents.
+* Made is_two_file a property that uses save()
 
 New in v8.0.4
 =============

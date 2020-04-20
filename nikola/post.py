@@ -75,7 +75,7 @@ class Post(object):
     _next_post = None
     is_draft = False
     is_private = False
-    is_two_file = True
+    _is_two_file = None
     _reading_time = None
     _remaining_reading_time = None
     _paragraph_count = None
@@ -366,10 +366,47 @@ class Post(object):
 
         self.updated = to_datetime(default_metadata['updated'], self.config['__tzinfo__'])
 
-    def _get_hyphenate(self):
+    @property
+    def hyphenate(self):
+        """Post is hyphenated."""
         return bool(self.config['HYPHENATE'] or self.meta('hyphenate'))
 
-    hyphenate = property(_get_hyphenate)
+    @property
+    def is_two_file(self):
+        """Post has a separate .meta file."""
+        if self._is_two_file is None:
+            return True
+        return self._is_two_file
+
+    @is_two_file.setter
+    def is_two_file(self, value):
+        """Set the is_two_file property, use with care.
+
+        Caution: this MAY REWRITE THE POST FILE.
+        Only should happen if you effectively *change* the value.
+
+        Arguments:
+            value {bool} -- Whether the post has a separate .meta file
+        """
+        # for lang in self.translated_to:
+
+        if self._is_two_file is None:
+            # Initial setting, this happens on post creation
+            self._is_two_file = value
+        elif value != self._is_two_file:
+            # Changing the value, this means you are transforming a 2-file
+            # into a 1-file or viceversa.
+            if value and not self.compiler.supports_metadata:
+                raise ValueError("Can't save metadata as 1-file using this compiler {}".format(self.compiler))
+            for lang in self.translated_to:
+                source = self.source(lang)
+                meta = self.meta(lang)
+                self._is_two_file = value
+                self.save(lang=lang, source=source, meta=meta)
+                if not value:  # Need to delete old meta file
+                    meta_path = get_translation_candidate(self.config, self.metadata_path, lang)
+                    if os.path.isfile(meta_path):
+                        os.unlink(meta_path)
 
     def __repr__(self):
         """Provide a representation of the post object."""
@@ -775,6 +812,30 @@ class Post(object):
         metadata = self.meta[lang]
         self.compiler.create_post(source_path, content=source, onefile=not self.is_two_file, is_page=not self.is_post, **metadata)
 
+    def save(self, lang=None, source=None, meta=None):
+        """Write post source to disk.
+
+        Use this with utmost care, it may wipe out a post.
+
+        Keyword Arguments:
+            lang str -- Language for this source. If set to None,
+                use current language.
+            source str -- The source text for the post in the
+                language. If set to None, use current source for
+                this language.
+            meta dict -- Metadata for this language, if not set,
+                use current metadata for this language.
+        """
+        if lang is None:
+            lang = nikola.utils.LocaleBorg().current_lang
+        if source is None:
+            source = self.source(lang)
+        if meta is None:
+            metadata = self.meta[lang]
+        source_path = self.translated_source_path(lang)
+        metadata = self.meta[lang]
+        self.compiler.create_post(source_path, content=source, onefile=not self.is_two_file, is_page=not self.is_post, **metadata)
+
     def source(self, lang=None):
         """Read the post and return its source."""
         if lang is None:
@@ -1140,7 +1201,8 @@ def get_meta(post, lang):
 
     # Set one-file status basing on default language only (Issue #3191)
     if is_two_file or lang is None:
-        post.is_two_file = is_two_file
+        # Direct access because setter is complicated
+        post._is_two_file = is_two_file
 
     return meta, used_extractor
 
