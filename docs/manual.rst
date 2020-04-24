@@ -1886,20 +1886,15 @@ If you want to use a custom domain, create your ``CNAME`` file in
 output directory. To add a custom commit message, use the ``-m`` option,
 followed by your message.
 
-Automated rebuilds with Travis CI
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Automated rebuilds (GitHub Actions, Travis CI, GitLab)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you want automated rebuilds and GitHub Pages deployment, allowing you to
-blog from anywhere in the world, follow this guide:
-`Automating Nikola rebuilds with Travis CI
-<https://getnikola.com/blog/automating-nikola-rebuilds-with-travis-ci.html>`_.
+blog from anywhere in the world, you have multiple options:
 
-Automated rebuilds with GitLab
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-GitLab also offers rebuild automation if you want to use Nikola with GitLab
-Pages. Check out the example `Nikola site on GitLab
-<https://gitlab.com/pages/nikola>`_.
+* `Automating Nikola rebuilds with GitHub Actions <https://getnikola.com/blog/automating-nikola-rebuilds-with-github-actions.html>`_ (easier for GitHub)
+* `Automating Nikola rebuilds with Travis CI <https://getnikola.com/blog/automating-nikola-rebuilds-with-travis-ci.html>`_
+* `Example Nikola site for GitLab Pages <https://gitlab.com/pages/nikola>`_
 
 Comments
 --------
