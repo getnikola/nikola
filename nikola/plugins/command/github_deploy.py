@@ -53,6 +53,10 @@ def check_ghp_import_installed():
         req_missing(['ghp-import2'], 'deploy the site to GitHub Pages')
 
 
+class DeployFailedException(Exception):
+    pass
+
+
 class CommandGitHubDeploy(Command):
     """Deploy site to GitHub Pages."""
 
@@ -99,9 +103,7 @@ class CommandGitHubDeploy(Command):
             self.logger.warning("Deleted {0} posts due to DEPLOY_* settings".format(len(undeployed_posts)))
 
         # Commit and push
-        self._commit_and_push(options['commit_message'])
-
-        return
+        return self._commit_and_push(options['commit_message'])
 
     def _run_command(self, command, xfail=False):
         """Run a command that may or may not fail."""
@@ -116,7 +118,7 @@ class CommandGitHubDeploy(Command):
                 'Failed GitHub deployment -- command {0} '
                 'returned {1}'.format(e.cmd, e.returncode)
             )
-            raise SystemError(e.returncode)
+            raise DeployFailedException(e.returncode)
 
     def _commit_and_push(self, commit_first_line):
         """Commit all the files and push."""
@@ -162,7 +164,7 @@ class CommandGitHubDeploy(Command):
 
             if autocommit:
                 self._run_command(['git', 'push', '-u', remote, source])
-        except SystemError as e:
+        except DeployFailedException as e:
             return e.args[0]
 
         self.logger.info("Successful deployment")

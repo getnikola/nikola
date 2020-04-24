@@ -20,6 +20,7 @@ Features
 Bugfixes
 --------
 
+* Return a non-zero error code when ``nikola github_deploy`` fails
 * Refactored scale_image causing performance increasing in image
   resizing.
 * Don’t force absolute links for brand/languages (Issue #3229)
@@ -50,7 +51,7 @@ Bugfixes
 Internal
 --------
 
-* Added Post.source() method to get a Post's object unprocessed 
+* Added Post.source() method to get a Post's object unprocessed
   contents.
 * Added Post.save() method to modify Post contents.
 * Made is_two_file a property that uses save()
