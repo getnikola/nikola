@@ -54,6 +54,7 @@ def check_ghp_import_installed():
 
 
 class DeployFailedException(Exception):
+    """An internal exception for deployment errors."""
     pass
 
 
