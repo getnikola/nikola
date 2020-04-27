@@ -43,7 +43,7 @@ EXIF_TAG_NAMES = {}
 class ImageProcessor(object):
     """Apply image operations."""
 
-    image_ext_list_builtin = ['.jpg', '.png', '.jpeg', '.gif', '.svg', '.svgz', '.bmp', '.tiff']
+    image_ext_list_builtin = ['.jpg', '.png', '.jpeg', '.gif', '.svg', '.svgz', '.bmp', '.tiff', '.webp']
 
     def _fill_exif_tag_names(self):
         """Connect EXIF tag names to numeric values."""
@@ -146,6 +146,10 @@ class ImageProcessor(object):
                     size = min(w, max_size * 4), min(w, max_size * 4)
             try:
                 im.thumbnail(size, Image.ANTIALIAS)
+                save_args = {}
+                if icc_profile:
+                    save_args['icc_profile'] = icc_profile
+
                 if exif is not None and preserve_exif_data:
                     # Put right size in EXIF data
                     w, h = im.size
@@ -156,9 +160,9 @@ class ImageProcessor(object):
                         exif["Exif"][piexif.ExifIFD.PixelXDimension] = w
                         exif["Exif"][piexif.ExifIFD.PixelYDimension] = h
                     # Filter EXIF data as required
-                    im.save(dst, exif=piexif.dump(exif), icc_profile=icc_profile)
-                else:
-                    im.save(dst, icc_profile=icc_profile)
+                    save_args['exif'] = piexif.dump(exif)
+
+                im.save(dst, **save_args)
             except Exception as e:
                 self.logger.warning("Can't process {0}, using original "
                                     "image! ({1})".format(src, e))
