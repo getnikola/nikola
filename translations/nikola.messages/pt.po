@@ -7,7 +7,8 @@
 # Translators:
 # Translators:
 # Translators:
-# Fabio Rosado <fabioglrosado@gmail.com>, 2017
+# Fábio Rosado <fabioglrosado@gmail.com>, 2017
+# Fábio Rosado <fabioglrosado@gmail.com>, 2020
 # jamatos <jamatos@fep.up.pt>, 2015
 # jamatos <jamatos@fep.up.pt>, 2015
 msgid ""
@@ -15,8 +16,8 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2018-08-10 08:02+0000\n"
-"Last-Translator: Chris Warrick\n"
+"PO-Revision-Date: 2020-04-26 16:36+0000\n"
+"Last-Translator: Fábio Rosado <fabioglrosado@gmail.com>\n"
 "Language-Team: Portuguese (http://www.transifex.com/ralsina/nikola/language/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -163,4 +164,4 @@ msgstr "Feed Atom"
 
 #. {date} (updated {updated_date})
 msgid "updated"
-msgstr ""
+msgstr "Actualizado"

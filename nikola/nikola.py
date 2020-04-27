@@ -168,7 +168,7 @@ LEGAL_VALUES = {
         'sr_latin': 'sr_Latn',
     },
     'RTL_LANGUAGES': ('ar', 'fa', 'he', 'ur'),
-    'LUXON_LOCALES': {
+    'LUXON_LOCALES': defaultdict(lambda: 'en', **{
         'af': 'af',
         'ar': 'ar',
         'az': 'az',
@@ -189,11 +189,13 @@ LEGAL_VALUES = {
         'fa': 'fa',
         'fi': 'fi',
         'fr': 'fr',
+        'fur': 'fur',
         'gl': 'gl',
         'hi': 'hi',
         'he': 'he',
         'hr': 'hr',
         'hu': 'hu',
+        'ia': 'ia',
         'id': 'id',
         'it': 'it',
         'ja': 'ja',
@@ -221,9 +223,9 @@ LEGAL_VALUES = {
         'vi': 'vi',
         'zh_cn': 'zh-CN',
         'zh_tw': 'zh-TW'
-    },
+    }),
     # TODO: remove in v9
-    'MOMENTJS_LOCALES': {
+    'MOMENTJS_LOCALES': defaultdict(lambda: 'en', **{
         'af': 'af',
         'ar': 'ar',
         'az': 'az',
@@ -276,7 +278,7 @@ LEGAL_VALUES = {
         'vi': 'vi',
         'zh_cn': 'zh-cn',
         'zh_tw': 'zh-tw'
-    },
+    }),
     'PYPHEN_LOCALES': {
         'af': 'af',
         'bg': 'bg',
