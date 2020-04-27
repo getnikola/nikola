@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Support WebP image scaling (Issue #3399)
 * Use Luxon instead of Moment for fancy dates to make it more
   lightweight, going from 328k to 68k (Issue #3232)
 * New ``nikola console -s script.py`` option to run scripts that
