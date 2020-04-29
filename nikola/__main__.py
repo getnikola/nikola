@@ -113,7 +113,7 @@ def main(args=None):
             os.chdir(root)
         # Help and imports don't require config, but can use one if it exists
         needs_config_file = (argname != 'help') and not argname.startswith('import_')
-        LOGGER.debug("Website root: {0!r}", root)
+        LOGGER.debug("Website root: %r", root)
     else:
         needs_config_file = False
 
