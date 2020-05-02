@@ -329,6 +329,25 @@ def typogrify_sans_widont(data):
 
 
 @apply_to_text_file
+def typogrify_sans_amp(data):
+    """Prettify text with typogrify, skipping the ampersand filter."""
+    if typo is None:
+        req_missing(['typogrify'], 'use the typogrify filter', optional=True)
+        return data
+
+    data = _normalize_html(data)
+    # Disabled because it might leave <span> tags inside your <title> blocks
+    # if your posts or pages contain ampersands in their title
+    # data = typo.amp(data)
+    data = typo.widont(data)
+    data = typo.smartypants(data)
+    # Disabled because of typogrify bug where it breaks <title>
+    # data = typo.caps(data)
+    data = typo.initial_quotes(data)
+    return data
+
+
+@apply_to_text_file
 def php_template_injection(data):
     """Insert PHP code into Nikola templates."""
     template = re.search(r'<\!-- __NIKOLA_PHP_TEMPLATE_INJECTION source\:(.*) checksum\:(.*)__ -->', data)
