@@ -2285,6 +2285,9 @@ filters.html5lib_xmllike
 filters.typogrify
    Improve typography using `typogrify <http://static.mintchaos.com/projects/typogrify/>`__
 
+filters.typogrify_sans_amp
+   Same as typogrify without the ampersand filter
+
 filters.typogrify_sans_widont
    Same as typogrify without the widont filter
 
