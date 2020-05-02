@@ -48,6 +48,8 @@ Bugfixes
   #3332)
 * Use correct language for hyphenation in posts that are not
   translated to all languages (Issue #3377)
+* Prevent ``<span>`` tags from appearing in certain page ``<title>``
+  blocks when using Typogrify (Issue #3404)
 
 Internal
 --------
