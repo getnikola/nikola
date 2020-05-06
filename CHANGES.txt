@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Support posts without titles (Issue #3408)
 * Support WebP image scaling (Issue #3399)
 * Use Luxon instead of Moment for fancy dates to make it more
   lightweight, going from 328k to 68k (Issue #3232)
