@@ -1091,12 +1091,12 @@ class Post(object):
             return ext
 
     def should_hide_title(self):
-        """Returns True if this post's title should be hidden. Use in templates to manage posts without titles."""
+        """Return True if this post's title should be hidden. Use in templates to manage posts without titles."""
         return self.title().strip() in ('NO TITLE', '') or self.meta('hidetitle') or \
             self.meta('type').strip() in self.types_to_hide_title
 
     def should_show_title(self):
-        """Returns True if this post's title should be displayed. Use in templates to manage posts without titles."""
+        """Return True if this post's title should be displayed. Use in templates to manage posts without titles."""
         return not self.should_hide_title()
 
 
