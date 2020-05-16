@@ -967,7 +967,7 @@ PRETTY_URLS = ${PRETTY_URLS}
 # If True, use the scheduling rule to all posts (not pages!) by default
 # SCHEDULE_ALL = False
 
-# Do you want a add a Mathjax config file?
+# Do you want to add a Mathjax config file?
 # MATHJAX_CONFIG = ""
 
 # If you want support for the $.$ syntax (which may conflict with running
