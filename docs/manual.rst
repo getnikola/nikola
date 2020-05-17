@@ -368,10 +368,10 @@ hyphenate
     hyphenation disabled by default.
 
 nocomments
-    Set to "True" to disable comments. Example:
+    Set to "True" to disable comments.
 
 pretty_url
-    Set to "False" to disable pretty URL for this page. Example:
+    Set to "False" to disable pretty URL for this page.
 
 previewimage
     Designate a preview or other representative image path relative to BASE_URL
