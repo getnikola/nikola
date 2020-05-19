@@ -117,7 +117,7 @@ html_theme = 'default'
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-# html_logo = None
+html_logo = "../../logo/nikola-50px-transparent.png"
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -241,7 +241,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     ('index', 'Nikola', 'Nikola Documentation',
-     'The Nikola Contributors', 'Nikola', 'One line description of project.',
+     'The Nikola Contributors', 'Nikola', 'A static site generator.',
      'Miscellaneous'),
 ]
 
