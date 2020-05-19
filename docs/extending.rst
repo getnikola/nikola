@@ -123,7 +123,7 @@ For your own plugin, just change the values in a sensible way. The
                 'long': 'port',
                 'default': 8000,
                 'type': int,
-                'help': 'Port number (default: 8000)',
+                'help': 'Port number',
             },
             {
                 'name': 'address',
@@ -131,7 +131,7 @@ For your own plugin, just change the values in a sensible way. The
                 'long': '--address',
                 'type': str,
                 'default': '127.0.0.1',
-                'help': 'Address to bind (default: 127.0.0.1)',
+                'help': 'Address to bind',
             },
         )
 
@@ -140,6 +140,7 @@ For your own plugin, just change the values in a sensible way. The
             out_dir = self.site.config['OUTPUT_FOLDER']
             if not os.path.isdir(out_dir):
                 print("Error: Missing '{0}' folder?".format(out_dir))
+                return 1  # Exit code on failure. (return 0 not necessary)
             else:
                 os.chdir(out_dir)
                 httpd = HTTPServer((options['address'], options['port']),
@@ -154,12 +155,14 @@ As mentioned above, a plugin can have options, which the user can see by doing
 .. code-block:: console
 
     $ nikola help serve
-    Purpose: start the test webserver
-    Usage:   nikola serve [options]
+    nikola serve [options]
+    start the test webserver
 
     Options:
-    -p ARG, --port=ARG        Port number (default: 8000)
-    -a ARG, ----address=ARG   Address to bind (default: 127.0.0.1)
+        -p ARG, --port=ARG
+            Port number [default: 8000]
+        -a ARG, --address=ARG
+            Address to bind [default: 127.0.0.1]
 
     $ nikola serve -p 9000
     Serving HTTP on 127.0.0.1 port 9000 ...
@@ -365,7 +368,7 @@ PageCompiler Plugins
 
 These plugins implement markup languages, they take sources for posts or pages and
 create HTML or other output files. A good example is `the misaka plugin
-<https://github.com/getnikola/plugins/tree/master/v7/misaka>`__ or the built-in
+<https://github.com/getnikola/plugins/tree/master/v8/misaka>`__ or the built-in
 compiler plugins.
 
 They must provide:
@@ -504,7 +507,7 @@ PostScanner Plugins
 Get posts and pages from "somewhere" to be added to the timeline.
 There are currently two plugins for this: the built-in ``scan_posts``, and
 ``pkgindex_scan`` (in the Plugin Index), which is used to treat .plugin/.theme
-+ README.md as posts for the Plugin and Theme Indexes.
++ README.md as posts to generate the Plugin and Theme Indexes.
 
 Plugin Index
 ============
@@ -605,13 +608,15 @@ Make sure to provide at least a docstring, or a identifier, to ensure rebuilds w
 Shortcodes
 ==========
 
-Some (hopefully all) markup compilers support shortcodes in these forms::
+Some (hopefully all) markup compilers support shortcodes in these forms:
 
-    {{% raw %}}{{% foo %}}  # No arguments
-    {{% foo bar %}}  # One argument, containing "bar"
-    {{% foo bar baz=bat %}}  # Two arguments, one containing "bar", one called "baz" containing "bat"
+.. code:: text
 
-    {{% foo %}}Some text{{% /foo %}}  # one argument called "data" containing "Some text"{{% /raw %}}
+    {{% raw %}}{{% foo %}}{{% /raw %}}  # No arguments
+    {{% foo bar %}}{{% /raw %}}  # One argument, containing "bar"
+    {{% foo bar baz=bat %}}{{% /raw %}}  # Two arguments, one containing "bar", one called "baz" containing "bat"
+
+    {{% foo %}}Some text{{% /foo %}}{{% /raw %}}  # one argument called "data" containing "Some text"
 
 So, if you are creating a plugin that generates markup, it may be a good idea
 to register it as a shortcode in addition of to restructured text directive or
@@ -728,3 +733,23 @@ guarantee that sort of thing?
 
 There are no sections, and no access protection, so let's not use it to store passwords and such. Use responsibly.
 
+Logging
+=======
+
+Plugins often need to produce messages to the screen. All plugins get a logger object (``self.logger``) by default,
+configured to work with Nikola (logging level, colorful output, plugin name as the logger name). If you need, you can
+also use the global (``nikola.utils.LOGGER``) logger, or you can instantiate custom loggers with
+``nikola.utils.get_logger`` or the ``nikola.log`` module.
+
+Template and Dependency Injection
+=================================
+
+Plugins have access to two injection facilities.
+
+If your plugin needs custom templates for its features (adding pages, displaying stuff, etc.), you can put them in the
+``templates/mako`` and ``templates/jinja`` subfolders in your plugin’s folder. Note that those templates have a very low
+priority, so that users can override your plugin’s templates with their own.
+
+If your plugin needs to inject dependencies, the ``inject_dependency(target, dependency)`` function can be used to add a
+``dependency`` for tasks which basename == ``target``. This facility should be limited to cases which really need it,
+consider other facilities first (eg. adding post dependencies).
