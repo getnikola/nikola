@@ -2,6 +2,7 @@
 {% extends 'base.tmpl' %}
 {% import 'comments_helper.tmpl' as comments with context %}
 {% import 'ui_helper.tmpl' as ui with context %}
+{% import 'post_helper.tmpl' as post_helper with context %}
 {% block sourcelink %}{% endblock %}
 
 {% block content %}
@@ -72,6 +73,10 @@
     {% endfor %}
 {% endif %}
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
+{% if post %}
+    {{ post_helper.open_graph_metadata(post) }}
+    {{ post_helper.twitter_card_information(post) }}
+{% endif %}
 {% endblock %}
 
 {% block extra_js %}

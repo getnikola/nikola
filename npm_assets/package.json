@@ -6,12 +6,12 @@
     "license": "MIT",
     "dependencies": {
         "baguettebox.js": "^1.11.0",
-        "bootstrap": "^4.4.1",
+        "bootstrap": "^4.5.0",
         "html5shiv": "^3.7.3",
-        "jquery": "^3.4.1",
+        "jquery": "^3.5.1",
         "justified-layout": "^3.0.0",
         "livereload-js": "^2.4.0",
-        "luxon": "^1.23.0",
+        "luxon": "^1.24.1",
         "popper.js": "^1.16.1"
     }
 }
