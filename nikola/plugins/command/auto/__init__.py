@@ -250,7 +250,7 @@ class CommandAuto(Command):
         if browser:
             # Some browsers fail to load 0.0.0.0 (Issue #2755)
             if host == '0.0.0.0':
-                server_url = "http://127.0.0.1:{1}/".format(host, port)
+                server_url = "http://127.0.0.1:{0}/".format(port)
             self.logger.info("Opening {0} in the default web browser...".format(server_url))
             webbrowser.open(server_url)
 
