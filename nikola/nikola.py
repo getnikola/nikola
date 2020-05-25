@@ -619,6 +619,7 @@ class Nikola(object):
             'GITHUB_COMMIT_SOURCE': False,  # WARNING: conf.py.in overrides this with True for backwards compatibility
             'META_GENERATOR_TAG': True,
             'REST_FILE_INSERTION_ENABLED': True,
+            'TYPES_TO_HIDE_TITLE': [],
         }
 
         # set global_context for template rendering
@@ -1793,7 +1794,7 @@ class Nikola(object):
                         else:  # let other errors raise
                             raise
             args = {
-                'title': post.title(lang),
+                'title': post.title(lang) if post.should_show_title() else None,
                 'link': post.permalink(lang, absolute=True, query=feed_append_query),
                 'description': data,
                 # PyRSS2Gen's pubDate is GMT time.

@@ -177,6 +177,7 @@ class Post(object):
         self.translations = self.config['TRANSLATIONS']
         self.skip_untranslated = not self.config['SHOW_UNTRANSLATED_POSTS']
         self._default_preview_image = self.config['DEFAULT_PREVIEW_IMAGE']
+        self.types_to_hide_title = self.config['TYPES_TO_HIDE_TITLE']
 
     def _set_tags(self):
         """Set post tags."""
@@ -1088,6 +1089,15 @@ class Post(object):
             return '.src' + ext
         else:
             return ext
+
+    def should_hide_title(self):
+        """Return True if this post's title should be hidden. Use in templates to manage posts without titles."""
+        return self.title().strip() in ('NO TITLE', '') or self.meta('hidetitle') or \
+            self.meta('type').strip() in self.types_to_hide_title
+
+    def should_show_title(self):
+        """Return True if this post's title should be displayed. Use in templates to manage posts without titles."""
+        return not self.should_hide_title()
 
 
 def get_metadata_from_file(source_path, post, config, lang, metadata_extractors_by):

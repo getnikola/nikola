@@ -72,6 +72,7 @@
 * `Mario Pozzo <https://github.com/camboris>`_
 * `Mark Eichin <https://github.com/eichin>`_
 * `Martin Bless <https://github.com/marble>`_
+* `Martin McCallion <https://github.com/devilgate>`_
 * `Martin Michlmayr <https://github.com/tbm>`_
 * `Martin Wimpress <https://github.com/wimpr1m>`_
 * `Martín Gaitán <https://github.com/mgaitan>`_
