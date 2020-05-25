@@ -672,11 +672,13 @@ class LanguageNotFoundError(Exception):
         return 'cannot find language {0}'.format(self.lang)
 
 
-def load_messages(themes, translations, default_lang, themes_dirs):
+def load_messages(themes, translations, default_lang, themes_dirs, config):
     """Load theme's messages into context.
 
     All the messages from parent themes are loaded,
     and "younger" themes have priority.
+
+    Finally, config's MESSAGES is overlayed
     """
     messages = Functionary(dict, default_lang)
     oldpath = list(sys.path)
@@ -719,6 +721,10 @@ def load_messages(themes, translations, default_lang, themes_dirs):
         if not status and lang not in INCOMPLETE_LANGUAGES_WARNED:
             LOGGER.warning("Incomplete translation for language '{0}'.".format(lang))
             INCOMPLETE_LANGUAGES_WARNED.add(lang)
+
+    if 'MESSAGES' in config:
+        breakpoint()
+        messages.update(config['MESSAGES'])
 
     return messages
 

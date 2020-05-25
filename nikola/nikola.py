@@ -1332,7 +1332,8 @@ class Nikola(object):
                 self._MESSAGES = utils.load_messages(self.THEMES,
                                                      self.translations,
                                                      self.default_lang,
-                                                     themes_dirs=self.themes_dirs)
+                                                     themes_dirs=self.themes_dirs,
+                                                     config=self.config)
             return self._MESSAGES
         except utils.LanguageNotFoundError as e:
             utils.LOGGER.error('''Cannot load language "{0}".  Please make sure it is supported by Nikola itself, or that you have the appropriate messages files in your themes.'''.format(e.lang))
