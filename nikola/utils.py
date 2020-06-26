@@ -926,6 +926,11 @@ def current_time(tzinfo=None):
     return dt
 
 
+def current_date():
+    """Get today's date."""
+    return datetime.date.today()
+
+
 from nikola import filters as task_filters  # NOQA
 
 

@@ -197,8 +197,9 @@ class PostListShortcode(ShortcodePlugin):
             filtered_timeline = natsort.natsorted(filtered_timeline, key=lambda post: post.meta[lang][sort], alg=natsort.ns.F | natsort.ns.IC)
 
         if date:
-            _now = utils.current_time()
-            filtered_timeline = [p for p in filtered_timeline if date_in_range(utils.html_unescape(date), p.date, now=_now)]
+            _now = utils.current_date()
+            filtered_timeline = [p for p in filtered_timeline if date_in_range(utils.html_unescape(date), p.date,
+                                                                               now=_now)]
 
         for post in filtered_timeline[start:stop:step]:
             if slugs:

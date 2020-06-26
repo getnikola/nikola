@@ -75,12 +75,13 @@ def date_in_range(date_range, date, debug=False, now=None):
         if attribute in ('weekday', 'isoweekday'):
             left = getattr(date, attribute)()
             right = int(value)
+        elif value == 'now':
+            print('Value is "now"; date is {}; now is {}'.format(date, now))
+            left = date.date()
+            right = now or datetime.date.today()
         elif attribute:
             left = getattr(date, attribute)
             right = int(value)
-        elif value == 'now':
-            left = date
-            right = now or datetime.datetime.now()
         else:
             left = date
             right = dateutil.parser.parse(value)
