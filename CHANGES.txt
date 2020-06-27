@@ -1,3 +1,14 @@
+New in master
+=============
+
+Features
+--------
+
+Bugfixes
+--------
+
+* Fix ``doit`` requirement to ``doit>=0.32.0`` (Issue #3422)
+
 New in v8.1.0
 =============
 
