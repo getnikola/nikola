@@ -22,6 +22,7 @@ Features
 Bugfixes
 --------
 
+* Support directory names in ``REDIRECTIONS`` (Issue #3421)
 * Return a non-zero error code when ``nikola github_deploy`` fails
 * Refactored scale_image causing performance increasing in image
   resizing.
