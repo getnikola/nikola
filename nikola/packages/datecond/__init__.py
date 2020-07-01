@@ -76,7 +76,6 @@ def date_in_range(date_range, date, debug=False, now=None):
             left = getattr(date, attribute)()
             right = int(value)
         elif value == 'now':
-            print('Value is "now"; date is {}; now is {}'.format(date, now))
             left = date.date()
             right = now or datetime.date.today()
         elif attribute:
