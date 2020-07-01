@@ -44,12 +44,15 @@ class Redirect(Task):
             'redirections': self.site.config['REDIRECTIONS'],
             'output_folder': self.site.config['OUTPUT_FOLDER'],
             'filters': self.site.config['FILTERS'],
+            'index_file': self.site.config['INDEX_FILE'],
         }
 
         yield self.group_task()
         if kw['redirections']:
             for src, dst in kw["redirections"]:
                 src_path = os.path.join(kw["output_folder"], src.lstrip('/'))
+                if src_path.endswith("/"):
+                    src_path += kw['index_file']
                 yield utils.apply_filters({
                     'basename': self.name,
                     'name': src_path,

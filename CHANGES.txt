@@ -4,6 +4,17 @@ New in master
 Features
 --------
 
+Bugfixes
+--------
+
+* Fix ``doit`` requirement to ``doit>=0.32.0`` (Issue #3422)
+
+New in v8.1.0
+=============
+
+Features
+--------
+
 * Support posts without titles (Issue #3408)
 * Support WebP image scaling (Issue #3399)
 * Use Luxon instead of Moment for fancy dates to make it more
@@ -23,6 +34,7 @@ Bugfixes
 --------
 
 * Make ``post_list`` use days rather than times (Issue #3420)
+* Support directory names in ``REDIRECTIONS`` (Issue #3421)
 * Return a non-zero error code when ``nikola github_deploy`` fails
 * Refactored scale_image causing performance increasing in image
   resizing.

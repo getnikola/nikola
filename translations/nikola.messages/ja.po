@@ -14,14 +14,15 @@
 # Yasuhiko Shiga <4wordextinguisher@gmail.com>, 2013
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
+# Shmon <yostos@yostos.org>, 2020
 # Yasuhiko Shiga <4wordextinguisher@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2018-08-10 08:02+0000\n"
-"Last-Translator: Chris Warrick\n"
+"PO-Revision-Date: 2020-05-11 05:00+0000\n"
+"Last-Translator: Shmon <yostos@yostos.org>\n"
 "Language-Team: Japanese (http://www.transifex.com/ralsina/nikola/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +31,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "More posts about %s"
-msgstr "%sに関する文書一覧"
+msgstr "%sに関する記事一覧"
 
 #. Here your translation should NOT say English but the name of your language
 #. instead
@@ -53,13 +54,13 @@ msgid "Read more"
 msgstr "続きを読む"
 
 msgid "Posts about %s"
-msgstr "%sについての文書"
+msgstr "%sについての記事"
 
 msgid "Next post"
-msgstr "次の文書"
+msgstr "次の記事"
 
 msgid "old posts, page %d"
-msgstr "過去の文書 %dページ目"
+msgstr "過去の記事 %dページ目"
 
 msgid "page %d"
 msgstr "ページ%d"
@@ -73,13 +74,13 @@ msgid "Read in English"
 msgstr "日本語で読む"
 
 msgid "Posts for year %s"
-msgstr "%s年の文書"
+msgstr "%s年の記事"
 
 msgid "Newer posts"
-msgstr "新しい文書"
+msgstr "新しい記事"
 
 msgid "Previous post"
-msgstr "一つ前の文書"
+msgstr "一つ前の記事"
 
 msgid "Also available in:"
 msgstr "他の言語で読む:"
@@ -91,10 +92,10 @@ msgid "Original site"
 msgstr "翻訳元のサイト"
 
 msgid "Older posts"
-msgstr "過去の文書"
+msgstr "過去の記事"
 
 msgid "Archive"
-msgstr "文書一覧"
+msgstr "過去記事一覧"
 
 msgid "Publication date"
 msgstr "公開日"
@@ -103,16 +104,16 @@ msgid "Posted:"
 msgstr "公開日時:"
 
 msgid "Posts for {month_year}"
-msgstr "{month_year}の文書"
+msgstr "{month_year}の記事"
 
 msgid "Posts for {month_day_year}"
-msgstr "{month_day_year}の文書"
+msgstr "{month_day_year}の記事"
 
 msgid "Nothing found."
 msgstr "なにも見つかりませんでした。"
 
 msgid "No posts found."
-msgstr "文書はありません。"
+msgstr "記事はありません。"
 
 msgid "RSS feed"
 msgstr "RSSフィード"
@@ -132,14 +133,14 @@ msgstr "(有効)"
 
 #. Default content for a new post
 msgid "Write your post here."
-msgstr "ここに文書を記述してください。"
+msgstr "ここに記事を記述してください。"
 
 #. Default content for a new page
 msgid "Write your page here."
-msgstr "ここに文書を記述してください。"
+msgstr "ここに記事を記述してください。"
 
 msgid "Uncategorized"
-msgstr "uncategorized"
+msgstr "カテゴリなし"
 
 #. Used for feeds of any format
 msgid "Updates"
@@ -149,7 +150,7 @@ msgid "Authors"
 msgstr "著者一覧"
 
 msgid "Posts by %s"
-msgstr "%sの文書一覧"
+msgstr "%sの記事一覧"
 
 msgid "Toggle navigation"
 msgstr "ナビゲーションを隠す"
@@ -168,4 +169,4 @@ msgstr "Atomフィード"
 
 #. {date} (updated {updated_date})
 msgid "updated"
-msgstr ""
+msgstr "更新日時"
