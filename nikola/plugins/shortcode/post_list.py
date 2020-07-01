@@ -219,9 +219,6 @@ class PostListShortcode(ShortcodePlugin):
 
             posts += [post]
 
-        if not posts:
-            return '', []
-
         template_deps = site.template_system.template_deps(template)
         if state:
             # Register template as a dependency (Issue #2391)
