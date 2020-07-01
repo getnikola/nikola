@@ -22,6 +22,7 @@ Features
 Bugfixes
 --------
 
+* Make ``post_list`` use days rather than times (Issue #3420)
 * Return a non-zero error code when ``nikola github_deploy`` fails
 * Refactored scale_image causing performance increasing in image
   resizing.
