@@ -2262,19 +2262,19 @@ The currently available filters are:
       }
 
 filters.html_tidy_nowrap
-   Prettify HTML 5 documents with `tidy5 <http://www.html-tidy.org/>`_
+   Prettify HTML 5 documents with `tidy5 <https://www.html-tidy.org/>`_
 
 filters.html_tidy_wrap
-   Prettify HTML 5 documents wrapped at 80 characters with `tidy5 <http://www.html-tidy.org/>`_
+   Prettify HTML 5 documents wrapped at 80 characters with `tidy5 <https://www.html-tidy.org/>`_
 
 filters.html_tidy_wrap_attr
-   Prettify HTML 5 documents and wrap lines and attributes with `tidy5 <http://www.html-tidy.org/>`_
+   Prettify HTML 5 documents and wrap lines and attributes with `tidy5 <https://www.html-tidy.org/>`_
 
 filters.html_tidy_mini
-   Minify HTML 5 into smaller documents with `tidy5 <http://www.html-tidy.org/>`_
+   Minify HTML 5 into smaller documents with `tidy5 <https://www.html-tidy.org/>`_
 
 filters.html_tidy_withconfig
-   Run `tidy5 <http://www.html-tidy.org/>`_ with ``tidy5.conf`` as the config file (supplied by user)
+   Run `tidy5 <https://www.html-tidy.org/>`_ with ``tidy5.conf`` as the config file (supplied by user)
 
 filters.html5lib_minify
    Minify HTML5 using html5lib_minify
@@ -2283,7 +2283,7 @@ filters.html5lib_xmllike
    Format using html5lib
 
 filters.typogrify
-   Improve typography using `typogrify <http://static.mintchaos.com/projects/typogrify/>`__
+   Improve typography using `typogrify <https://github.com/mintchaos/typogrify>`__
 
 filters.typogrify_sans_widont
    Same as typogrify without the widont filter
@@ -2296,7 +2296,7 @@ filters.normalize_html
    quotes. Usually not needed.
 
 filters.yui_compressor
-   Compress CSS/JavaScript using `YUI compressor <http://yui.github.io/yuicompressor/>`_
+   Compress CSS/JavaScript using `YUI compressor <https://yui.github.io/yuicompressor/>`_
 
 filters.closure_compiler
    Compile, compress, and optimize JavaScript `Google Closure Compiler <https://developers.google.com/closure/compiler/>`_
@@ -2305,13 +2305,13 @@ filters.optipng
    Compress PNG files using `optipng <http://optipng.sourceforge.net/>`_
 
 filters.jpegoptim
-   Compress JPEG files using `jpegoptim <http://www.kokkonen.net/tjko/projects.html>`_
+   Compress JPEG files using `jpegoptim <https://www.kokkonen.net/tjko/projects.html>`_
 
 filters.cssminify
-   Minify CSS using http://cssminifier.com/ (requires Internet access)
+   Minify CSS using https://cssminifier.com/ (requires Internet access)
 
 filters.jsminify
-   Minify JS using http://javascript-minifier.com/ (requires Internet access)
+   Minify JS using https://javascript-minifier.com/ (requires Internet access)
 
 filters.jsonminify
    Minify JSON files (strip whitespace and use minimal separators).
