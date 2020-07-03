@@ -284,7 +284,8 @@ Basic
 `````
 
 title
-    Title of the post. (required)
+    Title of the post. Using HTML/math in titles is not supported/recommended.
+    (required)
 
 slug
     Slug of the post. Used as the last component of the page URL.  We recommend
