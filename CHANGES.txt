@@ -7,8 +7,9 @@ Features
 Bugfixes
 --------
 
-* Default to no line numbers in code listings, honor CodeHilite
-  requesting no line numbers (Issue #3426)
+* Default to no line numbers in code blocks, honor CodeHilite
+  requesting no line numbers. Listing pages still use line numbers
+  (Issue #3426)
 * Fix ``doit`` requirement to ``doit>=0.32.0`` (Issue #3422)
 
 New in v8.1.0
