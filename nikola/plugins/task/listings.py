@@ -134,7 +134,9 @@ class Listings(Task):
                         except Exception:
                             lexer = TextLexer()
                         fd.seek(0)
-                    code = highlight(fd.read(), lexer, utils.NikolaPygmentsHTML(in_name))
+                    code = highlight(
+                        fd.read(), lexer,
+                        utils.NikolaPygmentsHTML(in_name, linenos='table'))
                 title = os.path.basename(in_name)
             else:
                 code = ''
