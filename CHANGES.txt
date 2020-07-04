@@ -7,6 +7,8 @@ Features
 Bugfixes
 --------
 
+* Default to no line numbers in code listings, honor CodeHilite
+  requesting no line numbers (Issue #3426)
 * Fix ``doit`` requirement to ``doit>=0.32.0`` (Issue #3422)
 
 New in v8.1.0

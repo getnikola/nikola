@@ -1629,7 +1629,11 @@ class NikolaPygmentsHTML(BetterHtmlFormatter):
                 anchor_ref, lang=LocaleBorg().current_lang, force=True)
         self.nclasses = classes
         kwargs['cssclass'] = 'code'
+        if not kwargs.get('linenos'):
+            # Default to no line numbers (Issue #3426)
+            kwargs['linenos'] = False
         if kwargs.get('linenos') not in {'table', 'inline', 'ol', False}:
+            # Map invalid values to table
             kwargs['linenos'] = 'table'
         kwargs['anchorlinenos'] = kwargs['linenos'] == 'table'
         kwargs['nowrap'] = False
