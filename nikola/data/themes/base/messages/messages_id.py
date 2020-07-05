@@ -45,5 +45,5 @@ MESSAGES = {
     "Write your post here.": "Tulis tulisan Anda disini.",
     "old posts, page %d": "tulisan lama, halaman %d",
     "page %d": "halaman %d",
-    "updated": "",
+    "updated": "diperbarui",
 }

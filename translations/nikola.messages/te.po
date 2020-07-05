@@ -9,13 +9,14 @@
 # Translators:
 # Chillar Anand <anand21nanda@gmail.com>, 2016
 # Chillar Anand <anand21nanda@gmail.com>, 2016
+# Krishnakanth, 2020
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2018-08-10 08:02+0000\n"
-"Last-Translator: Chris Warrick\n"
+"PO-Revision-Date: 2020-07-03 15:17+0000\n"
+"Last-Translator: Krishnakanth\n"
 "Language-Team: Telugu (http://www.transifex.com/ralsina/nikola/language/te/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,7 +51,7 @@ msgid "Posts about %s"
 msgstr "%s గూర్చి టపాలు"
 
 msgid "Next post"
-msgstr "తరువాత టపా"
+msgstr "తరువాతి టపా"
 
 msgid "old posts, page %d"
 msgstr "పాత టపాలు, పేజీ %d"
@@ -97,16 +98,16 @@ msgid "Posted:"
 msgstr "ప్రచురుంచిన తేదీ:"
 
 msgid "Posts for {month_year}"
-msgstr ""
+msgstr "{month_year} యొక్క టపాలు"
 
 msgid "Posts for {month_day_year}"
-msgstr ""
+msgstr "{month_day_year} యొక్క టపాలు"
 
 msgid "Nothing found."
-msgstr ""
+msgstr "ఏదీ కనుగొనబడలేదు."
 
 msgid "No posts found."
-msgstr ""
+msgstr "టపాలు ఏవీ కనుగొనబడలేదు."
 
 msgid "RSS feed"
 msgstr "RSS ఫీడ్"
@@ -146,20 +147,20 @@ msgid "Posts by %s"
 msgstr "%s యొక్క టపాలు"
 
 msgid "Toggle navigation"
-msgstr ""
+msgstr "నావిగేషన్‌ను టోగుల్ చేయండి"
 
 msgid "Previous"
-msgstr ""
+msgstr "మునుపటి"
 
 msgid "Up"
-msgstr ""
+msgstr "పైకి"
 
 msgid "Next"
-msgstr ""
+msgstr "తరువాతి"
 
 msgid "Atom feed"
-msgstr ""
+msgstr "అటామ్ ఫీడ్"
 
 #. {date} (updated {updated_date})
 msgid "updated"
-msgstr ""
+msgstr "నవీకరించబడింది"

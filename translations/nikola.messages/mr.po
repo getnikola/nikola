@@ -7,164 +7,157 @@
 # Translators:
 # Translators:
 # Translators:
-# seanpue <a@seanpue.com>, 2014,2016
-# Krishnakanth, 2020
-# saadat, 2013
-# Saadat M. <saadat@saadatmand.pk>, 2013-2014
-# Saadat M. <saadat@saadatmand.pk>, 2013,2015,2017
-# Saadat M. <saadat@saadatmand.pk>, 2013
-# seanpue <a@seanpue.com>, 2014,2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2020-07-03 16:18+0000\n"
-"Last-Translator: Krishnakanth\n"
-"Language-Team: Urdu (http://www.transifex.com/ralsina/nikola/language/ur/)\n"
+"PO-Revision-Date: 2013-03-15 15:29+0000\n"
+"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"Language-Team: Marathi (http://www.transifex.com/ralsina/nikola/language/mr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ur\n"
+"Language: mr\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "More posts about %s"
-msgstr "%s کے بارے میں مزید تحاریر"
+msgstr ""
 
 #. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "LANGUAGE"
-msgstr "اردو"
+msgstr ""
 
 msgid "Tags"
-msgstr "ٹیگز"
+msgstr ""
 
 msgid "Categories"
-msgstr "زمرے"
+msgstr ""
 
 msgid "Tags and Categories"
-msgstr "ٹیگز اور زمرے"
+msgstr ""
 
 msgid "Comments"
-msgstr "تبصرے"
+msgstr ""
 
 msgid "Read more"
-msgstr "مزید پڑھیں"
+msgstr ""
 
 msgid "Posts about %s"
-msgstr "%s کے بارے میں تحاریر"
+msgstr ""
 
 msgid "Next post"
-msgstr "اگلی تحریر"
+msgstr ""
 
 msgid "old posts, page %d"
-msgstr "پرانی تحاریر صفحہ %d"
+msgstr ""
 
 msgid "page %d"
-msgstr "صفحہ %d"
+msgstr ""
 
 msgid "Source"
-msgstr "سورس"
+msgstr ""
 
 #. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "Read in English"
-msgstr "اردو میں پڑھیں"
+msgstr ""
 
 msgid "Posts for year %s"
-msgstr "سال %s کی تحاریر"
+msgstr ""
 
 msgid "Newer posts"
-msgstr "نئی تحاریر"
+msgstr ""
 
 msgid "Previous post"
-msgstr "پچھلی تحریر"
+msgstr ""
 
 msgid "Also available in:"
-msgstr "ان میں بھی دستیاب:"
+msgstr ""
 
 msgid "Languages:"
-msgstr "زبانیں:"
+msgstr ""
 
 msgid "Original site"
-msgstr "اصلی سائٹ"
+msgstr ""
 
 msgid "Older posts"
-msgstr "پرانی تحاریر"
+msgstr ""
 
 msgid "Archive"
-msgstr "آرکائیو"
+msgstr ""
 
 msgid "Publication date"
-msgstr "تاریخِ اشاعت"
+msgstr ""
 
 msgid "Posted:"
-msgstr "اشاعت:"
+msgstr ""
 
 msgid "Posts for {month_year}"
-msgstr "{month_year} کی تحاریر"
+msgstr ""
 
 msgid "Posts for {month_day_year}"
-msgstr "{month_day_year} کی تحاریر"
+msgstr ""
 
 msgid "Nothing found."
-msgstr "کچھ نہیں مل سکا۔"
+msgstr ""
 
 msgid "No posts found."
-msgstr "کوئی تحریر نہیں مل سکی۔"
+msgstr ""
 
 msgid "RSS feed"
-msgstr "آر ایس ایس فیڈ"
+msgstr ""
 
 msgid "%d min remaining to read"
-msgstr "%d منٹ کا مطالعہ باقی"
+msgstr ""
 
 msgid "Skip to main content"
-msgstr "مرکزی متن پر جائیں"
+msgstr ""
 
 msgid "Subcategories:"
-msgstr "ذیلی زمرے"
+msgstr ""
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
-msgstr "(فعال)"
+msgstr ""
 
 #. Default content for a new post
 msgid "Write your post here."
-msgstr "اپنی تحریر یہاں لکھیں۔"
+msgstr ""
 
 #. Default content for a new page
 msgid "Write your page here."
-msgstr "اپنے صفحے کا متن یہاں لکھیں۔"
+msgstr ""
 
 msgid "Uncategorized"
-msgstr "بے زمرہ"
+msgstr ""
 
 #. Used for feeds of any format
 msgid "Updates"
-msgstr "تازہ ترین"
+msgstr ""
 
 msgid "Authors"
-msgstr "مصنفین"
+msgstr ""
 
 msgid "Posts by %s"
-msgstr "%s کی تحاریر"
+msgstr ""
 
 msgid "Toggle navigation"
-msgstr "نیویگیشن ہٹائیں/دکھائیں"
+msgstr ""
 
 msgid "Previous"
-msgstr "پیچھے"
+msgstr ""
 
 msgid "Up"
-msgstr "اوپر"
+msgstr ""
 
 msgid "Next"
-msgstr "آگے"
+msgstr ""
 
 msgid "Atom feed"
-msgstr "ایٹم فِیڈ"
+msgstr ""
 
 #. {date} (updated {updated_date})
 msgid "updated"
-msgstr "تازہ کاری"
+msgstr ""

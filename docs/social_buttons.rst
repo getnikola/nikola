@@ -6,7 +6,7 @@
 .. description:
 .. author: The Nikola Team
 
-:Version: 8.1.0
+:Version: 8.1.1
 
 .. class:: alert alert-primary float-md-right
 

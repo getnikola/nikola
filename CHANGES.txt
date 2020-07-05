@@ -1,8 +1,5 @@
-New in master
+New in v8.1.1
 =============
-
-Features
---------
 
 Bugfixes
 --------
