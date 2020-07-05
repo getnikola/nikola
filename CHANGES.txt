@@ -7,6 +7,9 @@ Features
 Bugfixes
 --------
 
+* Default to no line numbers in code blocks, honor CodeHilite
+  requesting no line numbers. Listing pages still use line numbers
+  (Issue #3426)
 * Remove duplicate MathJax config in bootstrap themes (Issue #3427)
 * Fix ``doit`` requirement to ``doit>=0.32.0`` (Issue #3422)
 
