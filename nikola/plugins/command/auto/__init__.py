@@ -34,8 +34,9 @@ import re
 import stat
 import subprocess
 import sys
-
+import typing
 import webbrowser
+
 import pkg_resources
 
 from nikola.plugin_categories import Command
@@ -73,6 +74,7 @@ class CommandAuto(Command):
     doc_purpose = "builds and serves a site; automatically detects site changes, rebuilds, and optionally refreshes a browser"
     dns_sd = None
     delta_last_rebuild = datetime.timedelta(milliseconds=100)
+    web_runner = None  # type: web.AppRunner
 
     cmd_options = [
         {
@@ -212,23 +214,10 @@ class CommandAuto(Command):
         self.has_server = not options['no-server']
 
         if self.has_server:
-            # Set up aiohttp server and start it
-            webapp = web.Application()
-            webapp.router.add_get('/livereload.js', self.serve_livereload_js)
-            webapp.router.add_get('/robots.txt', self.serve_robots_txt)
-            webapp.router.add_route('*', '/livereload', self.websocket_handler)
-            resource = IndexHtmlStaticResource(True, self.snippet, '', out_folder)
-            webapp.router.register_resource(resource)
-
-            runner = web.AppRunner(webapp)
-            loop.run_until_complete(runner.setup())
-            site = web.TCPSite(runner, host, port)
-            loop.run_until_complete(site.start())
+            loop.run_until_complete(self.set_up_server(host, port, out_folder))
 
         # Run an initial build so we are up-to-date. The server is running, but we are not watching yet.
-        loop.run_until_complete(self._rebuild_site())
-        # If there are any clients, have them reload the root.
-        loop.run_until_complete(self._send_reload_command(self.site.config['INDEX_FILE']))
+        loop.run_until_complete(self.run_initial_rebuild())
 
         self.wd_observer = Observer()
         # Watch output folders and trigger reloads
@@ -238,12 +227,12 @@ class CommandAuto(Command):
         # Watch input folders and trigger rebuilds
         for p in watched:
             if os.path.exists(p):
-                self.wd_observer.schedule(NikolaEventHandler(self.run_nikola_build, loop), p, recursive=True)
+                self.wd_observer.schedule(NikolaEventHandler(self.queue_rebuild, loop), p, recursive=True)
 
         # Watch config file (a bit of a hack, but we need a directory)
         _conf_fn = os.path.abspath(self.site.configuration_filename or 'conf.py')
         _conf_dn = os.path.dirname(_conf_fn)
-        self.wd_observer.schedule(ConfigEventHandler(_conf_fn, self.run_nikola_build, loop), _conf_dn, recursive=False)
+        self.wd_observer.schedule(ConfigEventHandler(_conf_fn, self.queue_rebuild, loop), _conf_dn, recursive=False)
         self.wd_observer.start()
 
         win_sleeper = None
@@ -300,20 +289,33 @@ class CommandAuto(Command):
                 self.dns_sd.Reset()
             rebuild_queue_fut.cancel()
             reload_queue_fut.cancel()
-            loop.run_until_complete(self._cleanup_server(site, runner, webapp))
+            loop.run_until_complete(self.web_runner.cleanup())
             self.wd_observer.stop()
             self.wd_observer.join()
         loop.close()
 
-    async def _cleanup_server(self, site, runner, webapp):
-        """Clean up the aiohttp server."""
-        await site.stop()
-        await runner.shutdown()
-        await runner.cleanup()
-        await webapp.shutdown()
-        await webapp.cleanup()
+    async def set_up_server(self, host: str, port: int, out_folder: str) -> None:
+        """Set up aiohttp server and start it."""
+        webapp = web.Application()
+        webapp.router.add_get('/livereload.js', self.serve_livereload_js)
+        webapp.router.add_get('/robots.txt', self.serve_robots_txt)
+        webapp.router.add_route('*', '/livereload', self.websocket_handler)
+        resource = IndexHtmlStaticResource(True, self.snippet, '', out_folder)
+        webapp.router.register_resource(resource)
+        webapp.on_shutdown.append(self.remove_websockets)
 
-    async def run_nikola_build(self, event):
+        self.web_runner = web.AppRunner(webapp)
+        await self.web_runner.setup()
+        website = web.TCPSite(self.web_runner, host, port)
+        await website.start()
+
+    async def run_initial_rebuild(self) -> None:
+        """Run an initial rebuild."""
+        await self._rebuild_site()
+        # If there are any clients, have them reload the root.
+        await self._send_reload_command(self.site.config['INDEX_FILE'])
+
+    async def queue_rebuild(self, event) -> None:
         """Rebuild the site."""
         # Move events have a dest_path, some editors like gedit use a
         # move on larger save operations for write protection
@@ -333,7 +335,7 @@ class CommandAuto(Command):
         self.logger.debug('Queuing rebuild from {0}'.format(event_path))
         await self.rebuild_queue.put((datetime.datetime.now(), event_path))
 
-    async def run_rebuild_queue(self):
+    async def run_rebuild_queue(self) -> None:
         """Run rebuilds from a queue (Nikola can only build in a single instance)."""
         while True:
             date, event_path = await self.rebuild_queue.get()
@@ -342,7 +344,7 @@ class CommandAuto(Command):
                 continue
             await self._rebuild_site(event_path)
 
-    async def _rebuild_site(self, event_path=None):
+    async def _rebuild_site(self, event_path: typing.Optional[str] = None) -> None:
         """Rebuild the site."""
         self.is_rebuilding = True
         self.last_rebuild = datetime.datetime.now()
@@ -363,7 +365,7 @@ class CommandAuto(Command):
 
         self.is_rebuilding = False
 
-    async def run_reload_queue(self):
+    async def run_reload_queue(self) -> None:
         """Send reloads from a queue to limit CPU usage."""
         while True:
             p = await self.reload_queue.get()
@@ -374,11 +376,11 @@ class CommandAuto(Command):
             else:
                 await asyncio.sleep(IDLE_REFRESH_DELAY)
 
-    async def _send_reload_command(self, p):
+    async def _send_reload_command(self, path: str) -> None:
         """Send a reload command."""
-        await self.send_to_websockets({'command': 'reload', 'path': p, 'liveCSS': True})
+        await self.send_to_websockets({'command': 'reload', 'path': path, 'liveCSS': True})
 
-    async def reload_page(self, event):
+    async def reload_page(self, event) -> None:
         """Reload the page."""
         # Move events have a dest_path, some editors like gedit use a
         # move on larger save operations for write protection
@@ -420,7 +422,7 @@ class CommandAuto(Command):
                     await ws.send_json(response)
                 elif message['command'] != 'info':
                     self.logger.warning("Unknown command in message: {0}".format(message))
-            elif msg.type == aiohttp.WSMsgType.CLOSED:
+            elif msg.type in (aiohttp.WSMsgType.CLOSED, aiohttp.WSMsgType.CLOSING):
                 break
             elif msg.type == aiohttp.WSMsgType.CLOSE:
                 self.logger.debug("Closing WebSocket")
@@ -437,7 +439,13 @@ class CommandAuto(Command):
 
         return ws
 
-    async def send_to_websockets(self, message):
+    async def remove_websockets(self, app) -> None:
+        """Remove all websockets."""
+        for ws in self.sockets:
+            await ws.close()
+        self.sockets.clear()
+
+    async def send_to_websockets(self, message: dict) -> None:
         """Send a message to all open WebSockets."""
         to_delete = []
         for ws in self.sockets:
@@ -461,7 +469,7 @@ class CommandAuto(Command):
             self.sockets.remove(ws)
 
 
-async def windows_ctrlc_workaround():
+async def windows_ctrlc_workaround() -> None:
     """Work around bpo-23057."""
     # https://bugs.python.org/issue23057
     while True:
@@ -480,13 +488,12 @@ class IndexHtmlStaticResource(StaticResource):
         self.snippet = snippet
         super().__init__(*args, **kwargs)
 
-    async def _handle(self, request):
+    async def _handle(self, request: web.Request) -> web.Response:
         """Handle incoming requests (pass to handle_file)."""
         filename = request.match_info['filename']
-        ret = await self.handle_file(request, filename)
-        return ret
+        return await self.handle_file(request, filename)
 
-    async def handle_file(self, request, filename, from_index=None):
+    async def handle_file(self, request: web.Request, filename: str, from_index=None) -> web.Response:
         """Handle file requests."""
         try:
             filepath = self._directory.joinpath(filename).resolve()
@@ -535,7 +542,7 @@ class IndexHtmlStaticResource(StaticResource):
 
         return ret
 
-    def transform_html(self, text):
+    def transform_html(self, text: str) -> str:
         """Apply some transforms to HTML content."""
         # Inject livereload.js
         text = text.replace('</head>', self.snippet, 1)
