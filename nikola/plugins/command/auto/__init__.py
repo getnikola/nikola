@@ -79,7 +79,7 @@ class CommandAuto(Command):
             'long': 'port',
             'default': 8000,
             'type': int,
-            'help': 'Port number)',
+            'help': 'Port number',
         },
         {
             'name': 'address',
@@ -111,6 +111,22 @@ class CommandAuto(Command):
             'default': False,
             'type': bool,
             'help': 'Disable the server, automate rebuilds only'
+        },
+        {
+            'name': 'process',
+            'short': 'n',
+            'long': 'process',
+            'default': 0,
+            'type': int,
+            'help': 'Number of subprocesses (nikola build argument)'
+        },
+        {
+            'name': 'parallel-type',
+            'short': 'P',
+            'long': 'parallel-type',
+            'default': 'process',
+            'type': str,
+            'help': "Parallelization mode ('process' or 'thread', nikola build argument)"
         },
     ]
 
