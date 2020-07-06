@@ -39,7 +39,7 @@ import webbrowser
 import pkg_resources
 
 from nikola.plugin_categories import Command
-from nikola.utils import dns_sd, req_missing, get_theme_path
+from nikola.utils import dns_sd, req_missing, get_theme_path, makedirs
 
 try:
     import aiohttp
@@ -151,9 +151,9 @@ class CommandAuto(Command):
         if self.site.configuration_filename != 'conf.py':
             self.nikola_cmd.append('--conf=' + self.site.configuration_filename)
 
-        # Run an initial build so we are up-to-date (synchronously)
-        self.logger.info("Rebuilding the site...")
-        subprocess.call(self.nikola_cmd)
+        if options and options.get('process'):
+            self.nikola_cmd += ['--process={}'.format(options['process']),
+                                '--parallel-type={}'.format(options['parallel-type'])]
 
         port = options and options.get('port')
         self.snippet = '''<script>document.write('<script src="http://'
@@ -182,6 +182,9 @@ class CommandAuto(Command):
         watched.add(pkg_resources.resource_filename('nikola', ''))
 
         out_folder = self.site.config['OUTPUT_FOLDER']
+        if not os.path.exists(out_folder):
+            makedirs(out_folder)
+
         if options and options.get('browser'):
             browser = True
         else:
@@ -194,14 +197,6 @@ class CommandAuto(Command):
 
         host = options['address'].strip('[').strip(']') or dhost
 
-        # Set up asyncio server
-        webapp = web.Application()
-        webapp.router.add_get('/livereload.js', self.serve_livereload_js)
-        webapp.router.add_get('/robots.txt', self.serve_robots_txt)
-        webapp.router.add_route('*', '/livereload', self.websocket_handler)
-        resource = IndexHtmlStaticResource(True, self.snippet, '', out_folder)
-        webapp.router.register_resource(resource)
-
         # Prepare asyncio event loop
         # Required for subprocessing to work
         loop = asyncio.get_event_loop()
@@ -213,8 +208,23 @@ class CommandAuto(Command):
         self.has_server = not options['no-server']
 
         if self.has_server:
-            handler = webapp.make_handler()
-            srv = loop.run_until_complete(loop.create_server(handler, host, port))
+            # Set up aiohttp server and start it
+            webapp = web.Application()
+            webapp.router.add_get('/livereload.js', self.serve_livereload_js)
+            webapp.router.add_get('/robots.txt', self.serve_robots_txt)
+            webapp.router.add_route('*', '/livereload', self.websocket_handler)
+            resource = IndexHtmlStaticResource(True, self.snippet, '', out_folder)
+            webapp.router.register_resource(resource)
+
+            runner = web.AppRunner(webapp)
+            loop.run_until_complete(runner.setup())
+            site = web.TCPSite(runner, host, port)
+            loop.run_until_complete(site.start())
+
+        # Run an initial build so we are up-to-date. The server is running, but we are not watching yet.
+        loop.run_until_complete(self._rebuild_site())
+        # If there are any clients, have them reload the root.
+        loop.run_until_complete(self._send_reload_command(self.site.config['INDEX_FILE']))
 
         self.wd_observer = Observer()
         # Watch output folders and trigger reloads
@@ -255,8 +265,6 @@ class CommandAuto(Command):
             loop.close()
             return
 
-        host, port = srv.sockets[0].getsockname()
-
         if options['ipv6'] or '::' in host:
             server_url = "http://[{0}]:{1}/".format(host, port)
         else:
@@ -286,14 +294,22 @@ class CommandAuto(Command):
             if self.dns_sd:
                 self.dns_sd.Reset()
             queue_future.cancel()
-            srv.close()
             loop.run_until_complete(srv.wait_closed())
             loop.run_until_complete(webapp.shutdown())
             loop.run_until_complete(handler.shutdown(5.0))
             loop.run_until_complete(webapp.cleanup())
+            loop.run_until_complete(self._cleanup_server(site, runner, webapp))
             self.wd_observer.stop()
             self.wd_observer.join()
         loop.close()
+
+    async def _cleanup_server(self, site, runner, webapp):
+        """Clean up the aiohttp server."""
+        await site.stop()
+        await runner.shutdown()
+        await runner.cleanup()
+        await webapp.shutdown()
+        await webapp.cleanup()
 
     async def run_nikola_build(self, event):
         """Rebuild the site."""
@@ -322,18 +338,34 @@ class CommandAuto(Command):
             if date < (self.last_rebuild + self.delta_last_rebuild):
                 self.logger.debug("Skipping rebuild from {0} (within delta)".format(event_path))
                 continue
-            self.last_rebuild = datetime.datetime.now()
-            self.logger.info('REBUILDING SITE (from {0})'.format(event_path))
-            p = await asyncio.create_subprocess_exec(*self.nikola_cmd, stderr=subprocess.PIPE)
-            exit_code = await p.wait()
-            error = await p.stderr.read()
-            errord = error.decode('utf-8')
+            await self._rebuild_site(event_path)
 
-            if exit_code != 0:
-                self.logger.error(errord)
-                await self.send_to_websockets({'command': 'alert', 'message': errord})
+    async def _rebuild_site(self, event_path=None):
+        """Rebuild the site."""
+        self.is_rebuilding = True
+        self.last_rebuild = datetime.datetime.now()
+        if event_path:
+            self.logger.info('REBUILDING SITE (from {0})'.format(event_path))
+        else:
+            self.logger.info('REBUILDING SITE')
+
+        p = await asyncio.create_subprocess_exec(*self.nikola_cmd, stderr=subprocess.PIPE)
+        exit_code = await p.wait()
+        out = (await p.stderr.read()).decode('utf-8')
+
+        if exit_code != 0:
+            self.logger.error("Rebuild failed\n" + out)
+            await self.send_to_websockets({'command': 'alert', 'message': out})
+        else:
+            self.logger.info("Rebuild successful\n" + out)
+
+        self.is_rebuilding = False
             else:
                 self.logger.info("Rebuild successful\n" + errord)
+
+    async def _send_reload_command(self, p):
+        """Send a reload command."""
+        await self.send_to_websockets({'command': 'reload', 'path': p, 'liveCSS': True})
 
     async def reload_page(self, event):
         """Reload the page."""
