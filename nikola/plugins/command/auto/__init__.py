@@ -434,6 +434,9 @@ class CommandAuto(Command):
 
             try:
                 await ws.send_json(message)
+                if ws._close_code:
+                    await ws.close()
+                    to_delete.append(ws)
             except RuntimeError as e:
                 if 'closed' in e.args[0]:
                     self.logger.warning("WebSocket {0} closed uncleanly".format(ws))
