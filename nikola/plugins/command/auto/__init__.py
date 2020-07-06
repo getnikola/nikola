@@ -58,6 +58,8 @@ except ImportError:
     Observer = None
 
 LRJS_PATH = os.path.join(os.path.dirname(__file__), 'livereload.js')
+REBUILDING_REFRESH_DELAY = 0.35
+IDLE_REFRESH_DELAY = 0.05
 
 if sys.platform == 'win32':
     asyncio.set_event_loop(asyncio.ProactorEventLoop())
@@ -134,7 +136,9 @@ class CommandAuto(Command):
         """Start the watcher."""
         self.sockets = []
         self.rebuild_queue = asyncio.Queue()
+        self.reload_queue = asyncio.Queue()
         self.last_rebuild = datetime.datetime.now()
+        self.is_rebuilding = False
 
         if aiohttp is None and Observer is None:
             req_missing(['aiohttp', 'watchdog'], 'use the "auto" command')
@@ -281,7 +285,8 @@ class CommandAuto(Command):
         # Run the event loop forever and handle shutdowns.
         try:
             # Run rebuild queue
-            queue_future = asyncio.ensure_future(self.run_rebuild_queue())
+            rebuild_queue_fut = asyncio.ensure_future(self.run_rebuild_queue())
+            reload_queue_fut = asyncio.ensure_future(self.run_reload_queue())
 
             self.dns_sd = dns_sd(port, (options['ipv6'] or '::' in host))
             loop.run_forever()
@@ -293,11 +298,8 @@ class CommandAuto(Command):
                 win_sleeper.cancel()
             if self.dns_sd:
                 self.dns_sd.Reset()
-            queue_future.cancel()
-            loop.run_until_complete(srv.wait_closed())
-            loop.run_until_complete(webapp.shutdown())
-            loop.run_until_complete(handler.shutdown(5.0))
-            loop.run_until_complete(webapp.cleanup())
+            rebuild_queue_fut.cancel()
+            reload_queue_fut.cancel()
             loop.run_until_complete(self._cleanup_server(site, runner, webapp))
             self.wd_observer.stop()
             self.wd_observer.join()
@@ -360,8 +362,17 @@ class CommandAuto(Command):
             self.logger.info("Rebuild successful\n" + out)
 
         self.is_rebuilding = False
+
+    async def run_reload_queue(self):
+        """Send reloads from a queue to limit CPU usage."""
+        while True:
+            p = await self.reload_queue.get()
+            self.logger.info('REFRESHING: {0}'.format(p))
+            await self._send_reload_command(p)
+            if self.is_rebuilding:
+                await asyncio.sleep(REBUILDING_REFRESH_DELAY)
             else:
-                self.logger.info("Rebuild successful\n" + errord)
+                await asyncio.sleep(IDLE_REFRESH_DELAY)
 
     async def _send_reload_command(self, p):
         """Send a reload command."""
@@ -371,10 +382,12 @@ class CommandAuto(Command):
         """Reload the page."""
         # Move events have a dest_path, some editors like gedit use a
         # move on larger save operations for write protection
-        event_path = event.dest_path if hasattr(event, 'dest_path') else event.src_path
+        if event:
+            event_path = event.dest_path if hasattr(event, 'dest_path') else event.src_path
+        else:
+            event_path = self.site.config['OUTPUT_FOLDER']
         p = os.path.relpath(event_path, os.path.abspath(self.site.config['OUTPUT_FOLDER'])).replace(os.sep, '/')
-        self.logger.info('REFRESHING: {0}'.format(p))
-        await self.send_to_websockets({'command': 'reload', 'path': p, 'liveCSS': True})
+        await self.reload_queue.put(p)
 
     async def serve_livereload_js(self, request):
         """Handle requests to /livereload.js and serve the JS file."""
