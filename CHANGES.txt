@@ -9,6 +9,8 @@ Features
 * Add Marathi translation
 * Restore ``caps`` typogrify filter (wraps strings of capital letters
   with ``<span class="caps">`` (via Issue #3405)
+* Improve ``nikola auto`` performance with rate-limiting, support
+  ``-n`` argument to pass to ``nikola build`` (Issue #3401)
 * Added Marathi translation
 
 Bugfixes
