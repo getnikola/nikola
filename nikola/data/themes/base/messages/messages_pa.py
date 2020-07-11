@@ -6,7 +6,7 @@ MESSAGES = {
     "(active)": "(ਚਲੰਤ)",
     "Also available in:": "ਹੋਰ  ਉਪਲਬਧ ਬੋਲੀਆਂ:",
     "Archive": "ਆਰਕਾਈਵ",
-    "Atom feed": "",
+    "Atom feed": "ਐਟਮ ਫੀਡ",
     "Authors": "ਲੇਖਕ",
     "Categories": "ਸ਼੍ਰੇਣੀ",
     "Comments": "ਟਿੱਪਣੀਆਂ",
@@ -45,5 +45,5 @@ MESSAGES = {
     "Write your post here.": "ਆਪਣੀ ਲਿਖਤ ਏਥੇ ਲਿਖੋ |",
     "old posts, page %d": "ਪੁਰਾਣੀਆਂ ਲਿਖਤਾਂ , ਸਫ਼ਾ %d",
     "page %d": "ਸਫ਼ਾ %d",
-    "updated": "",
+    "updated": "ਅੱਪਡੇਟ ਕੀਤਾ",
 }

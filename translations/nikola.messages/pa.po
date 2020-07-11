@@ -10,14 +10,15 @@
 # seanpue <a@seanpue.com>, 2016
 # jasdeep <jsbhangra@gmail.com>, 2015,2017
 # jasdeep <jsbhangra@gmail.com>, 2015,2017
+# Krishnakanth Allika, 2020
 # seanpue <a@seanpue.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2018-08-10 08:02+0000\n"
-"Last-Translator: Chris Warrick\n"
+"PO-Revision-Date: 2020-07-06 14:45+0000\n"
+"Last-Translator: Krishnakanth Allika\n"
 "Language-Team: Panjabi (Punjabi) (http://www.transifex.com/ralsina/nikola/language/pa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -160,8 +161,8 @@ msgid "Next"
 msgstr "ਅੱਗੇ "
 
 msgid "Atom feed"
-msgstr ""
+msgstr "ਐਟਮ ਫੀਡ"
 
 #. {date} (updated {updated_date})
 msgid "updated"
-msgstr ""
+msgstr "ਅੱਪਡੇਟ ਕੀਤਾ"

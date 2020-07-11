@@ -1,3 +1,14 @@
+New in master
+=============
+
+Features
+--------
+
+* Added Marathi translation
+
+Bugfixes
+--------
+
 New in v8.1.1
 =============
 
