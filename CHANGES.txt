@@ -9,6 +9,8 @@ Features
 Bugfixes
 --------
 
+* Fixed handling of duplicate plugins on Windows
+
 New in v8.1.1
 =============
 
