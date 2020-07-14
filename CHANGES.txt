@@ -9,7 +9,8 @@ Features
 Bugfixes
 --------
 
-* Fixed handling of duplicate plugins on Windows
+* Fix handling of duplicate plugins on Windows
+* Allow else clause in post-list plugin. (Issue #3436)
 
 New in v8.1.1
 =============
