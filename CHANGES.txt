@@ -9,13 +9,14 @@ Features
 Bugfixes
 --------
 
+* Allow else clause in post-list plugin. (Issue #3436)
+
 New in v8.1.1
 =============
 
 Bugfixes
 --------
 
-* Allow else clause in post-list plugin. (Issue #3436)
 * Default to no line numbers in code blocks, honor CodeHilite
   requesting no line numbers. Listing pages still use line numbers
   (Issue #3426)
