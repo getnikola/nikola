@@ -44,6 +44,7 @@
 * `Felix Fontein <https://github.com/felixfontein>`_
 * `Felix Schwarz <https://github.com/FelixSchwarz>`_
 * `Florian Finkernagel <https://github.com/TyberiusPrime>`_
+* `Florian Zimmermann <https://github.com/PoByBolek>`_
 * `follower <https://github.com/follower>`_
 * `George Leslie-Waksman <https://github.com/gwax>`_
 * `Grzegorz Śliwiński <https://github.com/fizyk>`_

@@ -102,9 +102,11 @@ link://tag_rss/cats => /tags/cats.xml""",
         """Return a path for the list of all classifications."""
         if self.site.config['TAGS_INDEX_PATH'](lang):
             path = self.site.config['TAGS_INDEX_PATH'](lang)
-            return [_f for _f in [path] if _f], 'never'
+            append_index = 'never'
         else:
-            return [_f for _f in [self.site.config['TAG_PATH'](lang)] if _f], 'always'
+            path = self.site.config['TAG_PATH'](lang)
+            append_index = 'always'
+        return [component for component in path.split('/') if component], append_index
 
     def get_path(self, classification, lang, dest_type='page'):
         """Return a path for the given classification."""

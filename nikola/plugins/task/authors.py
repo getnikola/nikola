@@ -94,7 +94,8 @@ link://author_rss/joe => /authors/joe.xml""",
 
     def get_overview_path(self, lang, dest_type='page'):
         """Return a path for the list of all classifications."""
-        return [self.site.config['AUTHOR_PATH'](lang)], 'always'
+        path = self.site.config['AUTHOR_PATH'](lang)
+        return [component for component in path.split('/') if component], 'always'
 
     def get_path(self, classification, lang, dest_type='page'):
         """Return a path for the given classification."""
