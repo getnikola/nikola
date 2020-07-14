@@ -140,7 +140,7 @@ class CommandPlugin(Command):
                 user_mode = True
 
             if user_mode:
-                self.output_dir = os.path.expanduser('~/.nikola/plugins')
+                self.output_dir = os.path.expanduser(os.path.join('~', '.nikola', 'plugins'))
             else:
                 self.output_dir = 'plugins'
 

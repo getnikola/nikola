@@ -988,6 +988,8 @@ class Nikola(object):
             for i, place in enumerate(self._plugin_places):
                 if plugin[0].startswith(place):
                     return i
+            utils.LOGGER.warn("Duplicate plugin found in unexpected location: {}".format(plugin[0]))
+            return len(self._plugin_places)
 
         plugin_dict = defaultdict(list)
         for data in plugin_list:
@@ -1025,7 +1027,7 @@ class Nikola(object):
         extra_plugins_dirs = self.config['EXTRA_PLUGINS_DIRS']
         self._plugin_places = [
             resource_filename('nikola', 'plugins'),
-            os.path.expanduser('~/.nikola/plugins'),
+            os.path.expanduser(os.path.join('~', '.nikola', 'plugins')),
             os.path.join(os.getcwd(), 'plugins'),
         ] + [path for path in extra_plugins_dirs if path]
 
