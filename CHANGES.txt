@@ -9,6 +9,8 @@ Features
 Bugfixes
 --------
 
+* Allow else clause in post-list plugin. (Issue #3436)
+
 New in v8.1.1
 =============
 
