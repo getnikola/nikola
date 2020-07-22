@@ -95,8 +95,9 @@ NAVIGATION_ALT_LINKS = {
 # Name of the theme to use.
 THEME = ${THEME}
 
-# Primary color of your theme. This will be used to customize your theme.
-# Must be a HEX value.
+# A theme color. In default themes, it might be displayed by some browsers as
+# the browser UI color (eg. Chrome on Android). Other themes might also use it
+# as an accent color (the default ones don’t). Must be a HEX value.
 THEME_COLOR = '#5670d4'
 
 # Theme configuration. Fully theme-dependent. (translatable)
