@@ -15,9 +15,16 @@
 
 <nav class="navbar navbar-expand-md static-top mb-4
 {% if theme_config.get('navbar_light') %}
-navbar-light bg-light
+navbar-light
 {% else %}
-navbar-dark bg-dark
+navbar-dark
+{% endif %}
+{% if theme_config.get('navbar_custom_bg') %}
+{{ theme_config['navbar_custom_bg'] }}
+{% elif theme_config.get('navbar_light') %}
+bg-light
+{% else %}
+bg-dark
 {% endif %}
 ">
     <div class="container"><!-- This keeps the margins nice -->
