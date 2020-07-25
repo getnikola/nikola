@@ -243,7 +243,7 @@ class CommandNewPost(Command):
         date_path_opt = options['date-path']
         date_path_auto = self.site.config['NEW_POST_DATE_PATH'] and content_type == 'post'
         date_path_format = self.site.config['NEW_POST_DATE_PATH_FORMAT'].strip('/')
-        post_type = options['type'] if 'type' in options else 'text'
+        post_type = options.get('type', 'text')
 
         if wants_available:
             self.print_compilers()
