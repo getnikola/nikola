@@ -11,6 +11,7 @@ Bugfixes
 
 * Fix handling of duplicate plugins on Windows
 * Allow else clause in post-list plugin. (Issue #3436)
+* Ensure `type` metadata value from plugins is preserved (Issue 3445)
 
 New in v8.1.1
 =============

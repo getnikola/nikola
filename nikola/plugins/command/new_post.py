@@ -243,6 +243,7 @@ class CommandNewPost(Command):
         date_path_opt = options['date-path']
         date_path_auto = self.site.config['NEW_POST_DATE_PATH'] and content_type == 'post'
         date_path_format = self.site.config['NEW_POST_DATE_PATH_FORMAT'].strip('/')
+        post_type = options.get('type', 'text')
 
         if wants_available:
             self.print_compilers()
@@ -363,7 +364,7 @@ class CommandNewPost(Command):
             'tags': tags,
             'link': '',
             'description': '',
-            'type': 'text',
+            'type': post_type,
         }
 
         if not path:
@@ -429,7 +430,7 @@ class CommandNewPost(Command):
         else:
             compiler_plugin.create_post(
                 txt_path, content=content, onefile=onefile, title=title,
-                slug=slug, date=date, tags=tags, is_page=is_page, **metadata)
+                slug=slug, date=date, tags=tags, is_page=is_page, type=post_type, **metadata)
 
         event = dict(path=txt_path)
 
