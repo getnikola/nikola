@@ -2289,6 +2289,9 @@ filters.typogrify
 filters.typogrify_sans_widont
    Same as typogrify without the widont filter
 
+filters.typogrify_custom
+    Run typogrify with a custom set or filters. Takes ``typogrify_filters`` (a list of callables) and ``ignore_tags`` (defaults to None).
+
 filters.minify_lines
    **THIS FILTER HAS BEEN TURNED INTO A NOOP** and currently does nothing.
 

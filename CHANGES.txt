@@ -7,12 +7,17 @@ Features
 * Add ``navbar_custom_bg`` theme option to ``bootstrap4`` and document
   options for ``bootstrap4`` better (Issue #3443)
 * Add Marathi translation
+* Restore ``caps`` typogrify filter (wraps strings of capital letters
+  with ``<span class="caps">`` (via Issue #3405)
+* Added Marathi translation
 
 Bugfixes
 --------
 
 * Ensure query strings and fragments are kept with ``URL_TYPE =
   "full_path"`` (Issue #3448)
+* Don’t run typogrify filters on ``<title>`` tag to avoid adding extra
+  tags(Issue #3405)
 * Fix handling of duplicate plugins on Windows
 * Allow else clause in post-list plugin. (Issue #3436)
 * Ensure `type` metadata value from plugins is preserved (Issue 3445)

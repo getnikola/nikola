@@ -266,21 +266,32 @@ def minify_lines(data):
     return data
 
 
+def _run_typogrify(data, typogrify_filters, ignore_tags=None):
+    """Run typogrify with ignore support."""
+    if ignore_tags is None:
+        ignore_tags = ["title"]
+
+    data = _normalize_html(data)
+
+    section_list = typo.process_ignores(data, ignore_tags)
+
+    rendered_text = ""
+    for text_item, should_process in section_list:
+        if should_process:
+            for f in typogrify_filters:
+                text_item = f(text_item)
+
+        rendered_text += text_item
+
+    return rendered_text
+
 @apply_to_text_file
 def typogrify(data):
     """Prettify text with typogrify."""
     if typo is None:
         req_missing(['typogrify'], 'use the typogrify filter', optional=True)
         return data
-
-    data = _normalize_html(data)
-    data = typo.amp(data)
-    data = typo.widont(data)
-    data = typo.smartypants(data)
-    # Disabled because of typogrify bug where it breaks <title>
-    # data = typo.caps(data)
-    data = typo.initial_quotes(data)
-    return data
+    return _run_typogrify(data, [typo.amp, typo.widont, typo.smartypants, typo.caps, typo.initial_quotes])
 
 
 def _smarty_oldschool(text):
@@ -300,15 +311,7 @@ def typogrify_oldschool(data):
         req_missing(['typogrify'], 'use the typogrify_oldschool filter', optional=True)
         return data
 
-    data = _normalize_html(data)
-    data = typo.amp(data)
-    data = typo.widont(data)
-    data = _smarty_oldschool(data)
-    data = typo.smartypants(data)
-    # Disabled because of typogrify bug where it breaks <title>
-    # data = typo.caps(data)
-    data = typo.initial_quotes(data)
-    return data
+    return _run_typogrify(data, [typo.amp, typo.widont, _smarty_oldschool, typo.smartypants, typo.caps, typo.initial_quotes])
 
 
 @apply_to_text_file
@@ -318,14 +321,18 @@ def typogrify_sans_widont(data):
     # wrapping, see issue #1465
     if typo is None:
         req_missing(['typogrify'], 'use the typogrify_sans_widont filter')
+        return data
 
-    data = _normalize_html(data)
-    data = typo.amp(data)
-    data = typo.smartypants(data)
-    # Disabled because of typogrify bug where it breaks <title>
-    # data = typo.caps(data)
-    data = typo.initial_quotes(data)
-    return data
+    return _run_typogrify(data, [typo.amp, typo.smartypants, typo.caps, typo.initial_quotes])
+
+
+@apply_to_text_file
+def typogrify_custom(data, typogrify_filters, ignore_tags=None):
+    """Run typogrify with a custom list of fliter functions."""
+    if typo is None:
+        req_missing(['typogrify'], 'use the typogrify filter', optional=True)
+        return data
+    return _run_typogrify(data, typogrify_filters, ignore_tags)
 
 
 @apply_to_text_file
