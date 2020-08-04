@@ -1,7 +1,7 @@
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v4.5.0): modal.js
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * Bootstrap (v4.5.1): modal.js
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
 
@@ -15,7 +15,7 @@ import Util from './util'
  */
 
 const NAME               = 'modal'
-const VERSION            = '4.5.0'
+const VERSION            = '4.5.1'
 const DATA_KEY           = 'bs.modal'
 const EVENT_KEY          = `.${DATA_KEY}`
 const DATA_API_KEY       = '.data-api'
@@ -238,12 +238,25 @@ class Modal {
         return
       }
 
+      const isModalOverflowing = this._element.scrollHeight > document.documentElement.clientHeight
+
+      if (!isModalOverflowing) {
+        this._element.style.overflowY = 'hidden'
+      }
+
       this._element.classList.add(CLASS_NAME_STATIC)
 
-      const modalTransitionDuration = Util.getTransitionDurationFromElement(this._element)
+      const modalTransitionDuration = Util.getTransitionDurationFromElement(this._dialog)
+      $(this._element).off(Util.TRANSITION_END)
 
       $(this._element).one(Util.TRANSITION_END, () => {
         this._element.classList.remove(CLASS_NAME_STATIC)
+        if (!isModalOverflowing) {
+          $(this._element).one(Util.TRANSITION_END, () => {
+            this._element.style.overflowY = ''
+          })
+            .emulateTransitionEnd(this._element, modalTransitionDuration)
+        }
       })
         .emulateTransitionEnd(modalTransitionDuration)
       this._element.focus()
@@ -265,6 +278,7 @@ class Modal {
     this._element.style.display = 'block'
     this._element.removeAttribute('aria-hidden')
     this._element.setAttribute('aria-modal', true)
+    this._element.setAttribute('role', 'dialog')
 
     if ($(this._dialog).hasClass(CLASS_NAME_SCROLLABLE) && modalBody) {
       modalBody.scrollTop = 0
@@ -344,6 +358,7 @@ class Modal {
     this._element.style.display = 'none'
     this._element.setAttribute('aria-hidden', true)
     this._element.removeAttribute('aria-modal')
+    this._element.removeAttribute('role')
     this._isTransitioning = false
     this._showBackdrop(() => {
       $(document.body).removeClass(CLASS_NAME_OPEN)

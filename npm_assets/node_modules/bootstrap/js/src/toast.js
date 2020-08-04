@@ -1,7 +1,7 @@
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v4.5.0): toast.js
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * Bootstrap (v4.5.1): toast.js
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
 
@@ -15,7 +15,7 @@ import Util from './util'
  */
 
 const NAME               = 'toast'
-const VERSION            = '4.5.0'
+const VERSION            = '4.5.1'
 const DATA_KEY           = 'bs.toast'
 const EVENT_KEY          = `.${DATA_KEY}`
 const JQUERY_NO_CONFLICT = $.fn[NAME]
@@ -83,6 +83,8 @@ class Toast {
       return
     }
 
+    this._clearTimeout()
+
     if (this._config.animation) {
       this._element.classList.add(CLASS_NAME_FADE)
     }
@@ -130,8 +132,7 @@ class Toast {
   }
 
   dispose() {
-    clearTimeout(this._timeout)
-    this._timeout = null
+    this._clearTimeout()
 
     if (this._element.classList.contains(CLASS_NAME_SHOW)) {
       this._element.classList.remove(CLASS_NAME_SHOW)
@@ -182,6 +183,11 @@ class Toast {
     } else {
       complete()
     }
+  }
+
+  _clearTimeout() {
+    clearTimeout(this._timeout)
+    this._timeout = null
   }
 
   // Static
