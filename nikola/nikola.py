@@ -1589,7 +1589,7 @@ class Nikola(object):
                 return dst
             elif url_type == 'full_path':
                 dst = urljoin(self.config['BASE_URL'], dst.lstrip('/'))
-                return urlparse(dst).path
+                return utils.full_path_from_urlparse(urlparse(dst))
             else:
                 return "#"
 
@@ -1604,10 +1604,7 @@ class Nikola(object):
             dst = urljoin(self.config['BASE_URL'], dst.lstrip('/'))
             if url_type == 'full_path':
                 parsed = urlparse(urljoin(self.config['BASE_URL'], dst.lstrip('/')))
-                if parsed.fragment:
-                    dst = '{0}#{1}'.format(parsed.path, parsed.fragment)
-                else:
-                    dst = parsed.path
+                dst = utils.full_path_from_urlparse(parsed)
             return dst
 
         # Now both paths are on the same site and absolute

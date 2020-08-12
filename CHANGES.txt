@@ -9,6 +9,8 @@ Features
 Bugfixes
 --------
 
+* Ensure query strings and fragments are kept with ``URL_TYPE =
+  "full_path"`` (Issue #3448)
 * Fix handling of duplicate plugins on Windows
 * Allow else clause in post-list plugin. (Issue #3436)
 * Ensure `type` metadata value from plugins is preserved (Issue 3445)
