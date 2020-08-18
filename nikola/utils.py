@@ -861,6 +861,16 @@ def encodelink(iri):
     encoded_link = urlunparse(link.values())
     return encoded_link
 
+
+def full_path_from_urlparse(parsed) -> str:
+    """Given urlparse output, return the full path (with query and fragment)."""
+    dst = parsed.path
+    if parsed.query:
+        dst = "{0}?{1}".format(dst, parsed.query)
+    if parsed.fragment:
+        dst = "{0}#{1}".format(dst, parsed.fragment)
+    return dst
+
 # A very slightly safer version of zip.extractall that works on
 # python < 2.6
 
