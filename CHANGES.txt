@@ -4,7 +4,9 @@ New in master
 Features
 --------
 
-* Added Marathi translation
+* Add ``navbar_custom_bg`` theme option to ``bootstrap4`` and document
+  options for ``bootstrap4`` better (Issue #3443)
+* Add Marathi translation
 
 Bugfixes
 --------
