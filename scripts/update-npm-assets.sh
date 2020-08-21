@@ -26,9 +26,9 @@ ln -sf ../../../../../../npm_assets/node_modules/baguettebox.js/dist/baguetteBox
 git add .
 popd
 
-# Link moment.js and html5shiv to base theme
+# Link luxon and html5shiv to base theme
 pushd nikola/data/themes/base/assets/js
-ln -sf ../../../../../../npm_assets/node_modules/moment/min/moment-with-locales.min.js .
+ln -sf ../../../../../../npm_assets/node_modules/luxon/build/global/luxon.min.js .
 ln -sf ../../../../../../npm_assets/node_modules/html5shiv/dist/html5shiv-printshiv.min.js .
 ln -sf ../../../../../../npm_assets/node_modules/html5shiv/dist/html5shiv-printshiv.min.js html5.js
 git add moment-with-locales.min.js html5.js html5shiv-printshiv.min.js
