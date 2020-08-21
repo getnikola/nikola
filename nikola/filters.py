@@ -285,6 +285,7 @@ def _run_typogrify(data, typogrify_filters, ignore_tags=None):
 
     return rendered_text
 
+
 @apply_to_text_file
 def typogrify(data):
     """Prettify text with typogrify."""
