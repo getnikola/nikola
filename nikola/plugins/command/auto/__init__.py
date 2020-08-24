@@ -488,12 +488,12 @@ class IndexHtmlStaticResource(StaticResource):
         self.snippet = snippet
         super().__init__(*args, **kwargs)
 
-    async def _handle(self, request: web.Request) -> web.Response:
+    async def _handle(self, request: 'web.Request') -> 'web.Response':
         """Handle incoming requests (pass to handle_file)."""
         filename = request.match_info['filename']
         return await self.handle_file(request, filename)
 
-    async def handle_file(self, request: web.Request, filename: str, from_index=None) -> web.Response:
+    async def handle_file(self, request: 'web.Request', filename: str, from_index=None) -> 'web.Response':
         """Handle file requests."""
         try:
             filepath = self._directory.joinpath(filename).resolve()
