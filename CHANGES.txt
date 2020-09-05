@@ -16,6 +16,7 @@ Features
 Bugfixes
 --------
 
+* Don’t break slugs with slashes in ``doc`` directive (Issue #3450)
 * Avoid warnings from type annotations in ``auto`` caused by missing
   ``aiohttp`` (Issue #3451)
 * Ensure query strings and fragments are kept with ``URL_TYPE =
