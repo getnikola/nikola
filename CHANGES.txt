@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Support for multiple authors per post — comma-separated, enabled by
+  ``MULTIPLE_AUTHORS_PER_POST`` setting (Issue #3252)
 * Add ``navbar_custom_bg`` theme option to ``bootstrap4`` and document
   options for ``bootstrap4`` better (Issue #3443)
 * Add Marathi translation

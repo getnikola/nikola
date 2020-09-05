@@ -32,7 +32,11 @@
         ${html_title()}
         <div class="metadata">
             <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
-                % if author_pages_generated:
+                % if author_pages_generated and multiple_authors_per_post:
+                    % for author in post.authors():
+                        <a class="u-url" href="${_link('author', author)}">${author|h}</a>
+                    % endfor
+                % elif author_pages_generated:
                     <a class="u-url" href="${_link('author', post.author())}">${post.author()|h}</a>
                 % else:
                     ${post.author()|h}
