@@ -112,9 +112,11 @@ link://category_rss/dogs => /categories/dogs.xml""",
         """Return a path for the list of all classifications."""
         if self.site.config['CATEGORIES_INDEX_PATH'](lang):
             path = self.site.config['CATEGORIES_INDEX_PATH'](lang)
-            return [_f for _f in [path] if _f], 'never'
+            append_index = 'never'
         else:
-            return [_f for _f in [self.site.config['CATEGORY_PATH'](lang)] if _f], 'always'
+            path = self.site.config['CATEGORY_PATH'](lang)
+            append_index = 'always'
+        return [component for component in path.split('/') if component], append_index
 
     def slugify_tag_name(self, name, lang):
         """Slugify a tag name."""
