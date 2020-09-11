@@ -47,16 +47,8 @@ class Plugin(RestExtension):
         return super().set_site(site)
 
 
-def _doc_link(rawtext, text, options={}, content=[]):
-    """Handle the doc role."""
-    # split link's text and post's slug in role content
-    has_explicit_title, title, slug = split_explicit_title(text)
-    if '#' in slug:
-        slug, fragment = slug.split('#', 1)
-    else:
-        fragment = None
-    slug = slugify(slug)
-    # check if the slug given is part of our blog posts/pages
+def _find_post(slug):
+    """Find a post with the given slug in posts or pages."""
     twin_slugs = False
     post = None
     for p in doc_role.site.timeline:
@@ -66,6 +58,23 @@ def _doc_link(rawtext, text, options={}, content=[]):
             else:
                 twin_slugs = True
                 break
+    return post, twin_slugs
+
+
+def _doc_link(rawtext, text, options={}, content=[]):
+    """Handle the doc role."""
+    # split link's text and post's slug in role content
+    has_explicit_title, title, slug = split_explicit_title(text)
+    if '#' in slug:
+        slug, fragment = slug.split('#', 1)
+    else:
+        fragment = None
+
+    # Look for the unslugified input first, then try to slugify (Issue #3450)
+    post, twin_slugs = _find_post(slug)
+    if post is None:
+        slug = slugify(slug)
+        post, twin_slugs = _find_post(slug)
 
     try:
         if post is None:
