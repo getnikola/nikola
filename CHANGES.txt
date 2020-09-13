@@ -16,6 +16,7 @@ Features
 Bugfixes
 --------
 
+* Add support for ``nbconvert>=6.0.0`` (Issue #3457)
 * Don’t break slugs with slashes in ``doc`` directive (Issue #3450)
 * Avoid warnings from type annotations in ``auto`` caused by missing
   ``aiohttp`` (Issue #3451)

@@ -31,11 +31,13 @@ import json
 import os
 
 try:
+    import nbconvert
     from nbconvert.exporters import HTMLExporter
     import nbformat
     current_nbformat = nbformat.current_nbformat
     from jupyter_client import kernelspec
     from traitlets.config import Config
+    NBCONVERT_VERSION_MAJOR = int(nbconvert.__version__.partition(".")[0])
     flag = True
 except ImportError:
     flag = None
@@ -60,7 +62,10 @@ class CompileIPynb(PageCompiler):
         c = Config(get_default_jupyter_config())
         c.merge(Config(self.site.config['IPYNB_CONFIG']))
         if 'template_file' not in self.site.config['IPYNB_CONFIG'].get('Exporter', {}):
-            c['Exporter']['template_file'] = 'basic.tpl'  # not a typo
+            if NBCONVERT_VERSION_MAJOR >= 6:
+                c['Exporter']['template_file'] = 'classic/base.html.j2'
+            else:
+                c['Exporter']['template_file'] = 'basic.tpl'  # not a typo
         exportHtml = HTMLExporter(config=c)
         body, _ = exportHtml.from_notebook_node(nb_json)
         return body
