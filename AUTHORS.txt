@@ -1,3 +1,4 @@
+* `Aaron Meurer <https://github.com/asmeurer>`_
 * `Agustin Henze <https://github.com/agustinhenze>`_
 * `Alberto Berti <https://github.com/azazel75>`_
 * `Alex Popescu <https://github.com/al3xandru>`_

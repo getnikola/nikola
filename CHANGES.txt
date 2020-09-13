@@ -12,6 +12,7 @@ Features
 * Improve ``nikola auto`` performance with rate-limiting, support
   ``-n`` argument to pass to ``nikola build`` (Issue #3401)
 * Added Marathi translation
+* Add support for the `Utterances <https://utteranc.es>`_ comment system.
 
 Bugfixes
 --------
