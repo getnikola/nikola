@@ -6,6 +6,7 @@
 <%namespace name="facebook" file="comments_helper_facebook.tmpl"/>
 <%namespace name="isso" file="comments_helper_isso.tmpl"/>
 <%namespace name="commento" file="comments_helper_commento.tmpl"/>
+<%namespace name="utterances" file="comments_helper_utterances.tmpl"/>
 
 <%def name="comment_form(url, title, identifier)">
     %if comment_system == 'disqus':
@@ -20,6 +21,8 @@
         ${isso.comment_form(url, title, identifier)}
     % elif comment_system == 'commento':
         ${commento.comment_form(url, title, identifier)}
+    % elif comment_system == 'utterances':
+        ${utterances.comment_form(url, title, identifier)}
     %endif
 </%def>
 
@@ -36,6 +39,8 @@
         ${isso.comment_link(link, identifier)}
     % elif comment_system == 'commento':
         ${commento.comment_link(link, identifier)}
+    % elif comment_system == 'utterances':
+        ${utterances.comment_link(link, identifier)}
     %endif
 </%def>
 
@@ -52,5 +57,7 @@
         ${isso.comment_link_script()}
     % elif comment_system == 'commento':
         ${commento.comment_link_script()}
+    % elif comment_system == 'utterances':
+        ${utterances.comment_link_script()}
     %endif
 </%def>
