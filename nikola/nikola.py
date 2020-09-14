@@ -100,6 +100,7 @@ LEGAL_VALUES = {
         'isso',
         'muut',
         'commento',
+        'utterances',
     ],
     'TRANSLATIONS': {
         'af': 'Afrikaans',
