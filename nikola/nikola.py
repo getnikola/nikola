@@ -836,6 +836,13 @@ class Nikola(object):
             utils.LOGGER.error('CATEGORY_PAGES_FOLLOW_DESTPATH requires CATEGORY_ALLOW_HIERARCHIES = True, CATEGORY_OUTPUT_FLAT_HIERARCHY = False.')
             sys.exit(1)
 
+        # The Utterances comment system has a required configuration value
+        if self.config.get('COMMENT_SYSTEM') == 'utterances':
+            utterances_config = self.config.get('GLOBAL_CONTEXT', {}).get('utterances_config', {})
+            if not ('issue-term' in utterances_config or 'issue-number' in utterances_config):
+                utils.LOGGER.error("COMMENT_SYSTEM = 'utterances' must have either GLOBAL_CONTEXT['utterances_config']['issue-term'] or GLOBAL_CONTEXT['utterances_config']['issue-term'] defined.")
+                sys.exit(1)
+
         # Handle CONTENT_FOOTER and RSS_COPYRIGHT* properly.
         # We provide the arguments to format in CONTENT_FOOTER_FORMATS and RSS_COPYRIGHT_FORMATS.
         self.config['CONTENT_FOOTER'].langformat(self.config['CONTENT_FOOTER_FORMATS'])
