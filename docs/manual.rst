@@ -1911,6 +1911,7 @@ Nikola supports several third party comment systems:
 * `Facebook <https://facebook.com/>`_
 * `Isso <https://posativ.org/isso/>`_
 * `Commento <https://github.com/adtac/commento>`_
+* `Utterances <https://utteranc.es/>`_
 
 By default it will use DISQUS, but you can change by setting ``COMMENT_SYSTEM``
 to one of "disqus", "intensedebate", "livefyre", "moot", "facebook", "isso" or "commento"
@@ -1929,9 +1930,14 @@ to one of "disqus", "intensedebate", "livefyre", "moot", "facebook", "isso" or "
    * For Isso, it's the URL of your Isso instance (must be world-accessible, encoded with
      Punycode (if using Internationalized Domain Names) and **have a trailing slash**,
      default ``http://localhost:8080/``). You can add custom config options via
-     GLOBAL_CONTEXT, eg. ``GLOBAL_CONTEXT['isso_config'] = {"require-author": "true"}``
+     ``GLOBAL_CONTEXT``, e.g., ``GLOBAL_CONTEXT['isso_config'] = {"require-author": "true"}``
    * For Commento, it's the URL of the commento instance as required by the ``serverUrl``
      parameter in commento's documentation.
+   * For Utterances, it's the **repo name** (``"org/user"``) on GitHub whose
+     issue tracker is used for comments. Additional Utterances configuration
+     values can be stored in the ``GLOBAL_CONTEXT``, e.g.,
+     ``GLOBAL_CONTEXT['utterances_config'] = {"issue-term": "title",
+     "label": "Comments", "theme": "github-light", "crossorigin": "anonymous")``.
 
 To use comments in a visible site, you should register with the service and
 then set the ``COMMENT_SYSTEM_ID`` option.
@@ -1976,6 +1982,14 @@ You can disable comments for a post by adding a "nocomments" metadata field to i
 
     You need jQuery, but not because Facebook wants it (see Issue
     #639).
+
+.. admonition:: Utterances Support
+
+   You can copy the configuration options from the `Utterances setup page
+   <https://utteranc.es>`_ into ``GLOBAL_CONTEXT['utterances_config']``,
+   except for ``repo``, which should be set as ``COMMENT_SYSTEM_ID``. Note
+   that the either ``issue-term`` or ``issue-number`` must be provided. All
+   other Utterances configuration options are optional.
 
 Images and Galleries
 --------------------
