@@ -842,7 +842,6 @@ class Nikola(object):
             utterances_config = self.config.get('GLOBAL_CONTEXT', {}).get('utterances_config', {})
             if not ('issue-term' in utterances_config or 'issue-number' in utterances_config):
                 utils.LOGGER.error("COMMENT_SYSTEM = 'utterances' must have either GLOBAL_CONTEXT['utterances_config']['issue-term'] or GLOBAL_CONTEXT['utterances_config']['issue-term'] defined.")
-                sys.exit(1)
 
         # Handle CONTENT_FOOTER and RSS_COPYRIGHT* properly.
         # We provide the arguments to format in CONTENT_FOOTER_FORMATS and RSS_COPYRIGHT_FORMATS.
