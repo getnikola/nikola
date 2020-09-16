@@ -1,0 +1,14 @@
+[Core]
+name = quotebacks_mdx
+module = quotebacks_mdx
+
+[Nikola]
+compiler = markdown
+PluginCategory = CompilerExtension
+
+[Documentation]
+author = Matt Webb (tweaked by Martin McCallion for Nikola compatibility)
+version = 0.1
+website = https://github.com/genmon/quotebacks-mdx
+description = Markdown extension for simpler Quotenacks support (https://quotebacks.net/).
+
