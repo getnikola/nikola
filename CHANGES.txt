@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Add support for Matt Webb's Quotebacks Markdown extension.
 * Add ``navbar_custom_bg`` theme option to ``bootstrap4`` and document
   options for ``bootstrap4`` better (Issue #3443)
 * Add Marathi translation
