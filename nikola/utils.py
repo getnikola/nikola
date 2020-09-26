@@ -1938,7 +1938,7 @@ def load_data(path):
         loader = toml
     if loader is None:
         return
-    with io.open(path, 'r', encoding='utf8') as inf:
+    with io.open(path, 'r', encoding='utf-8-sig') as inf:
         return getattr(loader, function)(inf)
 
 

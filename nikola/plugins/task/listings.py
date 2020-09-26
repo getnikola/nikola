@@ -119,13 +119,13 @@ class Listings(Task):
                     raise ValueError(msg)
 
                 ipynb_compiler = ipynb_plugin.plugin_object
-                with open(in_name, "r", encoding="utf8") as in_file:
+                with open(in_name, "r", encoding="utf-8-sig") as in_file:
                     nb_json = ipynb_compiler._nbformat_read(in_file)
                     code = ipynb_compiler._compile_string(nb_json)
                 title = os.path.basename(in_name)
                 needs_ipython_css = True
             elif in_name:
-                with open(in_name, 'r', encoding='utf-8') as fd:
+                with open(in_name, 'r', encoding='utf-8-sig') as fd:
                     try:
                         lexer = get_lexer_for_filename(in_name)
                     except Exception:

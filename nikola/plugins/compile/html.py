@@ -54,8 +54,8 @@ class CompileHtml(PageCompiler):
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
-        with io.open(dest, "w+", encoding="utf8") as out_file:
-            with io.open(source, "r", encoding="utf8") as in_file:
+        with io.open(dest, "w+", encoding="utf-8") as out_file:
+            with io.open(source, "r", encoding="utf-8-sig") as in_file:
                 data = in_file.read()
             data, shortcode_deps = self.compile_string(data, source, is_two_file, post, lang)
             out_file.write(data)
@@ -80,7 +80,7 @@ class CompileHtml(PageCompiler):
         makedirs(os.path.dirname(path))
         if not content.endswith('\n'):
             content += '\n'
-        with io.open(path, "w+", encoding="utf8") as fd:
+        with io.open(path, "w+", encoding="utf-8") as fd:
             if onefile:
                 fd.write(write_metadata(metadata, comment_wrap=True, site=self.site, compiler=self))
             fd.write(content)
@@ -91,7 +91,7 @@ class CompileHtml(PageCompiler):
             lang = LocaleBorg().current_lang
         source_path = post.translated_source_path(lang)
 
-        with io.open(source_path, 'r', encoding='utf-8') as inf:
+        with io.open(source_path, 'r', encoding='utf-8-sig') as inf:
             data = inf.read()
 
         metadata = {}

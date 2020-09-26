@@ -66,11 +66,11 @@ def fix_all_git_symlinked(topdir):
     """
     # Determine whether or not symlinks need fixing (they don’t if installing
     # from a .tar.gz file)
-    with io.open(topdir + r'\nikola\data\symlink-test-link.txt', 'r', encoding='utf-8') as f:
+    with io.open(topdir + r'\nikola\data\symlink-test-link.txt', 'r', encoding='utf-8-sig') as f:
         text = f.read()
         if text.startswith("NIKOLA_SYMLINKS=OK"):
             return -1
-    with io.open(topdir + r'\nikola\data\symlinked.txt', 'r', encoding='utf-8') as f:
+    with io.open(topdir + r'\nikola\data\symlinked.txt', 'r', encoding='utf-8-sig') as f:
         text = f.read()
     # expect each line a relpath from git or zip root,
     # smoke test relpaths are relative to git root
@@ -92,7 +92,7 @@ def fix_all_git_symlinked(topdir):
             continue
 
         # build src path and do some basic validation
-        with io.open(os.path.join(topdir, dst), 'r', encoding='utf-8') as f:
+        with io.open(os.path.join(topdir, dst), 'r', encoding='utf-8-sig') as f:
             text = f.read()
         dst_dir = os.path.dirname(dst)
         try:

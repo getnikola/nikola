@@ -16,6 +16,7 @@ Features
 Bugfixes
 --------
 
+* Read files as utf-8-sig to allow BOM in input files
 * Don’t break slugs with slashes in ``doc`` directive (Issue #3450)
 * Avoid warnings from type annotations in ``auto`` caused by missing
   ``aiohttp`` (Issue #3451)

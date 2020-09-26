@@ -292,7 +292,7 @@ class PageCompiler(BasePlugin):
         """Read contents of .dep file and return them as a list."""
         dep_path = self.get_dep_filename(post, lang)
         if os.path.isfile(dep_path):
-            with io.open(dep_path, 'r+', encoding='utf8') as depf:
+            with io.open(dep_path, 'r+', encoding='utf-8-sig') as depf:
                 deps = [l.strip() for l in depf.readlines()]
                 return deps
         return []

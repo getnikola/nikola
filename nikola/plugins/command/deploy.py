@@ -56,23 +56,7 @@ class CommandDeploy(Command):
 
         # Get last-deploy from persistent state
         last_deploy = self.site.state.get('last_deploy')
-        if last_deploy is None:
-            # If there is a last-deploy saved, move it to the new state persistence thing
-            # FIXME: remove in Nikola 8
-            if os.path.isfile(timestamp_path):
-                try:
-                    with io.open(timestamp_path, 'r', encoding='utf8') as inf:
-                        last_deploy = dateutil.parser.parse(inf.read())
-                        clean = False
-                except (IOError, Exception) as e:
-                    self.logger.debug("Problem when reading `{0}`: {1}".format(timestamp_path, e))
-                    last_deploy = datetime(1970, 1, 1)
-                    clean = True
-                os.unlink(timestamp_path)  # Remove because from now on it's in state
-            else:  # Just a default
-                last_deploy = datetime(1970, 1, 1)
-                clean = True
-        else:
+        if last_deploy is not None:
             last_deploy = dateutil.parser.parse(last_deploy)
             clean = False
 

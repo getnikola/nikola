@@ -82,8 +82,8 @@ class CompileIPynb(PageCompiler):
     def compile(self, source, dest, is_two_file=False, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
-        with io.open(dest, "w+", encoding="utf8") as out_file:
-            with io.open(source, "r", encoding="utf8") as in_file:
+        with io.open(dest, "w+", encoding="utf-8") as out_file:
+            with io.open(source, "r", encoding="utf-8-sig") as in_file:
                 nb_str = in_file.read()
             output, shortcode_deps = self.compile_string(nb_str, source,
                                                          is_two_file, post,
@@ -107,7 +107,7 @@ class CompileIPynb(PageCompiler):
         if lang is None:
             lang = LocaleBorg().current_lang
         source = post.translated_source_path(lang)
-        with io.open(source, "r", encoding="utf8") as in_file:
+        with io.open(source, "r", encoding="utf-8-sig") as in_file:
             nb_json = nbformat.read(in_file, current_nbformat)
         # Metadata might not exist in two-file posts or in hand-crafted
         # .ipynb files.
@@ -156,7 +156,7 @@ class CompileIPynb(PageCompiler):
         if onefile:
             nb["metadata"]["nikola"] = metadata
 
-        with io.open(path, "w+", encoding="utf8") as fd:
+        with io.open(path, "w+", encoding="utf-8") as fd:
             nbformat.write(nb, fd, 4)
 
 
