@@ -26,8 +26,6 @@
 
 """Deploy site."""
 
-import io
-import os
 import subprocess
 import time
 from datetime import datetime
@@ -51,9 +49,6 @@ class CommandDeploy(Command):
 
     def _execute(self, command, args):
         """Execute the deploy command."""
-        # Get last successful deploy date
-        timestamp_path = os.path.join(self.site.config['CACHE_FOLDER'], 'lastdeploy')
-
         # Get last-deploy from persistent state
         last_deploy = self.site.state.get('last_deploy')
         if last_deploy is not None:
