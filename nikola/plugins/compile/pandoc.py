@@ -54,7 +54,7 @@ class CompilePandoc(PageCompiler):
         makedirs(os.path.dirname(dest))
         try:
             subprocess.check_call(['pandoc', '-o', dest, source] + self.site.config['PANDOC_OPTIONS'])
-            with open(dest, 'r', encoding='utf-8') as inf:
+            with open(dest, 'r', encoding='utf-8-sig') as inf:
                 output, shortcode_deps = self.site.apply_shortcodes(inf.read())
             with open(dest, 'w', encoding='utf-8') as outf:
                 outf.write(output)

@@ -236,7 +236,7 @@ class CommandTheme(Command):
         if os.path.exists(confpypath):
             LOGGER.warning('This theme has a sample config file.  Integrate it with yours in order to make this theme work!')
             print('Contents of the conf.py.sample file:\n')
-            with io.open(confpypath, 'r', encoding='utf-8') as fh:
+            with io.open(confpypath, 'r', encoding='utf-8-sig') as fh:
                 if self.site.colorful:
                     print(pygments.highlight(fh.read(), PythonLexer(), TerminalFormatter()))
                 else:

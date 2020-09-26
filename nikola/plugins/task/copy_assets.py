@@ -98,14 +98,14 @@ class CopyAssets(Task):
             def create_code_css():
                 formatter = BetterHtmlFormatter(style=kw["code_color_scheme"])
                 utils.makedirs(os.path.dirname(code_css_path))
-                with io.open(code_css_path, 'w+', encoding='utf8') as outf:
+                with io.open(code_css_path, 'w+', encoding='utf-8') as outf:
                     outf.write(kw["code.css_head"])
                     outf.write(formatter.get_style_defs(
                         kw["code.css_selectors"], kw["code.css_wrappers"]))
                     outf.write(kw["code.css_close"])
 
             if os.path.exists(code_css_path):
-                with io.open(code_css_path, 'r', encoding='utf-8') as fh:
+                with io.open(code_css_path, 'r', encoding='utf-8-sig') as fh:
                     testcontents = fh.read(len(kw["code.css_head"])) == kw["code.css_head"]
             else:
                 testcontents = False

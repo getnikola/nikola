@@ -116,8 +116,8 @@ class CompileMarkdown(PageCompiler):
         if Markdown is None:
             req_missing(['markdown'], 'build this site (compile Markdown)')
         makedirs(os.path.dirname(dest))
-        with io.open(dest, "w+", encoding="utf8") as out_file:
-            with io.open(source, "r", encoding="utf8") as in_file:
+        with io.open(dest, "w+", encoding="utf-8") as out_file:
+            with io.open(source, "r", encoding="utf-8-sig") as in_file:
                 data = in_file.read()
             output, shortcode_deps = self.compile_string(data, source, is_two_file, post, lang)
             out_file.write(output)
@@ -142,7 +142,7 @@ class CompileMarkdown(PageCompiler):
         makedirs(os.path.dirname(path))
         if not content.endswith('\n'):
             content += '\n'
-        with io.open(path, "w+", encoding="utf8") as fd:
+        with io.open(path, "w+", encoding="utf-8") as fd:
             if onefile:
                 fd.write(write_metadata(metadata, comment_wrap=True, site=self.site, compiler=self))
             fd.write(content)
@@ -157,7 +157,7 @@ class CompileMarkdown(PageCompiler):
         if lang is None:
             lang = LocaleBorg().current_lang
         source = post.translated_source_path(lang)
-        with io.open(source, 'r', encoding='utf-8') as inf:
+        with io.open(source, 'r', encoding='utf-8-sig') as inf:
             # Note: markdown meta returns lowercase keys
             data = inf.read()
             # If the metadata starts with "---" it's actually YAML and

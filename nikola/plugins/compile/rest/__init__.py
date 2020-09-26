@@ -71,7 +71,7 @@ class CompileRest(PageCompiler):
         # environment. Real issues will be reported while compiling.
         null_logger = logging.getLogger('NULL')
         null_logger.setLevel(1000)
-        with io.open(source_path, 'r', encoding='utf-8') as inf:
+        with io.open(source_path, 'r', encoding='utf-8-sig') as inf:
             data = inf.read()
             _, _, _, document = rst2html(data, logger=null_logger, source_path=source_path, transforms=self.site.rst_transforms)
         meta = {}
@@ -145,8 +145,8 @@ class CompileRest(PageCompiler):
         """Compile the source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
         error_level = 100
-        with io.open(dest, "w+", encoding="utf8") as out_file:
-            with io.open(source, "r", encoding="utf8") as in_file:
+        with io.open(dest, "w+", encoding="utf-8") as out_file:
+            with io.open(source, "r", encoding="utf-8-sig") as in_file:
                 data = in_file.read()
                 output, error_level, deps, shortcode_deps = self.compile_string(data, source, is_two_file, post, lang)
                 out_file.write(output)
@@ -175,7 +175,7 @@ class CompileRest(PageCompiler):
         makedirs(os.path.dirname(path))
         if not content.endswith('\n'):
             content += '\n'
-        with io.open(path, "w+", encoding="utf8") as fd:
+        with io.open(path, "w+", encoding="utf-8") as fd:
             if onefile:
                 fd.write(write_metadata(metadata, comment_wrap=False, site=self.site, compiler=self))
             fd.write(content)

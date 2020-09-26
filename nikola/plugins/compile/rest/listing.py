@@ -182,7 +182,7 @@ class Listing(Include):
         self.arguments.insert(0, fpath)
         if 'linenos' in self.options:
             self.options['number-lines'] = self.options['linenos']
-        with io.open(fpath, 'r+', encoding='utf8') as fileobject:
+        with io.open(fpath, 'r+', encoding='utf-8-sig') as fileobject:
             self.content = fileobject.read().splitlines()
         self.state.document.settings.record_dependencies.add(fpath)
         target = urlunsplit(("link", 'listing', fpath.replace('\\', '/'), '', ''))

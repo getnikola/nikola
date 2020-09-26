@@ -49,12 +49,12 @@ class CommandRst2Html(Command):
             print("This command takes only one argument (input file name).")
             return 2
         source = args[0]
-        with io.open(source, "r", encoding="utf8") as in_file:
+        with io.open(source, "r", encoding="utf-8-sig") as in_file:
             data = in_file.read()
             output, error_level, deps, shortcode_deps = compiler.compile_string(data, source, True)
 
         rstcss_path = resource_filename('nikola', 'data/themes/base/assets/css/rst_base.css')
-        with io.open(rstcss_path, "r", encoding="utf8") as fh:
+        with io.open(rstcss_path, "r", encoding="utf-8-sig") as fh:
             rstcss = fh.read()
 
         template_path = resource_filename('nikola', 'plugins/command/rst2html/rst2html.tmpl')
