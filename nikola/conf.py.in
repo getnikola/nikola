@@ -105,7 +105,7 @@ THEME_COLOR = '#5670d4'
 # bootblog4 supports: featured_large featured_small featured_on_mobile
 #                     featured_large_image_on_mobile featured_strip_html sidebar
 # bootstrap4 supports: navbar_light (defaults to False)
-#                      navbar_bg_custom (defaults to '')
+#                      navbar_custom_bg (defaults to '')
 
 # Config for bootblog4:
 THEME_CONFIG = {
@@ -134,7 +134,7 @@ THEME_CONFIG = {
 #         # background color. If set, navbar_light controls only background
 #         # color. Supported values: bg-dark, bg-light, bg-primary, bg-secondary,
 #         # bg-success, bg-danger, bg-warning, bg-info, bg-white, bg-transparent.
-#         'navbar_bg_custom': '',
+#         'navbar_custom_bg': '',
 #     }
 # }
 
