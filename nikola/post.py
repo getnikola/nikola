@@ -646,7 +646,7 @@ class Post(object):
             deps_path = post.compiler.get_dep_filename(post, lang)
         if deps_list or (post.compiler.use_dep_file if post else False):
             deps_list = [p for p in deps_list if p != dest]  # Don't depend on yourself (#1671)
-            with io.open(deps_path, "w+", encoding="utf8") as deps_file:
+            with io.open(deps_path, "w+", encoding="utf-8") as deps_file:
                 deps_file.write('\n'.join(deps_list))
         else:
             if os.path.isfile(deps_path):
@@ -843,7 +843,7 @@ class Post(object):
             lang = nikola.utils.LocaleBorg().current_lang
 
         source = self.translated_source_path(lang)
-        with open(source, encoding='utf-8') as inf:
+        with open(source, 'r', encoding='utf-8-sig') as inf:
             data = inf.read()
         if self.is_two_file:  # Metadata is not here
             source_data = data
@@ -874,7 +874,7 @@ class Post(object):
         if not os.path.isfile(file_name):
             self.compile(lang)
 
-        with io.open(file_name, "r", encoding="utf8") as post_file:
+        with io.open(file_name, "r", encoding="utf-8-sig") as post_file:
             data = post_file.read().strip()
 
         if self.compiler.extension() == '.php':
@@ -975,7 +975,7 @@ class Post(object):
             # duplicated with Post.text()
             lang = nikola.utils.LocaleBorg().current_lang
             file_name, _ = self._translated_file_path(lang)
-            with io.open(file_name, "r", encoding="utf8") as post_file:
+            with io.open(file_name, "r", encoding="utf-8-sig") as post_file:
                 data = post_file.read().strip()
             try:
                 document = lxml.html.fragment_fromstring(data, "body")

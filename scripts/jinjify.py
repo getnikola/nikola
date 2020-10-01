@@ -48,7 +48,7 @@ def jinjify(in_theme, out_theme):
         pass
     lookup = jinja2.Environment()
     lookup.filters['tojson'] = json.dumps
-    lookup.loader = jinja2.FileSystemLoader([out_templates_path], encoding='utf-8')
+    lookup.loader = jinja2.FileSystemLoader([out_templates_path], encoding='utf-8-sig')
     for template in glob.glob(os.path.join(in_templates_path, "*.tmpl")):
         out_template = os.path.join(out_templates_path, os.path.basename(template))
         with io.open(template, "r", encoding="utf-8") as inf:

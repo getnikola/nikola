@@ -17,6 +17,7 @@ matrix:
     env: NMODE=nikola OS=macOS
     python: '3.8'
     before_install:
+    - brew cask uninstall --force java
     - brew update
     - brew uninstall gdal postgis
     - brew unlink python@2

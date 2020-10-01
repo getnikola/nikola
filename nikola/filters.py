@@ -90,7 +90,7 @@ def apply_to_text_file(f):
     """
     @wraps(f)
     def f_in_file(fname, *args, **kwargs):
-        with io.open(fname, 'r', encoding='utf-8') as inf:
+        with io.open(fname, 'r', encoding='utf-8-sig') as inf:
             data = inf.read()
         data = f(data, *args, **kwargs)
         with io.open(fname, 'w+', encoding='utf-8') as outf:
@@ -342,7 +342,7 @@ def php_template_injection(data):
     template = re.search(r'<\!-- __NIKOLA_PHP_TEMPLATE_INJECTION source\:(.*) checksum\:(.*)__ -->', data)
     if template:
         source = template.group(1)
-        with io.open(source, "r", encoding="utf-8") as in_file:
+        with io.open(source, "r", encoding="utf-8-sig") as in_file:
             phpdata = in_file.read()
         _META_SEPARATOR = '(' + os.linesep * 2 + '|' + ('\n' * 2) + '|' + ("\r\n" * 2) + ')'
         phpdata = re.split(_META_SEPARATOR, phpdata, maxsplit=1)[-1]
@@ -419,7 +419,7 @@ def add_header_permalinks(fname, xpath_list=None, file_blacklist=None):
     file_blacklist = file_blacklist or []
     if fname in file_blacklist:
         return
-    with io.open(fname, 'r', encoding='utf-8') as inf:
+    with io.open(fname, 'r', encoding='utf-8-sig') as inf:
         data = inf.read()
     doc = lxml.html.document_fromstring(data)
     # Get language for slugify

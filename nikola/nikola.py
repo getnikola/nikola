@@ -100,6 +100,7 @@ LEGAL_VALUES = {
         'isso',
         'muut',
         'commento',
+        'utterances',
     ],
     'TRANSLATIONS': {
         'af': 'Afrikaans',
@@ -835,6 +836,12 @@ class Nikola(object):
         if self.config.get('CATEGORY_PAGES_FOLLOW_DESTPATH') and (not self.config.get('CATEGORY_ALLOW_HIERARCHIES') or self.config.get('CATEGORY_OUTPUT_FLAT_HIERARCHY')):
             utils.LOGGER.error('CATEGORY_PAGES_FOLLOW_DESTPATH requires CATEGORY_ALLOW_HIERARCHIES = True, CATEGORY_OUTPUT_FLAT_HIERARCHY = False.')
             sys.exit(1)
+
+        # The Utterances comment system has a required configuration value
+        if self.config.get('COMMENT_SYSTEM') == 'utterances':
+            utterances_config = self.config.get('GLOBAL_CONTEXT', {}).get('utterances_config', {})
+            if not ('issue-term' in utterances_config or 'issue-number' in utterances_config):
+                utils.LOGGER.error("COMMENT_SYSTEM = 'utterances' must have either GLOBAL_CONTEXT['utterances_config']['issue-term'] or GLOBAL_CONTEXT['utterances_config']['issue-term'] defined.")
 
         # Handle CONTENT_FOOTER and RSS_COPYRIGHT* properly.
         # We provide the arguments to format in CONTENT_FOOTER_FORMATS and RSS_COPYRIGHT_FORMATS.

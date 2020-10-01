@@ -416,7 +416,7 @@ class CommandNewPost(Command):
             LOGGER.warning('This compiler does not support one-file posts.')
 
         if onefile and import_file:
-            with io.open(import_file, 'r', encoding='utf-8') as fh:
+            with io.open(import_file, 'r', encoding='utf-8-sig') as fh:
                 content = fh.read()
         elif not import_file:
             if is_page:
