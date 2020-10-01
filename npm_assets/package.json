@@ -1,7 +1,7 @@
 {
     "name": "Nikola",
     "version": "0.1.0",
-    "description": "Nikola, a static site generator",
+    "description": "Nikola, a Static site generator",
     "repository": "https://github.com/getnikola/nikola",
     "license": "MIT",
     "dependencies": {
