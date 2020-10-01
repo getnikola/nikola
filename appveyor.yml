@@ -1,4 +1,5 @@
 # based on https://github.com/jakubroztocil/httpie/blob/master/appveyor.yml
+#pip install
 build: false
 environment:
   matrix:
