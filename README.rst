@@ -28,7 +28,7 @@ Static websites are safer, use fewer resources, and avoid vendor and platform lo
 You can read more about this in the `Nikola Handbook`_
 
 
-What Can Nikola Do?
+What Nikola Can Do?
 -------------------
 
 It has many features, but here are some of the nicer ones:
