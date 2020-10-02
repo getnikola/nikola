@@ -26,6 +26,8 @@ Why Static Websites?
 
 Static websites are safer, use fewer resources, and avoid vendor and platform lock-in.
 You can read more about this in the `Nikola Handbook`_
+Also a Content Management System takes its own time to process the data and generate HTML. 
+You save that processing time as the server can fetch the file and send it straight to the client.
 
 
 What Can Nikola Do?
