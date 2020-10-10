@@ -17,6 +17,8 @@ Features
 Bugfixes
 --------
 
+* Fix ``LINK_CHECK_WHITELIST`` having issues due to mixing Unicode
+  and bytestrings (Issue #3466)
 * Add support for ``nbconvert>=6.0.0`` (Issue #3457)
 * Read files as utf-8-sig to allow BOM in input files
 * Don’t break slugs with slashes in ``doc`` directive (Issue #3450)
