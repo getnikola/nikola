@@ -1217,6 +1217,10 @@ MARKDOWN_EXTENSIONS = ['markdown.extensions.fenced_code', 'markdown.extensions.c
 #      }
 # }
 
+# Add any post types here that you want to be displayed without a title.
+# If your theme supports it, the titles will not be shown.
+# TYPES_TO_HIDE_TITLE = []
+
 # Additional metadata that is added to a post when creating a new_post
 # ADDITIONAL_METADATA = {}
 
@@ -1304,7 +1308,3 @@ GLOBAL_CONTEXT = {}
 # GLOBAL_CONTEXT as parameter when the template is about to be
 # rendered
 GLOBAL_CONTEXT_FILLER = []
-
-# Add any post types here that you want to be displayed without a title.
-# Ir your theme supports it, the titles will not be shown.
-TYPES_TO_HIDE_TITLE = []

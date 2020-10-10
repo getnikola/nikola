@@ -218,6 +218,7 @@ class ImageProcessor(object):
             try:
                 im = Image.open(src)
                 exif = im._getexif()
+                im.close()
             except Exception:
                 exif = None
             if exif is not None:

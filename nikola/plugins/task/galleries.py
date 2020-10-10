@@ -670,6 +670,7 @@ class Galleries(Task, ImageProcessor):
                     im = Image.open(thumb)
                     w, h = im.size
                     _image_size_cache[thumb] = w, h
+                    im.close()
             # Use basename to avoid issues with multilingual sites (Issue #3078)
             img_basename = os.path.basename(img)
             photo_info[img_basename] = {
