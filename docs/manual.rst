@@ -2402,7 +2402,10 @@ You can apply filters to specific posts or pages by using the ``filters`` metada
 
 .. code:: restructuredtext
 
-    .. filters: filters.html_tidy_nowrap, "sed s/foo/bar"
+    .. filters: filters.html_tidy_nowrap, "sed s/foo/bar %s"
+
+Please note that applying custom filters (not those provided via Nikola's filter module) 
+via metadata only works for filters implemented via external programs like in that `sed` example.
 
 Optimizing Your Website
 -----------------------
