@@ -5,6 +5,7 @@ import sys
 import shutil
 from setuptools import setup, find_packages
 from setuptools.command.install import install
+from setuptools.command.build_py import build_py
 
 
 with open('requirements.txt', 'r') as fh:
@@ -98,6 +99,12 @@ class nikola_install(install):
         install.run(self)
 
 
+class nikola_build_py(build_py):
+    def run(self):
+        expands_symlinks_for_windows()
+        build_py.run(self)
+
+
 setup(name='Nikola',
       version='8.1.1',
       description='A modular, fast, simple, static website and blog generator',
@@ -132,7 +139,7 @@ setup(name='Nikola',
       extras_require=extras,
       include_package_data=True,
       python_requires='>=3.5',
-      cmdclass={'install': nikola_install},
+      cmdclass={'install': nikola_install, 'build_py': nikola_build_py},
       data_files=[
               ('share/doc/nikola', [
                'docs/manual.rst',
