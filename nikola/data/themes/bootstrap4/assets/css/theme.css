@@ -222,6 +222,10 @@ pre.code {
     white-space: pre-wrap;
 }
 
+.byline a:not(:last-child):after {
+    content: ",";
+}
+
 /* Override incorrect Bootstrap 4 default */
 html[dir="rtl"] body {
     text-align: right;

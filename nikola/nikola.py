@@ -548,6 +548,7 @@ class Nikola(object):
             'MATHJAX_CONFIG': '',
             'METADATA_FORMAT': 'nikola',
             'METADATA_MAPPING': {},
+            'MULTIPLE_AUTHORS_PER_POST': False,
             'NEW_POST_DATE_PATH': False,
             'NEW_POST_DATE_PATH_FORMAT': '%Y/%m/%d',
             'OLD_THEME_SUPPORT': True,
@@ -1276,6 +1277,7 @@ class Nikola(object):
         self._GLOBAL_CONTEXT['smartjoin'] = utils.smartjoin
         self._GLOBAL_CONTEXT['colorize_str'] = utils.colorize_str
         self._GLOBAL_CONTEXT['meta_generator_tag'] = self.config.get('META_GENERATOR_TAG')
+        self._GLOBAL_CONTEXT['multiple_authors_per_post'] = self.config.get('MULTIPLE_AUTHORS_PER_POST')
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
 

@@ -547,7 +547,7 @@ class Post(object):
             lang = nikola.utils.LocaleBorg().current_lang
         return self.meta[lang]['title']
 
-    def author(self, lang=None):
+    def author(self, lang=None) -> str:
         """Return localized author or BLOG_AUTHOR if unspecified.
 
         If lang is not specified, it defaults to the current language from
@@ -559,6 +559,21 @@ class Post(object):
             author = self.meta[lang]['author']
         else:
             author = self.config['BLOG_AUTHOR'](lang)
+
+        return author
+
+    def authors(self, lang=None) -> list:
+        """Return localized authors or BLOG_AUTHOR if unspecified.
+
+        If lang is not specified, it defaults to the current language from
+        templates, as set in LocaleBorg.
+        """
+        if lang is None:
+            lang = nikola.utils.LocaleBorg().current_lang
+        if self.meta[lang]['author']:
+            author = [i.strip() for i in self.meta[lang]['author'].split(",")]
+        else:
+            author = [self.config['BLOG_AUTHOR'](lang)]
 
         return author
 

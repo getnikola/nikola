@@ -127,6 +127,9 @@ html[dir="rtl"] #toptranslations {
 .postlist li {
 	margin-bottom: .33em;
 }
+.byline a:not(:last-child):after {
+	content: ",";
+}
 
 /* Post and archive pagers */
 .postindexpager .pager .next:before {

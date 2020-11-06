@@ -73,6 +73,7 @@ link://author_rss/joe => /authors/joe.xml""",
         """Set Nikola site."""
         super().set_site(site)
         self.show_list_as_index = site.config['AUTHOR_PAGES_ARE_INDEXES']
+        self.more_than_one_classifications_per_post = site.config.get('MULTIPLE_AUTHORS_PER_POST', False)
         self.template_for_single_list = "authorindex.tmpl" if self.show_list_as_index else "author.tmpl"
         self.translation_manager = utils.ClassificationTranslationManager()
 
@@ -86,7 +87,10 @@ link://author_rss/joe => /authors/joe.xml""",
 
     def classify(self, post, lang):
         """Classify the given post for the given language."""
-        return [post.author(lang=lang)]
+        if self.more_than_one_classifications_per_post:
+            return post.authors(lang=lang)
+        else:
+            return [post.author(lang=lang)]
 
     def get_classification_friendly_name(self, classification, lang, only_last_component=False):
         """Extract a friendly name from the classification."""
