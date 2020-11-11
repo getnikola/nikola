@@ -19,7 +19,7 @@ Features
 Bugfixes
 --------
 
-* Also fix symlinks when installing from source with pip; if possible,
+* Windows: Also fix symlinks when installing from source with pip; if possible,
   enable Developer Mode and run ``git config --global core.symlinks true``
   before cloning the Nikola repo
 * Fix ``LINK_CHECK_WHITELIST`` having issues due to mixing Unicode
