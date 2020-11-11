@@ -1085,11 +1085,13 @@ class Post(object):
 
         image_path = self.meta[lang]['previewimage']
         if not image_path:
-            return self._default_preview_image
+            image_path = self._default_preview_image
 
-        # This is further parsed by the template, because we don’t have access
-        # to the URL replacer here.  (Issue #1473)
-        return image_path
+        if image_path.startswith("/"):
+            # Paths starting with slashes are expected to be root-relative, pass them directly.
+            return image_path
+        # Other paths are relative to the permalink. The path will be made prettier by the URL replacer later.
+        return urljoin(self.permalink(lang), image_path)
 
     def source_ext(self, prefix=False):
         """Return the source file extension.
