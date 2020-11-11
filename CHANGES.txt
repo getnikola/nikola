@@ -22,6 +22,9 @@ Bugfixes
 * Also fix symlinks when installing from source with pip; if possible,
   enable Developer Mode and run ``git config --global core.symlinks true``
   before cloning the Nikola repo
+* Fix clicking on links to image files. baguetteBox now requires a
+  link (``<a>``) to have an ``<img>`` as a child in order to make the
+  link activate the lightbox. (Issue #3472)
 * Fix ``LINK_CHECK_WHITELIST`` having issues due to mixing Unicode
   and bytestrings (Issue #3466)
 * Add support for ``nbconvert>=6.0.0`` (Issue #3457)
