@@ -1087,7 +1087,7 @@ class Post(object):
         if not image_path:
             image_path = self._default_preview_image
 
-        if image_path.startswith("/"):
+        if not image_path or image_path.startswith("/"):
             # Paths starting with slashes are expected to be root-relative, pass them directly.
             return image_path
         # Other paths are relative to the permalink. The path will be made prettier by the URL replacer later.
