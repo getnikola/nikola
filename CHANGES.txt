@@ -19,6 +19,8 @@ Features
 Bugfixes
 --------
 
+* Fix previewimages (post- and root-relative) in bootblog4/galleries
+  featured posts for non-server-root sites (Issue #3471)
 * Windows: Also fix symlinks when installing from source with pip; if possible,
   enable Developer Mode and run ``git config --global core.symlinks true``
   before cloning the Nikola repo

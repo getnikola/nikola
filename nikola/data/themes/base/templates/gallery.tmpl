@@ -21,7 +21,7 @@
             <div class="thumnbnail-container">
                 <a href="${folder}" class="thumbnail image-reference" title="${ftitle|h}">
                     % if fpost and fpost.previewimage:
-                        <img src="${url_replacer(fpost.permalink(), fpost.previewimage, lang, 'full_path')}" alt="${ftitle|h}" loading="lazy" style="max-width:${thumbnail_size}px; max-height:${thumbnail_size}px;" />
+                        <img src="${fpost.previewimage}" alt="${ftitle|h}" loading="lazy" style="max-width:${thumbnail_size}px; max-height:${thumbnail_size}px;" />
                     % else:
                         <div style="height: ${thumbnail_size}px; width: ${thumbnail_size}px; background-color: #eee;"></div>
                     % endif
