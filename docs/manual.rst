@@ -2000,9 +2000,7 @@ and put images there. Nikola will take care of creating thumbnails, index page, 
 If you click on images on a gallery, or on images with links in post, you will
 see a bigger image, thanks to the excellent `baguetteBox
 <https://feimosi.github.io/baguetteBox.js/>`_.  If don’t want this behavior, add an
-``.islink`` class to your link. (The behavior is caused by ``<a
-class="reference">`` if you need to use it outside of galleries and reST
-thumbnails.)
+``.islink`` class to your link.
 
 The gallery pages are generated using the ``gallery.tmpl`` template, and you can
 customize it there (you could switch to another lightbox instead of baguetteBox, change

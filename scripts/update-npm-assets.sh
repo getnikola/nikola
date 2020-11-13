@@ -53,4 +53,7 @@ popd
 
 scripts/generate_symlinked_list.sh
 
+# Verify baguetteBox patch
+grep PATCHED npm_assets/node_modules/baguettebox.js/dist/baguetteBox.js > /dev/null || printf '%b' '\033[1;31mWARNING: baguetteBox must be manually patched (in both unminified and minified versions), see npm_assets/baguetteBox-links-with-images-only.patch\033[0m\n'
+
 # vim:tw=0
