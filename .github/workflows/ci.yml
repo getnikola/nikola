@@ -5,9 +5,6 @@ on:
     branches: master
   # Run on all changes in pull requests
   pull_request:
-  # Run CI once per day (at 06:00 UTC)
-  # schedule:
-  #   - cron: '0 6 * * *'
 
 jobs:
   nikola:
@@ -40,6 +37,9 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '${{ matrix.python }}'
+      - name: Upgrade packaging stack
+        run: |
+          pip install --upgrade-strategy eager -U pip setuptools wheel
       - name: Install test requirements
         run: |
           pip install --upgrade-strategy eager -Ur requirements-tests.txt
@@ -66,7 +66,7 @@ jobs:
           scripts/codacy_coverage.sh
 
   flake8:
-    name: Linting
+    name: Linting (flake8, pydocstyle)
     strategy:
       matrix:
         python:
@@ -79,6 +79,9 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '${{ matrix.python }}'
+      - name: Upgrade packaging stack
+        run: |
+          pip install --upgrade-strategy eager -U pip setuptools wheel
       - name: Install requirements
         run: |
           pip install flake8 pydocstyle
@@ -103,6 +106,9 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '${{ matrix.python }}'
+      - name: Upgrade packaging stack
+        run: |
+          pip install --upgrade-strategy eager -U pip setuptools wheel
       - name: Install requirements
         run: |
           pip install --upgrade-strategy eager -Ur requirements.txt
