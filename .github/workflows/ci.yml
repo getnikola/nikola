@@ -1,0 +1,53 @@
+name: CI
+on:
+  # Run on all pushes to master (including merge of PR)
+  push:
+    branches: master
+  # Run on all changes in pull requests
+  pull_request:
+  # Run CI once per day (at 06:00 UTC)
+  # schedule:
+  #   - cron: '0 6 * * *'
+
+jobs:
+  nikola:
+    name: Basic tests (Python ${{python}} on ${{image}})
+    strategy:
+      matrix:
+        python:
+          - 3.5
+          - 3.6
+          - 3.7
+          - 3.8
+        image:
+          - unbutu-18.04
+          - ubuntu-16.04
+        exclude:
+          - python: 3.5
+            image: ubuntu-18.04
+          - python: 3.6
+            image: ubuntu-16.04
+          - python: 3.7
+            image: ubuntu-16.04
+          - python: 3.8
+            image: ubuntu-16.04
+    runs-on: '${{image}}'
+    steps: []
+
+  flake8:
+    name: Linting (flake8)
+    strategy:
+      matrix:
+        python:
+          - 3.8
+    runs-on: ubuntu-18.04
+    steps: []
+
+  basereq:
+    name: Compare to baseline
+    strategy:
+      matrix:
+        python:
+          - 3.8
+    runs-on: ubuntu-18.04
+    steps: []
