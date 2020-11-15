@@ -9,8 +9,8 @@ In goes content, out comes a website, ready to deploy.
 .. image:: https://img.shields.io/requires/github/getnikola/nikola.svg
    :target: https://requires.io/github/getnikola/nikola/requirements/?branch=master
 
-.. image:: http://img.shields.io/travis/getnikola/nikola.svg
-   :target: https://travis-ci.org/getnikola/nikola
+.. image:: https://github.com/getnikola/nikola/workflows/Nikola%20CI/badge.svg
+   :target: https://github.com/getnikola/nikola/actions
 
 .. image:: http://img.shields.io/coveralls/getnikola/nikola.png
   :target: https://coveralls.io/r/getnikola/nikola?branch=master

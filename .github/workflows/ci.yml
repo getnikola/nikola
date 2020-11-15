@@ -1,4 +1,4 @@
-name: CI
+name: Nikola CI
 on:
   # Run on all pushes to master (including merge of PR)
   push:
