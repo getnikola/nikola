@@ -59,10 +59,13 @@ Here are some guidelines about how you can contribute to Nikola:
   easily testable.
 * **Test your code.** If you can, run the test suite with ``pytest tests/``
   (you will need to install pytest and some other requirements, see
-  ``requirements-tests.txt``). Alternatively, you can push and wait for Travis
-  to pick up and test your changes.
+  ``requirements-tests.txt``). Alternatively, you can push, make a PR and wait
+  for our CI to pick up and test your changes. Test results will appear at the
+  bottom of the PR page, and you can get `notifications
+  <https://github.com/settings/notifications>`_ about failed runs if you
+  configure them on GitHub.
 
-  If running tests is not feasible, please at least confirm that:
+  If running tests is not feasible before you push, please at least confirm that:
 
   * the demo site (created with ``nikola init -qd demosite``) builds without errors
   * the bugs you were trying to fix do not occur anymore (if applicable)
