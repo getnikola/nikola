@@ -32,7 +32,8 @@ jobs:
           - python: 3.8
             image: ubuntu-16.04
     runs-on: '${{image}}'
-    steps: []
+    steps:
+      - run: echo hello
 
   flake8:
     name: Linting (flake8)
@@ -41,7 +42,8 @@ jobs:
         python:
           - 3.8
     runs-on: ubuntu-18.04
-    steps: []
+    steps:
+      - run: echo hello
 
   basereq:
     name: Compare to baseline
@@ -50,4 +52,5 @@ jobs:
         python:
           - 3.8
     runs-on: ubuntu-18.04
-    steps: []
+    steps:
+      - run: echo hello
