@@ -36,7 +36,6 @@ env:
     secure: GqUDW0j4Ay8pS9tS/g5JBYGtgBG0g0oD2g4X9JXgVchiFj3GIRL+dwiXpgx3LELy7nCWF3EzClFxxMdVqqxizQ/I8xqiA0XL/rf5z/y+9d9nmKOxV8SV73n0eCgsHWkbdSLJ6MKs6s0Trlz9jLu/P+Bhfu2ttqkOH8WttfEf3VE=
 install:
 - if [[ $NMODE == 'nikola' ]]; then pip install --upgrade-strategy eager -Ur requirements-tests.txt; if [[ "$?" != '0' ]]; then cat /home/travis/.pip/pip.log; false; fi; fi
-- if [[ $NMODE == 'nikola' ]]; then pip install --upgrade-strategy eager -U codacy-coverage; if [[ "$?" != '0' ]]; then cat /home/travis/.pip/pip.log; false; fi; fi
 - if [[ $NMODE == 'basereq' ]]; then pip install --upgrade-strategy eager -Ur requirements.txt; if [[ "$?" != '0' ]]; then cat /home/travis/.pip/pip.log; false; fi; fi
 - if [[ $NMODE == 'nikola' || $NMODE == 'basereq' ]]; then pip install .; fi
 - if [[ $NMODE == 'flake8' ]]; then pip install flake8 pydocstyle; fi
@@ -45,7 +44,6 @@ script:
 - if [[ $NMODE == 'nikola' ]]; then nikola; fi
 - if [[ $NMODE == 'nikola' ]]; then nikola help; fi
 - if [[ $NMODE == 'nikola' ]]; then scripts/baseline.sh check; fi
-- if [[ $NMODE == 'nikola' ]]; then scripts/codacy_coverage.sh; fi
 - if [[ $NMODE == 'flake8' ]]; then flake8 nikola/ tests/; fi
 - if [[ $NMODE == 'flake8' ]]; then pydocstyle --count --match-dir='(?!^\\.)(?!data).*' nikola/; fi
 - if [[ $NMODE == 'basereq' ]]; then cd /; nikola help; fi

@@ -8,7 +8,7 @@ on:
 
 jobs:
   nikola:
-    name: Basic tests (Python ${{ matrix.python }} on ${{ matrix.image }})
+    name: Nikola test suite (Python ${{ matrix.python }} on ${{ matrix.image }})
     strategy:
       fail-fast: false
       matrix:
@@ -34,9 +34,6 @@ jobs:
       - name: Install test requirements
         run: |
           pip install --upgrade-strategy eager -Ur requirements-tests.txt
-      - name: Install coverage requirements
-        run: |
-          pip install --upgrade-strategy eager -U codacy-coverage
       - name: Install Nikola
         run: |
           pip install .
