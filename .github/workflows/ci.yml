@@ -8,7 +8,7 @@ on:
 
 jobs:
   nikola:
-    name: Nikola test suite (Python ${{ matrix.python }} on ${{ matrix.image }})
+    name: Nikola tests (Python ${{ matrix.python }} on ${{ matrix.image }})
     strategy:
       fail-fast: false
       matrix:
