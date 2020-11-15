@@ -11,7 +11,7 @@ on:
 
 jobs:
   nikola:
-    name: Basic tests (Python ${{python}} on ${{image}})
+    name: Basic tests (Python ${{ matrix.python }} on ${{ matrix.image }})
     strategy:
       matrix:
         python:
@@ -31,7 +31,7 @@ jobs:
             image: ubuntu-16.04
           - python: 3.8
             image: ubuntu-16.04
-    runs-on: '${{image}}'
+    runs-on: '${{ matrix.image }}'
     steps:
       - run: echo hello
 
