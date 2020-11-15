@@ -43,7 +43,7 @@ script:
 - if [[ $NMODE == 'nikola' ]]; then py.test tests/; fi
 - if [[ $NMODE == 'nikola' ]]; then nikola; fi
 - if [[ $NMODE == 'nikola' ]]; then nikola help; fi
-- if [[ $NMODE == 'nikola' ]]; then scripts/baseline.sh check; fi
+- if [[ $NMODE == 'nikola' && "$(scripts/getpyver.py short)" == "3.8" ]]; then scripts/baseline.sh check; fi
 - if [[ $NMODE == 'flake8' ]]; then flake8 nikola/ tests/; fi
 - if [[ $NMODE == 'flake8' ]]; then pydocstyle --count --match-dir='(?!^\\.)(?!data).*' nikola/; fi
 - if [[ $NMODE == 'basereq' ]]; then cd /; nikola help; fi

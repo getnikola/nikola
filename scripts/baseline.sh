@@ -1,18 +1,16 @@
 #!/bin/bash
 PYVER=$(scripts/getpyver.py short)
-if [[ $PYVER == '3.8' ]]; then
-    if [[ "$1" == "check" ]]; then
-        echo -e "\033[36m>> Downloading baseline for $PYVER...\033[0m"
-        # we only support 3.8
-        wget https://github.com/getnikola/invariant-builds/archive/v$PYVER'.zip'
-        unzip -q 'v'$PYVER'.zip'
-        rm -rf baseline$PYVER
-        mv invariant-builds-$PYVER baseline
-        rm 'v'$PYVER'.zip'
+if [[ "$1" == "check" ]]; then
+    echo -e "\033[36m>> Downloading baseline for $PYVER...\033[0m"
+    wget https://github.com/getnikola/invariant-builds/archive/v$PYVER'.zip'
+    if [[ $? != 0 ]]; then
+        echo -e "\033[31;1m>> Cannot download baseline for $PYVER.\033[0m"
+        exit 1
     fi
-else
-    echo -e "\033[35m>> Version $PYVER does not support baseline testing.\033[0m"
-    exit 0
+    unzip -q 'v'$PYVER'.zip'
+    rm -rf baseline$PYVER
+    mv invariant-builds-$PYVER baseline
+    rm 'v'$PYVER'.zip'
 fi
 nikola init -qd nikola-baseline-build
 cd nikola-baseline-build
