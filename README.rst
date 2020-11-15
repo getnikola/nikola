@@ -12,9 +12,6 @@ In goes content, out comes a website, ready to deploy.
 .. image:: https://github.com/getnikola/nikola/workflows/Nikola%20CI/badge.svg
    :target: https://github.com/getnikola/nikola/actions
 
-.. image:: http://img.shields.io/coveralls/getnikola/nikola.png
-  :target: https://coveralls.io/r/getnikola/nikola?branch=master
-
 .. image:: http://img.shields.io/badge/license-MIT-green.svg
    :target: https://github.com/getnikola/nikola/blob/master/LICENSE.txt
 
