@@ -21,7 +21,7 @@ jobs:
           - 3.7
           - 3.8
         image:
-          - unbutu-18.04
+          - ubuntu-18.04
           - ubuntu-16.04
         exclude:
           - python: 3.5
@@ -36,6 +36,10 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '${{ matrix.python }}'
       - name: Install test requirements
         run: |
           pip install --upgrade-strategy eager -Ur requirements-tests.txt
@@ -71,6 +75,10 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '${{ matrix.python }}'
       - name: Install requirements
         run: |
           pip install flake8 pydocstyle
@@ -82,7 +90,7 @@ jobs:
           pydocstyle --count --match-dir='(?!^\\.)(?!data).*' nikola/
 
   basereq:
-    name: Baseline
+    name: Install with base requirements
     strategy:
       matrix:
         python:
@@ -91,6 +99,10 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '${{ matrix.python }}'
       - name: Install requirements
         run: |
           pip install --upgrade-strategy eager -Ur requirements.txt
