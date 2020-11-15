@@ -12,23 +12,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python:
-          - 3.5
-          - 3.6
-          - 3.7
-          - 3.8
+        python: [3.5, 3.6, 3.7, 3.8, 3.9]
         image:
-          - ubuntu-18.04
-          - ubuntu-16.04
-        exclude:
-          - python: 3.5
-            image: ubuntu-18.04
-          - python: 3.6
-            image: ubuntu-16.04
-          - python: 3.7
-            image: ubuntu-16.04
-          - python: 3.8
-            image: ubuntu-16.04
+          - ubuntu-latest
+        include:
+          - python: 3.9
+            image: macos-latest
+          - python: 3.9
+            image: windows-latest
     runs-on: '${{ matrix.image }}'
     steps:
       - name: Check out code
@@ -59,19 +50,17 @@ jobs:
         run: |
           nikola help
       - name: Compare to baseline
+        if: runner.os == 'Linux'
         run: |
           scripts/baseline.sh check
-      - name: Code coverage
-        run: |
-          scripts/codacy_coverage.sh
 
   flake8:
     name: Linting (flake8, pydocstyle)
     strategy:
       matrix:
         python:
-          - 3.8
-    runs-on: ubuntu-18.04
+          - 3.9
+    runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -97,8 +86,8 @@ jobs:
     strategy:
       matrix:
         python:
-          - 3.8
-    runs-on: ubuntu-18.04
+          - 3.9
+    runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v2
