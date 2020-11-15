@@ -142,7 +142,7 @@ cleanup
 
 git add -A --ignore-errors . || exit $?
 
-git commit -S -asm "Version $version" || exit $?
+git commit -S -am "Version $version" || exit $?
 git tag -sm "Version $version" v$version || exit $?
 git push --follow-tags origin master || exit $?
 

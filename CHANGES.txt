@@ -1,4 +1,4 @@
-New in master
+New in v8.1.2
 =============
 
 Features
@@ -13,8 +13,7 @@ Features
   with ``<span class="caps">`` (via Issue #3405)
 * Improve ``nikola auto`` performance with rate-limiting, support
   ``-n`` argument to pass to ``nikola build`` (Issue #3401)
-* Added Marathi translation
-* Add support for the `Utterances <https://utteranc.es>`_ comment system.
+* Add support for the `Utterances <https://utteranc.es>`_ comment system
 
 Bugfixes
 --------
@@ -37,10 +36,10 @@ Bugfixes
 * Ensure query strings and fragments are kept with ``URL_TYPE =
   "full_path"`` (Issue #3448)
 * Don’t run typogrify filters on ``<title>`` tag to avoid adding extra
-  tags(Issue #3405)
+  tags (Issue #3405)
 * Fix handling of duplicate plugins on Windows
 * Allow else clause in post-list plugin. (Issue #3436)
-* Ensure `type` metadata value from plugins is preserved (Issue 3445)
+* Ensure ``type`` metadata value from plugins is preserved (Issue 3445)
 * Fix path handlers with slashes on Windows
 
 New in v8.1.1

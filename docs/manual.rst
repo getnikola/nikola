@@ -7,7 +7,7 @@
 .. has_math: true
 .. author: The Nikola Team
 
-:Version: 8.1.1
+:Version: 8.1.2
 
 .. class:: alert alert-primary float-md-right
 
@@ -1865,7 +1865,7 @@ sure you have ``nikola`` and ``git`` installed on your PATH.
    * ``GITHUB_REMOTE_NAME`` is the remote to which changes are pushed.
    * ``GITHUB_COMMIT_SOURCE`` controls whether or not the source branch is
      automatically committed to and pushed. We recommend setting it to
-     ``True``, unless you are automating builds with Travis CI.
+     ``True``, unless you are automating builds with CI (eg. GitHub Actions/GitLab CI).
 
 4. Create a ``.gitignore`` file. We recommend adding at least the following entries:
 
@@ -1887,14 +1887,13 @@ If you want to use a custom domain, create your ``CNAME`` file in
 output directory. To add a custom commit message, use the ``-m`` option,
 followed by your message.
 
-Automated rebuilds (GitHub Actions, Travis CI, GitLab)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Automated rebuilds (GitHub Actions, GitLab)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you want automated rebuilds and GitHub Pages deployment, allowing you to
 blog from anywhere in the world, you have multiple options:
 
 * `Automating Nikola rebuilds with GitHub Actions <https://getnikola.com/blog/automating-nikola-rebuilds-with-github-actions.html>`_ (easier for GitHub)
-* `Automating Nikola rebuilds with Travis CI <https://getnikola.com/blog/automating-nikola-rebuilds-with-travis-ci.html>`_
 * `Example Nikola site for GitLab Pages <https://gitlab.com/pages/nikola>`_
 
 Comments
@@ -2402,7 +2401,7 @@ You can apply filters to specific posts or pages by using the ``filters`` metada
 
     .. filters: filters.html_tidy_nowrap, "sed s/foo/bar %s"
 
-Please note that applying custom filters (not those provided via Nikola's filter module) 
+Please note that applying custom filters (not those provided via Nikola's filter module)
 via metadata only works for filters implemented via external programs like in that `sed` example.
 
 Optimizing Your Website
