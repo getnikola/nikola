@@ -13,6 +13,7 @@ jobs:
   nikola:
     name: Basic tests (Python ${{ matrix.python }} on ${{ matrix.image }})
     strategy:
+      fail-fast: false
       matrix:
         python:
           - 3.5
@@ -33,24 +34,78 @@ jobs:
             image: ubuntu-16.04
     runs-on: '${{ matrix.image }}'
     steps:
-      - run: echo hello
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Install test requirements
+        run: |
+          pip install --upgrade-strategy eager -Ur requirements-tests.txt
+      - name: Install coverage requirements
+        run: |
+          pip install --upgrade-strategy eager -U codacy-coverage
+      - name: Install Nikola
+        run: |
+          pip install .
+      - name: Run tests
+        run: |
+          py.test tests/
+      - name: Run nikola
+        run: |
+          nikola
+      - name: Run nikola help
+        run: |
+          nikola help
+      - name: Compare to baseline
+        run: |
+          scripts/baseline.sh check
+      - name: Code coverage
+        run: |
+          scripts/codacy_coverage.sh
 
   flake8:
-    name: Linting (flake8)
+    name: Linting
     strategy:
       matrix:
         python:
           - 3.8
     runs-on: ubuntu-18.04
     steps:
-      - run: echo hello
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Install requirements
+        run: |
+          pip install flake8 pydocstyle
+      - name: Run flake8
+        run: |
+          flake8 nikola/ tests/
+      - name: Run pydocstyle
+        run: |
+          pydocstyle --count --match-dir='(?!^\\.)(?!data).*' nikola/
 
   basereq:
-    name: Compare to baseline
+    name: Baseline
     strategy:
       matrix:
         python:
           - 3.8
     runs-on: ubuntu-18.04
     steps:
-      - run: echo hello
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Install requirements
+        run: |
+          pip install --upgrade-strategy eager -Ur requirements.txt
+      - name: Install Nikola
+        run: |
+          pip install .
+      - name: Run help
+        run: |
+          nikola help
+        working-directory: /
+      - name: Run init
+        run: |
+          nikola init -qd nsite
+        working-directory: /tmp/
+      - name: Run build
+        run: |
+          nikola build
+        working-directory: /tmp/nsite
