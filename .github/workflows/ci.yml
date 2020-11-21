@@ -1,0 +1,140 @@
+name: Nikola CI
+on:
+  # Run on all pushes to master (including merge of PR)
+  push:
+    branches: master
+  # Run on all changes in pull requests
+  pull_request:
+
+jobs:
+  nikola:
+    name: Nikola tests (Python ${{ matrix.python }} on ${{ matrix.image }})
+    strategy:
+      fail-fast: false
+      matrix:
+        python: [3.5, 3.6, 3.7, 3.8, 3.9]
+        image:
+          - ubuntu-latest
+        include:
+          - python: 3.9
+            image: macos-latest
+          - python: 3.9
+            image: windows-latest
+    runs-on: '${{ matrix.image }}'
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '${{ matrix.python }}'
+      - name: Upgrade packaging stack
+        run: |
+          pip install --upgrade-strategy eager -U pip setuptools wheel
+      - name: Install test requirements
+        run: |
+          pip install --upgrade-strategy eager -Ur requirements-tests.txt
+      - name: Install Nikola
+        run: |
+          pip install .
+      - name: Run tests
+        run: |
+          py.test tests/
+      - name: Run nikola
+        run: |
+          nikola
+      - name: Run nikola help
+        run: |
+          nikola help
+
+  baseline:
+    name: Baseline testing (Python ${{ matrix.python }} on ${{ matrix.image }})
+    strategy:
+      fail-fast: false
+      matrix:
+        python: [3.8]
+        image:
+          - ubuntu-latest
+    runs-on: '${{ matrix.image }}'
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '${{ matrix.python }}'
+      - name: Upgrade packaging stack
+        run: |
+          pip install --upgrade-strategy eager -U pip setuptools wheel
+      - name: Install extra requirements
+        run: |
+          pip install --upgrade-strategy eager -Ur requirements-extras.txt freezegun
+      - name: Install Nikola
+        run: |
+          pip install .
+      - name: Compare to baseline
+        run: |
+          scripts/baseline.sh check
+
+  flake8:
+    name: Linting (flake8, pydocstyle)
+    strategy:
+      matrix:
+        python:
+          - 3.9
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '${{ matrix.python }}'
+      - name: Upgrade packaging stack
+        run: |
+          pip install --upgrade-strategy eager -U pip setuptools wheel
+      - name: Install requirements
+        run: |
+          pip install flake8 pydocstyle
+      - name: Run flake8
+        run: |
+          flake8 nikola/ tests/
+      - name: Run pydocstyle
+        run: |
+          pydocstyle --count --match-dir='(?!^\\.)(?!data).*' nikola/
+
+  basereq:
+    name: Build demo site with base requirements
+    strategy:
+      matrix:
+        python:
+          - 3.9
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '${{ matrix.python }}'
+      - name: Upgrade packaging stack
+        run: |
+          pip install --upgrade-strategy eager -U pip setuptools wheel
+      - name: Install requirements
+        run: |
+          pip install --upgrade-strategy eager -Ur requirements.txt
+      - name: Install Nikola
+        run: |
+          pip install .
+      - name: Run help
+        run: |
+          nikola help
+        working-directory: /
+      - name: Run init
+        run: |
+          nikola init -qd nsite
+        working-directory: /tmp/
+      - name: Run build
+        run: |
+          nikola build
+        working-directory: /tmp/nsite
