@@ -54,6 +54,8 @@ class CommandDeploy(Command):
         if last_deploy is not None:
             last_deploy = dateutil.parser.parse(last_deploy)
             clean = False
+        else:
+            clean = True
 
         if self.site.config['COMMENT_SYSTEM'] and self.site.config['COMMENT_SYSTEM_ID'] == 'nikolademo':
             self.logger.warning("\nWARNING WARNING WARNING WARNING\n"
@@ -96,6 +98,8 @@ class CommandDeploy(Command):
         self.logger.info("Successful deployment")
 
         new_deploy = datetime.utcnow()
+        if last_deploy is None:
+            last_deploy = new_deploy
         self._emit_deploy_event(last_deploy, new_deploy, clean, undeployed_posts)
 
         # Store timestamp of successful deployment
