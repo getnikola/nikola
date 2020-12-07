@@ -227,7 +227,8 @@ class PostListShortcode(ShortcodePlugin):
             for d in template_deps:
                 self_post.register_depfile(d, lang=lang)
 
-        template_data = {
+        template_data = site.GLOBAL_CONTEXT.copy()
+        template_data.update({
             'lang': lang,
             'posts': posts,
             # Need to provide str, not TranslatableSetting (Issue #2104)
@@ -235,7 +236,7 @@ class PostListShortcode(ShortcodePlugin):
             'post_list_id': post_list_id,
             'messages': site.MESSAGES,
             '_link': site.link,
-        }
+        })
         output = site.template_system.render_template(
             template, None, template_data)
         return output, template_deps
