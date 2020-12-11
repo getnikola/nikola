@@ -799,7 +799,7 @@ class Nikola(object):
         for val in self.config['DATE_FORMAT'].values.values():
             if '%' in val:
                 utils.LOGGER.error('The DATE_FORMAT setting needs to be upgraded.')
-                utils.LOGGER.warning("Nikola now uses CLDR-style date strings. http://cldr.unicode.org/translation/date-time")
+                utils.LOGGER.warning("Nikola now uses CLDR-style date strings. http://cldr.unicode.org/translation/date-time-1/date-time")
                 utils.LOGGER.warning("Example: %Y-%m-%d %H:%M ==> yyyy-MM-dd HH:mm")
                 utils.LOGGER.warning("(note it’s different to what moment.js uses!)")
                 sys.exit(1)
