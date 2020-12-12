@@ -35,7 +35,7 @@ assets
 
     The included themes use `Bootstrap <https://getbootstrap.com/>`_,
     `baguetteBox <https://feimosi.github.io/baguetteBox.js/>`_, `Justified Layout by Flickr
-    <http://flickr.github.io/justified-layout/>`_ and `Luxon
+    <https://flickr.github.io/justified-layout/>`_ and `Luxon
     <https://moment.github.io/luxon/>`_, so they are in assets, along with CSS files for
     syntax highlighting, reStructuredText and Jupyter, as well as a minified
     copy of jQuery.
@@ -108,7 +108,7 @@ with the same name as your theme, and a ``.theme`` extension, eg.
    parent = base
    author = The Nikola Contributors
    author_url = https://getnikola.com/
-   based_on = Bootstrap 3 <http://getbootstrap.com/>
+   based_on = Bootstrap 3 <https://getbootstrap.com/>
    license = MIT
    tags = bootstrap
 
@@ -167,14 +167,14 @@ Templates
 ---------
 
 In templates there is a number of files whose name ends in ``.tmpl``. Those are the
-theme’s page templates. They are done using the `Mako <http://makotemplates.org>`_
+theme’s page templates. They are done using the `Mako <https://www.makotemplates.org>`_
 or `Jinja2 <http://jinja.pocoo.org>`_ template languages. If you want to do a theme, you
 should learn one first. What engine is used by the theme is declared in the ``engine`` file.
 
 .. Tip::
 
    If you are using Mako templates, and want some extra speed when building the site
-   you can install Beaker and `make templates be cached <http://docs.makotemplates.org/en/latest/caching.html>`__
+   you can install Beaker and `make templates be cached <https://docs.makotemplates.org/en/latest/caching.html>`__
 
 
 Both template engines have a nifty concept of template inheritance. That means that a
@@ -452,7 +452,7 @@ at https://www.transifex.com/projects/p/nikola/
 If you want to create a theme that has new strings, and you want those strings to be translatable,
 then your theme will need a custom ``messages`` folder.
 
-`LESS <http://lesscss.org/>`__ and `Sass <http://sass-lang.com/>`__
+`LESS <http://lesscss.org/>`__ and `Sass <https://sass-lang.com/>`__
 -------------------------------------------------------------------
 
 .. note::

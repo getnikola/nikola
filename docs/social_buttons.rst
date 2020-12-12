@@ -94,7 +94,7 @@ is the HTML code suggested by ShareNice:
         data-services="plus.google.com,facebook.com,digg.com,email,delicious.com,twitter.com"
         style="float:right"></div>"""
 
-    BODY_END = """<script src="http://graingert.co.uk/shareNice/code.js"></script>"""
+    BODY_END = """<script src="https://graingert.co.uk/shareNice/code.js"></script>"""
 
 And you should now see a sharing box at the bottom right of the page.
 
@@ -114,7 +114,7 @@ One bad bit of this so far is that you are now using a script from another site,
 doesn't let Nikola perform as many optimizations to your page as it could.
 So, if you really want to go the extra mile to save a few KB and round trips, you *could*
 install your own copy from the `github repo <https://github.com/mischat/shareNice>`_ and
-use that instead of the copy at `ShareNice <http://graingert.co.uk/shareNice>`_.
+use that instead of the copy at `ShareNice <https://graingert.co.uk/shareNice>`_.
 
 Then, you can create your own theme inheriting from the one you are using and add the CSS
 and JS files from ShareNice into your ``bundles`` configuration so they are combined and
@@ -181,7 +181,7 @@ In my experience this produces a broken, duplicate, semi-working thing. YMMV and
 The Easy Way
 ~~~~~~~~~~~~
 
-Go to http://panzi.github.io/SocialSharePrivacy/ and use the provided form to get the code. Make sure you check "I already use JQuery"
+Go to https://panzi.github.io/SocialSharePrivacy/ and use the provided form to get the code. Make sure you check "I already use JQuery"
 if you are using one of the themes that require it, like site or default, select the services you want, and use your disqus name if
 you have one.
 
