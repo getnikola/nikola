@@ -145,6 +145,7 @@ class PostListShortcode(ShortcodePlugin):
 
         if self_post:
             self_post.register_depfile("####MAGIC####TIMELINE", lang=lang)
+            self_post.register_depfile("####MAGIC####CONFIG:GLOBAL_CONTEXT", lang=lang)
 
         # If we get strings for start/stop, make them integers
         if start is not None:
