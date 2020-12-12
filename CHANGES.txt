@@ -4,7 +4,7 @@ New in master
 Features
 --------
 
-* Provide the full `GLOBAL_CONTEXT` to the post list shortcode plugin
+* Provide the full ``GLOBAL_CONTEXT`` to the post list shortcode plugin
   (Issue #3481)
 
 New in v8.1.2
