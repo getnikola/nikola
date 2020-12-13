@@ -290,7 +290,7 @@ These have access to the ``site`` object which contains your timeline and
 your configuration.
 
 The critical bit of Task plugins is their ``gen_tasks`` method, which ``yields``
-`doit tasks <http://pydoit.org/tasks.html>`_.
+`doit tasks <https://pydoit.org/tasks.html>`_.
 
 The details of how to handle dependencies, etc., are a bit too much for this
 document, so I'll just leave you with an example, the ``copy_assets`` task.
@@ -440,7 +440,7 @@ SignalHandler Plugins
 ---------------------
 
 These plugins extend the ``SignalHandler`` class and connect to one or more
-signals via `blinker <http://pythonhosted.org/blinker/>`_.
+signals via `blinker <https://pythonhosted.org/blinker/>`_.
 
 The easiest way to do this is to reimplement ``set_site()`` and just connect to
 whatever signals you want there.

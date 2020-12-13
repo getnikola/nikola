@@ -62,7 +62,7 @@ instead of something the user generates.
 
 Nikola can do:
 
-* A blog (`example <http://ralsina.me>`__)
+* A blog (`example <https://ralsina.me>`__)
 * Your company's site
 * Your personal site
 * A software project's site (`example <https://getnikola.com>`__)
@@ -94,7 +94,7 @@ Getting Help
 TL;DR:
 
 * You can file bugs at `the issue tracker <https://github.com/getnikola/nikola/issues>`__
-* You can discuss Nikola at the `nikola-discuss google group <http://groups.google.com/group/nikola-discuss>`_
+* You can discuss Nikola at the `nikola-discuss google group <https://groups.google.com/group/nikola-discuss>`_
 * You can subscribe to `the Nikola Blog <https://getnikola.com/blog>`_
 * You can follow `Nikola on Twitter <https://twitter.com/GetNikola>`_
 
@@ -224,7 +224,7 @@ By default, that file will contain also some extra information about your post (
 It can be placed in a separate file by using the ``-2`` option, but it's generally
 easier to keep it in a single location.
 
-The contents of your post have to be written (by default) in `reStructuredText <http://docutils.sf.net>`__
+The contents of your post have to be written (by default) in `reStructuredText <https://docutils.sourceforge.io/>`__
 but you can use a lot of different markups using the ``-f`` option.
 
 Currently, Nikola supports reStructuredText, Markdown, Jupyter Notebooks, HTML as input,
@@ -345,7 +345,7 @@ author
     display (theme-dependent)
 
 enclosure
-    Add an enclosure to this post when it's used in RSS. See `more information about enclosures <http://en.wikipedia.org/wiki/RSS_enclosure>`__
+    Add an enclosure to this post when it's used in RSS. See `more information about enclosures <https://en.wikipedia.org/wiki/RSS_enclosure>`__
 
 data
     Path to an external data file (JSON/YAML/TOML dictionary), relative to ``conf.py``.
@@ -938,7 +938,7 @@ Monday, Wednesday and Friday at 7am, add the following
     SCHEDULE_RULE = 'RRULE:FREQ=WEEKLY;BYDAY=MO,WE,FR;BYHOUR=7;BYMINUTE=0;BYSECOND=0'
 
 For more details on how to specify a recurrence rule, look at the
-`iCal specification <http://www.kanzaki.com/docs/ical/rrule.html>`_.
+`iCal specification <https://www.kanzaki.com/docs/ical/rrule.html>`_.
 Or if you are scared of this format, many calendaring applications (eg. Google
 Calendar) offer iCal exports, so you can copy-paste the repeat rule from a
 generated iCal (``.ics``) file (which is a human-readable text file).
@@ -1589,7 +1589,7 @@ CSS tweaking
     there and a targets file containing the list of files you want compiled.
 
 .. _LESS: http://lesscss.org/
-.. _Sass: http://sass-lang.com/
+.. _Sass: https://sass-lang.com/
 
 Template tweaking and creating themes
     If you really want to change the pages radically, you will want to do a
@@ -1791,8 +1791,8 @@ request in the  `GitHub repository <https://github.com/getnikola/nikola-themes>`
 
 One other option is to tweak an existing theme using a different color scheme,
 typography and CSS in general. Nikola provides a ``subtheme`` command
-to create a custom theme by downloading free CSS files from http://bootswatch.com
-and http://hackerthemes.com
+to create a custom theme by downloading free CSS files from https://bootswatch.com
+and https://hackerthemes.com
 
 
 .. code:: console
@@ -1832,8 +1832,8 @@ Here is an example, from my own site's deployment script:
     ]}
 
 Other interesting ideas are using
-`git as a deployment mechanism <http://toroid.org/ams/git-website-howto>`_ (or any other VCS
-for that matter), using `lftp mirror <http://lftp.yar.ru/>`_ or unison, or Dropbox.
+`git as a deployment mechanism <https://toroid.org/git-website-howto>`_ (or any other VCS
+for that matter), using `lftp mirror <https://lftp.yar.ru/>`_ or unison, or Dropbox.
 Any way you can think of to copy files from one place to another is good enough.
 
 Deploying to GitHub
@@ -2094,7 +2094,7 @@ is used as the photo caption. If the filename starts with a number, it will
 be stripped. For example ``03_an_amazing_sunrise.jpg`` will be render as *An amazing sunrise*.
 
 Here is a `demo gallery </galleries/demo>`_ of historic, public domain Nikola
-Tesla pictures taken from `this site <http://kerryr.net/pioneers/gallery/tesla.htm>`_.
+Tesla pictures taken from `this site <https://kerryr.net/pioneers/gallery/tesla.htm>`_.
 
 Embedding Images
 ~~~~~~~~~~~~~~~~
@@ -2567,9 +2567,9 @@ URL of the page.  For example here are two random videos:
 
 .. code:: restructuredtext
 
-    .. media:: http://vimeo.com/72425090
+    .. media:: https://vimeo.com/72425090
 
-    .. media:: http://www.youtube.com/watch?v=wyRpAat5oz0
+    .. media:: https://www.youtube.com/watch?v=wyRpAat5oz0
 
 It supports Instagram, Flickr, Github gists, Funny or Die, and dozens more, thanks to `Micawber <https://github.com/coleifer/micawber>`_
 
@@ -2577,7 +2577,7 @@ YouTube
 ~~~~~~~
 
 To link to a YouTube video, you need the id of the video. For example, if the
-URL of the video is http://www.youtube.com/watch?v=8N_tupPBtWQ what you need is
+URL of the video is https://www.youtube.com/watch?v=8N_tupPBtWQ what you need is
 **8N_tupPBtWQ**
 
 Once you have that, all you need to do is:
@@ -2598,7 +2598,7 @@ Vimeo
 ~~~~~
 
 To link to a Vimeo video, you need the id of the video. For example, if the
-URL of the video is http://www.vimeo.com/20241459 then the id is **20241459**
+URL of the video is https://vimeo.com/20241459 then the id is **20241459**
 
 Once you have that, all you need to do is:
 
@@ -2622,7 +2622,7 @@ Supported options: ``height``, ``width``, ``align`` (one of ``left``,
 Soundcloud
 ~~~~~~~~~~
 
-This directive lets you share music from http://soundcloud.com You first need to get the
+This directive lets you share music from https://soundcloud.com You first need to get the
 ID for the piece, which you can find in the "share" link. For example, if the
 WordPress code starts like this:
 
@@ -2688,7 +2688,7 @@ Extending ``LISTINGS_FOLDERS`` to ``{'listings': 'listings', 'code': 'formatted-
 will additionally process all source code files in ``code`` and put the results into
 ``output/formatted-code``.
 
-__ http://docutils.sourceforge.net/docs/ref/rst/directives.html#including-an-external-document-fragment
+__ https://docutils.sourceforge.io/docs/ref/rst/directives.html#including-an-external-document-fragment
 
 .. note::
 
@@ -2726,11 +2726,11 @@ To include an image placed in the ``images`` folder (or other folders defined in
 The small thumbnail will be placed in the page, and it will be linked to the bigger
 version of the image when clicked, using
 `baguetteBox <https://feimosi.github.io/baguetteBox.js/>`_ by default. All options supported by
-the reST `image <http://docutils.sourceforge.net/docs/ref/rst/directives.html#image>`_
+the reST `image <https://docutils.sourceforge.io/docs/ref/rst/directives.html#image>`_
 directive are supported (except ``target``). Providing ``alt`` is recommended,
 as this is the image caption. If a body element is provided, the thumbnail will
 mimic the behavior of the `figure
-<http://docutils.sourceforge.net/docs/ref/rst/directives.html#figure>`_
+<https://docutils.sourceforge.io/docs/ref/rst/directives.html#figure>`_
 directive instead:
 
 .. code:: restructuredtext
@@ -2933,7 +2933,7 @@ with a ``True`` argument, eg. ``all=True``.
    Nikola's configuration, so you can just put a ``docutils.conf`` next
    to your ``conf.py`` and any settings in its ``[nikola]`` section will be used.
 
-   More information in the `docutils configuration reference <http://docutils.sourceforge.net/docs/user/config.html>`__
+   More information in the `docutils configuration reference <https://docutils.sourceforge.io/docs/user/config.html>`__
 
 
 Importing your WordPress site into Nikola
@@ -3115,7 +3115,7 @@ And upgrade them:
     Contents of the requirements-nonpy.txt file:
 
         Graphviz
-            http://www.graphviz.org/
+            https://www.graphviz.org/
 
     You have to install those yourself or through a package manager.
 

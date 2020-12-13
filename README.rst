@@ -45,7 +45,7 @@ It has many features, but here are some of the nicer ones:
 .. _Nikola Handbook: https://getnikola.com/handbook.html#why-static
 __ https://users.getnikola.com/
 .. _Themable: https://themes.getnikola.com
-.. _doit: http://pydoit.org
+.. _doit: https://pydoit.org
 .. _available plugins: https://plugins.getnikola.com/
 .. _reStructuredText: https://getnikola.com/quickstart.html
 .. _image galleries: https://getnikola.com/galleries/demo/

@@ -18,7 +18,7 @@ Help and Support
    developers and volunteers (users) there which are there to provide
    help, if they are around and read your message.  The channel is
    `publicly logged <https://irclogs.getnikola.com/>`_.
-3. You can also contact `@GetNikola <http://twitter.com/GetNikola>`_ on
+3. You can also contact `@GetNikola <https://twitter.com/GetNikola>`_ on
    Twitter.
 4. If you are experiencing a bug, you should report it on GitHub (see
    below).
@@ -72,7 +72,7 @@ Administrators
 | Chris Warrick        | Kwpolska        | Poland    | chris@getnikola.com   |
 +----------------------+-----------------+-----------+-----------------------+
 
-.. _mailing list: http://groups.google.com/group/nikola-discuss
+.. _mailing list: https://groups.google.com/group/nikola-discuss
 .. _Issue tracker: https://github.com/getnikola/nikola/issues
 .. _plugins issue tracker: https://github.com/getnikola/plugins/issues
 .. _themes issue tracker: https://github.com/getnikola/nikola-themes/issues

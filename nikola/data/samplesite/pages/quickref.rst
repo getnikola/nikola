@@ -58,22 +58,22 @@
 
 
         <p>The full details of the markup may be found on the
-        <a href="http://docutils.sourceforge.net/rst.html">reStructuredText</a>
+        <a href="https://docutils.sourceforge.io/rst.html">reStructuredText</a>
         page. This document is just intended as a reminder.
 
         <p>Links that look like "(<a href="#details">details</a>)" point
         into the HTML version of the full <a
-        href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html">reStructuredText
+        href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html">reStructuredText
         specification</a> document.  These are relative links; if they
         don't work, please use the <a
-        href="http://docutils.sourceforge.net/docs/user/rst/quickref.html"
+        href="https://docutils.sourceforge.io/docs/user/rst/quickref.html"
         >master "Quick reStructuredText"</a> document.
 
 
         <h2><a href="#contents" name="inline-markup" class="backref"
             >Inline Markup</a></h2>
 
-        <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#inline-markup">details</a>)
+        <p>(<a href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#inline-markup">details</a>)
 
         <p>Inline markup allows words and phrases within text to have
         character styles (like italics and boldface) and functionality
@@ -157,8 +157,8 @@
         <td>See <a href="#citations">Citations</a>.
 
         <tr valign="top">
-        <td nowrap><samp>http://docutils.sf.net/</samp>
-        <td><a href="http://docutils.sf.net/">http://docutils.sf.net/</a>
+        <td nowrap><samp>https://docutils.sourceforge.io/</samp>
+        <td><a href="https://docutils.sourceforge.io/">https://docutils.sourceforge.io/</a>
         <td>A standalone hyperlink.
 
         </table>
@@ -206,7 +206,7 @@
             >Escaping with Backslashes</a></h2>
 
         <p>(<a
-        href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#escaping-mechanism">details</a>)
+        href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#escaping-mechanism">details</a>)
 
         <p>reStructuredText uses backslashes ("\") to override the special
         meaning given to markup characters and get the literal characters
@@ -254,7 +254,7 @@
         <h2><a href="#contents" name="section-structure" class="backref"
             >Section Structure</a></h2>
 
-        <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#sections">details</a>)
+        <p>(<a href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#sections">details</a>)
 
         <p><table class="table"  border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
         <thead>
@@ -300,7 +300,7 @@
         <h2><a href="#contents" name="paragraphs" class="backref"
             >Paragraphs</a></h2>
 
-        <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#paragraphs">details</a>)
+        <p>(<a href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#paragraphs">details</a>)
 
         <p><table class="table"  border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
         <thead>
@@ -328,7 +328,7 @@
         <h2><a href="#contents" name="bullet-lists" class="backref"
             >Bullet Lists</a></h2>
 
-        <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#bullet-lists">details</a>)
+        <p>(<a href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#bullet-lists">details</a>)
 
         <p><table class="table"  border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
         <thead>
@@ -366,7 +366,7 @@
         <h2><a href="#contents" name="enumerated-lists" class="backref"
             >Enumerated Lists</a></h2>
 
-        <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#enumerated-lists">details</a>)
+        <p>(<a href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#enumerated-lists">details</a>)
 
         <p><table class="table"  border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
         <thead>
@@ -404,7 +404,7 @@
         <h2><a href="#contents" name="definition-lists" class="backref"
             >Definition Lists</a></h2>
 
-        <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#definition-lists">details</a>)
+        <p>(<a href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#definition-lists">details</a>)
 
         <p><table class="table"  border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
         <thead>
@@ -445,7 +445,7 @@
         <h2><a href="#contents" name="field-lists" class="backref"
             >Field Lists</a></h2>
 
-        <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#field-lists">details</a>)
+        <p>(<a href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#field-lists">details</a>)
 
         <p><table class="table"  border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
         <thead>
@@ -484,7 +484,7 @@
         <h2><a href="#contents" name="option-lists" class="backref"
             >Option Lists</a></h2>
 
-        <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#option-lists">details</a>)
+        <p>(<a href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#option-lists">details</a>)
 
         <p><table class="table"  border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
         <thead>
@@ -532,7 +532,7 @@
         <h2><a href="#contents" name="literal-blocks" class="backref"
             >Literal Blocks</a></h2>
 
-        <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#literal-blocks">details</a>)
+        <p>(<a href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#literal-blocks">details</a>)
 
         <p><table class="table"  border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
         <thead>
@@ -621,7 +621,7 @@
         <h2><a href="#contents" name="line-blocks" class="backref"
             >Line Blocks</a></h2>
 
-        <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#line-blocks">details</a>)
+        <p>(<a href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#line-blocks">details</a>)
 
         <p><table class="table"  border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
         <thead>
@@ -663,7 +663,7 @@
         <h2><a href="#contents" name="block-quotes" class="backref"
             >Block Quotes</a></h2>
 
-        <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#block-quotes">details</a>)
+        <p>(<a href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#block-quotes">details</a>)
 
         <p><table class="table"  border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
         <thead>
@@ -695,7 +695,7 @@
         <h2><a href="#contents" name="doctest-blocks" class="backref"
             >Doctest Blocks</a></h2>
 
-        <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#doctest-blocks">details</a>)
+        <p>(<a href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#doctest-blocks">details</a>)
 
         <p><table class="table"  border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
         <thead>
@@ -723,7 +723,7 @@
         </table>
 
         <p>"The <a
-        href="http://www.python.org/doc/current/lib/module-doctest.html">doctest</a>
+        href="https://docs.python.org/3/library/doctest.html">doctest</a>
         module searches a module's docstrings for text that looks like an
         interactive Python session, then executes all such sessions to
         verify they still work exactly as shown." (From the doctest docs.)
@@ -731,7 +731,7 @@
         <h2><a href="#contents" name="tables" class="backref"
             >Tables</a></h2>
 
-        <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#tables">details</a>)
+        <p>(<a href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#tables">details</a>)
 
         <p>There are two syntaxes for tables in reStructuredText.  Grid
         tables are complete but cumbersome to create.  Simple tables are
@@ -848,7 +848,7 @@
         <h2><a href="#contents" name="transitions" class="backref"
             >Transitions</a></h2>
 
-        <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#transitions">details</a>)
+        <p>(<a href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#transitions">details</a>)
 
         <p><table class="table"  border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
         <thead>
@@ -898,7 +898,7 @@
         <h3><a href="#contents" name="footnotes" class="backref"
             >Footnotes</a></h3>
 
-        <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#footnotes">details</a>)
+        <p>(<a href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#footnotes">details</a>)
 
         <p><table class="table"  border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
         <thead>
@@ -991,7 +991,7 @@
         <h3><a href="#contents" name="citations" class="backref"
             >Citations</a></h3>
 
-        <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#citations">details</a>)
+        <p>(<a href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#citations">details</a>)
 
         <p><table class="table"  border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
         <thead>
@@ -1044,7 +1044,7 @@
         <h3><a href="#contents" name="hyperlink-targets" class="backref"
             >Hyperlink Targets</a></h3>
 
-        <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#hyperlink-targets">details</a>)
+        <p>(<a href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#hyperlink-targets">details</a>)
 
         <h4><a href="#contents" name="external-hyperlink-targets" class="backref"
             >External Hyperlink Targets</a></h4>
@@ -1061,12 +1061,12 @@
         <td rowspan="2">
             <samp>External&nbsp;hyperlinks,&nbsp;like&nbsp;Python_.</samp>
 
-            <p><samp>..&nbsp;_Python:&nbsp;http://www.python.org/</samp>
+            <p><samp>..&nbsp;_Python:&nbsp;https://www.python.org/</samp>
         <td>
             <table class="table"  width="100%">
             <tr bgcolor="#99CCFF"><td><em>Fold-in form</em>
             <tr><td>External hyperlinks, like
-            <a href="http://www.python.org/">Python</a>.
+            <a href="https://www.python.org/">Python</a>.
             </table>
         <tr valign="top">
         <td>
@@ -1078,7 +1078,7 @@
             <p><table class="table" >
                 <tr><td colspan="2"><hr>
                 <tr><td><a name="labPython"><i>Python:</i></a>
-                <td> <a href="http://www.python.org/">http://www.python.org/</a>
+                <td> <a href="https://www.python.org/">https://www.python.org/</a>
             </table>
             </table>
         </table>
@@ -1089,11 +1089,11 @@
         printed documents, where the link needs to be presented explicitly, for
         example as a footnote.  You can force usage of the call-out form by
         using the
-        "<a href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#target-notes">target-notes</a>"
+        "<a href="https://docutils.sourceforge.io/docs/ref/rst/directives.html#target-notes">target-notes</a>"
         directive.
 
         <p>reStructuredText also provides for <b>embedded URIs</b> (<a
-        href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#embedded-uris">details</a>),
+        href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#embedded-uris-and-aliases">details</a>),
         a convenience at the expense of readability.  A hyperlink
         reference may directly embed a target URI inline, within angle
         brackets.  The following is exactly equivalent to the example above:
@@ -1109,9 +1109,9 @@
         <tr valign="top">
         <td rowspan="2">
             <samp>External&nbsp;hyperlinks,&nbsp;like&nbsp;`Python
-    <br>&lt;http://www.python.org/&gt;`_.</samp>
+    <br>&lt;https://www.python.org/&gt;`_.</samp>
         <td>External hyperlinks, like
-            <a href="http://www.python.org/">Python</a>.
+            <a href="https://www.python.org/">Python</a>.
         </table>
 
         <h4><a href="#contents" name="internal-hyperlink-targets" class="backref"
@@ -1157,7 +1157,7 @@
         <h4><a href="#contents" name="indirect-hyperlink-targets" class="backref"
             >Indirect Hyperlink Targets</a></h4>
 
-        <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#indirect-hyperlink-targets">details</a>)
+        <p>(<a href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#indirect-hyperlink-targets">details</a>)
 
         <p><table class="table"  border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
         <thead>
@@ -1172,13 +1172,13 @@
             <samp>Python_&nbsp;is&nbsp;`my&nbsp;favourite
     <br>programming&nbsp;language`__.</samp>
 
-            <p><samp>..&nbsp;_Python:&nbsp;http://www.python.org/</samp>
+            <p><samp>..&nbsp;_Python:&nbsp;https://www.python.org/</samp>
 
             <p><samp>__&nbsp;Python_</samp>
 
         <td>
-            <p><a href="http://www.python.org/">Python</a> is
-            <a href="http://www.python.org/">my favourite
+            <p><a href="https://www.python.org/">Python</a> is
+            <a href="https://www.python.org/">my favourite
             programming language</a>.
 
         </table>
@@ -1197,7 +1197,7 @@
         <h4><a href="#contents" name="implicit-hyperlink-targets" class="backref"
             >Implicit Hyperlink Targets</a></h4>
 
-        <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#implicit-hyperlink-targets">details</a>)
+        <p>(<a href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#implicit-hyperlink-targets">details</a>)
 
         <p>Section titles, footnotes, and citations automatically generate
         hyperlink targets (the title text or footnote/citation label is
@@ -1225,12 +1225,12 @@
         <h3><a href="#contents" name="directives" class="backref"
             >Directives</a></h3>
 
-        <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#directives">details</a>)
+        <p>(<a href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#directives">details</a>)
 
         <p>Directives are a general-purpose extension mechanism, a way of
         adding support for new constructs without adding new syntax.  For
         a description of all standard directives, see <a
-        href="http://docutils.sourceforge.net/docs/ref/rst/directives.html" >reStructuredText
+        href="https://docutils.sourceforge.io/docs/ref/rst/directives.html" >reStructuredText
         Directives</a>.
 
         <p><table class="table"  border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
@@ -1253,7 +1253,7 @@
         <h3><a href="#contents" name="substitution-references-and-definitions"
             class="backref" >Substitution References and Definitions</a></h3>
 
-        <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#substitution-definitions">details</a>)
+        <p>(<a href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#substitution-definitions">details</a>)
 
         <p>Substitutions are like inline directives, allowing graphics and
         arbitrary constructs within text.
@@ -1283,7 +1283,7 @@
         <h3><a href="#contents" name="comments" class="backref"
             >Comments</a></h3>
 
-        <p>(<a href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#comments">details</a>)
+        <p>(<a href="https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#comments">details</a>)
 
         <p>Any text which begins with an explicit markup start but doesn't
         use the syntax of any of the constructs above, is a comment.
@@ -1332,15 +1332,15 @@
         reStructuredText should <a
         href="mailto:docutils-users@lists.sourceforge.net" >post a
         message</a> to the <a
-        href="http://lists.sourceforge.net/lists/listinfo/docutils-users"
+        href="https://sourceforge.net/projects/docutils/lists/docutils-users"
         >Docutils-Users mailing list</a>.  The <a
-        href="http://docutils.sourceforge.net/" >Docutils project web
+        href="https://docutils.sourceforge.io/" >Docutils project web
         site</a> has more information.
 
         <p><hr>
         <address>
         <p>Authors:
-        <a href="http://www.tibsnjoan.co.uk/">Tibs</a>
+        <a href="https://www.tibsnjoan.co.uk/">Tibs</a>
         (<a href="mailto:tibs@tibsnjoan.co.uk"><tt>tibs@tibsnjoan.co.uk</tt></a>)
         and David Goodger
         (<a href="mailto:goodger@python.org">goodger@python.org</a>)

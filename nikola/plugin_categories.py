@@ -119,7 +119,7 @@ class Command(BasePlugin, DoitCommand):
     doc_purpose = "A short explanation."
     doc_usage = ""
     doc_description = None  # None value will completely omit line from doc
-    # see http://python-doit.sourceforge.net/cmd_run.html#parameters
+    # see https://pydoit.org/cmd_run.html#parameters
     cmd_options = ()
     needs_config = True
 
@@ -302,7 +302,7 @@ class PageCompiler(BasePlugin):
         def create_lambda(lang: str) -> 'typing.Callable':
             # We create a lambda like this so we can pass `lang` to it, because if we didn’t
             # add that function, `lang` would always be the last language in TRANSLATIONS.
-            # (See http://docs.python-guide.org/en/latest/writing/gotchas/#late-binding-closures)
+            # (See https://docs.python-guide.org/writing/gotchas/#late-binding-closures)
             return lambda: self._read_extra_deps(post, lang)
 
         for lang in self.site.config['TRANSLATIONS']:
