@@ -531,6 +531,16 @@ class Post(object):
 
     def formatted_date(self, date_format, date=None):
         """Return the formatted date as string."""
+        if isinstance(date, str):
+            try:
+                date = to_datetime(date, self.config['__tzinfo__'])
+            except ValueError:
+                if not date:
+                    msg = 'Missing date in file {}'.format(self.source_path)
+                else:
+                    msg = "Invalid date '{0}' in file {1}".format(date, self.source_path)
+                LOGGER.error(msg)
+                raise ValueError(msg)
         return utils.LocaleBorg().formatted_date(date_format, date if date else self.date)
 
     def formatted_updated(self, date_format):

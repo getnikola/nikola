@@ -6,6 +6,8 @@ Features
 
 * Provide the full ``GLOBAL_CONTEXT`` to the post list shortcode plugin
   (Issue #3481)
+* Accept and parse string datetime representations passed to
+  ``post.formatted_date()``
 
 New in v8.1.2
 =============
