@@ -453,7 +453,7 @@ If you want to create a theme that has new strings, and you want those strings t
 then your theme will need a custom ``messages`` folder.
 
 `LESS <http://lesscss.org/>`__ and `Sass <https://sass-lang.com/>`__
--------------------------------------------------------------------
+--------------------------------------------------------------------
 
 .. note::
     The LESS and Sass compilers were moved to the Plugins Index in
