@@ -98,6 +98,9 @@ class BasePlugin(IPlugin):
         """Find the dependencies for a file."""
         return []
 
+    def register_auto_watched_folder(self, folder: str) -> None:
+        self.site.registered_auto_watched_folders.add(folder)
+
 
 class PostScanner(BasePlugin):
     """The scan method of these plugins is called by Nikola.scan_posts."""

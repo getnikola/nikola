@@ -414,6 +414,7 @@ class Nikola(object):
         self.injected_deps = defaultdict(list)
         self.shortcode_registry = {}
         self.metadata_extractors_by = default_metadata_extractors_by()
+        self.registered_auto_watched_folders = set()
 
         self.rst_transforms = []
         self.template_hooks = {

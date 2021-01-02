@@ -184,6 +184,7 @@ class CommandAuto(Command):
             watched.add(item)
         for item in self.site._plugin_places:
             watched.add(item)
+        watched |= self.site.registered_auto_watched_folders
         # Nikola itself (useful for developers)
         watched.add(pkg_resources.resource_filename('nikola', ''))
 
