@@ -312,6 +312,11 @@ pre.code, code {
 	overflow: auto;
 }
 
+/* Set a minimum logo height to ensure .svg are displayed if there is no brand text (#3493) */
+#logo {
+	min-height: 25px;
+}
+
 /* SOURCE: https://github.com/h5bp/html5-boilerplate/blob/master/src/css/main.css */
 @media print {
 	*,
