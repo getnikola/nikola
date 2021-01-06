@@ -1,6 +1,6 @@
 -r requirements.txt
 Jinja2>=2.7.2
-husl>=4.0.2
+hsluv>=5.0.0
 pyphen>=0.9.1
 micawber>=0.3.0
 pygal>=2.0.0
