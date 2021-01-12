@@ -1046,8 +1046,17 @@ MARKDOWN_EXTENSIONS = ['markdown.extensions.fenced_code', 'markdown.extensions.c
 
 
 # Extra options to pass to the pandoc command.
-# by default, it's empty, is a list of strings, for example
+# It should have type Union[List[str], Dict[str, List[str]]]
+# by default, it's an empty list
+# it can be is a list of strings, for example
 # ['-F', 'pandoc-citeproc', '--bibliography=/Users/foo/references.bib']
+# it can be a dict, where the keys are the extensions in COMPILERS['pandoc'], for example
+# COMPILERS['pandoc'] = ['.rst', '.md', '.txt']
+# PANDOC_OPTIONS = {
+#     '.rst': ['-t', 'rst'],
+#     '.md': ['-t', 'markdown'],
+#     '.txt': ['-t', 'markdown-raw_html'],
+# }
 # Pandoc does not demote headers by default.  To enable this, you can use, for example
 # ['--base-header-level=2']
 # PANDOC_OPTIONS = []
