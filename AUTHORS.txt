@@ -62,6 +62,7 @@
 * `James C. McPherson <https://github.com/jmcp>`_
 * `Kade For <https://github.com/kadefor>`_
 * `Kay Hayen <https://github.com/kayhayen>`_
+* `Kolen Cheung <https://github.com/ickc>`_
 * `lbiaggi <https://github.com/lbiaggi>`_
 * `Leandro Poblet <https://github.com/DoctorMalboro>`_
 * `Luis Miguel Morillas <https://github.com/lmorillas>`_
