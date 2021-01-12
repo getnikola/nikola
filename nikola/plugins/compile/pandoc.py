@@ -33,6 +33,7 @@ You will need, of course, to install pandoc
 import io
 import os
 import subprocess
+from typing import List, Union, Dict
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import req_missing, makedirs, write_metadata
@@ -49,11 +50,28 @@ class CompilePandoc(PageCompiler):
         self.config_dependencies = [str(site.config['PANDOC_OPTIONS'])]
         super().set_site(site)
 
+    def _get_pandoc_options(self, source: str) -> List[str]:
+        config_options: Union[List[str], Dict[str, List[str]]] = self.site.config['PANDOC_OPTIONS']
+        type_ = type(config_options)
+        if type_ is list:
+            pandoc_options = config_options
+        elif type_ is dict:
+            ext = source.split('.')[-1]
+            try:
+                pandoc_options = config_options['.{}'.format(ext)]
+            except KeyError:
+                raise ValueError('Extension {} is not defined in PANDOC_OPTIONS: {}'.format(ext, config_options))
+        else:
+            raise ValueError('PANDOC_OPTIONS expected to be of type Union[List[str], Dict[str, List[str]]]: {}'.format(config_options))
+        
+        self.logger.info('compiling {} with args "{}"'.format(source, ' '.join(pandoc_options)))
+        return pandoc_options
+
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
         try:
-            subprocess.check_call(['pandoc', '-o', dest, source] + self.site.config['PANDOC_OPTIONS'])
+            subprocess.check_call(['pandoc', '-o', dest, source] + self._get_pandoc_options(source))
             with open(dest, 'r', encoding='utf-8-sig') as inf:
                 output, shortcode_deps = self.site.apply_shortcodes(inf.read())
             with open(dest, 'w', encoding='utf-8') as outf:
