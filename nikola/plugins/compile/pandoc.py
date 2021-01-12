@@ -63,7 +63,6 @@ class CompilePandoc(PageCompiler):
                 raise ValueError('Extension {} is not defined in PANDOC_OPTIONS: {}'.format(ext, config_options))
         else:
             raise ValueError('PANDOC_OPTIONS expected to be of type Union[List[str], Dict[str, List[str]]]: {}'.format(config_options))
-        
         self.logger.info('compiling {} with args "{}"'.format(source, ' '.join(pandoc_options)))
         return pandoc_options
 
