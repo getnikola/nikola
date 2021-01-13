@@ -14,3 +14,7 @@ def test_command_version():
 
 def test_importing_plugin_task_galleries():
     import nikola.plugins.task.galleries  # NOQA
+
+
+def test_importing_plugin_compile_pandoc():
+    import nikola.plugins.compile.pandoc  # NOQA
