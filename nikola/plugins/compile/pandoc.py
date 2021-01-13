@@ -34,6 +34,7 @@ import io
 import os
 import subprocess
 from typing import List, Union, Dict
+from pathlib import Path
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import req_missing, makedirs, write_metadata
@@ -56,9 +57,9 @@ class CompilePandoc(PageCompiler):
         if type_ is list:
             pandoc_options = config_options
         elif type_ is dict:
-            ext = source.split('.')[-1]
+            ext = Path(source).suffix
             try:
-                pandoc_options = config_options['.{}'.format(ext)]
+                pandoc_options = config_options[ext]
             except KeyError:
                 raise ValueError('Extension {} is not defined in PANDOC_OPTIONS: {}'.format(ext, config_options))
         else:
