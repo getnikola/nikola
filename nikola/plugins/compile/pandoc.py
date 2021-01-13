@@ -52,7 +52,7 @@ class CompilePandoc(PageCompiler):
         super().set_site(site)
 
     def _get_pandoc_options(self, source: str) -> List[str]:
-        '''obtain pandoc args from config depending on type and file extensions'''
+        """obtain pandoc args from config depending on type and file extensions"""
         # Union[List[str], Dict[str, List[str]]]
         config_options = self.site.config['PANDOC_OPTIONS']
         type_ = type(config_options)
