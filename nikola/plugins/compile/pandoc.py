@@ -61,10 +61,11 @@ class CompilePandoc(PageCompiler):
             try:
                 pandoc_options = config_options[ext]
             except KeyError:
-                raise ValueError('Extension {} is not defined in PANDOC_OPTIONS: {}'.format(ext, config_options))
+                self.logger.warn('Setting PANDOC_OPTIONS to [], because extension {} is not defined in PANDOC_OPTIONS: {}.'.format(ext, config_options))
+                pandoc_options = []
         else:
-            raise ValueError('PANDOC_OPTIONS expected to be of type Union[List[str], Dict[str, List[str]]]: {}'.format(config_options))
-        self.logger.info('compiling {} with args "{}"'.format(source, ' '.join(pandoc_options)))
+            self.logger.warn('Setting PANDOC_OPTIONS to [], because PANDOC_OPTIONS is expected to be of type Union[List[str], Dict[str, List[str]]] but this is not: {}'.format(config_options))
+            pandoc_options = []
         return pandoc_options
 
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):
