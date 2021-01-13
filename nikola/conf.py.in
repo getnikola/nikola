@@ -1046,7 +1046,6 @@ MARKDOWN_EXTENSIONS = ['markdown.extensions.fenced_code', 'markdown.extensions.c
 
 
 # Extra options to pass to the pandoc command.
-# It should have type Union[List[str], Dict[str, List[str]]]
 # by default, it's an empty list
 # it can be is a list of strings, for example
 # ['-F', 'pandoc-citeproc', '--bibliography=/Users/foo/references.bib']
