@@ -66,7 +66,7 @@ class ImageProcessor(object):
         self._fill_exif_tag_names()
         exif = exif.copy()  # Don't modify in-place, it's rude
         for k in list(exif.keys()):
-            if type(exif[k]) != dict:
+            if not isinstance(exif[k], dict):
                 pass  # At least thumbnails have no fields
             elif k not in whitelist:
                 exif.pop(k)  # Not whitelisted, remove

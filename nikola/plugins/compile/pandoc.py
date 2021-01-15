@@ -55,13 +55,12 @@ class CompilePandoc(PageCompiler):
         """Obtain pandoc args from config depending on type and file extensions."""
         # Union[List[str], Dict[str, List[str]]]
         config_options = self.site.config['PANDOC_OPTIONS']
-        type_ = type(config_options)
-        if type_ is list:
-            pandoc_options = config_options
-        elif type_ is dict:
+        if isinstance(config_options, (list, tuple)):
+            pandoc_options = list(config_options)
+        elif isinstance(config_options, dict):
             ext = Path(source).suffix
             try:
-                pandoc_options = config_options[ext]
+                pandoc_options = list(config_options[ext])
             except KeyError:
                 self.logger.warn('Setting PANDOC_OPTIONS to [], because extension {} is not defined in PANDOC_OPTIONS: {}.'.format(ext, config_options))
                 pandoc_options = []

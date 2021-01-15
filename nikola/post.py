@@ -612,9 +612,9 @@ class Post(object):
         if add not in {'fragment', 'page', 'both'}:
             raise Exception("Add parameter is '{0}', but must be either 'fragment', 'page', or 'both'.".format(add))
         if add == 'fragment' or add == 'both':
-            self._dependency_file_fragment[lang].append((type(dependency) != str, dependency))
+            self._dependency_file_fragment[lang].append((not isinstance(dependency, str), dependency))
         if add == 'page' or add == 'both':
-            self._dependency_file_page[lang].append((type(dependency) != str, dependency))
+            self._dependency_file_page[lang].append((not isinstance(dependency, str), dependency))
 
     def add_dependency_uptodate(self, dependency, is_callable=False, add='both', lang=None):
         """Add a dependency for task's ``uptodate`` for tasks using that post.
@@ -677,7 +677,7 @@ class Post(object):
                 # can add directly
                 result = dep[1]
             # if result is a list, add its contents
-            if type(result) == list:
+            if isinstance(result, list):
                 deps.extend(result)
             else:
                 deps.append(result)
