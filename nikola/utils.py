@@ -80,9 +80,9 @@ except ImportError:
     YAML = None
 
 try:
-    import husl
+    import hsluv
 except ImportError:
-    husl = None
+    hsluv = None
 
 __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real',
            'get_theme_chain', 'load_messages', 'copy_tree', 'copy_file',
@@ -1752,7 +1752,7 @@ def colorize_str_from_base_color(string, base_color):
 
     Make up to 16 attempts (number of bytes returned by hashing) at picking a
     hue for our color at least 27 deg removed from the base color, leaving
-    lightness and saturation untouched using HUSL colorspace.
+    lightness and saturation untouched using HSLuv colorspace.
     """
     def hash_str(string, pos):
         return hashlib.md5(string.encode('utf-8')).digest()[pos]
@@ -1760,17 +1760,17 @@ def colorize_str_from_base_color(string, base_color):
     def degreediff(dega, degb):
         return min(abs(dega - degb), abs((degb - dega) + 360))
 
-    if husl is None:
-        req_missing(['husl'], 'Use color mixing (section colors)',
+    if hsluv is None:
+        req_missing(['hsluv'], 'Use color mixing (section colors)',
                     optional=True)
         return base_color
-    h, s, l = husl.hex_to_husl(base_color)
+    h, s, l = hsluv.hex_to_hsluv(base_color)
     old_h = h
     idx = 0
     while degreediff(old_h, h) < 27 and idx < 16:
         h = 360.0 * (float(hash_str(string, idx)) / 255)
         idx += 1
-    return husl.husl_to_hex(h, s, l)
+    return hsluv.hsluv_to_hex((h, s, l))
 
 
 def colorize_str(string: str, base_color: str, presets: dict):
@@ -1782,7 +1782,7 @@ def colorize_str(string: str, base_color: str, presets: dict):
 
 def color_hsl_adjust_hex(hexstr, adjust_h=None, adjust_s=None, adjust_l=None):
     """Adjust a hex color using HSL arguments, adjustments in percentages 1.0 to -1.0. Returns a hex color."""
-    h, s, l = husl.hex_to_husl(hexstr)
+    h, s, l = hsluv.hex_to_husl(hexstr)
 
     if adjust_h:
         h = h + (adjust_h * 360.0)
@@ -1793,7 +1793,7 @@ def color_hsl_adjust_hex(hexstr, adjust_h=None, adjust_s=None, adjust_l=None):
     if adjust_l:
         l = l + (adjust_l * 100.0)
 
-    return husl.husl_to_hex(h, s, l)
+    return hsluv.hsluv_to_hex((h, s, l))
 
 
 def dns_sd(port, inet6):
