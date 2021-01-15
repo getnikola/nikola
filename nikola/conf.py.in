@@ -1045,11 +1045,11 @@ MARKDOWN_EXTENSIONS = ['markdown.extensions.fenced_code', 'markdown.extensions.c
 # MARKDOWN_EXTENSION_CONFIGS = {}
 
 
-# Extra options to pass to the pandoc command.
-# by default, it's an empty list
-# it can be is a list of strings, for example
-# ['-F', 'pandoc-citeproc', '--bibliography=/Users/foo/references.bib']
-# it can be a dict, where the keys are the extensions in COMPILERS['pandoc'], for example
+# Extra options to pass to the pandoc command, empty by default.
+# It can be a list of strings or a dict (keys are file extensions).
+# Example for a list of strings (used for all extensions):
+# PANDOC_OPTIONS = ['-F', 'pandoc-citeproc', '--bibliography=/Users/foo/references.bib']
+# Example for a dict, where the keys are the extensions in COMPILERS['pandoc']:
 # COMPILERS['pandoc'] = ['.rst', '.md', '.txt']
 # PANDOC_OPTIONS = {
 #     '.rst': ['-t', 'rst'],
