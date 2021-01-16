@@ -1784,7 +1784,7 @@ def colorize_str(string: str, base_color: str, presets: dict):
 
 def color_hsl_adjust_hex(hexstr, adjust_h=None, adjust_s=None, adjust_l=None):
     """Adjust a hex color using HSL arguments, adjustments in percentages 1.0 to -1.0. Returns a hex color."""
-    h, s, l = hsluv.hex_to_husl(hexstr)
+    h, s, l = hsluv.hex_to_hsluv(hexstr)
 
     if adjust_h:
         h = h + (adjust_h * 360.0)
