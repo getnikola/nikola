@@ -7,7 +7,14 @@ Features
 * Provide the full ``GLOBAL_CONTEXT`` to the post list shortcode plugin
   (Issue #3481)
 * Add ``BasePlugin.register_auto_watched_folder()``
-* dispatch PANDOC_OPTIONS base on input extensions (Issue #3492)
+* Allow different ``PANDOC_OPTIONS`` values based on input extensions
+  by specifying a dict of ``{".extension": [options]}`` (Issue #3492)
+
+Bugfixes
+--------
+
+* Fix an ``UnboundLocalError`` crash in ``nikola deploy`` (Isssue
+  #3479)
 
 New in v8.1.2
 =============
