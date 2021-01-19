@@ -20,6 +20,7 @@ from nikola.utils import (
     get_theme_chain,
     get_translation_candidate,
     write_metadata,
+    bool_from_meta,
 )
 
 
@@ -571,6 +572,35 @@ def test_write_metadata_default(post):
 def test_write_metadata_fallbacks(post, arg):
     data = {"title": "xx"}
     assert write_metadata(data, arg) == ".. title: xx\n\n"
+
+
+@pytest.mark.parametrize("value, expected", [
+    ("true", True),
+    ("True", True),
+    ("TRUE", True),
+    ("yes", True),
+    ("Yes", True),
+    ("YES", True),
+    ("false", False),
+    ("False", False),
+    ("FALSE", False),
+    ("no", False),
+    ("No", False),
+    ("NO", False),
+    ("1", True),
+    (1, True),
+    ("0", False),
+    (0, False),
+    ("0", False),
+    (True, True),
+    (False, False),
+    ("unknown", "F"),
+    (None, "B"),
+    ("", "B"),
+])
+def test_bool_from_meta(value, expected):
+    meta = {"key": value}
+    assert bool_from_meta(meta, "key", "F", "B") == expected
 
 
 @pytest.fixture

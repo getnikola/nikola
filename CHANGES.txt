@@ -9,6 +9,8 @@ Features
 * Add ``BasePlugin.register_auto_watched_folder()``
 * Allow different ``PANDOC_OPTIONS`` values based on input extensions
   by specifying a dict of ``{".extension": [options]}`` (Issue #3492)
+* Allow boolean/integer ``pretty_url`` post meta values in YAML/TOML
+  (Issue #3503)
 
 Bugfixes
 --------

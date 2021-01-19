@@ -54,7 +54,8 @@ from .utils import (
     to_datetime,
     demote_headers,
     get_translation_candidate,
-    map_metadata
+    map_metadata,
+    bool_from_meta,
 )
 
 try:
@@ -427,13 +428,14 @@ class Post(object):
 
     def has_pretty_url(self, lang):
         """Check if this page has a pretty URL."""
-        m = self.meta[lang].get('pretty_url', '')
-        if m:
-            # match is a non-empty string, overides anything
-            return m.lower() == 'true' or m.lower() == 'yes'
-        else:
+        meta_value = bool_from_meta(self.meta[lang], 'pretty_url')
+
+        if meta_value is None:
             # use PRETTY_URLS, unless the slug is 'index'
             return self.pretty_urls and self.meta[lang]['slug'] != 'index'
+        else:
+            # override with meta value
+            return meta_value
 
     def _has_pretty_url(self, lang):
         """Check if this page has a pretty URL."""
@@ -450,13 +452,13 @@ class Post(object):
             return True
         lang = nikola.utils.LocaleBorg().current_lang
         if self.is_translation_available(lang):
-            if self.meta[lang].get('has_math') in ('true', 'True', 'yes', '1', 1, True):
+            if bool_from_meta(self.meta[lang], 'has_math'):
                 return True
             if self.config['USE_TAG_METADATA']:
                 return 'mathjax' in self.tags_for_language(lang)
         # If it has math in ANY other language, enable it. Better inefficient than broken.
         for lang in self.translated_to:
-            if self.meta[lang].get('has_math') in ('true', 'True', 'yes', '1', 1, True):
+            if bool_from_meta(self.meta[lang], 'has_math'):
                 return True
         if self.config['USE_TAG_METADATA']:
             return 'mathjax' in self.alltags

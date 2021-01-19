@@ -97,7 +97,7 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real',
            'adjust_name_for_index_path', 'adjust_name_for_index_link',
            'NikolaPygmentsHTML', 'create_redirect', 'clean_before_deployment',
            'sort_posts', 'smartjoin', 'indent', 'load_data', 'html_unescape',
-           'rss_writer', 'map_metadata', 'req_missing',
+           'rss_writer', 'map_metadata', 'req_missing', 'bool_from_meta',
            # Deprecated, moved to hierarchy_utils:
            'TreeNode', 'clone_treenode', 'flatten_tree_structure',
            'sort_classifications', 'join_hierarchical_category_path',
@@ -1495,6 +1495,24 @@ def write_metadata(data, metadata_format=None, comment_wrap=False, site=None, co
     else:  # Nikola, default
         from nikola.metadata_extractors import DEFAULT_EXTRACTOR
         return DEFAULT_EXTRACTOR.write_metadata(data, comment_wrap)
+
+
+def bool_from_meta(meta, key, fallback=False, blank=None):
+    """Convert a boolean-ish meta value to a boolean."""
+    value = meta.get(key)
+    if isinstance(value, str):
+        value_lowercase = value.lower().strip()
+        if value_lowercase in {"true", "yes", "1"}:
+            return True
+        elif value_lowercase in {"false", "no", "0"}:
+            return False
+        elif not value_lowercase:
+            return blank
+    elif isinstance(value, int):
+        return bool(value)
+    elif value is None:
+        return blank
+    return fallback
 
 
 def ask(query, default=None):
