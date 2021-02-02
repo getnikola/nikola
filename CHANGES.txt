@@ -18,6 +18,13 @@ Bugfixes
 * Fix an ``UnboundLocalError`` crash in ``nikola deploy`` (Isssue
   #3479)
 
+Other
+-----
+
+* For ``nikola github_deploy``, the ``ghp-import`` PyPI package is now
+  recommended instead of ``ghp-import2``. Both versions should work,
+  but you can’t have both installed at the same time. (Issue #3499)
+
 New in v8.1.2
 =============
 
