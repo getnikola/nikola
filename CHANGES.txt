@@ -11,6 +11,8 @@ Features
   by specifying a dict of ``{".extension": [options]}`` (Issue #3492)
 * Allow boolean/integer ``pretty_url`` post meta values in YAML/TOML
   (Issue #3503)
+* Add ``NIKOLA_LOG_FORMAT`` & ``NIKOLA_LOG_TIME_FORMAT`` environment
+  variables to configure the logging format
 
 Bugfixes
 --------
