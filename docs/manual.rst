@@ -3141,6 +3141,12 @@ To show more logging messages, as well as full tracebacks, you need to set an
 environment variable: ``NIKOLA_DEBUG=1``. If you want to only see tracebacks,
 set ``NIKOLA_SHOW_TRACEBACKS=1``.
 
+Log Format
+~~~~~~~~~~
+
+The format of log messages can be configured via ``NIKOLA_LOG_FORMAT`` & ``NIKOLA_LOG_TIME_FORMAT``
+environment variables.
+
 Shell Tab Completion
 ~~~~~~~~~~~~~~~~~~~~
 

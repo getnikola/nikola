@@ -28,6 +28,7 @@
 
 import enum
 import logging
+from os import getenv
 import warnings
 
 from nikola import DEBUG
@@ -103,8 +104,8 @@ def configure_logging(logging_mode: LoggingMode = LoggingMode.NORMAL) -> None:
     handler = logging.StreamHandler()
     handler.setFormatter(
         ColorfulFormatter(
-            fmt="[%(asctime)s] %(levelname)s: %(name)s: %(message)s",
-            datefmt="%Y-%m-%d %H:%M:%S",
+            fmt=getenv('NIKOLA_LOG_FORMAT', "[%(asctime)s] %(levelname)s: %(name)s: %(message)s"),
+            datefmt=getenv('NIKOLA_LOG_TIME_FORMAT', "%Y-%m-%d %H:%M:%S"),
         )
     )
 
