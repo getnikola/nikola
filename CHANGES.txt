@@ -31,6 +31,7 @@ New in v8.1.2
 Features
 --------
 
+* Fix time zone guessing logic in ``nikola init`` (Issue #3510)
 * Support for multiple authors per post — comma-separated, enabled by
   ``MULTIPLE_AUTHORS_PER_POST`` setting (Issue #3252)
 * Add ``navbar_custom_bg`` theme option to ``bootstrap4`` and document

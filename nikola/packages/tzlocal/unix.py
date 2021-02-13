@@ -116,8 +116,9 @@ def _get_localzone(_root="/"):
         while start != 0:
             tzpath = tzpath[start:]
             try:
-                dateutil.tz.gettz(tzpath)
-                return tzpath
+                tested_tz = dateutil.tz.gettz(tzpath)
+                if tested_tz:
+                    return tzpath
             except Exception:
                 pass
             start = tzpath.find("/") + 1
