@@ -15,9 +15,6 @@ In goes content, out comes a website, ready to deploy.
 .. image:: http://img.shields.io/badge/license-MIT-green.svg
    :target: https://github.com/getnikola/nikola/blob/master/LICENSE.txt
 
-.. image:: https://build.snapcraft.io/badge/getnikola/nikola.svg
-   :target: https://build.snapcraft.io/user/getnikola/nikola
-
 Why Static Websites?
 --------------------
 
