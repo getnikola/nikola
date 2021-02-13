@@ -31,7 +31,7 @@ pushd nikola/data/themes/base/assets/js
 ln -sf ../../../../../../npm_assets/node_modules/luxon/build/global/luxon.min.js .
 ln -sf ../../../../../../npm_assets/node_modules/html5shiv/dist/html5shiv-printshiv.min.js .
 ln -sf ../../../../../../npm_assets/node_modules/html5shiv/dist/html5shiv-printshiv.min.js html5.js
-git add moment-with-locales.min.js html5.js html5shiv-printshiv.min.js
+git add luxon.min.js html5.js html5shiv-printshiv.min.js
 popd
 
 # Link jQuery to bootstrap theme
