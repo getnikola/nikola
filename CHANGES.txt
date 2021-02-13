@@ -1,4 +1,4 @@
-New in master
+New in v8.1.3
 =============
 
 Features
@@ -15,7 +15,7 @@ Features
 Bugfixes
 --------
 
-* Fix an ``UnboundLocalError`` crash in ``nikola deploy`` (Isssue
+* Fix an ``UnboundLocalError`` crash in ``nikola deploy`` (Issue
   #3479)
 
 Other

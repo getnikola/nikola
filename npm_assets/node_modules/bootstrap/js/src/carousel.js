@@ -1,6 +1,6 @@
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v4.5.3): carousel.js
+ * Bootstrap (v4.6.0): carousel.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -15,7 +15,7 @@ import Util from './util'
  */
 
 const NAME = 'carousel'
-const VERSION = '4.5.3'
+const VERSION = '4.6.0'
 const DATA_KEY = 'bs.carousel'
 const EVENT_KEY = `.${DATA_KEY}`
 const DATA_API_KEY = '.data-api'
@@ -169,6 +169,8 @@ class Carousel {
     }
 
     if (this._config.interval && !this._isPaused) {
+      this._updateInterval()
+
       this._interval = setInterval(
         (document.visibilityState ? this.nextWhenVisible : this.next).bind(this),
         this._config.interval
@@ -401,6 +403,23 @@ class Carousel {
     }
   }
 
+  _updateInterval() {
+    const element = this._activeElement || this._element.querySelector(SELECTOR_ACTIVE_ITEM)
+
+    if (!element) {
+      return
+    }
+
+    const elementInterval = parseInt(element.getAttribute('data-interval'), 10)
+
+    if (elementInterval) {
+      this._config.defaultInterval = this._config.defaultInterval || this._config.interval
+      this._config.interval = elementInterval
+    } else {
+      this._config.interval = this._config.defaultInterval || this._config.interval
+    }
+  }
+
   _slide(direction, element) {
     const activeElement = this._element.querySelector(SELECTOR_ACTIVE_ITEM)
     const activeElementIndex = this._getItemIndex(activeElement)
@@ -445,6 +464,7 @@ class Carousel {
     }
 
     this._setActiveIndicatorElement(nextElement)
+    this._activeElement = nextElement
 
     const slidEvent = $.Event(EVENT_SLID, {
       relatedTarget: nextElement,
@@ -460,14 +480,6 @@ class Carousel {
 
       $(activeElement).addClass(directionalClassName)
       $(nextElement).addClass(directionalClassName)
-
-      const nextElementInterval = parseInt(nextElement.getAttribute('data-interval'), 10)
-      if (nextElementInterval) {
-        this._config.defaultInterval = this._config.defaultInterval || this._config.interval
-        this._config.interval = nextElementInterval
-      } else {
-        this._config.interval = this._config.defaultInterval || this._config.interval
-      }
 
       const transitionDuration = Util.getTransitionDurationFromElement(activeElement)
 

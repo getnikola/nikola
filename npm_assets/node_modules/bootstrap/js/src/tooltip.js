@@ -1,6 +1,6 @@
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v4.5.3): tooltip.js
+ * Bootstrap (v4.6.0): tooltip.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -20,7 +20,7 @@ import Util from './util'
  */
 
 const NAME = 'tooltip'
-const VERSION = '4.5.3'
+const VERSION = '4.6.0'
 const DATA_KEY = 'bs.tooltip'
 const EVENT_KEY = `.${DATA_KEY}`
 const JQUERY_NO_CONFLICT = $.fn[NAME]
@@ -41,6 +41,7 @@ const DefaultType = {
   container: '(string|element|boolean)',
   fallbackPlacement: '(string|array)',
   boundary: '(string|element)',
+  customClass: '(string|function)',
   sanitize: 'boolean',
   sanitizeFn: '(null|function)',
   whiteList: 'object',
@@ -70,6 +71,7 @@ const Default = {
   container: false,
   fallbackPlacement: 'flip',
   boundary: 'scrollParent',
+  customClass: '',
   sanitize: true,
   sanitizeFn: null,
   whiteList: DefaultWhitelist,
@@ -112,7 +114,7 @@ const TRIGGER_MANUAL = 'manual'
 class Tooltip {
   constructor(element, config) {
     if (typeof Popper === 'undefined') {
-      throw new TypeError('Bootstrap\'s tooltips require Popper.js (https://popper.js.org/)')
+      throw new TypeError('Bootstrap\'s tooltips require Popper (https://popper.js.org)')
     }
 
     // private
@@ -284,6 +286,7 @@ class Tooltip {
       this._popper = new Popper(this.element, tip, this._getPopperConfig(attachment))
 
       $(tip).addClass(CLASS_NAME_SHOW)
+      $(tip).addClass(this.config.customClass)
 
       // If this is a touch-enabled device we add extra
       // empty mouseover listeners to the body's immediate children;
