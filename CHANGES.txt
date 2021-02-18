@@ -1,3 +1,12 @@
+New in master
+=============
+
+Features
+--------
+
+* New ``auto_command_starting`` signal when ``nikola auto`` is
+  starting
+
 New in v8.1.3
 =============
 

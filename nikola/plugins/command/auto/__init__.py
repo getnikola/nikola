@@ -37,6 +37,7 @@ import sys
 import typing
 import webbrowser
 
+import blinker
 import pkg_resources
 
 from nikola.plugin_categories import Command
@@ -135,6 +136,8 @@ class CommandAuto(Command):
     ]
 
     def _execute(self, options, args):
+        blinker.signal('auto_command_starting').send(self.site)
+
         """Start the watcher."""
         self.sockets = []
         self.rebuild_queue = asyncio.Queue()
