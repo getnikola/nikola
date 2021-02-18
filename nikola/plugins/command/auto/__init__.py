@@ -136,9 +136,8 @@ class CommandAuto(Command):
     ]
 
     def _execute(self, options, args):
-        blinker.signal('auto_command_starting').send(self.site)
-
         """Start the watcher."""
+
         self.sockets = []
         self.rebuild_queue = asyncio.Queue()
         self.reload_queue = asyncio.Queue()
@@ -151,6 +150,8 @@ class CommandAuto(Command):
             req_missing(['aiohttp'], 'use the "auto" command')
         elif Observer is None:
             req_missing(['watchdog'], 'use the "auto" command')
+            
+        blinker.signal('auto_command_starting').send(self.site)
 
         if sys.argv[0].endswith('__main__.py'):
             self.nikola_cmd = [sys.executable, '-m', 'nikola', 'build']
