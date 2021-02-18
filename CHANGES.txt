@@ -7,6 +7,12 @@ Features
 * New ``auto_command_starting`` signal when ``nikola auto`` is
   starting
 
+Bugfixes
+--------
+
+* Typogrify ignores ``div`` elements with ``.math`` CSS class.
+  (Issue #3512)
+
 New in v8.1.3
 =============
 
