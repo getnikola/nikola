@@ -137,7 +137,6 @@ class CommandAuto(Command):
 
     def _execute(self, options, args):
         """Start the watcher."""
-
         self.sockets = []
         self.rebuild_queue = asyncio.Queue()
         self.reload_queue = asyncio.Queue()
