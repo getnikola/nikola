@@ -29,7 +29,7 @@ from .helper import FakeSite
 """,
             """\
 <table class="codehilitetable"><tr><td class="linenos">\
-<div class="linenodiv"><pre>1</pre></div>\
+<div class="linenodiv"><pre><span class="normal">1</span></pre></div>\
 </td><td class="code"><pre class="code literal-block"><span></span>\
 <code><span class="kn">from</span> <span class="nn">this</span>
 </code></pre>
