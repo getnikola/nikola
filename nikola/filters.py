@@ -269,7 +269,7 @@ def minify_lines(data):
 def _run_typogrify(data, typogrify_filters, ignore_tags=None):
     """Run typogrify with ignore support."""
     if ignore_tags is None:
-        ignore_tags = ["title"]
+        ignore_tags = ["title", ".math"]
 
     data = _normalize_html(data)
 
