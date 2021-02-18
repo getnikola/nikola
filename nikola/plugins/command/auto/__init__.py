@@ -37,6 +37,7 @@ import sys
 import typing
 import webbrowser
 
+import blinker
 import pkg_resources
 
 from nikola.plugin_categories import Command
@@ -148,6 +149,8 @@ class CommandAuto(Command):
             req_missing(['aiohttp'], 'use the "auto" command')
         elif Observer is None:
             req_missing(['watchdog'], 'use the "auto" command')
+
+        blinker.signal('auto_command_starting').send(self.site)
 
         if sys.argv[0].endswith('__main__.py'):
             self.nikola_cmd = [sys.executable, '-m', 'nikola', 'build']
