@@ -6,6 +6,11 @@ Features
 
 * New ``auto_command_starting`` signal when ``nikola auto`` is
   starting
+* ``typogrify_custom`` filter adds a default value for
+  ``typogrify_filters`` so that ``ignore_tags`` can be specified
+  as the only option.
+* The default ``ignore_tags`` are appended to the user-supplied
+  ``ignore_tags`` added via ``typogrify_custom``.
 
 Bugfixes
 --------
