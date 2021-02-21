@@ -272,7 +272,7 @@ def _run_typogrify(data, typogrify_filters, ignore_tags=None):
     if ignore_tags is None:
         ignore_tags = default_ignore_tags
     else:
-        ignore_tags.extend(default_ignore_tags)
+        ignore_tags = ignore_tags + default_ignore_tags
 
     data = _normalize_html(data)
 
