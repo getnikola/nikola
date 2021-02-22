@@ -2301,7 +2301,33 @@ filters.typogrify_sans_widont
    Same as typogrify without the widont filter
 
 filters.typogrify_custom
-    Run typogrify with a custom set or filters. Takes ``typogrify_filters`` (a list of callables) and ``ignore_tags`` (defaults to None).
+    Run typogrify with a custom set of filters or ignored HTML elements. Takes one or
+    both of the arguments ``typogrify_filters`` or ``ignore_tags``. ``typogrify_filters``
+    must be a list of typogrify filter callables to run. ``ignore_tags`` must be a list
+    of strings specifying HTML tags, CSS classes (prefixed with ``.``), tag ``id`` names
+    (prefixed with ``#``), or a tag and a class or id. The following code should be
+    placed in ``conf.py``.
+
+    .. code-block:: python
+
+      from nikola.filters import typogrify_custom
+      import functools
+      # This filter will ignore HTML elements with the CSS class "typo-ignore"
+      FILTERS = {
+        ".html": [functools.partial(typogrify_custom, ignore_tags=[".typo-ignore"])]
+      }
+      # Alternatively, to specify ``typogrify_filters``
+      import typogrify.filters as typo
+      FILTERS = {
+        ".html": [functools.partial(typogrify_custom, typogrify_filters=[typo.amp])]
+      }
+
+    The default value for ``typogrify_filters`` is
+    ``[typo.amp, typo.widont, typo.smartypants, typo.caps, typo.initial_quotes]`` and the
+    default value for ``ignore_tags`` is ``["title", ".math"]``. If ``ignore_tags`` is
+    specified, the default tags will be appended to the supplied list. See the
+    `documentation <https://github.com/mintchaos/typogrify/blob/master/typogrify/filters.py#L8-L14>`__
+    for the ``process_ignores`` function in typogrify.
 
 filters.minify_lines
    **THIS FILTER HAS BEEN TURNED INTO A NOOP** and currently does nothing.
