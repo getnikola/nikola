@@ -123,7 +123,8 @@ class CommandAuto(Command):
             'long': 'process',
             'default': 0,
             'type': int,
-            'help': 'Number of subprocesses (nikola build argument)'
+            'help': 'Number of subprocesses',
+            'section': 'Arguments passed to `nikola build`'
         },
         {
             'name': 'parallel-type',
@@ -131,8 +132,25 @@ class CommandAuto(Command):
             'long': 'parallel-type',
             'default': 'process',
             'type': str,
-            'help': "Parallelization mode ('process' or 'thread', nikola build argument)"
+            'help': "Parallelization mode ('process' or 'thread')",
+            'section': 'Arguments passed to `nikola build`'
         },
+        {
+            'name': 'db-file',
+            'long': 'db-file',
+            'default': '.doit.db',
+            'type': str,
+            'help': 'Database file',
+            'section': 'Arguments passed to `nikola build`'
+        },
+        {
+            'name': 'backend',
+            'long': 'backend',
+            'default': 'dbm',
+            'type': str,
+            'help': "Database backend ('dbm', 'json', 'sqlite3')",
+            'section': 'Arguments passed to `nikola build`'
+        }
     ]
 
     def _execute(self, options, args):
@@ -163,6 +181,10 @@ class CommandAuto(Command):
         if options and options.get('process'):
             self.nikola_cmd += ['--process={}'.format(options['process']),
                                 '--parallel-type={}'.format(options['parallel-type'])]
+
+        if options:
+            self.nikola_cmd += ['--db-file={}'.format(options['db-file']),
+                                '--backend={}'.format(options['backend'])]
 
         port = options and options.get('port')
         self.snippet = '''<script>document.write('<script src="http://'

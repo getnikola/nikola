@@ -15,6 +15,7 @@ Features
 Bugfixes
 --------
 
+* Support passing ``--backend`` and ``--db-file`` to ``nikola auto``
 * Typogrify ignores ``div`` elements with ``.math`` CSS class.
   (Issue #3512)
 
