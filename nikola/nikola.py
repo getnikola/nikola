@@ -1565,11 +1565,6 @@ class Nikola(object):
                 if '%' in dst_url.netloc:
                     # convert lxml percent-encoded garbage to punycode
                     nl = unquote(dst_url.netloc)
-                    try:
-                        nl = nl.decode('utf-8')
-                    except AttributeError:
-                        # python 3: already unicode
-                        pass
                     nl = nl.encode('idna')
                     if isinstance(nl, bytes):
                         nl = nl.decode('latin-1')  # so idna stays unchanged
