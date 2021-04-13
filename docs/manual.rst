@@ -652,14 +652,14 @@ default set to:
 
 In case you translate your posts, you might also want to adjust various
 other settings so that the generated URLs match the translation. You can
-find most places in `conf.py` by searching for `(translatable)`. For example,
-you might want to localize `/categories/` (search for `TAG_PATH`), `/pages/`
-and `/posts/` (search for `POSTS` and `PAGES`, or see the next section), or
+find most places in ``conf.py`` by searching for ``(translatable)``. For example,
+you might want to localize ``/categories/`` (search for ``TAG_PATH``), ``/pages/``
+and ``/posts/`` (search for ``POSTS`` and ``PAGES``, or see the next section), or
 how to adjust the URLs for subsequent pages for indexes (search for
-`INDEXES_PRETTY_PAGE_URL`).
+``INDEXES_PRETTY_PAGE_URL``).
 
 Nikola supports multiple languages for a post (we have almost 50 translations!). If you wish to
-add support for more languages, check out `the Transifex page for Nikola <https://www.transifex.com/projects/p/nikola/>`_
+add support for more languages, check out `the Transifex page for Nikola <https://www.transifex.com/projects/p/nikola/>`_.
 
 How does Nikola decide where posts should go?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1332,10 +1332,14 @@ emoji
 gist
     Show GitHub gists. If you know the gist's ID, this will show it in your site:
 
-    {{% raw %}}{{% gist 2395294 %}} {{% /raw %}}
+    .. code:: text
+
+        {{% raw %}}{{% gist 2395294 %}} {{% /raw %}}
 
 listing
-    Used to show a code listing. Example::
+    Used to show a code listing. Example:
+
+    .. code:: text
 
         {{% raw %}}{{% listing hello.py python linenumbers=True %}}{{% /raw %}}
 
@@ -2416,9 +2420,10 @@ filters.deduplicate_ids
 
       DEDUPLICATE_IDS_TOP_CLASSES = ('postpage', 'storypage')
 
-    You can also use a file blacklist (``HEADER_PERMALINKS_FILE_BLACKLIST``),
-    useful for some index pages. Paths include the output directory (eg.
-    ``output/index.html``)
+
+   You can also use a file blacklist (``HEADER_PERMALINKS_FILE_BLACKLIST``),
+   useful for some index pages. Paths include the output directory (eg.
+   ``output/index.html``)
 
 
 You can apply filters to specific posts or pages by using the ``filters`` metadata field:
