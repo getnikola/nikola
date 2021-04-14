@@ -7,6 +7,13 @@
 {% import 'comments_helper_isso.tmpl' as isso with context %}
 {% import 'comments_helper_commento.tmpl' as commento with context %}
 {% import 'comments_helper_utterances.tmpl' as utterances with context %}
+{% import 'comments_helper_cactus.tmpl' as cactus with context %}
+
+{% macro comment_extra_head() %}
+    {% if comment_system == 'cactus' %}
+        {{ cactus.comment_extra_head() }}
+    {% endif %}
+{% endmacro %}
 
 {% macro comment_form(url, title, identifier) %}
     {% if comment_system == 'disqus' %}
@@ -23,6 +30,8 @@
         {{ commento.comment_form(url, title, identifier) }}
     {% elif comment_system == 'utterances' %}
         {{ utterances.comment_form(url, title, identifier) }}
+    {% elif comment_system == 'cactus' %}
+        {{ cactus.comment_form(url, title, identifier) }}
     {% endif %}
 {% endmacro %}
 
@@ -41,6 +50,8 @@
         {{ commento.comment_link(link, identifier) }}
     {% elif comment_system == 'utterances' %}
         {{ utterances.comment_link(link, identifier) }}
+    {% elif comment_system == 'cactus' %}
+        {{ cactus.comment_link(link, identifier) }}
     {% endif %}
 {% endmacro %}
 
@@ -59,5 +70,7 @@
         {{ commento.comment_link_script() }}
     {% elif comment_system == 'utterances' %}
         {{ utterances.comment_link_script() }}
+    {% elif comment_system == 'cactus' %}
+        {{ cactus.comment_link_script() }}
     {% endif %}
 {% endmacro %}

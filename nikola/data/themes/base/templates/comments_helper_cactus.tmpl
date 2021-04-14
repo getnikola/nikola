@@ -1,0 +1,38 @@
+## -*- coding: utf-8 -*-
+<%def name="comment_extra_head()">
+%if comment_system_id:
+<script type="text/javascript" src="https://latest.cactus.chat/cactus.js"></script>
+<link rel="stylesheet" href="https://latest.cactus.chat/style.css" type="text/css">
+%endif
+</%def>
+
+<%def name="comment_form(url, title, identifier)">
+%if comment_system_id:
+<div id="comment-section"></div>
+<%
+import nikola.utils
+post_slug = nikola.utils.slugify(title)
+%>
+<script>
+initComments({
+  node: document.getElementById("comment-section"),
+  % if cactus_config:
+  % for k, v in cactus_config.items():
+  ${k}: "${v}",
+  % endfor
+  % endif
+  siteName: "${comment_system_id}",
+  commentSectionId: "${post_slug}"
+})
+</script>
+%endif
+</%def>
+
+<%def name="comment_link(link, identifier)">
+%if comment_system_id:
+<a href="${link}#comment-section">${messages("Comments")}</a>
+%endif
+</%def>
+
+<%def name="comment_link_script()">
+</%def>

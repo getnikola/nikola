@@ -1915,6 +1915,7 @@ Nikola supports several third party comment systems:
 * `Isso <https://posativ.org/isso/>`_
 * `Commento <https://github.com/adtac/commento>`_
 * `Utterances <https://utteranc.es/>`_
+* `Cactus <https://cactus.chat/>`_
 
 By default it will use DISQUS, but you can change by setting ``COMMENT_SYSTEM``
 to one of "disqus", "intensedebate", "livefyre", "moot", "facebook", "isso" or "commento"
@@ -1941,6 +1942,10 @@ to one of "disqus", "intensedebate", "livefyre", "moot", "facebook", "isso" or "
      values can be stored in the ``GLOBAL_CONTEXT``, e.g.,
      ``GLOBAL_CONTEXT['utterances_config'] = {"issue-term": "title",
      "label": "Comments", "theme": "github-light", "crossorigin": "anonymous")``.
+   * For Cactus Comments, it's the unique identifier used to register your site
+     with a Cactus Comments Application Service, whose address should be stored in
+     the ``GLOBAL_CONTEXT``, e.g.
+     ``GLOBAL_CONTEXT['cactus_config'] = {"serverName": "cactus.chat", "defaultHomeserverUrl": "https://matrix.cactus.chat:8448"}``
 
 To use comments in a visible site, you should register with the service and
 then set the ``COMMENT_SYSTEM_ID`` option.

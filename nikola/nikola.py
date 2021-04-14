@@ -101,6 +101,7 @@ LEGAL_VALUES = {
         'muut',
         'commento',
         'utterances',
+        'cactus'
     ],
     'TRANSLATIONS': {
         'af': 'Afrikaans',
@@ -839,11 +840,15 @@ class Nikola(object):
             utils.LOGGER.error('CATEGORY_PAGES_FOLLOW_DESTPATH requires CATEGORY_ALLOW_HIERARCHIES = True, CATEGORY_OUTPUT_FLAT_HIERARCHY = False.')
             sys.exit(1)
 
-        # The Utterances comment system has a required configuration value
+        # The Utterances and Cactus comment systems have required configuration values
         if self.config.get('COMMENT_SYSTEM') == 'utterances':
             utterances_config = self.config.get('GLOBAL_CONTEXT', {}).get('utterances_config', {})
             if not ('issue-term' in utterances_config or 'issue-number' in utterances_config):
                 utils.LOGGER.error("COMMENT_SYSTEM = 'utterances' must have either GLOBAL_CONTEXT['utterances_config']['issue-term'] or GLOBAL_CONTEXT['utterances_config']['issue-term'] defined.")
+        if self.config.get('COMMENT_SYSTEM') == 'cactus':
+            cactus_config = self.config.get('GLOBAL_CONTEXT', {}).get('cactus_config', {})
+            if not all(ky in cactus_config for ky in ("serverName", "defaultHomeserverUrl")):
+                utils.LOGGER.error("COMMENT_SYSTEM = 'cactus' must have GLOBAL_CONTEXT['cactus_config']['serverName'] and GLOBAL_CONTEXT['cactus_config']['defaultHomeserverUrl'] defined.")
 
         # Handle CONTENT_FOOTER and RSS_COPYRIGHT* properly.
         # We provide the arguments to format in CONTENT_FOOTER_FORMATS and RSS_COPYRIGHT_FORMATS.
