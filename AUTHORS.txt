@@ -101,6 +101,7 @@
 * `Paul Ivanov <https://github.com/ivanov>`_
 * `Pelle Nilsson <https://github.com/pellenilsson>`_
 * `phora <https://github.com/phora>`_
+* `Pieter David <https://github.com/pieterdavid>`_
 * `Pierpaolo Da Fieno <https://github.com/numshub>`_
 * `pmav99 <https://github.com/pmav99>`_
 * `Puneeth Chaganti <https://github.com/punchagan>`_

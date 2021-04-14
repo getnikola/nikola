@@ -11,6 +11,7 @@ Features
   as the only option.
 * The default ``ignore_tags`` are appended to the user-supplied
   ``ignore_tags`` added via ``typogrify_custom``.
+* Add [Cactus Comments](https://cactus.chat) as a comments system
 
 Bugfixes
 --------
