@@ -1,63 +1,15 @@
 ## -*- coding: utf-8 -*-
 
-<%namespace name="disqus" file="comments_helper_disqus.tmpl"/>
-<%namespace name="intensedebate" file="comments_helper_intensedebate.tmpl"/>
-<%namespace name="muut" file="comments_helper_muut.tmpl"/>
-<%namespace name="facebook" file="comments_helper_facebook.tmpl"/>
-<%namespace name="isso" file="comments_helper_isso.tmpl"/>
-<%namespace name="commento" file="comments_helper_commento.tmpl"/>
-<%namespace name="utterances" file="comments_helper_utterances.tmpl"/>
+<%namespace name="comments_helper_impl" file="comments_helper_${context['comment_system']}.tmpl"/>
 
 <%def name="comment_form(url, title, identifier)">
-    %if comment_system == 'disqus':
-        ${disqus.comment_form(url, title, identifier)}
-    % elif comment_system == 'intensedebate':
-        ${intensedebate.comment_form(url, title, identifier)}
-    % elif comment_system == 'muut':
-        ${muut.comment_form(url, title, identifier)}
-    % elif comment_system == 'facebook':
-        ${facebook.comment_form(url, title, identifier)}
-    % elif comment_system == 'isso':
-        ${isso.comment_form(url, title, identifier)}
-    % elif comment_system == 'commento':
-        ${commento.comment_form(url, title, identifier)}
-    % elif comment_system == 'utterances':
-        ${utterances.comment_form(url, title, identifier)}
-    %endif
+    ${comments_helper_impl.comment_form(url, title, identifier)}
 </%def>
 
 <%def name="comment_link(link, identifier)">
-    %if comment_system == 'disqus':
-        ${disqus.comment_link(link, identifier)}
-    % elif comment_system == 'intensedebate':
-        ${intensedebate.comment_link(link, identifier)}
-    % elif comment_system == 'muut':
-        ${muut.comment_link(link, identifier)}
-    % elif comment_system == 'facebook':
-        ${facebook.comment_link(link, identifier)}
-    % elif comment_system == 'isso':
-        ${isso.comment_link(link, identifier)}
-    % elif comment_system == 'commento':
-        ${commento.comment_link(link, identifier)}
-    % elif comment_system == 'utterances':
-        ${utterances.comment_link(link, identifier)}
-    %endif
+    ${comments_helper_impl.comment_link(link, identifier)}
 </%def>
 
 <%def name="comment_link_script()">
-    %if comment_system == 'disqus':
-        ${disqus.comment_link_script()}
-    % elif comment_system == 'intensedebate':
-        ${intensedebate.comment_link_script()}
-    % elif comment_system == 'muut':
-        ${muut.comment_link_script()}
-    % elif comment_system == 'facebook':
-        ${facebook.comment_link_script()}
-    % elif comment_system == 'isso':
-        ${isso.comment_link_script()}
-    % elif comment_system == 'commento':
-        ${commento.comment_link_script()}
-    % elif comment_system == 'utterances':
-        ${utterances.comment_link_script()}
-    %endif
+    ${comments_helper_impl.comment_link_script()}
 </%def>
