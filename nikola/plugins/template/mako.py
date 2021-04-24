@@ -61,7 +61,11 @@ class MakoTemplates(TemplateSystem):
         for n in lex.template.nodes:
             keyword = getattr(n, 'keyword', None)
             if keyword in ["inherit", "namespace"] or isinstance(n, parsetree.IncludeTag):
-                deps.append(n.attributes['file'])
+                if n.attributes["file"] == n.parsed_attributes["file"].strip("'"):
+                    deps.append(n.attributes['file'])
+                else:
+                    LOGGER.warning("Ignoring file=%s for template string dependencies in %s",
+                                   n.attributes["file"], filename)
         # Some templates will include "foo.tmpl" and we need paths, so normalize them
         # using the template lookup
         for i, d in enumerate(deps):

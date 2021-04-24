@@ -31,7 +31,7 @@ import json
 import os
 
 from nikola.plugin_categories import TemplateSystem
-from nikola.utils import makedirs, req_missing, sort_posts, _smartjoin_filter
+from nikola.utils import makedirs, req_missing, slugify, sort_posts, _smartjoin_filter
 
 try:
     import jinja2
@@ -66,6 +66,7 @@ class JinjaTemplates(TemplateSystem):
         self.lookup.filters['tojson'] = json.dumps
         self.lookup.filters['sort_posts'] = sort_posts
         self.lookup.filters['smartjoin'] = _smartjoin_filter
+        self.lookup.filters['slugify'] = slugify
         self.lookup.globals['enumerate'] = enumerate
         self.lookup.globals['isinstance'] = isinstance
         self.lookup.globals['tuple'] = tuple
