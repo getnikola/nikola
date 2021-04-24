@@ -1918,6 +1918,8 @@ Nikola supports several third party comment systems:
 
 By default it will use DISQUS, but you can change by setting ``COMMENT_SYSTEM``
 to one of "disqus", "intensedebate", "livefyre", "moot", "facebook", "isso" or "commento"
+It is also possible to use a comment system added by a plugin, see the
+`Cactus Comments plugin <https://plugins.getnikola.com/#cactuscomments>`_ for an example.
 
 .. sidebar:: ``COMMENT_SYSTEM_ID``
 

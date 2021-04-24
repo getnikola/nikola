@@ -11,6 +11,7 @@ Features
   as the only option.
 * The default ``ignore_tags`` are appended to the user-supplied
   ``ignore_tags`` added via ``typogrify_custom``.
+* Allow adding comment systems from a plugin
 
 Bugfixes
 --------

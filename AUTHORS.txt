@@ -102,6 +102,7 @@
 * `Pelle Nilsson <https://github.com/pellenilsson>`_
 * `phora <https://github.com/phora>`_
 * `Pierpaolo Da Fieno <https://github.com/numshub>`_
+* `Pieter David <https://github.com/pieterdavid>`_
 * `pmav99 <https://github.com/pmav99>`_
 * `Puneeth Chaganti <https://github.com/punchagan>`_
 * `pwm1234 <https://github.com/pwm1234>`_
