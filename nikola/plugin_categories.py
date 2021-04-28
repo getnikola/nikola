@@ -475,6 +475,12 @@ class ConfigPlugin(BasePlugin):
     name = "dummy_config_plugin"
 
 
+class CommentSystem(BasePlugin):
+    """A plugn that offers a new comment system."""
+
+    name = "dummy_comment_system"
+
+
 class ShortcodePlugin(BasePlugin):
     """A plugin that adds a shortcode."""
 

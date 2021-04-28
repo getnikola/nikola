@@ -66,6 +66,7 @@ from .plugin_categories import (
     TemplateSystem,
     SignalHandler,
     ConfigPlugin,
+    CommentSystem,
     PostScanner,
     Taxonomy,
 )
@@ -1029,6 +1030,7 @@ class Nikola(object):
             "ShortcodePlugin": ShortcodePlugin,
             "SignalHandler": SignalHandler,
             "ConfigPlugin": ConfigPlugin,
+            "CommentSystem": CommentSystem,
             "PostScanner": PostScanner,
             "Taxonomy": Taxonomy,
         })
@@ -1172,7 +1174,8 @@ class Nikola(object):
             self.compilers[plugin_info.name] = \
                 plugin_info.plugin_object
 
-        # Load config plugins and register templated shortcodes
+        # Load comment systems, config plugins and register templated shortcodes
+        self._activate_plugins_of_category("CommentSystem")
         self._activate_plugins_of_category("ConfigPlugin")
         self._register_templated_shortcodes()
 
