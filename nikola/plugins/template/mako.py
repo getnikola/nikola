@@ -28,6 +28,7 @@
 
 import io
 import os
+import re
 import shutil
 
 from mako import exceptions, util, lexer, parsetree
@@ -52,7 +53,7 @@ class MakoTemplates(TemplateSystem):
     directories = []
     cache_dir = None
 
-    def get_string_deps(self, text, filename=None):
+    def get_string_deps(self, text, context=None, *, filename=None):
         """Find dependencies for a template string."""
         lex = lexer.Lexer(text=text, filename=filename, input_encoding='utf-8')
         lex.parse()
@@ -61,11 +62,11 @@ class MakoTemplates(TemplateSystem):
         for n in lex.template.nodes:
             keyword = getattr(n, 'keyword', None)
             if keyword in ["inherit", "namespace"] or isinstance(n, parsetree.IncludeTag):
-                if (n.attributes.get('name') == "comments_helper_impl" and
-                        n.attributes["file"] != n.parsed_attributes["file"].strip("'")):
-                    pass  # comment system loading, ignore dependency for now
-                else:
-                    deps.append(n.attributes['file'])
+                filename = n.attributes["file"]
+                if '${' in filename:
+                    # Support for comment helper inclusions
+                    filename = re.sub(r'''\${context\[['"](.*?)['"]]}''', lambda m: context[m.group(1)], filename)
+                deps.append(filename)
         # Some templates will include "foo.tmpl" and we need paths, so normalize them
         # using the template lookup
         for i, d in enumerate(deps):
@@ -77,10 +78,10 @@ class MakoTemplates(TemplateSystem):
                              d, filename)
         return deps
 
-    def get_deps(self, filename):
+    def get_deps(self, filename, context=None):
         """Get paths to dependencies for a template."""
         text = util.read_file(filename)
-        return self.get_string_deps(text, filename)
+        return self.get_string_deps(text, context, filename=filename)
 
     def set_directories(self, directories, cache_folder):
         """Create a new template lookup with set directories."""
@@ -126,17 +127,17 @@ class MakoTemplates(TemplateSystem):
         context.update(self.filters)
         return Template(template, lookup=self.lookup).render(**context)
 
-    def template_deps(self, template_name):
+    def template_deps(self, template_name, context=None):
         """Generate list of dependencies for a template."""
         # We can cache here because dependencies should
         # not change between runs
         if self.cache.get(template_name, None) is None:
             template = self.lookup.get_template(template_name)
-            dep_filenames = self.get_deps(template.filename)
+            dep_filenames = self.get_deps(template.filename, context)
             deps = [template.filename]
             for fname in dep_filenames:
                 # yes, it uses forward slashes on Windows
-                deps += self.template_deps(fname.split('/')[-1])
+                deps += self.template_deps(fname.split('/')[-1], context)
             self.cache[template_name] = list(set(deps))
         return self.cache[template_name]
 

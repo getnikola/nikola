@@ -219,7 +219,7 @@ class PostListShortcode(ShortcodePlugin):
 
             posts += [post]
 
-        template_deps = site.template_system.template_deps(template)
+        template_deps = site.template_system.template_deps(template, site.GLOBAL_CONTEXT)
         if state:
             # Register template as a dependency (Issue #2391)
             for d in template_deps:
