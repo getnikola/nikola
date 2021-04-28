@@ -1917,7 +1917,7 @@ Nikola supports several third party comment systems:
 * `Utterances <https://utteranc.es/>`_
 
 By default it will use DISQUS, but you can change by setting ``COMMENT_SYSTEM``
-to one of "disqus", "intensedebate", "livefyre", "moot", "facebook", "isso" or "commento"
+to one of "disqus", "intensedebate", "livefyre", "moot", "facebook", "isso", "commento" or "utterances".
 It is also possible to use a comment system added by a plugin, see the
 `Cactus Comments plugin <https://plugins.getnikola.com/#cactuscomments>`_ for an example.
 
