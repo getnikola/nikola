@@ -307,10 +307,13 @@ class Galleries(Task, ImageProcessor):
                     context['post'] = post
                 else:
                     context['post'] = None
+
+                template_dep_context = context.copy()
+                template_dep_context.update(self.site.GLOBAL_CONTEXT)
                 file_dep = self.site.template_system.template_deps(
-                    template_name) + image_list + thumbs
+                    template_name, template_dep_context) + image_list + thumbs
                 file_dep_dest = self.site.template_system.template_deps(
-                    template_name) + dest_img_list + thumbs
+                    template_name, template_dep_context) + dest_img_list + thumbs
                 if post:
                     file_dep += [post.translated_base_path(l) for l in self.kw['translations']]
                     file_dep_dest += [post.translated_base_path(l) for l in self.kw['translations']]

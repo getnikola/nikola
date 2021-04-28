@@ -66,6 +66,7 @@ from .plugin_categories import (
     TemplateSystem,
     SignalHandler,
     ConfigPlugin,
+    CommentSystem,
     PostScanner,
     Taxonomy,
 )
@@ -1029,6 +1030,7 @@ class Nikola(object):
             "ShortcodePlugin": ShortcodePlugin,
             "SignalHandler": SignalHandler,
             "ConfigPlugin": ConfigPlugin,
+            "CommentSystem": CommentSystem,
             "PostScanner": PostScanner,
             "Taxonomy": Taxonomy,
         })
@@ -1172,7 +1174,8 @@ class Nikola(object):
             self.compilers[plugin_info.name] = \
                 plugin_info.plugin_object
 
-        # Load config plugins and register templated shortcodes
+        # Load comment systems, config plugins and register templated shortcodes
+        self._activate_plugins_of_category("CommentSystem")
         self._activate_plugins_of_category("ConfigPlugin")
         self._register_templated_shortcodes()
 
@@ -1668,7 +1671,7 @@ class Nikola(object):
                 context[k] = context[k](context['lang'])
             output = self.template_system.render_template_to_string(t_data, context)
             if fname is not None:
-                dependencies = [fname] + self.template_system.get_deps(fname)
+                dependencies = [fname] + self.template_system.get_deps(fname, context)
             else:
                 dependencies = []
             return output, dependencies
@@ -1709,7 +1712,7 @@ class Nikola(object):
         for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
             context[k] = context[k](context['lang'])
         output = self.template_system.render_template_to_string(t_data, context)
-        dependencies = self.template_system.get_string_deps(t_data)
+        dependencies = self.template_system.get_string_deps(t_data, context)
         return output, dependencies
 
     def register_shortcode(self, name, f):
@@ -2264,8 +2267,10 @@ class Nikola(object):
         """
         utils.LocaleBorg().set_locale(lang)
 
+        template_dep_context = context.copy()
+        template_dep_context.update(self.GLOBAL_CONTEXT)
         file_deps = copy(file_deps) if file_deps else []
-        file_deps += self.template_system.template_deps(template_name)
+        file_deps += self.template_system.template_deps(template_name, template_dep_context)
         file_deps = sorted(list(filter(None, file_deps)))
 
         context = copy(context) if context else {}

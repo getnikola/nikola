@@ -27,6 +27,10 @@ dumb_replacements = [
     ['loop.index', 'loop.index0'],
     ['is None', 'is none'],
     ['is not None', 'is not none'],
+    [
+        "{% import 'comments_helper_{{ context['comment_system'] }}.tmpl' as comments_helper_impl with context %}",
+        "{% import 'comments_helper_%s.tmpl' % comment_system as comments_helper_impl with context %}"
+    ]
 ]
 
 dumber_replacements = [
@@ -64,7 +68,7 @@ def jinjify(in_theme, out_theme):
         for repl in dumber_replacements:
             data = data.replace(*repl)
 
-        with io.open(out_template, "w+", encoding="utf-8") as outf:
+        with io.open(out_template, "w+", encoding="utf-8", newline="\n") as outf:
             outf.write(data + '\n')
 
         # Syntax check output
