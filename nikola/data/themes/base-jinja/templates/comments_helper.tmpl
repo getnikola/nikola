@@ -1,15 +1,15 @@
 {#  -*- coding: utf-8 -*- #}
 
-{% import 'comments_helper_%s.tmpl' % comment_system as comment_system_impl with context %}
+{% import 'comments_helper_%s.tmpl' % comment_system as comments_helper_impl with context %}
 
 {% macro comment_form(url, title, identifier) %}
-    {{ comment_system_impl.comment_form(url, title, identifier) }}
+    {{ comments_helper_impl.comment_form(url, title, identifier) }}
 {% endmacro %}
 
 {% macro comment_link(link, identifier) %}
-    {{ comment_system_impl.comment_link(link, identifier) }}
+    {{ comments_helper_impl.comment_link(link, identifier) }}
 {% endmacro %}
 
 {% macro comment_link_script() %}
-    {{ comment_system_impl.comment_link_script() }}
+    {{ comments_helper_impl.comment_link_script() }}
 {% endmacro %}
