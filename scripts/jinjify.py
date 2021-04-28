@@ -27,6 +27,10 @@ dumb_replacements = [
     ['loop.index', 'loop.index0'],
     ['is None', 'is none'],
     ['is not None', 'is not none'],
+    [
+        "{% import 'comments_helper_{{ context['comment_system'] }}.tmpl' as comments_helper_impl with context %}",
+        "{% import 'comments_helper_%s.tmpl' % comment_system as comments_helper_impl with context %}"
+    ]
 ]
 
 dumber_replacements = [
@@ -64,7 +68,7 @@ def jinjify(in_theme, out_theme):
         for repl in dumber_replacements:
             data = data.replace(*repl)
 
-        with io.open(out_template, "w+", encoding="utf-8") as outf:
+        with io.open(out_template, "w+", encoding="utf-8", newline="\n") as outf:
             outf.write(data + '\n')
 
         # Syntax check output
@@ -124,7 +128,6 @@ def mako2jinja(input_file):
 
     namespace = re.compile(r'(.*)<% *namespace name="(.*?)".* file="(.*?)".*/>(.*)', re.IGNORECASE)
     inherit = re.compile(r'(.*)<% *inherit file="(.*?)".*/>(.*)', re.IGNORECASE)
-    contextexpression = re.compile(r"{{ context\['([^']*)'\] }}|{{ context\[\"([^\"]*)\"\] }}")
 
     block_single_line = re.compile(r'(.*)<% *block.*name="(.*?)".*>(.*)</% *block>(.*)', re.IGNORECASE)
     block_start = re.compile(r'(.*)<% *block.*name="(.*?)".*>(.*)', re.IGNORECASE)
@@ -205,19 +208,7 @@ def mako2jinja(input_file):
             output += m_for_end.expand(r'\1{% endfor %}\2') + '\n'
 
         elif m_namspace:
-            mgroups = list(m_namspace.groups())
-            # substitute all expressions ${context[...]} (already converted to {{ context[...] }})
-            fileAtt = "'{0}'".format(mgroups[2])
-            m_cexpr = contextexpression.search(fileAtt)
-            while m_cexpr:
-                fileAtt = "{0}%s{1} % {2}".format(
-                        fileAtt[:m_cexpr.span()[0]],
-                        fileAtt[m_cexpr.span()[1]:],
-                        next(cg for cg in m_cexpr.groups() if cg is not None)
-                        )
-                m_cexpr = contextexpression.search(fileAtt)
-            mgroups[2] = fileAtt
-            output += "{0}{{% import {2} as {1} with context %}}{3}\n".format(*mgroups)
+            output += m_namspace.expand(r"\1{% import '\3' as \2 with context %}\4") + '\n'
         elif m_inherit:
             output += m_inherit.expand(r"{% extends '\2' %}\3") + '\n'
 
