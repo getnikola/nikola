@@ -31,10 +31,11 @@ import json
 import os
 
 from nikola.plugin_categories import TemplateSystem
-from nikola.utils import makedirs, req_missing, sort_posts, _smartjoin_filter
+from nikola.utils import makedirs, req_missing, slugify, sort_posts, _smartjoin_filter
 
 try:
     import jinja2
+    import jinja2.nodes
     from jinja2 import meta
 except ImportError:
     jinja2 = None
@@ -66,6 +67,7 @@ class JinjaTemplates(TemplateSystem):
         self.lookup.filters['tojson'] = json.dumps
         self.lookup.filters['sort_posts'] = sort_posts
         self.lookup.filters['smartjoin'] = _smartjoin_filter
+        self.lookup.filters['slugify'] = slugify
         self.lookup.globals['enumerate'] = enumerate
         self.lookup.globals['isinstance'] = isinstance
         self.lookup.globals['tuple'] = tuple
@@ -104,29 +106,35 @@ class JinjaTemplates(TemplateSystem):
         """Render template to a string using context."""
         return self.lookup.from_string(template).render(**context)
 
-    def get_string_deps(self, text):
+    def get_string_deps(self, text, context=None):
         """Find dependencies for a template string."""
         deps = set([])
         ast = self.lookup.parse(text)
-        dep_names = [d for d in meta.find_referenced_templates(ast) if d]
+        simple_dep_names = [d for d in meta.find_referenced_templates(ast) if d]
+        formatted_dep_names = [
+            imp.template.left.value % (context[imp.template.right.name],)
+            for imp in ast.find_all(jinja2.nodes.Import)
+            if isinstance(imp.template, jinja2.nodes.Mod)
+        ]
+        dep_names = simple_dep_names + formatted_dep_names
         for dep_name in dep_names:
             filename = self.lookup.loader.get_source(self.lookup, dep_name)[1]
-            sub_deps = [filename] + self.get_deps(filename)
+            sub_deps = [filename] + self.get_deps(filename, context)
             self.dependency_cache[dep_name] = sub_deps
             deps |= set(sub_deps)
         return list(deps)
 
-    def get_deps(self, filename):
+    def get_deps(self, filename, context=None):
         """Return paths to dependencies for the template loaded from filename."""
         with io.open(filename, 'r', encoding='utf-8-sig') as fd:
             text = fd.read()
-        return self.get_string_deps(text)
+        return self.get_string_deps(text, context)
 
-    def template_deps(self, template_name):
+    def template_deps(self, template_name, context=None):
         """Generate list of dependencies for a template."""
         if self.dependency_cache.get(template_name) is None:
             filename = self.lookup.loader.get_source(self.lookup, template_name)[1]
-            self.dependency_cache[template_name] = [filename] + self.get_deps(filename)
+            self.dependency_cache[template_name] = [filename] + self.get_deps(filename, context)
         return self.dependency_cache[template_name]
 
     def get_template_path(self, template_name):

@@ -94,7 +94,7 @@ class BasePlugin(IPlugin):
         """Add 'dependency' to the target task's task_deps."""
         self.site.injected_deps[target].append(dependency)
 
-    def get_deps(self, filename):
+    def get_deps(self, filename, context=None):
         """Find the dependencies for a file."""
         return []
 
@@ -222,15 +222,15 @@ class TemplateSystem(BasePlugin):
         """Set the list of folders where templates are located and cache."""
         raise NotImplementedError()
 
-    def template_deps(self, template_name: str):
+    def template_deps(self, template_name: str, context=None):
         """Return filenames which are dependencies for a template."""
         raise NotImplementedError()
 
-    def get_deps(self, filename: str):
+    def get_deps(self, filename: str, context=None):
         """Return paths to dependencies for the template loaded from filename."""
         raise NotImplementedError()
 
-    def get_string_deps(self, text: str):
+    def get_string_deps(self, text: str, context=None):
         """Find dependencies for a template string."""
         raise NotImplementedError()
 
@@ -473,6 +473,12 @@ class ConfigPlugin(BasePlugin):
     """A plugin that can edit config (or modify the site) on-the-fly."""
 
     name = "dummy_config_plugin"
+
+
+class CommentSystem(BasePlugin):
+    """A plugn that offers a new comment system."""
+
+    name = "dummy_comment_system"
 
 
 class ShortcodePlugin(BasePlugin):

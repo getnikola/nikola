@@ -1,63 +1,15 @@
 {#  -*- coding: utf-8 -*- #}
 
-{% import 'comments_helper_disqus.tmpl' as disqus with context %}
-{% import 'comments_helper_intensedebate.tmpl' as intensedebate with context %}
-{% import 'comments_helper_muut.tmpl' as muut with context %}
-{% import 'comments_helper_facebook.tmpl' as facebook with context %}
-{% import 'comments_helper_isso.tmpl' as isso with context %}
-{% import 'comments_helper_commento.tmpl' as commento with context %}
-{% import 'comments_helper_utterances.tmpl' as utterances with context %}
+{% import 'comments_helper_%s.tmpl' % comment_system as comments_helper_impl with context %}
 
 {% macro comment_form(url, title, identifier) %}
-    {% if comment_system == 'disqus' %}
-        {{ disqus.comment_form(url, title, identifier) }}
-    {% elif comment_system == 'intensedebate' %}
-        {{ intensedebate.comment_form(url, title, identifier) }}
-    {% elif comment_system == 'muut' %}
-        {{ muut.comment_form(url, title, identifier) }}
-    {% elif comment_system == 'facebook' %}
-        {{ facebook.comment_form(url, title, identifier) }}
-    {% elif comment_system == 'isso' %}
-        {{ isso.comment_form(url, title, identifier) }}
-    {% elif comment_system == 'commento' %}
-        {{ commento.comment_form(url, title, identifier) }}
-    {% elif comment_system == 'utterances' %}
-        {{ utterances.comment_form(url, title, identifier) }}
-    {% endif %}
+    {{ comments_helper_impl.comment_form(url, title, identifier) }}
 {% endmacro %}
 
 {% macro comment_link(link, identifier) %}
-    {% if comment_system == 'disqus' %}
-        {{ disqus.comment_link(link, identifier) }}
-    {% elif comment_system == 'intensedebate' %}
-        {{ intensedebate.comment_link(link, identifier) }}
-    {% elif comment_system == 'muut' %}
-        {{ muut.comment_link(link, identifier) }}
-    {% elif comment_system == 'facebook' %}
-        {{ facebook.comment_link(link, identifier) }}
-    {% elif comment_system == 'isso' %}
-        {{ isso.comment_link(link, identifier) }}
-    {% elif comment_system == 'commento' %}
-        {{ commento.comment_link(link, identifier) }}
-    {% elif comment_system == 'utterances' %}
-        {{ utterances.comment_link(link, identifier) }}
-    {% endif %}
+    {{ comments_helper_impl.comment_link(link, identifier) }}
 {% endmacro %}
 
 {% macro comment_link_script() %}
-    {% if comment_system == 'disqus' %}
-        {{ disqus.comment_link_script() }}
-    {% elif comment_system == 'intensedebate' %}
-        {{ intensedebate.comment_link_script() }}
-    {% elif comment_system == 'muut' %}
-        {{ muut.comment_link_script() }}
-    {% elif comment_system == 'facebook' %}
-        {{ facebook.comment_link_script() }}
-    {% elif comment_system == 'isso' %}
-        {{ isso.comment_link_script() }}
-    {% elif comment_system == 'commento' %}
-        {{ commento.comment_link_script() }}
-    {% elif comment_system == 'utterances' %}
-        {{ utterances.comment_link_script() }}
-    {% endif %}
+    {{ comments_helper_impl.comment_link_script() }}
 {% endmacro %}

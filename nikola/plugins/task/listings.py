@@ -179,7 +179,7 @@ class Listings(Task):
 
         yield self.group_task()
 
-        template_deps = self.site.template_system.template_deps('listing.tmpl')
+        template_deps = self.site.template_system.template_deps('listing.tmpl', self.site.GLOBAL_CONTEXT)
 
         for input_folder, output_folder in self.kw['listings_folders'].items():
             for root, dirs, files in os.walk(input_folder, followlinks=True):

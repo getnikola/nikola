@@ -492,6 +492,14 @@ Does nothing specific, can be used to modify the site object (and thus the confi
 Put all the magic you want in ``set_site()``, and don’t forget to run the one
 from ``super()``. Example plugin: `navstories <https://github.com/getnikola/plugins/tree/master/v7/navstories>`__
 
+
+CommentSystem Plugins
+---------------------
+
+Can be used to add a new comment system. (It doesn’t do anything by itself.) It’s expected to provide templates named ``comment_helper_foo.tmpl``.
+
+Example plugin: `cactuscomments <https://github.com/getnikola/plugins/tree/master/v8/cactuscomments>`__
+
 Shortcode Plugins
 -----------------
 
