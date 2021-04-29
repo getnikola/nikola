@@ -582,6 +582,11 @@ to
                         def add(our_key, wp_key, is_int=False, ignore_zero=False, is_float=False):
                             if wp_key in image_meta:
                                 value = image_meta[wp_key]
+                                if value in ("", b"") and (is_int or is_float):
+                                    if ignore_zero:
+                                        return
+                                    else:
+                                        dst_meta[our_key] = 0
                                 if is_int:
                                     value = int(value)
                                     if ignore_zero and value == 0:

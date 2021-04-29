@@ -18,6 +18,8 @@ Bugfixes
 --------
 
 * Support passing ``--backend`` and ``--db-file`` to ``nikola auto``
+* Support blank values in certain WordPress-imported structures
+  (Issue #3535)
 * Typogrify ignores ``div`` elements with ``.math`` CSS class.
   (Issue #3512)
 
