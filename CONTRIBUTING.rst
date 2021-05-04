@@ -3,11 +3,16 @@ Patch submission guidelines [1]_
 
 Here are some guidelines about how you can contribute to Nikola:
 
-* If your contribution is a new feature, you should make sure an issue exists
-  for it, and perhaps `discuss it <http://groups.google.com/group/nikola-discuss>`_
-  on the mailing list. If you’re fixing a bug you just noticed, or are making a
-  minor change, creating an issue is optional, but please search for existing
-  issues.
+* Please make sure the bug you’re fixing or the feature you’re contributing has
+  a GitHub issue. If there is no issue for the bug/feature, please create it
+  first. The issue description should be precise. We need information about
+  what the bug/feature is. For features, we need to have information that can
+  help us understand the request, the benefits and drawbacks of adding this
+  feature to Nikola.
+
+* If your contribution is a new feature, it should be discussed first, under
+  the GitHub issue for the feature request. You may also discuss it on the
+  `mailing list <http://groups.google.com/group/nikola-discuss>`_.
 
 * **Create a new Git branch specific to your change(s).** For example, if
   you’re adding a new feature to foo the bars, do something like the
@@ -42,11 +47,11 @@ Here are some guidelines about how you can contribute to Nikola:
   fail, you can just use ``git pull --no-rebase``.
 * **Make sure documentation is updated** — at the very least, keep docstrings
   current, and if necessary, update the reStructuredText documentation in ``docs/``.
-* **Add a CHANGELOG entry** at the *top* of ``CHANGES.txt`` mentioning issue number
-  and in the correct Features/Bugfixes section. Put it under *New in master*.
-  Create that section if it does not exist yet. Do not add an entry if the
-  change is trivial (documentation, typo fixes) or if the change is internal
-  (not noticeable to end users in any way).
+* **Add a CHANGELOG entry** at the *top* of ``CHANGES.txt`` mentioning the
+  issue number in parentheses and in the correct Features/Bugfixes section. Put
+  it under *New in master*.  Create that section if it does not exist yet. Do
+  not add an entry if the change is trivial (documentation, typo fixes) or if
+  the change is internal (not noticeable to end users in any way).
 * Add your name to ``AUTHORS.txt`` if the change is non-trivial.
 * If you are fixing an issue, **include the issue number in commit** and/or pull
   request text (eg. ``fix #1234``) so the issue `is automatically closed
@@ -60,8 +65,9 @@ Here are some guidelines about how you can contribute to Nikola:
 * **Test your code.** If you can, run the test suite with ``pytest tests/``
   (you will need to install pytest and some other requirements, see
   ``requirements-tests.txt``). Alternatively, you can push, make a PR and wait
-  for our CI to pick up and test your changes. Test results will appear at the
-  bottom of the PR page, and you can get `notifications
+  for our CI to pick up and test your changes (but note that workflows for new
+  contributors require maintainer approval for security reasons). Test results
+  will appear at the bottom of the PR page, and you can get `notifications
   <https://github.com/settings/notifications>`_ about failed runs if you
   configure them on GitHub.
 
