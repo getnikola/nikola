@@ -14,7 +14,7 @@ Help and Support
 ================
 
 1. A `mailing list`_, nikola-discuss on Google Groups exists.
-2. There are IRC channels: #nikola on Freenode and on Libera.Chat.  You can
+2. There’s an IRC channel: #nikola on Libera.Chat.  You can
    find many developers and volunteers (users) there which are there to provide
    help, if they are around and read your message.  The channels are
    `publicly logged <https://irclogs.getnikola.com/>`_.
