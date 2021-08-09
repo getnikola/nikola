@@ -1149,7 +1149,8 @@ class Nikola(object):
         command_plugins = self._activate_plugins_of_category("Command")
         for plugin_info in command_plugins:
             plugin_info.plugin_object.short_help = plugin_info.description
-            self._commands[plugin_info.name] = plugin_info.plugin_object
+            name = getattr(plugin_info.plugin_object, 'name', plugin_info.name)
+            self._commands[name] = plugin_info.plugin_object
 
         self._activate_plugins_of_category("Task")
         self._activate_plugins_of_category("LateTask")
@@ -1318,7 +1319,8 @@ class Nikola(object):
         # this code duplicated in tests/base.py
         plugins = []
         for plugin_info in self.plugin_manager.getPluginsOfCategory(category):
-            self.plugin_manager.activatePluginByName(plugin_info.name)
+            name = getattr(plugin_info.plugin_object, 'name', plugin_info.name)
+            self.plugin_manager.activatePluginByName(name)
             plugin_info.plugin_object.set_site(self)
             plugins.append(plugin_info)
         return plugins
