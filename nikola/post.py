@@ -1238,7 +1238,7 @@ def get_meta(post, lang):
     signal('metadata').send({
         'path': post.source_path,
         'meta': meta
-    });
+    })
     return meta, used_extractor
 
 
