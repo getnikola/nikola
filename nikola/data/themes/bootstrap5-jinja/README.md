@@ -6,5 +6,7 @@ content layout. For a more blog-style layout, check out `bootblog4`.
 Note that unlike previous versions of Bootstrap, icon fonts are not built-in.
 You can get [Bootstrap Icons](https://icons.getbootstrap.com/) separately.
 
-TODO: support Bootswatch font/color schemes through the `nikola subtheme`
-command.
+This theme supports Bootswatch font/color schemes through the `nikola subtheme`
+command:
+
+    $ nikola subtheme -p bootstrap5-jinja -s <theme_name>
