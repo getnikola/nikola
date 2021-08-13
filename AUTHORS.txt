@@ -22,6 +22,7 @@
 * `Christian Lawson-Perfect <https://github.com/christianp>`_
 * `Christopher Arndt <https:/github.com/SpotlightKid>`_
 * `Claudio Canepa <https://github.com/ccanepa>`_
+* `Clayton A. Davis <https://github.com/clayadavis>`_
 * `Damien Tournoud <https://github.com/damz>`_
 * `Damián Avila <https://github.com/damianavila>`_
 * `Daniel Aleksandersen <https://github.com/Aeyoun>`_
