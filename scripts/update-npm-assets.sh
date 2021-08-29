@@ -16,6 +16,18 @@ ln -sf ../../../../../../npm_assets/node_modules/bootstrap/dist/css/bootstrap.mi
 git add .
 popd
 
+# Link bootstrap5 assets to bootstrap5
+pushd nikola/data/themes/bootstrap5/assets/js
+ln -sf ../../../../../../npm_assets/node_modules/bootstrap5/dist/js/bootstrap.bundle.min.js .
+git add .
+popd
+
+pushd nikola/data/themes/bootstrap5/assets/css
+ln -sf ../../../../../../npm_assets/node_modules/bootstrap5/dist/css/bootstrap.min.css .
+git add .
+popd
+
+
 # Link baguettebox.js to base theme
 pushd nikola/data/themes/base/assets/js
 ln -sf ../../../../../../npm_assets/node_modules/baguettebox.js/dist/baguetteBox.min.js .

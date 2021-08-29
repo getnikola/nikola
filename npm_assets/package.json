@@ -7,6 +7,7 @@
     "dependencies": {
         "baguettebox.js": "^1.11.0",
         "bootstrap": "^4.6.0",
+        "bootstrap5": "npm:bootstrap@^5.1.0",
         "html5shiv": "^3.7.3",
         "jquery": "^3.5.1",
         "justified-layout": "^3.0.0",
