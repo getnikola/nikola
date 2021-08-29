@@ -1338,7 +1338,7 @@ class Nikola(object):
             if self.config['USE_CDN'] and self.config['USE_CDN_WARNING']:
                 bootstrap_path = utils.get_asset_path(os.path.join(
                     'assets', 'css', 'bootstrap.min.css'), self._THEMES)
-                if bootstrap_path and bootstrap_path.split(os.sep)[-4] not in ['bootstrap', 'bootstrap3', 'bootstrap4']:
+                if bootstrap_path and bootstrap_path.split(os.sep)[-4] not in ['bootstrap', 'bootstrap3', 'bootstrap4', 'bootstrap5']:
                     utils.LOGGER.warning('The USE_CDN option may be incompatible with your theme, because it uses a hosted version of bootstrap.')
 
         return self._THEMES

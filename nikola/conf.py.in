@@ -87,7 +87,7 @@ NAVIGATION_LINKS = ${NAVIGATION_LINKS}
 
 # Alternative navigation links. Works the same way NAVIGATION_LINKS does,
 # although themes may not always support them. (translatable)
-# (Bootstrap 4: right-side of navbar, Bootblog 4: right side of title)
+# (Bootstrap 4/5: right-side of navbar, Bootblog 4/5: right side of title)
 NAVIGATION_ALT_LINKS = {
     DEFAULT_LANG: ()
 }
@@ -101,13 +101,13 @@ THEME = ${THEME}
 THEME_COLOR = '#5670d4'
 
 # Theme configuration. Fully theme-dependent. (translatable)
-# Samples for bootblog4 (enabled) and bootstrap4 (commented) follow.
+# Samples for bootblog4/5 (enabled) and bootstrap4/5 (commented) follow.
 # bootblog4 supports: featured_large featured_small featured_on_mobile
 #                     featured_large_image_on_mobile featured_strip_html sidebar
 # bootstrap4 supports: navbar_light (defaults to False)
 #                      navbar_custom_bg (defaults to '')
 
-# Config for bootblog4:
+# Config for bootblog4 and bootblog5:
 THEME_CONFIG = {
     DEFAULT_LANG: {
         # Show the latest featured post in a large box, with the previewimage as its background.
@@ -125,7 +125,7 @@ THEME_CONFIG = {
         'sidebar': ''
     }
 }
-# Config for bootstrap4:
+# Config for bootstrap4 and bootstrap5:
 # THEME_CONFIG = {
 #     DEFAULT_LANG: {
 #         # Use a light navbar with dark text. Defaults to False.

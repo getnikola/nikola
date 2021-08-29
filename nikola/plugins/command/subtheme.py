@@ -94,7 +94,9 @@ class CommandSubTheme(Command):
             version = '3'
         elif _check_for_theme('bootstrap4', themes) or _check_for_theme('bootstrap4-jinja', themes):
             version = '4'
-        elif not _check_for_theme('bootstrap4', themes) and not _check_for_theme('bootstrap4-jinja', themes):
+        elif _check_for_theme('bootstrap5', themes) or _check_for_theme('bootstrap5-jinja', themes):
+            version = '5'
+        elif not any(_check_for_theme(theme, themes) for theme in ('bootstrap4', 'bootstrap4-jinja', 'bootstrap5', 'bootstrap5-jinja')):
             LOGGER.warning(
                 '"subtheme" only makes sense for themes that use bootstrap')
         elif _check_for_theme('bootstrap3-gradients', themes) or _check_for_theme('bootstrap3-gradients-jinja', themes):
