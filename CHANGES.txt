@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Add Maori translation
+* Add Occitan translation
 * New ``auto_command_starting`` signal when ``nikola auto`` is
   starting
 * ``typogrify_custom`` filter adds a default value for

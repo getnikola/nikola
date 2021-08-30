@@ -7,163 +7,158 @@
 # Translators:
 # Translators:
 # Translators:
-# Alfons Rovira <inclusa@gmail.com>, 2014
-# Carles Barrobés <carles@barrobes.com>, 2021
-# Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
-# Robert Antoni Buj i Gelonch <rbuj@fedoraproject.org>, 2019
-# Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
-# Sergi Almacellas <pokoli@gmail.com>, 2016
+# Hakim Oubouali <hakim1bal@protonmail.com>, 2020-2021
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2021-01-24 16:06+0000\n"
-"Last-Translator: Carles Barrobés <carles@barrobes.com>\n"
-"Language-Team: Catalan (http://www.transifex.com/ralsina/nikola/language/ca/)\n"
+"PO-Revision-Date: 2021-01-01 12:49+0000\n"
+"Last-Translator: Hakim Oubouali <hakim1bal@protonmail.com>\n"
+"Language-Team: Central Atlas Tamazight (http://www.transifex.com/ralsina/nikola/language/tzm/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ca\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: tzm\n"
+"Plural-Forms: nplurals=2; plural=(n == 0 || n == 1 || (n > 10 && n < 100) ? 0 : 1;\n"
 
 msgid "More posts about %s"
-msgstr "Més entrades sobre %s"
+msgstr ""
 
 #. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "LANGUAGE"
-msgstr "Català"
+msgstr "Tamaziɣt"
 
 msgid "Tags"
-msgstr "Etiquetes"
+msgstr ""
 
 msgid "Categories"
-msgstr "Categories"
+msgstr ""
 
 msgid "Tags and Categories"
-msgstr "Etiquetes i categories"
+msgstr ""
 
 msgid "Comments"
-msgstr "Comentaris"
+msgstr "Ixfawalen"
 
 msgid "Read more"
-msgstr "Llegeix-ne més"
+msgstr "Ɣer uggar"
 
 msgid "Posts about %s"
-msgstr "Entrades sobre %s"
+msgstr ""
 
 msgid "Next post"
-msgstr "Entrada següent"
+msgstr ""
 
 msgid "old posts, page %d"
-msgstr "entrades antigues, pàgina %d"
+msgstr ""
 
 msgid "page %d"
-msgstr "pàgina %d"
+msgstr ""
 
 msgid "Source"
-msgstr "Codi"
+msgstr "Asagem"
 
 #. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "Read in English"
-msgstr "Llegeix-ho en català"
+msgstr "Ɣer s tneglizt"
 
 msgid "Posts for year %s"
-msgstr "Entrades de l'any %s"
+msgstr ""
 
 msgid "Newer posts"
-msgstr "Entrades més recents"
+msgstr ""
 
 msgid "Previous post"
-msgstr "Entrada anterior"
+msgstr ""
 
 msgid "Also available in:"
-msgstr "També disponible en:"
+msgstr ""
 
 msgid "Languages:"
-msgstr "Idiomes:"
+msgstr ""
 
 msgid "Original site"
-msgstr "Lloc original"
+msgstr ""
 
 msgid "Older posts"
-msgstr "Entrades més antigues"
+msgstr ""
 
 msgid "Archive"
-msgstr "Arxiu"
+msgstr ""
 
 msgid "Publication date"
-msgstr "Data de publicació"
+msgstr ""
 
 msgid "Posted:"
-msgstr "Publicat:"
+msgstr ""
 
 msgid "Posts for {month_year}"
-msgstr "Publicat en {month_year}"
+msgstr ""
 
 msgid "Posts for {month_day_year}"
-msgstr "Entrades per {month_day_year}"
+msgstr ""
 
 msgid "Nothing found."
-msgstr "No trobat"
+msgstr ""
 
 msgid "No posts found."
-msgstr "Publicació no trobada"
+msgstr ""
 
 msgid "RSS feed"
-msgstr "Canal RSS"
+msgstr ""
 
 msgid "%d min remaining to read"
-msgstr "%d min restants per a llegir"
+msgstr ""
 
 msgid "Skip to main content"
-msgstr "Vés al comentari principal"
+msgstr ""
 
 msgid "Subcategories:"
-msgstr "Subcategories:"
+msgstr ""
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
-msgstr "(actiu)"
+msgstr ""
 
 #. Default content for a new post
 msgid "Write your post here."
-msgstr "Escriviu la vostra entrada aquí."
+msgstr ""
 
 #. Default content for a new page
 msgid "Write your page here."
-msgstr "Escriviu la vostra pàgina aquí."
+msgstr ""
 
 msgid "Uncategorized"
-msgstr "Sense categoria"
+msgstr ""
 
 #. Used for feeds of any format
 msgid "Updates"
-msgstr "Actualitzacions"
+msgstr ""
 
 msgid "Authors"
-msgstr "Autors"
+msgstr ""
 
 msgid "Posts by %s"
-msgstr "Entrades per %s"
+msgstr ""
 
 msgid "Toggle navigation"
-msgstr "Commuta la navegació"
+msgstr ""
 
 msgid "Previous"
-msgstr "Anterior"
+msgstr ""
 
 msgid "Up"
-msgstr "Amunt"
+msgstr ""
 
 msgid "Next"
-msgstr "Següent"
+msgstr ""
 
 msgid "Atom feed"
-msgstr "Canal Atom"
+msgstr ""
 
 #. {date} (updated {updated_date})
 msgid "updated"
-msgstr "actualitzat"
+msgstr ""
