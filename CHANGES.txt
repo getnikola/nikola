@@ -19,6 +19,8 @@ Features
 Bugfixes
 --------
 
+* Fix bug with posts after the first one appearing shifted due to a
+  ``<div>`` closed too early (Issue #3573, #3564)
 * Fix support for files outside of site root directory on Windows
 * Support passing ``--backend`` and ``--db-file`` to ``nikola auto``
 * Support blank values in certain WordPress-imported structures

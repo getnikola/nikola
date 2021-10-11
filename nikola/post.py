@@ -910,10 +910,7 @@ class Post(object):
         if self.hyphenate:
             hyphenate(document, real_lang)
 
-        try:
-            data = lxml.html.tostring(document.body, encoding='unicode')
-        except Exception:
-            data = lxml.html.tostring(document, encoding='unicode')
+        data = utils.html_tostring_fragment(document)
 
         if teaser_only:
             teaser_regexp = self.config.get('TEASER_REGEXP', TEASER_REGEXP)
@@ -936,10 +933,7 @@ class Post(object):
                         post_title=self.title(lang))
                 # This closes all open tags and sanitizes the broken HTML
                 document = lxml.html.fromstring(teaser)
-                try:
-                    data = lxml.html.tostring(document.body, encoding='unicode')
-                except IndexError:
-                    data = lxml.html.tostring(document, encoding='unicode')
+                data = utils.html_tostring_fragment(document)
 
         if data and strip_html:
             try:
@@ -952,11 +946,11 @@ class Post(object):
             if self.demote_headers:
                 # see above
                 try:
-                    document = lxml.html.fromstring(data)
+                    document = lxml.html.fragment_fromstring(data, "body")
                     demote_headers(document, self.demote_headers)
-                    data = lxml.html.tostring(document.body, encoding='unicode')
+                    data = utils.html_tostring_fragment(document)
                 except (lxml.etree.ParserError, IndexError):
-                    data = lxml.html.tostring(document, encoding='unicode')
+                    pass
 
         return data
 

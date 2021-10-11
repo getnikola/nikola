@@ -30,6 +30,7 @@ import configparser
 import datetime
 import hashlib
 import io
+import lxml.html
 import operator
 import os
 import re
@@ -654,6 +655,25 @@ def get_theme_chain(theme, themes_dirs):
             break
         themes.append(parent)
     return themes
+
+
+def html_tostring_fragment(document):
+    """Convert a HTML snippet to a fragment, ready for insertion elsewhere."""
+    try:
+        doc = lxml.html.tostring(document.body, encoding='unicode').strip()
+    except Exception:
+        doc = lxml.html.tostring(document, encoding='unicode').strip()
+    start_fragments = ["<html>", "<body>"]
+    end_fragments = ["</body>", "</html>"]
+    for start in start_fragments:
+        if doc.startswith(start):
+            doc = doc[len(start):].strip()
+            print(repr(doc))
+    for end in end_fragments:
+        if doc.endswith(end):
+            doc = doc[:-len(end)].strip()
+            print(repr(doc))
+    return doc
 
 
 INCOMPLETE_LANGUAGES_WARNED = set()
