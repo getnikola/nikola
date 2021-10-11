@@ -285,12 +285,12 @@ Basic
 
 title
     Title of the post. Using HTML/math in titles is not supported/recommended.
-    (required)
+    If not specified, the file name will be used.
 
 slug
     Slug of the post. Used as the last component of the page URL.  We recommend
     and default to using a restricted character set (``a-z0-9-_``) because
-    other symbols may cause issues in URLs. (required)
+    other symbols may cause issues in URLs. If not specified, the file name will be used.
 
     So, if the slug is "the-slug" the page generated would be "the-slug.html" or
     "the-slug/index.html" (if you have the pretty URLs option enabled)
