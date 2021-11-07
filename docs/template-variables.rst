@@ -422,12 +422,16 @@ Variables available in the “Tags and categories” page (``tags.tmpl``)
 
 .. class:: table table-bordered table-striped
 
-==============  ======  ===========================================================================================================
-Name            Type    Description
-==============  ======  ===========================================================================================================
-``items``       list    Tags *(name, link)*
-``cat_items``   list    Categories *(name, full name, path, link, indent levels, indent to change before, indent to change after)*
-==============  ======  ===========================================================================================================
+========================  ======  ===========================================================================================================
+Name                      Type    Description
+========================  ======  ===========================================================================================================
+``items``                 list    Tags *(name, link)*
+``cat_items``             list    Categories *(name, full name, path, link, indent levels, indent to change before, indent to change after)*
+``category_titles``       dict    ``CATEGORY_TITLES`` setting (dict for the current language only)
+``category_descriptions`` dict    ``CATEGORY_DESCRIPTIONS`` setting (dict for the current language only)
+``tag_titles``            dict    ``TAG_TITLES`` setting (dict for the current language only)
+``tag_descriptions``      dict    ``TAG_DESCRIPTIONS`` setting (dict for the current language only)
+========================  ======  ===========================================================================================================
 
 For more details about hierarchies, see `Hierarchical lists`_
 

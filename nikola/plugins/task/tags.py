@@ -128,6 +128,8 @@ link://tag_rss/cats => /tags/cats.xml""",
             "title": self.site.MESSAGES[lang]["Tags"],
             "description": self.site.MESSAGES[lang]["Tags"],
             "pagekind": ["list", "tags_page"],
+            "tag_descriptions": self.site.config['TAG_DESCRIPTIONS'](lang),
+            "tag_titles": self.site.config['TAG_TITLES'](lang),
         }
         kw.update(context)
         return context, kw

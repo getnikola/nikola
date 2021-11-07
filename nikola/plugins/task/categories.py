@@ -186,6 +186,8 @@ link://category_rss/dogs => /categories/dogs.xml""",
             "title": self.site.MESSAGES[lang]["Categories"],
             "description": self.site.MESSAGES[lang]["Categories"],
             "pagekind": ["list", "tags_page"],
+            "category_descriptions": self.site.config['CATEGORY_DESCRIPTIONS'](lang),
+            "category_titles": self.site.config['CATEGORY_TITLES'](lang),
         }
         kw.update(context)
         return context, kw
