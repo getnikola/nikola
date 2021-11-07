@@ -143,8 +143,8 @@ link://tag_rss/cats => /tags/cats.xml""",
             "tag_titles": self.site.config['TAG_TITLES'],
         }
         context = {
-            "title": self.site.config['TAG_TITLES'].get(lang, {}).get(classification, self.site.MESSAGES[lang]["Posts about %s"] % classification),
-            "description": self.site.config['TAG_DESCRIPTIONS'].get(lang, {}).get(classification),
+            "title": self.site.config['TAG_TITLES'](lang).get(classification, self.site.MESSAGES[lang]["Posts about %s"] % classification),
+            "description": self.site.config['TAG_DESCRIPTIONS'](lang).get(classification),
             "pagekind": ["tag_page", "index" if self.show_list_as_index else "list"],
             "tag": classification,
         }

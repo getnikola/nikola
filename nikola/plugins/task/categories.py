@@ -209,8 +209,8 @@ link://category_rss/dogs => /categories/dogs.xml""",
         subcats = [(child.name, self.site.link(self.classification_name, child.classification_name, lang)) for child in children]
         friendly_name = self.get_classification_friendly_name(classification, lang)
         context = {
-            "title": self.site.config['CATEGORY_TITLES'].get(lang, {}).get(classification, self.site.MESSAGES[lang]["Posts about %s"] % friendly_name),
-            "description": self.site.config['CATEGORY_DESCRIPTIONS'].get(lang, {}).get(classification),
+            "title": self.site.config['CATEGORY_TITLES'](lang).get(classification, self.site.MESSAGES[lang]["Posts about %s"] % friendly_name),
+            "description": self.site.config['CATEGORY_DESCRIPTIONS'](lang).get(classification),
             "pagekind": ["tag_page", "index" if self.show_list_as_index else "list"],
             "tag": friendly_name,
             "category": classification,

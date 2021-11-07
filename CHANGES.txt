@@ -19,6 +19,8 @@ Features
 Bugfixes
 --------
 
+* Make ``CATEGORY_TITLES``, ``CATEGORY_DESCRIPTIONS``, ``TAG_TITLES``,
+  ``TAG_DESCRIPTIONS`` translatable settings for consistency (Issue #3584)
 * Fix bug with posts after the first one appearing shifted due to a
   ``<div>`` closed too early (Issue #3573, #3564)
 * Fix support for files outside of site root directory on Windows
