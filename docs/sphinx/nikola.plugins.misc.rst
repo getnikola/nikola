@@ -24,4 +24,3 @@ nikola.plugins.misc.taxonomies\_classifier module
    :members:
    :undoc-members:
    :show-inheritance:
-

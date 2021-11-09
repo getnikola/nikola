@@ -145,4 +145,3 @@ nikola.plugins.command.version module
    :members:
    :undoc-members:
    :show-inheritance:
-

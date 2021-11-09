@@ -49,4 +49,3 @@ nikola.plugins.compile.php module
    :members:
    :undoc-members:
    :show-inheritance:
-

@@ -168,4 +168,3 @@ nikola.plugins.task.taxonomies module
    :members:
    :undoc-members:
    :show-inheritance:
-

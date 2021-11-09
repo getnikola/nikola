@@ -14,4 +14,3 @@ Subpackages
 
    nikola.packages.datecond
    nikola.packages.pygments_better_html
-   nikola.packages.tzlocal
