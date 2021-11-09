@@ -317,6 +317,7 @@ COMPILERS = ${COMPILERS}
 # Set descriptions for tag pages to make them more interesting. The
 # default is no description. The value is used in the meta description
 # and displayed underneath the tag list or index page’s title.
+# (translatable)
 # TAG_DESCRIPTIONS = {
 #    DEFAULT_LANG: {
 #        "blogging": "Meta-blog posts about blogging.",
@@ -325,6 +326,7 @@ COMPILERS = ${COMPILERS}
 # }
 
 # Set special titles for tag pages. The default is "Posts about TAG".
+# (translatable)
 # TAG_TITLES = {
 #    DEFAULT_LANG: {
 #        "blogging": "Meta-posts about blogging",
@@ -390,6 +392,7 @@ CATEGORY_OUTPUT_FLAT_HIERARCHY = ${CATEGORY_OUTPUT_FLAT_HIERARCHY}
 # Set descriptions for category pages to make them more interesting. The
 # default is no description. The value is used in the meta description
 # and displayed underneath the category list or index page’s title.
+# (translatable)
 # CATEGORY_DESCRIPTIONS = {
 #    DEFAULT_LANG: {
 #        "blogging": "Meta-blog posts about blogging.",
@@ -398,6 +401,7 @@ CATEGORY_OUTPUT_FLAT_HIERARCHY = ${CATEGORY_OUTPUT_FLAT_HIERARCHY}
 # }
 
 # Set special titles for category pages. The default is "Posts about CATEGORY".
+# (translatable)
 # CATEGORY_TITLES = {
 #    DEFAULT_LANG: {
 #        "blogging": "Meta-posts about blogging",
