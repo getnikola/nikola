@@ -22,6 +22,7 @@ visible in this version of Nikola docs.
    internals
    social_buttons
    path_handlers
+   support
 
 .. toctree::
    :maxdepth: 5

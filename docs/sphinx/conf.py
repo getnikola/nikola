@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-#
+
+from __future__ import unicode_literals
+import os
+import sys
+
 # Nikola documentation build configuration file, created by
 # sphinx-quickstart on Sun Sep 22 17:43:37 2013.
 #
@@ -15,19 +19,17 @@
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-# sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
 # needs_sphinx = '1.0'
 
-from __future__ import unicode_literals
-
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.mathjax']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.mathjax', 'nikola_titles_for_sphinx']
 # extensions.append('sphinxcontrib.gist')
 
 # Add any paths that contain templates here, relative to this directory.
@@ -35,6 +37,8 @@ templates_path = ['_templates']
 
 # The suffix of source filenames.
 source_suffix = '.rst'
+
+source_parsers = {'.rst': 'nikola_titles_for_sphinx.NikolaTitlesRSTParser'}
 
 # The encoding of source files.
 # source_encoding = 'utf-8-sig'
