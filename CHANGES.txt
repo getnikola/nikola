@@ -21,6 +21,8 @@ Features
 Bugfixes
 --------
 
+* Fix changes to ``INDEX_READ_MORE_LINK`` and ``FEED_READ_MORE_LINK``
+  not triggering rebuilds
 * Make ``CATEGORY_TITLES``, ``CATEGORY_DESCRIPTIONS``, ``TAG_TITLES``,
   ``TAG_DESCRIPTIONS`` translatable settings for consistency (Issue #3584)
 * Fix bug with posts after the first one appearing shifted due to a

@@ -736,6 +736,8 @@ class Nikola(object):
                                             'rss_path',
                                             'rss_filename_base',
                                             'atom_filename_base',
+                                            'index_read_more_link',
+                                            'feed_read_more_link',
                                             )
         # WARNING: navigation_(alt_)links SHOULD NOT be added to the list above.
         #          Themes ask for [lang] there and we should provide it.
@@ -1320,6 +1322,8 @@ class Nikola(object):
         self.ALL_PAGE_DEPS['slug_author_path'] = self.config.get('SLUG_AUTHOR_PATH')
         self.ALL_PAGE_DEPS['slug_tag_path'] = self.config.get('SLUG_TAG_PATH')
         self.ALL_PAGE_DEPS['locale'] = self.config.get('LOCALE')
+        self.ALL_PAGE_DEPS['index_read_more_link'] = self.config.get('INDEX_READ_MORE_LINK')
+        self.ALL_PAGE_DEPS['feed_read_more_link'] = self.config.get('FEED_READ_MORE_LINK')
 
     def _activate_plugins_of_category(self, category):
         """Activate all the plugins of a given category and return them."""
