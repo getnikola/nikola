@@ -33,6 +33,7 @@ Bugfixes
   (Issue #3535)
 * Typogrify ignores ``div`` elements with ``.math`` CSS class.
   (Issue #3512)
+* Adjust panorama aspect ratio to 3:1 and document behaviour.
 
 New in v8.1.3
 =============
