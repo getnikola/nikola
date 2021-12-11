@@ -55,6 +55,7 @@
 * `Hardening <https://github.com/hardening>`_
 * `Hong Xu <https://www.topbug.net>`_
 * `Ivan Teoh <https://github.com/ivanteoh>`_
+* `Jesper Dramsch <https://github.com/jesperdramsch>`_
 * `John Kristensen <https://github.com/jerrykan>`_
 * `Jonathon Anderson <https://github.com/anderbubble>`_
 * `Joshua Barratt <https://github.com/jbarratt>`_
