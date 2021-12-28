@@ -12,13 +12,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: [3.5, 3.6, 3.7, 3.8, 3.9]
+        python: ['3.5', '3.6', '3.7', '3.8', '3.9', '3.10']
         image:
           - ubuntu-latest
         include:
-          - python: 3.9
+          - python: '3.10'
             image: macos-latest
-          - python: 3.9
+          - python: '3.10'
             image: windows-latest
     runs-on: '${{ matrix.image }}'
     steps:
@@ -52,7 +52,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: [3.9]
+        python: ['3.10']
         image:
           - ubuntu-latest
     runs-on: '${{ matrix.image }}'
@@ -81,7 +81,7 @@ jobs:
     strategy:
       matrix:
         python:
-          - 3.9
+          - '3.10'
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -108,7 +108,7 @@ jobs:
     strategy:
       matrix:
         python:
-          - 3.9
+          - '3.10'
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
