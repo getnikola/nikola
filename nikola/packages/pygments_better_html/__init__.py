@@ -239,3 +239,17 @@ class BetterHtmlFormatter(HtmlFormatter):
 
         for t, piece in source:
             outfile.write(piece)
+
+    # FIXME patch for broken code in pygments 2.11.0/2.11.1 - remove when
+    # Pygments PR #2014 merged
+    def _wrap_lineanchors(self, inner):
+        s = self.lineanchors
+        # subtract 1 since we have to increment i *before* yielding
+        i = self.linenostart - 1
+        for t, line in inner:
+            if t:
+                i += 1
+                href = "" if self.linenos else ' href="#%s-%d"' % (s, i)
+                yield 1, '<a id="%s-%d" name="%s-%d"%s></a>' % (s, i, s, i, href) + line
+            else:
+                yield 0, line
