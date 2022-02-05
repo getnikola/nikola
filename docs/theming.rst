@@ -284,10 +284,6 @@ These are the templates that come with the included themes:
 ``post_list_directive.tmpl``
     Template used by the ``post_list`` reStructuredText directive.
 
-``sectionindex.tmpl``
-    Used to display section indexes, if ``POST_SECTIONS_ARE_INDEXES`` is True.
-    By default, it just inherits ``index.tmpl``, with added feeds.
-
 ``page.tmpl``
     Used for pages that are not part of a blog, usually a cleaner, less
     intrusive layout than ``post.tmpl``, but same parameters.
@@ -309,20 +305,49 @@ Variables available in templates
 The full, complete list of variables available in templates is maintained in a separate
 document: `Template variables <https://getnikola.com/template-variables.html>`_
 
-Customizing themes to user color preference and section colors
---------------------------------------------------------------
+Customizing themes to user color preference, colorizing category names
+----------------------------------------------------------------------
 
 The user’s preference for theme color is exposed in templates as
 ``theme_color`` set in the ``THEME_COLOR`` option.
 
-Each section has an assigned color that is either set by the user or auto
-selected by adjusting the hue of the user’s ``THEME_COLOR``. The color is
-exposed in templates through ``post.section_color(lang)``. The function that
-generates the colors from strings and any given color (by section name and
-theme color for sections) is exposed through the
-``colorize_str_from_base_color(string, hex_color)`` function
+This theme color is exposed to the browser in default themes — some browsers
+might use this color in the user interface (eg. Chrome on Android in light mode
+displays the toolbar in this color).
 
-Hex color values, like that returned by the theme or section color can be
+Nikola also comes with support for auto-generating colors similar to a base
+color. This can be used with ``theme_color`` and eg. category names. This
+feature is exposed to templates as two functions: ``colorize_str(string,
+hex_color, presets)`` and  ``colorize_str_from_base_color(string, hex_color)``.
+If you want to display the category name in the color, first define a list of
+overrides in your ``conf.py`` file:
+
+.. code:: python
+    # conf.py
+    GLOBAL_CONTEXT = {
+        "category_colors": {
+            "Blue": "#0000FF"
+        }
+    }
+
+With that definition, you can now use ``colorize_str`` in your templates like this:
+
+.. code:: html+mako
+
+    <!-- Mako -->
+    <span style="background-color: ${colorize_str(post.meta('category'), theme_color, category_colors)}">${post.meta('category')}</span>
+
+.. code:: html+jinja
+
+    <!-- Jinja2 -->
+    <span style="background-color: {{ colorize_str(post.meta('category'), theme_color, category_colors) }}">{{ post.meta('category') }}</span>
+
+Note that the category named “Blue” will be displyed in #0000FF due to the
+override specified in your config; other categories will have an auto-generated
+color visually similar to your theme color.
+
+
+Hex color values, like that returned by the theme or string colorization can be
 altered in the HSL colorspace through the function
 ``color_hsl_adjust_hex(hex_string, adjust_h, adjust_s, adjust_l)``.
 Adjustments are given in values between 1.0 and -1.0. For example, the theme
@@ -427,12 +452,10 @@ List of page kinds provided by default plugins:
 * index, archive_page
 * index, author_page
 * index, main_index
-* index, section_page
 * index, tag_page
 * list
 * list, archive_page
 * list, author_page
-* list, section_page
 * list, tag_page
 * list, tags_page
 * post_page

@@ -84,14 +84,6 @@ Name                                Type                                Descript
 ``navigation_links``                TranslatableSetting                 ``NAVIGATION_LINKS`` setting
 ``navigation_alt_links``            TranslatableSetting                 ``NAVIGATION_ALT_LINKS`` setting
 ``needs_ipython_css``               bool                                whether or not Jupyter CSS is needed by this site
-``posts_sections``                  bool                                ``POSTS_SECTIONS`` setting
-``posts_section_are_indexes``       bool                                ``POSTS_SECTIONS_ARE_INDEXES`` setting
-``posts_sections_are_indexes``      bool                                ``POSTS_SECTIONS_ARE_INDEXES`` setting
-``posts_section_colors``            TranslatableSetting                 ``POSTS_SECTION_COLORS`` setting
-``posts_section_descriptions``      Tss                                 ``POSTS_SECTION_DESCRIPTIONS`` setting
-``posts_section_from_meta``         bool                                ``POSTS_SECTION_FROM_META`` setting
-``posts_section_name``              TranslatableSetting[str]            ``POSTS_SECTION_NAME`` setting
-``posts_section_title``             TranslatableSetting[str]            ``POSTS_SECTION_TITLE`` setting
 ``rel_link``                        function                            ``Nikola.rel_link`` function
 ``rss_link``                        str                                 ``RSS_LINK`` setting
 ``search_form``                     TranslatableSetting[str]            ``SEARCH_FORM`` setting
@@ -205,7 +197,6 @@ Taxonomy                Variable                                    Value
 ``category``            ``overview_page_hierarchy_variable_name``   ``cat_hierarchy``
 ``index``               ``overview_page_variable_name``             unavailable (None)
 ``page_index_folder``   ``overview_page_variable_name``             ``page_folder``
-``section_index``       ``overview_page_variable_name``             ``sections``
 ``tag``                 ``overview_page_variable_name``             ``tags``
 ``tag``                 ``overview_page_items_variable_name``       ``items``
 ======================  ==========================================  ===================
@@ -224,7 +215,6 @@ Taxonomy                Has hierarchy       List (one classification) template  
 ``category``            yes                 tag.tmpl                            tagindex.tmpl                           tags.tmpl (with tags)                           n/a                                     ``CATEGORY_PAGES_ARE_INDEXES``  n/a
 ``index``               no                  n/a                                 index.tmpl                              n/a                                             n/a                                     yes                             no
 ``page_index_folder``   yes                 list.tmpl                           n/a                                     n/a                                             n/a                                     no                              no
-``section_index``       no                  list.tmpl                           sectionindex.tmpl                       n/a                                             n/a                                     ``POSTS_SECTIONS_ARE_INDEXES``  no
 ``tag``                 no                  tag.tmpl                            tagindex.tmpl                           tags.tmpl (with categories)                     n/a                                     ``TAG_PAGES_ARE_INDEXES``       no
 ======================  ==================  ==================================  ======================================  ==============================================  ======================================  ==============================  ==============================
 
@@ -390,19 +380,6 @@ Name                Type        Description
 ``files``           list[str]   List of files in the folder
 ``source_link``     str         Link to the source file
 ==================  ==========  ========================================
-
-Variables available in sections
--------------------------------
-
-.. class:: table table-bordered table-striped
-
-===================  ===========  ===========================================================================
-Name                 Type         Description
-===================  ===========  ===========================================================================
-``section``          str          Section name (internal)
-``kind``             str          Always ``"section"``
-``other_languages``  list[tuple]  List of tuples ``(lang, section, name)`` of same section in other languages
-===================  ===========  ===========================================================================
 
 Variables available in tag pages
 --------------------------------
