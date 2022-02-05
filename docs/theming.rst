@@ -323,7 +323,8 @@ If you want to display the category name in the color, first define a list of
 overrides in your ``conf.py`` file:
 
 .. code:: python
-    # conf.py
+
+    # end of conf.py
     GLOBAL_CONTEXT = {
         "category_colors": {
             "Blue": "#0000FF"
