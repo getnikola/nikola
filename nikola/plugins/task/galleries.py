@@ -271,6 +271,10 @@ class Galleries(Task, ImageProcessor):
                 for path, folder in folder_list:
                     fpost = self.parse_index(path, input_folder, output_folder)
                     if fpost:
+                        # do not add galleries to the folders that are either
+                        # of these states (#3598)
+                        if fpost.is_draft or fpost.is_private or fpost.publish_later:
+                            continue
                         ft = fpost.title(lang) or folder
                     else:
                         ft = folder
