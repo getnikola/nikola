@@ -85,6 +85,7 @@ class Galleries(Task, ImageProcessor):
             'exif_whitelist': site.config['EXIF_WHITELIST'],
             'preserve_icc_profiles': site.config['PRESERVE_ICC_PROFILES'],
             'index_path': site.config['INDEX_PATH'],
+            'index_file': site.config['INDEX_FILE'],
             'disable_indexes': site.config['DISABLE_INDEXES'],
             'galleries_use_thumbnail': site.config['GALLERIES_USE_THUMBNAIL'],
             'galleries_default_thumbnail': site.config['GALLERIES_DEFAULT_THUMBNAIL'],
@@ -522,6 +523,9 @@ class Galleries(Task, ImageProcessor):
                     post.meta[lang]['title'] = os.path.split(gallery)[1]
             # Register the post (via #2417)
             self.site.post_per_input_file[index_path] = post
+            # Register post for the sitemap, too (#3598)
+            index_output = os.path.join(gallery, self.kw['index_file'])
+            self.site.post_per_file[index_output] = post
         else:
             post = None
         return post
