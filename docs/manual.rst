@@ -2089,8 +2089,11 @@ The ``conf.py`` options affecting images and gallery pages are these:
 
 If you add a reST file in ``galleries/gallery_name/index.txt`` its contents will be
 converted to HTML and inserted above the images in the gallery page. The
-format is the same as for posts. You can use the ``title`` and ``previewimage``
-metadata fields to change how the gallery is shown.
+format is the same as for posts. You can use the ``title``, ``previewimage``, and
+``status`` metadata fields to change how the gallery is shown.
+
+If the ``status`` is ``private``, ``draft``, or ``publish_later``, the
+gallery will not appear in the index, the RSS feeds, nor in the sitemap.
 
 If you add some image filenames in ``galleries/gallery_name/exclude.meta``, they
 will be excluded in the gallery page.

@@ -1,3 +1,12 @@
+New in master
+=============
+
+Features
+--------
+
+* Gallery index pages support the `status` flag (Issue #3598)
+
+
 New in v8.2.0
 =============
 
