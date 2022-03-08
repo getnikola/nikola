@@ -2622,13 +2622,14 @@ Once you have that, all you need to do is:
 
     .. youtube:: 8N_tupPBtWQ
 
-Supported options: ``height``, ``width``, ``align`` (one of ``left``,
+Supported options: ``height``, ``width``, ``start_at``, ``align`` (one of ``left``,
 ``center``, ``right``) — all are optional. Example:
 
 .. code:: restructuredtext
 
     .. youtube:: 8N_tupPBtWQ
        :align: center
+       :start_at: 4
 
 Vimeo
 ~~~~~
