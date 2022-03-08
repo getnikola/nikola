@@ -5,6 +5,7 @@ Features
 --------
 
 * Gallery index pages support the `status` flag (Issue #3598)
+* Add ``start_at`` option to youtube directive (Issue #3603)
 
 
 New in v8.2.0
