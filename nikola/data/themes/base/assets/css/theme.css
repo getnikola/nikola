@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 /*
-	Copyright © 2014-2020 Daniel Aleksandersen and others.
+	Copyright © 2014-2022 Daniel Aleksandersen and others.
 
 	Permission is hereby granted, free of charge, to any
 	person obtaining a copy of this software and associated
@@ -126,6 +126,9 @@ html[dir="rtl"] #toptranslations {
 }
 .postlist li {
 	margin-bottom: .33em;
+}
+.byline a:not(:last-child):after {
+	content: ",";
 }
 
 /* Post and archive pagers */
@@ -307,6 +310,11 @@ pre.code, code {
 	white-space: pre-wrap;
 	word-wrap: normal;
 	overflow: auto;
+}
+
+/* Set a minimum logo height to ensure .svg are displayed if there is no brand text (#3493) */
+#logo {
+	min-height: 25px;
 }
 
 /* SOURCE: https://github.com/h5bp/html5-boilerplate/blob/master/src/css/main.css */

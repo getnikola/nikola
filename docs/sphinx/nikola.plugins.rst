@@ -28,4 +28,3 @@ nikola.plugins.basic\_import module
    :members:
    :undoc-members:
    :show-inheritance:
-

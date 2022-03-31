@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2013-2020 Udo Spallek, Roberto Alsina and others.
+# Copyright © 2013-2022 Udo Spallek, Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -79,7 +79,7 @@ class PostListShortcode(ShortcodePlugin):
         * clause: attribute comparison_operator value (spaces optional)
           * attribute: year, month, day, hour, month, second, weekday, isoweekday; or empty for full datetime
           * comparison_operator: == != <= >= < >
-          * value: integer, 'now' or dateutil-compatible date input
+          * value: integer, 'now', 'today', or dateutil-compatible date input
 
     ``tags`` : string [, string...]
         Filter posts to show only posts having at least one of the ``tags``.
@@ -145,6 +145,7 @@ class PostListShortcode(ShortcodePlugin):
 
         if self_post:
             self_post.register_depfile("####MAGIC####TIMELINE", lang=lang)
+            self_post.register_depfile("####MAGIC####CONFIG:GLOBAL_CONTEXT", lang=lang)
 
         # If we get strings for start/stop, make them integers
         if start is not None:
@@ -218,10 +219,7 @@ class PostListShortcode(ShortcodePlugin):
 
             posts += [post]
 
-        if not posts:
-            return '', []
-
-        template_deps = site.template_system.template_deps(template)
+        template_deps = site.template_system.template_deps(template, site.GLOBAL_CONTEXT)
         if state:
             # Register template as a dependency (Issue #2391)
             for d in template_deps:
@@ -230,7 +228,8 @@ class PostListShortcode(ShortcodePlugin):
             for d in template_deps:
                 self_post.register_depfile(d, lang=lang)
 
-        template_data = {
+        template_data = site.GLOBAL_CONTEXT.copy()
+        template_data.update({
             'lang': lang,
             'posts': posts,
             # Need to provide str, not TranslatableSetting (Issue #2104)
@@ -238,7 +237,7 @@ class PostListShortcode(ShortcodePlugin):
             'post_list_id': post_list_id,
             'messages': site.MESSAGES,
             '_link': site.link,
-        }
+        })
         output = site.template_system.render_template(
             template, None, template_data)
         return output, template_deps

@@ -222,7 +222,16 @@ pre.code {
     white-space: pre-wrap;
 }
 
+.byline a:not(:last-child):after {
+    content: ",";
+}
+
 /* Override incorrect Bootstrap 4 default */
 html[dir="rtl"] body {
     text-align: right;
+}
+
+/* Set a minimum logo height to ensure .svg are displayed if there is no brand text (#3493) */
+#logo {
+    min-height: 25px;
 }

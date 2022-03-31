@@ -1,7 +1,7 @@
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v4.5.0): alert.js
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * Bootstrap (v4.6.1): alert.js
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
 
@@ -9,32 +9,28 @@ import $ from 'jquery'
 import Util from './util'
 
 /**
- * ------------------------------------------------------------------------
  * Constants
- * ------------------------------------------------------------------------
  */
 
-const NAME                = 'alert'
-const VERSION             = '4.5.0'
-const DATA_KEY            = 'bs.alert'
-const EVENT_KEY           = `.${DATA_KEY}`
-const DATA_API_KEY        = '.data-api'
-const JQUERY_NO_CONFLICT  = $.fn[NAME]
+const NAME = 'alert'
+const VERSION = '4.6.1'
+const DATA_KEY = 'bs.alert'
+const EVENT_KEY = `.${DATA_KEY}`
+const DATA_API_KEY = '.data-api'
+const JQUERY_NO_CONFLICT = $.fn[NAME]
+
+const CLASS_NAME_ALERT = 'alert'
+const CLASS_NAME_FADE = 'fade'
+const CLASS_NAME_SHOW = 'show'
+
+const EVENT_CLOSE = `close${EVENT_KEY}`
+const EVENT_CLOSED = `closed${EVENT_KEY}`
+const EVENT_CLICK_DATA_API = `click${EVENT_KEY}${DATA_API_KEY}`
 
 const SELECTOR_DISMISS = '[data-dismiss="alert"]'
 
-const EVENT_CLOSE          = `close${EVENT_KEY}`
-const EVENT_CLOSED         = `closed${EVENT_KEY}`
-const EVENT_CLICK_DATA_API = `click${EVENT_KEY}${DATA_API_KEY}`
-
-const CLASS_NAME_ALERT = 'alert'
-const CLASS_NAME_FADE  = 'fade'
-const CLASS_NAME_SHOW  = 'show'
-
 /**
- * ------------------------------------------------------------------------
- * Class Definition
- * ------------------------------------------------------------------------
+ * Class definition
  */
 
 class Alert {
@@ -43,13 +39,11 @@ class Alert {
   }
 
   // Getters
-
   static get VERSION() {
     return VERSION
   }
 
   // Public
-
   close(element) {
     let rootElement = this._element
     if (element) {
@@ -71,10 +65,9 @@ class Alert {
   }
 
   // Private
-
   _getRootElement(element) {
     const selector = Util.getSelectorFromElement(element)
-    let parent     = false
+    let parent = false
 
     if (selector) {
       parent = document.querySelector(selector)
@@ -105,7 +98,7 @@ class Alert {
     const transitionDuration = Util.getTransitionDurationFromElement(element)
 
     $(element)
-      .one(Util.TRANSITION_END, (event) => this._destroyElement(element, event))
+      .one(Util.TRANSITION_END, event => this._destroyElement(element, event))
       .emulateTransitionEnd(transitionDuration)
   }
 
@@ -117,11 +110,10 @@ class Alert {
   }
 
   // Static
-
   static _jQueryInterface(config) {
     return this.each(function () {
       const $element = $(this)
-      let data       = $element.data(DATA_KEY)
+      let data = $element.data(DATA_KEY)
 
       if (!data) {
         data = new Alert(this)
@@ -146,9 +138,7 @@ class Alert {
 }
 
 /**
- * ------------------------------------------------------------------------
- * Data Api implementation
- * ------------------------------------------------------------------------
+ * Data API implementation
  */
 
 $(document).on(
@@ -158,14 +148,12 @@ $(document).on(
 )
 
 /**
- * ------------------------------------------------------------------------
  * jQuery
- * ------------------------------------------------------------------------
  */
 
-$.fn[NAME]             = Alert._jQueryInterface
+$.fn[NAME] = Alert._jQueryInterface
 $.fn[NAME].Constructor = Alert
-$.fn[NAME].noConflict  = () => {
+$.fn[NAME].noConflict = () => {
   $.fn[NAME] = JQUERY_NO_CONFLICT
   return Alert._jQueryInterface
 }

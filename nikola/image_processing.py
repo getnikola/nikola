@@ -66,7 +66,7 @@ class ImageProcessor(object):
         self._fill_exif_tag_names()
         exif = exif.copy()  # Don't modify in-place, it's rude
         for k in list(exif.keys()):
-            if type(exif[k]) != dict:
+            if not isinstance(exif[k], dict):
                 pass  # At least thumbnails have no fields
             elif k not in whitelist:
                 exif.pop(k)  # Not whitelisted, remove
@@ -142,7 +142,7 @@ class ImageProcessor(object):
             if w > max_size or h > max_size:
                 size = max_size, max_size
                 # Panoramas get larger thumbnails because they look *awful*
-                if bigger_panoramas and w > 2 * h:
+                if bigger_panoramas and w > 3 * h:
                     size = min(w, max_size * 4), min(w, max_size * 4)
             try:
                 im.thumbnail(size, Image.ANTIALIAS)
@@ -189,7 +189,7 @@ class ImageProcessor(object):
                 # calculate new size preserving aspect ratio.
                 ratio = float(w) / h
                 # Panoramas get larger thumbnails because they look *awful*
-                if bigger_panoramas and w > 2 * h:
+                if bigger_panoramas and w > 3 * h:
                     max_size = max_size * 4
                 if w > h:
                     w = max_size
@@ -218,6 +218,7 @@ class ImageProcessor(object):
             try:
                 im = Image.open(src)
                 exif = im._getexif()
+                im.close()
             except Exception:
                 exif = None
             if exif is not None:

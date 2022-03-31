@@ -1,3 +1,4 @@
+* `Aaron Meurer <https://github.com/asmeurer>`_
 * `Agustin Henze <https://github.com/agustinhenze>`_
 * `Alberto Berti <https://github.com/azazel75>`_
 * `Alex Popescu <https://github.com/al3xandru>`_
@@ -21,6 +22,7 @@
 * `Christian Lawson-Perfect <https://github.com/christianp>`_
 * `Christopher Arndt <https:/github.com/SpotlightKid>`_
 * `Claudio Canepa <https://github.com/ccanepa>`_
+* `Clayton A. Davis <https://github.com/clayadavis>`_
 * `Damien Tournoud <https://github.com/damz>`_
 * `Damián Avila <https://github.com/damianavila>`_
 * `Daniel Aleksandersen <https://github.com/Aeyoun>`_
@@ -44,6 +46,7 @@
 * `Felix Fontein <https://github.com/felixfontein>`_
 * `Felix Schwarz <https://github.com/FelixSchwarz>`_
 * `Florian Finkernagel <https://github.com/TyberiusPrime>`_
+* `Florian Zimmermann <https://github.com/PoByBolek>`_
 * `follower <https://github.com/follower>`_
 * `George Leslie-Waksman <https://github.com/gwax>`_
 * `Grzegorz Śliwiński <https://github.com/fizyk>`_
@@ -52,6 +55,7 @@
 * `Hardening <https://github.com/hardening>`_
 * `Hong Xu <https://www.topbug.net>`_
 * `Ivan Teoh <https://github.com/ivanteoh>`_
+* `Jesper Dramsch <https://github.com/jesperdramsch>`_
 * `John Kristensen <https://github.com/jerrykan>`_
 * `Jonathon Anderson <https://github.com/anderbubble>`_
 * `Joshua Barratt <https://github.com/jbarratt>`_
@@ -60,6 +64,7 @@
 * `James C. McPherson <https://github.com/jmcp>`_
 * `Kade For <https://github.com/kadefor>`_
 * `Kay Hayen <https://github.com/kayhayen>`_
+* `Kolen Cheung <https://github.com/ickc>`_
 * `lbiaggi <https://github.com/lbiaggi>`_
 * `Leandro Poblet <https://github.com/DoctorMalboro>`_
 * `Luis Miguel Morillas <https://github.com/lmorillas>`_
@@ -72,6 +77,7 @@
 * `Mario Pozzo <https://github.com/camboris>`_
 * `Mark Eichin <https://github.com/eichin>`_
 * `Martin Bless <https://github.com/marble>`_
+* `Martin McCallion <https://github.com/devilgate>`_
 * `Martin Michlmayr <https://github.com/tbm>`_
 * `Martin Wimpress <https://github.com/wimpr1m>`_
 * `Martín Gaitán <https://github.com/mgaitan>`_
@@ -98,6 +104,7 @@
 * `Pelle Nilsson <https://github.com/pellenilsson>`_
 * `phora <https://github.com/phora>`_
 * `Pierpaolo Da Fieno <https://github.com/numshub>`_
+* `Pieter David <https://github.com/pieterdavid>`_
 * `pmav99 <https://github.com/pmav99>`_
 * `Puneeth Chaganti <https://github.com/punchagan>`_
 * `pwm1234 <https://github.com/pwm1234>`_

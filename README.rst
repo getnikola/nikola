@@ -9,17 +9,11 @@ In goes content, out comes a website, ready to deploy.
 .. image:: https://img.shields.io/requires/github/getnikola/nikola.svg
    :target: https://requires.io/github/getnikola/nikola/requirements/?branch=master
 
-.. image:: http://img.shields.io/travis/getnikola/nikola.svg
-   :target: https://travis-ci.org/getnikola/nikola
-
-.. image:: http://img.shields.io/coveralls/getnikola/nikola.png
-  :target: https://coveralls.io/r/getnikola/nikola?branch=master
+.. image:: https://github.com/getnikola/nikola/workflows/Nikola%20CI/badge.svg
+   :target: https://github.com/getnikola/nikola/actions
 
 .. image:: http://img.shields.io/badge/license-MIT-green.svg
    :target: https://github.com/getnikola/nikola/blob/master/LICENSE.txt
-
-.. image:: https://build.snapcraft.io/badge/getnikola/nikola.svg
-   :target: https://build.snapcraft.io/user/getnikola/nikola
 
 Why Static Websites?
 --------------------
@@ -43,12 +37,12 @@ It has many features, but here are some of the nicer ones:
 * Syntax highlighting for almost any programming language or markup
 * Multilingual sites, `translated to 50 languages.`__
 * Doesn't reinvent wheels, leverages existing tools.
-* Python 3.4+ compatible.
+* Python 3.5+ compatible.
 
 .. _Nikola Handbook: https://getnikola.com/handbook.html#why-static
 __ https://users.getnikola.com/
 .. _Themable: https://themes.getnikola.com
-.. _doit: http://pydoit.org
+.. _doit: https://pydoit.org
 .. _available plugins: https://plugins.getnikola.com/
 .. _reStructuredText: https://getnikola.com/quickstart.html
 .. _image galleries: https://getnikola.com/galleries/demo/

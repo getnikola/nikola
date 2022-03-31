@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2020 Roberto Alsina and others.
+# Copyright © 2012-2022 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -94,9 +94,12 @@ class BasePlugin(IPlugin):
         """Add 'dependency' to the target task's task_deps."""
         self.site.injected_deps[target].append(dependency)
 
-    def get_deps(self, filename):
+    def get_deps(self, filename, context=None):
         """Find the dependencies for a file."""
         return []
+
+    def register_auto_watched_folder(self, folder: str) -> None:
+        self.site.registered_auto_watched_folders.add(folder)
 
 
 class PostScanner(BasePlugin):
@@ -119,7 +122,7 @@ class Command(BasePlugin, DoitCommand):
     doc_purpose = "A short explanation."
     doc_usage = ""
     doc_description = None  # None value will completely omit line from doc
-    # see http://python-doit.sourceforge.net/cmd_run.html#parameters
+    # see https://pydoit.org/cmd_run.html#parameters
     cmd_options = ()
     needs_config = True
 
@@ -219,15 +222,15 @@ class TemplateSystem(BasePlugin):
         """Set the list of folders where templates are located and cache."""
         raise NotImplementedError()
 
-    def template_deps(self, template_name: str):
+    def template_deps(self, template_name: str, context=None):
         """Return filenames which are dependencies for a template."""
         raise NotImplementedError()
 
-    def get_deps(self, filename: str):
+    def get_deps(self, filename: str, context=None):
         """Return paths to dependencies for the template loaded from filename."""
         raise NotImplementedError()
 
-    def get_string_deps(self, text: str):
+    def get_string_deps(self, text: str, context=None):
         """Find dependencies for a template string."""
         raise NotImplementedError()
 
@@ -292,7 +295,7 @@ class PageCompiler(BasePlugin):
         """Read contents of .dep file and return them as a list."""
         dep_path = self.get_dep_filename(post, lang)
         if os.path.isfile(dep_path):
-            with io.open(dep_path, 'r+', encoding='utf8') as depf:
+            with io.open(dep_path, 'r+', encoding='utf-8-sig') as depf:
                 deps = [l.strip() for l in depf.readlines()]
                 return deps
         return []
@@ -302,7 +305,7 @@ class PageCompiler(BasePlugin):
         def create_lambda(lang: str) -> 'typing.Callable':
             # We create a lambda like this so we can pass `lang` to it, because if we didn’t
             # add that function, `lang` would always be the last language in TRANSLATIONS.
-            # (See http://docs.python-guide.org/en/latest/writing/gotchas/#late-binding-closures)
+            # (See https://docs.python-guide.org/writing/gotchas/#late-binding-closures)
             return lambda: self._read_extra_deps(post, lang)
 
         for lang in self.site.config['TRANSLATIONS']:
@@ -470,6 +473,12 @@ class ConfigPlugin(BasePlugin):
     """A plugin that can edit config (or modify the site) on-the-fly."""
 
     name = "dummy_config_plugin"
+
+
+class CommentSystem(BasePlugin):
+    """A plugn that offers a new comment system."""
+
+    name = "dummy_comment_system"
 
 
 class ShortcodePlugin(BasePlugin):

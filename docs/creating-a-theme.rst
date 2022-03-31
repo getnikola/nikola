@@ -42,7 +42,7 @@ So::
     # Look at it
     jekyll serve & google-chrome http://localhost:4000
 
-If you **do not want to install Jekyll**, you can also see it in action at http://lanyon.getpoole.com/
+If you **do not want to install Jekyll**, you can also see it in action at https://lanyon.getpoole.com/
 
 Some things jump to my mind:
 
@@ -90,7 +90,7 @@ First, we create a site with some content in it. We’ll use the ``nikola init``
 
     Please choose the correct time zone for your blog. Nikola uses the tz database.
     You can find your time zone here:
-    http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+    https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
     Time zone [UTC]:
         Current time in UTC: 16:02:07
@@ -134,7 +134,7 @@ First let’s look at the head element:
     <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
 
     <head>
-    <link href="http://gmpg.org/xfn/11" rel="profile">
+    <link href="https://gmpg.org/xfn/11" rel="profile">
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
     <!-- Enable responsiveness on mobile devices-->
@@ -148,7 +148,7 @@ First let’s look at the head element:
     <link rel="stylesheet" href="/public/css/poole.css">
     <link rel="stylesheet" href="/public/css/syntax.css">
     <link rel="stylesheet" href="/public/css/lanyon.css">
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700|PT+Sans:400">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700|PT+Sans:400">
 
     <!-- Icons -->
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.thumbnail.png">
@@ -260,7 +260,7 @@ And we will change it so it uses the lanyon styles instead of theme.css (again, 
             <link href="/assets/css/ipython.min.css" rel="stylesheet" type="text/css">
             <link href="/assets/css/nikola_ipython.css" rel="stylesheet" type="text/css">
         % endif
-        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700|PT+Sans:400">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700|PT+Sans:400">
     </%def>
 
 .. figure:: https://getnikola.com/images/lanyon-1.thumbnail.png
@@ -285,7 +285,7 @@ Lanyon’s content is split in two parts: a sidebar and the rest. The sidebar lo
     <!-- Toggleable sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-item">
-            <p>A reserved <a href="http://jekyllrb.com" target="_blank">Jekyll</a> theme that places the utmost gravity on content with a hidden drawer. Made by <a href="https://twitter.com/mdo" target="_blank">@mdo</a>.</p>
+            <p>A reserved <a href="https://jekyllrb.com" target="_blank">Jekyll</a> theme that places the utmost gravity on content with a hidden drawer. Made by <a href="https://twitter.com/mdo" target="_blank">@mdo</a>.</p>
         </div>
 
         <nav class="sidebar-nav">
@@ -378,7 +378,7 @@ So, first, lets change that base template to be more lanyon-like:
         <!-- Toggleable sidebar -->
         <div class="sidebar" id="sidebar">
             <div class="sidebar-item">
-                <p>A reserved <a href="http://getnikola.com" target="_blank">Nikola</a> theme that places the utmost gravity on content with a hidden drawer. Made by <a href="https://twitter.com/mdo" target="_blank">@mdo</a> for Jekyll,
+                <p>A reserved <a href="https://getnikola.com" target="_blank" rel="noopener">Nikola</a> theme that places the utmost gravity on content with a hidden drawer. Made by <a href="https://twitter.com/mdo" target="_blank" rel="noopener">@mdo</a> for Jekyll,
                 ported to Nikola by <a href="https://twitter.com/ralsina" target="_blank">@ralsina</a>.</p>
             </div>
             ${header.html_navigation_links()}
@@ -465,7 +465,7 @@ Now let’s look at the content. In Lanyon, this is how the "main" content looks
         <div class="post">
             <h1 class="post-title">Introducing Lanyon</h1>
             <span class="post-date">02 Jan 2014</span>
-            <p>Lanyon is an unassuming <a href="http://jekyllrb.com">Jekyll</a> theme [...]
+            <p>Lanyon is an unassuming <a href="https://jekyllrb.com">Jekyll</a> theme [...]
         </div>
       </div>
     </div>
@@ -846,6 +846,6 @@ The End
 
 And that’s it, that’s a whole theme. Eventually, once people start using it, they will notice small broken details, which will need handling one at a time.
 
-This theme should be available in http://themes.getnikola.com/v7/lanyon/ and you can see it in action at https://themes.getnikola.com/v7/lanyon/demo/ .
+This theme should be available in https://themes.getnikola.com/v7/lanyon/ and you can see it in action at https://themes.getnikola.com/v7/lanyon/demo/ .
 
 What if you want to extend other parts of the theme? Check out the :doc:`Theming reference <theming>`. You can also contribute your improvements to the `nikola-themes <https://github.com/getnikola/nikola>` repository on GitHub.

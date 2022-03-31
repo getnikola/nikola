@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2020 Roberto Alsina and others.
+# Copyright © 2012-2022 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -48,7 +48,7 @@ class Plugin(RestExtension):
 CODE = """\
 <div class="youtube-video{align}">
 <iframe width="{width}" height="{height}"
-src="https://www.youtube-nocookie.com/embed/{yid}?rel=0&wmode=transparent"
+src="https://www.youtube-nocookie.com/embed/{yid}?rel=0&wmode=transparent{start_at}"
 frameborder="0" allow="encrypted-media" allowfullscreen
 ></iframe>
 </div>"""
@@ -69,7 +69,8 @@ class Youtube(Directive):
     option_spec = {
         "width": directives.unchanged,
         "height": directives.unchanged,
-        "align": _align_choice
+        "align": _align_choice,
+        "start_at": directives.unchanged
     }
 
     def run(self):
@@ -85,6 +86,14 @@ class Youtube(Directive):
             options['align'] = ' align-' + self.options['align']
         else:
             options['align'] = ''
+
+        start_at = options.get('start_at')
+
+        if start_at:
+            options['start_at'] = '&start=' + start_at
+        else:
+            options['start_at'] = ''
+
         return [nodes.raw('', CODE.format(**options), format='html')]
 
     def check_content(self):

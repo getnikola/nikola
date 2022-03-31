@@ -87,6 +87,29 @@ def test_youtube_iframe():
     )
 
 
+def test_youtube_iframe_start_at():
+    """Test Youtube iframe tag generation with start_at attribute"""
+
+    sample = ".. youtube:: YID\n   :height: 400\n   :width: 600\n   :start_at: 60"
+    html = get_html_from_rst(sample)
+    assert_html_contains(
+        html,
+        "iframe",
+        attributes={
+            "src": (
+                "https://www.youtube-nocookie.com"
+                "/embed/YID?rel=0&"
+                "wmode=transparent&start=60"
+            ),
+            "height": "400",
+            "width": "600",
+            "frameborder": "0",
+            "allowfullscreen": "",
+            "allow": "encrypted-media",
+        },
+    )
+
+
 def test_vimeo(disable_vimeo_api_query):
     """Test Vimeo iframe tag generation"""
 

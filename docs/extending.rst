@@ -6,7 +6,7 @@
 .. description:
 .. author: The Nikola Team
 
-:Version: 8.0.4
+:Version: 8.2.0
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
 .. class:: alert alert-primary float-md-right
@@ -290,7 +290,7 @@ These have access to the ``site`` object which contains your timeline and
 your configuration.
 
 The critical bit of Task plugins is their ``gen_tasks`` method, which ``yields``
-`doit tasks <http://pydoit.org/tasks.html>`_.
+`doit tasks <https://pydoit.org/tasks.html>`_.
 
 The details of how to handle dependencies, etc., are a bit too much for this
 document, so I'll just leave you with an example, the ``copy_assets`` task.
@@ -440,7 +440,7 @@ SignalHandler Plugins
 ---------------------
 
 These plugins extend the ``SignalHandler`` class and connect to one or more
-signals via `blinker <http://pythonhosted.org/blinker/>`_.
+signals via `blinker <https://pythonhosted.org/blinker/>`_.
 
 The easiest way to do this is to reimplement ``set_site()`` and just connect to
 whatever signals you want there.
@@ -491,6 +491,14 @@ Does nothing specific, can be used to modify the site object (and thus the confi
 
 Put all the magic you want in ``set_site()``, and don’t forget to run the one
 from ``super()``. Example plugin: `navstories <https://github.com/getnikola/plugins/tree/master/v7/navstories>`__
+
+
+CommentSystem Plugins
+---------------------
+
+Can be used to add a new comment system. (It doesn’t do anything by itself.) It’s expected to provide templates named ``comment_helper_foo.tmpl``.
+
+Example plugin: `cactuscomments <https://github.com/getnikola/plugins/tree/master/v8/cactuscomments>`__
 
 Shortcode Plugins
 -----------------

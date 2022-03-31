@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2020 Roberto Alsina and others.
+# Copyright © 2012-2022 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -85,6 +85,7 @@ class Galleries(Task, ImageProcessor):
             'exif_whitelist': site.config['EXIF_WHITELIST'],
             'preserve_icc_profiles': site.config['PRESERVE_ICC_PROFILES'],
             'index_path': site.config['INDEX_PATH'],
+            'index_file': site.config['INDEX_FILE'],
             'disable_indexes': site.config['DISABLE_INDEXES'],
             'galleries_use_thumbnail': site.config['GALLERIES_USE_THUMBNAIL'],
             'galleries_default_thumbnail': site.config['GALLERIES_DEFAULT_THUMBNAIL'],
@@ -270,6 +271,10 @@ class Galleries(Task, ImageProcessor):
                 for path, folder in folder_list:
                     fpost = self.parse_index(path, input_folder, output_folder)
                     if fpost:
+                        # do not add galleries to the folders that are either
+                        # of these states (#3598)
+                        if fpost.is_draft or fpost.is_private or fpost.publish_later:
+                            continue
                         ft = fpost.title(lang) or folder
                     else:
                         ft = folder
@@ -307,10 +312,13 @@ class Galleries(Task, ImageProcessor):
                     context['post'] = post
                 else:
                     context['post'] = None
+
+                template_dep_context = context.copy()
+                template_dep_context.update(self.site.GLOBAL_CONTEXT)
                 file_dep = self.site.template_system.template_deps(
-                    template_name) + image_list + thumbs
+                    template_name, template_dep_context) + image_list + thumbs
                 file_dep_dest = self.site.template_system.template_deps(
-                    template_name) + dest_img_list + thumbs
+                    template_name, template_dep_context) + dest_img_list + thumbs
                 if post:
                     file_dep += [post.translated_base_path(l) for l in self.kw['translations']]
                     file_dep_dest += [post.translated_base_path(l) for l in self.kw['translations']]
@@ -519,6 +527,9 @@ class Galleries(Task, ImageProcessor):
                     post.meta[lang]['title'] = os.path.split(gallery)[1]
             # Register the post (via #2417)
             self.site.post_per_input_file[index_path] = post
+            # Register post for the sitemap, too (#3598)
+            index_output = os.path.join(gallery, self.kw['index_file'])
+            self.site.post_per_file[index_output] = post
         else:
             post = None
         return post
@@ -670,6 +681,7 @@ class Galleries(Task, ImageProcessor):
                     im = Image.open(thumb)
                     w, h = im.size
                     _image_size_cache[thumb] = w, h
+                    im.close()
             # Use basename to avoid issues with multilingual sites (Issue #3078)
             img_basename = os.path.basename(img)
             photo_info[img_basename] = {

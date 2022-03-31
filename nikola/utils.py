@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2020 Roberto Alsina and others.
+# Copyright © 2012-2022 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -30,6 +30,7 @@ import configparser
 import datetime
 import hashlib
 import io
+import lxml.html
 import operator
 import os
 import re
@@ -80,9 +81,9 @@ except ImportError:
     YAML = None
 
 try:
-    import husl
+    import hsluv
 except ImportError:
-    husl = None
+    hsluv = None
 
 __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real',
            'get_theme_chain', 'load_messages', 'copy_tree', 'copy_file',
@@ -97,7 +98,7 @@ __all__ = ('CustomEncoder', 'get_theme_path', 'get_theme_path_real',
            'adjust_name_for_index_path', 'adjust_name_for_index_link',
            'NikolaPygmentsHTML', 'create_redirect', 'clean_before_deployment',
            'sort_posts', 'smartjoin', 'indent', 'load_data', 'html_unescape',
-           'rss_writer', 'map_metadata', 'req_missing',
+           'rss_writer', 'map_metadata', 'req_missing', 'bool_from_meta',
            # Deprecated, moved to hierarchy_utils:
            'TreeNode', 'clone_treenode', 'flatten_tree_structure',
            'sort_classifications', 'join_hierarchical_category_path',
@@ -656,6 +657,25 @@ def get_theme_chain(theme, themes_dirs):
     return themes
 
 
+def html_tostring_fragment(document):
+    """Convert a HTML snippet to a fragment, ready for insertion elsewhere."""
+    try:
+        doc = lxml.html.tostring(document.body, encoding='unicode').strip()
+    except Exception:
+        doc = lxml.html.tostring(document, encoding='unicode').strip()
+    start_fragments = ["<html>", "<body>"]
+    end_fragments = ["</body>", "</html>"]
+    for start in start_fragments:
+        if doc.startswith(start):
+            doc = doc[len(start):].strip()
+            print(repr(doc))
+    for end in end_fragments:
+        if doc.endswith(end):
+            doc = doc[:-len(end)].strip()
+            print(repr(doc))
+    return doc
+
+
 INCOMPLETE_LANGUAGES_WARNED = set()
 
 
@@ -798,7 +818,7 @@ def remove_file(source):
 
 
 # slugify is adopted from
-# http://code.activestate.com/recipes/
+# https://code.activestate.com/recipes/
 # 577257-slugify-make-a-string-usable-in-a-url-or-filename/
 _slugify_strip_re = re.compile(r'[^+\w\s-]', re.UNICODE)
 _slugify_hyphenate_re = re.compile(r'[-\s]+', re.UNICODE)
@@ -867,6 +887,16 @@ def encodelink(iri):
     encoded_link = urlunparse(link.values())
     return encoded_link
 
+
+def full_path_from_urlparse(parsed) -> str:
+    """Given urlparse output, return the full path (with query and fragment)."""
+    dst = parsed.path
+    if parsed.query:
+        dst = "{0}?{1}".format(dst, parsed.query)
+    if parsed.fragment:
+        dst = "{0}#{1}".format(dst, parsed.fragment)
+    return dst
+
 # A very slightly safer version of zip.extractall that works on
 # python < 2.6
 
@@ -900,7 +930,9 @@ def extract_all(zipfile, path='themes'):
 def to_datetime(value, tzinfo=None):
     """Convert string to datetime."""
     try:
-        if type(value) == datetime.date:
+        if type(value) is datetime.date:
+            # type() instead of isinstance() is expected here, since we don’t
+            # want to change datetime.datetime objects.
             value = datetime.datetime.combine(value, datetime.time(0, 0))
         if not isinstance(value, datetime.datetime):
             # dateutil does bad things with TZs like UTC-03:00.
@@ -1491,6 +1523,24 @@ def write_metadata(data, metadata_format=None, comment_wrap=False, site=None, co
         return DEFAULT_EXTRACTOR.write_metadata(data, comment_wrap)
 
 
+def bool_from_meta(meta, key, fallback=False, blank=None):
+    """Convert a boolean-ish meta value to a boolean."""
+    value = meta.get(key)
+    if isinstance(value, str):
+        value_lowercase = value.lower().strip()
+        if value_lowercase in {"true", "yes", "1"}:
+            return True
+        elif value_lowercase in {"false", "no", "0"}:
+            return False
+        elif not value_lowercase:
+            return blank
+    elif isinstance(value, int):
+        return bool(value)
+    elif value is None:
+        return blank
+    return fallback
+
+
 def ask(query, default=None):
     """Ask a question."""
     if default:
@@ -1635,7 +1685,11 @@ class NikolaPygmentsHTML(BetterHtmlFormatter):
                 anchor_ref, lang=LocaleBorg().current_lang, force=True)
         self.nclasses = classes
         kwargs['cssclass'] = 'code'
+        if not kwargs.get('linenos'):
+            # Default to no line numbers (Issue #3426)
+            kwargs['linenos'] = False
         if kwargs.get('linenos') not in {'table', 'inline', 'ol', False}:
+            # Map invalid values to table
             kwargs['linenos'] = 'table'
         kwargs['anchorlinenos'] = kwargs['linenos'] == 'table'
         kwargs['nowrap'] = False
@@ -1744,7 +1798,7 @@ def colorize_str_from_base_color(string, base_color):
 
     Make up to 16 attempts (number of bytes returned by hashing) at picking a
     hue for our color at least 27 deg removed from the base color, leaving
-    lightness and saturation untouched using HUSL colorspace.
+    lightness and saturation untouched using HSLuv colorspace.
     """
     def hash_str(string, pos):
         return hashlib.md5(string.encode('utf-8')).digest()[pos]
@@ -1752,17 +1806,17 @@ def colorize_str_from_base_color(string, base_color):
     def degreediff(dega, degb):
         return min(abs(dega - degb), abs((degb - dega) + 360))
 
-    if husl is None:
-        req_missing(['husl'], 'Use color mixing (section colors)',
+    if hsluv is None:
+        req_missing(['hsluv'], 'Use color mixing (section colors)',
                     optional=True)
         return base_color
-    h, s, l = husl.hex_to_husl(base_color)
+    h, s, l = hsluv.hex_to_hsluv(base_color)
     old_h = h
     idx = 0
     while degreediff(old_h, h) < 27 and idx < 16:
         h = 360.0 * (float(hash_str(string, idx)) / 255)
         idx += 1
-    return husl.husl_to_hex(h, s, l)
+    return hsluv.hsluv_to_hex((h, s, l))
 
 
 def colorize_str(string: str, base_color: str, presets: dict):
@@ -1774,7 +1828,7 @@ def colorize_str(string: str, base_color: str, presets: dict):
 
 def color_hsl_adjust_hex(hexstr, adjust_h=None, adjust_s=None, adjust_l=None):
     """Adjust a hex color using HSL arguments, adjustments in percentages 1.0 to -1.0. Returns a hex color."""
-    h, s, l = husl.hex_to_husl(hexstr)
+    h, s, l = hsluv.hex_to_hsluv(hexstr)
 
     if adjust_h:
         h = h + (adjust_h * 360.0)
@@ -1785,7 +1839,7 @@ def color_hsl_adjust_hex(hexstr, adjust_h=None, adjust_s=None, adjust_l=None):
     if adjust_l:
         l = l + (adjust_l * 100.0)
 
-    return husl.husl_to_hex(h, s, l)
+    return hsluv.hsluv_to_hex((h, s, l))
 
 
 def dns_sd(port, inet6):
@@ -1930,7 +1984,7 @@ def load_data(path):
         loader = toml
     if loader is None:
         return
-    with io.open(path, 'r', encoding='utf8') as inf:
+    with io.open(path, 'r', encoding='utf-8-sig') as inf:
         return getattr(loader, function)(inf)
 
 

@@ -1,16 +1,14 @@
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v4.5.0): util.js
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * Bootstrap (v4.6.1): util.js
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
 
 import $ from 'jquery'
 
 /**
- * ------------------------------------------------------------------------
  * Private TransitionEnd Helpers
- * ------------------------------------------------------------------------
  */
 
 const TRANSITION_END = 'transitionend'
@@ -34,6 +32,7 @@ function getSpecialTransitionEndEvent() {
       if ($(event.target).is(this)) {
         return event.handleObj.handler.apply(this, arguments) // eslint-disable-line prefer-rest-params
       }
+
       return undefined
     }
   }
@@ -61,9 +60,7 @@ function setTransitionEndSupport() {
 }
 
 /**
- * --------------------------------------------------------------------------
- * Public Util Api
- * --------------------------------------------------------------------------
+ * Public Util API
  */
 
 const Util = {
@@ -74,6 +71,7 @@ const Util = {
       // eslint-disable-next-line no-bitwise
       prefix += ~~(Math.random() * MAX_UID) // "~~" acts like a faster Math.floor() here
     } while (document.getElementById(prefix))
+
     return prefix
   },
 
@@ -87,7 +85,7 @@ const Util = {
 
     try {
       return document.querySelector(selector) ? selector : null
-    } catch (err) {
+    } catch (_) {
       return null
     }
   },
@@ -124,7 +122,6 @@ const Util = {
     $(element).trigger(TRANSITION_END)
   },
 
-  // TODO: Remove in v5
   supportsTransitionEnd() {
     return Boolean(TRANSITION_END)
   },
@@ -137,9 +134,9 @@ const Util = {
     for (const property in configTypes) {
       if (Object.prototype.hasOwnProperty.call(configTypes, property)) {
         const expectedTypes = configTypes[property]
-        const value         = config[property]
-        const valueType     = value && Util.isElement(value)
-          ? 'element' : toType(value)
+        const value = config[property]
+        const valueType = value && Util.isElement(value) ?
+          'element' : toType(value)
 
         if (!new RegExp(expectedTypes).test(valueType)) {
           throw new Error(

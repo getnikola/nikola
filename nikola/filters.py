@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2020 Roberto Alsina and others.
+# Copyright © 2012-2022 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -90,7 +90,7 @@ def apply_to_text_file(f):
     """
     @wraps(f)
     def f_in_file(fname, *args, **kwargs):
-        with io.open(fname, 'r', encoding='utf-8') as inf:
+        with io.open(fname, 'r', encoding='utf-8-sig') as inf:
             data = inf.read()
         data = f(data, *args, **kwargs)
         with io.open(fname, 'w+', encoding='utf-8') as outf:
@@ -266,21 +266,36 @@ def minify_lines(data):
     return data
 
 
+def _run_typogrify(data, typogrify_filters, ignore_tags=None):
+    """Run typogrify with ignore support."""
+    default_ignore_tags = ["title", ".math"]
+    if ignore_tags is None:
+        ignore_tags = default_ignore_tags
+    else:
+        ignore_tags = ignore_tags + default_ignore_tags
+
+    data = _normalize_html(data)
+
+    section_list = typo.process_ignores(data, ignore_tags)
+
+    rendered_text = ""
+    for text_item, should_process in section_list:
+        if should_process:
+            for f in typogrify_filters:
+                text_item = f(text_item)
+
+        rendered_text += text_item
+
+    return rendered_text
+
+
 @apply_to_text_file
 def typogrify(data):
     """Prettify text with typogrify."""
     if typo is None:
         req_missing(['typogrify'], 'use the typogrify filter', optional=True)
         return data
-
-    data = _normalize_html(data)
-    data = typo.amp(data)
-    data = typo.widont(data)
-    data = typo.smartypants(data)
-    # Disabled because of typogrify bug where it breaks <title>
-    # data = typo.caps(data)
-    data = typo.initial_quotes(data)
-    return data
+    return _run_typogrify(data, [typo.amp, typo.widont, typo.smartypants, typo.caps, typo.initial_quotes])
 
 
 def _smarty_oldschool(text):
@@ -300,15 +315,7 @@ def typogrify_oldschool(data):
         req_missing(['typogrify'], 'use the typogrify_oldschool filter', optional=True)
         return data
 
-    data = _normalize_html(data)
-    data = typo.amp(data)
-    data = typo.widont(data)
-    data = _smarty_oldschool(data)
-    data = typo.smartypants(data)
-    # Disabled because of typogrify bug where it breaks <title>
-    # data = typo.caps(data)
-    data = typo.initial_quotes(data)
-    return data
+    return _run_typogrify(data, [typo.amp, typo.widont, _smarty_oldschool, typo.smartypants, typo.caps, typo.initial_quotes])
 
 
 @apply_to_text_file
@@ -318,14 +325,20 @@ def typogrify_sans_widont(data):
     # wrapping, see issue #1465
     if typo is None:
         req_missing(['typogrify'], 'use the typogrify_sans_widont filter')
+        return data
 
-    data = _normalize_html(data)
-    data = typo.amp(data)
-    data = typo.smartypants(data)
-    # Disabled because of typogrify bug where it breaks <title>
-    # data = typo.caps(data)
-    data = typo.initial_quotes(data)
-    return data
+    return _run_typogrify(data, [typo.amp, typo.smartypants, typo.caps, typo.initial_quotes])
+
+
+@apply_to_text_file
+def typogrify_custom(data, typogrify_filters=None, ignore_tags=None):
+    """Run typogrify with a custom list of filter functions."""
+    if typo is None:
+        req_missing(['typogrify'], 'use the typogrify filter', optional=True)
+        return data
+    if typogrify_filters is None:
+        typogrify_filters = [typo.amp, typo.widont, typo.smartypants, typo.caps, typo.initial_quotes]
+    return _run_typogrify(data, typogrify_filters, ignore_tags)
 
 
 @apply_to_text_file
@@ -334,7 +347,7 @@ def php_template_injection(data):
     template = re.search(r'<\!-- __NIKOLA_PHP_TEMPLATE_INJECTION source\:(.*) checksum\:(.*)__ -->', data)
     if template:
         source = template.group(1)
-        with io.open(source, "r", encoding="utf-8") as in_file:
+        with io.open(source, "r", encoding="utf-8-sig") as in_file:
             phpdata = in_file.read()
         _META_SEPARATOR = '(' + os.linesep * 2 + '|' + ('\n' * 2) + '|' + ("\r\n" * 2) + ')'
         phpdata = re.split(_META_SEPARATOR, phpdata, maxsplit=1)[-1]
@@ -411,7 +424,7 @@ def add_header_permalinks(fname, xpath_list=None, file_blacklist=None):
     file_blacklist = file_blacklist or []
     if fname in file_blacklist:
         return
-    with io.open(fname, 'r', encoding='utf-8') as inf:
+    with io.open(fname, 'r', encoding='utf-8-sig') as inf:
         data = inf.read()
     doc = lxml.html.document_fromstring(data)
     # Get language for slugify

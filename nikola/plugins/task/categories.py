@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2020 Roberto Alsina and others.
+# Copyright © 2012-2022 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -112,9 +112,11 @@ link://category_rss/dogs => /categories/dogs.xml""",
         """Return a path for the list of all classifications."""
         if self.site.config['CATEGORIES_INDEX_PATH'](lang):
             path = self.site.config['CATEGORIES_INDEX_PATH'](lang)
-            return [_f for _f in [path] if _f], 'never'
+            append_index = 'never'
         else:
-            return [_f for _f in [self.site.config['CATEGORY_PATH'](lang)] if _f], 'always'
+            path = self.site.config['CATEGORY_PATH'](lang)
+            append_index = 'always'
+        return [component for component in path.split('/') if component], append_index
 
     def slugify_tag_name(self, name, lang):
         """Slugify a tag name."""
@@ -184,6 +186,8 @@ link://category_rss/dogs => /categories/dogs.xml""",
             "title": self.site.MESSAGES[lang]["Categories"],
             "description": self.site.MESSAGES[lang]["Categories"],
             "pagekind": ["list", "tags_page"],
+            "category_descriptions": self.site.config['CATEGORY_DESCRIPTIONS'](lang),
+            "category_titles": self.site.config['CATEGORY_TITLES'](lang),
         }
         kw.update(context)
         return context, kw
@@ -207,8 +211,8 @@ link://category_rss/dogs => /categories/dogs.xml""",
         subcats = [(child.name, self.site.link(self.classification_name, child.classification_name, lang)) for child in children]
         friendly_name = self.get_classification_friendly_name(classification, lang)
         context = {
-            "title": self.site.config['CATEGORY_TITLES'].get(lang, {}).get(classification, self.site.MESSAGES[lang]["Posts about %s"] % friendly_name),
-            "description": self.site.config['CATEGORY_DESCRIPTIONS'].get(lang, {}).get(classification),
+            "title": self.site.config['CATEGORY_TITLES'](lang).get(classification, self.site.MESSAGES[lang]["Posts about %s"] % friendly_name),
+            "description": self.site.config['CATEGORY_DESCRIPTIONS'](lang).get(classification),
             "pagekind": ["tag_page", "index" if self.show_list_as_index else "list"],
             "tag": friendly_name,
             "category": classification,

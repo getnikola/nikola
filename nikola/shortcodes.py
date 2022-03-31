@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2020 Roberto Alsina and others.
+# Copyright © 2012-2022 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -371,7 +371,7 @@ def apply_shortcodes(data, registry, site=None, filename=None, raise_exceptions=
                     if not isinstance(res, tuple):  # For backards compatibility
                         res = (res, [])
                 else:
-                    LOGGER.error('Unknown shortcode {0} (started at {1})', name, _format_position(data, current[2]))
+                    LOGGER.error('Unknown shortcode %s (started at %s)', name, _format_position(data, current[2]))
                     res = ('', [])
                 result.append(res[0])
                 dependencies += res[1]

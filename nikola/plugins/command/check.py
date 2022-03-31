@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2020 Roberto Alsina and others.
+# Copyright © 2012-2022 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -274,7 +274,7 @@ class CommandCheck(Command):
                         continue
 
                     # Skip whitelisted targets
-                    if any(re.search(_, target) for _ in self.whitelist):
+                    if any(pattern.search(target) for pattern in self.whitelist):
                         continue
 
                     # Check the remote link works
@@ -320,7 +320,7 @@ class CommandCheck(Command):
                         target_filename = os.path.abspath(
                             os.path.join(os.path.dirname(filename).encode('utf-8'), unquoted_target))
 
-                elif url_type in ('full_path', 'absolute'):
+                else:
                     relative = False
                     if url_type == 'absolute':
                         # convert to 'full_path' case, ie url relative to root
@@ -348,7 +348,12 @@ class CommandCheck(Command):
                         fs_rel_path = fs_relpath_from_url_path(url_rel_path)
                         target_filename = os.path.join(self.site.config['OUTPUT_FOLDER'], fs_rel_path)
 
-                if any(re.search(x, target_filename) for x in self.whitelist):
+                if isinstance(target_filename, str):
+                    target_filename_str = target_filename
+                else:
+                    target_filename_str = target_filename.decode("utf-8", errors="surrogateescape")
+
+                if any(pattern.search(target_filename_str) for pattern in self.whitelist):
                     continue
 
                 elif target_filename not in self.existing_targets:

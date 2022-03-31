@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2020 Roberto Alsina and others.
+# Copyright © 2012-2022 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -102,9 +102,11 @@ link://tag_rss/cats => /tags/cats.xml""",
         """Return a path for the list of all classifications."""
         if self.site.config['TAGS_INDEX_PATH'](lang):
             path = self.site.config['TAGS_INDEX_PATH'](lang)
-            return [_f for _f in [path] if _f], 'never'
+            append_index = 'never'
         else:
-            return [_f for _f in [self.site.config['TAG_PATH'](lang)] if _f], 'always'
+            path = self.site.config['TAG_PATH'](lang)
+            append_index = 'always'
+        return [component for component in path.split('/') if component], append_index
 
     def get_path(self, classification, lang, dest_type='page'):
         """Return a path for the given classification."""
@@ -126,6 +128,8 @@ link://tag_rss/cats => /tags/cats.xml""",
             "title": self.site.MESSAGES[lang]["Tags"],
             "description": self.site.MESSAGES[lang]["Tags"],
             "pagekind": ["list", "tags_page"],
+            "tag_descriptions": self.site.config['TAG_DESCRIPTIONS'](lang),
+            "tag_titles": self.site.config['TAG_TITLES'](lang),
         }
         kw.update(context)
         return context, kw
@@ -141,8 +145,8 @@ link://tag_rss/cats => /tags/cats.xml""",
             "tag_titles": self.site.config['TAG_TITLES'],
         }
         context = {
-            "title": self.site.config['TAG_TITLES'].get(lang, {}).get(classification, self.site.MESSAGES[lang]["Posts about %s"] % classification),
-            "description": self.site.config['TAG_DESCRIPTIONS'].get(lang, {}).get(classification),
+            "title": self.site.config['TAG_TITLES'](lang).get(classification, self.site.MESSAGES[lang]["Posts about %s"] % classification),
+            "description": self.site.config['TAG_DESCRIPTIONS'](lang).get(classification),
             "pagekind": ["tag_page", "index" if self.show_list_as_index else "list"],
             "tag": classification,
         }

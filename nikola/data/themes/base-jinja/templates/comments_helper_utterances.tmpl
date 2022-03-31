@@ -1,0 +1,23 @@
+{#  -*- coding: utf-8 -*- #}
+{% macro comment_form(url, title, identifier) %}
+    {% if comment_system_id %}
+        <div data-title="{{ title|e }}" id="utterances-thread"></div>
+        <script src="https://utteranc.es/client.js" repo="{{ comment_system_id }}"
+        {% if utterances_config %}
+        {% for k, v in utterances_config.items() %}
+        {{ k }}="{{ v }}"
+        {% endfor %}
+        {% endif %}
+        ></script>
+    {% endif %}
+{% endmacro %}
+
+{% macro comment_link(link, identifier) %}
+    {% if comment_system_id %}
+        <a href="{{ link }}#utterances-thread">{{ messages("Comments") }}</a>
+    {% endif %}
+{% endmacro %}
+
+
+{% macro comment_link_script() %}
+{% endmacro %}

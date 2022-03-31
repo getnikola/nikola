@@ -5,7 +5,7 @@
 
 .. class:: subtitle
 
-By `GUY BOOTHBY <http://www.gutenberg.org/ebooks/author/3587>`__
+By `GUY BOOTHBY <https://www.gutenberg.org/ebooks/author/3587>`__
 
 Author of "Dr. Nikola," "The Beautiful White Devil," etc., etc.
 
@@ -23,14 +23,14 @@ Author of "Dr. Nikola," "The Beautiful White Devil," etc., etc.
     Title: A Bid for Fortune
     or Dr. Nikola's Vendetta
 
-    Author: `Guy Boothby <http://www.gutenberg.org/ebooks/author/3587>`__
+    Author: `Guy Boothby <https://www.gutenberg.org/ebooks/author/3587>`__
 
     Release Date: May 29, 2007 [EBook #21640]
 
     Language: English
 
     Produced by Marilynda Fraser-Cunliffe, Mary Meehan and the
-    Online Distributed Proofreading Team at http://www.pgdp.net
+    Online Distributed Proofreading Team at https://www.pgdp.net
 
     Originally published by:
 

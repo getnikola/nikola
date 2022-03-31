@@ -1,0 +1,164 @@
+# Messages in Nikola
+# Copyright (C) 2012-2016
+# This file is distributed under the same license as the Nikola package.
+# 
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+# Krishnakanth Allika, 2020
+msgid ""
+msgstr ""
+"Project-Id-Version: Nikola\n"
+"Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
+"POT-Creation-Date: 2013-03-15 12:24-0300\n"
+"PO-Revision-Date: 2020-07-06 04:45+0000\n"
+"Last-Translator: Krishnakanth Allika\n"
+"Language-Team: Marathi (http://www.transifex.com/ralsina/nikola/language/mr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: mr\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "More posts about %s"
+msgstr "%s बद्दल अधिक पोस्ट"
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "LANGUAGE"
+msgstr "मराठी"
+
+msgid "Tags"
+msgstr "टॅग्ज"
+
+msgid "Categories"
+msgstr "श्रेणी"
+
+msgid "Tags and Categories"
+msgstr "टॅग्ज आणि श्रेण्या"
+
+msgid "Comments"
+msgstr "टिप्पण्या"
+
+msgid "Read more"
+msgstr "अधिक वाचा"
+
+msgid "Posts about %s"
+msgstr "%s बद्दल पोस्ट"
+
+msgid "Next post"
+msgstr "पुढील पोस्ट"
+
+msgid "old posts, page %d"
+msgstr "जुने पोस्ट, पृष्ठ %d"
+
+msgid "page %d"
+msgstr "पृष्ठ %d"
+
+msgid "Source"
+msgstr "स्रोत"
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "Read in English"
+msgstr "मराठी मध्ये वाचा"
+
+msgid "Posts for year %s"
+msgstr "%s वर्षासाठी पोस्ट"
+
+msgid "Newer posts"
+msgstr "नवीन पोस्ट्स"
+
+msgid "Previous post"
+msgstr "मागील पोस्ट"
+
+msgid "Also available in:"
+msgstr "मध्ये देखील उपलब्ध:"
+
+msgid "Languages:"
+msgstr "भाषा:"
+
+msgid "Original site"
+msgstr "मूळ साइट"
+
+msgid "Older posts"
+msgstr "जुने पोस्ट"
+
+msgid "Archive"
+msgstr "संग्रह"
+
+msgid "Publication date"
+msgstr "प्रकाशन तारीख"
+
+msgid "Posted:"
+msgstr "पोस्ट केले:"
+
+msgid "Posts for {month_year}"
+msgstr "{month_year} साठी पोस्ट्स"
+
+msgid "Posts for {month_day_year}"
+msgstr "{month_day_year} साठी पोस्ट्स"
+
+msgid "Nothing found."
+msgstr "काहीही सापडले नाही."
+
+msgid "No posts found."
+msgstr "कोणतीही पोस्ट आढळली नाहीत"
+
+msgid "RSS feed"
+msgstr "आरएसएस फीड"
+
+msgid "%d min remaining to read"
+msgstr "वाचण्यासाठी %d मिनिटे शिल्लक आहेत"
+
+msgid "Skip to main content"
+msgstr "मुख्य सामग्रीकडे जा"
+
+msgid "Subcategories:"
+msgstr "उपश्रेणी:"
+
+#. Used for active navigation links, for screen readers only
+msgid "(active)"
+msgstr "(सक्रिय)"
+
+#. Default content for a new post
+msgid "Write your post here."
+msgstr "आपले पोस्ट येथे लिहा."
+
+#. Default content for a new page
+msgid "Write your page here."
+msgstr "आपले पृष्ठ येथे लिहा."
+
+msgid "Uncategorized"
+msgstr "अवर्गीकृत"
+
+#. Used for feeds of any format
+msgid "Updates"
+msgstr "अद्यतने"
+
+msgid "Authors"
+msgstr "लेखक"
+
+msgid "Posts by %s"
+msgstr "%s द्वारा पोस्ट केलेले"
+
+msgid "Toggle navigation"
+msgstr "नेव्हिगेशन टॉगल करा"
+
+msgid "Previous"
+msgstr "मागील"
+
+msgid "Up"
+msgstr "वर"
+
+msgid "Next"
+msgstr "पुढे"
+
+msgid "Atom feed"
+msgstr "अ‍ॅटम फीड"
+
+#. {date} (updated {updated_date})
+msgid "updated"
+msgstr "अद्यतनित"

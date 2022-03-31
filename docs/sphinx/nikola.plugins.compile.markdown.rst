@@ -32,4 +32,3 @@ nikola.plugins.compile.markdown.mdx\_podcast module
    :members:
    :undoc-members:
    :show-inheritance:
-

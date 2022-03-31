@@ -4,6 +4,138 @@ New in master
 Features
 --------
 
+* Gallery index pages support the `status` flag (Issue #3598)
+* Add ``start_at`` option to youtube directive (Issue #3603)
+
+
+New in v8.2.0
+=============
+
+Features
+--------
+
+* Add ``category_titles``, ``category_descriptions``, ``tag_titles``,
+  ``tag_descriptions`` to default context of tags page (Issue #3584)
+* Add Maori translation
+* Add Occitan translation
+* New ``auto_command_starting`` signal when ``nikola auto`` is
+  starting
+* ``typogrify_custom`` filter adds a default value for
+  ``typogrify_filters`` so that ``ignore_tags`` can be specified
+  as the only option.
+* The default ``ignore_tags`` are appended to the user-supplied
+  ``ignore_tags`` added via ``typogrify_custom``.
+* Allow adding comment systems from a plugin (Issue #3544)
+* New ``CommentSystem`` plugin category (Issue #3544)
+
+Bugfixes
+--------
+
+* Fix changes to ``INDEX_READ_MORE_LINK`` and ``FEED_READ_MORE_LINK``
+  not triggering rebuilds
+* Make ``CATEGORY_TITLES``, ``CATEGORY_DESCRIPTIONS``, ``TAG_TITLES``,
+  ``TAG_DESCRIPTIONS`` translatable settings for consistency (Issue #3584)
+* Fix bug with posts after the first one appearing shifted due to a
+  ``<div>`` closed too early (Issue #3573, #3564)
+* Fix support for files outside of site root directory on Windows
+* Support passing ``--backend`` and ``--db-file`` to ``nikola auto``
+* Support blank values in certain WordPress-imported structures
+  (Issue #3535)
+* Typogrify ignores ``div`` elements with ``.math`` CSS class.
+  (Issue #3512)
+* Adjust panorama aspect ratio to 3:1 and document behaviour.
+
+New in v8.1.3
+=============
+
+Features
+--------
+
+* Provide the full ``GLOBAL_CONTEXT`` to the post list shortcode plugin
+  (Issue #3481)
+* Add ``BasePlugin.register_auto_watched_folder()``
+* Allow different ``PANDOC_OPTIONS`` values based on input extensions
+  by specifying a dict of ``{".extension": [options]}`` (Issue #3492)
+* Allow boolean/integer ``pretty_url`` post meta values in YAML/TOML
+  (Issue #3503)
+
+Bugfixes
+--------
+
+* Fix an ``UnboundLocalError`` crash in ``nikola deploy`` (Issue
+  #3479)
+
+Other
+-----
+
+* For ``nikola github_deploy``, the ``ghp-import`` PyPI package is now
+  recommended instead of ``ghp-import2``. Both versions should work,
+  but you can’t have both installed at the same time. (Issue #3499)
+
+New in v8.1.2
+=============
+
+Features
+--------
+
+* Fix time zone guessing logic in ``nikola init`` (Issue #3510)
+* Support for multiple authors per post — comma-separated, enabled by
+  ``MULTIPLE_AUTHORS_PER_POST`` setting (Issue #3252)
+* Add ``navbar_custom_bg`` theme option to ``bootstrap4`` and document
+  options for ``bootstrap4`` better (Issue #3443)
+* Add Marathi translation
+* Restore ``caps`` typogrify filter (wraps strings of capital letters
+  with ``<span class="caps">`` (via Issue #3405)
+* Improve ``nikola auto`` performance with rate-limiting, support
+  ``-n`` argument to pass to ``nikola build`` (Issue #3401)
+* Add support for the `Utterances <https://utteranc.es>`_ comment system
+
+Bugfixes
+--------
+
+* Fix previewimages (post- and root-relative) in bootblog4/galleries
+  featured posts for non-server-root sites (Issue #3471)
+* Windows: Also fix symlinks when installing from source with pip; if possible,
+  enable Developer Mode and run ``git config --global core.symlinks true``
+  before cloning the Nikola repo
+* Fix clicking on links to image files. baguetteBox now requires a
+  link (``<a>``) to have an ``<img>`` as a child in order to make the
+  link activate the lightbox. (Issue #3472)
+* Fix ``LINK_CHECK_WHITELIST`` having issues due to mixing Unicode
+  and bytestrings (Issue #3466)
+* Add support for ``nbconvert>=6.0.0`` (Issue #3457)
+* Read files as utf-8-sig to allow BOM in input files
+* Don’t break slugs with slashes in ``doc`` directive (Issue #3450)
+* Avoid warnings from type annotations in ``auto`` caused by missing
+  ``aiohttp`` (Issue #3451)
+* Ensure query strings and fragments are kept with ``URL_TYPE =
+  "full_path"`` (Issue #3448)
+* Don’t run typogrify filters on ``<title>`` tag to avoid adding extra
+  tags (Issue #3405)
+* Fix handling of duplicate plugins on Windows
+* Allow else clause in post-list plugin. (Issue #3436)
+* Ensure ``type`` metadata value from plugins is preserved (Issue 3445)
+* Fix path handlers with slashes on Windows
+
+New in v8.1.1
+=============
+
+Bugfixes
+--------
+
+* Default to no line numbers in code blocks, honor CodeHilite
+  requesting no line numbers. Listing pages still use line numbers
+  (Issue #3426)
+* Remove duplicate MathJax config in bootstrap themes (Issue #3427)
+* Fix ``doit`` requirement to ``doit>=0.32.0`` (Issue #3422)
+
+New in v8.1.0
+=============
+
+Features
+--------
+
+* Support posts without titles (Issue #3408)
 * Support WebP image scaling (Issue #3399)
 * Use Luxon instead of Moment for fancy dates to make it more
   lightweight, going from 328k to 68k (Issue #3232)
@@ -23,6 +155,7 @@ Features
 Bugfixes
 --------
 
+* Support directory names in ``REDIRECTIONS`` (Issue #3421)
 * Return a non-zero error code when ``nikola github_deploy`` fails
 * Refactored scale_image causing performance increasing in image
   resizing.

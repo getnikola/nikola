@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2020 Roberto Alsina and others.
+# Copyright © 2012-2022 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -29,7 +29,7 @@
 import os
 import sys
 
-__version__ = '8.0.4'
+__version__ = '8.2.0'
 DEBUG = bool(os.getenv('NIKOLA_DEBUG'))
 SHOW_TRACEBACKS = bool(os.getenv('NIKOLA_SHOW_TRACEBACKS'))
 

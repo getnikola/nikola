@@ -1,0 +1,164 @@
+# Messages in Nikola
+# Copyright (C) 2012-2016
+# This file is distributed under the same license as the Nikola package.
+# 
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+# Quentin PAGÈS, 2021
+msgid ""
+msgstr ""
+"Project-Id-Version: Nikola\n"
+"Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
+"POT-Creation-Date: 2013-03-15 12:24-0300\n"
+"PO-Revision-Date: 2021-08-30 11:24+0000\n"
+"Last-Translator: Quentin PAGÈS\n"
+"Language-Team: Occitan (post 1500) (http://www.transifex.com/ralsina/nikola/language/oc/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: oc\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "More posts about %s"
+msgstr "Mai de publicacion sus %s"
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "LANGUAGE"
+msgstr "Occitan"
+
+msgid "Tags"
+msgstr "Etiquetas"
+
+msgid "Categories"
+msgstr "Categorias"
+
+msgid "Tags and Categories"
+msgstr "Etiquetas e categorias"
+
+msgid "Comments"
+msgstr "Comentaris"
+
+msgid "Read more"
+msgstr "Ne legir mai"
+
+msgid "Posts about %s"
+msgstr "Publicacions tocant %s"
+
+msgid "Next post"
+msgstr "Publicacion seguenta"
+
+msgid "old posts, page %d"
+msgstr "publicacions ancianas, pagina %d"
+
+msgid "page %d"
+msgstr "pagina %d"
+
+msgid "Source"
+msgstr "Font"
+
+#. Here your translation should NOT say English but the name of your language
+#. instead
+msgid "Read in English"
+msgstr "Legir en occitan"
+
+msgid "Posts for year %s"
+msgstr "Publicacions per annada %s"
+
+msgid "Newer posts"
+msgstr "Publicacions mai recentas"
+
+msgid "Previous post"
+msgstr "Publicacion precedenta"
+
+msgid "Also available in:"
+msgstr "Tanben disponibla en :"
+
+msgid "Languages:"
+msgstr "Lengas :"
+
+msgid "Original site"
+msgstr "Site original"
+
+msgid "Older posts"
+msgstr "Publicacions mai ancianas"
+
+msgid "Archive"
+msgstr "Archius"
+
+msgid "Publication date"
+msgstr "Data de publicacion"
+
+msgid "Posted:"
+msgstr "Publicada lo :"
+
+msgid "Posts for {month_year}"
+msgstr "Publicacions per {month_year} "
+
+msgid "Posts for {month_day_year}"
+msgstr "Publicacions per {month_day_year}"
+
+msgid "Nothing found."
+msgstr "Res pas trobat."
+
+msgid "No posts found."
+msgstr "Cap de publicacion pas trobada."
+
+msgid "RSS feed"
+msgstr "Flux RSS"
+
+msgid "%d min remaining to read"
+msgstr "%d min demorantas de lectura"
+
+msgid "Skip to main content"
+msgstr "Passar al contengut màger"
+
+msgid "Subcategories:"
+msgstr "Jos-categorias :"
+
+#. Used for active navigation links, for screen readers only
+msgid "(active)"
+msgstr "(actiu)"
+
+#. Default content for a new post
+msgid "Write your post here."
+msgstr "Escrivètz vòstra publicacion aquí."
+
+#. Default content for a new page
+msgid "Write your page here."
+msgstr "Escrivètz vòstra pagina aquí."
+
+msgid "Uncategorized"
+msgstr "Sens categoria"
+
+#. Used for feeds of any format
+msgid "Updates"
+msgstr "Actualizacions"
+
+msgid "Authors"
+msgstr "Autors"
+
+msgid "Posts by %s"
+msgstr "Publicat per %s"
+
+msgid "Toggle navigation"
+msgstr "Alternar la navigacion"
+
+msgid "Previous"
+msgstr "Precedent"
+
+msgid "Up"
+msgstr "Amont"
+
+msgid "Next"
+msgstr "Seguent"
+
+msgid "Atom feed"
+msgstr "Flux Atom"
+
+#. {date} (updated {updated_date})
+msgid "updated"
+msgstr "actualizada"

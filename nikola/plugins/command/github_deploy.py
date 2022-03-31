@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2014-2020 Puneeth Chaganti and others.
+# Copyright © 2014-2022 Puneeth Chaganti and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -50,7 +50,7 @@ def check_ghp_import_installed():
     except OSError:
         # req_missing defaults to `python=True` — and it’s meant to be like this.
         # `ghp-import` is installed via pip, but the only way to use it is by executing the script it installs.
-        req_missing(['ghp-import2'], 'deploy the site to GitHub Pages')
+        req_missing(['ghp-import'], 'deploy the site to GitHub Pages')
 
 
 class DeployFailedException(Exception):

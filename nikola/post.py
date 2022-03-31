@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2020 Roberto Alsina and others.
+# Copyright © 2012-2022 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -54,7 +54,8 @@ from .utils import (
     to_datetime,
     demote_headers,
     get_translation_candidate,
-    map_metadata
+    map_metadata,
+    bool_from_meta,
 )
 
 try:
@@ -177,6 +178,7 @@ class Post(object):
         self.translations = self.config['TRANSLATIONS']
         self.skip_untranslated = not self.config['SHOW_UNTRANSLATED_POSTS']
         self._default_preview_image = self.config['DEFAULT_PREVIEW_IMAGE']
+        self.types_to_hide_title = self.config['TYPES_TO_HIDE_TITLE']
 
     def _set_tags(self):
         """Set post tags."""
@@ -251,7 +253,7 @@ class Post(object):
         self.post_name = os.path.splitext(source_path)[0]  # posts/blah
         _relpath = os.path.relpath(self.post_name)
         if _relpath != self.post_name:
-            self.post_name = _relpath.replace('..' + os.sep, '_..' + os.sep)
+            self.post_name = _relpath.replace('..' + os.sep, '__dotdot__' + os.sep)
         # cache[\/]posts[\/]blah.html
         self.base_path = os.path.join(self.config['CACHE_FOLDER'], self.post_name + ".html")
         # cache/posts/blah.html
@@ -426,13 +428,14 @@ class Post(object):
 
     def has_pretty_url(self, lang):
         """Check if this page has a pretty URL."""
-        m = self.meta[lang].get('pretty_url', '')
-        if m:
-            # match is a non-empty string, overides anything
-            return m.lower() == 'true' or m.lower() == 'yes'
-        else:
+        meta_value = bool_from_meta(self.meta[lang], 'pretty_url')
+
+        if meta_value is None:
             # use PRETTY_URLS, unless the slug is 'index'
             return self.pretty_urls and self.meta[lang]['slug'] != 'index'
+        else:
+            # override with meta value
+            return meta_value
 
     def _has_pretty_url(self, lang):
         """Check if this page has a pretty URL."""
@@ -449,13 +452,13 @@ class Post(object):
             return True
         lang = nikola.utils.LocaleBorg().current_lang
         if self.is_translation_available(lang):
-            if self.meta[lang].get('has_math') in ('true', 'True', 'yes', '1', 1, True):
+            if bool_from_meta(self.meta[lang], 'has_math'):
                 return True
             if self.config['USE_TAG_METADATA']:
                 return 'mathjax' in self.tags_for_language(lang)
         # If it has math in ANY other language, enable it. Better inefficient than broken.
         for lang in self.translated_to:
-            if self.meta[lang].get('has_math') in ('true', 'True', 'yes', '1', 1, True):
+            if bool_from_meta(self.meta[lang], 'has_math'):
                 return True
         if self.config['USE_TAG_METADATA']:
             return 'mathjax' in self.alltags
@@ -546,7 +549,7 @@ class Post(object):
             lang = nikola.utils.LocaleBorg().current_lang
         return self.meta[lang]['title']
 
-    def author(self, lang=None):
+    def author(self, lang=None) -> str:
         """Return localized author or BLOG_AUTHOR if unspecified.
 
         If lang is not specified, it defaults to the current language from
@@ -558,6 +561,21 @@ class Post(object):
             author = self.meta[lang]['author']
         else:
             author = self.config['BLOG_AUTHOR'](lang)
+
+        return author
+
+    def authors(self, lang=None) -> list:
+        """Return localized authors or BLOG_AUTHOR if unspecified.
+
+        If lang is not specified, it defaults to the current language from
+        templates, as set in LocaleBorg.
+        """
+        if lang is None:
+            lang = nikola.utils.LocaleBorg().current_lang
+        if self.meta[lang]['author']:
+            author = [i.strip() for i in self.meta[lang]['author'].split(",")]
+        else:
+            author = [self.config['BLOG_AUTHOR'](lang)]
 
         return author
 
@@ -596,9 +614,9 @@ class Post(object):
         if add not in {'fragment', 'page', 'both'}:
             raise Exception("Add parameter is '{0}', but must be either 'fragment', 'page', or 'both'.".format(add))
         if add == 'fragment' or add == 'both':
-            self._dependency_file_fragment[lang].append((type(dependency) != str, dependency))
+            self._dependency_file_fragment[lang].append((not isinstance(dependency, str), dependency))
         if add == 'page' or add == 'both':
-            self._dependency_file_page[lang].append((type(dependency) != str, dependency))
+            self._dependency_file_page[lang].append((not isinstance(dependency, str), dependency))
 
     def add_dependency_uptodate(self, dependency, is_callable=False, add='both', lang=None):
         """Add a dependency for task's ``uptodate`` for tasks using that post.
@@ -645,7 +663,7 @@ class Post(object):
             deps_path = post.compiler.get_dep_filename(post, lang)
         if deps_list or (post.compiler.use_dep_file if post else False):
             deps_list = [p for p in deps_list if p != dest]  # Don't depend on yourself (#1671)
-            with io.open(deps_path, "w+", encoding="utf8") as deps_file:
+            with io.open(deps_path, "w+", encoding="utf-8") as deps_file:
                 deps_file.write('\n'.join(deps_list))
         else:
             if os.path.isfile(deps_path):
@@ -661,7 +679,7 @@ class Post(object):
                 # can add directly
                 result = dep[1]
             # if result is a list, add its contents
-            if type(result) == list:
+            if isinstance(result, list):
                 deps.extend(result)
             else:
                 deps.append(result)
@@ -842,7 +860,7 @@ class Post(object):
             lang = nikola.utils.LocaleBorg().current_lang
 
         source = self.translated_source_path(lang)
-        with open(source, encoding='utf-8') as inf:
+        with open(source, 'r', encoding='utf-8-sig') as inf:
             data = inf.read()
         if self.is_two_file:  # Metadata is not here
             source_data = data
@@ -873,7 +891,7 @@ class Post(object):
         if not os.path.isfile(file_name):
             self.compile(lang)
 
-        with io.open(file_name, "r", encoding="utf8") as post_file:
+        with io.open(file_name, "r", encoding="utf-8-sig") as post_file:
             data = post_file.read().strip()
 
         if self.compiler.extension() == '.php':
@@ -892,10 +910,7 @@ class Post(object):
         if self.hyphenate:
             hyphenate(document, real_lang)
 
-        try:
-            data = lxml.html.tostring(document.body, encoding='unicode')
-        except Exception:
-            data = lxml.html.tostring(document, encoding='unicode')
+        data = utils.html_tostring_fragment(document)
 
         if teaser_only:
             teaser_regexp = self.config.get('TEASER_REGEXP', TEASER_REGEXP)
@@ -918,10 +933,7 @@ class Post(object):
                         post_title=self.title(lang))
                 # This closes all open tags and sanitizes the broken HTML
                 document = lxml.html.fromstring(teaser)
-                try:
-                    data = lxml.html.tostring(document.body, encoding='unicode')
-                except IndexError:
-                    data = lxml.html.tostring(document, encoding='unicode')
+                data = utils.html_tostring_fragment(document)
 
         if data and strip_html:
             try:
@@ -934,11 +946,11 @@ class Post(object):
             if self.demote_headers:
                 # see above
                 try:
-                    document = lxml.html.fromstring(data)
+                    document = lxml.html.fragment_fromstring(data, "body")
                     demote_headers(document, self.demote_headers)
-                    data = lxml.html.tostring(document.body, encoding='unicode')
+                    data = utils.html_tostring_fragment(document)
                 except (lxml.etree.ParserError, IndexError):
-                    data = lxml.html.tostring(document, encoding='unicode')
+                    pass
 
         return data
 
@@ -974,7 +986,7 @@ class Post(object):
             # duplicated with Post.text()
             lang = nikola.utils.LocaleBorg().current_lang
             file_name, _ = self._translated_file_path(lang)
-            with io.open(file_name, "r", encoding="utf8") as post_file:
+            with io.open(file_name, "r", encoding="utf-8-sig") as post_file:
                 data = post_file.read().strip()
             try:
                 document = lxml.html.fragment_fromstring(data, "body")
@@ -1069,11 +1081,13 @@ class Post(object):
 
         image_path = self.meta[lang]['previewimage']
         if not image_path:
-            return self._default_preview_image
+            image_path = self._default_preview_image
 
-        # This is further parsed by the template, because we don’t have access
-        # to the URL replacer here.  (Issue #1473)
-        return image_path
+        if not image_path or image_path.startswith("/"):
+            # Paths starting with slashes are expected to be root-relative, pass them directly.
+            return image_path
+        # Other paths are relative to the permalink. The path will be made prettier by the URL replacer later.
+        return urljoin(self.permalink(lang), image_path)
 
     def source_ext(self, prefix=False):
         """Return the source file extension.
@@ -1088,6 +1102,15 @@ class Post(object):
             return '.src' + ext
         else:
             return ext
+
+    def should_hide_title(self):
+        """Return True if this post's title should be hidden. Use in templates to manage posts without titles."""
+        return self.title().strip() in ('NO TITLE', '') or self.meta('hidetitle') or \
+            self.meta('type').strip() in self.types_to_hide_title
+
+    def should_show_title(self):
+        """Return True if this post's title should be displayed. Use in templates to manage posts without titles."""
+        return not self.should_hide_title()
 
 
 def get_metadata_from_file(source_path, post, config, lang, metadata_extractors_by):

@@ -7,7 +7,7 @@
 .. has_math: true
 .. author: The Nikola Team
 
-:Version: 8.0.4
+:Version: 8.2.0
 
 .. class:: alert alert-primary float-md-right
 
@@ -62,7 +62,7 @@ instead of something the user generates.
 
 Nikola can do:
 
-* A blog (`example <http://ralsina.me>`__)
+* A blog (`example <https://ralsina.me>`__)
 * Your company's site
 * Your personal site
 * A software project's site (`example <https://getnikola.com>`__)
@@ -94,7 +94,7 @@ Getting Help
 TL;DR:
 
 * You can file bugs at `the issue tracker <https://github.com/getnikola/nikola/issues>`__
-* You can discuss Nikola at the `nikola-discuss google group <http://groups.google.com/group/nikola-discuss>`_
+* You can discuss Nikola at the `nikola-discuss google group <https://groups.google.com/group/nikola-discuss>`_
 * You can subscribe to `the Nikola Blog <https://getnikola.com/blog>`_
 * You can follow `Nikola on Twitter <https://twitter.com/GetNikola>`_
 
@@ -224,7 +224,7 @@ By default, that file will contain also some extra information about your post (
 It can be placed in a separate file by using the ``-2`` option, but it's generally
 easier to keep it in a single location.
 
-The contents of your post have to be written (by default) in `reStructuredText <http://docutils.sf.net>`__
+The contents of your post have to be written (by default) in `reStructuredText <https://docutils.sourceforge.io/>`__
 but you can use a lot of different markups using the ``-f`` option.
 
 Currently, Nikola supports reStructuredText, Markdown, Jupyter Notebooks, HTML as input,
@@ -284,12 +284,13 @@ Basic
 `````
 
 title
-    Title of the post. (required)
+    Title of the post. Using HTML/math in titles is not supported/recommended.
+    If not specified, the file name will be used.
 
 slug
     Slug of the post. Used as the last component of the page URL.  We recommend
     and default to using a restricted character set (``a-z0-9-_``) because
-    other symbols may cause issues in URLs. (required)
+    other symbols may cause issues in URLs. If not specified, the file name will be used.
 
     So, if the slug is "the-slug" the page generated would be "the-slug.html" or
     "the-slug/index.html" (if you have the pretty URLs option enabled)
@@ -344,7 +345,7 @@ author
     display (theme-dependent)
 
 enclosure
-    Add an enclosure to this post when it's used in RSS. See `more information about enclosures <http://en.wikipedia.org/wiki/RSS_enclosure>`__
+    Add an enclosure to this post when it's used in RSS. See `more information about enclosures <https://en.wikipedia.org/wiki/RSS_enclosure>`__
 
 data
     Path to an external data file (JSON/YAML/TOML dictionary), relative to ``conf.py``.
@@ -651,14 +652,14 @@ default set to:
 
 In case you translate your posts, you might also want to adjust various
 other settings so that the generated URLs match the translation. You can
-find most places in `conf.py` by searching for `(translatable)`. For example,
-you might want to localize `/categories/` (search for `TAG_PATH`), `/pages/`
-and `/posts/` (search for `POSTS` and `PAGES`, or see the next section), or
+find most places in ``conf.py`` by searching for ``(translatable)``. For example,
+you might want to localize ``/categories/`` (search for ``TAG_PATH``), ``/pages/``
+and ``/posts/`` (search for ``POSTS`` and ``PAGES``, or see the next section), or
 how to adjust the URLs for subsequent pages for indexes (search for
-`INDEXES_PRETTY_PAGE_URL`).
+``INDEXES_PRETTY_PAGE_URL``).
 
 Nikola supports multiple languages for a post (we have almost 50 translations!). If you wish to
-add support for more languages, check out `the Transifex page for Nikola <https://www.transifex.com/projects/p/nikola/>`_
+add support for more languages, check out `the Transifex page for Nikola <https://www.transifex.com/projects/p/nikola/>`_.
 
 How does Nikola decide where posts should go?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -937,7 +938,7 @@ Monday, Wednesday and Friday at 7am, add the following
     SCHEDULE_RULE = 'RRULE:FREQ=WEEKLY;BYDAY=MO,WE,FR;BYHOUR=7;BYMINUTE=0;BYSECOND=0'
 
 For more details on how to specify a recurrence rule, look at the
-`iCal specification <http://www.kanzaki.com/docs/ical/rrule.html>`_.
+`iCal specification <https://www.kanzaki.com/docs/ical/rrule.html>`_.
 Or if you are scared of this format, many calendaring applications (eg. Google
 Calendar) offer iCal exports, so you can copy-paste the repeat rule from a
 generated iCal (``.ics``) file (which is a human-readable text file).
@@ -1331,10 +1332,14 @@ emoji
 gist
     Show GitHub gists. If you know the gist's ID, this will show it in your site:
 
-    {{% raw %}}{{% gist 2395294 %}} {{% /raw %}}
+    .. code:: text
+
+        {{% raw %}}{{% gist 2395294 %}} {{% /raw %}}
 
 listing
-    Used to show a code listing. Example::
+    Used to show a code listing. Example:
+
+    .. code:: text
 
         {{% raw %}}{{% listing hello.py python linenumbers=True %}}{{% /raw %}}
 
@@ -1588,7 +1593,7 @@ CSS tweaking
     there and a targets file containing the list of files you want compiled.
 
 .. _LESS: http://lesscss.org/
-.. _Sass: http://sass-lang.com/
+.. _Sass: https://sass-lang.com/
 
 Template tweaking and creating themes
     If you really want to change the pages radically, you will want to do a
@@ -1661,7 +1666,7 @@ Fancy Dates
 Nikola can use various styles for presenting dates.
 
 DATE_FORMAT
-    The date format to use if there is no JS or fancy dates are off.  `Compatible with CLDR syntax. <http://cldr.unicode.org/translation/date-time>`_
+    The date format to use if there is no JS or fancy dates are off.  `Compatible with CLDR syntax. <http://cldr.unicode.org/translation/date-time-1/date-time>`_
 
 LUXON_DATE_FORMAT
     The date format to use with Luxon. A dictionary of dictionaries: the top level is languages, and the subdictionaries are of the format ``{'preset': False, 'format': 'yyyy-MM-dd HH:mm'}``. `Used by Luxon <https://moment.github.io/luxon/docs/manual/formatting>`_ (format can be the preset name, eg. ``'DATE_LONG'``).
@@ -1790,8 +1795,8 @@ request in the  `GitHub repository <https://github.com/getnikola/nikola-themes>`
 
 One other option is to tweak an existing theme using a different color scheme,
 typography and CSS in general. Nikola provides a ``subtheme`` command
-to create a custom theme by downloading free CSS files from http://bootswatch.com
-and http://hackerthemes.com
+to create a custom theme by downloading free CSS files from https://bootswatch.com
+and https://hackerthemes.com
 
 
 .. code:: console
@@ -1831,8 +1836,8 @@ Here is an example, from my own site's deployment script:
     ]}
 
 Other interesting ideas are using
-`git as a deployment mechanism <http://toroid.org/ams/git-website-howto>`_ (or any other VCS
-for that matter), using `lftp mirror <http://lftp.yar.ru/>`_ or unison, or Dropbox.
+`git as a deployment mechanism <https://toroid.org/git-website-howto>`_ (or any other VCS
+for that matter), using `lftp mirror <https://lftp.yar.ru/>`_ or unison, or Dropbox.
 Any way you can think of to copy files from one place to another is good enough.
 
 Deploying to GitHub
@@ -1864,7 +1869,7 @@ sure you have ``nikola`` and ``git`` installed on your PATH.
    * ``GITHUB_REMOTE_NAME`` is the remote to which changes are pushed.
    * ``GITHUB_COMMIT_SOURCE`` controls whether or not the source branch is
      automatically committed to and pushed. We recommend setting it to
-     ``True``, unless you are automating builds with Travis CI.
+     ``True``, unless you are automating builds with CI (eg. GitHub Actions/GitLab CI).
 
 4. Create a ``.gitignore`` file. We recommend adding at least the following entries:
 
@@ -1886,14 +1891,13 @@ If you want to use a custom domain, create your ``CNAME`` file in
 output directory. To add a custom commit message, use the ``-m`` option,
 followed by your message.
 
-Automated rebuilds (GitHub Actions, Travis CI, GitLab)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Automated rebuilds (GitHub Actions, GitLab)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you want automated rebuilds and GitHub Pages deployment, allowing you to
 blog from anywhere in the world, you have multiple options:
 
 * `Automating Nikola rebuilds with GitHub Actions <https://getnikola.com/blog/automating-nikola-rebuilds-with-github-actions.html>`_ (easier for GitHub)
-* `Automating Nikola rebuilds with Travis CI <https://getnikola.com/blog/automating-nikola-rebuilds-with-travis-ci.html>`_
 * `Example Nikola site for GitLab Pages <https://gitlab.com/pages/nikola>`_
 
 Comments
@@ -1910,9 +1914,12 @@ Nikola supports several third party comment systems:
 * `Facebook <https://facebook.com/>`_
 * `Isso <https://posativ.org/isso/>`_
 * `Commento <https://github.com/adtac/commento>`_
+* `Utterances <https://utteranc.es/>`_
 
 By default it will use DISQUS, but you can change by setting ``COMMENT_SYSTEM``
-to one of "disqus", "intensedebate", "livefyre", "moot", "facebook", "isso" or "commento"
+to one of "disqus", "intensedebate", "livefyre", "moot", "facebook", "isso", "commento" or "utterances".
+It is also possible to use a comment system added by a plugin, see the
+`Cactus Comments plugin <https://plugins.getnikola.com/#cactuscomments>`_ for an example.
 
 .. sidebar:: ``COMMENT_SYSTEM_ID``
 
@@ -1928,9 +1935,14 @@ to one of "disqus", "intensedebate", "livefyre", "moot", "facebook", "isso" or "
    * For Isso, it's the URL of your Isso instance (must be world-accessible, encoded with
      Punycode (if using Internationalized Domain Names) and **have a trailing slash**,
      default ``http://localhost:8080/``). You can add custom config options via
-     GLOBAL_CONTEXT, eg. ``GLOBAL_CONTEXT['isso_config'] = {"require-author": "true"}``
+     ``GLOBAL_CONTEXT``, e.g., ``GLOBAL_CONTEXT['isso_config'] = {"require-author": "true"}``
    * For Commento, it's the URL of the commento instance as required by the ``serverUrl``
      parameter in commento's documentation.
+   * For Utterances, it's the **repo name** (``"org/user"``) on GitHub whose
+     issue tracker is used for comments. Additional Utterances configuration
+     values can be stored in the ``GLOBAL_CONTEXT``, e.g.,
+     ``GLOBAL_CONTEXT['utterances_config'] = {"issue-term": "title",
+     "label": "Comments", "theme": "github-light", "crossorigin": "anonymous")``.
 
 To use comments in a visible site, you should register with the service and
 then set the ``COMMENT_SYSTEM_ID`` option.
@@ -1976,6 +1988,14 @@ You can disable comments for a post by adding a "nocomments" metadata field to i
     You need jQuery, but not because Facebook wants it (see Issue
     #639).
 
+.. admonition:: Utterances Support
+
+   You can copy the configuration options from the `Utterances setup page
+   <https://utteranc.es>`_ into ``GLOBAL_CONTEXT['utterances_config']``,
+   except for ``repo``, which should be set as ``COMMENT_SYSTEM_ID``. Note
+   that the either ``issue-term`` or ``issue-number`` must be provided. All
+   other Utterances configuration options are optional.
+
 Images and Galleries
 --------------------
 
@@ -1985,9 +2005,7 @@ and put images there. Nikola will take care of creating thumbnails, index page, 
 If you click on images on a gallery, or on images with links in post, you will
 see a bigger image, thanks to the excellent `baguetteBox
 <https://feimosi.github.io/baguetteBox.js/>`_.  If don’t want this behavior, add an
-``.islink`` class to your link. (The behavior is caused by ``<a
-class="reference">`` if you need to use it outside of galleries and reST
-thumbnails.)
+``.islink`` class to your link.
 
 The gallery pages are generated using the ``gallery.tmpl`` template, and you can
 customize it there (you could switch to another lightbox instead of baguetteBox, change
@@ -2071,8 +2089,11 @@ The ``conf.py`` options affecting images and gallery pages are these:
 
 If you add a reST file in ``galleries/gallery_name/index.txt`` its contents will be
 converted to HTML and inserted above the images in the gallery page. The
-format is the same as for posts. You can use the ``title`` and ``previewimage``
-metadata fields to change how the gallery is shown.
+format is the same as for posts. You can use the ``title``, ``previewimage``, and
+``status`` metadata fields to change how the gallery is shown.
+
+If the ``status`` is ``private``, ``draft``, or ``publish_later``, the
+gallery will not appear in the index, the RSS feeds, nor in the sitemap.
 
 If you add some image filenames in ``galleries/gallery_name/exclude.meta``, they
 will be excluded in the gallery page.
@@ -2082,7 +2103,7 @@ is used as the photo caption. If the filename starts with a number, it will
 be stripped. For example ``03_an_amazing_sunrise.jpg`` will be render as *An amazing sunrise*.
 
 Here is a `demo gallery </galleries/demo>`_ of historic, public domain Nikola
-Tesla pictures taken from `this site <http://kerryr.net/pioneers/gallery/tesla.htm>`_.
+Tesla pictures taken from `this site <https://kerryr.net/pioneers/gallery/tesla.htm>`_.
 
 Embedding Images
 ~~~~~~~~~~~~~~~~
@@ -2262,19 +2283,19 @@ The currently available filters are:
       }
 
 filters.html_tidy_nowrap
-   Prettify HTML 5 documents with `tidy5 <http://www.html-tidy.org/>`_
+   Prettify HTML 5 documents with `tidy5 <https://www.html-tidy.org/>`_
 
 filters.html_tidy_wrap
-   Prettify HTML 5 documents wrapped at 80 characters with `tidy5 <http://www.html-tidy.org/>`_
+   Prettify HTML 5 documents wrapped at 80 characters with `tidy5 <https://www.html-tidy.org/>`_
 
 filters.html_tidy_wrap_attr
-   Prettify HTML 5 documents and wrap lines and attributes with `tidy5 <http://www.html-tidy.org/>`_
+   Prettify HTML 5 documents and wrap lines and attributes with `tidy5 <https://www.html-tidy.org/>`_
 
 filters.html_tidy_mini
-   Minify HTML 5 into smaller documents with `tidy5 <http://www.html-tidy.org/>`_
+   Minify HTML 5 into smaller documents with `tidy5 <https://www.html-tidy.org/>`_
 
 filters.html_tidy_withconfig
-   Run `tidy5 <http://www.html-tidy.org/>`_ with ``tidy5.conf`` as the config file (supplied by user)
+   Run `tidy5 <https://www.html-tidy.org/>`_ with ``tidy5.conf`` as the config file (supplied by user)
 
 filters.html5lib_minify
    Minify HTML5 using html5lib_minify
@@ -2283,10 +2304,39 @@ filters.html5lib_xmllike
    Format using html5lib
 
 filters.typogrify
-   Improve typography using `typogrify <http://static.mintchaos.com/projects/typogrify/>`__
+   Improve typography using `typogrify <https://github.com/mintchaos/typogrify>`__
 
 filters.typogrify_sans_widont
    Same as typogrify without the widont filter
+
+filters.typogrify_custom
+    Run typogrify with a custom set of filters or ignored HTML elements. Takes one or
+    both of the arguments ``typogrify_filters`` or ``ignore_tags``. ``typogrify_filters``
+    must be a list of typogrify filter callables to run. ``ignore_tags`` must be a list
+    of strings specifying HTML tags, CSS classes (prefixed with ``.``), tag ``id`` names
+    (prefixed with ``#``), or a tag and a class or id. The following code should be
+    placed in ``conf.py``.
+
+    .. code-block:: python
+
+      from nikola.filters import typogrify_custom
+      import functools
+      # This filter will ignore HTML elements with the CSS class "typo-ignore"
+      FILTERS = {
+        ".html": [functools.partial(typogrify_custom, ignore_tags=[".typo-ignore"])]
+      }
+      # Alternatively, to specify ``typogrify_filters``
+      import typogrify.filters as typo
+      FILTERS = {
+        ".html": [functools.partial(typogrify_custom, typogrify_filters=[typo.amp])]
+      }
+
+    The default value for ``typogrify_filters`` is
+    ``[typo.amp, typo.widont, typo.smartypants, typo.caps, typo.initial_quotes]`` and the
+    default value for ``ignore_tags`` is ``["title", ".math"]``. If ``ignore_tags`` is
+    specified, the default tags will be appended to the supplied list. See the
+    `documentation <https://github.com/mintchaos/typogrify/blob/master/typogrify/filters.py#L8-L14>`__
+    for the ``process_ignores`` function in typogrify.
 
 filters.minify_lines
    **THIS FILTER HAS BEEN TURNED INTO A NOOP** and currently does nothing.
@@ -2296,7 +2346,7 @@ filters.normalize_html
    quotes. Usually not needed.
 
 filters.yui_compressor
-   Compress CSS/JavaScript using `YUI compressor <http://yui.github.io/yuicompressor/>`_
+   Compress CSS/JavaScript using `YUI compressor <https://yui.github.io/yuicompressor/>`_
 
 filters.closure_compiler
    Compile, compress, and optimize JavaScript `Google Closure Compiler <https://developers.google.com/closure/compiler/>`_
@@ -2305,13 +2355,13 @@ filters.optipng
    Compress PNG files using `optipng <http://optipng.sourceforge.net/>`_
 
 filters.jpegoptim
-   Compress JPEG files using `jpegoptim <http://www.kokkonen.net/tjko/projects.html>`_
+   Compress JPEG files using `jpegoptim <https://www.kokkonen.net/tjko/projects.html>`_
 
 filters.cssminify
-   Minify CSS using http://cssminifier.com/ (requires Internet access)
+   Minify CSS using https://cssminifier.com/ (requires Internet access)
 
 filters.jsminify
-   Minify JS using http://javascript-minifier.com/ (requires Internet access)
+   Minify JS using https://javascript-minifier.com/ (requires Internet access)
 
 filters.jsonminify
    Minify JSON files (strip whitespace and use minimal separators).
@@ -2375,16 +2425,20 @@ filters.deduplicate_ids
 
       DEDUPLICATE_IDS_TOP_CLASSES = ('postpage', 'storypage')
 
-    You can also use a file blacklist (``HEADER_PERMALINKS_FILE_BLACKLIST``),
-    useful for some index pages. Paths include the output directory (eg.
-    ``output/index.html``)
+
+   You can also use a file blacklist (``HEADER_PERMALINKS_FILE_BLACKLIST``),
+   useful for some index pages. Paths include the output directory (eg.
+   ``output/index.html``)
 
 
 You can apply filters to specific posts or pages by using the ``filters`` metadata field:
 
 .. code:: restructuredtext
 
-    .. filters: filters.html_tidy_nowrap, "sed s/foo/bar"
+    .. filters: filters.html_tidy_nowrap, "sed s/foo/bar %s"
+
+Please note that applying custom filters (not those provided via Nikola's filter module)
+via metadata only works for filters implemented via external programs like in that `sed` example.
 
 Optimizing Your Website
 -----------------------
@@ -2549,9 +2603,9 @@ URL of the page.  For example here are two random videos:
 
 .. code:: restructuredtext
 
-    .. media:: http://vimeo.com/72425090
+    .. media:: https://vimeo.com/72425090
 
-    .. media:: http://www.youtube.com/watch?v=wyRpAat5oz0
+    .. media:: https://www.youtube.com/watch?v=wyRpAat5oz0
 
 It supports Instagram, Flickr, Github gists, Funny or Die, and dozens more, thanks to `Micawber <https://github.com/coleifer/micawber>`_
 
@@ -2559,7 +2613,7 @@ YouTube
 ~~~~~~~
 
 To link to a YouTube video, you need the id of the video. For example, if the
-URL of the video is http://www.youtube.com/watch?v=8N_tupPBtWQ what you need is
+URL of the video is https://www.youtube.com/watch?v=8N_tupPBtWQ what you need is
 **8N_tupPBtWQ**
 
 Once you have that, all you need to do is:
@@ -2568,19 +2622,20 @@ Once you have that, all you need to do is:
 
     .. youtube:: 8N_tupPBtWQ
 
-Supported options: ``height``, ``width``, ``align`` (one of ``left``,
+Supported options: ``height``, ``width``, ``start_at``, ``align`` (one of ``left``,
 ``center``, ``right``) — all are optional. Example:
 
 .. code:: restructuredtext
 
     .. youtube:: 8N_tupPBtWQ
        :align: center
+       :start_at: 4
 
 Vimeo
 ~~~~~
 
 To link to a Vimeo video, you need the id of the video. For example, if the
-URL of the video is http://www.vimeo.com/20241459 then the id is **20241459**
+URL of the video is https://vimeo.com/20241459 then the id is **20241459**
 
 Once you have that, all you need to do is:
 
@@ -2604,7 +2659,7 @@ Supported options: ``height``, ``width``, ``align`` (one of ``left``,
 Soundcloud
 ~~~~~~~~~~
 
-This directive lets you share music from http://soundcloud.com You first need to get the
+This directive lets you share music from https://soundcloud.com You first need to get the
 ID for the piece, which you can find in the "share" link. For example, if the
 WordPress code starts like this:
 
@@ -2670,7 +2725,7 @@ Extending ``LISTINGS_FOLDERS`` to ``{'listings': 'listings', 'code': 'formatted-
 will additionally process all source code files in ``code`` and put the results into
 ``output/formatted-code``.
 
-__ http://docutils.sourceforge.net/docs/ref/rst/directives.html#including-an-external-document-fragment
+__ https://docutils.sourceforge.io/docs/ref/rst/directives.html#including-an-external-document-fragment
 
 .. note::
 
@@ -2708,11 +2763,11 @@ To include an image placed in the ``images`` folder (or other folders defined in
 The small thumbnail will be placed in the page, and it will be linked to the bigger
 version of the image when clicked, using
 `baguetteBox <https://feimosi.github.io/baguetteBox.js/>`_ by default. All options supported by
-the reST `image <http://docutils.sourceforge.net/docs/ref/rst/directives.html#image>`_
+the reST `image <https://docutils.sourceforge.io/docs/ref/rst/directives.html#image>`_
 directive are supported (except ``target``). Providing ``alt`` is recommended,
 as this is the image caption. If a body element is provided, the thumbnail will
 mimic the behavior of the `figure
-<http://docutils.sourceforge.net/docs/ref/rst/directives.html#figure>`_
+<https://docutils.sourceforge.io/docs/ref/rst/directives.html#figure>`_
 directive instead:
 
 .. code:: restructuredtext
@@ -2856,7 +2911,7 @@ The following options are recognized:
       * clause: attribute comparison_operator value (spaces optional)
           * attribute: year, month, day, hour, month, second, weekday, isoweekday; or empty for full datetime
           * comparison_operator: == != <= >= < >
-          * value: integer, 'now' or dateutil-compatible date input
+          * value: integer, 'now', 'today', or dateutil-compatible date input
 
 * ``tags`` : string [, string...]
       Filter posts to show only posts having at least one of the ``tags``.
@@ -2915,7 +2970,7 @@ with a ``True`` argument, eg. ``all=True``.
    Nikola's configuration, so you can just put a ``docutils.conf`` next
    to your ``conf.py`` and any settings in its ``[nikola]`` section will be used.
 
-   More information in the `docutils configuration reference <http://docutils.sourceforge.net/docs/user/config.html>`__
+   More information in the `docutils configuration reference <https://docutils.sourceforge.io/docs/user/config.html>`__
 
 
 Importing your WordPress site into Nikola
@@ -3097,7 +3152,7 @@ And upgrade them:
     Contents of the requirements-nonpy.txt file:
 
         Graphviz
-            http://www.graphviz.org/
+            https://www.graphviz.org/
 
     You have to install those yourself or through a package manager.
 

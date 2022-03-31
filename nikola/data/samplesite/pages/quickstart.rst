@@ -22,7 +22,7 @@ quick reference`_ document.
 __
 .. _Quick reStructuredText: ../quickref/
 .. _master quick reference:
-   http://docutils.sourceforge.net/docs/user/rst/quickref.html
+   https://docutils.sourceforge.io/docs/user/rst/quickref.html
 
 .. Note:: This document is an informal introduction to
    reStructuredText.  The `What Next?`_ section below has links to
@@ -100,7 +100,7 @@ __ ../quickref/#escaping
    middle of a word won't be recognized.  See the `markup spec`__ for
    full details.
 
-__ http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#inline-markup
+__ https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#inline-markup
 
 
 Lists
@@ -385,8 +385,8 @@ you wish to supply additional information, you may::
 
 See the full `image directive documentation`__ for more info.
 
-__ http://docutils.sourceforge.net/docs/ref/rst/directives.html
-__ http://docutils.sourceforge.net/docs/ref/rst/directives.html#images
+__ https://docutils.sourceforge.io/docs/ref/rst/directives.html
+__ https://docutils.sourceforge.io/docs/ref/rst/directives.html#images
 
 
 What Next?
@@ -402,9 +402,9 @@ reStructuredText should post a message to the Docutils-users_ mailing
 list.
 
 .. [#] If that relative link doesn't work, try the master document:
-   http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html.
+   https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html.
 
 .. _reStructuredText Markup Specification:
-   http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html
-.. _Docutils-users: http://docutils.sourceforge.net/docs/user/mailing-lists.html#docutils-users
-.. _Docutils project web site: http://docutils.sourceforge.net/
+   https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html
+.. _Docutils-users: https://docutils.sourceforge.io/docs/user/mailing-lists.html#docutils-users
+.. _Docutils project web site: https://docutils.sourceforge.io/

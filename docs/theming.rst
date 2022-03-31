@@ -6,7 +6,7 @@
 .. description:
 .. author: The Nikola Team
 
-:Version: 8.0.4
+:Version: 8.2.0
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
 .. class:: alert alert-primary float-md-right
@@ -35,7 +35,7 @@ assets
 
     The included themes use `Bootstrap <https://getbootstrap.com/>`_,
     `baguetteBox <https://feimosi.github.io/baguetteBox.js/>`_, `Justified Layout by Flickr
-    <http://flickr.github.io/justified-layout/>`_ and `Luxon
+    <https://flickr.github.io/justified-layout/>`_ and `Luxon
     <https://moment.github.io/luxon/>`_, so they are in assets, along with CSS files for
     syntax highlighting, reStructuredText and Jupyter, as well as a minified
     copy of jQuery.
@@ -108,7 +108,7 @@ with the same name as your theme, and a ``.theme`` extension, eg.
    parent = base
    author = The Nikola Contributors
    author_url = https://getnikola.com/
-   based_on = Bootstrap 3 <http://getbootstrap.com/>
+   based_on = Bootstrap 3 <https://getbootstrap.com/>
    license = MIT
    tags = bootstrap
 
@@ -167,14 +167,14 @@ Templates
 ---------
 
 In templates there is a number of files whose name ends in ``.tmpl``. Those are the
-theme’s page templates. They are done using the `Mako <http://makotemplates.org>`_
+theme’s page templates. They are done using the `Mako <https://www.makotemplates.org>`_
 or `Jinja2 <http://jinja.pocoo.org>`_ template languages. If you want to do a theme, you
 should learn one first. What engine is used by the theme is declared in the ``engine`` file.
 
 .. Tip::
 
    If you are using Mako templates, and want some extra speed when building the site
-   you can install Beaker and `make templates be cached <http://docs.makotemplates.org/en/latest/caching.html>`__
+   you can install Beaker and `make templates be cached <https://docs.makotemplates.org/en/latest/caching.html>`__
 
 
 Both template engines have a nifty concept of template inheritance. That means that a
@@ -284,10 +284,6 @@ These are the templates that come with the included themes:
 ``post_list_directive.tmpl``
     Template used by the ``post_list`` reStructuredText directive.
 
-``sectionindex.tmpl``
-    Used to display section indexes, if ``POST_SECTIONS_ARE_INDEXES`` is True.
-    By default, it just inherits ``index.tmpl``, with added feeds.
-
 ``page.tmpl``
     Used for pages that are not part of a blog, usually a cleaner, less
     intrusive layout than ``post.tmpl``, but same parameters.
@@ -309,20 +305,50 @@ Variables available in templates
 The full, complete list of variables available in templates is maintained in a separate
 document: `Template variables <https://getnikola.com/template-variables.html>`_
 
-Customizing themes to user color preference and section colors
---------------------------------------------------------------
+Customizing themes to user color preference, colorizing category names
+----------------------------------------------------------------------
 
 The user’s preference for theme color is exposed in templates as
 ``theme_color`` set in the ``THEME_COLOR`` option.
 
-Each section has an assigned color that is either set by the user or auto
-selected by adjusting the hue of the user’s ``THEME_COLOR``. The color is
-exposed in templates through ``post.section_color(lang)``. The function that
-generates the colors from strings and any given color (by section name and
-theme color for sections) is exposed through the
-``colorize_str_from_base_color(string, hex_color)`` function
+This theme color is exposed to the browser in default themes — some browsers
+might use this color in the user interface (eg. Chrome on Android in light mode
+displays the toolbar in this color).
 
-Hex color values, like that returned by the theme or section color can be
+Nikola also comes with support for auto-generating colors similar to a base
+color. This can be used with ``theme_color`` and eg. category names. This
+feature is exposed to templates as two functions: ``colorize_str(string,
+hex_color, presets)`` and  ``colorize_str_from_base_color(string, hex_color)``.
+If you want to display the category name in the color, first define a list of
+overrides in your ``conf.py`` file:
+
+.. code:: python
+
+    # end of conf.py
+    GLOBAL_CONTEXT = {
+        "category_colors": {
+            "Blue": "#0000FF"
+        }
+    }
+
+With that definition, you can now use ``colorize_str`` in your templates like this:
+
+.. code:: html+mako
+
+    <!-- Mako -->
+    <span style="background-color: ${colorize_str(post.meta('category'), theme_color, category_colors)}">${post.meta('category')}</span>
+
+.. code:: html+jinja
+
+    <!-- Jinja2 -->
+    <span style="background-color: {{ colorize_str(post.meta('category'), theme_color, category_colors) }}">{{ post.meta('category') }}</span>
+
+Note that the category named “Blue” will be displyed in #0000FF due to the
+override specified in your config; other categories will have an auto-generated
+color visually similar to your theme color.
+
+
+Hex color values, like that returned by the theme or string colorization can be
 altered in the HSL colorspace through the function
 ``color_hsl_adjust_hex(hex_string, adjust_h, adjust_s, adjust_l)``.
 Adjustments are given in values between 1.0 and -1.0. For example, the theme
@@ -427,12 +453,10 @@ List of page kinds provided by default plugins:
 * index, archive_page
 * index, author_page
 * index, main_index
-* index, section_page
 * index, tag_page
 * list
 * list, archive_page
 * list, author_page
-* list, section_page
 * list, tag_page
 * list, tags_page
 * post_page
@@ -452,8 +476,8 @@ at https://www.transifex.com/projects/p/nikola/
 If you want to create a theme that has new strings, and you want those strings to be translatable,
 then your theme will need a custom ``messages`` folder.
 
-`LESS <http://lesscss.org/>`__ and `Sass <http://sass-lang.com/>`__
--------------------------------------------------------------------
+`LESS <http://lesscss.org/>`__ and `Sass <https://sass-lang.com/>`__
+--------------------------------------------------------------------
 
 .. note::
     The LESS and Sass compilers were moved to the Plugins Index in
