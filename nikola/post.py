@@ -324,6 +324,7 @@ class Post(object):
         for lang in self.translations:
             if self.meta[lang].get('data') is not None:
                 self.data[lang] = utils.load_data(self.meta[lang]['data'])
+                self.register_depfile(self.meta[lang]['data'], lang=lang)
 
     def _load_translated_metadata(self, default_metadata):
         """Load metadata from all translation sources."""
