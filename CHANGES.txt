@@ -8,6 +8,11 @@ Features
 * Add ``start_at`` option to youtube directive (Issue #3603)
 
 
+Bugfixes
+--------
+
+* Add data files to dependency file (Issue #3608)
+
 New in v8.2.0
 =============
 
