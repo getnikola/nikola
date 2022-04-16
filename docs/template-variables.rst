@@ -454,7 +454,7 @@ Post object attributes
 
 This list only includes variables that make sense for templates. Some function signatures have been shortened to save space, ``?`` means the argument has default value.
 
-More docs: `nikola.post.Post on ReadTheDocs <https://nikola.readthedocs.io/en/latest/nikola/#nikola.post.Post>`_. Check out the source of the Post class as well.
+More docs: `nikola.post.Post on ReadTheDocs <https://nikola.readthedocs.io/en/latest/nikola.html#nikola.post.Post>`_. Check out the source of the Post class as well.
 
 ===================================================================  ==========  =============================================================
 Name                                                                 Type        Description
