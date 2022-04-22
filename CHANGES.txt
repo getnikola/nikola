@@ -7,6 +7,12 @@ Features
 * Gallery index pages support the `status` flag (Issue #3598)
 * Add ``start_at`` option to youtube directive (Issue #3603)
 
+Bugfixes
+--------
+
+* Compatibility with doit 0.36.0 (Issue #3612)
+
+Note: ``nikola doit_auto`` is not available if using doit>=0.36.0.
 
 Bugfixes
 --------
