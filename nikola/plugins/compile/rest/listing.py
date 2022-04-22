@@ -57,7 +57,8 @@ class CodeBlock(Directive):
                    'name': directives.unchanged,
                    'number-lines': directives.unchanged,  # integer or None
                    'linenos': directives.unchanged,
-                   'tab-width': directives.nonnegative_int}
+                   'tab-width': directives.nonnegative_int,
+                   'emphasize-lines': directives.unchanged_required}
     has_content = True
 
     def run(self):
@@ -103,7 +104,33 @@ class CodeBlock(Directive):
         else:
             anchor_ref = 'rest_code_' + uuid.uuid4().hex
 
-        formatter = utils.NikolaPygmentsHTML(anchor_ref=anchor_ref, classes=classes, linenos=linenos, linenostart=linenostart)
+        linespec = self.options.get('emphasize-lines')
+        if linespec:
+            try:
+                nlines = len(self.content)
+                hl_lines = utils.parselinenos(linespec, nlines)
+                if any(i >= nlines for i in hl_lines):
+                    raise self.error(
+                        'line number spec is out of range(1-%d): %r' %
+                        (nlines, self.options['emphasize-lines'])
+                    )
+                hl_lines = [x + 1 for x in hl_lines if x < nlines]
+            except ValueError as err:
+                raise self.error(err)
+        else:
+            hl_lines = None
+
+        extra_kwargs = {}
+        if hl_lines is not None:
+            extra_kwargs['hl_lines'] = hl_lines
+
+        formatter = utils.NikolaPygmentsHTML(
+            anchor_ref=anchor_ref,
+            classes=classes,
+            linenos=linenos,
+            linenostart=linenostart,
+            **extra_kwargs
+        )
         out = pygments.highlight(code, lexer, formatter)
         node = nodes.raw('', out, format='html')
 

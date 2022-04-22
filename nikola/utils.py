@@ -62,6 +62,7 @@ from doit import tools
 from doit.cmdparse import CmdParse
 from pkg_resources import resource_filename
 from nikola.packages.pygments_better_html import BetterHtmlFormatter
+from typing import List
 from unidecode import unidecode
 
 # Renames
@@ -2005,6 +2006,33 @@ def map_metadata(meta, key, config):
     for meta_key, hook in config.get('METADATA_VALUE_MAPPING', {}).get(key, {}).items():
         if meta_key in meta:
             meta[meta_key] = hook(meta[meta_key])
+
+
+def parselinenos(spec: str, total: int) -> List[int]:
+    """Parse a line number spec.
+
+    Example: "1,2,4-6" -> [0, 1, 3, 4, 5]
+    """
+    items = list()
+    parts = spec.split(',')
+    for part in parts:
+        try:
+            begend = part.strip().split('-')
+            if ['', ''] == begend:
+                raise ValueError
+            elif len(begend) == 1:
+                items.append(int(begend[0]) - 1)
+            elif len(begend) == 2:
+                start = int(begend[0] or 1)  # left half open (cf. -10)
+                end = int(begend[1] or max(start, total))  # right half open (cf. 10-)
+                if start > end:  # invalid range (cf. 10-1)
+                    raise ValueError
+                items.extend(range(start - 1, end))
+            else:
+                raise ValueError
+        except Exception as exc:
+            raise ValueError('invalid line number spec: %r' % spec) from exc
+    return items
 
 
 class ClassificationTranslationManager(object):
