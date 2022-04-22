@@ -2009,8 +2009,9 @@ def map_metadata(meta, key, config):
 
 
 def parselinenos(spec: str, total: int) -> List[int]:
-    """Parse a line number spec (such as "1,2,4-6") and return a list of
-    wanted line numbers.
+    """Parse a line number spec.
+
+    Example: "1,2,4-6" -> [0, 1, 3, 4, 5]
     """
     items = list()
     parts = spec.split(',')
