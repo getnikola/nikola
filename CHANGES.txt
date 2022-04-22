@@ -4,6 +4,7 @@ New in master
 Features
 --------
 
+* Add ``emphasize_lines`` directive to code blocks (Issue #3607)
 * Gallery index pages support the `status` flag (Issue #3598)
 * Add ``start_at`` option to youtube directive (Issue #3603)
 

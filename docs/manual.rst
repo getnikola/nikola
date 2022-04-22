@@ -2694,6 +2694,21 @@ for ``code`` directive are provided: ``code-block`` and ``sourcecode``:
 
        print("Our virtues and our failings are inseparable")
 
+Certain lines might be highlighted via the ``emphasize-lines`` directive:
+
+.. code:: restructuredtext
+
+    .. code-block:: python
+        :emphasize-lines: 3,5
+
+        def some_function():
+            interesting = False
+            print('This line is highlighted.')
+            print('This one is not...')
+            print('...but this one is.')
+
+Line ranges are also supported, such as ``:emphasize-lines: 1-3,5-9,15``.
+
 Listing
 ~~~~~~~
 
