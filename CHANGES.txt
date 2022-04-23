@@ -1,24 +1,21 @@
-New in master
+New in v8.2.1
 =============
 
 Features
 --------
 
 * Add ``emphasize_lines`` directive to code blocks (Issue #3607)
-* Gallery index pages support the `status` flag (Issue #3598)
+* Gallery index pages support the ``status`` flag (Issue #3598)
 * Add ``start_at`` option to youtube directive (Issue #3603)
 
 Bugfixes
 --------
 
+* Add data files to dependency file (Issue #3608)
 * Compatibility with doit 0.36.0 (Issue #3612)
 
-Note: ``nikola doit_auto`` is not available if using doit>=0.36.0.
-
-Bugfixes
---------
-
-* Add data files to dependency file (Issue #3608)
+Note: ``nikola doit_auto`` is not available if using ``doit>=0.36.0``.
+You can still use ``nikola auto``.
 
 New in v8.2.0
 =============
