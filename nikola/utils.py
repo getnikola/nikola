@@ -1713,7 +1713,7 @@ _original_find_formatter_class = pygments.formatters.find_formatter_class
 
 
 def nikola_find_formatter_class(alias):
-    """A Nikola-specific version of find_formatter_class."""
+    """Nikola-specific version of find_formatter_class."""
     if alias.lower().contains('html'):
         return NikolaPygmentsHTML
     return _original_find_formatter_class(alias)
