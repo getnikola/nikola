@@ -1708,6 +1708,18 @@ class NikolaPygmentsHTML(BetterHtmlFormatter):
 
 # For consistency, override the default formatter.
 pygments.formatters._formatter_cache['HTML'] = NikolaPygmentsHTML
+pygments.formatters._formatter_cache['html'] = NikolaPygmentsHTML
+_original_find_formatter_class = pygments.formatters.find_formatter_class
+
+
+def nikola_find_formatter_class(alias):
+    """A Nikola-specific version of find_formatter_class."""
+    if alias.lower().contains('html'):
+        return NikolaPygmentsHTML
+    return _original_find_formatter_class(alias)
+
+
+pygments.formatters.find_formatter_class = nikola_find_formatter_class
 
 
 def get_displayed_page_number(i, num_pages, site):
