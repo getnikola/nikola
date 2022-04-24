@@ -1690,7 +1690,7 @@ class NikolaPygmentsHTML(BetterHtmlFormatter):
         kwargs['nowrap'] = False
         super().__init__(**kwargs)
 
-    def wrap(self, source, outfile):
+    def wrap(self, source, *args):
         """Wrap the ``source``, which is a generator yielding individual lines, in custom generators."""
         style = []
         if self.prestyles:
