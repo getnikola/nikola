@@ -1,11 +1,5 @@
-New in master
+New in v8.2.2
 =============
-
-Features
---------
-
-Bugfixes
---------
 
 * Compatibility with Pygments 2.12.0 (Issue #3617, #3618)
 
