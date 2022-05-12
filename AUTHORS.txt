@@ -117,6 +117,7 @@
 * `Roman Faizullin <https://github.com/faizrr>`_
 * `Roman Imankulov <https://github.com/imankulov>`_
 * `Santiago Pestarini <https://github.com/quijot>`_
+* `Santiago Fraire Willemoes <https://github.com/Woile>`_
 * `Sean Pue <https://github.com/seanpue>`_
 * `Simon van der Veldt <https://github.com/simonvanderveldt>`_
 * `Stefan Näwe <https://github.com/snaewe>`_

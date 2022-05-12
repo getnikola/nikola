@@ -642,5 +642,6 @@ def test_parselinenos():
     with pytest.raises(ValueError):
         parselinenos('3-1', 10)
 
+
 def test_nikola_find_formatter_class_returns_pygments_class():
     assert NikolaPygmentsHTML == nikola_find_formatter_class("html")

@@ -1,3 +1,11 @@
+New in v8.2.3
+=============
+
+Bugfixes
+--------
+
+* Find substring in string instead of using `contains` in utils
+
 New in v8.2.2
 =============
 
