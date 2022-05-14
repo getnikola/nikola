@@ -14,11 +14,13 @@ from nikola.post import get_meta
 from nikola.utils import (
     TemplateHookRegistry,
     TranslatableSetting,
+    NikolaPygmentsHTML,
     demote_headers,
     get_asset_path,
     get_crumbs,
     get_theme_chain,
     get_translation_candidate,
+    nikola_find_formatter_class,
     write_metadata,
     bool_from_meta,
     parselinenos
@@ -639,3 +641,7 @@ def test_parselinenos():
         parselinenos('-', 10)
     with pytest.raises(ValueError):
         parselinenos('3-1', 10)
+
+
+def test_nikola_find_formatter_class_returns_pygments_class():
+    assert NikolaPygmentsHTML == nikola_find_formatter_class("html")
