@@ -1,4 +1,4 @@
-New in v8.2.3
+New in master
 =============
 
 Bugfixes
