@@ -123,11 +123,6 @@ dl.option-list > dd > *:first-child
   width: 100%;
   margin: 0;
 }
-/* field names followed by a colon */
-dl.field-list > dt:after,
-dl.docinfo > dt:after {
-  content: ":";
-}
 
 /* Bibliographic Fields (docinfo) */
 dl.docinfo pre.address {
