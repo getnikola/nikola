@@ -140,10 +140,8 @@ class GistPattern(InlineProcessor):
         return resp.text
 
     def handleMatch(self, m, _):
-        """
-        Handle pattern match. The third arg is "data", wider
-        context around the match; we don't need it.
-        """
+        """Handle pattern match."""
+        # The third arg is "data", wider context around the match; we don't need it.
         gist_id = m.group('gist_id')
         gist_file = m.group('filename')
 
