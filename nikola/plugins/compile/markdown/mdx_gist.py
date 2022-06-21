@@ -82,13 +82,13 @@ from nikola.utils import get_logger
 
 try:
     from markdown.extensions import Extension
-    from markdown.inlinepatterns import Pattern
+    from markdown.inlinepatterns import InlineProcessor
     from markdown.util import AtomicString
     from markdown.util import etree
 except ImportError:
     # No need to catch this, if you try to use this without Markdown,
     # the markdown compiler will fail first
-    Extension = Pattern = object
+    Extension = InlineProcessor = object
 
 
 LOGGER = get_logger('compile_markdown.mdx_gist')
@@ -112,12 +112,12 @@ class GistFetchException(Exception):
             status_code, url)
 
 
-class GistPattern(Pattern):
+class GistPattern(InlineProcessor):
     """InlinePattern for footnote markers in a document's body text."""
 
     def __init__(self, pattern, configs):
         """Initialize the pattern."""
-        Pattern.__init__(self, pattern)
+        InlineProcessor.__init__(self, pattern)
 
     def get_raw_gist_with_filename(self, gist_id, filename):
         """Get raw gist text for a filename."""
@@ -139,8 +139,9 @@ class GistPattern(Pattern):
 
         return resp.text
 
-    def handleMatch(self, m):
+    def handleMatch(self, m, _):
         """Handle pattern match."""
+        # The third arg is "data", wider context around the match; we don't need it.
         gist_id = m.group('gist_id')
         gist_file = m.group('filename')
 
@@ -170,7 +171,7 @@ class GistPattern(Pattern):
             warning_comment = etree.Comment(' WARNING: {0} '.format(e.message))
             noscript_elem.append(warning_comment)
 
-        return gist_elem
+        return (gist_elem, m.start(0), m.end(0))
 
 
 class GistExtension(MarkdownExtension, Extension):
