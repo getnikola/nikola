@@ -4,6 +4,7 @@ New in master
 Bugfixes
 --------
 
+* Compatibility with Markdown 3.4.0 (Issue #3635)
 * Find substring in string instead of using `contains` in utils
 * Don't add semicolon in docinfo fields via CSS (caused duplicated
   semicolons)

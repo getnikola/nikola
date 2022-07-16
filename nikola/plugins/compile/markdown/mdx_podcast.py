@@ -36,11 +36,12 @@ Basic Example:
 <p><audio controls=""><source src="https://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3" type="audio/mpeg"></source></audio></p>
 """
 
+import xml.etree.ElementTree as etree
+
 from nikola.plugin_categories import MarkdownExtension
 try:
     from markdown.extensions import Extension
     from markdown.inlinepatterns import Pattern
-    from markdown.util import etree
 except ImportError:
     # No need to catch this, if you try to use this without Markdown,
     # the markdown compiler will fail first

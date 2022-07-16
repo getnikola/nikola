@@ -76,6 +76,7 @@ Error Case: non-existent file:
 """
 
 import requests
+import xml.etree.ElementTree as etree
 
 from nikola.plugin_categories import MarkdownExtension
 from nikola.utils import get_logger
@@ -84,11 +85,10 @@ try:
     from markdown.extensions import Extension
     from markdown.inlinepatterns import InlineProcessor
     from markdown.util import AtomicString
-    from markdown.util import etree
 except ImportError:
     # No need to catch this, if you try to use this without Markdown,
     # the markdown compiler will fail first
-    Extension = InlineProcessor = object
+    Extension = InlineProcessor = AtomicString = object
 
 
 LOGGER = get_logger('compile_markdown.mdx_gist')
