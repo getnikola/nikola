@@ -1189,7 +1189,7 @@ def separate_qtranslate_tagged_langs(text):
             if not c.strip():
                 continue
         elif c[2:qt_end_with_lang_len].startswith(qt_end):
-            # a language specific section (with language code at the begining)
+            # a language specific section (with language code at the beginning)
             lang = c[:2]
             c = c[qt_end_with_lang_len:]
         else:
