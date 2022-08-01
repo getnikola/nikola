@@ -29,7 +29,7 @@
 import os
 import sys
 
-__version__ = '8.2.2'
+__version__ = '8.2.3'
 DEBUG = bool(os.getenv('NIKOLA_DEBUG'))
 SHOW_TRACEBACKS = bool(os.getenv('NIKOLA_SHOW_TRACEBACKS'))
 

@@ -1,5 +1,5 @@
 name: nikola
-version: 8.2.2
+version: 8.2.3
 summary: A static website generator
 description: A static website generator
 confinement: strict
