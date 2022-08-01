@@ -9,6 +9,8 @@ Bugfixes
 * Don't add semicolon in docinfo fields via CSS (caused duplicated
   semicolons)
 
+Nikola now requires Python 3.7 or newer.
+
 New in v8.2.2
 =============
 
