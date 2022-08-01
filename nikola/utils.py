@@ -731,7 +731,7 @@ def load_messages(themes, translations, default_lang, themes_dirs):
                 del translation
             except ImportError as orig:
                 last_exception = orig
-        del(english)
+        del english
         sys.path = oldpath
 
     if not all(found.values()):
