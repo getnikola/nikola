@@ -5,6 +5,9 @@ on:
     branches: master
   # Run on all changes in pull requests
   pull_request:
+  # Run every Saturday at 17:10 UTC to ensure stability (dependency changes not breaking things)
+  schedule:
+    - cron: '10 17 * * 6'
 
 jobs:
   nikola:
