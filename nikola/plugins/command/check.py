@@ -148,6 +148,14 @@ class CommandCheck(Command):
             'default': False,
             'help': 'Check that remote links work.',
         },
+        {
+            'name': 'timeout',
+            'long': 'timeout',
+            'short': 't',
+            'type': int,
+            'default': 30,
+            'help': 'Timeout (in seconds) for HTTP requests in remote checks.',
+        },
     ]
 
     def _execute(self, options, args):
@@ -160,6 +168,7 @@ class CommandCheck(Command):
         else:
             self.logger.level = logging.WARNING
         failure = False
+        self.timeout = options['timeout']
         if options['links']:
             failure |= self.scan_links(options['find_sources'], options['remote'])
         if options['files']:
@@ -171,6 +180,7 @@ class CommandCheck(Command):
 
     existing_targets = set([])
     checked_remote_targets = {}
+    timeout = None
     cache = {}
 
     def analyze(self, fname, find_sources=False, check_remote=False):
@@ -279,19 +289,19 @@ class CommandCheck(Command):
 
                     # Check the remote link works
                     req_headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0 (Nikola)'}  # I’m a real boy!
-                    resp = requests.head(target, headers=req_headers, allow_redirects=False)
+                    resp = requests.head(target, headers=req_headers, allow_redirects=False, timeout=self.timeout)
 
                     # Retry client errors (4xx) as GET requests because many servers are broken
                     if resp.status_code >= 400 and resp.status_code <= 499:
                         time.sleep(0.5)
-                        resp = requests.get(target, headers=req_headers, allow_redirects=False)
+                        resp = requests.get(target, headers=req_headers, allow_redirects=False, timeout=self.timeout)
 
                     # Follow redirects and see where they lead, redirects to errors will be reported twice
                     if resp.status_code in [301, 302, 307, 308]:
                         redir_status_code = resp.status_code
                         time.sleep(0.5)
                         # Known redirects are retested using GET because IIS servers otherwise get HEADaches
-                        resp = requests.get(target, headers=req_headers, allow_redirects=True)
+                        resp = requests.get(target, headers=req_headers, allow_redirects=True, timeout=self.timeout)
                         # Permanent redirects should be updated
                         if redir_status_code in [301, 308]:
                             self.logger.warning("Remote link moved PERMANENTLY to \"{0}\" and should be updated in {1}: {2} [HTTP: {3}]".format(resp.url, filename, target, redir_status_code))
