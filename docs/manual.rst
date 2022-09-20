@@ -7,7 +7,7 @@
 .. has_math: true
 .. author: The Nikola Team
 
-:Version: 8.1.3
+:Version: 8.2.3
 
 .. class:: alert alert-primary float-md-right
 
@@ -134,7 +134,7 @@ Obsolescence
     You may say those are long term issues, or that they won't matter for years. Well,
     I believe things should work forever, or as close to it as we can make them.
     Nikola's static output and its input files will work as long as you can install
-    Python 3.5 or newer under Linux, Windows, or macOS and can find a server
+    Python 3.7 or newer under Linux, Windows, or macOS and can find a server
     that sends files over HTTP. That's probably 10 or 15 years at least.
 
     Also, static sites are easily handled by the Internet Archive.
@@ -285,12 +285,12 @@ Basic
 
 title
     Title of the post. Using HTML/math in titles is not supported/recommended.
-    (required)
+    If not specified, the file name will be used.
 
 slug
     Slug of the post. Used as the last component of the page URL.  We recommend
     and default to using a restricted character set (``a-z0-9-_``) because
-    other symbols may cause issues in URLs. (required)
+    other symbols may cause issues in URLs. If not specified, the file name will be used.
 
     So, if the slug is "the-slug" the page generated would be "the-slug.html" or
     "the-slug/index.html" (if you have the pretty URLs option enabled)
@@ -2089,8 +2089,11 @@ The ``conf.py`` options affecting images and gallery pages are these:
 
 If you add a reST file in ``galleries/gallery_name/index.txt`` its contents will be
 converted to HTML and inserted above the images in the gallery page. The
-format is the same as for posts. You can use the ``title`` and ``previewimage``
-metadata fields to change how the gallery is shown.
+format is the same as for posts. You can use the ``title``, ``previewimage``, and
+``status`` metadata fields to change how the gallery is shown.
+
+If the ``status`` is ``private``, ``draft``, or ``publish_later``, the
+gallery will not appear in the index, the RSS feeds, nor in the sitemap.
 
 If you add some image filenames in ``galleries/gallery_name/exclude.meta``, they
 will be excluded in the gallery page.
@@ -2619,13 +2622,14 @@ Once you have that, all you need to do is:
 
     .. youtube:: 8N_tupPBtWQ
 
-Supported options: ``height``, ``width``, ``align`` (one of ``left``,
+Supported options: ``height``, ``width``, ``start_at``, ``align`` (one of ``left``,
 ``center``, ``right``) — all are optional. Example:
 
 .. code:: restructuredtext
 
     .. youtube:: 8N_tupPBtWQ
        :align: center
+       :start_at: 4
 
 Vimeo
 ~~~~~
@@ -2689,6 +2693,21 @@ for ``code`` directive are provided: ``code-block`` and ``sourcecode``:
        :number-lines:
 
        print("Our virtues and our failings are inseparable")
+
+Certain lines might be highlighted via the ``emphasize-lines`` directive:
+
+.. code:: restructuredtext
+
+    .. code-block:: python
+        :emphasize-lines: 3,5
+
+        def some_function():
+            interesting = False
+            print('This line is highlighted.')
+            print('This one is not...')
+            print('...but this one is.')
+
+Line ranges are also supported, such as ``:emphasize-lines: 1-3,5-9,15``.
 
 Listing
 ~~~~~~~

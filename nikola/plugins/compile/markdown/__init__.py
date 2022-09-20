@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2021 Roberto Alsina and others.
+# Copyright © 2012-2022 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -33,12 +33,19 @@ import threading
 
 from nikola import shortcodes as sc
 from nikola.plugin_categories import PageCompiler
-from nikola.utils import makedirs, req_missing, write_metadata, LocaleBorg, map_metadata
+from nikola.utils import makedirs, req_missing, write_metadata, LocaleBorg, map_metadata, NikolaPygmentsHTML
 
 try:
     from markdown import Markdown
 except ImportError:
     Markdown = None
+
+# Override Pygments formatter for Markdown.
+try:
+    import markdown.extensions.codehilite
+    markdown.extensions.codehilite.get_formatter_by_name = lambda _, **args: NikolaPygmentsHTML(**args)
+except ImportError:
+    pass
 
 
 class ThreadLocalMarkdown(threading.local):

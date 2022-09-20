@@ -1,2 +1,2 @@
--r ../../requirements-extras.txt
 pyparsing>=2.0.2
+Sphinx>=4.2.0

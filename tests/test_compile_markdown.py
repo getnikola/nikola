@@ -28,12 +28,10 @@ from .helper import FakeSite
     from this
 """,
             """\
-<table class="codehilitetable"><tr><td class="linenos">\
-<div class="linenodiv"><pre><span class="normal">1</span></pre></div>\
-</td><td class="code"><pre class="code literal-block"><span></span>\
-<code><span class="kn">from</span> <span class="nn">this</span>
-</code></pre>
-</td></tr></table>
+<div class="code"><table class="codetable"><tr><td class="linenos linenodiv">\
+<a href="#-1"><code data-line-number="1"></code></a></td>\
+<td class="code"><code><span class="kn">from</span> <span class="nn">this</span>
+</code></td></tr></table></div>
 """,
             id="hilite",
         ),

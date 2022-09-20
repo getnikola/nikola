@@ -22,6 +22,7 @@
 * `Christian Lawson-Perfect <https://github.com/christianp>`_
 * `Christopher Arndt <https:/github.com/SpotlightKid>`_
 * `Claudio Canepa <https://github.com/ccanepa>`_
+* `Clayton A. Davis <https://github.com/clayadavis>`_
 * `Damien Tournoud <https://github.com/damz>`_
 * `Damián Avila <https://github.com/damianavila>`_
 * `Daniel Aleksandersen <https://github.com/Aeyoun>`_
@@ -54,6 +55,7 @@
 * `Hardening <https://github.com/hardening>`_
 * `Hong Xu <https://www.topbug.net>`_
 * `Ivan Teoh <https://github.com/ivanteoh>`_
+* `Jesper Dramsch <https://github.com/jesperdramsch>`_
 * `John Kristensen <https://github.com/jerrykan>`_
 * `Jonathon Anderson <https://github.com/anderbubble>`_
 * `Joshua Barratt <https://github.com/jbarratt>`_
@@ -115,9 +117,11 @@
 * `Roman Faizullin <https://github.com/faizrr>`_
 * `Roman Imankulov <https://github.com/imankulov>`_
 * `Santiago Pestarini <https://github.com/quijot>`_
+* `Santiago Fraire Willemoes <https://github.com/Woile>`_
 * `Sean Pue <https://github.com/seanpue>`_
 * `Simon van der Veldt <https://github.com/simonvanderveldt>`_
 * `Stefan Näwe <https://github.com/snaewe>`_
+* `Stefano Rivera <https://github.com/stefanor>`_
 * `Stephan Fitzpatrick <https://github.com/knowsuchagency>`_
 * `Sukil Etxenike <https://github.com/sukiletxe>`_
 * `Ted Timmons <https://github.com/tedder>`_

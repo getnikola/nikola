@@ -88,4 +88,3 @@ nikola.plugins.compile.rest.youtube module
    :members:
    :undoc-members:
    :show-inheritance:
-

@@ -14,13 +14,16 @@ from nikola.post import get_meta
 from nikola.utils import (
     TemplateHookRegistry,
     TranslatableSetting,
+    NikolaPygmentsHTML,
     demote_headers,
     get_asset_path,
     get_crumbs,
     get_theme_chain,
     get_translation_candidate,
+    nikola_find_formatter_class,
     write_metadata,
     bool_from_meta,
+    parselinenos
 )
 
 
@@ -619,3 +622,26 @@ class FakePost:
 
     def __init__(self):
         metadata_extractors.load_defaults(self, self.metadata_extractors_by)
+
+
+def test_parselinenos():
+    assert parselinenos('1,2,3', 10) == [0, 1, 2]
+    assert parselinenos('4, 5, 6', 10) == [3, 4, 5]
+    assert parselinenos('-4', 10) == [0, 1, 2, 3]
+    assert parselinenos('7-9', 10) == [6, 7, 8]
+    assert parselinenos('7-', 10) == [6, 7, 8, 9]
+    assert parselinenos('1,7-', 10) == [0, 6, 7, 8, 9]
+    assert parselinenos('7-7', 10) == [6]
+    assert parselinenos('11-', 10) == [10]
+    with pytest.raises(ValueError):
+        parselinenos('1-2-3', 10)
+    with pytest.raises(ValueError):
+        parselinenos('abc-def', 10)
+    with pytest.raises(ValueError):
+        parselinenos('-', 10)
+    with pytest.raises(ValueError):
+        parselinenos('3-1', 10)
+
+
+def test_nikola_find_formatter_class_returns_pygments_class():
+    assert NikolaPygmentsHTML == nikola_find_formatter_class("html")

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2021 Roberto Alsina and others.
+# Copyright © 2012-2022 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -134,10 +134,12 @@ LEGAL_VALUES = {
         ('ja', '!jp'): 'Japanese',
         'ko': 'Korean',
         'lt': 'Lithuanian',
+        'mi': 'Maori',
         'ml': 'Malayalam',
         'mr': 'Marathi',
         'nb': 'Norwegian (Bokmål)',
         'nl': 'Dutch',
+        'oc': 'Occitan',
         'pa': 'Punjabi',
         'pl': 'Polish',
         'pt': 'Portuguese',
@@ -204,10 +206,12 @@ LEGAL_VALUES = {
         'ja': 'ja',
         'ko': 'ko',
         'lt': 'lt',
+        'mi': 'mi',
         'ml': 'ml',
         'mr': 'mr',
         'nb': 'nb',
         'nl': 'nl',
+        'oc': 'oc',
         'pa': 'pa',
         'pl': 'pl',
         'pt': 'pt',
@@ -682,6 +686,10 @@ class Nikola(object):
                                       'FEED_READ_MORE_LINK',
                                       'INDEXES_TITLE',
                                       'CATEGORY_DESTPATH_NAMES',
+                                      'CATEGORY_TITLES',
+                                      'CATEGORY_DESCRIPTIONS',
+                                      'TAG_TITLES',
+                                      'TAG_DESCRIPTIONS',
                                       'INDEXES_PAGES',
                                       'INDEXES_PRETTY_PAGE_URL',
                                       'THEME_CONFIG',
@@ -728,6 +736,8 @@ class Nikola(object):
                                             'rss_path',
                                             'rss_filename_base',
                                             'atom_filename_base',
+                                            'index_read_more_link',
+                                            'feed_read_more_link',
                                             )
         # WARNING: navigation_(alt_)links SHOULD NOT be added to the list above.
         #          Themes ask for [lang] there and we should provide it.
@@ -1312,6 +1322,8 @@ class Nikola(object):
         self.ALL_PAGE_DEPS['slug_author_path'] = self.config.get('SLUG_AUTHOR_PATH')
         self.ALL_PAGE_DEPS['slug_tag_path'] = self.config.get('SLUG_TAG_PATH')
         self.ALL_PAGE_DEPS['locale'] = self.config.get('LOCALE')
+        self.ALL_PAGE_DEPS['index_read_more_link'] = self.config.get('INDEX_READ_MORE_LINK')
+        self.ALL_PAGE_DEPS['feed_read_more_link'] = self.config.get('FEED_READ_MORE_LINK')
 
     def _activate_plugins_of_category(self, category):
         """Activate all the plugins of a given category and return them."""

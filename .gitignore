@@ -1,6 +1,3 @@
-# Demo for Bagguette
-/bower_components/baguettebox.js/demo/*
-
 *.db
 *~
 *.diff
@@ -14,6 +11,8 @@ output/
 
 # 
 .DS_Store
+
+docs/sphinx/_build
 
 # All of .idea should be ignored
 .idea/

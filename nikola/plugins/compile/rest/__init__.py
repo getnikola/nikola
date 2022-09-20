@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2021 Roberto Alsina and others.
+# Copyright © 2012-2022 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -264,7 +264,7 @@ def add_node(node, visit_function=None, depart_function=None):
     """Register a Docutils node class.
 
     This function is completely optional. It is a same concept as
-    `Sphinx add_node function <http://sphinx-doc.org/extdev/appapi.html#sphinx.application.Sphinx.add_node>`_.
+    `Sphinx add_node function <https://www.sphinx-doc.org/en/master/extdev/appapi.html#sphinx.application.Sphinx.add_node>`_.
 
     For example::
 

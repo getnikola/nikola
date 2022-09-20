@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2021 Roberto Alsina and others.
+# Copyright © 2012-2022 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -1189,7 +1189,7 @@ def separate_qtranslate_tagged_langs(text):
             if not c.strip():
                 continue
         elif c[2:qt_end_with_lang_len].startswith(qt_end):
-            # a language specific section (with language code at the begining)
+            # a language specific section (with language code at the beginning)
             lang = c[:2]
             c = c[qt_end_with_lang_len:]
         else:

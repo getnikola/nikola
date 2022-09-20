@@ -142,7 +142,7 @@ class ImageProcessor(object):
             if w > max_size or h > max_size:
                 size = max_size, max_size
                 # Panoramas get larger thumbnails because they look *awful*
-                if bigger_panoramas and w > 2 * h:
+                if bigger_panoramas and w > 3 * h:
                     size = min(w, max_size * 4), min(w, max_size * 4)
             try:
                 im.thumbnail(size, Image.ANTIALIAS)
@@ -189,7 +189,7 @@ class ImageProcessor(object):
                 # calculate new size preserving aspect ratio.
                 ratio = float(w) / h
                 # Panoramas get larger thumbnails because they look *awful*
-                if bigger_panoramas and w > 2 * h:
+                if bigger_panoramas and w > 3 * h:
                     max_size = max_size * 4
                 if w > h:
                     w = max_size

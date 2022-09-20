@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2021 Roberto Alsina and others.
+# Copyright © 2012-2022 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -324,6 +324,7 @@ class Post(object):
         for lang in self.translations:
             if self.meta[lang].get('data') is not None:
                 self.data[lang] = utils.load_data(self.meta[lang]['data'])
+                self.register_depfile(self.meta[lang]['data'], lang=lang)
 
     def _load_translated_metadata(self, default_metadata):
         """Load metadata from all translation sources."""
@@ -910,10 +911,7 @@ class Post(object):
         if self.hyphenate:
             hyphenate(document, real_lang)
 
-        try:
-            data = lxml.html.tostring(document.body, encoding='unicode')
-        except Exception:
-            data = lxml.html.tostring(document, encoding='unicode')
+        data = utils.html_tostring_fragment(document)
 
         if teaser_only:
             teaser_regexp = self.config.get('TEASER_REGEXP', TEASER_REGEXP)
@@ -936,10 +934,7 @@ class Post(object):
                         post_title=self.title(lang))
                 # This closes all open tags and sanitizes the broken HTML
                 document = lxml.html.fromstring(teaser)
-                try:
-                    data = lxml.html.tostring(document.body, encoding='unicode')
-                except IndexError:
-                    data = lxml.html.tostring(document, encoding='unicode')
+                data = utils.html_tostring_fragment(document)
 
         if data and strip_html:
             try:
@@ -952,11 +947,11 @@ class Post(object):
             if self.demote_headers:
                 # see above
                 try:
-                    document = lxml.html.fromstring(data)
+                    document = lxml.html.fragment_fromstring(data, "body")
                     demote_headers(document, self.demote_headers)
-                    data = lxml.html.tostring(document.body, encoding='unicode')
+                    data = utils.html_tostring_fragment(document)
                 except (lxml.etree.ParserError, IndexError):
-                    data = lxml.html.tostring(document, encoding='unicode')
+                    pass
 
         return data
 

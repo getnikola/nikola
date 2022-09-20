@@ -7,13 +7,13 @@
 # Translators:
 # Translators:
 # Translators:
-# Ian Stewart <ianstewart56@hotmail.com>, 2019
+# Ian Stewart <ianstewart56@hotmail.com>, 2019,2021
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2019-05-11 10:41+0000\n"
+"PO-Revision-Date: 2021-01-21 03:29+0000\n"
 "Last-Translator: Ian Stewart <ianstewart56@hotmail.com>\n"
 "Language-Team: Maori (http://www.transifex.com/ralsina/nikola/language/mi/)\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "More posts about %s"
-msgstr ""
+msgstr "Ētahi atu pou e pā ana ki %s"
 
 #. Here your translation should NOT say English but the name of your language
 #. instead
@@ -40,19 +40,19 @@ msgid "Tags and Categories"
 msgstr "Tūtohu me nga kāwai"
 
 msgid "Comments"
-msgstr "Kōrerohia"
+msgstr "Nga korero"
 
 msgid "Read more"
-msgstr ""
+msgstr "Pānuihia atu"
 
 msgid "Posts about %s"
-msgstr ""
+msgstr "Tuhinga e pā ana ki %s"
 
 msgid "Next post"
-msgstr ""
+msgstr "Pou muri"
 
 msgid "old posts, page %d"
-msgstr ""
+msgstr "nga pou tawhito, whārangi %d"
 
 msgid "page %d"
 msgstr "whārangi %d"
@@ -63,61 +63,61 @@ msgstr "Matapuna"
 #. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "Read in English"
-msgstr ""
+msgstr "Pānuihia i te Maori"
 
 msgid "Posts for year %s"
-msgstr ""
+msgstr "Tuhinga mo te tau %s"
 
 msgid "Newer posts"
-msgstr ""
+msgstr "Nga pou hou"
 
 msgid "Previous post"
-msgstr ""
+msgstr "Tuhinga o mua"
 
 msgid "Also available in:"
-msgstr ""
+msgstr "Kei te wātea ano hoki"
 
 msgid "Languages:"
 msgstr "Reo"
 
 msgid "Original site"
-msgstr ""
+msgstr "Pae tukutuku"
 
 msgid "Older posts"
-msgstr ""
+msgstr "Nga pou tawhito"
 
 msgid "Archive"
 msgstr "Pūranga"
 
 msgid "Publication date"
-msgstr ""
+msgstr "Pukapuka tuhi"
 
 msgid "Posted:"
-msgstr ""
+msgstr "Tukua"
 
 msgid "Posts for {month_year}"
-msgstr ""
+msgstr "Tuhinga mo {month_year}"
 
 msgid "Posts for {month_day_year}"
-msgstr ""
+msgstr "Tuhinga mo {month_day_year}"
 
 msgid "Nothing found."
 msgstr "Kīhai i kitea"
 
 msgid "No posts found."
-msgstr ""
+msgstr "Kāore i kitea he korero."
 
 msgid "RSS feed"
 msgstr "Whāngai RSS"
 
 msgid "%d min remaining to read"
-msgstr ""
+msgstr "%d meneti ka toe ki te korero"
 
 msgid "Skip to main content"
-msgstr ""
+msgstr "Haere ki te ihirangi matua"
 
 msgid "Subcategories:"
-msgstr ""
+msgstr "Ngā kōpaki"
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
@@ -125,14 +125,14 @@ msgstr "(mātātoa)"
 
 #. Default content for a new post
 msgid "Write your post here."
-msgstr ""
+msgstr "Tuhia to pou i konei."
 
 #. Default content for a new page
 msgid "Write your page here."
-msgstr ""
+msgstr "Tuhia taau whārangi ki konei."
 
 msgid "Uncategorized"
-msgstr ""
+msgstr "Korekorekore"
 
 #. Used for feeds of any format
 msgid "Updates"
@@ -142,10 +142,10 @@ msgid "Authors"
 msgstr "Kaituhi"
 
 msgid "Posts by %s"
-msgstr ""
+msgstr "Tuhinga na %s"
 
 msgid "Toggle navigation"
-msgstr ""
+msgstr "Takahuri whakatere"
 
 msgid "Previous"
 msgstr "Whakamuri"
@@ -157,7 +157,7 @@ msgid "Next"
 msgstr "Panuku"
 
 msgid "Atom feed"
-msgstr ""
+msgstr "Atom whangai"
 
 #. {date} (updated {updated_date})
 msgid "updated"

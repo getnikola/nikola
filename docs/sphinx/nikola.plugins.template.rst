@@ -24,4 +24,3 @@ nikola.plugins.template.mako module
    :members:
    :undoc-members:
    :show-inheritance:
-

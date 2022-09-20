@@ -123,11 +123,6 @@ dl.option-list > dd > *:first-child
   width: 100%;
   margin: 0;
 }
-/* field names followed by a colon */
-dl.field-list > dt:after,
-dl.docinfo > dt:after {
-  content: ":";
-}
 
 /* Bibliographic Fields (docinfo) */
 dl.docinfo pre.address {
@@ -140,13 +135,62 @@ dl.docinfo > dd.authors > p { margin: 0; }
 dl.option-list > dt { font-weight: normal; }
 span.option { white-space: nowrap; }
 
+
 /* Footnotes and Citations  */
+
+.footnote, .citation { margin: 1em 0; } /* default paragraph skip (Firefox) */
+/* hanging indent */
+.citation { padding-left: 2em; }
+.footnote { padding-left: 1.7em; }
+.footnote.superscript { padding-left: 1.0em; }
+.citation > .label { margin-left: -2em; }
+.footnote > .label { margin-left: -1.7em; }
+.footnote.superscript > .label { margin-left: -1.0em; }
+
+.footnote > .label + *,
+.citation > .label + * {
+  display: inline-block;
+  margin-top: 0;
+  vertical-align: top;
+}
+.footnote > .backrefs + *,
+.citation > .backrefs + * {
+  margin-top: 0;
+}
+.footnote > .label + p, .footnote > .backrefs + p,
+.citation > .label + p, .citation > .backrefs + p {
+  display: inline;
+  vertical-align: inherit;
+}
+
+.backrefs { user-select: none; }
+.backrefs > a { font-style: italic; }
+
+/* superscript footnotes */
+a[role="doc-noteref"].superscript,
+.footnote.superscript > .label,
+.footnote.superscript > .backrefs {
+  vertical-align: super;
+  font-size: smaller;
+  line-height: 1;
+}
+a[role="doc-noteref"].superscript > .fn-bracket,
+.footnote.superscript > .label > .fn-bracket {
+  /* hide brackets in display but leave for copy/paste */
+  display: inline-block;
+  width: 0;
+  overflow: hidden;
+}
+[role="doc-noteref"].superscript + [role="doc-noteref"].superscript {
+  padding-left: 0.15em; /* separate consecutive footnote references */
+  /* TODO: unfortunately, "+" also selects with text between the references. */
+}
+
+/* Legacy Footnotes and Citations */
 dl.footnote.superscript > dd { margin-left: 1em; }
 dl.footnote.brackets > dd { margin-left: 2em; }
 dl.footnote > dt { font-weight: normal; }
-a.footnote-reference.brackets:before,
 dt.label > span.brackets:before { content: "["; }
-a.footnote-reference.brackets:after,
 dt.label > span.brackets:after { content: "]"; }
 a.footnote-reference.superscript,
 dl.footnote.superscript > dt.label {
@@ -363,6 +407,12 @@ table.numbered > caption:before {
 /* ----------------------- */
 
 /* line on the left */
+.footnote-list {
+  border-left: solid thin;
+  padding-left: 0.25em;
+}
+
+/* same thing for old docutils versions */
 dl.footnote {
   padding-left: 1ex;
   border-left: solid;

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2021 Roberto Alsina and others.
+# Copyright © 2012-2022 Roberto Alsina and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
@@ -30,6 +30,7 @@ import configparser
 import datetime
 import hashlib
 import io
+import lxml.html
 import operator
 import os
 import re
@@ -61,6 +62,7 @@ from doit import tools
 from doit.cmdparse import CmdParse
 from pkg_resources import resource_filename
 from nikola.packages.pygments_better_html import BetterHtmlFormatter
+from typing import List
 from unidecode import unidecode
 
 # Renames
@@ -656,6 +658,25 @@ def get_theme_chain(theme, themes_dirs):
     return themes
 
 
+def html_tostring_fragment(document):
+    """Convert a HTML snippet to a fragment, ready for insertion elsewhere."""
+    try:
+        doc = lxml.html.tostring(document.body, encoding='unicode').strip()
+    except Exception:
+        doc = lxml.html.tostring(document, encoding='unicode').strip()
+    start_fragments = ["<html>", "<body>"]
+    end_fragments = ["</body>", "</html>"]
+    for start in start_fragments:
+        if doc.startswith(start):
+            doc = doc[len(start):].strip()
+            print(repr(doc))
+    for end in end_fragments:
+        if doc.endswith(end):
+            doc = doc[:-len(end)].strip()
+            print(repr(doc))
+    return doc
+
+
 INCOMPLETE_LANGUAGES_WARNED = set()
 
 
@@ -707,10 +728,10 @@ def load_messages(themes, translations, default_lang, themes_dirs):
                 for k, v in translation.MESSAGES.items():
                     if v:
                         messages[lang][k] = v
-                del(translation)
+                del translation
             except ImportError as orig:
                 last_exception = orig
-        del(english)
+        del english
         sys.path = oldpath
 
     if not all(found.values()):
@@ -1669,7 +1690,7 @@ class NikolaPygmentsHTML(BetterHtmlFormatter):
         kwargs['nowrap'] = False
         super().__init__(**kwargs)
 
-    def wrap(self, source, outfile):
+    def wrap(self, source, *args):
         """Wrap the ``source``, which is a generator yielding individual lines, in custom generators."""
         style = []
         if self.prestyles:
@@ -1687,6 +1708,18 @@ class NikolaPygmentsHTML(BetterHtmlFormatter):
 
 # For consistency, override the default formatter.
 pygments.formatters._formatter_cache['HTML'] = NikolaPygmentsHTML
+pygments.formatters._formatter_cache['html'] = NikolaPygmentsHTML
+_original_find_formatter_class = pygments.formatters.find_formatter_class
+
+
+def nikola_find_formatter_class(alias):
+    """Nikola-specific version of find_formatter_class."""
+    if "html" in alias.lower():
+        return NikolaPygmentsHTML
+    return _original_find_formatter_class(alias)
+
+
+pygments.formatters.find_formatter_class = nikola_find_formatter_class
 
 
 def get_displayed_page_number(i, num_pages, site):
@@ -1985,6 +2018,33 @@ def map_metadata(meta, key, config):
     for meta_key, hook in config.get('METADATA_VALUE_MAPPING', {}).get(key, {}).items():
         if meta_key in meta:
             meta[meta_key] = hook(meta[meta_key])
+
+
+def parselinenos(spec: str, total: int) -> List[int]:
+    """Parse a line number spec.
+
+    Example: "1,2,4-6" -> [0, 1, 3, 4, 5]
+    """
+    items = list()
+    parts = spec.split(',')
+    for part in parts:
+        try:
+            begend = part.strip().split('-')
+            if ['', ''] == begend:
+                raise ValueError
+            elif len(begend) == 1:
+                items.append(int(begend[0]) - 1)
+            elif len(begend) == 2:
+                start = int(begend[0] or 1)  # left half open (cf. -10)
+                end = int(begend[1] or max(start, total))  # right half open (cf. 10-)
+                if start > end:  # invalid range (cf. 10-1)
+                    raise ValueError
+                items.extend(range(start - 1, end))
+            else:
+                raise ValueError
+        except Exception as exc:
+            raise ValueError('invalid line number spec: %r' % spec) from exc
+    return items
 
 
 class ClassificationTranslationManager(object):
