@@ -75,6 +75,6 @@ def create_gzipped_copy(in_path, out_path, command=None):
     if command:
         subprocess.check_call(shlex.split(command.format(filename=in_path)))
     else:
-        with gzip.GzipFile(out_path, 'wb+') as outf:
+        with gzip.GzipFile(out_path, 'wb+', mtime=0) as outf:
             with open(in_path, 'rb') as inf:
                 outf.write(inf.read())
