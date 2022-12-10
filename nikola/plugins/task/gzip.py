@@ -30,6 +30,7 @@ import gzip
 import os
 import shlex
 import subprocess
+import sys
 
 from nikola.plugin_categories import TaskMultiplier
 
@@ -73,8 +74,11 @@ class GzipFiles(TaskMultiplier):
 def create_gzipped_copy(in_path, out_path, command=None):
     """Create gzipped copy of in_path and save it as out_path."""
     if command:
-        subprocess.check_call(shlex.split(command.format(filename=in_path)))
+        if sys.platform == 'win32':
+            subprocess.check_call(command.format(filename=in_path))
+        else:
+            subprocess.check_call(shlex.split(command.format(filename=in_path)))
     else:
-        with gzip.GzipFile(out_path, 'wb+') as outf:
+        with gzip.GzipFile(out_path, 'wb+', mtime=0) as outf:
             with open(in_path, 'rb') as inf:
                 outf.write(inf.read())

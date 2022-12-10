@@ -6,6 +6,12 @@ Features
 
 * Add a ``--timeout`` parameter to the ``check`` plugin, defaulting to
   30s. (Issue #3643)
+* GZIP compression is now deterministic for automatic deploys (Issue #3650)
+
+Bug Fixes
+---------
+
+* `GZIP_COMMAND` parsing on `win32` platforms (Issue#3649)
 
 New in v8.2.3
 =============
