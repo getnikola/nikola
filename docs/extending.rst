@@ -621,10 +621,10 @@ Some (hopefully all) markup compilers support shortcodes in these forms:
 .. code:: text
 
     {{% raw %}}{{% foo %}}{{% /raw %}}  # No arguments
-    {{% raw %}{{% foo bar %}}{{% /raw %}}  # One argument, containing "bar"
-    {{% raw %}{{% foo bar baz=bat %}}{{% /raw %}}  # Two arguments, one containing "bar", one called "baz" containing "bat"
+    {{% raw %}}{{% foo bar %}}{{% /raw %}}  # One argument, containing "bar"
+    {{% raw %}}{{% foo bar baz=bat %}}{{% /raw %}}  # Two arguments, one containing "bar", one called "baz" containing "bat"
 
-    {{% raw %}{{% foo %}}Some text{{% /foo %}}{{% /raw %}}  # one argument called "data" containing "Some text"
+    {{% raw %}}{{% foo %}}Some text{{% /foo %}}{{% /raw %}}  # one argument called "data" containing "Some text"
 
 So, if you are creating a plugin that generates markup, it may be a good idea
 to register it as a shortcode in addition of to restructured text directive or
