@@ -669,11 +669,9 @@ def html_tostring_fragment(document):
     for start in start_fragments:
         if doc.startswith(start):
             doc = doc[len(start):].strip()
-            print(repr(doc))
     for end in end_fragments:
         if doc.endswith(end):
             doc = doc[:-len(end)].strip()
-            print(repr(doc))
     return doc
 
 
