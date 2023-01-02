@@ -12,7 +12,7 @@ Features
 Bug Fixes
 ---------
 
-* `GZIP_COMMAND` parsing on `win32` platforms (Issue#3649)
+* Fix API URL in CSS and JS minifiers (Issue #3658)
 * Fix ``:align: center`` for images in reST (Issue #3657)
 * ``GZIP_COMMAND`` parsing on ``win32`` platforms (Issue #3649)
 

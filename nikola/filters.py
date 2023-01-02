@@ -359,33 +359,33 @@ def php_template_injection(data):
 
 @apply_to_text_file
 def cssminify(data):
-    """Minify CSS using https://cssminifier.com/."""
+    """Minify CSS using <https://www.toptal.com/developers/cssminifier>."""
     try:
-        url = 'https://cssminifier.com/raw'
+        url = 'https://www.toptal.com/developers/cssminifier/api/raw'
         _data = {'input': data}
         response = requests.post(url, data=_data)
         if response.status_code != 200:
-            LOGGER.error("can't use cssminifier.com: HTTP status {}", response.status_code)
+            LOGGER.error("Can't use toptal.com CSS Minifier: HTTP status {}", response.status_code)
             return data
         return response.text
     except Exception as exc:
-        LOGGER.error("can't use cssminifier.com: {}", exc)
+        LOGGER.error("Can't use toptal.com CSS Minifier: {}", exc)
         return data
 
 
 @apply_to_text_file
 def jsminify(data):
-    """Minify JS using https://javascript-minifier.com/."""
+    """Minify JS using <https://www.toptal.com/developers/javascript-minifier>."""
     try:
-        url = 'https://javascript-minifier.com/raw'
+        url = 'https://www.toptal.com/developers/javascript-minifier/api/raw'
         _data = {'input': data}
         response = requests.post(url, data=_data)
         if response.status_code != 200:
-            LOGGER.error("can't use javascript-minifier.com: HTTP status {}", response.status_code)
+            LOGGER.error("Can't use toptal.com JavaScript Minifier: HTTP status {}", response.status_code)
             return data
         return response.text
     except Exception as exc:
-        LOGGER.error("can't use javascript-minifier.com: {}", exc)
+        LOGGER.error("Can't use toptal.com JavaScript Minifier: {}", exc)
         return data
 
 
