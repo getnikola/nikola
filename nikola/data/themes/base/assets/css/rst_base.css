@@ -1,8 +1,8 @@
 /* Minimal style sheet for the HTML output of Docutils.                    */
 /*                                                                         */
 /* :Author: Günter Milde, based on html4css1.css by David Goodger          */
-/* :Id: $Id: minimal.css 8642 2021-03-26 13:51:14Z milde $               */
-/* :Copyright: © 2015 Günter Milde.                                        */
+/* :Id: $Id: minimal.css 9079 2022-06-19 14:00:56Z milde $                                                               */
+/* :Copyright: © 2015, 2021 Günter Milde.                                  */
 /* :License: Released under the terms of the `2-Clause BSD license`_,      */
 /*    in short:                                                            */
 /*                                                                         */
@@ -14,11 +14,10 @@
 /*                                                                         */
 /* .. _2-Clause BSD license: http://www.spdx.org/licenses/BSD-2-Clause     */
 
-/* This CSS2.1_ stylesheet defines rules for Docutils elements without    */
-/* HTML equivalent. It is required to make the document semantic visible. */
-/*                                                                        */
-/* .. _CSS2.1: http://www.w3.org/TR/CSS2                                  */
-/* .. _validates: http://jigsaw.w3.org/css-validator/validator$link       */
+/* This CSS3 stylesheet defines rules for Docutils elements without        */
+/* HTML equivalent. It is required to make the document semantics visible. */
+/*                                                                         */
+/* .. _validates: http://jigsaw.w3.org/css-validator/validator$link        */
 
 /* titles */
 p.topic-title,
@@ -43,8 +42,8 @@ p.sidebar-subtitle {
 h1 + p.subtitle {
   font-size: 1.6em;
 }
-h2 + p.section-subtitle, a.toc-backref {
-  color: black;
+a.toc-backref {
+  color: inherit;
   text-decoration: none;
 }
 
@@ -73,12 +72,14 @@ span.problematic {
   margin-top: 0;
   margin-bottom: 0;
 }
+/* Nested Paragraphs */
+p:first-child { margin-top: 0; }
+p:last-child { margin-bottom: 0; }
+details > p:last-child { margin-bottom: 1em; }
 
 /* Table of Contents */
-.topic.contents { margin: 0.5em 0; }
-.topic.contents ul.auto-toc {
+.contents ul.auto-toc { /* section numbers present */
   list-style-type: none;
-  padding-left: 1.5em;
 }
 
 /* Enumerated Lists */
@@ -97,6 +98,13 @@ dt .classifier:before {
 }
 /* Field Lists and similar */
 /* bold field name, content starts on the same line */
+dl.field-list,
+dl.option-list,
+dl.docinfo,
+dl.footnote,
+dl.citation {
+  display: flow-root;
+}
 dl.field-list > dt,
 dl.option-list > dt,
 dl.docinfo > dt,
@@ -107,13 +115,19 @@ dl.citation > dt {
   float: left;
   margin: 0;
   padding: 0;
-  padding-right: 0.5em;
+  padding-right: 0.2em;
 }
 /* Offset for field content (corresponds to the --field-name-limit option) */
 dl.field-list > dd,
 dl.option-list > dd,
 dl.docinfo > dd {
   margin-left:  9em; /* ca. 14 chars in the test examples, fit all Docinfo fields */
+}
+/* start nested lists on new line */
+dd > dl:first-child,
+dd > ul:first-child,
+dd > ol:first-child {
+  clear: left;
 }
 /* start field-body on a new line after long field names */
 dl.field-list > dd > *:first-child,
@@ -134,7 +148,6 @@ dl.docinfo > dd.authors > p { margin: 0; }
 /* Option Lists */
 dl.option-list > dt { font-weight: normal; }
 span.option { white-space: nowrap; }
-
 
 /* Footnotes and Citations  */
 
@@ -209,7 +222,6 @@ dt.label > span.fn-backref > a { font-style: italic; }
   margin-right: auto;
 }
 .align-center {
-  clear: both;
   text-align: center;
   margin-left: auto;
   margin-right: auto;
@@ -222,6 +234,12 @@ dt.label > span.fn-backref > a { font-style: italic; }
 .align-middle { vertical-align: middle; }
 .align-bottom { vertical-align: bottom; }
 
+img.align-left, img.align-center, img.align-right,
+.figure.align-left, .figure.align-center, .figure.align-right,
+object.align-left, object.align-center, object.align-right {
+  display: block;
+}
+
 /* reset inner alignment in figures and tables */
 figure.align-left, figure.align-right,
 table.align-left, table.align-center, table.align-right {
@@ -229,23 +247,13 @@ table.align-left, table.align-center, table.align-right {
 }
 
 /* Text Blocks */
-blockquote,
-div.topic,
-aside.topic {
-  margin: 1em 2em;
-}
+.topic { margin: 1em 2em; }
 .sidebar,
 .admonition,
 .system-message {
-  border: thin solid;
   margin: 1em 2em;
+  border: thin solid;
   padding: 0.5em 1em;
-}
-.sidebar {
-  width: 30%;
-  max-width: 26em;
-  float: right;
-  clear: right;
 }
 div.line-block { display: block; }
 div.line-block div.line-block, pre { margin-left: 2em; }
@@ -258,7 +266,6 @@ pre.code code:before {
 }
 
 /* Tables */
-
 td > p:first-child, th > p:first-child { margin-top: 0; }
 td > p, th > p { margin-bottom: 0; }
 
@@ -268,11 +275,20 @@ td > p, th > p { margin-bottom: 0; }
   padding-right: 0.5em /* separate table cells */
 }
 
+table > caption {
+  text-align: left;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+table.captionbelow {
+  caption-side: bottom;
+}
+
 /* CSS31_ style sheet for the output of Docutils HTML writers.             */
 /* Rules for easy reading and pre-defined style variants.                  */
 /*                                                                         */
 /* :Author: Günter Milde, based on html4css1.css by David Goodger          */
-/* :Id: $Id: plain.css 8636 2021-03-19 00:23:33Z milde $                                                               */
+/* :Id: $Id: plain.css 9081 2022-06-19 20:23:12Z milde $                                                               */
 /* :Copyright: © 2015 Günter Milde.                                        */
 /* :License: Released under the terms of the `2-Clause BSD license`_,      */
 /*    in short:                                                            */
@@ -284,11 +300,26 @@ td > p, th > p { margin-bottom: 0; }
 /*    This file is offered as-is, without any warranty.                    */
 /*                                                                         */
 /* .. _2-Clause BSD license: http://www.spdx.org/licenses/BSD-2-Clause     */
-/* .. _CSS3: http://www.w3.org/TR/CSS3                                     */
+/* .. _CSS3: https://www.w3.org/Style/CSS/                                 */
 
 
 /* Document Structure */
 /* ****************** */
+
+/* Table of Contents */
+ul.auto-toc > li > p {
+  padding-left: 1em;
+  text-indent: -1em;
+}
+nav.contents ul {
+  padding-left: 1em;
+}
+main > nav.contents ul ul ul ul:not(.auto-toc) {
+  list-style-type: '\2B29\ ';
+}
+main > nav.contents ul ul ul ul ul:not(.auto-toc) {
+  list-style-type: '\2B1D\ ';
+}
 
 /* Transitions */
 hr.docutils {
@@ -305,30 +336,39 @@ dl > dd {
 /* Lists */
 /* ===== */
 
-/* Separate list entries in compound lists */
-dl > dd, ol > li,
-
 /* Definition Lists */
 /* Indent lists nested in definition lists */
-/* (:only-child is new in CSS 3)           */
 dd > ul:only-child, dd > ol:only-child { padding-left: 1em; }
 
 /* Description Lists */
 /* styled like in most dictionaries, encyclopedias etc. */
+dl.description {
+  display: flow-root;
+}
 dl.description > dt {
   font-weight: bold;
   clear: left;
   float: left;
   margin: 0;
   padding: 0;
-  padding-right: 0.5em;
+  padding-right: 0.3em;
+}
+dl.description > dd:after {
+  display: table;
+  content: "";
+  clear: left; /* clearfix for empty descriptions */
 }
 
 /* Field Lists */
 
+dl.field-list > dd,
+dl.docinfo > dd {
+  margin-left: var(--field-indent); /* adapted in media queries or HTML */
+}
+
 /* example for custom field-name width */
 dl.field-list.narrow > dd {
-  margin-left: 5em;
+  --field-indent: 5em;
 }
 /* run-in: start field-body on same line after long field names */
 dl.field-list.run-in > dd p {
@@ -337,8 +377,8 @@ dl.field-list.run-in > dd p {
 
 /* Bibliographic Fields */
 
-/* generally, bibliographic fields use special definition list dl.docinfo */
-/* but dedication and abstract are placed into "topic" divs */
+/* generally, bibliographic fields use dl.docinfo */
+/* but dedication and abstract are placed into divs */
 div.abstract p.topic-title {
   text-align: center;
 }
@@ -351,6 +391,10 @@ div.dedication p.topic-title {
   font-style: normal;
 }
 
+/* disclosures */
+details { padding-left: 1em; }
+summary { margin-left: -1em; }
+
 /* Text Blocks */
 /* =========== */
 
@@ -360,14 +404,9 @@ pre.math, pre.code {
   font-family: monospace;
 }
 
-/* Block Quotes */
-blockquote > table,
-div.topic > table {
-  margin-top: 0;
-  margin-bottom: 0;
-}
+/* Block Quotes and Topics */
 blockquote p.attribution,
-div.topic p.attribution {
+.topic p.attribution {
   text-align: right;
   margin-left: 20%;
 }
@@ -468,7 +507,9 @@ div.error {
 aside.sidebar {
   width: 30%;
   max-width: 26em;
+  float: right;
+  clear: right;
   margin-left: 1em;
-  margin-right: -2%;
-  background-color: #ffffee;
+  margin-right: -1%;
+  background-color: #fffffa;
 }
