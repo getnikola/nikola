@@ -44,7 +44,7 @@ The Build Command
 
 Nikola's goal is similar, deep at heart, to a Makefile. Take sources, compile them
 into something, in this case a website. Instead of a Makefile, Nikola uses
-`doit <https://pydoit.org>`_
+`doit <https://pydoit.org>`_.
 
 Doit has the concept of "tasks". The 1 minute summary of tasks is that they have:
 
@@ -64,7 +64,11 @@ basename:name
 .. sidebar:: More about tasks
 
    If you ever want to do your own tasks, you really should read the doit
-   `documentation on tasks <https://pydoit.org/tasks.html>`_
+   `documentation on tasks <https://pydoit.org/tasks.html>`_.
+   
+   Notably, by default doit redirects ``stdout`` and ``stderr``. To get a
+   proper PDB debugging shell, you need to use doit's own
+   `set_trace <https://pydoit.org/tools.html#set-trace>`_ function.
 
 So, what Nikola does, when you use the build command, is to read the
 configuration ``conf.py`` from the current folder, instantiate
