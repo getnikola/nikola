@@ -25,7 +25,7 @@ You can read more about this in the `Nikola Handbook`_
 What Can Nikola Do?
 -------------------
 
-It has many features, but here are some of the nicer ones:
+Nikola has many exceptional features. Some of its most outstanding features include:
 
 * `Blogs, with tags, feeds, archives, comments, etc.`__
 * `Themable`_
