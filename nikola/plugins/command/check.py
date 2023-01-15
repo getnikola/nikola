@@ -156,6 +156,14 @@ class CommandCheck(Command):
             'default': 30,
             'help': 'Timeout (in seconds) for HTTP requests in remote checks.',
         },
+        {
+            'name': 'ignore_query_strings',
+            'long': 'ignore-query-strings',
+            'short': 'q',
+            'type': bool,
+            'default': False,
+            'help': 'Ignore query strings for internal links.',
+        }
     ]
 
     def _execute(self, options, args):
@@ -170,7 +178,7 @@ class CommandCheck(Command):
         failure = False
         self.timeout = options['timeout']
         if options['links']:
-            failure |= self.scan_links(options['find_sources'], options['remote'])
+            failure |= self.scan_links(options['find_sources'], options['remote'], options['ignore_query_strings'])
         if options['files']:
             failure |= self.scan_files()
         if options['clean']:
@@ -183,7 +191,7 @@ class CommandCheck(Command):
     timeout = None
     cache = {}
 
-    def analyze(self, fname, find_sources=False, check_remote=False):
+    def analyze(self, fname, find_sources=False, check_remote=False, ignore_query_strings=False):
         """Analyze links on a page."""
         rv = False
         self.whitelist = [re.compile(x) for x in self.site.config['LINK_CHECK_WHITELIST']]
@@ -363,6 +371,10 @@ class CommandCheck(Command):
                 else:
                     target_filename_str = target_filename.decode("utf-8", errors="surrogateescape")
 
+                if ignore_query_strings and "?" in target_filename_str:
+                    target_filename, _, _ = target_filename.rpartition("?")
+                    target_filename_str, _, _ = target_filename_str.rpartition("?")
+
                 if any(pattern.search(target_filename_str) for pattern in self.whitelist):
                     continue
 
@@ -381,7 +393,7 @@ class CommandCheck(Command):
             self.logger.error(u"Error with: {0} {1}".format(filename, exc))
         return rv
 
-    def scan_links(self, find_sources=False, check_remote=False):
+    def scan_links(self, find_sources=False, check_remote=False, ignore_query_strings=False):
         """Check links on the site."""
         self.logger.debug("Checking Links:")
         self.logger.debug("===============\n")
@@ -397,13 +409,13 @@ class CommandCheck(Command):
         for fname in _call_nikola_list(self.site, self.cache)[0]:
             if fname.startswith(output_folder):
                 if '.html' == fname[-5:]:
-                    if self.analyze(fname, find_sources, check_remote):
+                    if self.analyze(fname, find_sources, check_remote, ignore_query_strings):
                         failure = True
                 if atom_extension == fname[-len(atom_extension):]:
-                    if self.analyze(fname, find_sources, False):
+                    if self.analyze(fname, find_sources, False, ignore_query_strings):
                         failure = True
                 if fname.endswith('sitemap.xml') or fname.endswith('sitemapindex.xml'):
-                    if self.analyze(fname, find_sources, False):
+                    if self.analyze(fname, find_sources, False, ignore_query_strings):
                         failure = True
         if not failure:
             self.logger.debug("All links checked.")

@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Add a ``-q``, ``--ignore-query-strings`` option to ignore query strings
+  for internal links, allowing their use for cache busting
 * Update reST stylesheets (Issue #3657)
 * Add a ``--timeout`` parameter to the ``check`` plugin, defaulting to
   30s. (Issue #3643)
