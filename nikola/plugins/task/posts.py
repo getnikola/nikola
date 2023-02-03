@@ -26,6 +26,7 @@
 
 """Build HTML fragments from metadata and text."""
 
+import docutils
 import os
 from copy import copy
 
@@ -57,6 +58,7 @@ class RenderPosts(Task):
             "default_lang": self.site.config["DEFAULT_LANG"],
             "show_untranslated_posts": self.site.config['SHOW_UNTRANSLATED_POSTS'],
             "demote_headers": self.site.config['DEMOTE_HEADERS'],
+            "docutils_version": docutils.__version__,
         }
         self.tl_changed = False
 
