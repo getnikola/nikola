@@ -13,7 +13,7 @@ from nikola.utils import (
 
 TESLA_BIRTHDAY = datetime.date(1856, 7, 10)
 TESLA_BIRTHDAY_DT = datetime.datetime(1856, 7, 10, 12, 34, 56)
-DT_EN_US = "July 10, 1856 at 12:34:56 PM UTC"
+DT_EN_US = "July 10, 1856, 12:34:56\u202fPM UTC"
 DT_PL = "10 lipca 1856 12:34:56 UTC"
 
 
@@ -87,20 +87,20 @@ def test_format_date_timezone(base_config):
         2006, 7, 10, 12, 34, 56, tzinfo=dateutil.tz.gettz("America/New_York")
     )
     formatted_date = LocaleBorg().formatted_date("long", tesla_150_birthday_dtz)
-    assert formatted_date == "July 10, 2006 at 12:34:56 PM -0400"
+    assert formatted_date == "July 10, 2006, 12:34:56\u202fPM -0400"
 
     nodst = datetime.datetime(
         2006, 1, 10, 12, 34, 56, tzinfo=dateutil.tz.gettz("America/New_York")
     )
     formatted_date = LocaleBorg().formatted_date("long", nodst)
-    assert formatted_date == "January 10, 2006 at 12:34:56 PM -0500"
+    assert formatted_date == "January 10, 2006, 12:34:56\u202fPM -0500"
 
 
 @pytest.mark.parametrize(
     "english_variant, expected_date",
     [
         pytest.param("en_US", DT_EN_US, id="US"),
-        pytest.param("en_GB", "10 July 1856 at 12:34:56 UTC", id="GB"),
+        pytest.param("en_GB", "10 July 1856, 12:34:56 UTC", id="GB"),
     ],
 )
 def test_format_date_locale_variants(english_variant, expected_date):
