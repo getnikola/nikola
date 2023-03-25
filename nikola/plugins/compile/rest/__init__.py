@@ -77,7 +77,7 @@ class CompileRest(PageCompiler):
         meta = {}
         if 'title' in document:
             meta['title'] = document['title']
-        for docinfo in document.traverse(docutils.nodes.docinfo):
+        for docinfo in document.findall(docutils.nodes.docinfo):
             for element in docinfo.children:
                 if element.tagname == 'field':  # custom fields (e.g. summary)
                     name_elem, body_elem = element.children
