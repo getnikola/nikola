@@ -5,6 +5,7 @@
 tmp/
 cache/
 output/
+tags
 
 # GitHub token
 .pypt/gh-token
