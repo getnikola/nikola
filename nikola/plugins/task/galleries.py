@@ -725,9 +725,6 @@ class Galleries(Task, ImageProcessor):
         def make_url(url):
             return urljoin(self.site.config['BASE_URL'], url.lstrip('/'))
 
-        # WebP is not yet an official MIME type but we need to recognize them
-        mimetypes.add_type('image/webp', '.webp')
-
         all_data = list(zip(img_list, dest_img_list, img_titles))
 
         if self.kw['sort_by_date']:
