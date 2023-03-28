@@ -58,6 +58,7 @@
 * `Jesper Dramsch <https://github.com/jesperdramsch>`_
 * `John Kristensen <https://github.com/jerrykan>`_
 * `Jonathon Anderson <https://github.com/anderbubble>`_
+  `Jonathan Hartley <https://github.com/tartley>`_
 * `Joshua Barratt <https://github.com/jbarratt>`_
 * `Juan Pedro Fisanotti <https://github.com/fisadev>`_
 * `Juanjo Conti <https://github.com/jjconti>`_
