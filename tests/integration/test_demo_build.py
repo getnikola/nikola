@@ -80,8 +80,10 @@ def test_gallery_rss(build, output_dir):
             publish_date='Mon, 27 Mar 2023 18:18:55 GMT',
         ),
     ]
-    for item, expected in zip(parsed.feed, expected_items):
-        actual = to_dict(item, 'title', 'link', 'publish_date')
+    # TODO The use of 'zip' here is faulty.
+    #      It silently stops at the length of the shortest iterable
+    for actual_obj, expected in zip(parsed.feed, expected_items):
+        actual = to_dict(actual_obj, 'title', 'link', 'publish_date')
         assert actual == expected
 
 
