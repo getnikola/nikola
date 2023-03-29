@@ -7,6 +7,7 @@ In this case these are tested against the demo site with default
 settings.
 """
 
+import itertools
 import os
 
 import pytest
@@ -27,7 +28,7 @@ from .test_empty_build import (  # NOQA
 
 def to_dict(obj, *attrs):
     """Return a dict composed of the given attrs, taken from obj"""
-    return {name: getattr(obj, name) for name in attrs}
+    return {name: getattr(obj, name, '<missing>') for name in attrs}
 
 
 def test_gallery_rss(build, output_dir):
@@ -80,11 +81,11 @@ def test_gallery_rss(build, output_dir):
             publish_date='Wed, 01 Jan 2014 00:05:00 GMT',
         ),
     ]
-    # TODO The use of 'zip' here is faulty.
-    #      It silently stops at the length of the shortest iterable
-    for actual_obj, expected in zip(parsed.feed, expected_items):
+    for index, (actual_obj, expected) in enumerate(
+        itertools.zip_longest(parsed.feed, expected_items)
+    ):
         actual = to_dict(actual_obj, 'title', 'link', 'publish_date')
-        assert actual == expected
+        assert actual == expected, f'item {index} mismatch'
 
 
 @pytest.fixture(scope="module")
