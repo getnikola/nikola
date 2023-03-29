@@ -47,7 +47,7 @@ def test_gallery_rss(build, output_dir):
     parsed = rss_parser.Parser(xml=content).parse()
     # and the RSS contains gallery attributes:
     # TODO Should the title be the name of the gallery, not the final image in it?
-    assert parsed.title == 'Tesla conducts lg'
+    assert parsed.title == 'Tesla tower1 lg'
     assert parsed.version == '2.0'
     assert parsed.language == 'en'
     # TODO Should the gallery description contain the content of the index.txt file?
@@ -58,6 +58,11 @@ def test_gallery_rss(build, output_dir):
             title='Tesla4 lg',
             link='https://example.com/galleries/demo/tesla4_lg.jpg',
             publish_date='Wed, 01 Jan 2014 00:01:00 GMT',
+        ),
+        dict(
+            title='Tesla conducts lg',
+            link='https://example.com/galleries/demo/tesla_conducts_lg.webp',
+            publish_date='Wed, 01 Jan 2014 00:02:00 GMT',
         ),
         dict(
             title='Tesla lightning1 lg',
@@ -73,11 +78,6 @@ def test_gallery_rss(build, output_dir):
             title='Tesla tower1 lg',
             link='https://example.com/galleries/demo/tesla_tower1_lg.jpg',
             publish_date='Wed, 01 Jan 2014 00:05:00 GMT',
-        ),
-        dict(
-            title='Tesla conducts lg',
-            link='https://example.com/galleries/demo/tesla_conducts_lg.webp',
-            publish_date='Mon, 27 Mar 2023 18:18:55 GMT',
         ),
     ]
     # TODO The use of 'zip' here is faulty.
