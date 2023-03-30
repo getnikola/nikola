@@ -62,7 +62,7 @@ def test_gallery_rss(build, output_dir):
     # TODO Should the gallery description contain the content of the index.txt file?
     # assert parsed.description == ''
 
-    # and the image items in the RSS feed are:
+    # and the items in the RSS feed, corresponding to images, are:
     expected_items = [
         dict(
             id='galleries/demo/tesla4_lg.jpg',
@@ -143,9 +143,10 @@ def test_gallery_rss(build, output_dir):
     for index, (actual, expected) in enumerate(
         itertools.zip_longest(parsed.entries, expected_items)
     ):
-        # Assert keys/values in expected are a subset of those in actual.
+        # Keys/values in 'expected' should be a subset of those in 'actual'.
         assert expected.items() <= actual.items(), f'item {index} mismatch'
     # TODO can we get the gallery description from the XML?
+
 
 @pytest.fixture(scope="module")
 def build(target_dir):
