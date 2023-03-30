@@ -48,21 +48,17 @@ def test_gallery_rss(build, output_dir):
     assert len(content) > 0
     # and the text can be parsed as valid RSS
     parsed = feedparser.parse(content)
-    # TODO delete this:
-    from pprint import pprint
-    pprint(parsed)
     # and the RSS contains top level attributes:
     assert parsed.version == 'rss20'
-    # and the RSS contains feed attributes about the gallery:
+    # and the RSS contains feed attributes, about the gallery:
     assert parsed.feed.language == 'en'
     assert parsed.feed.link == 'https://example.com/galleries/demo/rss.xml'
-    # TODO Should the title be the name of the gallery, not the final image in it?
+    # TODO Should the title be the name of the gallery, not the final image?
     assert parsed.feed.title == 'Tesla tower1 lg'
+    # TODO Should the description be the content of its index.txt, converted to HTML?
+    assert parsed.feed.subtitle == '' # From the XML field 'description'
     assert parsed.feed.updated == 'Wed, 05 Apr 2023 23:59:58 GMT'
-    # TODO Should the gallery description contain the content of the index.txt file?
-    # assert parsed.description == ''
-
-    # and the items in the RSS feed, corresponding to images, are:
+    # and the images, as items in the RSS feed, are:
     expected_items = [
         dict(
             id='galleries/demo/tesla4_lg.jpg',
@@ -145,8 +141,6 @@ def test_gallery_rss(build, output_dir):
     ):
         # Keys/values in 'expected' should be a subset of those in 'actual'.
         assert expected.items() <= actual.items(), f'item {index} mismatch'
-    # TODO can we get the gallery description from the XML?
-
 
 @pytest.fixture(scope="module")
 def build(target_dir):
