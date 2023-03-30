@@ -7,8 +7,11 @@ In this case these are tested against the demo site with default
 settings.
 """
 
+import datetime
+import email
 import itertools
 import os
+import time
 
 import feedparser
 import freezegun
@@ -26,11 +29,21 @@ from .test_empty_build import (  # NOQA
     test_index_in_sitemap,
 )
 
+BUILDTIME = datetime.datetime(2023, 4, 5, 23, 59, 58, tzinfo=datetime.timezone.utc)
+
 
 class Any:
     """Compare equal with anything. Use for expected values we don't care about."""
     def __eq__(self, _):
         return True
+
+
+def rfc822(t):
+    """Format a datetime according to RFC822, eg 'Wed, 05 Apr 2023 23:59:58 GMT'"""
+    return email.utils.formatdate(
+        time.mktime(BUILDTIME.astimezone().timetuple()),
+        usegmt=True,
+    )
 
 
 def test_gallery_rss(build, output_dir):
@@ -39,6 +52,7 @@ def test_gallery_rss(build, output_dir):
     # TODO Can I rely on the name of 'galleries' during tests,
     #      or should I be using/setting config->GALLERY_FOLDERS?
     rss_path = os.path.join(output_dir, 'galleries', 'demo', 'rss.xml')
+
     # Then it exists
     assert os.path.isfile(rss_path)
     # and it contains text
@@ -55,9 +69,9 @@ def test_gallery_rss(build, output_dir):
     assert parsed.feed.link == 'https://example.com/galleries/demo/rss.xml'
     # TODO Should the title be the name of the gallery, not the final image?
     assert parsed.feed.title == 'Tesla tower1 lg'
-    # TODO Should the description be the content of its index.txt, converted to HTML?
-    assert parsed.feed.subtitle == '' # From the XML field 'description'
-    assert parsed.feed.updated == 'Wed, 05 Apr 2023 23:59:58 GMT'
+    # TODO Should the description be the content of the gallery's index.txt?
+    assert parsed.feed.subtitle == ''  # From the XML field 'description'
+    assert parsed.feed.updated == rfc822(BUILDTIME)
     # and the images, as items in the RSS feed, are:
     expected_items = [
         dict(
@@ -142,13 +156,14 @@ def test_gallery_rss(build, output_dir):
         # Keys/values in 'expected' should be a subset of those in 'actual'.
         assert expected.items() <= actual.items(), f'item {index} mismatch'
 
+
 @pytest.fixture(scope="module")
 def build(target_dir):
     """Fill the site with demo content and build it."""
     prepare_demo_site(target_dir)
 
     with cd(target_dir):
-        with freezegun.freeze_time("2023-04-05 23:59:58", tz_offset=0):
+        with freezegun.freeze_time(BUILDTIME):
             __main__.main(["build"])
 
 
