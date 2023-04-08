@@ -891,6 +891,7 @@ class Nikola(object):
                     utils.LOGGER.warning('You are currently disabling "{}", but not the following new taxonomy plugins: {}'.format(old_plugin_name, ', '.join(missing_plugins)))
                     utils.LOGGER.warning('Please also disable these new plugins or remove "{}" from the DISABLED_PLUGINS list.'.format(old_plugin_name))
                     self.config['DISABLED_PLUGINS'].extend(missing_plugins)
+
         # Special-case logic for "render_indexes" to fix #2591
         if 'render_indexes' in self.config['DISABLED_PLUGINS']:
             if 'generate_rss' in self.config['DISABLED_PLUGINS'] or self.config['GENERATE_RSS'] is False:
@@ -999,6 +1000,9 @@ class Nikola(object):
         if self.configured:
             self.state._set_site(self)
             self.cache._set_site(self)
+
+        # WebP files have no official MIME type yet, but we need to recognize them (Issue #3671)
+        mimetypes.add_type('image/webp', '.webp')
 
     def _filter_duplicate_plugins(self, plugin_list):
         """Find repeated plugins and discard the less local copy."""
