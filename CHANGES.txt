@@ -16,6 +16,7 @@ Bug Fixes
 
 * Fix RSS generation of galleries containing WebP images, which caused
   an unhandled exception due to not having a known MIME type (Issue #3671)
+* Fix ``auto`` command infinite loop (Issue #3677)
 * Fix API URL in CSS and JS minifiers (Issue #3658)
 * Fix ``:align: center`` for images in reST (Issue #3657)
 * ``GZIP_COMMAND`` parsing on ``win32`` platforms (Issue #3649)

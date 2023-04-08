@@ -587,13 +587,11 @@ class NikolaEventHandler:
         self.function = function
         self.loop = loop
 
-    async def on_any_event(self, event):
-        """Handle all file events."""
-        await self.function(event)
-
     def dispatch(self, event):
         """Dispatch events to handler."""
-        self.loop.call_soon_threadsafe(asyncio.ensure_future, self.on_any_event(event))
+        if event.event_type in {"opened", "closed"}:
+            return
+        self.loop.call_soon_threadsafe(asyncio.ensure_future, self.function(event))
 
 
 class ConfigEventHandler(NikolaEventHandler):
@@ -601,11 +599,10 @@ class ConfigEventHandler(NikolaEventHandler):
 
     def __init__(self, configuration_filename, function, loop):
         """Initialize the handler."""
+        super().__init__(function, loop)
         self.configuration_filename = configuration_filename
-        self.function = function
-        self.loop = loop
 
-    async def on_any_event(self, event):
+    def dispatch(self, event):
         """Handle file events if they concern the configuration file."""
         if event._src_path == self.configuration_filename:
-            await self.function(event)
+            super().dispatch(event)
