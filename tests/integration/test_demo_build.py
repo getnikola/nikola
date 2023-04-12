@@ -86,8 +86,7 @@ def test_gallery_rss(build, output_dir):
                     'type': 'image/jpeg',
                 },
             ],
-            # TODO: Commented out because this fails on Windows, off by 1 hour
-            # published='Wed, 01 Jan 2014 00:01:00 GMT',
+            published='Wed, 01 Jan 2014 00:01:00 GMT',
             title='Tesla4 lg',
         ),
         dict(
@@ -102,8 +101,7 @@ def test_gallery_rss(build, output_dir):
                     'type': 'image/webp',
                 },
             ],
-            # TODO: Commented out because this fails on Windows, off by 1 hour
-            # published='Wed, 01 Jan 2014 00:02:00 GMT',
+            published='Wed, 01 Jan 2014 00:02:00 GMT',
             title='Tesla conducts lg',
         ),
         dict(
@@ -118,8 +116,7 @@ def test_gallery_rss(build, output_dir):
                     'type': 'image/jpeg',
                 },
             ],
-            # TODO: Commented out because this fails on Windows, off by 1 hour
-            # published='Wed, 01 Jan 2014 00:03:00 GMT',
+            published='Wed, 01 Jan 2014 00:03:00 GMT',
             title='Tesla lightning1 lg',
         ),
         dict(
@@ -134,8 +131,7 @@ def test_gallery_rss(build, output_dir):
                     'type': 'image/jpeg',
                 },
             ],
-            # TODO: Commented out because this fails on Windows, off by 1 hour
-            # published='Wed, 01 Jan 2014 00:04:00 GMT',
+            published='Wed, 01 Jan 2014 00:04:00 GMT',
             title='Tesla lightning2 lg',
         ),
         dict(
@@ -150,8 +146,7 @@ def test_gallery_rss(build, output_dir):
                     'type': 'image/jpeg',
                 }
             ],
-            # TODO: Commented out because this fails on Windows, off by 1 hour
-            # published='Wed, 01 Jan 2014 00:05:00 GMT',
+            published='Wed, 01 Jan 2014 00:05:00 GMT',
             title='Tesla tower1 lg',
         ),
     ]
@@ -159,9 +154,8 @@ def test_gallery_rss(build, output_dir):
         itertools.zip_longest(parsed.entries, expected_items)
     ):
         # Keys/values in 'expected' should be a subset of those in 'actual'.
-        assert expected.items() <= actual.items(), f'item {index} mismatch'
-        print(actual['published'])
-    1/0
+        for key, value in expected.items():
+            assert actual[key] == value, f'Item {index} mismatch: {key}: {actual[key]} != {value}'
 
 @pytest.fixture(scope="module")
 def build(target_dir):
