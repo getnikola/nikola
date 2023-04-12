@@ -38,6 +38,18 @@ class Any:
         return True
 
 
+class Path:
+    """Compare equal with OS-normalized paths that match the given string."""
+    def __init__(self, path):
+        self.path = path
+
+    def __repr__(self):
+        return f'<Path {self.path!r}'
+
+    def __eq__(self, other):
+        return os.path.normcase(self.path) == os.path.normcase(other)
+
+
 def rfc822(t):
     """Format a datetime according to RFC822, eg 'Wed, 05 Apr 2023 23:59:58 GMT'"""
     return email.utils.formatdate(
@@ -75,7 +87,7 @@ def test_gallery_rss(build, output_dir):
     # and the images, as items in the RSS feed, are:
     expected_items = [
         dict(
-            id='galleries/demo/tesla4_lg.jpg',
+            id=Path('galleries/demo/tesla4_lg.jpg'),
             link='https://example.com/galleries/demo/tesla4_lg.jpg',
             links=[
                 Any(),
@@ -90,7 +102,7 @@ def test_gallery_rss(build, output_dir):
             title='Tesla4 lg',
         ),
         dict(
-            id='galleries/demo/tesla_conducts_lg.webp',
+            id=Path('galleries/demo/tesla_conducts_lg.webp'),
             link='https://example.com/galleries/demo/tesla_conducts_lg.webp',
             links=[
                 Any(),
@@ -105,7 +117,7 @@ def test_gallery_rss(build, output_dir):
             title='Tesla conducts lg',
         ),
         dict(
-            id='galleries/demo/tesla_lightning1_lg.jpg',
+            id=Path('galleries/demo/tesla_lightning1_lg.jpg'),
             link='https://example.com/galleries/demo/tesla_lightning1_lg.jpg',
             links=[
                 Any(),
@@ -120,7 +132,7 @@ def test_gallery_rss(build, output_dir):
             title='Tesla lightning1 lg',
         ),
         dict(
-            id='galleries/demo/tesla_lightning2_lg.jpg',
+            id=Path('galleries/demo/tesla_lightning2_lg.jpg'),
             link='https://example.com/galleries/demo/tesla_lightning2_lg.jpg',
             links=[
                 Any(),
@@ -135,7 +147,7 @@ def test_gallery_rss(build, output_dir):
             title='Tesla lightning2 lg',
         ),
         dict(
-            id='galleries/demo/tesla_tower1_lg.jpg',
+            id=Path('galleries/demo/tesla_tower1_lg.jpg'),
             link='https://example.com/galleries/demo/tesla_tower1_lg.jpg',
             links=[
                 Any(),
@@ -153,7 +165,6 @@ def test_gallery_rss(build, output_dir):
     for index, (actual, expected) in enumerate(
         itertools.zip_longest(parsed.entries, expected_items)
     ):
-        # Keys/values in 'expected' should be a subset of those in 'actual'.
         for key, value in expected.items():
             assert actual[key] == value, f'Item {index} mismatch: {key}: {actual[key]} != {value}'
 
