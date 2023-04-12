@@ -168,6 +168,7 @@ def test_gallery_rss(build, output_dir):
         for key, value in expected.items():
             assert actual[key] == value, f'Item {index} mismatch: {key}: {actual[key]} != {value}'
 
+
 @pytest.fixture(scope="module")
 def build(target_dir):
     """Fill the site with demo content and build it."""
