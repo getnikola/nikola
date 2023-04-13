@@ -67,9 +67,11 @@ def test_gallery_rss(build, output_dir):
     # and the RSS contains feed attributes, about the gallery:
     assert parsed.feed.language == 'en'
     assert parsed.feed.link == 'https://example.com/galleries/demo/rss.xml'
-    # TODO Should the title be the name of the gallery, not the final image?
+    # TODO I think the following is a bug: The feed title should be the Gallery name,
+    #      not the name of the gallery's final image.
     assert parsed.feed.title == 'Tesla tower1 lg'
-    # TODO Should the description be the content of the gallery's index.txt?
+    # TODO I think the following is a bug: The feed's subtitle (aka description) should
+    #      contain the content of the gallery's index.txt.
     assert parsed.feed.subtitle == ''  # From the XML field 'description'
     assert parsed.feed.updated == rfc822(BUILDTIME)
     # and the images, as items in the RSS feed, are:
