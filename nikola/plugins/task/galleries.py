@@ -544,7 +544,7 @@ class Galleries(Task, ImageProcessor):
         except IOError:
             excluded_image_name_list = []
 
-        excluded_image_list = ["{0}/{1}".format(gallery_path, i) for i in excluded_image_name_list]
+        excluded_image_list = [os.path.join(gallery_path, i) for i in excluded_image_name_list]
         return excluded_image_list
 
     def get_image_list(self, gallery_path):
