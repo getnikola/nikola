@@ -103,12 +103,12 @@ def test_gallery_rss(build, output_dir):
             link='https://example.com/galleries/demo/tesla4_lg.jpg',
             links=[
                 Any(),
-                {
-                    'href': 'https://example.com/galleries/demo/tesla4_lg.jpg',
-                    'length': '30200',
-                    'rel': 'enclosure',
-                    'type': 'image/jpeg',
-                },
+                dict(
+                    href='https://example.com/galleries/demo/tesla4_lg.jpg',
+                    length='30200',
+                    rel='enclosure',
+                    type='image/jpeg',
+                ),
             ],
             published='Wed, 01 Jan 2014 00:01:00 GMT',
             title='Tesla4 lg',
@@ -118,12 +118,12 @@ def test_gallery_rss(build, output_dir):
             link='https://example.com/galleries/demo/tesla_conducts_lg.webp',
             links=[
                 Any(),
-                {
-                    'href': 'https://example.com/galleries/demo/tesla_conducts_lg.webp',
-                    'length': '9620',
-                    'rel': 'enclosure',
-                    'type': 'image/webp',
-                },
+                dict(
+                    href='https://example.com/galleries/demo/tesla_conducts_lg.webp',
+                    length='9620',
+                    rel='enclosure',
+                    type='image/webp',
+                ),
             ],
             published='Wed, 01 Jan 2014 00:02:00 GMT',
             title='Tesla conducts lg',
@@ -133,12 +133,12 @@ def test_gallery_rss(build, output_dir):
             link='https://example.com/galleries/demo/tesla_lightning1_lg.jpg',
             links=[
                 Any(),
-                {
-                    'href': 'https://example.com/galleries/demo/tesla_lightning1_lg.jpg',
-                    'length': '41123',
-                    'rel': 'enclosure',
-                    'type': 'image/jpeg',
-                },
+                dict(
+                    href='https://example.com/galleries/demo/tesla_lightning1_lg.jpg',
+                    length='41123',
+                    rel='enclosure',
+                    type='image/jpeg',
+                ),
             ],
             published='Wed, 01 Jan 2014 00:03:00 GMT',
             title='Tesla lightning1 lg',
@@ -148,12 +148,12 @@ def test_gallery_rss(build, output_dir):
             link='https://example.com/galleries/demo/tesla_lightning2_lg.jpg',
             links=[
                 Any(),
-                {
-                    'href': 'https://example.com/galleries/demo/tesla_lightning2_lg.jpg',
-                    'length': '36994',
-                    'rel': 'enclosure',
-                    'type': 'image/jpeg',
-                },
+                dict(
+                    href='https://example.com/galleries/demo/tesla_lightning2_lg.jpg',
+                    length='36994',
+                    rel='enclosure',
+                    type='image/jpeg',
+                ),
             ],
             published='Wed, 01 Jan 2014 00:04:00 GMT',
             title='Tesla lightning2 lg',
@@ -163,12 +163,12 @@ def test_gallery_rss(build, output_dir):
             link='https://example.com/galleries/demo/tesla_tower1_lg.jpg',
             links=[
                 Any(),
-                {
-                    'href': 'https://example.com/galleries/demo/tesla_tower1_lg.jpg',
-                    'length': '18105',
-                    'rel': 'enclosure',
-                    'type': 'image/jpeg',
-                }
+                dict(
+                    href='https://example.com/galleries/demo/tesla_tower1_lg.jpg',
+                    length='18105',
+                    rel='enclosure',
+                    type='image/jpeg',
+                )
             ],
             published='Wed, 01 Jan 2014 00:05:00 GMT',
             title='Tesla tower1 lg',
