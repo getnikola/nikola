@@ -49,8 +49,6 @@ def rfc822(t):
 def test_gallery_rss(build, output_dir):
     # Given a build of the demo samplesite in 'output_dir'
     # When we look for the RSS file of the "Demo" gallery
-    # TODO Can I rely on the name of 'galleries' during tests,
-    #      or should I be using/setting config->GALLERY_FOLDERS?
     rss_path = os.path.join(output_dir, 'galleries', 'demo', 'rss.xml')
 
     # Then it exists
