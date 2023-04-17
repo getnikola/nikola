@@ -160,7 +160,7 @@ you can use anything you like from it:
    (on by default)
 
 And that's it. You will want to change the NAVIGATION_LINKS option to create a reasonable
-menu for your site, you may want to modify the theme (check ``nikola help bootswatch_theme``
+menu for your site, you may want to modify the theme (check ``nikola help subtheme``
 for a quick & dirty solution), and you may want to add a blog later on, for company news
 or whatever.
 
