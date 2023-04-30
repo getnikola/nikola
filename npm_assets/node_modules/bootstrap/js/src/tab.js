@@ -1,6 +1,6 @@
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v4.6.1): tab.js
+ * Bootstrap (v4.6.2): tab.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -13,7 +13,7 @@ import Util from './util'
  */
 
 const NAME = 'tab'
-const VERSION = '4.6.1'
+const VERSION = '4.6.2'
 const DATA_KEY = 'bs.tab'
 const EVENT_KEY = `.${DATA_KEY}`
 const DATA_API_KEY = '.data-api'
@@ -58,7 +58,8 @@ class Tab {
     if (this._element.parentNode &&
         this._element.parentNode.nodeType === Node.ELEMENT_NODE &&
         $(this._element).hasClass(CLASS_NAME_ACTIVE) ||
-        $(this._element).hasClass(CLASS_NAME_DISABLED)) {
+        $(this._element).hasClass(CLASS_NAME_DISABLED) ||
+        this._element.hasAttribute('disabled')) {
       return
     }
 

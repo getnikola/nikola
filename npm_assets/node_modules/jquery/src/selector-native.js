@@ -196,9 +196,8 @@ jQuery.extend( {
 		return ret;
 	},
 	contains: function( a, b ) {
-		var adown = a.nodeType === 9 ? a.documentElement : a,
-			bup = b && b.parentNode;
-		return a === bup || !!( bup && bup.nodeType === 1 && adown.contains( bup ) );
+		var bup = b && b.parentNode;
+		return a === bup || !!( bup && bup.nodeType === 1 && a.contains( bup ) );
 	},
 	isXMLDoc: function( elem ) {
 		var namespace = elem.namespaceURI,
@@ -230,7 +229,7 @@ jQuery.extend( jQuery.find, {
 	attr: function( elem, name ) {
 		var fn = jQuery.expr.attrHandle[ name.toLowerCase() ],
 
-			// Don't get fooled by Object.prototype properties (jQuery #13807)
+			// Don't get fooled by Object.prototype properties (jQuery trac-13807)
 			value = fn && hasOwn.call( jQuery.expr.attrHandle, name.toLowerCase() ) ?
 				fn( elem, name, jQuery.isXMLDoc( elem ) ) :
 				undefined;

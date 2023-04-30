@@ -1,7 +1,7 @@
 [main]
 host = https://www.transifex.com
 
-[nikola.messages]
+[o:ralsina:p:nikola:r:messages]
 file_filter = translations/nikola.messages/<lang>.po
 source_file = translations/nikola.messages/en.po
 source_lang = en
