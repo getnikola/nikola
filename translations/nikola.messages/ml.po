@@ -3,14 +3,19 @@
 # This file is distributed under the same license as the Nikola package.
 # 
 # Translators:
-# nemo@dicto.xyz 2018
-#
+# Translators:
+# Translators:
+# Translators:
+# Translators:
+# Nemo G <nemo@dicto.xyz>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
-"POT-Creation-Date: 2013-09-09 01:24-0300\n"
-"Language-Team: Malayalam (http://www.transifex.com/ralsina/nikola/language/ml/)\n"
+"POT-Creation-Date: 2013-03-15 12:24-0300\n"
+"PO-Revision-Date: 2013-03-15 15:29+0000\n"
+"Last-Translator: Nemo G <nemo@dicto.xyz>, 2018\n"
+"Language-Team: Malayalam (http://app.transifex.com/ralsina/nikola/language/ml/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -18,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "More posts about %s"
-msgstr "%s-നെ കുറിച്ചുള്ള കൂടുതല്‍ രചനകള്‍"
+msgstr "%s -നെ കുറിച്ചുള്ള കൂടുതല്‍ രചനകള്‍"
 
 #. Here your translation should NOT say English but the name of your language
 #. instead
@@ -106,13 +111,13 @@ msgid "RSS feed"
 msgstr "ആര്‍ എസ് എസ് ഫീഡ്"
 
 msgid "%d min remaining to read"
-msgstr "%d മിനിട്ട് കൂടി വായിച്ചു തീരാന്‍  "
+msgstr "വായിച്ചു തീരാന്‍ %dമിനിട്ട് കൂടി"
 
 msgid "Skip to main content"
 msgstr "പ്രധാന ഉള്ളടക്കത്തിലേക്ക് നേരെ പോവുക"
 
 msgid "Subcategories:"
-msgstr "ഉപവിഭാഗങ്ങള്‍:"
+msgstr "ഉപവിഭാഗങ്ങള്‍"
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"

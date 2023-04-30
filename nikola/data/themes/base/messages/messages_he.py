@@ -10,7 +10,7 @@ MESSAGES = {
     "Authors": "מחברים",
     "Categories": "קטגוריות",
     "Comments": "הערות",
-    "LANGUAGE": "אנגלית",
+    "LANGUAGE": "עברית",
     "Languages:": "שפות:",
     "More posts about %s": "עוד פוסטים אודות %s",
     "Newer posts": "פוסטים חדשים",

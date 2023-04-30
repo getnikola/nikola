@@ -7,162 +7,157 @@
 # Translators:
 # Translators:
 # Translators:
-# Chris Warrick, 2018
-# Chris Warrick, 2018
-# DONGGEUN LEE <dglee2@gmail.com>, 2014
-# Yi donghoon <icq4ever@gmail.com>, 2016,2018,2022
-# Zhé Chén, 2022
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
 "PO-Revision-Date: 2013-03-15 15:29+0000\n"
-"Last-Translator: Yi donghoon <icq4ever@gmail.com>, 2016,2018,2022\n"
-"Language-Team: Korean (http://app.transifex.com/ralsina/nikola/language/ko/)\n"
+"Last-Translator: Chris Warrick <kwpolska@gmail.com>\n"
+"Language-Team: Tamil (http://app.transifex.com/ralsina/nikola/language/ta/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ko\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: ta\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "More posts about %s"
-msgstr "%s에 대한 또다른 포스트"
+msgstr ""
 
 #. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "LANGUAGE"
-msgstr "한국어"
+msgstr ""
 
 msgid "Tags"
-msgstr "태그"
+msgstr ""
 
 msgid "Categories"
-msgstr "분류"
+msgstr ""
 
 msgid "Tags and Categories"
-msgstr "태그와 분류"
+msgstr ""
 
 msgid "Comments"
-msgstr "댓글"
+msgstr ""
 
 msgid "Read more"
-msgstr "더 읽기"
+msgstr ""
 
 msgid "Posts about %s"
-msgstr "%s에 대한 포스트"
+msgstr ""
 
 msgid "Next post"
-msgstr "다음 포스트"
+msgstr ""
 
 msgid "old posts, page %d"
-msgstr "이전 포스트, 페이지 %d"
+msgstr ""
 
 msgid "page %d"
-msgstr "페이지 %d"
+msgstr ""
 
 msgid "Source"
-msgstr "원문"
+msgstr ""
 
 #. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "Read in English"
-msgstr "영어로 읽기"
+msgstr ""
 
 msgid "Posts for year %s"
-msgstr "%s년도 포스트"
+msgstr ""
 
 msgid "Newer posts"
-msgstr "최신 포스트"
+msgstr ""
 
 msgid "Previous post"
-msgstr "이전 포스트"
+msgstr ""
 
 msgid "Also available in:"
-msgstr "이곳에서도 가능함:"
+msgstr ""
 
 msgid "Languages:"
-msgstr "언어:"
+msgstr ""
 
 msgid "Original site"
-msgstr "출처"
+msgstr ""
 
 msgid "Older posts"
-msgstr "옛날 포스트"
+msgstr ""
 
 msgid "Archive"
-msgstr "저장소"
+msgstr ""
 
 msgid "Publication date"
-msgstr "발간일"
+msgstr ""
 
 msgid "Posted:"
-msgstr "작성됨:"
+msgstr ""
 
 msgid "Posts for {month_year}"
-msgstr "{month_year}에 쓴 포스트"
+msgstr ""
 
 msgid "Posts for {month_day_year}"
-msgstr "{month_day_year}에 작성된 포스트"
+msgstr ""
 
 msgid "Nothing found."
-msgstr "검색 결과 없음."
+msgstr ""
 
 msgid "No posts found."
-msgstr "검색된 포스트 없음."
+msgstr ""
 
 msgid "RSS feed"
-msgstr "RSS 목록"
+msgstr ""
 
 msgid "%d min remaining to read"
-msgstr "읽기 %d분 남음."
+msgstr ""
 
 msgid "Skip to main content"
-msgstr "주 콘텐츠로 바로가기"
+msgstr ""
 
 msgid "Subcategories:"
-msgstr "서브 카테고리:"
+msgstr ""
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
-msgstr "(활성됨)"
+msgstr ""
 
 #. Default content for a new post
 msgid "Write your post here."
-msgstr "이곳에 글을 작성하세요."
+msgstr ""
 
 #. Default content for a new page
 msgid "Write your page here."
-msgstr "여기에 페이지를 작성하세요."
+msgstr ""
 
 msgid "Uncategorized"
-msgstr "카테고리 없음"
+msgstr ""
 
 #. Used for feeds of any format
 msgid "Updates"
-msgstr "업데이트"
+msgstr ""
 
 msgid "Authors"
-msgstr "작성자"
+msgstr ""
 
 msgid "Posts by %s"
-msgstr "%s의 작성된 포스트"
+msgstr ""
 
 msgid "Toggle navigation"
-msgstr "네비게이션 켜고 끄기"
+msgstr ""
 
 msgid "Previous"
-msgstr "이전"
+msgstr ""
 
 msgid "Up"
-msgstr "상위"
+msgstr ""
 
 msgid "Next"
-msgstr "다음"
+msgstr ""
 
 msgid "Atom feed"
-msgstr "아톰 피드"
+msgstr ""
 
 #. {date} (updated {updated_date})
 msgid "updated"
-msgstr "업데이트됨"
+msgstr ""
