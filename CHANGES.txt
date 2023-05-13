@@ -1,3 +1,11 @@
+New in master
+=============
+
+Bugfixes
+--------
+
+* Fix baguetteBox.js invoking in the base theme (Issue #3687)
+
 New in v8.2.4
 =============
 

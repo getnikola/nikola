@@ -30,7 +30,7 @@
     {% endif %}
     {% block extra_js %}{% endblock %}
     <script>
-    baguetteBox.run('div#content', {
+    baguetteBox.run('main#content', {
         ignoreClass: 'islink',
         captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script>
