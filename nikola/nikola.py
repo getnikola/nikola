@@ -96,6 +96,7 @@ LEGAL_VALUES = {
     'DEFAULT_THEME': 'bootblog4',
     'COMMENT_SYSTEM': [
         'disqus',
+        'discourse',
         'facebook',
         'intensedebate',
         'isso',

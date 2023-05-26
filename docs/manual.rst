@@ -1909,6 +1909,7 @@ are probably expecting: comments.
 Nikola supports several third party comment systems:
 
 * `DISQUS <https://disqus.com>`_
+* `Discourse <https://discourse.com>`_
 * `IntenseDebate <https://www.intensedebate.com/>`_
 * `Muut (Formerly moot) <https://muut.com/>`_
 * `Facebook <https://facebook.com/>`_
@@ -1936,6 +1937,7 @@ It is also possible to use a comment system added by a plugin, see the
      Punycode (if using Internationalized Domain Names) and **have a trailing slash**,
      default ``http://localhost:8080/``). You can add custom config options via
      ``GLOBAL_CONTEXT``, e.g., ``GLOBAL_CONTEXT['isso_config'] = {"require-author": "true"}``
+   * For Discourse, it's the forum instance (must be world-accessible)  and **have a trailing slash**.
    * For Commento, it's the URL of the commento instance as required by the ``serverUrl``
      parameter in commento's documentation.
    * For Utterances, it's the **repo name** (``"org/user"``) on GitHub whose
