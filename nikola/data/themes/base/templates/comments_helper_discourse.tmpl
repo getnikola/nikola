@@ -1,7 +1,5 @@
 ## -*- coding: utf-8 -*-
 
-<%! import json %>
-
 <%def name="comment_form(url, title, identifier)">
     %if comment_system_id:
         <div id="discourse-comments"></div>
@@ -26,6 +24,4 @@
 
 
 <%def name="comment_link_script()">
-    %if comment_system_id:
-    %endif
 </%def>
