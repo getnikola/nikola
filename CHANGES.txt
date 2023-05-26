@@ -1,6 +1,11 @@
 New in master
 =============
 
+Features
+--------
+
+* Support for Discourse as comment system
+
 Bugfixes
 --------
 
