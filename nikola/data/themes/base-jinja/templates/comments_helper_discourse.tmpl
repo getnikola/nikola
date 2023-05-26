@@ -4,7 +4,7 @@
     {% if comment_system_id %}
         <div id="discourse-comments"></div>
         <script type="text/javascript">
-            DiscourseEmbed = { discourseUrl: '{{ blog_url }}',
+            DiscourseEmbed = { discourseUrl: '{{ comment_system_id }}',
             discourseEmbedUrl: '{{ url }}' };
 
             (function() {
