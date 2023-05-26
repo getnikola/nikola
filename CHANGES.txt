@@ -4,7 +4,7 @@ New in master
 Features
 --------
 
-* Support for Discourse as comment system
+* Support for Discourse as comment system (Issue #3689)
 
 Bugfixes
 --------
