@@ -1909,6 +1909,7 @@ are probably expecting: comments.
 Nikola supports several third party comment systems:
 
 * `DISQUS <https://disqus.com>`_
+* `Discourse <https://discourse.com>`_
 * `IntenseDebate <https://www.intensedebate.com/>`_
 * `Muut (Formerly moot) <https://muut.com/>`_
 * `Facebook <https://facebook.com/>`_
