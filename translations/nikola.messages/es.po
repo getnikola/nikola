@@ -10,8 +10,9 @@
 # Alvarez Alejandro <eliluminado00@gmail.com>, 2017
 # Ángel García Cuartero, 2014-2015
 # Chris Warrick, 2015,2017
-# Joaquín Tita <carpincho@gmail.com>, 2014
+# Joaquín T <joaquintita@gmail.com>, 2014
 # Juan José Conti <jjconti@gmail.com>, 2015
+# Nicolas Bohorquez, 2022
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013-2016
 msgid ""
@@ -19,14 +20,14 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2018-08-10 08:02+0000\n"
-"Last-Translator: Chris Warrick\n"
-"Language-Team: Spanish (http://www.transifex.com/ralsina/nikola/language/es/)\n"
+"PO-Revision-Date: 2013-03-15 15:29+0000\n"
+"Last-Translator: Nicolas Bohorquez, 2022\n"
+"Language-Team: Spanish (http://app.transifex.com/ralsina/nikola/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 msgid "More posts about %s"
 msgstr "Más publicaciones sobre %s"
@@ -167,4 +168,4 @@ msgstr "Canal Atom"
 
 #. {date} (updated {updated_date})
 msgid "updated"
-msgstr ""
+msgstr "actualizado"

@@ -6,7 +6,7 @@
 .. description:
 .. author: The Nikola Team
 
-:Version: 8.2.3
+:Version: 8.2.4
 :Author: Roberto Alsina <ralsina@netmanagers.com.ar>
 
 .. class:: alert alert-primary float-md-right
@@ -461,9 +461,8 @@ List of page kinds provided by default plugins:
 * list, tags_page
 * post_page
 * page_page
-* story_page
+* story_page (alternate/legacy name for page_page)
 * listing
-* generic_page
 * gallery_front
 * gallery_page
 

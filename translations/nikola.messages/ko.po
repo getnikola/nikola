@@ -9,16 +9,17 @@
 # Translators:
 # Chris Warrick, 2018
 # Chris Warrick, 2018
-# Dong Geun <dglee2@gmail.com>, 2014
-# Yi donghoon <icq4ever@gmail.com>, 2016,2018
+# DONGGEUN LEE <dglee2@gmail.com>, 2014
+# Yi donghoon <icq4ever@gmail.com>, 2016,2018,2022
+# Zhé Chén, 2022
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2018-08-10 08:02+0000\n"
-"Last-Translator: Chris Warrick\n"
-"Language-Team: Korean (http://www.transifex.com/ralsina/nikola/language/ko/)\n"
+"PO-Revision-Date: 2013-03-15 15:29+0000\n"
+"Last-Translator: Yi donghoon <icq4ever@gmail.com>, 2016,2018,2022\n"
+"Language-Team: Korean (http://app.transifex.com/ralsina/nikola/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -120,7 +121,7 @@ msgid "Skip to main content"
 msgstr "주 콘텐츠로 바로가기"
 
 msgid "Subcategories:"
-msgstr "서브 카테고리"
+msgstr "서브 카테고리:"
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
@@ -145,23 +146,23 @@ msgid "Authors"
 msgstr "작성자"
 
 msgid "Posts by %s"
-msgstr "%s에 의해 작성된 글"
+msgstr "%s의 작성된 포스트"
 
 msgid "Toggle navigation"
-msgstr ""
+msgstr "네비게이션 켜고 끄기"
 
 msgid "Previous"
 msgstr "이전"
 
 msgid "Up"
-msgstr ""
+msgstr "상위"
 
 msgid "Next"
 msgstr "다음"
 
 msgid "Atom feed"
-msgstr ""
+msgstr "아톰 피드"
 
 #. {date} (updated {updated_date})
 msgid "updated"
-msgstr ""
+msgstr "업데이트됨"

@@ -5,6 +5,7 @@ define( [
 	"./core/nodeName",
 	"./var/rcssNum",
 	"./css/var/rnumnonpx",
+	"./css/var/rcustomProp",
 	"./css/var/cssExpand",
 	"./css/var/getStyles",
 	"./css/var/swap",
@@ -17,8 +18,9 @@ define( [
 	"./core/init",
 	"./core/ready",
 	"./selector" // contains
-], function( jQuery, access, camelCase, nodeName, rcssNum, rnumnonpx, cssExpand,
-	getStyles, swap, curCSS, adjustCSS, addGetHookIf, support, finalPropName ) {
+], function( jQuery, access, camelCase, nodeName, rcssNum, rnumnonpx,
+	rcustomProp, cssExpand, getStyles, swap, curCSS, adjustCSS, addGetHookIf,
+	support, finalPropName ) {
 
 "use strict";
 
@@ -28,7 +30,6 @@ var
 	// except "table", "table-cell", or "table-caption"
 	// See here for display values: https://developer.mozilla.org/en-US/docs/CSS/display
 	rdisplayswap = /^(none|table(?!-c[ea]).+)/,
-	rcustomProp = /^--/,
 	cssShow = { position: "absolute", visibility: "hidden", display: "block" },
 	cssNormalTransform = {
 		letterSpacing: "0",
@@ -264,15 +265,15 @@ jQuery.extend( {
 		if ( value !== undefined ) {
 			type = typeof value;
 
-			// Convert "+=" or "-=" to relative numbers (#7345)
+			// Convert "+=" or "-=" to relative numbers (trac-7345)
 			if ( type === "string" && ( ret = rcssNum.exec( value ) ) && ret[ 1 ] ) {
 				value = adjustCSS( elem, name, ret );
 
-				// Fixes bug #9237
+				// Fixes bug trac-9237
 				type = "number";
 			}
 
-			// Make sure that null and NaN values aren't set (#7116)
+			// Make sure that null and NaN values aren't set (trac-7116)
 			if ( value == null || value !== value ) {
 				return;
 			}

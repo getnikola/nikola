@@ -24,7 +24,7 @@ MESSAGES = {
     "Posts about %s": "Artikoloj pri %s",
     "Posts by %s": "Artikoloj de %s",
     "Posts for year %s": "Artikoloj de la jaro %s",
-    "Posts for {month_day_year}": "Artikoloj de la {month_day_year}",
+    "Posts for {month_day_year}": "Artikoloj de {month_day_year}",
     "Posts for {month_year}": "Artikoloj de {month_year}",
     "Previous post": "Antaŭa artikolo",
     "Previous": "Antaŭa",
@@ -45,5 +45,5 @@ MESSAGES = {
     "Write your post here.": "Skribu tie vian artikolon.",
     "old posts, page %d": "%da paĝo de malnovaj artikoloj",
     "page %d": "paĝo %d",
-    "updated": "",
+    "updated": "ĝisdatigita",
 }

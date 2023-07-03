@@ -10,7 +10,7 @@ MESSAGES = {
     "Authors": "Kaituhi",
     "Categories": "Kāwai",
     "Comments": "Nga korero",
-    "LANGUAGE": " Māori",
+    "LANGUAGE": "Māori",
     "Languages:": "Reo",
     "More posts about %s": "Ētahi atu pou e pā ana ki %s",
     "Newer posts": "Nga pou hou",

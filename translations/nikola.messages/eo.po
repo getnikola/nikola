@@ -7,17 +7,18 @@
 # Translators:
 # Translators:
 # Translators:
-# Baptiste Darthenay <baptiste+transifex@darthenay.fr>, 2015-2017
+# Batist D 🐍 <baptiste+transifex@darthenay.fr>, 2015-2017
 # David Paleino <d.paleino@gmail.com>, 2013
 # David Paleino <d.paleino@gmail.com>, 2013
+# Tanja Orme <irizanjo@gmail.com>, 2022
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2018-08-10 08:02+0000\n"
-"Last-Translator: Chris Warrick\n"
-"Language-Team: Esperanto (http://www.transifex.com/ralsina/nikola/language/eo/)\n"
+"PO-Revision-Date: 2013-03-15 15:29+0000\n"
+"Last-Translator: Tanja Orme <irizanjo@gmail.com>, 2022\n"
+"Language-Team: Esperanto (http://app.transifex.com/ralsina/nikola/language/eo/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -101,7 +102,7 @@ msgid "Posts for {month_year}"
 msgstr "Artikoloj de {month_year}"
 
 msgid "Posts for {month_day_year}"
-msgstr "Artikoloj de la {month_day_year}"
+msgstr "Artikoloj de {month_day_year}"
 
 msgid "Nothing found."
 msgstr "Nenio trovita."
@@ -163,4 +164,4 @@ msgstr "Atom fluo"
 
 #. {date} (updated {updated_date})
 msgid "updated"
-msgstr ""
+msgstr "ĝisdatigita"

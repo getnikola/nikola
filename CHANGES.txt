@@ -4,6 +4,19 @@ New in master
 Features
 --------
 
+* Support for Discourse as comment system (Issue #3689)
+
+Bugfixes
+--------
+
+* Fix baguetteBox.js invoking in the base theme (Issue #3687)
+
+New in v8.2.4
+=============
+
+Features
+--------
+
 * Add a ``-q``, ``--ignore-query-strings`` option to ignore query strings
   for internal links, allowing their use for cache busting
 * Update reST stylesheets (Issue #3657)
@@ -11,9 +24,12 @@ Features
   30s. (Issue #3643)
 * GZIP compression is now deterministic for automatic deploys (Issue #3650)
 
-Bug Fixes
----------
+Bugfixes
+--------
 
+* Fix failures to build with a "Document is empty" error in default themes
+  (Issue #3679)
+* Fix ``PAGE_INDEX`` skipping generation when there exists a conflicting post
 * Fix RSS generation of galleries containing WebP images, which caused
   an unhandled exception due to not having a known MIME type (Issue #3671)
 * Fix ``auto`` command infinite loop (Issue #3677)

@@ -10,20 +10,21 @@
 # Chris Warrick, 2013,2017
 # IGARASHI Masanao <syoux2@gmail.com>, 2015
 # Chris Warrick, 2013
-# Mika Kobayashi, 2014-2015,2017
+# fbc955180bc2b956cb4ef52d00eb80a0_91487f8, 2014-2015,2017
 # Yasuhiko Shiga <4wordextinguisher@gmail.com>, 2013
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
 # Shmon <yostos@yostos.org>, 2020
 # Yasuhiko Shiga <4wordextinguisher@gmail.com>, 2013
+# Zhé Chén, 2022
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2020-05-11 05:00+0000\n"
-"Last-Translator: Shmon <yostos@yostos.org>\n"
-"Language-Team: Japanese (http://www.transifex.com/ralsina/nikola/language/ja/)\n"
+"PO-Revision-Date: 2013-03-15 15:29+0000\n"
+"Last-Translator: Zhé Chén, 2022\n"
+"Language-Team: Japanese (http://app.transifex.com/ralsina/nikola/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -42,10 +43,10 @@ msgid "Tags"
 msgstr "タグ"
 
 msgid "Categories"
-msgstr "カテゴリ"
+msgstr "カテゴリー"
 
 msgid "Tags and Categories"
-msgstr "カテゴリおよびタグ一覧"
+msgstr "カテゴリーおよびタグ一覧"
 
 msgid "Comments"
 msgstr "コメント"
@@ -83,13 +84,13 @@ msgid "Previous post"
 msgstr "一つ前の記事"
 
 msgid "Also available in:"
-msgstr "他の言語で読む:"
+msgstr "他の言語で読む："
 
 msgid "Languages:"
-msgstr "言語:"
+msgstr "言語："
 
 msgid "Original site"
-msgstr "翻訳元のサイト"
+msgstr "元のサイト"
 
 msgid "Older posts"
 msgstr "過去の記事"
@@ -101,7 +102,7 @@ msgid "Publication date"
 msgstr "公開日"
 
 msgid "Posted:"
-msgstr "公開日時:"
+msgstr "公開日時："
 
 msgid "Posts for {month_year}"
 msgstr "{month_year}の記事"
@@ -125,7 +126,7 @@ msgid "Skip to main content"
 msgstr "本文を読み飛ばす"
 
 msgid "Subcategories:"
-msgstr "サブカテゴリ"
+msgstr "サブカテゴリー"
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
@@ -140,11 +141,11 @@ msgid "Write your page here."
 msgstr "ここに記事を記述してください。"
 
 msgid "Uncategorized"
-msgstr "カテゴリなし"
+msgstr "カテゴリーなし"
 
 #. Used for feeds of any format
 msgid "Updates"
-msgstr "フィード"
+msgstr "更新"
 
 msgid "Authors"
 msgstr "著者一覧"
@@ -156,13 +157,13 @@ msgid "Toggle navigation"
 msgstr "ナビゲーションを隠す"
 
 msgid "Previous"
-msgstr "前"
+msgstr "前へ"
 
 msgid "Up"
-msgstr "上"
+msgstr "上へ"
 
 msgid "Next"
-msgstr "次"
+msgstr "次へ"
 
 msgid "Atom feed"
 msgstr "Atomフィード"

@@ -7,6 +7,7 @@
 # Translators:
 # Translators:
 # Translators:
+# Nikolaos Kostakos <kosnickx@gmail.com>, 2019
 # Panagiotis Mavrogiorgos <otinanai90@gmail.com>, 2013,2015
 # Panagiotis Mavrogiorgos <otinanai90@gmail.com>, 2013
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
@@ -16,9 +17,9 @@ msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2018-08-10 08:02+0000\n"
-"Last-Translator: Chris Warrick\n"
-"Language-Team: Greek (http://www.transifex.com/ralsina/nikola/language/el/)\n"
+"PO-Revision-Date: 2013-03-15 15:29+0000\n"
+"Last-Translator: Nikolaos Kostakos <kosnickx@gmail.com>, 2019\n"
+"Language-Team: Greek (http://app.transifex.com/ralsina/nikola/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -111,57 +112,57 @@ msgid "No posts found."
 msgstr "Δε βρέθηκαν αναρτήσεις"
 
 msgid "RSS feed"
-msgstr ""
+msgstr "Ροή RSS"
 
 msgid "%d min remaining to read"
-msgstr ""
+msgstr "%dmin απομένουν για ανάγνωση"
 
 msgid "Skip to main content"
-msgstr ""
+msgstr "Παράλειψη στο κυρίως περιεχόμενο"
 
 msgid "Subcategories:"
-msgstr ""
+msgstr "Υποκατηγορίες:"
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
-msgstr ""
+msgstr "(ενεργό)"
 
 #. Default content for a new post
 msgid "Write your post here."
-msgstr ""
+msgstr "Γράψτε τις αναρτήσεις σας εδώ."
 
 #. Default content for a new page
 msgid "Write your page here."
-msgstr ""
+msgstr "Γράψτε τη σελίδα σας εδώ."
 
 msgid "Uncategorized"
-msgstr ""
+msgstr "Χωρίς κατηγορία."
 
 #. Used for feeds of any format
 msgid "Updates"
-msgstr ""
+msgstr "Ενημερώσεις"
 
 msgid "Authors"
-msgstr ""
+msgstr "Συγγραφείς"
 
 msgid "Posts by %s"
-msgstr ""
+msgstr "Αναρτήσεις από %s"
 
 msgid "Toggle navigation"
-msgstr ""
+msgstr "Εναλλαγή πλοήγησης"
 
 msgid "Previous"
-msgstr ""
+msgstr "Προηγούμενο"
 
 msgid "Up"
-msgstr ""
+msgstr "Επάνω"
 
 msgid "Next"
-msgstr ""
+msgstr "Επόμενο"
 
 msgid "Atom feed"
-msgstr ""
+msgstr "Ροή Atom"
 
 #. {date} (updated {updated_date})
 msgid "updated"
-msgstr ""
+msgstr "ενημερωμένο"

@@ -1,6 +1,6 @@
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v4.6.1): scrollspy.js
+ * Bootstrap (v4.6.2): scrollspy.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -13,7 +13,7 @@ import Util from './util'
  */
 
 const NAME = 'scrollspy'
-const VERSION = '4.6.1'
+const VERSION = '4.6.2'
 const DATA_KEY = 'bs.scrollspy'
 const EVENT_KEY = `.${DATA_KEY}`
 const DATA_API_KEY = '.data-api'
@@ -122,7 +122,7 @@ class ScrollSpy {
 
         return null
       })
-      .filter(item => item)
+      .filter(Boolean)
       .sort((a, b) => a[0] - b[0])
       .forEach(item => {
         this._offsets.push(item[0])

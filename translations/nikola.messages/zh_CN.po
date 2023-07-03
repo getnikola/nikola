@@ -7,23 +7,24 @@
 # Translators:
 # Translators:
 # Translators:
-# Christopher Meng <i@cicku.me>, 2013
-# Christopher Meng <i@cicku.me>, 2013
+# ᴄʜʀɪsᴛᴏᴘʜᴇʀ ᴍᴇɴɢ, 2013
+# ᴄʜʀɪsᴛᴏᴘʜᴇʀ ᴍᴇɴɢ, 2013
 # Kade For, 2013
 # Kade For, 2013,2019
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
 # Roberto Alsina <ralsina@netmanagers.com.ar>, 2013
 # spaceoi <zhangzhaoyu@gmail.com>, 2016
 # spaceoi <zhangzhaoyu@gmail.com>, 2016
-# eric <dingpengyu06@gmail.com>, 2018
+# Zhé Chén, 2022
+# xingkong <dingpengyu06@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2019-04-11 02:26+0000\n"
-"Last-Translator: Kade For\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/ralsina/nikola/language/zh_CN/)\n"
+"PO-Revision-Date: 2013-03-15 15:29+0000\n"
+"Last-Translator: Zhé Chén, 2022\n"
+"Language-Team: Chinese (China) (http://app.transifex.com/ralsina/nikola/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -54,13 +55,13 @@ msgid "Read more"
 msgstr "阅读更多"
 
 msgid "Posts about %s"
-msgstr "关于文章 %s"
+msgstr "关于 %s 的文章"
 
 msgid "Next post"
 msgstr "下一篇文章"
 
 msgid "old posts, page %d"
-msgstr "旧文章页 %d"
+msgstr "旧文章，第 %d 页"
 
 msgid "page %d"
 msgstr "第 %d 页"
@@ -71,10 +72,10 @@ msgstr "源文件"
 #. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "Read in English"
-msgstr "阅读简体中文"
+msgstr "阅读简体中文版"
 
 msgid "Posts for year %s"
-msgstr "%s年文章"
+msgstr "%s 年的文章"
 
 msgid "Newer posts"
 msgstr "较新的文章"
@@ -83,7 +84,7 @@ msgid "Previous post"
 msgstr "上一篇文章"
 
 msgid "Also available in:"
-msgstr "也可用于："
+msgstr "其他语言版本："
 
 msgid "Languages:"
 msgstr "语言："
@@ -104,16 +105,16 @@ msgid "Posted:"
 msgstr "发表于："
 
 msgid "Posts for {month_year}"
-msgstr "{month_year}文章"
+msgstr "{month_year}的文章"
 
 msgid "Posts for {month_day_year}"
-msgstr "{month_day_year}文章"
+msgstr "{month_day_year}的文章"
 
 msgid "Nothing found."
 msgstr "没有找到。"
 
 msgid "No posts found."
-msgstr "没有找到文章"
+msgstr "沒有找到文章。"
 
 msgid "RSS feed"
 msgstr "RSS 源"
@@ -129,7 +130,7 @@ msgstr "子类别："
 
 #. Used for active navigation links, for screen readers only
 msgid "(active)"
-msgstr "(活跃)"
+msgstr "（活跃）"
 
 #. Default content for a new post
 msgid "Write your post here."
@@ -150,7 +151,7 @@ msgid "Authors"
 msgstr "作者"
 
 msgid "Posts by %s"
-msgstr "文章有%s发布"
+msgstr "由 %s 发布的文章"
 
 msgid "Toggle navigation"
 msgstr "展开导航栏"
@@ -162,11 +163,11 @@ msgid "Up"
 msgstr "向上"
 
 msgid "Next"
-msgstr "项下"
+msgstr "下一篇"
 
 msgid "Atom feed"
 msgstr "Atom 源"
 
 #. {date} (updated {updated_date})
 msgid "updated"
-msgstr "更新"
+msgstr "已更新"

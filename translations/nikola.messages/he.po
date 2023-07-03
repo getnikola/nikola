@@ -8,14 +8,15 @@
 # Translators:
 # Translators:
 # Yitzhak Bar Geva <yitzhakbargeva@gmail.com>, 2016
+# Zhé Chén, 2022
 msgid ""
 msgstr ""
 "Project-Id-Version: Nikola\n"
 "Report-Msgid-Bugs-To: ralsina@netmanagers.com.ar\n"
 "POT-Creation-Date: 2013-03-15 12:24-0300\n"
-"PO-Revision-Date: 2018-08-10 08:02+0000\n"
-"Last-Translator: Chris Warrick\n"
-"Language-Team: Hebrew (http://www.transifex.com/ralsina/nikola/language/he/)\n"
+"PO-Revision-Date: 2013-03-15 15:29+0000\n"
+"Last-Translator: Zhé Chén, 2022\n"
+"Language-Team: Hebrew (http://app.transifex.com/ralsina/nikola/language/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -28,7 +29,7 @@ msgstr "עוד פוסטים אודות %s"
 #. Here your translation should NOT say English but the name of your language
 #. instead
 msgid "LANGUAGE"
-msgstr "אנגלית"
+msgstr "עברית"
 
 msgid "Tags"
 msgstr "תגים"

@@ -106,6 +106,6 @@ class PageIndex(Taxonomy):
         short_destination = dirname + '/' + self.site.config['INDEX_FILE']
         for post in post_list:
             # If there is an index.html pending to be created from a page, do not generate the page index.
-            if post.destination_path(lang, sep='/') == short_destination:
+            if post.destination_path(lang, sep='/').lstrip('/') == short_destination.lstrip('/'):
                 return False
         return True
