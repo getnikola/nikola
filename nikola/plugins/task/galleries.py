@@ -739,7 +739,7 @@ class Galleries(Task, ImageProcessor):
             img_list, dest_img_list, img_titles = [], [], []
 
         def forward_slashes(path):
-            """Given a path, convert directory separators to forward slash, on all platforms"""
+            """Given a path, convert directory separators to forward slash, on all platforms."""
             return str(pathlib.PurePosixPath(*os.path.split(path)))
 
         items = []
