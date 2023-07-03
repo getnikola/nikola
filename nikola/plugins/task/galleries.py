@@ -32,6 +32,7 @@ import io
 import json
 import mimetypes
 import os
+import pathlib
 from collections import OrderedDict
 from urllib.parse import urljoin
 
@@ -737,6 +738,10 @@ class Galleries(Task, ImageProcessor):
         else:
             img_list, dest_img_list, img_titles = [], [], []
 
+        def forward_slashes(path):
+            """Given a path, convert directory separators to forward slash, on all platforms"""
+            return str(pathlib.PurePosixPath(*os.path.split(path)))
+
         items = []
         for img, srcimg, title in list(zip(dest_img_list, img_list, img_titles))[:self.kw["feed_length"]]:
             img_size = os.stat(
@@ -745,7 +750,7 @@ class Galleries(Task, ImageProcessor):
             args = {
                 'title': title,
                 'link': make_url(img),
-                'guid': rss.Guid(img, False),
+                'guid': rss.Guid(forward_slashes(img), False),
                 'pubDate': self.image_date(srcimg),
                 'enclosure': rss.Enclosure(
                     make_url(img),
