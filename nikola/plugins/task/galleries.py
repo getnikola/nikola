@@ -749,11 +749,11 @@ class Galleries(Task, ImageProcessor):
                     self.site.config['OUTPUT_FOLDER'], img)).st_size
             args = {
                 'title': title,
-                'link': make_url(img),
+                'link': make_url(forward_slashes(img)),
                 'guid': rss.Guid(forward_slashes(img), False),
                 'pubDate': self.image_date(srcimg),
                 'enclosure': rss.Enclosure(
-                    make_url(img),
+                    make_url(forward_slashes(img)),
                     img_size,
                     mimetypes.guess_type(img)[0]
                 ),
