@@ -740,7 +740,7 @@ class Galleries(Task, ImageProcessor):
 
         def forward_slashes(path):
             """Given a path, convert directory separators to forward slash, on all platforms."""
-            return str(pathlib.PurePosixPath(*os.path.split(path)))
+            return str(pathlib.PurePosixPath(*path.split(os.path.sep)))
 
         items = []
         for img, srcimg, title in list(zip(dest_img_list, img_list, img_titles))[:self.kw["feed_length"]]:
