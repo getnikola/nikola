@@ -33,6 +33,7 @@ import functools
 import logging
 import operator
 import os
+import pathlib
 import sys
 import mimetypes
 from collections import defaultdict
@@ -1926,7 +1927,8 @@ class Nikola(object):
             else:
                 return link
         else:
-            return os.path.join(*path)
+            # URLs should always use forward slash separators, even on Windows
+            return pathlib.PurePosixPath(*path)
 
     def post_path(self, name, lang):
         """Link to the destination of an element in the POSTS/PAGES settings.
