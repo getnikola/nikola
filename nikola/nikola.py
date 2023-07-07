@@ -1928,7 +1928,7 @@ class Nikola(object):
                 return link
         else:
             # URLs should always use forward slash separators, even on Windows
-            return pathlib.PurePosixPath(*path)
+            return str(pathlib.PurePosixPath(*path))
 
     def post_path(self, name, lang):
         """Link to the destination of an element in the POSTS/PAGES settings.
