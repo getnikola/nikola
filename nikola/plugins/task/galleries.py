@@ -32,6 +32,7 @@ import io
 import json
 import mimetypes
 import os
+import pathlib
 from collections import OrderedDict
 from urllib.parse import urljoin
 
@@ -544,7 +545,7 @@ class Galleries(Task, ImageProcessor):
         except IOError:
             excluded_image_name_list = []
 
-        excluded_image_list = ["{0}/{1}".format(gallery_path, i) for i in excluded_image_name_list]
+        excluded_image_list = [os.path.join(gallery_path, i) for i in excluded_image_name_list]
         return excluded_image_list
 
     def get_image_list(self, gallery_path):
@@ -737,6 +738,10 @@ class Galleries(Task, ImageProcessor):
         else:
             img_list, dest_img_list, img_titles = [], [], []
 
+        def forward_slashes(path):
+            """Given a path, convert directory separators to forward slash, on all platforms."""
+            return str(pathlib.PurePosixPath(*path.split(os.path.sep)))
+
         items = []
         for img, srcimg, title in list(zip(dest_img_list, img_list, img_titles))[:self.kw["feed_length"]]:
             img_size = os.stat(
@@ -744,11 +749,11 @@ class Galleries(Task, ImageProcessor):
                     self.site.config['OUTPUT_FOLDER'], img)).st_size
             args = {
                 'title': title,
-                'link': make_url(img),
-                'guid': rss.Guid(img, False),
+                'link': make_url(forward_slashes(img)),
+                'guid': rss.Guid(forward_slashes(img), False),
                 'pubDate': self.image_date(srcimg),
                 'enclosure': rss.Enclosure(
-                    make_url(img),
+                    make_url(forward_slashes(img)),
                     img_size,
                     mimetypes.guess_type(img)[0]
                 ),
