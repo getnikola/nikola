@@ -9,6 +9,7 @@ Features
 Bugfixes
 --------
 
+* Ignore ``.DS_Store`` files in listing indexes (Issue #3698)
 * Fix baguetteBox.js invoking in the base theme (Issue #3687)
 
 New in v8.2.4

@@ -107,6 +107,7 @@ class Listings(Task):
         """Render pretty code listings."""
         # Things to ignore in listings
         ignored_extensions = (".pyc", ".pyo")
+        ignored_files = (".DS_Store",)
 
         def render_listing(in_name, out_name, input_folder, output_folder, folders=[], files=[]):
             needs_ipython_css = False
@@ -183,7 +184,9 @@ class Listings(Task):
 
         for input_folder, output_folder in self.kw['listings_folders'].items():
             for root, dirs, files in os.walk(input_folder, followlinks=True):
-                files = [f for f in files if os.path.splitext(f)[-1] not in ignored_extensions]
+                files = [f for f in files
+                         if os.path.splitext(f)[-1] not in ignored_extensions and
+                         f not in ignored_files]
 
                 uptodate = {'c': self.site.GLOBAL_CONTEXT}
 
@@ -224,7 +227,7 @@ class Listings(Task):
                     'clean': True,
                 }, self.kw["filters"])
                 for f in files:
-                    if f == '.DS_Store':
+                    if f in ignored_files:
                         continue
                     ext = os.path.splitext(f)[-1]
                     if ext in ignored_extensions:
