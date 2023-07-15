@@ -75,8 +75,31 @@ class BasePlugin(IPlugin):
     def inject_templates(self):
         """Inject 'templates/<engine>' (if exists) very early in the theme chain."""
         try:
+            mod_candidate = None
+            # since https://github.com/tibonihoo/yapsy/pull/11 ,
+            # yapsy only adds each imported plugin to sys.modules
+            # under its modified, "unique" name (see early in
+            # PluginManager.loadPlugins), so we recreate the
+            # modified name here to find it. we fudge the serial
+            # number here, assuming that if a plugin is loaded
+            # under the same name multiple times, the location
+            # will also be the same, so we can just use 0.
+            possible_names = (
+                self.__class__.__module__,
+                "yapsy_loaded_plugin_" + self.__class__.__module__ + "_0",
+                "yapsy_loaded_plugin_" + self.name + "_0",
+            )
+            for possible_name in possible_names:
+                mod_candidate = sys.modules.get(possible_name)
+                if mod_candidate:
+                    break
+            if not mod_candidate:
+                # well, we tried. we wind up here for the dummy
+                # plugins; honestly I'm not sure exactly why/how,
+                # but they don't have templates, so it's okay
+                return
             # Sorry, found no other way to get this
-            mod_path = sys.modules[self.__class__.__module__].__file__
+            mod_path = mod_candidate.__file__
             mod_dir = os.path.dirname(mod_path)
             tmpl_dir = os.path.join(
                 mod_dir, 'templates', self.site.template_system.name
