@@ -29,7 +29,6 @@
 import io
 import logging
 import os
-import sys
 import typing
 
 import doit
@@ -72,35 +71,14 @@ class BasePlugin(IPlugin):
         if not site.debug:
             self.logger.level = logging.INFO
 
+    def set_module_path(self, module_path):
+        """Set the plugin's module path."""
+        self.module_path = module_path
+
     def inject_templates(self):
         """Inject 'templates/<engine>' (if exists) very early in the theme chain."""
         try:
-            mod_candidate = None
-            # since https://github.com/tibonihoo/yapsy/pull/11 ,
-            # yapsy only adds each imported plugin to sys.modules
-            # under its modified, "unique" name (see early in
-            # PluginManager.loadPlugins), so we recreate the
-            # modified name here to find it. we fudge the serial
-            # number here, assuming that if a plugin is loaded
-            # under the same name multiple times, the location
-            # will also be the same, so we can just use 0.
-            possible_names = (
-                self.__class__.__module__,
-                "yapsy_loaded_plugin_" + self.__class__.__module__ + "_0",
-                "yapsy_loaded_plugin_" + self.name + "_0",
-            )
-            for possible_name in possible_names:
-                mod_candidate = sys.modules.get(possible_name)
-                if mod_candidate:
-                    break
-            if not mod_candidate:
-                # well, we tried. we wind up here for the dummy
-                # plugins; honestly I'm not sure exactly why/how,
-                # but they don't have templates, so it's okay
-                return
-            # Sorry, found no other way to get this
-            mod_path = mod_candidate.__file__
-            mod_dir = os.path.dirname(mod_path)
+            mod_dir = os.path.dirname(self.module_path)
             tmpl_dir = os.path.join(
                 mod_dir, 'templates', self.site.template_system.name
             )
@@ -108,10 +86,9 @@ class BasePlugin(IPlugin):
                 # Inject tmpl_dir low in the theme chain
                 self.site.template_system.inject_directory(tmpl_dir)
         except AttributeError:
-            # In some cases, __builtin__ becomes the module of a plugin.
-            # We couldn’t reproduce that, and really find the reason for this,
-            # so let’s just ignore it and be done with it.
-            pass
+            # This would likely mean we don't have module_path set.
+            # this should not usually happen, so log a warning
+            LOGGER.warning("Could not find template path for module {0}".format(self.name))
 
     def inject_dependency(self, target, dependency):
         """Add 'dependency' to the target task's task_deps."""
