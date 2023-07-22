@@ -377,6 +377,19 @@ def _enclosure(post, lang):
         return url, length, mime
 
 
+def _plugin_load_callback(plugin_info):
+    """Set the plugin's module path.
+
+    So we can find its template path later.
+    """
+    try:
+        plugin_info.plugin_object.set_module_path(plugin_info.path)
+    except AttributeError:
+        # this is just for safety in case plugin_object somehow
+        # isn't set
+        pass
+
+
 class Nikola(object):
     """Class that handles site generation.
 
@@ -1103,7 +1116,7 @@ class Nikola(object):
             self.plugin_manager._candidates = list(set(self.plugin_manager._candidates) - bad_candidates)
 
         self.plugin_manager._candidates = self._filter_duplicate_plugins(self.plugin_manager._candidates)
-        self.plugin_manager.loadPlugins()
+        self.plugin_manager.loadPlugins(callback_after=_plugin_load_callback)
 
         # Search for compiler plugins which we disabled but shouldn't have
         self._activate_plugins_of_category("PostScanner")
@@ -1134,7 +1147,7 @@ class Nikola(object):
                     utils.LOGGER.debug('Not loading compiler extension {}', p[-1].name)
             if to_add:
                 self.plugin_manager._candidates = self._filter_duplicate_plugins(to_add)
-                self.plugin_manager.loadPlugins()
+                self.plugin_manager.loadPlugins(callback_after=_plugin_load_callback)
 
         # Jupyter theme configuration.  If a website has ipynb enabled in post_pages
         # we should enable the Jupyter CSS (leaving that up to the theme itself).
