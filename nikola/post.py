@@ -1213,12 +1213,12 @@ def get_meta(post, lang):
 
     if lang is None:
         # Only perform these checks for the default language
-        if 'slug' not in meta:
+        if 'slug' not in meta or not meta['slug']:
             # If no slug is found in the metadata use the filename
             meta['slug'] = slugify(os.path.splitext(
                 os.path.basename(post.source_path))[0], post.default_lang)
 
-        if 'title' not in meta:
+        if 'title' not in meta or not meta['title']:
             # If no title is found, use the filename without extension
             meta['title'] = os.path.splitext(
                 os.path.basename(post.source_path))[0]
