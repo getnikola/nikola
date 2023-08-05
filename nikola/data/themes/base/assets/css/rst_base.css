@@ -72,10 +72,11 @@ span.problematic {
   margin-top: 0;
   margin-bottom: 0;
 }
-/* Nested Paragraphs */
+/* Nested Paragraphs
 p:first-child { margin-top: 0; }
 p:last-child { margin-bottom: 0; }
 details > p:last-child { margin-bottom: 1em; }
+ */
 
 /* Table of Contents */
 .contents ul.auto-toc { /* section numbers present */

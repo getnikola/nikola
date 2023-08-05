@@ -9,6 +9,7 @@ Features
 Bugfixes
 --------
 
+* Fix margins of paragraphs at the end of sections (Issue #3704)
 * Ignore ``.DS_Store`` files in listing indexes (Issue #3698)
 * Fix baguetteBox.js invoking in the base theme (Issue #3687)
 
