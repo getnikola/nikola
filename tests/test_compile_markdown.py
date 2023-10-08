@@ -1,4 +1,5 @@
 import io
+import sys
 from os import path
 
 import pytest
@@ -8,13 +9,17 @@ from nikola.plugins.compile.markdown import CompileMarkdown
 from .helper import FakeSite
 
 
+# The <source> tag should not have a closing tag, but it wasn't included in xml.etree.ElementTree.HTML_EMPTY before Python 3.11
+SOURCE_CLOSE_TAG = '</source>' if sys.version_info < (3, 11) else ''
+
+
 @pytest.mark.parametrize(
     "input_str, expected_output",
     [
         pytest.param("", "", id="empty"),
         pytest.param(
             "[podcast]https://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3[/podcast]",
-            '<p><audio controls=""><source src="https://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3" type="audio/mpeg"></source></audio></p>',
+            '<p><audio controls=""><source src="https://archive.org/download/Rebeldes_Stereotipos/rs20120609_1.mp3" type="audio/mpeg">' + SOURCE_CLOSE_TAG + '</audio></p>',
             id="mdx podcast",
         ),
         pytest.param(
