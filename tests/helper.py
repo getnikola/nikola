@@ -30,9 +30,11 @@ __all__ = ["cd", "FakeSite"]
 @contextmanager
 def cd(path):
     old_dir = os.getcwd()
-    os.chdir(path)
-    yield
-    os.chdir(old_dir)
+    try:
+        os.chdir(path)
+        yield
+    finally:
+        os.chdir(old_dir)
 
 
 class FakeSite:
