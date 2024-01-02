@@ -9,5 +9,5 @@ website = https://getnikola.com/
 description = Generate /robots.txt exclusion file and promote sitemap.
 
 [Nikola]
-PluginCategory = Task
+PluginCategory = LateTask
 

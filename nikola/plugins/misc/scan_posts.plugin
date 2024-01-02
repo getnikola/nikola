@@ -8,3 +8,5 @@ Version = 1.0
 Website = https://getnikola.com/
 Description = Scan posts and create timeline
 
+[Nikola]
+PluginCategory = PostScanner

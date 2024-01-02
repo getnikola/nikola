@@ -153,7 +153,7 @@ class Chart(Directive):
     def run(self):
         """Run the directive."""
         self.options['site'] = None
-        html = _site.plugin_manager.getPluginByName(
+        html = _site.plugin_manager.get_plugin_by_name(
             'chart', 'ShortcodePlugin').plugin_object.handler(
                 self.arguments[0],
                 data='\n'.join(self.content),

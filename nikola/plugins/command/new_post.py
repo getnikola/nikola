@@ -216,9 +216,7 @@ class CommandNewPost(Command):
     def _execute(self, options, args):
         """Create a new post or page."""
         global LOGGER
-        compiler_names = [p.name for p in
-                          self.site.plugin_manager.getPluginsOfCategory(
-                              "PageCompiler")]
+        compiler_names = [p.name for p in self.site.plugin_manager.get_plugins_of_category("PageCompiler")]
 
         if len(args) > 1:
             print(self.help())
@@ -298,7 +296,7 @@ class CommandNewPost(Command):
             self.print_compilers()
             return
 
-        compiler_plugin = self.site.plugin_manager.getPluginByName(
+        compiler_plugin = self.site.plugin_manager.get_plugin_by_name(
             content_format, "PageCompiler").plugin_object
 
         # Guess where we should put this

@@ -66,7 +66,7 @@ def install_plugin(site, plugin_name, output_dir=None, show_install_notes=False)
     """Install a Nikola plugin."""
     LOGGER.info("Installing plugin '{0}'".format(plugin_name))
     # Get hold of the 'plugin' plugin
-    plugin_installer_info = site.plugin_manager.getPluginByName('plugin', 'Command')
+    plugin_installer_info = site.plugin_manager.get_plugin_by_name('plugin', 'Command')
     if plugin_installer_info is None:
         LOGGER.error('Internal error: cannot find the "plugin" plugin which is supposed to come with Nikola!')
         return False
@@ -236,10 +236,9 @@ to
         self._find_wordpress_compiler()
         if self.wordpress_page_compiler is not None:
             return self.wordpress_page_compiler
-        plugin_info = self.site.plugin_manager.getPluginByName('markdown', 'PageCompiler')
+        plugin_info = self.site.plugin_manager.get_plugin_by_name('markdown', 'PageCompiler')
         if plugin_info is not None:
             if not plugin_info.is_activated:
-                self.site.plugin_manager.activatePluginByName(plugin_info.name)
                 plugin_info.plugin_object.set_site(self.site)
             return plugin_info.plugin_object
         else:
@@ -249,7 +248,7 @@ to
         """Find WordPress compiler plugin."""
         if self.wordpress_page_compiler is not None:
             return
-        plugin_info = self.site.plugin_manager.getPluginByName('wordpress', 'PageCompiler')
+        plugin_info = self.site.plugin_manager.get_plugin_by_name('wordpress', 'PageCompiler')
         if plugin_info is not None:
             if not plugin_info.is_activated:
                 self.site.plugin_manager.activatePluginByName(plugin_info.name)

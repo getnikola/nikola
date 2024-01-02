@@ -40,7 +40,6 @@ parts:
             - mako
             - unidecode
             - lxml
-            - Yapsy
             - PyRSS2Gen
             - blinker
             - setuptools

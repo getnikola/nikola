@@ -1,0 +1,13 @@
+[Core]
+name = first
+module = one
+
+[Documentation]
+author = Chris Warrick
+version = 1.0
+website = https://getnikola.com/
+description = Do one thing
+
+[Nikola]
+PluginCategory = Command
+compiler = foo

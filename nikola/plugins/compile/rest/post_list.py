@@ -88,7 +88,7 @@ class PostListDirective(Directive):
         date = self.options.get('date')
         filename = self.state.document.settings._nikola_source_path
 
-        output, deps = self.site.plugin_manager.getPluginByName(
+        output, deps = self.site.plugin_manager.get_plugin_by_name(
             'post_list', 'ShortcodePlugin').plugin_object.handler(
                 start,
                 stop,
