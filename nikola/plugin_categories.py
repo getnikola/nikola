@@ -885,6 +885,7 @@ class Taxonomy(BasePlugin):
         """
         return []
 
+
 CATEGORIES = {
     "Command": Command,
     "Task": Task,

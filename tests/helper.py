@@ -9,21 +9,9 @@ import os
 import pathlib
 from contextlib import contextmanager
 
-
-import nikola.utils
 import nikola.shortcodes
+import nikola.utils
 from nikola.plugin_manager import PluginManager
-from nikola.plugin_categories import (
-    Command,
-    Task,
-    LateTask,
-    TemplateSystem,
-    PageCompiler,
-    TaskMultiplier,
-    CompilerExtension,
-    MarkdownExtension,
-    RestExtension,
-)
 
 __all__ = ["cd", "FakeSite"]
 

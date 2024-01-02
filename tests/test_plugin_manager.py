@@ -76,7 +76,7 @@ def test_locate_plugins_finds_core_and_custom_plugins():
     assert first_plugin.source_dir == places[1]
 
     assert second_plugin.category == "ConfigPlugin"
-    assert second_plugin.compiler == None
+    assert second_plugin.compiler is None
     assert second_plugin.source_dir == places[1] / "second"
 
 
