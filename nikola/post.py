@@ -350,8 +350,8 @@ class Post(object):
             if self.config['__invariant__']:
                 default_metadata['date'] = datetime.datetime(2013, 12, 31, 23, 59, 59, tzinfo=self.config['__tzinfo__'])
             else:
-                default_metadata['date'] = datetime.datetime.utcfromtimestamp(
-                    os.stat(self.source_path).st_ctime).replace(tzinfo=dateutil.tz.tzutc()).astimezone(self.config['__tzinfo__'])
+                default_metadata['date'] = datetime.datetime.fromtimestamp(
+                    os.stat(self.source_path).st_ctime, dateutil.tz.tzutc()).astimezone(self.config['__tzinfo__'])
 
         # If time zone is set, build localized datetime.
         try:
