@@ -53,6 +53,7 @@ CATEGORY_TYPES: Set[Type[BasePlugin]] = set(CATEGORIES.values())
 @dataclass(frozen=True)
 class PluginCandidate:
     """A candidate plugin that was located but not yet loaded (imported)."""
+
     name: str
     description: Optional[str]
     plugin_id: str
@@ -65,6 +66,7 @@ class PluginCandidate:
 @dataclass(frozen=True)
 class PluginInfo:
     """A plugin that was loaded (imported)."""
+
     name: str
     description: Optional[str]
     plugin_id: str
