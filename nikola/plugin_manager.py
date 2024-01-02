@@ -94,12 +94,8 @@ class PluginManager:
         self._plugins_by_category = {}
         self.logger = get_logger("PluginManager")
 
-    def locate_plugins(self, force=False) -> List[PluginCandidate]:
+    def locate_plugins(self) -> List[PluginCandidate]:
         """Locate plugins in plugin_places."""
-        if self.candidates and not force:
-            # Already located
-            return self.candidates
-
         self.candidates = []
 
         plugin_files: List[Path] = []
@@ -172,18 +168,15 @@ class PluginManager:
             except ValueError:
                 pass
 
-            if full_module_name.startswith("nikola.plugins") and full_module_name in sys.modules:
-                # Loaded by something else (a dependent plugin?)
-                module_object = sys.modules[full_module_name]
-            else:
-                try:
-                    spec = importlib.util.spec_from_file_location(full_module_name, py_file_location)
-                    module_object = importlib.util.module_from_spec(spec)
+            try:
+                spec = importlib.util.spec_from_file_location(full_module_name, py_file_location)
+                module_object = importlib.util.module_from_spec(spec)
+                if full_module_name not in sys.modules:
                     sys.modules[full_module_name] = module_object
-                    spec.loader.exec_module(module_object)
-                except Exception:
-                    self.logger.exception(f"{plugin_id} threw an exception while loading")
-                    continue
+                spec.loader.exec_module(module_object)
+            except Exception:
+                self.logger.exception(f"{plugin_id} threw an exception while loading")
+                continue
 
             plugin_classes = [
                 c
