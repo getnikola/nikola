@@ -19,9 +19,9 @@ jobs:
         image:
           - ubuntu-latest
         include:
-          - python: '3.11'
+          - python: '3.12'
             image: macos-latest
-          - python: '3.11'
+          - python: '3.12'
             image: windows-latest
     runs-on: '${{ matrix.image }}'
     steps:
@@ -111,6 +111,7 @@ jobs:
     strategy:
       matrix:
         python:
+          - '3.11'
           - '3.12'
     runs-on: ubuntu-latest
     steps:
