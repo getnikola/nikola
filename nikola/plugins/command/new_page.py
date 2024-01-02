@@ -109,5 +109,5 @@ class CommandNewPage(Command):
         options['date-path'] = False
         # Even though stuff was split into `new_page`, it’s easier to do it
         # there not to duplicate the code.
-        p = self.site.plugin_manager.getPluginByName('new_post', 'Command').plugin_object
+        p = self.site.plugin_manager.get_plugin_by_name('new_post', 'Command').plugin_object
         return p.execute(options, args)

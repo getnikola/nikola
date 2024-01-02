@@ -9,5 +9,5 @@ website = https://getnikola.com/
 description = Support for Mako templates.
 
 [Nikola]
-PluginCategory = Template
+PluginCategory = TemplateSystem
 

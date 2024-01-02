@@ -3,7 +3,7 @@ name = gist
 module = gist
 
 [Nikola]
-PluginCategory = Shortcode
+PluginCategory = ShortcodePlugin
 
 [Documentation]
 author = Roberto Alsina

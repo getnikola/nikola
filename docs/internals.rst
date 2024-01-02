@@ -15,7 +15,7 @@ So, this is a short document explaining what each piece of Nikola does and
 how it all fits together.
 
 Nikola is a Pile of Plugins
-    Most of Nikola is implemented as plugins using `Yapsy <http://yapsy.sourceforge.net/>`_.
+    Most of Nikola is implemented as plugins (using a custom plugin manager inspired by Yapsy).
     You can ignore that they are plugins and just think of them as regular python
     modules and packages with a funny little ``.plugin`` file next to them.
 
@@ -65,7 +65,7 @@ basename:name
 
    If you ever want to do your own tasks, you really should read the doit
    `documentation on tasks <https://pydoit.org/tasks.html>`_.
-   
+
    Notably, by default doit redirects ``stdout`` and ``stderr``. To get a
    proper PDB debugging shell, you need to use doit's own
    `set_trace <https://pydoit.org/tools.html#set-trace>`_ function.

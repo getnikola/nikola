@@ -113,7 +113,7 @@ class Listings(Task):
             needs_ipython_css = False
             if in_name and in_name.endswith('.ipynb'):
                 # Special handling: render ipynbs in listings (Issue #1900)
-                ipynb_plugin = self.site.plugin_manager.getPluginByName("ipynb", "PageCompiler")
+                ipynb_plugin = self.site.plugin_manager.get_plugin_by_name("ipynb", "PageCompiler")
                 if ipynb_plugin is None:
                     msg = "To use .ipynb files as listings, you must set up the Jupyter compiler in COMPILERS and POSTS/PAGES."
                     utils.LOGGER.error(msg)

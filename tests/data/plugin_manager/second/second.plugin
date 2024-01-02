@@ -1,0 +1,13 @@
+[Core]
+name = 2nd
+module = two
+
+[Documentation]
+author = Chris Warrick
+version = 1.0
+website = https://getnikola.com/
+description = Do another thing
+
+[Nikola]
+PluginCategory = ConfigPlugin
+

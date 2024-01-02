@@ -3,7 +3,7 @@ name = thumbnail
 module = thumbnail
 
 [Nikola]
-PluginCategory = Shortcode
+PluginCategory = ShortcodePlugin
 
 [Documentation]
 author = Chris Warrick
