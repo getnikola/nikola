@@ -142,6 +142,7 @@ class PluginManager:
         return self.candidates
 
     def load_plugins(self, candidates: List[PluginCandidate]) -> None:
+        """Load selected candidate plugins."""
         plugins_root = Path(__file__).parent.parent
 
         for candidate in candidates:
@@ -178,7 +179,7 @@ class PluginManager:
                     module_object = importlib.util.module_from_spec(spec)
                     sys.modules[full_module_name] = module_object
                     spec.loader.exec_module(module_object)
-                except Exception as exc:
+                except Exception:
                     self.logger.exception(f"{plugin_id} threw an exception while loading")
                     continue
 
@@ -195,7 +196,7 @@ class PluginManager:
                 continue
             try:
                 plugin_object = plugin_classes[0]()
-            except Exception as exc:
+            except Exception:
                 self.logger.exception(f"{plugin_id} threw an exception while creating an instance")
                 continue
             self.logger.debug(f"Loaded {plugin_id}")
@@ -217,16 +218,20 @@ class PluginManager:
             self._plugins_by_category[plugin_info.category].append(plugin_info)
 
     def get_plugins_of_category(self, category: str) -> List[PluginInfo]:
+        """Get loaded plugins of a given category."""
         return self._plugins_by_category.get(category, [])
 
-    def get_plugin_by_name(self, name: str, category: str | None = None) -> PluginInfo | None:
+    def get_plugin_by_name(self, name: str, category: Optional[str] = None) -> Optional[PluginInfo]:
+        """Get a loaded plugin by name and optionally by category. Returns None if no such plugin is loaded."""
         for p in self.plugins:
             if p.name == name and (category is None or p.category == category):
                 return p
 
     # Aliases for Yapsy compatibility
     def getPluginsOfCategory(self, category: str) -> List[PluginInfo]:
+        """Get loaded plugins of a given category."""
         return self._plugins_by_category.get(category, [])
 
-    def getPluginByName(self, name: str, category: str | None = None) -> PluginInfo | None:
+    def getPluginByName(self, name: str, category: Optional[str] = None) -> Optional[PluginInfo]:
+        """Get a loaded plugin by name and optionally by category. Returns None if no such plugin is loaded."""
         return self.get_plugin_by_name(name, category)

@@ -55,20 +55,7 @@ from .metadata_extractors import default_metadata_extractors_by
 from .post import Post  # NOQA
 from .plugin_manager import PluginCandidate, PluginInfo, PluginManager
 from .plugin_categories import (
-    Command,
-    LateTask,
-    PageCompiler,
-    CompilerExtension,
-    MarkdownExtension,
-    RestExtension,
-    MetadataExtractor,
-    ShortcodePlugin,
-    Task,
-    TaskMultiplier,
     TemplateSystem,
-    SignalHandler,
-    ConfigPlugin,
-    CommentSystem,
     PostScanner,
     Taxonomy,
 )
@@ -1049,7 +1036,6 @@ class Nikola(object):
             os.path.join(os.getcwd(), 'plugins'),
         ] + [path for path in extra_plugins_dirs if path]
         self._plugin_places = [pathlib.Path(p) for p in self._plugin_places]
-
 
         self.plugin_manager = PluginManager(plugin_places=self._plugin_places)
 
