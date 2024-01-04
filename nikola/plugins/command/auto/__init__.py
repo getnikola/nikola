@@ -35,6 +35,7 @@ import stat
 import subprocess
 import sys
 import typing
+import urllib.parse
 import webbrowser
 
 import blinker
@@ -65,6 +66,17 @@ IDLE_REFRESH_DELAY = 0.05
 
 if sys.platform == 'win32':
     asyncio.set_event_loop(asyncio.ProactorEventLoop())
+
+
+def base_path_from_siteuri(siteuri: str) -> str:
+    """Extract the path part from a URI such as site['SITE_URL'].
+
+    The path never ends with a "/". (If only "/" is intended, it is empty.)
+    """
+    path = urllib.parse.urlsplit(siteuri).path
+    if path.endswith("/"):
+        path = path[:-1]
+    return path
 
 
 class CommandAuto(Command):
@@ -239,8 +251,10 @@ class CommandAuto(Command):
         # Server can be disabled (Issue #1883)
         self.has_server = not options['no-server']
 
+        base_path = base_path_from_siteuri(self.site.config['SITE_URL'])
+
         if self.has_server:
-            loop.run_until_complete(self.set_up_server(host, port, out_folder))
+            loop.run_until_complete(self.set_up_server(host, port, base_path, out_folder))
 
         # Run an initial build so we are up-to-date. The server is running, but we are not watching yet.
         loop.run_until_complete(self.run_initial_rebuild())
@@ -293,9 +307,12 @@ class CommandAuto(Command):
         if browser:
             # Some browsers fail to load 0.0.0.0 (Issue #2755)
             if host == '0.0.0.0':
-                server_url = "http://127.0.0.1:{0}/".format(port)
-            self.logger.info("Opening {0} in the default web browser...".format(server_url))
-            webbrowser.open(server_url)
+                browser_url = "http://127.0.0.1:{0}/{1}".format(port, base_path.lstrip("/"))
+            else:
+                # server_url always ends with a "/":
+                browser_url = "{0}{1}".format(server_url, base_path.lstrip("/"))
+            self.logger.info("Opening {0} in the default web browser...".format(browser_url))
+            webbrowser.open(browser_url)
 
         # Run the event loop forever and handle shutdowns.
         try:
@@ -320,13 +337,13 @@ class CommandAuto(Command):
             self.wd_observer.join()
         loop.close()
 
-    async def set_up_server(self, host: str, port: int, out_folder: str) -> None:
+    async def set_up_server(self, host: str, port: int, base_path: str, out_folder: str) -> None:
         """Set up aiohttp server and start it."""
         webapp = web.Application()
         webapp.router.add_get('/livereload.js', self.serve_livereload_js)
         webapp.router.add_get('/robots.txt', self.serve_robots_txt)
         webapp.router.add_route('*', '/livereload', self.websocket_handler)
-        resource = IndexHtmlStaticResource(True, self.snippet, '', out_folder)
+        resource = IndexHtmlStaticResource(True, self.snippet, base_path, out_folder)
         webapp.router.register_resource(resource)
         webapp.on_shutdown.append(self.remove_websockets)
 

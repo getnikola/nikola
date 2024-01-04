@@ -3,6 +3,7 @@
 * `Alberto Berti <https://github.com/azazel75>`_
 * `Alex Popescu <https://github.com/al3xandru>`_
 * `Alex Walters <https://github.com/tritium21>`_
+* `Andreas Krüger <https://github.com/aknrdureegaesr>`_
 * `Andreas Linz <https://github.com/KLINGTdotNET>`_
 * `André Felipe Dias <https://github.com/andredias>`_
 * `Areski Belaid <https://github.com/areski>`_
@@ -13,14 +14,14 @@
 * `Boris Kaul <https://github.com/localvoid>`_
 * `Brad Miller <https://github.com/bnmnetp>`_
 * `Brandon W. Maister <https://github.com/quodlibetor>`_
-* `Bussonnier Matthias <https://gtihub.com/carreau>`_
+* `Bussonnier Matthias <https://github.com/carreau>`_
 * `Carlos Martín Sánchez <https://github.com/carlosvin>`_
 * `Carsten Grohmann <https://github.com/CarstenGrohmann>`_
 * `Casey M. Bessette <https://github.com/caseybessette>`_
 * `Chris Lee <https://github.com/clee>`_
 * `Chris Warrick <https://github.com/Kwpolska>`_
 * `Christian Lawson-Perfect <https://github.com/christianp>`_
-* `Christopher Arndt <https:/github.com/SpotlightKid>`_
+* `Christopher Arndt <https://github.com/SpotlightKid>`_
 * `Claudio Canepa <https://github.com/ccanepa>`_
 * `Clayton A. Davis <https://github.com/clayadavis>`_
 * `Damien Tournoud <https://github.com/damz>`_
