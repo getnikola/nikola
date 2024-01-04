@@ -21,6 +21,14 @@ Bugfixes
   for non-root SITE_URL, in particular when URL_TYPE is full_path.
   (Issue #3715)
 
+For plugin developers
+---------------------
+
+Nikola now requires the ``.plugin`` file to contain a ``[Nikola]``
+section with a ``PluginCategory`` entry set to the name of the plugin
+category class. This was already required by ``plugins.getnikola.com``,
+but you may have custom plugins that don’t have this set.
+
 New in v8.2.4
 =============
 
