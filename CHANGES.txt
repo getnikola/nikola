@@ -18,6 +18,14 @@ Bugfixes
 * Ignore ``.DS_Store`` files in listing indexes (Issue #3698)
 * Fix baguetteBox.js invoking in the base theme (Issue #3687)
 
+For plugin developers
+---------------------
+
+Nikola now requires the ``.plugin`` file to contain a ``[Nikola]``
+section with a ``PluginCategory`` entry set to the name of the plugin
+category class. This was already required by ``plugins.getnikola.com``,
+but you may have custom plugins that don’t have this set.
+
 New in v8.2.4
 =============
 
