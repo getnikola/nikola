@@ -26,16 +26,17 @@
 
 """The second plugin."""
 
-from nikola.plugin_categories import ConfigPlugin
+from nikola.plugin_categories import TemplateSystem
 
 
-class TwoConfigPlugin(ConfigPlugin):
-    """The second plugin."""
+class BrokenPlugin(TemplateSystem):
+    """The TemplateSystem plugin whose .plugin file says it’s a Task plugin."""
 
-    name = "2nd"
-    two_site_set = False
+    name = "broken"
+    broken_site_set = False
 
     def set_site(self, site):
         super().set_site(site)
-        print("Site for 2 was set")
-        self.two_site_set = True
+        print("Site for broken was set")
+        self.broken_site_set = True
+        raise Exception("Site for broken was set")

@@ -115,17 +115,18 @@ class PluginManager:
             if "Documentation" in config:
                 description = config["Documentation"].get("Description")
             if "Nikola" not in config:
-                self.logger.warning(f"{plugin_id} does not specify Nikola configuration - it will not be loaded")
+                self.logger.warning(f"{plugin_id} does not specify Nikola configuration - it will not be loaded. "
+                                    "Please add a [Nikola] section to the .plugin file with a PluginCategory entry.")
                 continue
             category = config["Nikola"].get("PluginCategory")
             compiler = config["Nikola"].get("Compiler")
             if not category:
-                self.logger.warning(f"{plugin_id} does not specify any category - it will not be loaded")
+                self.logger.warning(f"{plugin_id} does not specify any category (Nikola.PluginCategory in .plugin file) - it will not be loaded")
                 continue
             if category in LEGACY_PLUGIN_NAMES:
                 category = LEGACY_PLUGIN_NAMES[category]
             if category not in CATEGORY_NAMES:
-                self.logger.warning(f"{plugin_id} specifies invalid category '{category}'")
+                self.logger.warning(f"{plugin_id} specifies invalid category '{category}' in the .plugin file - it will not be loaded")
                 continue
             self.logger.debug(f"Discovered {plugin_id}")
             self.candidates.append(
@@ -186,13 +187,20 @@ class PluginManager:
                 if isinstance(c, type) and issubclass(c, BasePlugin) and c not in CATEGORY_TYPES
             ]
             if len(plugin_classes) == 0:
-                self.logger.warning(f"{plugin_id} does not have any plugin classes")
+                self.logger.warning(f"{plugin_id} does not have any plugin classes - plugin will not be loaded")
                 continue
             elif len(plugin_classes) > 1:
-                self.logger.warning(f"{plugin_id} has multiple plugin classes; this is not supported - skipping")
+                self.logger.warning(f"{plugin_id} has multiple plugin classes; this is not supported - plugin will not be loaded")
                 continue
+
+            plugin_class = plugin_classes[0]
+
+            if not issubclass(plugin_class, CATEGORIES[candidate.category]):
+                self.logger.warning(f"{plugin_id} has category '{candidate.category}' in the .plugin file, but the implementation class {plugin_class} does not inherit from this category - plugin will not be loaded")
+                continue
+
             try:
-                plugin_object = plugin_classes[0]()
+                plugin_object = plugin_class()
             except Exception:
                 self.logger.exception(f"{plugin_id} threw an exception while creating an instance")
                 continue

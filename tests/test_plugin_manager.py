@@ -122,3 +122,21 @@ def test_load_plugins_twice():
     assert len(plugin_manager.plugins) == 2
     plugin_manager.load_plugins(plugins_to_load_second)
     assert len(plugin_manager.plugins) == 3
+
+
+def test_load_plugins_skip_mismatching_category(caplog):
+    """If a plugin specifies a different category than it actually implements, refuse to load it."""
+    places = [
+        Path(__file__).parent / "data" / "plugin_manager",
+    ]
+    plugin_manager = PluginManager(places)
+    candidates = plugin_manager.locate_plugins()
+    plugins_to_load = [p for p in candidates if p.name in {"broken"}]
+    plugin_to_load = plugins_to_load[0]
+    assert len(plugins_to_load) == 1
+
+    plugin_manager.load_plugins(plugins_to_load)
+
+    py_file = plugin_to_load.source_dir / "broken.py"
+    assert f"{plugin_to_load.plugin_id} ({py_file}) has category '{plugin_to_load.category}' in the .plugin file, but the implementation class <class 'tests.data.plugin_manager.broken.BrokenPlugin'> does not inherit from this category - plugin will not be loaded" in caplog.text
+    assert len(plugin_manager.plugins) == 0

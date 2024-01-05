@@ -1,0 +1,12 @@
+[Core]
+name = broken
+module = broken
+
+[Documentation]
+author = Chris Warrick
+version = 1.0
+website = https://getnikola.com/
+description = Broken (wrong category)
+
+[Nikola]
+PluginCategory = Task
