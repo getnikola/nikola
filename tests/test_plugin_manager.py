@@ -106,6 +106,17 @@ def test_load_plugins():
     assert plugin_manager.get_plugin_by_name("2nd").plugin_object.two_site_set
     assert plugin_manager.get_plugin_by_name("2nd", "Command") is None
 
+    deprecation_warning_seen = False
+    def expect_deprecation_warning(msg:str, deprecated_method:str, name:str, filename:str, lineno:int = -1):
+        nonlocal deprecation_warning_seen
+        deprecation_warning_seen = True
+        assert deprecated_method == "getPluginByName"
+        assert filename.endswith("/test_plugin_manager.py")
+
+    plugin_manager.logger.warning = expect_deprecation_warning
+    assert plugin_manager.getPluginByName("2nd", "Command") is None
+    assert deprecation_warning_seen
+
 
 def test_load_plugins_twice():
     """Ensure that extra plugins can be added."""

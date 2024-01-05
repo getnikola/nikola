@@ -32,7 +32,8 @@ import importlib.util
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Type, TYPE_CHECKING, Set
+import traceback
+from typing import Dict, List, Optional, Set, Tuple, Type, TYPE_CHECKING
 
 from .plugin_categories import BasePlugin, CATEGORIES
 from .utils import get_logger
@@ -87,6 +88,7 @@ class PluginManager:
     candidates: List[PluginCandidate]
     plugins: List[PluginInfo]
     _plugins_by_category: Dict[str, List[PluginInfo]]
+    _deprecation_already_warned: Set[Tuple[str, str, Optional[int]]]
 
     def __init__(self, plugin_places: List[Path]):
         """Initialize the plugin manager."""
@@ -95,6 +97,7 @@ class PluginManager:
         self.plugins = []
         self._plugins_by_category = {}
         self.logger = get_logger("PluginManager")
+        self._deprecation_already_warned = set()
 
     def locate_plugins(self) -> List[PluginCandidate]:
         """Locate plugins in plugin_places."""
@@ -225,10 +228,34 @@ class PluginManager:
                 return p
 
     # Aliases for Yapsy compatibility
+
+    def _warn_deprecation(self, deprecated_method: str) -> None:
+        caller = traceback.extract_stack()[-3]
+        name, filename, lineno = caller.name, caller.filename, caller.lineno
+        if (deprecated_method, filename, lineno) not in self._deprecation_already_warned:
+            self._deprecation_already_warned.add((deprecated_method, filename, lineno))
+            if lineno is not None:
+                self.logger.warning("Deprecated method %s still called by %s in %s, line %i.",
+                                    deprecated_method, name, filename, lineno)
+            else:
+                self.logger.warning("Deprecated method %s still called by %s in %s.",
+                                    deprecated_method, name, filename)
+
+
     def getPluginsOfCategory(self, category: str) -> List[PluginInfo]:
-        """Get loaded plugins of a given category."""
+        """Get loaded plugins of a given category.
+
+        This deprecated method is to be removed, probably in Nikola 9.0.0.
+        Use get_plugins_of_category(), it is functionally identical.
+        """
+        self._warn_deprecation("getPluginsOfCategory")
         return self._plugins_by_category.get(category, [])
 
     def getPluginByName(self, name: str, category: Optional[str] = None) -> Optional[PluginInfo]:
-        """Get a loaded plugin by name and optionally by category. Returns None if no such plugin is loaded."""
+        """Get a loaded plugin by name and optionally by category. Returns None if no such plugin is loaded.
+
+        This deprecated method is to be removed, probably in Nikola 9.0.0.
+        Use get_plugin_by_name(), it is functionally identical.
+        """
+        self._warn_deprecation("getPluginByName")
         return self.get_plugin_by_name(name, category)
