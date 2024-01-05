@@ -29,6 +29,7 @@
 import configparser
 import importlib
 import importlib.util
+import time
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -87,6 +88,7 @@ class PluginManager:
     candidates: List[PluginCandidate]
     plugins: List[PluginInfo]
     _plugins_by_category: Dict[str, List[PluginInfo]]
+    has_warnings: bool = False
 
     def __init__(self, plugin_places: List[Path]):
         """Initialize the plugin manager."""
@@ -115,18 +117,21 @@ class PluginManager:
             if "Documentation" in config:
                 description = config["Documentation"].get("Description")
             if "Nikola" not in config:
-                self.logger.warning(f"{plugin_id} does not specify Nikola configuration - it will not be loaded. "
-                                    "Please add a [Nikola] section to the .plugin file with a PluginCategory entry.")
+                self.logger.warning(f"{plugin_id} does not specify Nikola configuration - plugin will not be loaded")
+                self.logger.warning("Please add a [Nikola] section to the {plugin_file} file with a PluginCategory entry")
+                self.has_warnings = True
                 continue
             category = config["Nikola"].get("PluginCategory")
             compiler = config["Nikola"].get("Compiler")
             if not category:
-                self.logger.warning(f"{plugin_id} does not specify any category (Nikola.PluginCategory in .plugin file) - it will not be loaded")
+                self.logger.warning(f"{plugin_id} does not specify any category (Nikola.PluginCategory is missing in .plugin file) - plugin will not be loaded")
+                self.has_warnings = True
                 continue
             if category in LEGACY_PLUGIN_NAMES:
                 category = LEGACY_PLUGIN_NAMES[category]
             if category not in CATEGORY_NAMES:
-                self.logger.warning(f"{plugin_id} specifies invalid category '{category}' in the .plugin file - it will not be loaded")
+                self.logger.warning(f"{plugin_id} specifies invalid category '{category}' in the .plugin file - plugin will not be loaded")
+                self.has_warnings = True
                 continue
             self.logger.debug(f"Discovered {plugin_id}")
             self.candidates.append(
@@ -156,6 +161,7 @@ class PluginManager:
                 py_file_location = source_dir / module_name / "__init__.py"
             if not py_file_location.exists():
                 self.logger.warning(f"{plugin_id} could not be loaded (no valid module detected)")
+                self.has_warnings = True
                 continue
 
             plugin_id += f" ({py_file_location})"
@@ -179,6 +185,7 @@ class PluginManager:
                 spec.loader.exec_module(module_object)
             except Exception:
                 self.logger.exception(f"{plugin_id} threw an exception while loading")
+                self.has_warnings = True
                 continue
 
             plugin_classes = [
@@ -188,21 +195,25 @@ class PluginManager:
             ]
             if len(plugin_classes) == 0:
                 self.logger.warning(f"{plugin_id} does not have any plugin classes - plugin will not be loaded")
+                self.has_warnings = True
                 continue
             elif len(plugin_classes) > 1:
                 self.logger.warning(f"{plugin_id} has multiple plugin classes; this is not supported - plugin will not be loaded")
+                self.has_warnings = True
                 continue
 
             plugin_class = plugin_classes[0]
 
             if not issubclass(plugin_class, CATEGORIES[candidate.category]):
                 self.logger.warning(f"{plugin_id} has category '{candidate.category}' in the .plugin file, but the implementation class {plugin_class} does not inherit from this category - plugin will not be loaded")
+                self.has_warnings = True
                 continue
 
             try:
                 plugin_object = plugin_class()
             except Exception:
-                self.logger.exception(f"{plugin_id} threw an exception while creating an instance")
+                self.logger.exception(f"{plugin_id} threw an exception while creating the instance")
+                self.has_warnings = True
                 continue
             self.logger.debug(f"Loaded {plugin_id}")
             info = PluginInfo(
@@ -221,6 +232,13 @@ class PluginManager:
         self._plugins_by_category = {category: [] for category in CATEGORY_NAMES}
         for plugin_info in self.plugins:
             self._plugins_by_category[plugin_info.category].append(plugin_info)
+
+        if self.has_warnings:
+            self.logger.warning("Some plugins failed to load. Please review the above warning messages.")
+            # TODO remove following messages and delay in v8.3.1
+            self.logger.warning("You may need to update some plugins (from plugins.getnikola.com) or to fix their .plugin files.")
+            self.logger.warning("Waiting 2 seconds before continuing.")
+            time.sleep(2)
 
     def get_plugins_of_category(self, category: str) -> List[PluginInfo]:
         """Get loaded plugins of a given category."""
