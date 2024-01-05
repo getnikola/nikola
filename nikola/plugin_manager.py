@@ -225,10 +225,13 @@ class PluginManager:
                 return p
 
     # Aliases for Yapsy compatibility
+    # TODO: remove in v9
     def getPluginsOfCategory(self, category: str) -> List[PluginInfo]:
         """Get loaded plugins of a given category."""
+        self.logger.warning("Legacy getPluginsOfCategory method was used, it may be removed in the future. Please change it to get_plugins_of_category.")
         return self._plugins_by_category.get(category, [])
 
     def getPluginByName(self, name: str, category: Optional[str] = None) -> Optional[PluginInfo]:
         """Get a loaded plugin by name and optionally by category. Returns None if no such plugin is loaded."""
+        self.logger.warning("Legacy getPluginByName method was used, it may be removed in the future. Please change it to get_plugin_by_name.")
         return self.get_plugin_by_name(name, category)
