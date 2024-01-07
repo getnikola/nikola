@@ -44,7 +44,7 @@ class CommandRst2Html(Command):
 
     def _execute(self, options, args):
         """Compile reStructuredText to standalone HTML files."""
-        compiler = self.site.plugin_manager.getPluginByName('rest', 'PageCompiler').plugin_object
+        compiler = self.site.plugin_manager.get_plugin_by_name('rest', 'PageCompiler').plugin_object
         if len(args) != 1:
             print("This command takes only one argument (input file name).")
             return 2

@@ -33,7 +33,6 @@ import typing
 
 import doit
 from doit.cmd_base import Command as DoitCommand
-from yapsy.IPlugin import IPlugin
 
 from .utils import LOGGER, first_line, get_logger, req_missing
 
@@ -58,7 +57,7 @@ __all__ = (
 )
 
 
-class BasePlugin(IPlugin):
+class BasePlugin:
     """Base plugin class."""
 
     logger = None
@@ -66,7 +65,6 @@ class BasePlugin(IPlugin):
     def set_site(self, site):
         """Set site, which is a Nikola instance."""
         self.site = site
-        self.inject_templates()
         self.logger = get_logger(self.name)
         if not site.debug:
             self.logger.level = logging.INFO
@@ -74,21 +72,6 @@ class BasePlugin(IPlugin):
     def set_module_path(self, module_path):
         """Set the plugin's module path."""
         self.module_path = module_path
-
-    def inject_templates(self):
-        """Inject 'templates/<engine>' (if exists) very early in the theme chain."""
-        try:
-            mod_dir = os.path.dirname(self.module_path)
-            tmpl_dir = os.path.join(
-                mod_dir, 'templates', self.site.template_system.name
-            )
-            if os.path.isdir(tmpl_dir):
-                # Inject tmpl_dir low in the theme chain
-                self.site.template_system.inject_directory(tmpl_dir)
-        except AttributeError:
-            # This would likely mean we don't have module_path set.
-            # this should not usually happen, so log a warning
-            LOGGER.warning("Could not find template path for module {0}".format(self.name))
 
     def inject_dependency(self, target, dependency):
         """Add 'dependency' to the target task's task_deps."""
@@ -359,7 +342,7 @@ class PageCompiler(BasePlugin):
         """Activate all the compiler extension plugins for a given compiler and return them."""
         plugins = []
         for plugin_info in self.site.compiler_extensions:
-            if plugin_info.plugin_object.compiler_name == self.name:
+            if plugin_info.compiler == self.name or plugin_info.plugin_object.compiler_name == self.name:
                 plugins.append(plugin_info)
         return plugins
 
@@ -371,11 +354,8 @@ class CompilerExtension(BasePlugin):
     (a) create a new plugin class for them; or
     (b) use this class and filter them yourself.
     If you choose (b), you should the compiler name to the .plugin
-    file in the Nikola/Compiler section and filter all plugins of
-    this category, getting the compiler name with:
-        p.details.get('Nikola', 'Compiler')
-    Note that not all compiler plugins have this option and you might
-    need to catch configparser.NoOptionError exceptions.
+    file in the Nikola/compiler section and filter all plugins of
+    this category, getting the compiler name with `plugin_info.compiler`.
     """
 
     name = "dummy_compiler_extension"
@@ -904,3 +884,23 @@ class Taxonomy(BasePlugin):
         Provided is a set of classifications per language (`classifications_per_language`).
         """
         return []
+
+
+CATEGORIES = {
+    "Command": Command,
+    "Task": Task,
+    "LateTask": LateTask,
+    "TemplateSystem": TemplateSystem,
+    "PageCompiler": PageCompiler,
+    "TaskMultiplier": TaskMultiplier,
+    "CompilerExtension": CompilerExtension,
+    "MarkdownExtension": MarkdownExtension,
+    "RestExtension": RestExtension,
+    "MetadataExtractor": MetadataExtractor,
+    "ShortcodePlugin": ShortcodePlugin,
+    "SignalHandler": SignalHandler,
+    "ConfigPlugin": ConfigPlugin,
+    "CommentSystem": CommentSystem,
+    "PostScanner": PostScanner,
+    "Taxonomy": Taxonomy,
+}

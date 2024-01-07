@@ -3,7 +3,7 @@ name = emoji
 module = emoji
 
 [Nikola]
-PluginCategory = Shortcode
+PluginCategory = ShortcodePlugin
 
 [Documentation]
 author = Roberto Alsina

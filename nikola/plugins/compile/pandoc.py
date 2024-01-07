@@ -62,10 +62,10 @@ class CompilePandoc(PageCompiler):
             try:
                 pandoc_options = list(config_options[ext])
             except KeyError:
-                self.logger.warn('Setting PANDOC_OPTIONS to [], because extension {} is not defined in PANDOC_OPTIONS: {}.'.format(ext, config_options))
+                self.logger.warning('Setting PANDOC_OPTIONS to [], because extension {} is not defined in PANDOC_OPTIONS: {}.'.format(ext, config_options))
                 pandoc_options = []
         else:
-            self.logger.warn('Setting PANDOC_OPTIONS to [], because PANDOC_OPTIONS is expected to be of type Union[List[str], Dict[str, List[str]]] but this is not: {}'.format(config_options))
+            self.logger.warning('Setting PANDOC_OPTIONS to [], because PANDOC_OPTIONS is expected to be of type Union[List[str], Dict[str, List[str]]] but this is not: {}'.format(config_options))
             pandoc_options = []
         return pandoc_options
 

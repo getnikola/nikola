@@ -6,23 +6,12 @@ a Site substitute for rendering tests.
 """
 
 import os
+import pathlib
 from contextlib import contextmanager
 
-from yapsy.PluginManager import PluginManager
-
-import nikola.utils
 import nikola.shortcodes
-from nikola.plugin_categories import (
-    Command,
-    Task,
-    LateTask,
-    TemplateSystem,
-    PageCompiler,
-    TaskMultiplier,
-    CompilerExtension,
-    MarkdownExtension,
-    RestExtension,
-)
+import nikola.utils
+from nikola.plugin_manager import PluginManager
 
 __all__ = ["cd", "FakeSite"]
 
@@ -55,24 +44,11 @@ class FakeSite:
             "TRANSLATIONS": {"en": ""},
         }
         self.EXTRA_PLUGINS = self.config["EXTRA_PLUGINS"]
-        self.plugin_manager = PluginManager(
-            categories_filter={
-                "Command": Command,
-                "Task": Task,
-                "LateTask": LateTask,
-                "TemplateSystem": TemplateSystem,
-                "PageCompiler": PageCompiler,
-                "TaskMultiplier": TaskMultiplier,
-                "CompilerExtension": CompilerExtension,
-                "MarkdownExtension": MarkdownExtension,
-                "RestExtension": RestExtension,
-            }
-        )
+        places = [pathlib.Path(nikola.utils.__file__).parent / "plugins"]
+        self.plugin_manager = PluginManager(plugin_places=places)
         self.shortcode_registry = {}
-        self.plugin_manager.setPluginInfoExtension("plugin")
-        places = [os.path.join(os.path.dirname(nikola.utils.__file__), "plugins")]
-        self.plugin_manager.setPluginPlaces(places)
-        self.plugin_manager.collectPlugins()
+        candidates = self.plugin_manager.locate_plugins()
+        self.plugin_manager.load_plugins(candidates)
         self.compiler_extensions = self._activate_plugins_of_category(
             "CompilerExtension"
         )
@@ -88,13 +64,9 @@ class FakeSite:
         """Activate all the plugins of a given category and return them."""
         # this code duplicated in nikola/nikola.py
         plugins = []
-        for plugin_info in self.plugin_manager.getPluginsOfCategory(category):
-            if plugin_info.name in self.config.get("DISABLED_PLUGINS"):
-                self.plugin_manager.removePluginFromCategory(plugin_info, category)
-            else:
-                self.plugin_manager.activatePluginByName(plugin_info.name)
-                plugin_info.plugin_object.set_site(self)
-                plugins.append(plugin_info)
+        for plugin_info in self.plugin_manager.get_plugins_of_category(category):
+            plugin_info.plugin_object.set_site(self)
+            plugins.append(plugin_info)
         return plugins
 
     def render_template(self, name, _, context):

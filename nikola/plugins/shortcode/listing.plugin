@@ -3,7 +3,7 @@ name = listing_shortcode
 module = listing
 
 [Nikola]
-PluginCategory = Shortcode
+PluginCategory = ShortcodePlugin
 
 [Documentation]
 author = Roberto Alsina

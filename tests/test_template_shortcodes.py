@@ -67,7 +67,7 @@ class ShortcodeFakeSite(Nikola):
     def _get_template_system(self):
         if self._template_system is None:
             # Load template plugin
-            self._template_system = self.plugin_manager.getPluginByName(
+            self._template_system = self.plugin_manager.get_plugin_by_name(
                 "jinja", "TemplateSystem"
             ).plugin_object
             self._template_system.set_directories(".", "cache")
