@@ -55,7 +55,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ['3.11']
+        python: ['3.12']
         image:
           - ubuntu-latest
     runs-on: '${{ matrix.image }}'
