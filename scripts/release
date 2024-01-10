@@ -136,6 +136,10 @@ read bailout
 cleanup
 
 ./setup.py sdist bdist_wheel || exit $?
+
+gpg --detach-sign -a dist/Nikola-$version.tar.gz
+gpg --detach-sign -a dist/Nikola-$version*.whl
+
 twine upload dist/Nikola-$version.tar.gz dist/Nikola-$version*.whl || exit $?
 
 cleanup
