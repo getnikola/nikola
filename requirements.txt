@@ -14,3 +14,7 @@ natsort>=3.5.2
 requests>=2.2.0
 piexif>=1.0.3
 Babel>=2.6.0
+
+# remove when the lxml 5.x.y compatibility has been re-established
+# via https://github.com/getnikola/nikola/issues/3732
+lxml>=4.9.4,<5.0.0
