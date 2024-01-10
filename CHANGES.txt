@@ -17,7 +17,7 @@ Bugfixes
 * Fix margins of paragraphs at the end of sections (Issue #3704)
 * Ignore ``.DS_Store`` files in listing indexes (Issue #3698)
 * Fix baguetteBox.js invoking in the base theme (Issue #3687)
-* Fix development (preview) server `nikola auto`
+* Fix development (preview) server ``nikola auto``
   for non-root SITE_URL, in particular when URL_TYPE is full_path.
   (Issue #3715)
 
