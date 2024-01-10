@@ -3,7 +3,7 @@
 import io
 import os
 
-import lxml
+import lxml.html
 import pytest
 
 from nikola import __main__
@@ -25,9 +25,11 @@ def test_relative_links(build, output_dir):
     with io.open(test_path, "rb") as inf:
         data = inf.read()
 
+    html = lxml.html.fromstring(data)
+
     assert not any(
         url.startswith("..")
-        for _, _, url, _ in lxml.html.iterlinks(data)
+        for _, _, url, _ in html.iterlinks()
         if url.endswith("css")
     )
 
