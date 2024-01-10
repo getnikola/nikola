@@ -25,11 +25,9 @@ def test_relative_links(build, output_dir):
     with io.open(test_path, "rb") as inf:
         data = inf.read()
 
-    html = lxml.html.fromstring(data)
-
     assert not any(
         url.startswith("..")
-        for _, _, url, _ in html.iterlinks()
+        for _, _, url, _ in lxml.html.fromstring(data).iterlinks()
         if url.endswith("css")
     )
 
