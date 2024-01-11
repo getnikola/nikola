@@ -1,3 +1,14 @@
+New in master
+=============
+
+Features
+--------
+
+Bugfixes
+--------
+
+* Fix the ``nikola plugin`` command not working (Issue #3736)
+
 New in v8.3.0
 =============
 

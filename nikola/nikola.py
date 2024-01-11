@@ -1057,8 +1057,11 @@ class Nikola(object):
         self.disabled_compiler_extensions = defaultdict(list)
 
         candidates = self.plugin_manager.locate_plugins()
-        good_candidates = set()
-        if not load_all:
+
+        if load_all:
+            good_candidates = set(candidates)
+        else:
+            good_candidates = set()
             for p in candidates:
                 if commands_only:
                     if p.category != 'Command':
