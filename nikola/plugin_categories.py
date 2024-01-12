@@ -61,6 +61,7 @@ class BasePlugin:
     """Base plugin class."""
 
     logger = None
+    site: 'nikola.nikola.Nikola'
 
     def set_site(self, site):
         """Set site, which is a Nikola instance."""
