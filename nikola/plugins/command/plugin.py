@@ -32,7 +32,6 @@ import pathlib
 import sys
 import shutil
 import subprocess
-import time
 import typing
 
 import requests
@@ -289,7 +288,7 @@ class CommandPlugin(Command):
         for found_name, path in self.get_plugins():
             path: pathlib.Path
             if name == found_name:  # Uninstall this one
-                to_delete = path.parent # Delete parent of .py file or parent of package
+                to_delete = path.parent  # Delete parent of .py file or parent of package
                 LOGGER.warning('About to uninstall plugin: {0}'.format(name))
                 LOGGER.warning('This will delete {0}'.format(to_delete))
                 sure = utils.ask_yesno('Are you sure?')
