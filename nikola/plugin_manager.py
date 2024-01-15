@@ -108,11 +108,9 @@ class PluginManager:
         plugin_files: List[Path] = []
         while plugin_folders:
             base_folder = plugin_folders.popleft()
-            for item in base_folder.iterdir():
-                if item.is_dir():
-                    plugin_folders.append(item)
-                elif item.suffix == ".plugin":
-                    plugin_files.append(item)
+            items = list(base_folder.iterdir())
+            plugin_folders.extend([item for item in items if item.is_dir() and item.name != "__pycache__"])
+            plugin_files.extend([item for item in items if item.suffix == ".plugin" and not item.is_dir()])
 
         for plugin_file in plugin_files:
             source_dir = plugin_file.parent
