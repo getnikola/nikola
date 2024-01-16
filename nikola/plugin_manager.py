@@ -31,6 +31,8 @@ import importlib
 import importlib.util
 import time
 import sys
+
+from collections import deque
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Optional, Type, TYPE_CHECKING, Set
@@ -102,9 +104,13 @@ class PluginManager:
         """Locate plugins in plugin_places."""
         self.candidates = []
 
+        plugin_folders: deque = deque([place for place in self.plugin_places if place.exists() and place.is_dir()])
         plugin_files: List[Path] = []
-        for place in self.plugin_places:
-            plugin_files += place.rglob("*.plugin")
+        while plugin_folders:
+            base_folder = plugin_folders.popleft()
+            items = list(base_folder.iterdir())
+            plugin_folders.extend([item for item in items if item.is_dir() and item.name != "__pycache__"])
+            plugin_files.extend([item for item in items if item.suffix == ".plugin" and not item.is_dir()])
 
         for plugin_file in plugin_files:
             source_dir = plugin_file.parent
