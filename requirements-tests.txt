@@ -1,6 +1,6 @@
 -r requirements-extras.txt
 coverage>=4.5.1
-pytest>=4.1.0
+pytest>=4.3.0
 pytest-cov>=2.6.1
 feedparser>=6.0.10
 freezegun>=0.3.10
