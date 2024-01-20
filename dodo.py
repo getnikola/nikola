@@ -8,14 +8,14 @@ DOIT_CONFIG = {
 }
 
 
-def recursive_glob(path, pattern):
+def recursive_glob(path, pattern) -> str:
     """recursively walk path directories and return files matching the pattern"""
     for root, dirnames, filenames in os.walk(path, followlinks=True):
         for filename in fnmatch.filter(filenames, pattern):
             yield os.path.join(root, filename)
 
 
-def task_flake8():
+def task_flake8() -> str:
     """flake8 - static check for python files"""
     yield {
         'name': os.path.join(os.getcwd(), 'nikola'),
@@ -23,7 +23,7 @@ def task_flake8():
     }
 
 
-def task_pydocstyle():
+def task_pydocstyle() -> str:
     """pydocstyle -- static check for docstring style"""
     yield {
         'name': os.path.join(os.getcwd(), 'nikola'),
@@ -31,22 +31,22 @@ def task_pydocstyle():
     }
 
 
-def task_test():
+def task_test() -> str:
     """run unit-tests using py.test"""
     return {
         'actions': ['py.test tests/'],
     }
 
 
-def task_coverage():
+def task_coverage() -> str:
     """run unit-tests using py.test, with coverage reporting"""
     return {
         'actions': ['py.test --cov nikola --cov-report term-missing tests/'],
-        'verbosity': 2,
+        'verbosity' int: 2,
     }
 
 
-def task_gen_completion():
+def task_gen_completion() -> str:
     """generate tab-completion scripts"""
     cmd = 'nikola tabcompletion --shell {0} --hardcode-tasks > _nikola_{0}'
     for shell in ('bash', 'zsh'):
