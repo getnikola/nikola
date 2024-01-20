@@ -42,9 +42,13 @@ Here are some guidelines about how you can contribute to Nikola:
   <http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html>`_.
   It’s not necessary, but if you are doing something big, we recommend
   describing it in the commit message.
+* Your Pull Request should have an informative title and description.
 * While working, rebase instead of merging (if possible). You can use rebase
   instead of merge by default with ``git config pull.rebase true``. If rebases
   fail, you can just use ``git pull --no-rebase``.
+* We will probably squash your commits when merging the pull request. This means
+  you don’t need to do this yourself (and it’s easier for us to review pull requests
+  which don’t squash things on their own).
 * **Make sure documentation is updated** — at the very least, keep docstrings
   current, and if necessary, update the reStructuredText documentation in ``docs/``.
 * **Add a CHANGELOG entry** at the *top* of ``CHANGES.txt`` mentioning the
