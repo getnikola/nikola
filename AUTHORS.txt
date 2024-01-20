@@ -12,6 +12,7 @@
 * `Ben Mather <https://github.com/bwhmather>`_
 * `Bendik Knapstad <https://github.com/knapstad>`_
 * `Boris Kaul <https://github.com/localvoid>`_
+* 'boyhominid <https://github.com/boyhominid>'_
 * `Brad Miller <https://github.com/bnmnetp>`_
 * `Brandon W. Maister <https://github.com/quodlibetor>`_
 * `Bussonnier Matthias <https://github.com/carreau>`_
