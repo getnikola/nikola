@@ -46,7 +46,7 @@ Here are some guidelines about how you can contribute to Nikola:
 * While working, rebase instead of merging (if possible). You can use rebase
   instead of merge by default with ``git config pull.rebase true``. If rebases
   fail, you can just use ``git pull --no-rebase``.
-* We will probably squash your commits when merging the pull request. This means
+* We will squash your commits when merging the pull request. This means
   you don’t need to do this yourself (and it’s easier for us to review pull requests
   which don’t squash things on their own).
 * **Make sure documentation is updated** — at the very least, keep docstrings
