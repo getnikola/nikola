@@ -1031,7 +1031,7 @@ class Nikola(object):
         extra_plugins_dirs = self.config['EXTRA_PLUGINS_DIRS']
         self._loading_commands_only = commands_only
         self._plugin_places = [
-            importlib_resources('nikola')/'plugins',
+            importlib_resources('nikola') / 'plugins',
             os.path.expanduser(os.path.join('~', '.nikola', 'plugins')),
             os.path.join(os.getcwd(), 'plugins'),
         ] + [path for path in extra_plugins_dirs if path]
@@ -1694,7 +1694,7 @@ class Nikola(object):
         """
         self.register_shortcode('template', self._template_shortcode_handler)
 
-        builtin_sc_dir = importlib_resources('nikola')/os.path.join('data', 'shortcodes', utils.get_template_engine(self.THEMES))
+        builtin_sc_dir = importlib_resources('nikola') / os.path.join('data', 'shortcodes', utils.get_template_engine(self.THEMES))
 
         for sc_dir in [builtin_sc_dir, 'shortcodes']:
             if not os.path.isdir(sc_dir):
