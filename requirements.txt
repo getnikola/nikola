@@ -14,3 +14,4 @@ natsort>=5.1.0
 requests>=2.31.0
 piexif>=1.0.3
 Babel>=2.12.0
+importlib-resources>=0.5
