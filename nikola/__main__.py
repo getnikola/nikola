@@ -26,16 +26,10 @@
 
 """The main function of Nikola."""
 
-import importlib.util
-import os
-import shutil
-import sys
-import textwrap
-import traceback
-import doit.cmd_base
+from blinker import signal
 from collections import defaultdict
 
-from blinker import signal
+import doit.cmd_base
 from doit.cmd_base import TaskLoader2, _wrap
 from doit.cmd_clean import Clean as DoitClean
 from doit.cmd_completion import TabCompletion
@@ -44,6 +38,13 @@ from doit.cmd_run import Run as DoitRun
 from doit.doit_cmd import DoitMain
 from doit.loader import generate_tasks
 from doit.reporter import ExecutedOnlyReporter
+
+import importlib.util
+import os
+import shutil
+import sys
+import textwrap
+import traceback
 
 from . import __version__
 from .nikola import Nikola
@@ -55,7 +56,6 @@ try:
     import readline  # NOQA
 except ImportError:
     pass  # This is only so raw_input/input does nicer things if it's available
-
 
 config = {}
 

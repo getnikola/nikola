@@ -5,7 +5,6 @@ import pytest
 import pathlib
 import requests
 import socket
-import sys
 from typing import Optional, Tuple, Any, Dict
 
 from ..helper import FakeSite
@@ -38,6 +37,7 @@ def find_unused_port() -> int:
 
 class MyFakeSite(FakeSite):
     def __init__(self, config: Dict[str, Any], configuration_filename="conf.py"):
+        super(MyFakeSite, self).__init__()
         self.configured = True
         self.debug = True
         self.THEMES = []
@@ -70,13 +70,13 @@ def test_serves_root_dir(
     test_was_successful = False
     test_problem_description = "Async test setup apparently broken"
     test_inner_error: Optional[BaseException] = None
-    loop_for_this_test = None
+    loop = None
 
     async def grab_loop_and_run_test() -> None:
-        nonlocal test_problem_description, loop_for_this_test
+        nonlocal test_problem_description, loop
 
-        loop_for_this_test = asyncio.get_running_loop()
-        watchdog_handle = loop_for_this_test.call_later(TEST_MAX_DURATION, lambda: loop_for_this_test.stop())
+        loop = asyncio.get_running_loop()
+        watchdog_handle = loop.call_later(TEST_MAX_DURATION, loop.stop)
         test_problem_description = f"Test did not complete within {TEST_MAX_DURATION} seconds."
 
         def run_test() -> None:
@@ -113,13 +113,11 @@ def test_serves_root_dir(
                     LOGGER.info("Test completed successfully.")
                 else:
                     LOGGER.error("Test failed: %s", test_problem_description)
-                loop_for_this_test.call_soon_threadsafe(lambda: watchdog_handle.cancel())
+                loop.call_soon_threadsafe(watchdog_handle.cancel)
+                # Simulate Ctrl+C:
+                loop.call_soon_threadsafe(lambda: loop.call_later(0.01, loop.stop))
 
-                # We give the outer grab_loop_and_run_test a chance to complete
-                # before burning the bridge:
-                loop_for_this_test.call_soon_threadsafe(lambda: loop_for_this_test.call_later(0.05, lambda: loop_for_this_test.stop()))
-
-        await loop_for_this_test.run_in_executor(None, run_test)
+        await loop.run_in_executor(None, run_test)
 
     # We defeat the nikola site building functionality, so this does not actually get called.
     # But the code setting up site building wants a command list:
@@ -128,40 +126,14 @@ def test_serves_root_dir(
     # Defeat the site building functionality, and instead insert the test:
     command_auto.run_initial_rebuild = grab_loop_and_run_test
 
-    try:
-        # Start the development server
-        # which under the hood runs our test when trying to build the site:
-        command_auto.execute(options=options)
+    # Start the development server
+    # which under the hood runs our test when trying to build the site:
+    command_auto.execute(options=options)
 
-        # Verify the test succeeded:
-        if test_inner_error is not None:
-            raise test_inner_error
-        assert test_was_successful, test_problem_description
-    finally:
-        # Nikola is written with the assumption that it can
-        # create the event loop at will without ever cleaning it up.
-        # As this tests runs several times in succession,
-        # that assumption becomes a problem.
-        LOGGER.info("Cleaning up loop.")
-        # Loop cleanup:
-        assert loop_for_this_test is not None
-        assert not loop_for_this_test.is_running()
-        loop_for_this_test.close()
-        asyncio.set_event_loop(None)
-        # We would like to leave it at that,
-        # but doing so causes the next test to fail.
-        #
-        # We did not find asyncio - API to reset the loop
-        # to "back to square one, as if just freshly started".
-        #
-        # The following code does not feel right, it's a kludge,
-        # but it apparently works for now:
-        if sys.platform == 'win32':
-            # For this case, the auto module has special code
-            # (at module load time! 😟) which we reluctantly reproduce here:
-            asyncio.set_event_loop(asyncio.ProactorEventLoop())
-        else:
-            asyncio.set_event_loop(asyncio.new_event_loop())
+    # Verify the test succeeded:
+    if test_inner_error is not None:
+        raise test_inner_error
+    assert test_was_successful, test_problem_description
 
 
 @pytest.fixture(scope="module",
@@ -184,7 +156,7 @@ def site_and_base_path(request) -> Tuple[MyFakeSite, str]:
         "SITE_URL": request.param,
         "OUTPUT_FOLDER": OUTPUT_FOLDER.as_posix(),
     }
-    return (MyFakeSite(config), auto.base_path_from_siteuri(request.param))
+    return MyFakeSite(config), auto.base_path_from_siteuri(request.param)
 
 
 @pytest.fixture(scope="module")

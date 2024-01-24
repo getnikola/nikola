@@ -64,9 +64,6 @@ LRJS_PATH = os.path.join(os.path.dirname(__file__), 'livereload.js')
 REBUILDING_REFRESH_DELAY = 0.35
 IDLE_REFRESH_DELAY = 0.05
 
-if sys.platform == 'win32':
-    asyncio.set_event_loop(asyncio.ProactorEventLoop())
-
 
 def base_path_from_siteuri(siteuri: str) -> str:
     """Extract the path part from a URI such as site['SITE_URL'].
@@ -275,27 +272,18 @@ class CommandAuto(Command):
         self.wd_observer.schedule(ConfigEventHandler(_conf_fn, self.queue_rebuild, loop), _conf_dn, recursive=False)
         self.wd_observer.start()
 
-        win_sleeper = None
-        # https://bugs.python.org/issue23057 (fixed in Python 3.8)
-        if sys.platform == 'win32' and sys.version_info < (3, 8):
-            win_sleeper = asyncio.ensure_future(windows_ctrlc_workaround())
-
         if not self.has_server:
             self.logger.info("Watching for changes...")
             # Run the event loop forever (no server mode).
             try:
                 # Run rebuild queue
                 loop.run_until_complete(self.run_rebuild_queue())
-
                 loop.run_forever()
             except KeyboardInterrupt:
                 pass
             finally:
-                if win_sleeper:
-                    win_sleeper.cancel()
                 self.wd_observer.stop()
                 self.wd_observer.join()
-            loop.close()
             return
 
         if options['ipv6'] or '::' in host:
@@ -326,16 +314,17 @@ class CommandAuto(Command):
             pass
         finally:
             self.logger.info("Server is shutting down.")
-            if win_sleeper:
-                win_sleeper.cancel()
             if self.dns_sd:
                 self.dns_sd.Reset()
             rebuild_queue_fut.cancel()
             reload_queue_fut.cancel()
+
+            # Not sure why this isn't done by the web_runner.cleanup() code:
+            loop.run_until_complete(self.remove_websockets(None))
+
             loop.run_until_complete(self.web_runner.cleanup())
             self.wd_observer.stop()
             self.wd_observer.join()
-        loop.close()
 
     async def set_up_server(self, host: str, port: int, base_path: str, out_folder: str) -> None:
         """Set up aiohttp server and start it."""
@@ -482,7 +471,7 @@ class CommandAuto(Command):
 
         return ws
 
-    async def remove_websockets(self, app) -> None:
+    async def remove_websockets(self, _app) -> None:
         """Remove all websockets."""
         for ws in self.sockets:
             await ws.close()
@@ -510,13 +499,6 @@ class CommandAuto(Command):
 
         for ws in to_delete:
             self.sockets.remove(ws)
-
-
-async def windows_ctrlc_workaround() -> None:
-    """Work around bpo-23057."""
-    # https://bugs.python.org/issue23057
-    while True:
-        await asyncio.sleep(1)
 
 
 class IndexHtmlStaticResource(StaticResource):
