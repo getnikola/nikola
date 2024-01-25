@@ -59,6 +59,7 @@ class PluginCandidate:
 
     name: str
     description: Optional[str]
+    friendly_name: str
     plugin_id: str
     category: str
     compiler: Optional[str]
@@ -72,6 +73,7 @@ class PluginInfo:
 
     name: str
     description: Optional[str]
+    friendly_name: str
     plugin_id: str
     category: str
     compiler: Optional[str]
@@ -129,6 +131,7 @@ class PluginManager:
                 continue
             category = config["Nikola"].get("PluginCategory")
             compiler = config["Nikola"].get("Compiler")
+            friendly_name = config["Nikola"].get("friendlyname") or name
             if not category:
                 self.logger.warning(f"{plugin_id} does not specify any category (Nikola.PluginCategory is missing in .plugin file) - plugin will not be loaded")
                 self.has_warnings = True
@@ -144,6 +147,7 @@ class PluginManager:
                 PluginCandidate(
                     name=name,
                     description=description,
+                    friendly_name=friendly_name,
                     plugin_id=plugin_id,
                     category=category,
                     compiler=compiler,
@@ -225,6 +229,7 @@ class PluginManager:
             info = PluginInfo(
                 name=name,
                 description=candidate.description,
+                friendly_name=candidate.friendly_name,
                 plugin_id=candidate.plugin_id,
                 category=candidate.category,
                 compiler=candidate.compiler,
