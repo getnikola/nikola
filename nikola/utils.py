@@ -44,7 +44,7 @@ import typing
 from collections import defaultdict, OrderedDict
 from collections.abc import Callable, Iterable
 from html import unescape as html_unescape
-from importlib import reload as _reload
+from importlib import resources, reload as _reload
 from unicodedata import normalize as unicodenormalize
 from urllib.parse import quote as urlquote
 from urllib.parse import unquote as urlunquote
@@ -60,7 +60,6 @@ import PyRSS2Gen as rss
 from blinker import signal
 from doit import tools
 from doit.cmdparse import CmdParse
-from pkg_resources import resource_filename
 from nikola.packages.pygments_better_html import BetterHtmlFormatter
 from typing import List
 from unidecode import unidecode
@@ -586,7 +585,7 @@ def get_theme_path_real(theme, themes_dirs):
         dir_name = os.path.join(themes_dir, theme)
         if os.path.isdir(dir_name):
             return dir_name
-    dir_name = resource_filename('nikola', os.path.join('data', 'themes', theme))
+    dir_name = str(resources.path('nikola', os.path.join('data', 'themes', theme))) if sys.version_info.minor == 8 else str(resources.files('nikola').joinpath(os.path.join('data', 'themes', theme)))
     if os.path.isdir(dir_name):
         return dir_name
     raise Exception("Can't find theme '{0}'".format(theme))

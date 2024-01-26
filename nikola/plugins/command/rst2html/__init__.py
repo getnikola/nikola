@@ -28,8 +28,9 @@
 
 
 import io
+import sys
 import lxml.html
-from pkg_resources import resource_filename
+from importlib import resources
 from mako.template import Template
 from nikola.plugin_categories import Command
 
@@ -53,11 +54,11 @@ class CommandRst2Html(Command):
             data = in_file.read()
             output, error_level, deps, shortcode_deps = compiler.compile_string(data, source, True)
 
-        rstcss_path = resource_filename('nikola', 'data/themes/base/assets/css/rst_base.css')
+        rstcss_path = str(resources.path('nikola', 'data/themes/base/assets/css/rst_base.css')) if sys.version_info.minor == 8 else str(resources.files('nikola').joinpath('data/themes/base/assets/css/rst_base.css'))
         with io.open(rstcss_path, "r", encoding="utf-8-sig") as fh:
             rstcss = fh.read()
 
-        template_path = resource_filename('nikola', 'plugins/command/rst2html/rst2html.tmpl')
+        template_path = str(resources.path('nikola', 'plugins/command/rst2html/rst2html.tmpl')) if sys.version_info.minor == 8 else str(resources.files('nikola').joinpath('plugins/command/rst2html/rst2html.tmpl'))
         template = Template(filename=template_path)
         template_output = template.render(rstcss=rstcss, output=output)
         parser = lxml.html.HTMLParser(remove_blank_text=True)
