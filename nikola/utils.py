@@ -576,7 +576,7 @@ class config_changed(tools.config_changed):
                                                            sort_keys=True))
 
 
-def pkg_resources(package, resource):
+def pkg_resources(package: str, resource: str) -> str:
     """Return the resource based on the python version."""
     if sys.version_info.minor <= 8:
         with resources.path(package, resource) as path:
