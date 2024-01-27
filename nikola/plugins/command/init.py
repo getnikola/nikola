@@ -30,7 +30,6 @@ import datetime
 import io
 import json
 import os
-import sys
 import shutil
 import textwrap
 import unidecode
@@ -39,12 +38,11 @@ from urllib.parse import urlsplit, urlunsplit
 import dateutil.tz
 import dateutil.zoneinfo
 from mako.template import Template
-from importlib import resources
 
 import nikola
 from nikola.nikola import DEFAULT_INDEX_READ_MORE_LINK, DEFAULT_FEED_READ_MORE_LINK, LEGAL_VALUES
 from nikola.plugin_categories import Command
-from nikola.utils import ask, ask_yesno, get_logger, makedirs, load_messages
+from nikola.utils import ask, ask_yesno, get_logger, makedirs, load_messages, pkg_resources
 from nikola.packages.tzlocal import get_localzone
 
 
@@ -274,13 +272,13 @@ class CommandInit(Command):
     @classmethod
     def copy_sample_site(cls, target):
         """Copy sample site data to target directory."""
-        src = str(resources.path('nikola', os.path.join('data', 'samplesite'))) if sys.version_info.minor == 8 else str(resources.files('nikola').joinpath(os.path.join('data', 'samplesite')))
+        src = pkg_resources('nikola', os.path.join('data', 'samplesite'))
         shutil.copytree(src, target)
 
     @staticmethod
     def create_configuration(target):
         """Create configuration file."""
-        template_path = str(resources.path('nikola', 'conf.py.in')) if sys.version_info.minor == 8 else str(resources.files('nikola').joinpath('conf.py.in'))
+        template_path = pkg_resources('nikola', 'conf.py.in')
         conf_template = Template(filename=template_path)
         conf_path = os.path.join(target, 'conf.py')
         with io.open(conf_path, 'w+', encoding='utf8') as fd:
@@ -289,7 +287,7 @@ class CommandInit(Command):
     @staticmethod
     def create_configuration_to_string():
         """Return configuration file as a string."""
-        template_path = str(resources.path('nikola', 'conf.py.in')) if sys.version_info.minor == 8 else str(resources.files('nikola').joinpath('conf.py.in'))
+        template_path = pkg_resources('nikola', 'conf.py.in')
         conf_template = Template(filename=template_path)
         return conf_template.render(**prepare_config(SAMPLE_CONF))
 

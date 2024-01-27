@@ -40,10 +40,9 @@ import webbrowser
 from pathlib import Path
 
 import blinker
-from importlib import resources
 
 from nikola.plugin_categories import Command
-from nikola.utils import dns_sd, req_missing, get_theme_path, makedirs
+from nikola.utils import dns_sd, req_missing, get_theme_path, makedirs, pkg_resources
 
 try:
     import aiohttp
@@ -221,7 +220,7 @@ class CommandAuto(Command):
             watched.add(item)
         watched |= self.site.registered_auto_watched_folders
         # Nikola itself (useful for developers)
-        watched.add(str(resources.path('nikola', '')) if sys.version_info.minor == 8 else str(resources.files('nikola').joinpath('')))
+        watched.add(pkg_resources('nikola', ''))
 
         out_folder = self.site.config['OUTPUT_FOLDER']
         if not os.path.exists(out_folder):

@@ -30,12 +30,10 @@ import io
 import csv
 import datetime
 import os
-import sys
 from urllib.parse import urlparse
 
 from lxml import etree, html
 from mako.template import Template
-from importlib import resources
 
 from nikola import utils
 
@@ -99,7 +97,7 @@ class ImportMixin(object):
             utils.LOGGER.warning('The folder {0} already exists - assuming that this is a '
                                  'already existing Nikola site.'.format(self.output_folder))
 
-        filename = str(resources.path('nikola', 'conf.py.in')) if sys.version_info.minor == 8 else str(resources.files('nikola').joinpath('conf.py.in'))
+        filename = utils.pkg_resources('nikola', 'conf.py.in')
         # The 'strict_undefined=True' will give the missing symbol name if any,
         # (ex: NameError: 'THEME' is not defined )
         # for other errors from mako/runtime.py, you can add format_extensions=True ,
