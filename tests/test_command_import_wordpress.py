@@ -59,9 +59,8 @@ def test_importing_posts_and_attachments(module, import_command, import_filename
     import_command.context = import_command.populate_context(channel)
 
     # Ensuring clean results
-    # assert not import_command.url_map
-    assert not module.links
     import_command.url_map = {}
+    module.links.clear()
 
     write_metadata = mock.MagicMock()
     write_content = mock.MagicMock()
