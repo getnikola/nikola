@@ -37,6 +37,7 @@ import sys
 import typing
 import urllib.parse
 import webbrowser
+from pathlib import Path
 
 import blinker
 import pkg_resources
@@ -521,8 +522,13 @@ class IndexHtmlStaticResource(StaticResource):
     async def handle_file(self, request: 'web.Request', filename: str, from_index=None) -> 'web.Response':
         """Handle file requests."""
         try:
-            filepath = self._directory.joinpath(filename).resolve()
-            if not self._follow_symlinks:
+            unresolved_path = self._directory.joinpath(filename)
+            if self._follow_symlinks:
+                normalized_path = Path(os.path.normpath(unresolved_path))
+                normalized_path.relative_to(self._directory)
+                filepath = normalized_path.resolve()
+            else:
+                filepath = unresolved_path.resolve()
                 filepath.relative_to(self._directory)
         except (ValueError, FileNotFoundError) as error:
             # relatively safe
