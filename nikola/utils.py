@@ -579,7 +579,8 @@ class config_changed(tools.config_changed):
 def pkg_resources(package, resource):
     """Return the resource based on the python version."""
     if sys.version_info.minor <= 8:
-        return str(resources.path(package, resource))
+        with resources.path(package, resource) as path:
+            return str(path)
     else:
         return str(resources.files(package).joinpath(resource))
 
@@ -593,7 +594,7 @@ def get_theme_path_real(theme, themes_dirs):
         dir_name = os.path.join(themes_dir, theme)
         if os.path.isdir(dir_name):
             return dir_name
-    dir_name = pkg_resources('nikola', os.path.join('data', 'themes', theme))
+    dir_name = pkg_resources('nikola.data.themes', theme)
     if os.path.isdir(dir_name):
         return dir_name
     raise Exception("Can't find theme '{0}'".format(theme))

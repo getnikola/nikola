@@ -272,7 +272,7 @@ class CommandInit(Command):
     @classmethod
     def copy_sample_site(cls, target):
         """Copy sample site data to target directory."""
-        src = pkg_resources('nikola', os.path.join('data', 'samplesite'))
+        src = pkg_resources('nikola.data', 'samplesite')
         shutil.copytree(src, target)
 
     @staticmethod
