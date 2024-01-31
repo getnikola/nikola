@@ -44,7 +44,7 @@ import typing
 from collections import defaultdict, OrderedDict
 from collections.abc import Callable, Iterable
 from html import unescape as html_unescape
-from importlib import resources, reload as _reload
+from importlib import reload as _reload
 from unicodedata import normalize as unicodenormalize
 from urllib.parse import quote as urlquote
 from urllib.parse import unquote as urlunquote
@@ -69,6 +69,11 @@ from nikola import DEBUG  # NOQA
 from .log import LOGGER, get_logger  # NOQA
 from .hierarchy_utils import TreeNode, clone_treenode, flatten_tree_structure, sort_classifications
 from .hierarchy_utils import join_hierarchical_category_path, parse_escaped_hierarchical_category_name
+
+if sys.version_info.minor <= 8:
+    from pkg_resources import resource_filename
+else:
+    from importlib import resources
 
 try:
     import toml
@@ -579,8 +584,7 @@ class config_changed(tools.config_changed):
 def pkg_resources(package, resource):
     """Return the resource based on the python version."""
     if sys.version_info.minor <= 8:
-        with resources.path(package, resource) as path:
-            return str(path)
+        return resource_filename(package, resource)
     else:
         return str(resources.files(package).joinpath(resource))
 
@@ -594,7 +598,7 @@ def get_theme_path_real(theme, themes_dirs):
         dir_name = os.path.join(themes_dir, theme)
         if os.path.isdir(dir_name):
             return dir_name
-    dir_name = pkg_resources('nikola.data.themes', theme)
+    dir_name = pkg_resources('nikola', os.path.join('data', 'themes', theme))
     if os.path.isdir(dir_name):
         return dir_name
     raise Exception("Can't find theme '{0}'".format(theme))
