@@ -582,7 +582,7 @@ class config_changed(tools.config_changed):
 
 
 def pkg_resources(package, resource):
-    """Return the resource based on the python version."""
+    """Return path to a resource from the package with the given name."""
     if sys.version_info.minor <= 8:
         return resource_filename(package, resource)
     else:
