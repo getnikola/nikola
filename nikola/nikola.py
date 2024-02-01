@@ -1693,7 +1693,9 @@ class Nikola(object):
         """
         self.register_shortcode('template', self._template_shortcode_handler)
 
-        builtin_sc_dir = utils.pkg_resources('nikola', os.path.join('data','shortcodes',utils.get_template_engine(self.THEMES)))
+        builtin_sc_dir = utils.pkg_resources(
+            'nikola',
+            os.path.join('data', 'shortcodes', utils.get_template_engine(self.THEMES)))
 
         for sc_dir in [builtin_sc_dir, 'shortcodes']:
             if not os.path.isdir(sc_dir):
