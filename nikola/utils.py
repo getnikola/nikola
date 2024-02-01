@@ -581,7 +581,7 @@ class config_changed(tools.config_changed):
                                                            sort_keys=True))
 
 
-def pkg_resources(package, resource):
+def pkg_resources_path(package, resource):
     """Return path to a resource from the package with the given name."""
     if sys.version_info.minor <= 8:
         return resource_filename(package, resource)
