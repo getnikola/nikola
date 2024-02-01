@@ -34,7 +34,6 @@ from urllib.parse import urlparse
 
 from lxml import etree, html
 from mako.template import Template
-from pkg_resources import resource_filename
 
 from nikola import utils
 
@@ -98,7 +97,7 @@ class ImportMixin(object):
             utils.LOGGER.warning('The folder {0} already exists - assuming that this is a '
                                  'already existing Nikola site.'.format(self.output_folder))
 
-        filename = resource_filename('nikola', 'conf.py.in')
+        filename = utils.pkg_resources_path('nikola', 'conf.py.in')
         # The 'strict_undefined=True' will give the missing symbol name if any,
         # (ex: NameError: 'THEME' is not defined )
         # for other errors from mako/runtime.py, you can add format_extensions=True ,

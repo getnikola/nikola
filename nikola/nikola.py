@@ -46,7 +46,6 @@ import lxml.etree
 import lxml.html
 import natsort
 import PyRSS2Gen as rss
-from pkg_resources import resource_filename
 from blinker import signal
 
 from . import DEBUG, SHOW_TRACEBACKS, filters, utils, hierarchy_utils, shortcodes
@@ -1031,7 +1030,7 @@ class Nikola(object):
         extra_plugins_dirs = self.config['EXTRA_PLUGINS_DIRS']
         self._loading_commands_only = commands_only
         self._plugin_places = [
-            resource_filename('nikola', 'plugins'),
+            utils.pkg_resources_path('nikola', 'plugins'),
             os.path.expanduser(os.path.join('~', '.nikola', 'plugins')),
             os.path.join(os.getcwd(), 'plugins'),
         ] + [path for path in extra_plugins_dirs if path]
@@ -1694,7 +1693,7 @@ class Nikola(object):
         """
         self.register_shortcode('template', self._template_shortcode_handler)
 
-        builtin_sc_dir = resource_filename(
+        builtin_sc_dir = utils.pkg_resources_path(
             'nikola',
             os.path.join('data', 'shortcodes', utils.get_template_engine(self.THEMES)))
 
