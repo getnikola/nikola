@@ -60,7 +60,8 @@ def test_serves_root_dir(
         "port": find_unused_port(),
         "db-file": "/dev/null",
         "backend": "No backend",
-        "no-server": False
+        "no-server": False,
+        "poll": False
     }
 
     # We start an event loop, run the test in an executor,
