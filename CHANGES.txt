@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Support passing ``--poll`` to ``nikola auto`` to better deal with symlink farms.
+
 Bugfixes
 --------
 

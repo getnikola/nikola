@@ -57,8 +57,10 @@ except ImportError:
 
 try:
     from watchdog.observers import Observer
+    from watchdog.observers.polling import PollingObserver
 except ImportError:
     Observer = None
+    PollingObserver = None
 
 LRJS_PATH = os.path.join(os.path.dirname(__file__), 'livereload.js')
 REBUILDING_REFRESH_DELAY = 0.35
@@ -159,6 +161,16 @@ class CommandAuto(Command):
             'type': str,
             'help': "Database backend ('dbm', 'json', 'sqlite3')",
             'section': 'Arguments passed to `nikola build`'
+        },
+        {
+            # We might be able to improve on this
+            # if and when https://github.com/gorakhargosh/watchdog/issues/365
+            # is ever fixed.
+            'name': 'poll',
+            'long': 'poll',
+            'default': False,
+            'type': bool,
+            'help': 'Use polling to notice changes behind symbolic links. This may reduce performance.'
         }
     ]
 
@@ -256,7 +268,7 @@ class CommandAuto(Command):
         # Run an initial build so we are up-to-date. The server is running, but we are not watching yet.
         loop.run_until_complete(self.run_initial_rebuild())
 
-        self.wd_observer = Observer()
+        self.wd_observer = Observer() if not options['poll'] else PollingObserver()
         # Watch output folders and trigger reloads
         if self.has_server:
             self.wd_observer.schedule(NikolaEventHandler(self.reload_page, loop), out_folder, recursive=True)
