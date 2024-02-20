@@ -620,5 +620,5 @@ class ConfigEventHandler(NikolaEventHandler):
 
     def dispatch(self, event):
         """Handle file events if they concern the configuration file."""
-        if event._src_path == self.configuration_filename:
+        if event.src_path == self.configuration_filename:
             super().dispatch(event)
