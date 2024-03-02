@@ -13,6 +13,7 @@ Bugfixes
   (Issue #3750)
 * Fix the new plugin manager not loading plugins if the plugin folder is a symlink (Issue #3741)
 * Fix the ``nikola plugin`` command not working (Issue #3736)
+* Remove no longer used leftovers of annotations support (Issue #3764)
 
 Other
 -----
