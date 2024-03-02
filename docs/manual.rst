@@ -1690,10 +1690,6 @@ For Mako:
 .. code:: html
 
     % if date_fanciness != 0:
-    %if date_fanciness == 2:
-        <!-- Polyfill for relative dates in Safari -- best handled with a CDN -->
-        <script src="https://polyfill.io/v3/polyfill.js?features=Intl.RelativeTimeFormat.%7Elocale.${luxon_locales[lang]}"></script>
-    %endif
     <!-- required scripts -- best handled with bundles -->
     <script src="/assets/js/luxon.min.js"></script>
     <script src="/assets/js/fancydates.js"></script>
@@ -1712,10 +1708,6 @@ For Jinja2:
 .. code:: html
 
     {% if date_fanciness != 0 %}
-    {% if date_fanciness == 2 %}
-        <!-- Polyfill for relative dates in Safari -- best handled with a CDN -->
-        <script src="https://polyfill.io/v3/polyfill.js?features=Intl.RelativeTimeFormat.%7Elocale.{{ luxon_locales[lang] }}"></script>
-    {% endif %}
     <!-- required scripts -- best handled with bundles -->
     <script src="/assets/js/luxon.min.js"></script>
     <script src="/assets/js/fancydates.js"></script>

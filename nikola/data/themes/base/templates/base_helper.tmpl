@@ -78,9 +78,6 @@ lang="${lang}">
         % endif
     % endif
     % if date_fanciness != 0:
-        % if date_fanciness == 2:
-            <script src="https://polyfill.io/v3/polyfill.js?features=Intl.RelativeTimeFormat.%7Elocale.${luxon_locales[lang]}"></script>
-        % endif
         % if use_cdn:
             <script src="https://cdn.jsdelivr.net/npm/luxon@3.3.0/build/global/luxon.min.js" integrity="sha256-Nn+JGDrq3PuTxcDfJmmI0Srj5LpfOFlKqEiPwQK7y40=" crossorigin="anonymous"></script>
         % else:
