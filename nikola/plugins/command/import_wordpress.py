@@ -81,7 +81,7 @@ def install_plugin(site, plugin_name, output_dir=None, show_install_notes=False)
     if plugin_installer.execute(options=options) > 0:
         return False
     # Let the plugin manager find newly installed plugins
-    old_candidates = set(site.plugin_manager.candidates.copy())
+    old_candidates = set(site.plugin_manager.candidates)
     new_candidates = set(site.plugin_manager.locate_plugins())
     missing_candidates = list(new_candidates - old_candidates)
     new_plugins = site.plugin_manager.load_plugins(missing_candidates)
@@ -255,7 +255,7 @@ to
         plugin_info = self.site.plugin_manager.get_plugin_by_name('wordpress', 'PageCompiler')
         if plugin_info is None:
             candidates = self.site.plugin_manager.locate_plugins()
-            wordpress_candidates = [c for c in candidates if c.name == "wordpress"]
+            wordpress_candidates = [c for c in candidates if c.name == "wordpress" and c.category == "PageCompiler"]
             if wordpress_candidates:
                 new_plugins = self.site.plugin_manager.load_plugins(wordpress_candidates)
                 for p in new_plugins:
