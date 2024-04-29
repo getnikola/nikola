@@ -246,7 +246,7 @@ class CommandPlugin(Command):
         if requirements_nonpy_path.exists():
             LOGGER.warning('This plugin has third-party dependencies you need to install manually.')
             print('Contents of the requirements-nonpy.txt file:\n')
-            for l in requirements_nonpy_path.read_text().strip().split('\n'):
+            for l in requirements_nonpy_path.read_text().strip().splitlines():
                 i, j = l.split('::')
                 print(utils.indent(i.strip(), 4 * ' '))
                 print(utils.indent(j.strip(), 8 * ' '))
@@ -261,7 +261,7 @@ class CommandPlugin(Command):
             LOGGER.info('Installing plugins...')
             plugin_failure = False
             try:
-                for plugin_name in requirements_plugins_path.read_text().strip().split('\n'):
+                for plugin_name in requirements_plugins_path.read_text().strip().splitlines():
                     plugin_failure = self.do_install(url, plugin_name.strip(), show_install_notes) != 0
             except Exception:
                 plugin_failure = True
@@ -286,7 +286,6 @@ class CommandPlugin(Command):
     def do_uninstall(self, name):
         """Uninstall a plugin."""
         for found_name, path in self.get_plugins():
-            path: pathlib.Path
             if name == found_name:  # Uninstall this one
                 to_delete = path.parent  # Delete parent of .py file or parent of package
                 LOGGER.warning('About to uninstall plugin: {0}'.format(name))
