@@ -260,7 +260,9 @@ to
                 new_plugins = self.site.plugin_manager.load_plugins(wordpress_candidates)
                 for p in new_plugins:
                     self.site._activate_plugin(p)
-                    self.wordpress_page_compiler = p
+                    self.wordpress_page_compiler = p.plugin_object
+        else:
+            self.wordpress_page_compiler = plugin_info.plugin_object
 
     def _read_options(self, options, args):
         """Read command-line options."""
