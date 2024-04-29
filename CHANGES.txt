@@ -9,6 +9,7 @@ Features
 Bugfixes
 --------
 
+* Remove insecure HTTP fallback from ``nikola plugin``
 * Fix the ``nikola plugin`` command not working (Issue #3736, #3737)
 * Fix ``nikola new_post --available-formats`` crashing with TypeError
   (Issue #3750)
