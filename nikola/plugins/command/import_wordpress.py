@@ -38,7 +38,7 @@ from urllib.parse import urlparse, unquote
 import requests
 from lxml import etree
 
-from nikola.plugin_categories import Command
+from nikola.plugin_categories import Command, CompilerExtension
 from nikola import utils, hierarchy_utils
 from nikola.nikola import DEFAULT_TRANSLATIONS_PATTERN
 from nikola.utils import req_missing
@@ -68,12 +68,8 @@ def install_plugin(site, plugin_name, output_dir=None, show_install_notes=False)
     # Get hold of the 'plugin' plugin
     plugin_installer_info = site.plugin_manager.get_plugin_by_name('plugin', 'Command')
     if plugin_installer_info is None:
-        LOGGER.error('Internal error: cannot find the "plugin" plugin which is supposed to come with Nikola!')
+        LOGGER.error('Internal error: cannot find the "plugin" plugin which is supposed to come with Nikola - it might be disabled in conf.py')
         return False
-    if not plugin_installer_info.is_activated:
-        # Someone might have disabled the plugin in the `conf.py` used
-        site.plugin_manager.activatePluginByName(plugin_installer_info.name)
-        plugin_installer_info.plugin_object.set_site(site)
     plugin_installer = plugin_installer_info.plugin_object
     # Try to install the requested plugin
     options = {}
@@ -85,9 +81,16 @@ def install_plugin(site, plugin_name, output_dir=None, show_install_notes=False)
     if plugin_installer.execute(options=options) > 0:
         return False
     # Let the plugin manager find newly installed plugins
-    site.plugin_manager.collectPlugins()
-    # Re-scan for compiler extensions
-    site.compiler_extensions = site._activate_plugins_of_category("CompilerExtension")
+    old_candidates = set(site.plugin_manager.candidates)
+    new_candidates = set(site.plugin_manager.locate_plugins())
+    missing_candidates = list(new_candidates - old_candidates)
+    new_plugins = site.plugin_manager.load_plugins(missing_candidates)
+
+    # Activate new plugins
+    for p in new_plugins:
+        site._activate_plugin(p)
+        if isinstance(p.plugin_object, CompilerExtension):
+            site.compiler_extensions.append(p)
     return True
 
 
@@ -248,11 +251,17 @@ to
         """Find WordPress compiler plugin."""
         if self.wordpress_page_compiler is not None:
             return
+
         plugin_info = self.site.plugin_manager.get_plugin_by_name('wordpress', 'PageCompiler')
-        if plugin_info is not None:
-            if not plugin_info.is_activated:
-                self.site.plugin_manager.activatePluginByName(plugin_info.name)
-                plugin_info.plugin_object.set_site(self.site)
+        if plugin_info is None:
+            candidates = self.site.plugin_manager.locate_plugins()
+            wordpress_candidates = [c for c in candidates if c.name == "wordpress" and c.category == "PageCompiler"]
+            if wordpress_candidates:
+                new_plugins = self.site.plugin_manager.load_plugins(wordpress_candidates)
+                for p in new_plugins:
+                    self.site._activate_plugin(p)
+                    self.wordpress_page_compiler = p.plugin_object
+        else:
             self.wordpress_page_compiler = plugin_info.plugin_object
 
     def _read_options(self, options, args):

@@ -49,7 +49,7 @@ from unicodedata import normalize as unicodenormalize
 from urllib.parse import quote as urlquote
 from urllib.parse import unquote as urlunquote
 from urllib.parse import urlparse, urlunparse
-from zipfile import ZipFile as zipf
+from zipfile import ZipFile
 
 import babel.dates
 import dateutil.parser
@@ -916,20 +916,22 @@ def extract_all(zipfile, path='themes'):
     """Extract all files from a zip file."""
     pwd = os.getcwd()
     makedirs(path)
-    os.chdir(path)
-    z = zipf(zipfile)
-    namelist = z.namelist()
-    for f in namelist:
-        if f.endswith('/') and '..' in f:
-            raise UnsafeZipException('The zip file contains ".." and is '
-                                     'not safe to expand.')
-    for f in namelist:
-        if f.endswith('/'):
-            makedirs(f)
-        else:
-            z.extract(f)
-    z.close()
-    os.chdir(pwd)
+    try:
+        os.chdir(path)
+        z = ZipFile(zipfile)
+        namelist = z.namelist()
+        for f in namelist:
+            if f.endswith('/') and '..' in f:
+                raise UnsafeZipException('The zip file contains ".." and is '
+                                         'not safe to expand.')
+        for f in namelist:
+            if f.endswith('/'):
+                makedirs(f)
+            else:
+                z.extract(f)
+        z.close()
+    finally:
+        os.chdir(pwd)
 
 
 def to_datetime(value, tzinfo=None):

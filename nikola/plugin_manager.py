@@ -78,6 +78,7 @@ class PluginInfo:
     category: str
     compiler: Optional[str]
     source_dir: Path
+    py_file_location: Path
     module_name: str
     module_object: object
     plugin_object: BasePlugin
@@ -157,9 +158,10 @@ class PluginManager:
             )
         return self.candidates
 
-    def load_plugins(self, candidates: List[PluginCandidate]) -> None:
+    def load_plugins(self, candidates: List[PluginCandidate]) -> List[PluginInfo]:
         """Load selected candidate plugins."""
         plugins_root = Path(__file__).parent.parent
+        new_plugins = []
 
         for candidate in candidates:
             name = candidate.name
@@ -234,11 +236,13 @@ class PluginManager:
                 category=candidate.category,
                 compiler=candidate.compiler,
                 source_dir=source_dir,
+                py_file_location=py_file_location,
                 module_name=module_name,
                 module_object=module_object,
                 plugin_object=plugin_object,
             )
             self.plugins.append(info)
+            new_plugins.append(info)
 
         self._plugins_by_category = {category: [] for category in CATEGORY_NAMES}
         for plugin_info in self.plugins:
@@ -250,6 +254,8 @@ class PluginManager:
             self.logger.warning("You may need to update some plugins (from plugins.getnikola.com) or to fix their .plugin files.")
             self.logger.warning("Waiting 2 seconds before continuing.")
             time.sleep(2)
+
+        return new_plugins
 
     def get_plugins_of_category(self, category: str) -> List[PluginInfo]:
         """Get loaded plugins of a given category."""

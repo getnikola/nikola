@@ -28,11 +28,12 @@
 
 import io
 import json.decoder
-import os
+import pathlib
 import sys
 import shutil
 import subprocess
-import time
+import typing
+
 import requests
 
 import pygments
@@ -52,8 +53,9 @@ class CommandPlugin(Command):
     name = "plugin"
     doc_usage = "[-u url] [--user] [-i name] [-r name] [--upgrade] [-l] [--list-installed]"
     doc_purpose = "manage plugins"
-    output_dir = None
+    output_dir: pathlib.Path = None
     needs_config = False
+    never_upgrade = {'emoji'}  # plugin with the same name is shipped with Nikola
     cmd_options = [
         {
             'name': 'install',
@@ -133,16 +135,16 @@ class CommandPlugin(Command):
             return 2
 
         if options.get('output_dir') is not None:
-            self.output_dir = options.get('output_dir')
+            self.output_dir = pathlib.Path(options.get('output_dir'))
         else:
             if not self.site.configured and not user_mode and install:
                 LOGGER.warning('No site found, assuming --user')
                 user_mode = True
 
             if user_mode:
-                self.output_dir = os.path.expanduser(os.path.join('~', '.nikola', 'plugins'))
+                self.output_dir = pathlib.Path.home() / ".nikola" / "plugins"
             else:
-                self.output_dir = 'plugins'
+                self.output_dir = pathlib.Path("plugins")
 
         if list_available:
             return self.list_available(url)
@@ -166,14 +168,7 @@ class CommandPlugin(Command):
 
     def list_installed(self):
         """List installed plugins."""
-        plugins = []
-        for plugin in self.site.plugin_manager.getAllPlugins():
-            p = plugin.path
-            if os.path.isdir(p):
-                p = p + os.sep
-            else:
-                p = p + '.py'
-            plugins.append([plugin.name, p])
+        plugins = self.get_plugins()
 
         plugins.sort()
         print('Installed Plugins:')
@@ -196,25 +191,18 @@ class CommandPlugin(Command):
         """Upgrade all installed plugins."""
         LOGGER.warning('This is not very smart, it just reinstalls some plugins and hopes for the best')
         data = self.get_json(url)
-        plugins = []
-        for plugin in self.site.plugin_manager.getAllPlugins():
-            p = plugin.path
-            if os.path.isdir(p):
-                p = p + os.sep
-            else:
-                p = p + '.py'
-            if plugin.name in data:
-                plugins.append([plugin.name, p])
-        print('Will upgrade {0} plugins: {1}'.format(len(plugins), ', '.join(n for n, _ in plugins)))
+        plugins = [(n, p) for n, p in self.get_plugins() if n in data and n not in self.never_upgrade]
+        LOGGER.info('Will upgrade {0} plugins: {1}'.format(len(plugins), ', '.join(n for n, _ in plugins)))
         for name, path in plugins:
-            print('Upgrading {0}'.format(name))
+            path: pathlib.Path
+            LOGGER.info('Upgrading {0}'.format(name))
             p = path
             while True:
-                tail, head = os.path.split(path)
+                tail, head = path.parent, path.name
                 if head == 'plugins':
                     self.output_dir = path
                     break
-                elif tail == '':
+                elif path == tail:
                     LOGGER.error("Can't find the plugins folder for path: {0}".format(p))
                     return 1
                 else:
@@ -229,104 +217,83 @@ class CommandPlugin(Command):
             utils.makedirs(self.output_dir)
             url = data[name]
             LOGGER.info("Downloading '{0}'".format(url))
-            try:
-                zip_data = requests.get(url).content
-            except requests.exceptions.SSLError:
-                LOGGER.warning("SSL error, using http instead of https (press ^C to abort)")
-                time.sleep(1)
-                url = url.replace('https', 'http', 1)
-                zip_data = requests.get(url).content
+            zip_data = requests.get(url).content
 
             zip_file = io.BytesIO()
             zip_file.write(zip_data)
             LOGGER.info('Extracting: {0} into {1}/'.format(name, self.output_dir))
             utils.extract_all(zip_file, self.output_dir)
-            dest_path = os.path.join(self.output_dir, name)
+            dest_path = self.output_dir / name
         else:
             LOGGER.error("Can't find plugin " + name)
             return 1
 
-        reqpath = os.path.join(dest_path, 'requirements.txt')
-        if os.path.exists(reqpath):
+        requirements_path = dest_path / 'requirements.txt'
+        if requirements_path.exists():
             LOGGER.warning('This plugin has Python dependencies.')
             LOGGER.info('Installing dependencies with pip...')
             try:
-                subprocess.check_call((sys.executable, '-m', 'pip', 'install', '-r', reqpath))
+                subprocess.check_call((sys.executable, '-m', 'pip', 'install', '-r', str(requirements_path)))
             except subprocess.CalledProcessError:
                 LOGGER.error('Could not install the dependencies.')
                 print('Contents of the requirements.txt file:\n')
-                with io.open(reqpath, 'r', encoding='utf-8-sig') as fh:
-                    print(utils.indent(fh.read(), 4 * ' '))
-                print('You have to install those yourself or through a '
-                      'package manager.')
+                print(utils.indent(requirements_path.read_text(), 4 * ' '))
+                print('You have to install those yourself or through a package manager.')
             else:
                 LOGGER.info('Dependency installation succeeded.')
 
-        reqnpypath = os.path.join(dest_path, 'requirements-nonpy.txt')
-        if os.path.exists(reqnpypath):
-            LOGGER.warning('This plugin has third-party '
-                           'dependencies you need to install '
-                           'manually.')
+        requirements_nonpy_path = dest_path / 'requirements-nonpy.txt'
+        if requirements_nonpy_path.exists():
+            LOGGER.warning('This plugin has third-party dependencies you need to install manually.')
             print('Contents of the requirements-nonpy.txt file:\n')
-            with io.open(reqnpypath, 'r', encoding='utf-8-sig') as fh:
-                for l in fh.readlines():
-                    i, j = l.split('::')
-                    print(utils.indent(i.strip(), 4 * ' '))
-                    print(utils.indent(j.strip(), 8 * ' '))
-                    print()
+            for l in requirements_nonpy_path.read_text().strip().splitlines():
+                i, j = l.split('::')
+                print(utils.indent(i.strip(), 4 * ' '))
+                print(utils.indent(j.strip(), 8 * ' '))
+                print()
 
             print('You have to install those yourself or through a package '
                   'manager.')
 
-        req_plug_path = os.path.join(dest_path, 'requirements-plugins.txt')
-        if os.path.exists(req_plug_path):
+        requirements_plugins_path = dest_path / 'requirements-plugins.txt'
+        if requirements_plugins_path.exists():
             LOGGER.info('This plugin requires other Nikola plugins.')
             LOGGER.info('Installing plugins...')
             plugin_failure = False
             try:
-                with io.open(req_plug_path, 'r', encoding='utf-8-sig') as inf:
-                    for plugname in inf.readlines():
-                        plugin_failure = self.do_install(url, plugname.strip(), show_install_notes) != 0
+                for plugin_name in requirements_plugins_path.read_text().strip().splitlines():
+                    plugin_failure = self.do_install(url, plugin_name.strip(), show_install_notes) != 0
             except Exception:
                 plugin_failure = True
             if plugin_failure:
                 LOGGER.error('Could not install a plugin.')
                 print('Contents of the requirements-plugins.txt file:\n')
-                with io.open(req_plug_path, 'r', encoding='utf-8-sig') as fh:
-                    print(utils.indent(fh.read(), 4 * ' '))
+                print(utils.indent(requirements_plugins_path.read_text(), 4 * ' '))
                 print('You have to install those yourself manually.')
             else:
                 LOGGER.info('Dependency installation succeeded.')
 
-        confpypath = os.path.join(dest_path, 'conf.py.sample')
-        if os.path.exists(confpypath) and show_install_notes:
+        confpy_path = dest_path / 'conf.py.sample'
+        if confpy_path.exists() and show_install_notes:
             LOGGER.warning('This plugin has a sample config file.  Integrate it with yours in order to make this plugin work!')
             print('Contents of the conf.py.sample file:\n')
-            with io.open(confpypath, 'r', encoding='utf-8-sig') as fh:
-                if self.site.colorful:
-                    print(pygments.highlight(fh.read(), PythonLexer(), TerminalFormatter()))
-                else:
-                    print(fh.read())
+            if self.site.colorful:
+                print(pygments.highlight(confpy_path.read_text(), PythonLexer(), TerminalFormatter()))
+            else:
+                print(confpy_path.read_text())
         return 0
 
     def do_uninstall(self, name):
         """Uninstall a plugin."""
-        for plugin in self.site.plugin_manager.getAllPlugins():  # FIXME: this is repeated thrice
-            if name == plugin.name:  # Uninstall this one
-                p = plugin.path
-                if os.path.isdir(p):
-                    # Plugins that have a package in them need to delete parent
-                    # Issue #2356
-                    p = p + os.sep
-                    p = os.path.abspath(os.path.join(p, os.pardir))
-                else:
-                    p = os.path.dirname(p)
+        for found_name, path in self.get_plugins():
+            if name == found_name:  # Uninstall this one
+                to_delete = path.parent  # Delete parent of .py file or parent of package
                 LOGGER.warning('About to uninstall plugin: {0}'.format(name))
-                LOGGER.warning('This will delete {0}'.format(p))
+                LOGGER.warning('This will delete {0}'.format(to_delete))
                 sure = utils.ask_yesno('Are you sure?')
                 if sure:
-                    LOGGER.warning('Removing {0}'.format(p))
-                    shutil.rmtree(p)
+                    LOGGER.warning('Removing {0}'.format(to_delete))
+                    shutil.rmtree(to_delete)
                     return 0
                 return 1
         LOGGER.error('Unknown plugin: {0}'.format(name))
@@ -336,19 +303,24 @@ class CommandPlugin(Command):
         """Download the JSON file with all plugins."""
         if self.json is None:
             try:
-                try:
-                    self.json = requests.get(url).json()
-                except requests.exceptions.SSLError:
-                    LOGGER.warning("SSL error, using http instead of https (press ^C to abort)")
-                    time.sleep(1)
-                    url = url.replace('https', 'http', 1)
-                    self.json = requests.get(url).json()
+                self.json = requests.get(url).json()
             except json.decoder.JSONDecodeError as e:
                 LOGGER.error("Failed to decode JSON data in response from server.")
                 LOGGER.error("JSON error encountered: " + str(e))
-                LOGGER.error("This issue might be caused by server-side issues, or by to unusual activity in your "
+                LOGGER.error("This issue might be caused by server-side issues, or by unusual activity in your "
                              "network (as determined by CloudFlare). Please visit https://plugins.getnikola.com/ in "
                              "a browser.")
                 sys.exit(2)
 
         return self.json
+
+    def get_plugins(self) -> typing.List[typing.Tuple[str, pathlib.Path]]:
+        """Get currently installed plugins in site."""
+        plugins = []
+        for plugin in self.site.plugin_manager.plugins:
+            if plugin.py_file_location.name == "__init__.py":
+                path = plugin.py_file_location.parent
+            else:
+                path = plugin.py_file_location
+            plugins.append((plugin.name, path))
+        return plugins
