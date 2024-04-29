@@ -7,7 +7,7 @@
 .. has_math: true
 .. author: The Nikola Team
 
-:Version: 8.3.0
+:Version: 8.3.1
 
 .. class:: alert alert-primary float-md-right
 
