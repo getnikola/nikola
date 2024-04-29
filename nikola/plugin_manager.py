@@ -31,6 +31,8 @@ import importlib
 import importlib.util
 import time
 import sys
+
+from collections import deque
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Optional, Type, TYPE_CHECKING, Set
@@ -57,6 +59,7 @@ class PluginCandidate:
 
     name: str
     description: Optional[str]
+    friendly_name: str
     plugin_id: str
     category: str
     compiler: Optional[str]
@@ -70,6 +73,7 @@ class PluginInfo:
 
     name: str
     description: Optional[str]
+    friendly_name: str
     plugin_id: str
     category: str
     compiler: Optional[str]
@@ -103,9 +107,13 @@ class PluginManager:
         """Locate plugins in plugin_places."""
         self.candidates = []
 
+        plugin_folders: deque = deque([place for place in self.plugin_places if place.exists() and place.is_dir()])
         plugin_files: List[Path] = []
-        for place in self.plugin_places:
-            plugin_files += place.rglob("*.plugin")
+        while plugin_folders:
+            base_folder = plugin_folders.popleft()
+            items = list(base_folder.iterdir())
+            plugin_folders.extend([item for item in items if item.is_dir() and item.name != "__pycache__"])
+            plugin_files.extend([item for item in items if item.suffix == ".plugin" and not item.is_dir()])
 
         for plugin_file in plugin_files:
             source_dir = plugin_file.parent
@@ -124,6 +132,7 @@ class PluginManager:
                 continue
             category = config["Nikola"].get("PluginCategory")
             compiler = config["Nikola"].get("Compiler")
+            friendly_name = config["Nikola"].get("friendlyname") or name
             if not category:
                 self.logger.warning(f"{plugin_id} does not specify any category (Nikola.PluginCategory is missing in .plugin file) - plugin will not be loaded")
                 self.has_warnings = True
@@ -139,6 +148,7 @@ class PluginManager:
                 PluginCandidate(
                     name=name,
                     description=description,
+                    friendly_name=friendly_name,
                     plugin_id=plugin_id,
                     category=category,
                     compiler=compiler,
@@ -221,6 +231,7 @@ class PluginManager:
             info = PluginInfo(
                 name=name,
                 description=candidate.description,
+                friendly_name=candidate.friendly_name,
                 plugin_id=candidate.plugin_id,
                 category=candidate.category,
                 compiler=candidate.compiler,

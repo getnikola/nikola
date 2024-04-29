@@ -134,7 +134,7 @@ Obsolescence
     You may say those are long term issues, or that they won't matter for years. Well,
     I believe things should work forever, or as close to it as we can make them.
     Nikola's static output and its input files will work as long as you can install
-    Python 3.7 or newer under Linux, Windows, or macOS and can find a server
+    Python 3.8 or newer under Linux, Windows, or macOS and can find a server
     that sends files over HTTP. That's probably 10 or 15 years at least.
 
     Also, static sites are easily handled by the Internet Archive.
@@ -1690,10 +1690,6 @@ For Mako:
 .. code:: html
 
     % if date_fanciness != 0:
-    %if date_fanciness == 2:
-        <!-- Polyfill for relative dates in Safari -- best handled with a CDN -->
-        <script src="https://polyfill.io/v3/polyfill.js?features=Intl.RelativeTimeFormat.%7Elocale.${luxon_locales[lang]}"></script>
-    %endif
     <!-- required scripts -- best handled with bundles -->
     <script src="/assets/js/luxon.min.js"></script>
     <script src="/assets/js/fancydates.js"></script>
@@ -1712,10 +1708,6 @@ For Jinja2:
 .. code:: html
 
     {% if date_fanciness != 0 %}
-    {% if date_fanciness == 2 %}
-        <!-- Polyfill for relative dates in Safari -- best handled with a CDN -->
-        <script src="https://polyfill.io/v3/polyfill.js?features=Intl.RelativeTimeFormat.%7Elocale.{{ luxon_locales[lang] }}"></script>
-    {% endif %}
     <!-- required scripts -- best handled with bundles -->
     <script src="/assets/js/luxon.min.js"></script>
     <script src="/assets/js/fancydates.js"></script>

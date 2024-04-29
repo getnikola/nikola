@@ -6,9 +6,6 @@ In goes content, out comes a website, ready to deploy.
 .. image:: http://img.shields.io/pypi/v/Nikola.svg
    :target: https://pypi.python.org/pypi/Nikola
 
-.. image:: https://img.shields.io/requires/github/getnikola/nikola.svg
-   :target: https://requires.io/github/getnikola/nikola/requirements/?branch=master
-
 .. image:: https://github.com/getnikola/nikola/workflows/Nikola%20CI/badge.svg
    :target: https://github.com/getnikola/nikola/actions
 
@@ -37,7 +34,7 @@ It has many features, but here are some of the nicer ones:
 * Syntax highlighting for almost any programming language or markup
 * Multilingual sites, `translated to 50 languages.`__
 * Doesn't reinvent wheels, leverages existing tools.
-* Python 3.7+ compatible.
+* Python 3.8+ compatible.
 
 .. _Nikola Handbook: https://getnikola.com/handbook.html#why-static
 __ https://users.getnikola.com/

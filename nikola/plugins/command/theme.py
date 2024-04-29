@@ -38,7 +38,6 @@ import requests
 import pygments
 from pygments.lexers import PythonLexer
 from pygments.formatters import TerminalFormatter
-from pkg_resources import resource_filename
 
 from nikola.plugin_categories import Command
 from nikola import utils
@@ -287,7 +286,7 @@ class CommandTheme(Command):
         print("Installed Themes:")
         print("-----------------")
         themes = []
-        themes_dirs = self.site.themes_dirs + [resource_filename('nikola', os.path.join('data', 'themes'))]
+        themes_dirs = self.site.themes_dirs + [utils.pkg_resources_path('nikola', os.path.join('data', 'themes'))]
         for tdir in themes_dirs:
             if os.path.isdir(tdir):
                 themes += [(i, os.path.join(tdir, i)) for i in os.listdir(tdir)]
