@@ -1,3 +1,15 @@
+New in master
+=============
+
+Features
+--------
+
+Bugfixes
+--------
+
+* Restore `annotation_helper.tmpl` with dummy content - fix themes still mentioning it
+  (Issue #3764, #3773)
+
 New in v8.3.1
 =============
 
