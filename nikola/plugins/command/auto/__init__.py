@@ -429,7 +429,7 @@ class CommandAuto(Command):
         # Move events have a dest_path, some editors like gedit use a
         # move on larger save operations for write protection
         if event:
-            event_path = event.dest_path if hasattr(event, 'dest_path') else event.src_path
+            event_path = event.dest_path if (hasattr(event, 'dest_path') and event.dest_path) else event.src_path
         else:
             event_path = self.site.config['OUTPUT_FOLDER']
         p = os.path.relpath(event_path, os.path.abspath(self.site.config['OUTPUT_FOLDER'])).replace(os.sep, '/')
