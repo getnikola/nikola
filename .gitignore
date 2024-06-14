@@ -5,7 +5,10 @@
 tmp/
 cache/
 output/
+baseline/
+nikola-baseline-build/
 /tags
+v3.*.zip.*
 
 # GitHub token
 .pypt/gh-token
