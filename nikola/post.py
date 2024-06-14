@@ -1228,6 +1228,12 @@ def get_meta(post, lang):
         # Direct access because setter is complicated
         post._is_two_file = is_two_file
 
+    # There seems no way to get other metadata in a flexible way, so we add a signal
+    # here to hook into
+    signal('metadata').send({
+        'path': post.source_path,
+        'meta': meta
+    })
     return meta, used_extractor
 
 
