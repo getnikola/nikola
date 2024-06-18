@@ -35,9 +35,17 @@ from nikola.plugin_categories import Command
 
 class CommandStatus(Command):
     """Display site status."""
+    
+    branch_coverage = {
+    "branch_1": False,  # if branch for x > 0
+    "branch_2": False,   # else branch
+    "branch_3": False,  # else branch
+    "branch_4": False   # else branch
+    }
+
+
 
     name = "status"
-
     doc_purpose = "display site status"
     doc_description = "Show information about the posts and site deployment."
     doc_usage = '[-d|--list-drafts] [-m|--list-modified] [-p|--list-private] [-P|--list-published] [-s|--list-scheduled]'
@@ -163,9 +171,18 @@ class CommandStatus(Command):
         hours = dt.seconds / 60 // 60
         minutes = dt.seconds / 60 - (hours * 60)
         if days > 0:
+            self.branch_coverage["branch_1"] = True
             return "{0:.0f} days and {1:.0f} hours".format(days, hours)
         elif hours > 0:
+            self.branch_coverage["branch_2"] = True
             return "{0:.0f} hours and {1:.0f} minutes".format(hours, minutes)
         elif minutes:
+            self.branch_coverage["branch_3"] = True
             return "{0:.0f} minutes".format(minutes)
+        self.branch_coverage["branch_4"] = True
         return False
+    
+    
+    def report_coverage(self):
+        for branch, hit in self.branch_coverage.items():
+            print(f"{branch}: {'covered' if hit else 'not covered'}")
