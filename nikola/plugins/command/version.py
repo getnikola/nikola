@@ -35,6 +35,14 @@ from nikola import __version__
 URL = 'https://pypi.org/pypi/Nikola/json'
 
 
+command_execute_coverage = {
+    "branch_1": False,
+    "branch_2": False,
+    "branch_3": False,
+    "branch_4": False
+}
+
+
 class CommandVersion(Command):
     """Print Nikola version."""
 
@@ -58,11 +66,21 @@ class CommandVersion(Command):
         """Print the version number."""
         print("Nikola v" + __version__)
         if options.get('check'):
+            command_execute_coverage["branch_1"] = True
             data = requests.get(URL).json()
             pypi_version = data['info']['version']
+            if options.get('old'): 
+                command_execute_coverage["branch_2"] = True
+                pypi_version = '4.2.0'
             if pypi_version == __version__:
+                command_execute_coverage["branch_3"] = True
                 print("Nikola is up-to-date")
             else:
+                command_execute_coverage["branch_4"] = True
                 print("The latest version of Nikola is v{0}. Please upgrade "
                       "using `pip install --upgrade Nikola=={0}` or your "
                       "system package manager.".format(pypi_version))
+
+    def print_command_version_coverage():
+        for branch, covered in command_execute_coverage.items():
+            print(f"{branch} is {'covered' if covered else 'not covered'}")
