@@ -37,10 +37,10 @@ class CommandStatus(Command):
     """Display site status."""
     
     branch_coverage = {
-    "branch_1": False,  # if branch for x > 0
-    "branch_2": False,   # else branch
-    "branch_3": False,  # else branch
-    "branch_4": False   # else branch
+    "branch_1": False, 
+    "branch_2": False,  
+    "branch_3": False, 
+    "branch_4": False   
     }
 
 
@@ -186,3 +186,7 @@ class CommandStatus(Command):
     def report_coverage(self):
         for branch, hit in self.branch_coverage.items():
             print(f"{branch}: {'covered' if hit else 'not covered'}")
+            
+    def reset_coverage(self):
+        for key in self.branch_coverage:
+            self.branch_coverage[key] = False        

@@ -80,10 +80,17 @@ class ColorfulFormatter(logging.Formatter):
 # Initial configuration
 class LoggingMode(enum.Enum):
     """Logging mode options."""
-
+    
     NORMAL = 0
     STRICT = 1
     QUIET = 2
+
+branch_coverage_configure = {
+    "branch_1": False, 
+    "branch_2": False,  
+    "branch_3": False, 
+    "branch_4": False   
+    }
 
 
 def configure_logging(logging_mode: LoggingMode = LoggingMode.NORMAL) -> None:
@@ -92,11 +99,14 @@ def configure_logging(logging_mode: LoggingMode = LoggingMode.NORMAL) -> None:
     This method can be called multiple times, previous configuration will be overridden.
     """
     if DEBUG:
+        branch_coverage_configure["branch_1"] = True
         logging.root.level = logging.DEBUG
     else:
+        branch_coverage_configure["branch_2"] = True
         logging.root.level = logging.INFO
 
     if logging_mode == LoggingMode.QUIET:
+        branch_coverage_configure["branch_3"] = True
         logging.root.handlers = []
         return
 
@@ -110,12 +120,20 @@ def configure_logging(logging_mode: LoggingMode = LoggingMode.NORMAL) -> None:
 
     handlers = [handler]
     if logging_mode == LoggingMode.STRICT:
+        branch_coverage_configure["branch_4"] = True
         handlers.append(StrictModeExceptionHandler())
 
     logging.root.handlers = handlers
 
+def print_coverage_configure():
+    for branch, hit in branch_coverage_configure.items():
+        print(f"{branch} was {'hit' if hit else 'not hit'}")
+def reset_coverage_configure():
+    for key in branch_coverage_configure:
+        branch_coverage_configure[key] = False
 
 configure_logging()
+
 
 
 # For compatibility with old code written with Logbook in mind
