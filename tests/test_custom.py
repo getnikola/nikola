@@ -35,4 +35,6 @@ def test_color_formatter():
         # Call wrap_in_color and print the result for verification
         formatted_message = formatter.format(log_record)
         print(f"Level: {log_record.levelname}, Colorful: {colorState}, Output: {formatted_message}")
-
+    
+    ColorfulFormatter.print_colorful_wrap_coverage()
+    
