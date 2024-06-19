@@ -54,6 +54,14 @@ class StrictModeExceptionHandler(logging.StreamHandler):
             raise ApplicationWarning(self.format(record))
 
 
+colorful_wrap_coverage = {
+    "wrap_in_color_1": False,
+    "wrap_in_color_2": False,
+    "wrap_in_color_3": False,
+    "wrap_in_color_4": False,
+}
+
+
 class ColorfulFormatter(logging.Formatter):
     """Stream handler with colors."""
 
@@ -67,14 +75,22 @@ class ColorfulFormatter(logging.Formatter):
     def wrap_in_color(self, record: logging.LogRecord) -> str:
         """Return the colorized string for this record."""
         if not self._colorful:
+            colorful_wrap_coverage["wrap_in_color_1"] = True
             return "{}"
-        if record.levelno >= logging.ERROR:
+        if record.levelno >= logging.ERROR: #TODO:
+            colorful_wrap_coverage["wrap_in_color_2"] = True
             return "\033[1;31m{}\033[0m"
         elif record.levelno >= logging.WARNING:
+            colorful_wrap_coverage["wrap_in_color_3"] = True
             return "\033[1;33m{}\033[0m"
         elif record.levelno >= logging.INFO:
+            colorful_wrap_coverage["wrap_in_color_4"] = True
             return "\033[1m{}\033[0m"
         return "\033[37m{}\033[0m"
+    
+    def print_colorful_wrap_coverage():
+        for branch, covered in colorful_wrap_coverage.items():
+            print(f"{branch} is {'covered' if covered else 'not covered'}")
 
 
 # Initial configuration
