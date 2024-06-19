@@ -77,7 +77,7 @@ class ColorfulFormatter(logging.Formatter):
         if not self._colorful:
             colorful_wrap_coverage["wrap_in_color_1"] = True
             return "{}"
-        if record.levelno >= logging.ERROR: #TODO:
+        if record.levelno >= logging.ERROR:
             colorful_wrap_coverage["wrap_in_color_2"] = True
             return "\033[1;31m{}\033[0m"
         elif record.levelno >= logging.WARNING:
