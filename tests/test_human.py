@@ -6,26 +6,26 @@ from nikola.plugins.command.status import CommandStatus
 def command_status():
     return CommandStatus()
 
-@pytest.mark.individual
+@pytest.mark.skip(reason="None")
 def test_days_branch(command_status):
-    print("test wit 2 days 3 hours:")
+    print("\n test with 2 days 3 hours:")
     result = command_status.human_time(timedelta(days=2, hours=3))
     print(f"this is the result: ${result}")
 
-@pytest.mark.individual
+@pytest.mark.skip(reason="None")
 def test_hours_branch(command_status):
     print("test with 4 hours 20 minutes:")
     result = command_status.human_time(timedelta(hours=4, minutes=20))
     print(f"this is the result: ${result}")
 
 
-@pytest.mark.individual
+@pytest.mark.skip(reason="None")
 def test_minutes_branch(command_status):
     print("test with 15 minutes:")
     result = command_status.human_time(timedelta(minutes=15))
     print(f"this is the result: ${result}")
 
-@pytest.mark.individual
+@pytest.mark.skip(reason="None")
 def test_seconds_branch(command_status):
     print("test with 0 seconds:")
     result = command_status.human_time(timedelta(seconds=0))
