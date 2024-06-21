@@ -42,7 +42,7 @@ def test_strict_mode_no_debug():
     #print_coverage_configure()
     
     
-def test_combined(command_status):
+def test_combined():
     reset_coverage_configure()
     test_normal_mode_debug()
     test_normal_mode_no_debug()
