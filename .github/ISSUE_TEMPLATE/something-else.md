@@ -1,6 +1,6 @@
 ---
 name: Something else
-about: "(For usage questions, try the nikola-discuss mailing list)"
+about: "(For usage questions, use the Discussions tab)"
 title: ''
 labels: ''
 assignees: ''

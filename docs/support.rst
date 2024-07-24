@@ -13,14 +13,12 @@
 Help and Support
 ================
 
-1. A `mailing list`_, nikola-discuss on Google Groups exists.
+1. Create a `Discussion on GitHub`_.
 2. There’s an IRC channel: #nikola on Libera.Chat.  You can
    find many developers and volunteers (users) there which are there to provide
    help, if they are around and read your message.  The channels are
    `publicly logged <https://irclogs.getnikola.com/>`_.
-3. You can also contact `@GetNikola <https://twitter.com/GetNikola>`_ on
-   Twitter.
-4. If you are experiencing a bug, you should report it on GitHub (see
+3. If you are experiencing a bug, you should report it as an Issue on GitHub (see
    below).
 
 Plugins and Themes
@@ -28,7 +26,7 @@ Plugins and Themes
 
 Plugins and Themes from the Indexes are not officially supported.
 
-1. Ask the `mailing list`_, which may or may not work out.
+1. Create a `Discussion on GitHub`_, which may or may not work out.
 2. You can also try the IRC channel if the theme/plugin is very popular.
 3. Report an issue at the `plugins issue tracker`_ or at the `themes
    issue tracker`_.
@@ -42,8 +40,7 @@ Report a Bug, Request a Feature
 
 Bug reports should be sent to the `Issue tracker`_ at GitHub.
 
-Feature requests should be sent to the `Issue tracker`_ or to
-the `mailing list`_, especially if they require further discussion.
+Feature requests should be sent to the `Issue tracker`_ or in a `Discussion on GitHub`_, especially if they require further discussion.
 
 Administrativia
 ===============
@@ -72,7 +69,7 @@ Administrators
 | Chris Warrick        | Kwpolska        | Poland    | chris@getnikola.com   |
 +----------------------+-----------------+-----------+-----------------------+
 
-.. _mailing list: https://groups.google.com/group/nikola-discuss
+.. _Discussion on GitHub: https://github.com/getnikola/nikola/discussions
 .. _Issue tracker: https://github.com/getnikola/nikola/issues
 .. _plugins issue tracker: https://github.com/getnikola/plugins/issues
 .. _themes issue tracker: https://github.com/getnikola/nikola-themes/issues

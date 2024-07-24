@@ -93,10 +93,10 @@ Getting Help
 
 TL;DR:
 
-* You can file bugs at `the issue tracker <https://github.com/getnikola/nikola/issues>`__
-* You can discuss Nikola at the `nikola-discuss google group <https://groups.google.com/group/nikola-discuss>`_
+* You can file bugs at `the Issue tracker on GitHub <https://github.com/getnikola/nikola/issues>`__
+* You can discuss Nikola on the `Discussions page on GitHub <https://github.com/getnikola/nikola/discussions>`_
 * You can subscribe to `the Nikola Blog <https://getnikola.com/blog>`_
-* You can follow `Nikola on Twitter <https://twitter.com/GetNikola>`_
+* You can follow `Nikola on X <https://x.com/GetNikola>`_
 
 Why Static?
 -----------

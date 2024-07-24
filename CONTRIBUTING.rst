@@ -11,8 +11,8 @@ Here are some guidelines about how you can contribute to Nikola:
   feature to Nikola.
 
 * If your contribution is a new feature, it should be discussed first, under
-  the GitHub issue for the feature request. You may also discuss it on the
-  `mailing list <http://groups.google.com/group/nikola-discuss>`_.
+  the GitHub issue for the feature request. You can also discuss it on the
+  `GitHub Discussions tab <https://github.com/getnikola/nikola/discussions>`_.
 
 * **Create a new Git branch specific to your change(s).** For example, if
   you’re adding a new feature to foo the bars, do something like the
