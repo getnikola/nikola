@@ -308,6 +308,7 @@ def visit_literal(self, node):
     if 'code' in classes:
         # filter 'code' from class arguments
         node['classes'] = [cls for cls in classes if cls != 'code']
+        node.html5tagname = 'code'
         self.body.append(self.starttag(node, 'code', ''))
         return
     self.body.append(
