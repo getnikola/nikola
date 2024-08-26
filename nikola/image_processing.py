@@ -44,6 +44,7 @@ EXIF_TAG_NAMES = {}
 
 class ImageProcessor(object):
     """Apply image operations."""
+
     logger: logging.Logger
     dates: typing.Dict[str, datetime.datetime]
 
