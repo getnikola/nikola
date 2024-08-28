@@ -7,6 +7,8 @@ Features
 Bugfixes
 --------
 
+* Ignore errors in parsing SVG files for shrinking them, copy original file to output instead
+  (Issue #3785)
 * Restore `annotation_helper.tmpl` with dummy content - fix themes still mentioning it
   (Issue #3764, #3773)
 * Fix compatibility with watchdog 4 (Issue #3766)

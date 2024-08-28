@@ -28,10 +28,12 @@
 
 import datetime
 import gzip
+import logging
 import os
 import re
+import typing
 
-import lxml
+import lxml.etree
 import piexif
 from PIL import ExifTags, Image
 
@@ -42,6 +44,9 @@ EXIF_TAG_NAMES = {}
 
 class ImageProcessor(object):
     """Apply image operations."""
+
+    logger: logging.Logger
+    dates: typing.Dict[str, datetime.datetime]
 
     image_ext_list_builtin = ['.jpg', '.png', '.jpeg', '.gif', '.svg', '.svgz', '.bmp', '.tiff', '.webp']
 
@@ -210,6 +215,10 @@ class ImageProcessor(object):
                 op.close()
             except (KeyError, AttributeError) as e:
                 self.logger.warning("No width/height in %s. Original exception: %s" % (src, e))
+                utils.copy_file(src, dst)
+            except Exception as e:
+                self.logger.warning("Can't process {0}, using original "
+                                    "image! ({1})".format(src, e))
                 utils.copy_file(src, dst)
 
     def image_date(self, src):
