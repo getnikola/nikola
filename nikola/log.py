@@ -105,12 +105,7 @@ def configure_logging(logging_mode: LoggingMode = LoggingMode.NORMAL) -> None:
         return
 
     handler = logging.StreamHandler()
-    handler.setFormatter(
-        ColorfulFormatter(
-            fmt=_LOGGING_FMT,
-            datefmt=_LOGGING_DATEFMT,
-        )
-    )
+    handler.setFormatter(ColorfulFormatter(fmt=_LOGGING_FMT, datefmt=_LOGGING_DATEFMT))
 
     handlers = [handler]
     if logging_mode == LoggingMode.STRICT:
@@ -152,7 +147,7 @@ def init_template_trace_logging(filename: str) -> None:
 
     As there is lots of other stuff happening on the normal output stream,
     this info is also written to a log file.
-    """    
+    """
     TEMPLATES_LOGGER.level = logging.DEBUG
     formatter = logging.Formatter(
         fmt=_LOGGING_FMT,
