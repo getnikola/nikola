@@ -395,7 +395,7 @@ class Nikola(object):
         self.timeline = []
         self.pages = []
         self._scanned = False
-        self._template_system = None
+        self._template_system: typing.Optional[TemplateSystem] = None
         self._THEMES = None
         self._MESSAGES = None
         self.filters = {}
@@ -1459,7 +1459,11 @@ class Nikola(object):
         If ``is_fragment`` is set to ``True``, a HTML fragment will
         be rendered and not a whole HTML document.
         """
-        local_context = {}
+        if "post" in context and context["post"] is not None:
+            utils.TEMPLATES_LOGGER.debug("For %s, template %s builds %s", context["post"].source_path, template_name, output_name)
+        else:
+            utils.TEMPLATES_LOGGER.debug("Template %s builds %s", template_name, output_name)
+        local_context: typing.Dict[str, typing.Any] = {}
         local_context["template_name"] = template_name
         local_context.update(self.GLOBAL_CONTEXT)
         local_context.update(context)

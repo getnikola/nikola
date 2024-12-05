@@ -66,7 +66,7 @@ from unidecode import unidecode
 
 # Renames
 from nikola import DEBUG  # NOQA
-from .log import LOGGER, get_logger  # NOQA
+from .log import LOGGER, TEMPLATES_LOGGER, get_logger  # NOQA
 from .hierarchy_utils import TreeNode, clone_treenode, flatten_tree_structure, sort_classifications
 from .hierarchy_utils import join_hierarchical_category_path, parse_escaped_hierarchical_category_name
 
