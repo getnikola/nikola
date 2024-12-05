@@ -168,7 +168,7 @@ def init_template_trace_logging(filename: str) -> None:
 
 
 if TEMPLATES_TRACE:
-    init_template_trace_logging("templates_log.txt")
+    init_template_trace_logging("templates_trace.log")
 
 
 # Push warnings to logging
