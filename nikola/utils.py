@@ -1949,10 +1949,10 @@ def smartjoin(join_char: str, string_or_iterable: Union[None, str, bytes, Iterab
     'foo; bar'
     >>> smartjoin(' to ', ['count', 42])
     'count to 42'
-
-    The treatment of bytes (calling str(string_or_iterable)) is somewhat dubious. Is this needed?
     """
-    if isinstance(string_or_iterable, Iterable):
+    if isinstance(string_or_iterable, (str, bytes)):
+        return str(string_or_iterable)
+    elif isinstance(string_or_iterable, Iterable):
         return join_char.join([str(e) for e in string_or_iterable])
     else:
         return str(string_or_iterable)
