@@ -31,13 +31,14 @@ import sys
 
 # The current Nikola version:
 __version__ = '8.3.1'
-# A flag whether logging should emmit debug information:
+# A flag whether logging should emit debug information:
 DEBUG = bool(os.getenv('NIKOLA_DEBUG'))
 # A flag whether special templates trace logging should be generated:
 TEMPLATES_TRACE = bool(os.getenv('NIKOLA_TEMPLATES_TRACE'))
 # When this flag is set, fewer exceptions are handled internally;
 # instead they are left unhandled for the run time system to deal with them,
 # which typically leads to the stack traces being exposed.
+# This is a less noisy alternative to the NIKOLA_DEBUG flag.
 SHOW_TRACEBACKS = bool(os.getenv('NIKOLA_SHOW_TRACEBACKS'))
 
 if sys.version_info[0] == 2:

@@ -209,7 +209,7 @@ class Archive(Taxonomy):
         kw.update(context)
         return context, kw
 
-    def postprocess_posts_per_classification(self, posts_per_classification_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None):
+    def postprocess_posts_per_classification(self, posts_per_classification_per_language, flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None) -> None:
         """Rearrange, modify or otherwise use the list of posts per classification and per language."""
         # Build a lookup table for archive navigation, if we’ll need one.
         if self.site.config['CREATE_ARCHIVE_NAVIGATION']:
@@ -228,7 +228,7 @@ class Archive(Taxonomy):
                 for k, v in self.archive_navigation[lang].items():
                     self.archive_navigation[lang][k] = natsort.natsorted(v, alg=natsort.ns.F | natsort.ns.IC)
 
-        return super().postprocess_posts_per_classification(posts_per_classification_per_language, flat_hierarchy_per_lang, hierarchy_lookup_per_lang)
+        super().postprocess_posts_per_classification(posts_per_classification_per_language, flat_hierarchy_per_lang, hierarchy_lookup_per_lang)
 
     def should_generate_classification_page(self, classification, post_list, lang):
         """Only generates list of posts for classification if this function returns True."""
