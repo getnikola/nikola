@@ -4,6 +4,9 @@ New in master
 Features
 --------
 
+* Trace template usage when an environment variable ``NIKOLA_TEMPLATES_TRACE``
+  is set to any non-empty value.
+
 Bugfixes
 --------
 

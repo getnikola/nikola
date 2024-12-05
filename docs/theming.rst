@@ -7,7 +7,7 @@
 .. author: The Nikola Team
 
 :Version: 8.3.1
-:Author: Roberto Alsina <ralsina@netmanagers.com.ar>
+:Author: Roberto Alsina <ralsina@netmanagers.com.ar> and others
 
 .. class:: alert alert-primary float-md-right
 
@@ -130,8 +130,9 @@ The following keys are currently supported:
 
     The parent is so you don’t have to create a full theme each time: just
     create an empty theme, set the parent, and add the bits you want modified.
-    You **must** define a parent, otherwise many features won’t work due to
-    missing templates, messages, and assets.
+    It is strongly recommended you define a parent.  If you don't, many features
+    won’t work due to missing templates, messages, and assets until your home-grown
+    template is complete.
 
     The following settings are recommended:
 
@@ -184,8 +185,16 @@ so ``post.tmpl`` only define the content, and the layout is inherited from ``bas
 
 Another concept is theme inheritance. You do not need to duplicate all the
 default templates in your theme — you can just override the ones you want
-changed, and the rest will come from the parent theme. (Every theme needs a
-parent.)
+changed, and the rest will come from the parent theme.  If your theme does not
+define a parent, it needs to be complete.  It is generally a lot harder to
+come up with a complete theme, compared to only changing a few files and using
+the rest from a suitable parent theme.
+
+.. Tip::
+
+   If you set the environment variable ``NIKOLA_TEMPLATES_TRACE`` to any non-empty value
+   (``true`` is recommended), Nikola will log template usage, both on output and also
+   into a file ``templates_log.txt``.
 
 Apart from the `built-in templates`_ listed below, you can add other templates for specific
 pages, which the user can then use in his ``POSTS`` or ``PAGES`` option in
@@ -194,11 +203,11 @@ page via the ``template`` metadata, and custom templates can be added in the
 ``templates/`` folder of your site.
 
 If you want to modify (override) a built-in template, use ``nikola theme -c
-<name>.tmpl``.  This command will copy the specified template file to the
-``templates/`` directory of your currently used theme.
+<name>.tmpl``.  This command will copy the specified template file from the
+parent theme to the ``templates/`` directory of your currently used theme.
 
 Keep in mind that your theme is *yours*, so you can require whatever data you
-want (eg. you may depend on specific custom ``GLOBAL_CONTEXT`` variables, or
+want (e.g., you may depend on specific custom ``GLOBAL_CONTEXT`` variables, or
 post meta attributes). You don’t need to keep the same theme structure as the
 default themes do (although many of those names are hardcoded). Inheriting from
 at least ``base`` (or ``base-jinja``) is heavily recommended, but not strictly
