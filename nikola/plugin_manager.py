@@ -35,13 +35,12 @@ import sys
 from collections import deque
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Type, TYPE_CHECKING, Set
+from typing import Dict, Iterable, List, Optional, Type, Set
 
 from .plugin_categories import BasePlugin, CATEGORIES
 from .utils import get_logger
 
-if TYPE_CHECKING:
-    import logging
+import logging
 
 LEGACY_PLUGIN_NAMES: Dict[str, str] = {
     "Compiler": "PageCompiler",
@@ -158,7 +157,7 @@ class PluginManager:
             )
         return self.candidates
 
-    def load_plugins(self, candidates: List[PluginCandidate]) -> List[PluginInfo]:
+    def load_plugins(self, candidates: Iterable[PluginCandidate]) -> List[PluginInfo]:
         """Load selected candidate plugins."""
         plugins_root = Path(__file__).parent.parent
         new_plugins = []

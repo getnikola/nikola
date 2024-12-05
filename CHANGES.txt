@@ -6,6 +6,9 @@ Features
 
 * Trace template usage when an environment variable ``NIKOLA_TEMPLATES_TRACE``
   is set to any non-empty value.
+* Give user control over the raw underlying template engine
+  (either `mako.lookup.TemplateLookup` or `jinja2.Environment`)
+  via an optional `conf.py` method `TEMPLATE_ENGINE_FACTORY`.
 
 Bugfixes
 --------
