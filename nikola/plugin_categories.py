@@ -420,7 +420,7 @@ class MetadataExtractor(BasePlugin):
         """Split file, return metadata and the content."""
         # TODO: The name and interface of this method is a mess and needs to be cleaned up.
         split = self.split_metadata_from_text(source_text)
-        if len(split[0]) == 0:
+        if not split[0]:
             return {}
         return self._extract_metadata_from_text(split[0])
 
