@@ -29,8 +29,9 @@
 import configparser
 import importlib
 import importlib.util
-import time
+import logging
 import sys
+import time
 
 from collections import deque
 from dataclasses import dataclass
@@ -40,7 +41,6 @@ from typing import Dict, Iterable, List, Optional, Type, Set
 from .plugin_categories import BasePlugin, CATEGORIES
 from .utils import get_logger
 
-import logging
 
 LEGACY_PLUGIN_NAMES: Dict[str, str] = {
     "Compiler": "PageCompiler",
