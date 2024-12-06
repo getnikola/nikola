@@ -510,7 +510,7 @@ instead of silently continuing with empty content, you might do this:
     # Somewhere in conf.py:
     def TEMPLATE_ENGINE_FACTORY(**args) -> jinja2.Environment:
         augmented_args = dict(args)
-        augmented_args['undefined'] = jinja2.StrictUndefined
+        augmented_args['undefined'] = jinja2.DebugUndefined
         return jinja2.Environment(**augmented_args)
 
 

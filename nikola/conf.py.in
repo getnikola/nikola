@@ -1332,7 +1332,7 @@ WARN_ABOUT_TAG_METADATA = False
 # E.g., to configure Jinja2 to bark on non-existing values instead of silently omitting:
 # def TEMPLATE_ENGINE_FACTORY(**args) -> jinja2.Environment:
 #     augmented_args = dict(args)
-#     augmented_args['undefined'] = jinja2.StrictUndefined
+#     augmented_args['undefined'] = jinja2.DebugUndefined
 #     return jinja2.Environment(**augmented_args)
 
 # Put in global_context things you want available on all your templates.
