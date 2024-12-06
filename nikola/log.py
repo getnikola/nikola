@@ -30,7 +30,7 @@ import enum
 import logging
 import warnings
 
-from nikola import DEBUG
+from nikola import DEBUG, TEMPLATES_TRACE
 
 __all__ = (
     "get_logger",
@@ -86,6 +86,10 @@ class LoggingMode(enum.Enum):
     QUIET = 2
 
 
+_LOGGING_FMT = "[%(asctime)s] %(levelname)s: %(name)s: %(message)s"
+_LOGGING_DATEFMT = "%Y-%m-%d %H:%M:%S"
+
+
 def configure_logging(logging_mode: LoggingMode = LoggingMode.NORMAL) -> None:
     """Configure logging for Nikola.
 
@@ -101,12 +105,7 @@ def configure_logging(logging_mode: LoggingMode = LoggingMode.NORMAL) -> None:
         return
 
     handler = logging.StreamHandler()
-    handler.setFormatter(
-        ColorfulFormatter(
-            fmt="[%(asctime)s] %(levelname)s: %(name)s: %(message)s",
-            datefmt="%Y-%m-%d %H:%M:%S",
-        )
-    )
+    handler.setFormatter(ColorfulFormatter(fmt=_LOGGING_FMT, datefmt=_LOGGING_DATEFMT))
 
     handlers = [handler]
     if logging_mode == LoggingMode.STRICT:
@@ -137,6 +136,39 @@ def get_logger(name: str, handlers=None) -> logging.Logger:
 
 
 LOGGER = get_logger("Nikola")
+TEMPLATES_LOGGER = get_logger("nikola.templates")
+
+
+def init_template_trace_logging(filename: str) -> None:
+    """Initialize the tracing of the template system.
+
+    This tells a theme designer which templates are being exercised
+    and for which output files, and, if applicable, input files.
+
+    As there is lots of other stuff happening on the normal output stream,
+    this info is also written to a log file.
+    """
+    TEMPLATES_LOGGER.level = logging.DEBUG
+    formatter = logging.Formatter(
+        fmt=_LOGGING_FMT,
+        datefmt=_LOGGING_DATEFMT,
+    )
+    shandler = logging.StreamHandler()
+    shandler.setFormatter(formatter)
+    shandler.setLevel(logging.DEBUG)
+
+    fhandler = logging.FileHandler(filename, encoding="UTF-8")
+    fhandler.setFormatter(formatter)
+    fhandler.setLevel(logging.DEBUG)
+
+    TEMPLATES_LOGGER.handlers = [shandler, fhandler]
+    TEMPLATES_LOGGER.propagate = False
+
+    TEMPLATES_LOGGER.info("Template usage being traced to file %s", filename)
+
+
+if DEBUG or TEMPLATES_TRACE:
+    init_template_trace_logging("templates_trace.log")
 
 
 # Push warnings to logging
