@@ -167,7 +167,7 @@ def init_template_trace_logging(filename: str) -> None:
     TEMPLATES_LOGGER.info("Template usage being traced to file %s", filename)
 
 
-if TEMPLATES_TRACE:
+if DEBUG or TEMPLATES_TRACE:
     init_template_trace_logging("templates_trace.log")
 
 
