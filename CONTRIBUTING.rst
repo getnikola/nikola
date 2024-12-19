@@ -60,7 +60,8 @@ Here are some guidelines about how you can contribute to Nikola:
 * If you are fixing an issue, **include the issue number in commit** and/or pull
   request text (eg. ``fix #1234``) so the issue `is automatically closed
   <https://help.github.com/articles/closing-issues-via-commit-messages/>`_.
-* Run ``flake8 nikola tests`` for **style consistency**.
+* Run ``flake8 nikola tests`` and ``pydocstyle --count --match-dir='(?!^\\.)(?!data).*' nikola/``
+  for **style consistency**.
 * Ensure your Git name and e-mail are set correctly (they will be public)
   and `added to GitHub <https://github.com/settings/emails>`_
 * **Try writing some tests** if possible — again, following existing tests is
