@@ -104,7 +104,6 @@ class CommandServe(Command):
 
     def shutdown(self, signum=None, _frame=None):
         """Shut down the server."""
-
         if os.path.exists(self.serve_pidfile):
             os.remove(self.serve_pidfile)
 
@@ -329,7 +328,6 @@ def _create_RequestHandler_removing_basepath(base_path: str) -> Callable:
     Returns that class (used as a factory for objects).
     Better return type should be Callable[[...], OurHTTPRequestHandler], but Python 3.8 doesn't understand that.
     """
-
     base_path_with_slash = base_path if base_path.endswith("/") else f"{base_path}/"
 
     class OmitBasepathRequestHandler(OurHTTPRequestHandler):
