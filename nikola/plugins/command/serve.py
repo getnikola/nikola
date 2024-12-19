@@ -323,10 +323,11 @@ def _omit_basepath_component(base_path_with_slash: str, path: str) -> str:
         return path
 
 
-def _create_RequestHandler_removing_basepath(base_path: str) -> Callable[[...], OurHTTPRequestHandler]:
+def _create_RequestHandler_removing_basepath(base_path: str) -> Callable:
     """Create a new subclass of OurHTTPRequestHandler that removes a trailing base path from the path.
 
-    Returns that class (used as a factory for objects)
+    Returns that class (used as a factory for objects).
+    Better return type should be Callable[[...], OurHTTPRequestHandler], but Python 3.8 doesn't understand that.
     """
 
     base_path_with_slash = base_path if base_path.endswith("/") else f"{base_path}/"
