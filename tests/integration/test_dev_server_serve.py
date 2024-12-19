@@ -36,18 +36,21 @@ def test_serves_root_dir(
                 res = session.get(server_base_uri)
                 res.raise_for_status()
                 assert "text/html; charset=UTF-8" == res.headers['content-type']
-                assert expected_text in res.text
+                text_found = res.text.replace("\r\n", "\n")  # On windows, the server provides spurious \r
+                assert expected_text == text_found
 
                 assert not base_path.endswith("/")
                 res2 = session.get(f"{server_root_uri}{base_path}/")
                 res2.raise_for_status()
                 assert "text/html; charset=UTF-8" == res2.headers['content-type']
-                assert expected_text in res2.text
+                text_found_2 = res2.text.replace("\r\n", "\n")
+                assert expected_text == text_found_2
 
                 res3 = session.get(f"{server_root_uri}{base_path}/index.html")
                 res3.raise_for_status()
                 assert "text/html; charset=UTF-8" == res3.headers['content-type']
-                assert expected_text in res3.text
+                text_found_3 = res3.text.replace("\r\n", "\n")
+                assert expected_text in text_found_3
 
             LOGGER.info("Web server access successful with intended result.")
         finally:
