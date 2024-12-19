@@ -1862,7 +1862,7 @@ def color_hsl_adjust_hex(hexstr, adjust_h=None, adjust_s=None, adjust_l=None):
 
 
 def dns_sd(port, inet6):
-    """Optimistically publish a HTTP service to the local network over DNS-SD.
+    """Optimistically publish an HTTP service to the local network over DNS-SD.
 
     Works only on Linux/FreeBSD.  Requires the `avahi` and `dbus` modules (symlinks in virtualenvs)
     """
