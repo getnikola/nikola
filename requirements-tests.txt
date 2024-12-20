@@ -5,3 +5,4 @@ pytest-cov>=2.6.1
 feedparser>=6.0.10
 freezegun>=0.3.10
 flake8>=3.7.7
+pydocstyle>=6.3.0
