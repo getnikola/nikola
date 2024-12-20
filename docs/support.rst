@@ -48,9 +48,9 @@ Administrativia
 If you are in need of getting administrativia resolved, you may want
 to e-mail info@getnikola.com and therefore contact the people behind the
 project.  Note that this email **may not** be used for support matters.
-Messages are forwarded to all three administrators, the names and
-personal addresses (if you need to contact them personally) of you can
-find below.
+Messages are forwarded to all administrators.  If you need to
+contact them individually, you can find their names and
+personal addresses below.
 
 Administrators
 --------------
