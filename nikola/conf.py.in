@@ -195,7 +195,9 @@ TIMEZONE = ${TIMEZONE}
 # FORCE_ISO8601 = False
 
 # Date format used to display post dates. (translatable)
-# Used by babel.dates, CLDR style: http://cldr.unicode.org/translation/date-time-1/date-time
+# Used by babel.dates, CLDR style..
+# https://cldr.unicode.org/translation/date-time/date-time-symbols
+# https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
 # You can also use 'full', 'long', 'medium', or 'short'
 # DATE_FORMAT = 'yyyy-MM-dd HH:mm'
 
