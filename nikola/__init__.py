@@ -28,13 +28,14 @@
 
 import os
 import sys
+from typing import Final
 
-__version__ = '8.3.1'
-DEBUG = bool(os.getenv('NIKOLA_DEBUG'))
-SHOW_TRACEBACKS = bool(os.getenv('NIKOLA_SHOW_TRACEBACKS'))
+__version__: Final[str] = "8.3.1"
+DEBUG: bool = bool(os.getenv("NIKOLA_DEBUG"))
+SHOW_TRACEBACKS: bool = bool(os.getenv("NIKOLA_SHOW_TRACEBACKS"))
 
 if sys.version_info[0] == 2:
     raise Exception("Nikola does not support Python 2.")
 
-from .nikola import Nikola  # NOQA
 from . import plugins  # NOQA
+from .nikola import Nikola  # NOQA
