@@ -35,7 +35,6 @@ import stat
 import subprocess
 import sys
 import typing
-import urllib.parse
 import webbrowser
 from pathlib import Path
 
@@ -43,6 +42,7 @@ import blinker
 
 from nikola.plugin_categories import Command
 from nikola.utils import dns_sd, req_missing, get_theme_path, makedirs, pkg_resources_path
+from nikola.plugins.command.basepath_helper import base_path_from_siteuri
 
 try:
     import aiohttp
@@ -65,17 +65,6 @@ except ImportError:
 LRJS_PATH = os.path.join(os.path.dirname(__file__), 'livereload.js')
 REBUILDING_REFRESH_DELAY = 0.35
 IDLE_REFRESH_DELAY = 0.05
-
-
-def base_path_from_siteuri(siteuri: str) -> str:
-    """Extract the path part from a URI such as site['SITE_URL'].
-
-    The path never ends with a "/". (If only "/" is intended, it is empty.)
-    """
-    path = urllib.parse.urlsplit(siteuri).path
-    if path.endswith("/"):
-        path = path[:-1]
-    return path
 
 
 class CommandAuto(Command):
