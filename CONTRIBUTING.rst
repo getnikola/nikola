@@ -87,4 +87,4 @@ Here are some guidelines about how you can contribute to Nikola:
 
 .. [1] Very inspired by `fabric’s <https://github.com/fabric/fabric/blob/master/CONTRIBUTING.rst>`_ — thanks!
 
-.. [2] For example, logging or always making sure directories are created using ``utils.makedirs()``.
+.. [2] For example, logging, or always making sure directories are created using ``utils.makedirs()``.
