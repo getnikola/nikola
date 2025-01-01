@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Better HTML formatter for Pygments.
 
-Copyright © 2020-2024, Chris Warrick.
+Copyright © 2020-2025, Chris Warrick.
 License: 3-clause BSD.
 Portions copyright © 2006-2019, the Pygments authors. (2-clause BSD).
 """

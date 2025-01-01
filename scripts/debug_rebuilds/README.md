@@ -6,6 +6,6 @@ To debug unexpected Nikola rebuilds:
 4. Run `python step2_analyze_py_files.py | tee analysis.txt`. It will compare the two .py files, using `cc_debug.sqlite3` and `{first,second}_dump.py`.
 5. Compare the produced dictionaries. Note that you will probably need a character-level diff tool, <https://prettydiff.com/> is pretty good as long as you change CSS for `li.replace` to `word-break: break-all; white-space: pre-wrap;`
 
-Copyright © 2019-2024, Chris Warrick.
+Copyright © 2019-2025, Chris Warrick.
 Portions Copyright © Eduardo Nafuel Schettino and Doit Contributors.
 License of .py files is MIT (same as Nikola)

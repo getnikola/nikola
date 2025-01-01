@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright © 2017-2024 Roberto Alsina, Chris Warrick and others.
+# Copyright © 2017-2025 Roberto Alsina, Chris Warrick and others.
 
 # Permission is hereby granted, free of charge, to any
 # person obtaining a copy of this software and associated
