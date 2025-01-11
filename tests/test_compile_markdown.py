@@ -35,7 +35,7 @@ SOURCE_CLOSE_TAG = '</source>' if sys.version_info < (3, 11) else ''
             """\
 <div class="code"><table class="codetable"><tr><td class="linenos linenodiv">\
 <a href="#-1"><code data-line-number="1"></code></a></td>\
-<td class="code"><code><span class="kn">from</span> <span class="nn">this</span>
+<td class="code"><code><span class="kn">from</span><span class="w"> </span><span class="nn">this</span>
 </code></td></tr></table></div>
 """,
             id="hilite",
