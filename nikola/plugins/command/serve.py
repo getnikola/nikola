@@ -140,8 +140,11 @@ class CommandServe(Command):
                 # Some browsers fail to load 0.0.0.0 (Issue #2755)
                 if sa[0] == '0.0.0.0':
                     server_url = "http://127.0.0.1:{1}/".format(*sa)
-                self.logger.info("Opening {0} in the default web browser...".format(server_url))
-                webbrowser.open(server_url)
+                if getattr(webbrowser.get(), "name", "") in ["www-browser", "links", "elinks", "lynx", "w3m"]:
+                    self.logger.info("Unable to open web browser, as Python could only find a terminal browser...")
+                else:
+                    self.logger.info("Opening {0} in the default web browser...".format(server_url))
+                    webbrowser.open(server_url)
             if options['detach']:
                 self.detached = True
                 OurHTTPRequestHandler.quiet = True
