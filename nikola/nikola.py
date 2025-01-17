@@ -1990,7 +1990,7 @@ class Nikola(object):
                 utils.LOGGER.warning('Ambiguous path request for slug: {0}'.format(name))
             return [_f for _f in results[0].translated_source_path(lang).split('/')]
 
-    def filename_path(self, name, lang):
+    def filename_path(self, name, _lang):
         """Link to post or page by source filename.
 
         Example:
@@ -1998,12 +1998,17 @@ class Nikola(object):
         link://filename/manual.txt => /docs/handbook.html
         """
         results = [p for p in self.timeline if p.source_path == name]
-        if not results:
-            utils.LOGGER.warning("Cannot resolve path request for filename: {0}".format(name))
-        else:
+        if results:
             if len(results) > 1:
                 utils.LOGGER.error("Ambiguous path request for filename: {0}".format(name))
-            return [_f for _f in results[0].permalink(lang).split('/') if _f]
+        else:
+            # Probably multilingual post, we have to iterate through the posts more costly
+            results = self.timeline
+        for p in results:
+            for lang in p.translated_to:
+                if p.translated_source_path(lang) == name:
+                    return [_f for _f in p.permalink(lang).split('/') if _f]
+        utils.LOGGER.warning("Cannot resolve path request for filename: {0}".format(name))
 
     def register_path_handler(self, kind, f):
         """Register a path handler."""
