@@ -1,7 +1,5 @@
-.. title: Bar
-.. slug: 1
-
-Bar
+.. title: Two
+.. slug: 2
 
 `en <link://slug/1?lang=en>`_
 

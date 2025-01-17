@@ -43,6 +43,37 @@ def test_translated_titles(build, output_dir, other_locale):
         assert doc.find("//title").text == "Bar | Demo Site"
 
 
+def test_translated_cross_links(build, output_dir, other_locale):
+    """Check that cross-language links are correct."""
+    files = [
+        os.path.join(output_dir, "pages", "1", "index.html"),
+        os.path.join(output_dir, other_locale, "pages", "1", "index.html"),
+        os.path.join(output_dir, other_locale, "pages", "2", "index.html"),
+    ]
+    expected = {
+        "en": "pages/1",
+        "pl": "pl/pages/1",
+        "pl 2": "pl/pages/2",
+        "file en": "pages/1",
+        "file pl": "pl/pages/1",
+        "file pl 2": "pl/pages/2",
+    }
+    for f in files:
+        assert os.path.isfile(f)
+        with io.open(f, "r", encoding="utf8") as inf:
+            doc = lxml.html.parse(inf)
+        link_count = 0
+        for link in doc.findall("//article//p//a"):
+            text = link.text
+            href = link.get("href")
+            if text in expected:
+                link_count += 1
+                dest = os.path.join(os.path.dirname(f), href)
+                rel = os.path.relpath(dest, output_dir).strip('/')
+                assert rel == expected[text]
+        assert link_count == len(expected)
+
+
 @pytest.fixture(scope="module")
 def build(target_dir, test_dir):
     """Build the site."""

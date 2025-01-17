@@ -3,3 +3,15 @@
 .. date: 2001/01/01 00:00:00
 
 Foo
+
+`en <link://slug/1>`_
+
+`pl <link://slug/1?lang=pl>`_
+
+`pl 2 <link://slug/2?lang=pl>`_
+
+`file en <link://filename/pages/1.txt>`_
+
+`file pl <link://filename/pages/1.pl.txt>`_
+
+`file pl 2 <link://filename/pages/2.pl.txt>`_
