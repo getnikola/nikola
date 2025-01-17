@@ -69,8 +69,8 @@ def test_translated_cross_links(build, output_dir, other_locale):
             if text in expected:
                 link_count += 1
                 dest = os.path.join(os.path.dirname(f), href)
-                rel = os.path.relpath(dest, output_dir).strip('/')
-                assert rel == expected[text]
+                rel = os.path.relpath(dest, output_dir)
+                assert rel == os.path.normpath(expected[text])
         assert link_count == len(expected)
 
 
