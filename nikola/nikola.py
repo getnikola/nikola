@@ -1997,7 +1997,8 @@ class Nikola(object):
 
         link://filename/manual.txt => /docs/handbook.html
         """
-        results = [p for p in self.timeline if p.source_path == name]
+        name = os.path.normpath(name)
+        results = [p for p in self.timeline if os.path.normpath(p.source_path) == name]
         if results:
             if len(results) > 1:
                 utils.LOGGER.error("Ambiguous path request for filename: {0}".format(name))
@@ -2006,7 +2007,7 @@ class Nikola(object):
             results = self.timeline
         for p in results:
             for lang in p.translated_to:
-                if p.translated_source_path(lang) == name:
+                if os.path.normpath(p.translated_source_path(lang)) == name:
                     return [_f for _f in p.permalink(lang).split('/') if _f]
         utils.LOGGER.warning("Cannot resolve path request for filename: {0}".format(name))
 
