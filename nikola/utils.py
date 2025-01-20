@@ -30,6 +30,8 @@ import configparser
 import datetime
 import hashlib
 import io
+import urllib
+
 import lxml.html
 import operator
 import os
@@ -2168,3 +2170,14 @@ class ClassificationTranslationManager(object):
         args = {'translation_manager': self, 'site': site,
                 'posts_per_classification_per_language': posts_per_classification_per_language}
         signal('{}_translations_config'.format(basename.lower())).send(args)
+
+
+def base_path_from_siteuri(siteuri: str) -> str:
+    """Extract the path part from a URI such as site['SITE_URL'].
+
+    The path returned doesn't end with a "/". (If only "/" is intended, it is empty.)
+    """
+    path = urllib.parse.urlsplit(siteuri).path
+    if path.endswith("/"):
+        path = path[:-1]
+    return path

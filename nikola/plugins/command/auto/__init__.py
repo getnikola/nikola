@@ -42,7 +42,7 @@ import blinker
 
 from nikola.plugin_categories import Command
 from nikola.utils import dns_sd, req_missing, get_theme_path, makedirs, pkg_resources_path
-from nikola.plugins.command.basepath_helper import base_path_from_siteuri
+from utils import base_path_from_siteuri
 
 try:
     import aiohttp

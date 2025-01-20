@@ -41,7 +41,7 @@ from typing import Callable, Optional
 
 from nikola.plugin_categories import Command
 from nikola.utils import dns_sd
-from nikola.plugins.command.basepath_helper import base_path_from_siteuri
+from utils import base_path_from_siteuri
 
 
 class IPv6Server(HTTPServer):
