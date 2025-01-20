@@ -1,50 +1,13 @@
 import asyncio
-import nikola.plugins.command.auto as auto
-from nikola.utils import get_logger
+from typing import Optional, Tuple
+
 import pytest
-import pathlib
 import requests
-import socket
-from typing import Optional, Tuple, Any, Dict
 
-from ..helper import FakeSite
-
-SERVER_ADDRESS = "localhost"
-TEST_MAX_DURATION = 10  # Watchdog: Give up the test if it did not succeed during this time span.
-
-# Folder that has the fixture file we expect the server to serve:
-OUTPUT_FOLDER = pathlib.Path(__file__).parent.parent / "data" / "dev_server_sample_output_folder"
-
-LOGGER = get_logger("test_dev_server")
-
-
-def find_unused_port() -> int:
-    """Ask the OS for a currently unused port number.
-
-    (More precisely, a port that can be used for a TCP server servicing SERVER_ADDRESS.)
-    We use a method here rather than a fixture to minimize side effects of failing tests.
-    """
-    s = socket.socket()
-    try:
-        ANY_PORT = 0
-        s.bind((SERVER_ADDRESS, ANY_PORT))
-        address, port = s.getsockname()
-        LOGGER.info("Trying to set up dev server on http://%s:%i/", address, port)
-        return port
-    finally:
-        s.close()
-
-
-class MyFakeSite(FakeSite):
-    def __init__(self, config: Dict[str, Any], configuration_filename="conf.py"):
-        super(MyFakeSite, self).__init__()
-        self.configured = True
-        self.debug = True
-        self.THEMES = []
-        self._plugin_places = []
-        self.registered_auto_watched_folders = set()
-        self.config = config
-        self.configuration_filename = configuration_filename
+import nikola.plugins.command.auto as auto
+from nikola.utils import base_path_from_siteuri
+from .dev_server_test_helper import MyFakeSite, SERVER_ADDRESS, find_unused_port, TEST_MAX_DURATION, LOGGER, \
+    OUTPUT_FOLDER
 
 
 def test_serves_root_dir(
@@ -157,7 +120,7 @@ def site_and_base_path(request) -> Tuple[MyFakeSite, str]:
         "SITE_URL": request.param,
         "OUTPUT_FOLDER": OUTPUT_FOLDER.as_posix(),
     }
-    return MyFakeSite(config), auto.base_path_from_siteuri(request.param)
+    return MyFakeSite(config), base_path_from_siteuri(request.param)
 
 
 @pytest.fixture(scope="module")
@@ -170,27 +133,3 @@ def expected_text():
     with open(OUTPUT_FOLDER / "index.html", encoding="utf-8") as html_file:
         all_html = html_file.read()
         return all_html[all_html.find("<body>"):]
-
-
-@pytest.mark.parametrize(("uri", "expected_basepath"), [
-    ("http://localhost", ""),
-    ("http://local.host", ""),
-    ("http://localhost/", ""),
-    ("http://local.host/", ""),
-    ("http://localhost:123/", ""),
-    ("http://local.host:456/", ""),
-    ("https://localhost", ""),
-    ("https://local.host", ""),
-    ("https://localhost/", ""),
-    ("https://local.host/", ""),
-    ("https://localhost:123/", ""),
-    ("https://local.host:456/", ""),
-    ("http://example.org/blog", "/blog"),
-    ("https://lorem.ipsum/dolet/", "/dolet"),
-    ("http://example.org:124/blog", "/blog"),
-    ("http://example.org:124/Deep/Rab_bit/hol.e/", "/Deep/Rab_bit/hol.e"),
-    # Would anybody in a sane mind actually do this?
-    ("http://example.org:124/blog?lorem=ipsum&dol=et", "/blog"),
-])
-def test_basepath(uri: str, expected_basepath: Optional[str]) -> None:
-    assert expected_basepath == auto.base_path_from_siteuri(uri)

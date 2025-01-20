@@ -25,19 +25,22 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 """Start test server."""
-
+import atexit
 import os
 import sys
 import re
 import signal
 import socket
+import threading
 import webbrowser
 from http.server import HTTPServer
 from http.server import SimpleHTTPRequestHandler
 from io import BytesIO as StringIO
+from threading import Thread, current_thread
+from typing import Callable, Optional
 
 from nikola.plugin_categories import Command
-from nikola.utils import dns_sd
+from nikola.utils import base_path_from_siteuri, dns_sd
 
 
 class IPv6Server(HTTPServer):
@@ -52,7 +55,8 @@ class CommandServe(Command):
     name = "serve"
     doc_usage = "[options]"
     doc_purpose = "start the test webserver"
-    dns_sd = None
+    httpd: Optional[HTTPServer] = None
+    httpd_serving_thread: Optional[Thread] = None
 
     cmd_options = (
         {
@@ -98,13 +102,21 @@ class CommandServe(Command):
     )
 
     def shutdown(self, signum=None, _frame=None):
-        """Shut down the server that is running detached."""
-        if self.dns_sd:
-            self.dns_sd.Reset()
+        """Shut down the server."""
         if os.path.exists(self.serve_pidfile):
             os.remove(self.serve_pidfile)
-        if not self.detached:
-            self.logger.info("Server is shutting down.")
+
+        # Deal with the non-detached state:
+        if self.httpd is not None and self.httpd_serving_thread is not None and self.httpd_serving_thread != current_thread():
+            shut_me_down = self.httpd
+            self.httpd = None
+            self.httpd_serving_thread = None
+            self.logger.info("Web server is shutting down.")
+            shut_me_down.shutdown()
+        else:
+            self.logger.debug("No need to shut down the web server.")
+
+        # If this was called as a signal handler, shut down the entire application:
         if signum:
             sys.exit(0)
 
@@ -127,29 +139,33 @@ class CommandServe(Command):
                 ipv6 = False
                 OurHTTP = HTTPServer
 
-            httpd = OurHTTP((options['address'], options['port']),
-                            OurHTTPRequestHandler)
-            sa = httpd.socket.getsockname()
-            if ipv6:
-                server_url = "http://[{0}]:{1}/".format(*sa)
+            base_path = base_path_from_siteuri(self.site.config['BASE_URL'])
+            if base_path == "":
+                handler_factory = OurHTTPRequestHandler
             else:
-                server_url = "http://{0}:{1}/".format(*sa)
+                handler_factory = _create_RequestHandler_removing_basepath(base_path)
+            self.httpd = OurHTTP((options['address'], options['port']), handler_factory)
+
+            sa = self.httpd.socket.getsockname()
+            if ipv6:
+                server_url = "http://[{0}]:{1}/".format(*sa) + base_path
+            else:
+                server_url = "http://{0}:{1}/".format(*sa) + base_path
             self.logger.info("Serving on {0} ...".format(server_url))
 
             if options['browser']:
                 # Some browsers fail to load 0.0.0.0 (Issue #2755)
                 if sa[0] == '0.0.0.0':
-                    server_url = "http://127.0.0.1:{1}/".format(*sa)
+                    server_url = "http://127.0.0.1:{1}/".format(*sa) + base_path
                 self.logger.info("Opening {0} in the default web browser...".format(server_url))
                 webbrowser.open(server_url)
             if options['detach']:
-                self.detached = True
                 OurHTTPRequestHandler.quiet = True
                 try:
                     pid = os.fork()
                     if pid == 0:
                         signal.signal(signal.SIGTERM, self.shutdown)
-                        httpd.serve_forever()
+                        self.httpd.serve_forever()
                     else:
                         with open(self.serve_pidfile, 'w') as fh:
                             fh.write('{0}\n'.format(pid))
@@ -160,11 +176,26 @@ class CommandServe(Command):
                     else:
                         raise
             else:
-                self.detached = False
                 try:
-                    self.dns_sd = dns_sd(options['port'], (options['ipv6'] or '::' in options['address']))
-                    signal.signal(signal.SIGTERM, self.shutdown)
-                    httpd.serve_forever()
+                    dns_socket_publication = dns_sd(options['port'], (options['ipv6'] or '::' in options['address']))
+                    try:
+                        self.httpd_serving_thread = threading.current_thread()
+                        if threading.main_thread() == self.httpd_serving_thread:
+                            # If we are running as the main thread,
+                            # likely no other threads are running and nothing else will run after us.
+                            # In this special case, we take some responsibility for the application whole
+                            # (not really the job of any single plugin).
+                            # Clean up the socket publication on exit (if we actually had a socket publication):
+                            if dns_socket_publication is not None:
+                                atexit.register(dns_socket_publication.Reset)
+                            # Enable application shutdown via SIGTERM:
+                            signal.signal(signal.SIGTERM, self.shutdown)
+                        self.logger.info("Starting web server.")
+                        self.httpd.serve_forever()
+                        self.logger.info("Web server has shut down.")
+                    finally:
+                        if dns_socket_publication is not None:
+                            dns_socket_publication.Reset()
                 except KeyboardInterrupt:
                     self.shutdown()
                     return 130
@@ -186,7 +217,7 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
 
     # NOTICE: this is a patched version of send_head() to disable all sorts of
     # caching.  `nikola serve` is a development server, hence caching should
-    # not happen to have access to the newest resources.
+    # not happen, instead, we should give access to the newest resources.
     #
     # The original code was copy-pasted from Python 2.7.  Python 3.3 contains
     # the same code, missing the binary mode comment.
@@ -205,6 +236,7 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
 
         """
         path = self.translate_path(self.path)
+
         f = None
         if os.path.isdir(path):
             path_parts = list(self.path.partition('?'))
@@ -277,3 +309,29 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
         # end no-cache patch
         self.end_headers()
         return f
+
+
+def _omit_basepath_component(base_path_with_slash: str, path: str) -> str:
+    if path.startswith(base_path_with_slash):
+        return path[len(base_path_with_slash) - 1:]
+    elif path == base_path_with_slash[:-1]:
+        return "/"
+    else:
+        # Somewhat dubious. We should not really get asked this, normally.
+        return path
+
+
+def _create_RequestHandler_removing_basepath(base_path: str) -> Callable:
+    """Create a new subclass of OurHTTPRequestHandler that removes a trailing base path from the path.
+
+    Returns that class (used as a factory for objects).
+    Better return type should be Callable[[...], OurHTTPRequestHandler], but Python 3.8 doesn't understand that.
+    """
+    base_path_with_slash = base_path if base_path.endswith("/") else f"{base_path}/"
+
+    class OmitBasepathRequestHandler(OurHTTPRequestHandler):
+
+        def translate_path(self, path: str) -> str:
+            return super().translate_path(_omit_basepath_component(base_path_with_slash, path))
+
+    return OmitBasepathRequestHandler
