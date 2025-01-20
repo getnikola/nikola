@@ -1,5 +1,5 @@
 doit>=0.33.1
-Pygments>=2.4.2
+Pygments>=2.19.0
 Pillow>=9.1.0
 python-dateutil>=2.8.2
 docutils>=0.19
