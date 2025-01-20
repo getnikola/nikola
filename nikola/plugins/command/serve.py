@@ -40,8 +40,7 @@ from threading import Thread, current_thread
 from typing import Callable, Optional
 
 from nikola.plugin_categories import Command
-from nikola.utils import dns_sd
-from utils import base_path_from_siteuri
+from nikola.utils import base_path_from_siteuri, dns_sd
 
 
 class IPv6Server(HTTPServer):

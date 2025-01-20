@@ -5,7 +5,7 @@ import pytest
 import requests
 
 import nikola.plugins.command.auto as auto
-from utils import base_path_from_siteuri
+from nikola.utils import base_path_from_siteuri
 from .dev_server_test_helper import MyFakeSite, SERVER_ADDRESS, find_unused_port, TEST_MAX_DURATION, LOGGER, \
     OUTPUT_FOLDER
 

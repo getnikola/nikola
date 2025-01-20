@@ -41,8 +41,7 @@ from pathlib import Path
 import blinker
 
 from nikola.plugin_categories import Command
-from nikola.utils import dns_sd, req_missing, get_theme_path, makedirs, pkg_resources_path
-from utils import base_path_from_siteuri
+from nikola.utils import base_path_from_siteuri, dns_sd, get_theme_path, makedirs, pkg_resources_path, req_missing
 
 try:
     import aiohttp

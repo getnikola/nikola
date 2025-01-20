@@ -2,7 +2,7 @@ from typing import Optional
 
 import pytest
 
-from utils import base_path_from_siteuri
+from nikola.utils import base_path_from_siteuri
 
 
 @pytest.mark.parametrize(("uri", "expected_basepath"), [

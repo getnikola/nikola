@@ -5,7 +5,7 @@ import pytest
 from concurrent.futures import ThreadPoolExecutor
 
 import nikola.plugins.command.serve as serve
-from utils import base_path_from_siteuri
+from nikola.utils import base_path_from_siteuri
 from .dev_server_test_helper import MyFakeSite, SERVER_ADDRESS, find_unused_port, LOGGER, OUTPUT_FOLDER
 
 
