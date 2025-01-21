@@ -4,9 +4,13 @@ New in master
 Features
 --------
 
+* Support using ``link://kind/name?lang=some_lang`` to link to pages in specific languages
+  (Issue #3811)
+
 Bugfixes
 --------
 
+* Fix ``link://filename/`` magic links to handle multilingual pages (Issue #3811)
 * Ignore errors in parsing SVG files for shrinking them, copy original file to output instead
   (Issue #3785)
 * Restore `annotation_helper.tmpl` with dummy content - fix themes still mentioning it
