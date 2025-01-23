@@ -63,7 +63,7 @@ class JinjaTemplates(TemplateSystem):
         if jinja2 is None:
             return
 
-    def user_engine_factory(self, factory: Callable[..., jinja2.Environment]) -> None:
+    def set_user_engine_factory(self, factory: Callable[..., jinja2.Environment]) -> None:
         """Accept a factory that will be used to produce the underlying jinja2.Environment.
 
         Not normally needed, but it is there if you have special requirements.

@@ -117,7 +117,7 @@ class MakoTemplates(TemplateSystem):
         self.site = site
         self.filters.update(self.site.config['TEMPLATE_FILTERS'])
 
-    def user_engine_factory(self, factory: Callable[..., TemplateLookup]) -> None:
+    def set_user_engine_factory(self, factory: Callable[..., TemplateLookup]) -> None:
         """Accept a factory that will be used to produce the underlying TemplateLookup.
 
         Not normally needed, but it is there if you have special requirements.

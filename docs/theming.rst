@@ -200,9 +200,8 @@ the rest from a suitable parent theme.
 
 .. Tip::
 
-   If you set the environment variable ``NIKOLA_TEMPLATES_TRACE`` to any non-empty value
-   (``true`` is recommended), Nikola will log template usage, both on output and also
-   into a file ``templates_log.txt``.
+   If you set the environment variable ``NIKOLA_TEMPLATES_TRACE`` to ``true``,
+   Nikola will log template usage, both to output and also into a file ``templates_log.txt``.
 
 Apart from the `built-in templates`_ listed below, you can add other templates for specific
 pages, which the user can then use in his ``POSTS`` or ``PAGES`` option in

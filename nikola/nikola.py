@@ -1401,7 +1401,7 @@ class Nikola(object):
 
             engine_factory: Optional[Callable[..., Any]] = self.config.get("TEMPLATE_ENGINE_FACTORY")
             if engine_factory is not None:
-                self._template_system.user_engine_factory(engine_factory)
+                self._template_system.set_user_engine_factory(engine_factory)
 
             lookup_dirs = ['templates'] + [os.path.join(utils.get_theme_path(name), "templates")
                                            for name in self.THEMES]

@@ -60,7 +60,7 @@ class BasePlugin:
     """Base plugin class."""
 
     logger = None
-    site: Optional['nikola.nikola.Nikola'] = None # NOQA  # Fixme: Circular import
+    site: Optional['nikola.nikola.Nikola'] = None # NOQA  # Circular import not easy to fix.
 
     def set_site(self, site):
         """Set site, which is a Nikola instance."""
@@ -205,7 +205,7 @@ class TemplateSystem(BasePlugin):
         """Set the list of folders where templates are located and cache."""
         raise NotImplementedError()
 
-    def user_engine_factory(self, factory: Callable[..., Any]) -> None:
+    def set_user_engine_factory(self, factory: Callable[..., Any]) -> None:
         """Accept a function that will be used to produce the underlying raw template engine."""
         raise NotImplementedError()
 
