@@ -29,6 +29,7 @@
 import io
 import json
 import os
+from typing import Callable, Optional
 
 from nikola.plugin_categories import TemplateSystem
 from nikola.utils import makedirs, req_missing, slugify, sort_posts, _smartjoin_filter
@@ -45,7 +46,15 @@ class JinjaTemplates(TemplateSystem):
     """Support for Jinja2 templates."""
 
     name = "jinja"
-    lookup = None
+    if jinja2 is None:
+        lookup = None
+    else:
+        lookup: Optional[jinja2.Environment] = None
+
+        def _basic_environment_factory(self, **args):
+            return jinja2.Environment(**args)
+        _environment_factory = _basic_environment_factory
+
     dependency_cache = {}
     per_file_cache = {}
 
@@ -54,6 +63,13 @@ class JinjaTemplates(TemplateSystem):
         if jinja2 is None:
             return
 
+    def set_user_engine_factory(self, factory: Callable[..., jinja2.Environment]) -> None:
+        """Accept a factory that will be used to produce the underlying jinja2.Environment.
+
+        Not normally needed, but it is there if you have special requirements.
+        """
+        self._environment_factory = factory
+
     def set_directories(self, directories, cache_folder):
         """Create a new template lookup with set directories."""
         if jinja2 is None:
@@ -61,7 +77,7 @@ class JinjaTemplates(TemplateSystem):
         cache_folder = os.path.join(cache_folder, 'jinja')
         makedirs(cache_folder)
         cache = jinja2.FileSystemBytecodeCache(cache_folder)
-        self.lookup = jinja2.Environment(bytecode_cache=cache)
+        self.lookup = self._environment_factory(bytecode_cache=cache)
         self.lookup.trim_blocks = True
         self.lookup.lstrip_blocks = True
         self.lookup.filters['tojson'] = json.dumps

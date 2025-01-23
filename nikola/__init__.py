@@ -29,8 +29,17 @@
 import os
 import sys
 
+# The current Nikola version:
 __version__ = '8.3.1'
+
+# A flag whether logging should emit debug information:
 DEBUG = bool(os.getenv('NIKOLA_DEBUG'))
+
+# A flag whether special templates trace logging should be generated:
+TEMPLATES_TRACE = bool(os.getenv('NIKOLA_TEMPLATES_TRACE'))
+
+# A flag to show tracebacks of unhandled exceptions.
+# This is a less noisy alternative to the NIKOLA_DEBUG flag.
 SHOW_TRACEBACKS = bool(os.getenv('NIKOLA_SHOW_TRACEBACKS'))
 
 if sys.version_info[0] == 2:

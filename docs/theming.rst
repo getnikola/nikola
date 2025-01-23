@@ -7,7 +7,7 @@
 .. author: The Nikola Team
 
 :Version: 8.3.1
-:Author: Roberto Alsina <ralsina@netmanagers.com.ar>
+:Author: Roberto Alsina <ralsina@netmanagers.com.ar> and others
 
 .. class:: alert alert-primary float-md-right
 
@@ -130,8 +130,17 @@ The following keys are currently supported:
 
     The parent is so you don’t have to create a full theme each time: just
     create an empty theme, set the parent, and add the bits you want modified.
-    You **must** define a parent, otherwise many features won’t work due to
-    missing templates, messages, and assets.
+
+    While it is possible to create a theme without a parent, it is
+    **strongly discouraged** and not officially supported, in the sense:
+    We won't help with issues that are caused by a theme being parentless,
+    and we won't guarantee that it will always work with new Nikola versions.
+    The `base` and `base-jinja` themes provide assets, messages, and generic templates
+    that Nikola expects to be able to use in all sites. That said, if you are making
+    something very custom, Nikola will not prevent the creation of a theme
+    without `base`, but you will need to manually determine which templates and
+    messages are required in your theme. (Initially setting the ``NIKOLA_TEMPLATES_TRACE``
+    environment variable might be of some help, see below.)
 
     The following settings are recommended:
 
@@ -184,8 +193,15 @@ so ``post.tmpl`` only define the content, and the layout is inherited from ``bas
 
 Another concept is theme inheritance. You do not need to duplicate all the
 default templates in your theme — you can just override the ones you want
-changed, and the rest will come from the parent theme. (Every theme needs a
-parent.)
+changed, and the rest will come from the parent theme.  If your theme does not
+define a parent, it needs to be complete.  It is generally a lot harder to
+come up with a complete theme, compared to only changing a few files and using
+the rest from a suitable parent theme.
+
+.. Tip::
+
+   If you set the environment variable ``NIKOLA_TEMPLATES_TRACE`` to ``true``,
+   Nikola will log template usage, both to output and also into a file ``templates_log.txt``.
 
 Apart from the `built-in templates`_ listed below, you can add other templates for specific
 pages, which the user can then use in his ``POSTS`` or ``PAGES`` option in
@@ -194,11 +210,11 @@ page via the ``template`` metadata, and custom templates can be added in the
 ``templates/`` folder of your site.
 
 If you want to modify (override) a built-in template, use ``nikola theme -c
-<name>.tmpl``.  This command will copy the specified template file to the
-``templates/`` directory of your currently used theme.
+<name>.tmpl``.  This command will copy the specified template file from the
+parent theme to the ``templates/`` directory of your currently used theme.
 
 Keep in mind that your theme is *yours*, so you can require whatever data you
-want (eg. you may depend on specific custom ``GLOBAL_CONTEXT`` variables, or
+want (e.g., you may depend on specific custom ``GLOBAL_CONTEXT`` variables, or
 post meta attributes). You don’t need to keep the same theme structure as the
 default themes do (although many of those names are hardcoded). Inheriting from
 at least ``base`` (or ``base-jinja``) is heavily recommended, but not strictly
@@ -474,6 +490,28 @@ at https://www.transifex.com/projects/p/nikola/
 
 If you want to create a theme that has new strings, and you want those strings to be translatable,
 then your theme will need a custom ``messages`` folder.
+
+Configuration of the raw template engine
+----------------------------------------
+
+For usage not covered by the above, you can define a method
+`TEMPLATE_ENGINE_FACTORY` in `conf.py` that constructs the raw
+underlying templating engine. That `raw_engine` that your method
+needs to return is either a `jinja2.Environment` or a
+`mako.loopkup.TemplateLookup` object. Your factory method is
+called with the same arguments as is the pertinent `__init__`.
+
+E.g., to configure `jinja2` to bark and error out on missing values,
+instead of silently continuing with empty content, you might do this:
+
+.. code:: python
+
+    # Somewhere in conf.py:
+    def TEMPLATE_ENGINE_FACTORY(**args) -> jinja2.Environment:
+        augmented_args = dict(args)
+        augmented_args['undefined'] = jinja2.DebugUndefined
+        return jinja2.Environment(**augmented_args)
+
 
 `LESS <http://lesscss.org/>`__ and `Sass <https://sass-lang.com/>`__
 --------------------------------------------------------------------

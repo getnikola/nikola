@@ -36,6 +36,7 @@ import os
 import pathlib
 import sys
 import typing
+from typing import Any, Callable, Dict, Iterable, List, Optional, Set
 import mimetypes
 from collections import defaultdict
 from copy import copy
@@ -373,7 +374,7 @@ class Nikola(object):
     plugin_manager: PluginManager
     _template_system: TemplateSystem
 
-    def __init__(self, **config):
+    def __init__(self, **config) -> None:
         """Initialize proper environment for running tasks."""
         # Register our own path handlers
         self.path_handlers = {
@@ -395,7 +396,7 @@ class Nikola(object):
         self.timeline = []
         self.pages = []
         self._scanned = False
-        self._template_system = None
+        self._template_system: Optional[TemplateSystem] = None
         self._THEMES = None
         self._MESSAGES = None
         self.filters = {}
@@ -996,13 +997,13 @@ class Nikola(object):
         # WebP files have no official MIME type yet, but we need to recognize them (Issue #3671)
         mimetypes.add_type('image/webp', '.webp')
 
-    def _filter_duplicate_plugins(self, plugin_list: typing.Iterable[PluginCandidate]):
+    def _filter_duplicate_plugins(self, plugin_list: Iterable[PluginCandidate]):
         """Find repeated plugins and discard the less local copy."""
         def plugin_position_in_places(plugin: PluginInfo):
             # plugin here is a tuple:
             # (path to the .plugin file, path to plugin module w/o .py, plugin metadata)
+            place: pathlib.Path
             for i, place in enumerate(self._plugin_places):
-                place: pathlib.Path
                 try:
                     # Path.is_relative_to backport
                     plugin.source_dir.relative_to(place)
@@ -1025,7 +1026,7 @@ class Nikola(object):
             result.append(plugins[-1])
         return result
 
-    def init_plugins(self, commands_only=False, load_all=False):
+    def init_plugins(self, commands_only=False, load_all=False) -> None:
         """Load plugins as needed."""
         extra_plugins_dirs = self.config['EXTRA_PLUGINS_DIRS']
         self._loading_commands_only = commands_only
@@ -1086,9 +1087,9 @@ class Nikola(object):
         # Search for compiler plugins which we disabled but shouldn't have
         self._activate_plugins_of_category("PostScanner")
         if not load_all:
-            file_extensions = set()
+            file_extensions: Set[str] = set()
+            post_scanner: PostScanner
             for post_scanner in [p.plugin_object for p in self.plugin_manager.get_plugins_of_category('PostScanner')]:
-                post_scanner: PostScanner
                 exts = post_scanner.supported_extensions()
                 if exts is not None:
                     file_extensions.update(exts)
@@ -1126,8 +1127,8 @@ class Nikola(object):
 
         self._activate_plugins_of_category("Taxonomy")
         self.taxonomy_plugins = {}
+        taxonomy: Taxonomy
         for taxonomy in [p.plugin_object for p in self.plugin_manager.get_plugins_of_category('Taxonomy')]:
-            taxonomy: Taxonomy
             if not taxonomy.is_enabled():
                 continue
             if taxonomy.classification_name in self.taxonomy_plugins:
@@ -1322,7 +1323,7 @@ class Nikola(object):
             if candidate.exists() and candidate.is_dir():
                 self.template_system.inject_directory(str(candidate))
 
-    def _activate_plugins_of_category(self, category) -> typing.List[PluginInfo]:
+    def _activate_plugins_of_category(self, category) -> List[PluginInfo]:
         """Activate all the plugins of a given category and return them."""
         # this code duplicated in tests/base.py
         plugins = []
@@ -1397,6 +1398,11 @@ class Nikola(object):
                                  "plugin\n".format(template_sys_name))
                 sys.exit(1)
             self._template_system = typing.cast(TemplateSystem, pi.plugin_object)
+
+            engine_factory: Optional[Callable[..., Any]] = self.config.get("TEMPLATE_ENGINE_FACTORY")
+            if engine_factory is not None:
+                self._template_system.set_user_engine_factory(engine_factory)
+
             lookup_dirs = ['templates'] + [os.path.join(utils.get_theme_path(name), "templates")
                                            for name in self.THEMES]
             self._template_system.set_directories(lookup_dirs,
@@ -1444,7 +1450,7 @@ class Nikola(object):
 
         return compiler
 
-    def render_template(self, template_name, output_name, context, url_type=None, is_fragment=False):
+    def render_template(self, template_name: str, output_name: str, context, url_type=None, is_fragment=False):
         """Render a template with the global context.
 
         If ``output_name`` is None, will return a string and all URL
@@ -1459,7 +1465,11 @@ class Nikola(object):
         If ``is_fragment`` is set to ``True``, a HTML fragment will
         be rendered and not a whole HTML document.
         """
-        local_context = {}
+        if "post" in context and context["post"] is not None:
+            utils.TEMPLATES_LOGGER.debug("For %s, template %s builds %s", context["post"].source_path, template_name, output_name)
+        else:
+            utils.TEMPLATES_LOGGER.debug("Template %s builds %s", template_name, output_name)
+        local_context: Dict[str, Any] = {}
         local_context["template_name"] = template_name
         local_context.update(self.GLOBAL_CONTEXT)
         local_context.update(context)
