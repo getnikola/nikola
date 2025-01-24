@@ -1,4 +1,7 @@
 #!/bin/bash
+
+set -e -o pipefail -x
+
 PYVER=$(scripts/getpyver.py short)
 if [[ "$1" == "check" ]]; then
     echo -e "\033[36m>> Downloading baseline for $PYVER...\033[0m"
@@ -19,8 +22,7 @@ rm "pages/creating-a-theme.rst" "pages/extending.rst" "pages/internals.rst" "pag
 LC_ALL='en_US.UTF-8' PYTHONHASHSEED=0 nikola build --invariant
 if [[ "$1" == "check" ]]; then
     echo -e "\033[36m>> Testing baseline...\033[0m"
-    diff -ubwr ../baseline output
-    if [[ $? == 0 ]]; then
+    if diff -ubwr ../baseline output; then
         echo -e "\033[32;1m>> Baseline test successful\033[0m"
     else
         CODE=$?
