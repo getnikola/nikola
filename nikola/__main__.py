@@ -116,6 +116,17 @@ def main(args=None):
     else:
         needs_config_file = False
 
+    invariant = False
+
+    if len(args) > 0 and args[0] == 'build' and '--invariant' in args:
+        try:
+            import freezegun
+            freeze = freezegun.freeze_time("2038-01-01")
+            freeze.start()
+            invariant = True
+        except ImportError:
+            req_missing(['freezegun'], 'perform invariant builds')
+
     sys.path.insert(0, os.path.dirname(conf_filename))
     try:
         spec = importlib.util.spec_from_file_location("conf", conf_filename)
@@ -137,17 +148,6 @@ def main(args=None):
 
     if conf_filename_changed:
         LOGGER.info("Using config file '{0}'".format(conf_filename))
-
-    invariant = False
-
-    if len(args) > 0 and args[0] == 'build' and '--invariant' in args:
-        try:
-            import freezegun
-            freeze = freezegun.freeze_time("2038-01-01")
-            freeze.start()
-            invariant = True
-        except ImportError:
-            req_missing(['freezegun'], 'perform invariant builds')
 
     if config:
         if os.path.isdir('plugins') and not os.path.exists('plugins/__init__.py'):
