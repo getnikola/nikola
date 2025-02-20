@@ -42,9 +42,7 @@ import socket
 import subprocess
 import sys
 import threading
-import typing
 from collections import defaultdict, OrderedDict
-from collections.abc import Callable, Iterable
 from html import unescape as html_unescape
 from importlib import reload as _reload
 from unicodedata import normalize as unicodenormalize
@@ -63,12 +61,12 @@ from blinker import signal
 from doit import tools
 from doit.cmdparse import CmdParse
 from nikola.packages.pygments_better_html import BetterHtmlFormatter
-from typing import List
+from typing import Any, Callable, Dict, Iterable, List, Match, Optional, Union
 from unidecode import unidecode
 
 # Renames
 from nikola import DEBUG  # NOQA
-from .log import LOGGER, get_logger  # NOQA
+from .log import LOGGER, TEMPLATES_LOGGER, get_logger  # NOQA
 from .hierarchy_utils import TreeNode, clone_treenode, flatten_tree_structure, sort_classifications
 from .hierarchy_utils import join_hierarchical_category_path, parse_escaped_hierarchical_category_name
 
@@ -591,7 +589,7 @@ def pkg_resources_path(package, resource):
         return str(resources.files(package).joinpath(resource))
 
 
-def get_theme_path_real(theme, themes_dirs):
+def get_theme_path_real(theme, themes_dirs) -> str:
     """Return the path where the given theme's files are located.
 
     Looks in ./themes and in the place where themes go when installed.
@@ -611,7 +609,7 @@ def get_theme_path(theme):
     return theme
 
 
-def parse_theme_meta(theme_dir):
+def parse_theme_meta(theme_dir) -> Optional[configparser.ConfigParser]:
     """Parse a .theme meta file."""
     cp = configparser.ConfigParser()
     # The `or` case is in case theme_dir ends with a trailing slash
@@ -621,7 +619,7 @@ def parse_theme_meta(theme_dir):
     return cp if cp.has_section('Theme') else None
 
 
-def get_template_engine(themes):
+def get_template_engine(themes) -> str:
     """Get template engine used by a given theme."""
     for theme_name in themes:
         meta = parse_theme_meta(theme_name)
@@ -639,7 +637,7 @@ def get_template_engine(themes):
     return 'mako'
 
 
-def get_parent_theme_name(theme_name, themes_dirs=None):
+def get_parent_theme_name(theme_name, themes_dirs=None) -> Optional[str]:
     """Get name of parent theme."""
     meta = parse_theme_meta(theme_name)
     if meta:
@@ -659,7 +657,7 @@ def get_parent_theme_name(theme_name, themes_dirs=None):
         return None
 
 
-def get_theme_chain(theme, themes_dirs):
+def get_theme_chain(theme, themes_dirs) -> List[str]:
     """Create the full theme inheritance chain including paths."""
     themes = [get_theme_path_real(theme, themes_dirs)]
 
@@ -1199,7 +1197,7 @@ class LocaleBorg(object):
     in_string_formatter = None
 
     @classmethod
-    def initialize(cls, locales: 'typing.Dict[str, str]', initial_lang: str):
+    def initialize(cls, locales: Dict[str, str], initial_lang: str):
         """Initialize LocaleBorg.
 
         locales: dict with custom locale name overrides.
@@ -1252,8 +1250,8 @@ class LocaleBorg(object):
             return ''
 
     def formatted_date(self, date_format: 'str',
-                       date: 'typing.Union[datetime.date, datetime.datetime]',
-                       lang: 'typing.Optional[str]' = None) -> str:
+                       date: Union[datetime.date, datetime.datetime],
+                       lang: Optional[str] = None) -> str:
         """Return the formatted date/datetime as a string."""
         if lang is None:
             lang = self.current_lang
@@ -1272,7 +1270,7 @@ class LocaleBorg(object):
         else:
             return format_datetime(date, date_format, locale=locale)
 
-    def format_date_in_string(self, message: str, date: datetime.date, lang: 'typing.Optional[str]' = None) -> str:
+    def format_date_in_string(self, message: str, date: datetime.date, lang: Optional[str] = None) -> str:
         """Format date inside a string (message).
 
         Accepted modes: month, month_year, month_day_year.
@@ -1288,7 +1286,7 @@ class LocaleBorg(object):
             lang = self.current_lang
         locale = self.locales.get(lang, lang)
 
-        def date_formatter(match: typing.Match) -> str:
+        def date_formatter(match: Match) -> str:
             """Format a date as requested."""
             mode, custom_format = match.groups()
             if LocaleBorg.in_string_formatter is not None:
@@ -1942,8 +1940,8 @@ def sort_posts(posts, *keys):
     return posts
 
 
-def smartjoin(join_char: str, string_or_iterable) -> str:
-    """Join string_or_iterable with join_char if it is iterable; otherwise converts it to string.
+def smartjoin(join_char: str, string_or_iterable: Union[None, str, bytes, Iterable[Any]]) -> str:
+    """Join string_or_iterable with join_char if it is iterable; otherwise convert it to string.
 
     >>> smartjoin('; ', 'foo, bar')
     'foo, bar'
@@ -1953,7 +1951,7 @@ def smartjoin(join_char: str, string_or_iterable) -> str:
     'count to 42'
     """
     if isinstance(string_or_iterable, (str, bytes)):
-        return string_or_iterable
+        return str(string_or_iterable)
     elif isinstance(string_or_iterable, Iterable):
         return join_char.join([str(e) for e in string_or_iterable])
     else:

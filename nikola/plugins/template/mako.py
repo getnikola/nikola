@@ -30,6 +30,7 @@ import io
 import os
 import re
 import shutil
+from typing import Callable
 
 from mako import exceptions, util, lexer, parsetree
 from mako.lookup import TemplateLookup
@@ -52,6 +53,11 @@ class MakoTemplates(TemplateSystem):
     filters = {}
     directories = []
     cache_dir = None
+
+    def _basic_environment_factory(self, **args) -> TemplateLookup:
+        return TemplateLookup(**args)
+
+    _environment_factory = _basic_environment_factory
 
     def get_string_deps(self, text, context=None, *, filename=None):
         """Find dependencies for a template string."""
@@ -100,7 +106,7 @@ class MakoTemplates(TemplateSystem):
 
     def create_lookup(self):
         """Create a template lookup."""
-        self.lookup = TemplateLookup(
+        self.lookup = self._basic_environment_factory(
             directories=self.directories,
             module_directory=self.cache_dir,
             input_encoding='utf-8',
@@ -110,6 +116,13 @@ class MakoTemplates(TemplateSystem):
         """Set the Nikola site."""
         self.site = site
         self.filters.update(self.site.config['TEMPLATE_FILTERS'])
+
+    def set_user_engine_factory(self, factory: Callable[..., TemplateLookup]) -> None:
+        """Accept a factory that will be used to produce the underlying TemplateLookup.
+
+        Not normally needed, but it is there if you have special requirements.
+        """
+        self._environment_factory = factory
 
     def render_template(self, template_name, output_name, context):
         """Render the template into output_name using context."""

@@ -1321,6 +1321,20 @@ WARN_ABOUT_TAG_METADATA = False
 # those.
 # TEMPLATE_FILTERS = {}
 
+# If you want to, you can augment or change Nikola's configuration
+# of the underlying template engine used
+# in any way you please, by defining this function:
+# def TEMPLATE_ENGINE_FACTORY(**args):
+#    pass
+# This should return either a jinja2.Environment or a mako.lookup.TemplateLookup
+# object that have been configured with the args received plus any additional configuration wanted.
+#
+# E.g., to configure Jinja2 to bark on non-existing values instead of silently omitting:
+# def TEMPLATE_ENGINE_FACTORY(**args) -> jinja2.Environment:
+#     augmented_args = dict(args)
+#     augmented_args['undefined'] = jinja2.DebugUndefined
+#     return jinja2.Environment(**augmented_args)
+
 # Put in global_context things you want available on all your templates.
 # It can be anything, data, functions, modules, etc.
 GLOBAL_CONTEXT = {}
