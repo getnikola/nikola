@@ -93,7 +93,7 @@ def test_format_date_timezone(base_config):
         2006, 1, 10, 12, 34, 56, tzinfo=dateutil.tz.gettz("America/New_York")
     )
     formatted_date = LocaleBorg().formatted_date("long", nodst)
-    assert formatted_date == "January 10, 2006, 12:34:56\u202fPM -0500"
+    assert formatted_date == "January 10, 2006, 12:34:56\u202fPM EST"
 
 
 @pytest.mark.parametrize(
