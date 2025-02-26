@@ -27,7 +27,6 @@
 """Nikola -- a modular, fast, simple, static website generator."""
 
 import os
-import sys
 
 # The current Nikola version:
 __version__ = '8.3.1'
@@ -41,9 +40,6 @@ TEMPLATES_TRACE = bool(os.getenv('NIKOLA_TEMPLATES_TRACE'))
 # A flag to show tracebacks of unhandled exceptions.
 # This is a less noisy alternative to the NIKOLA_DEBUG flag.
 SHOW_TRACEBACKS = bool(os.getenv('NIKOLA_SHOW_TRACEBACKS'))
-
-if sys.version_info[0] == 2:
-    raise Exception("Nikola does not support Python 2.")
 
 from .nikola import Nikola  # NOQA
 from . import plugins  # NOQA
