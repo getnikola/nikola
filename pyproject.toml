@@ -10,11 +10,11 @@ readme = "README.rst"
 license = {text = "MIT License"}
 # for authors also see AUTHORS.txt file
 authors = [
-    { name = "Roberto Alsina and others", email = "ralsina@netmanagers.com.ar" },
+    { name = "Roberto Alsina and others", email = "info@getnikola.com" },
 ]
 maintainers = [
-    { name = "Chris Warrick", email = "chris@chriswarrick.com" },
-    { name = "Andreas Krüger", email = "andreas.krueger@famsik.de" }
+    { name = "Roberto Alsina", email = "roberto@getnikola.com" },
+    { name = "Chris Warrick", email = "chris@getnikola.com" }
 ]
 keywords = ["website", "blog", "static"]
 classifiers = [
@@ -98,14 +98,9 @@ docs = [
     "pyparsing>=2.0.2",
     "Sphinx>=4.2.0",
 ]
-linting = [
-    "flake8",
-    "pydocstyle"
-]
 
 [project.scripts]
 nikola = "nikola.__main__:main"
-
 
 [tool.setuptools.packages.find]
 exclude = ["tests", "tests.*"]
@@ -117,11 +112,6 @@ exclude = ["tests", "tests.*"]
     "docs/extending.rst"
 ]
 "share/man/man1" = ["docs/man/nikola.1.gz"]
-
-
-[tool.flake8]
-ignore = ["E501", "E741", "W504"]
-exclude = ["nikola/data/themes/base/messages"]
 
 [tool.pydocstyle]
 add-ignore = ["D412", "D413"]

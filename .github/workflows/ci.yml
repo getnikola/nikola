@@ -86,7 +86,7 @@ jobs:
           python-version: '${{ matrix.python }}'
       - name: Install requirements
         run: |
-          python -m pip install --upgrade-strategy eager -U .[linting]
+          python -m pip install --upgrade-strategy eager -U flake8 pydocstyle
       - name: Run flake8
         run: |
           flake8 nikola/ tests/
