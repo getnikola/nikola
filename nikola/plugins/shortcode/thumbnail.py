@@ -50,20 +50,20 @@ class ThumbnailShortcode(ShortcodePlugin):
             figclass = ''
 
         if align and data:
-            figclass += ' align-{0}'.format(align)
+            figclass += f' align-{align}'
         elif align:
-            imgclass += ' align-{0}'.format(align)
+            imgclass += f' align-{align}'
 
-        output = '<a href="{0}" class="image-reference"'.format(uri)
+        output = f'<a href="{uri}" class="image-reference"'
         if linktitle:
-            output += ' title="{0}"'.format(linktitle)
-        output += '><img src="{0}"'.format(src)
+            output += f' title="{linktitle}"'
+        output += f'><img src="{src}"'
         for item, name in ((alt, 'alt'), (title, 'title'), (imgclass, 'class')):
             if item:
-                output += ' {0}="{1}"'.format(name, item)
+                output += f' {name}="{item}"'
         output += '></a>'
 
         if data:
-            output = '<div class="figure {0}">{1}{2}</div>'.format(figclass, output, data)
+            output = f'<div class="figure {figclass}">{output}{data}</div>'
 
         return output, []

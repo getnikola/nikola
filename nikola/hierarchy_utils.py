@@ -96,13 +96,13 @@ class TreeNode(object):
     def _repr_partial(self):
         """Return partial representation."""
         if self.parent:
-            return "{0}/{1!r}".format(self.parent._repr_partial(), self.name)
+            return f"{self.parent._repr_partial()}/{self.name!r}"
         else:
             return repr(self.name)
 
     def __repr__(self):
         """Return programmer-friendly node representation."""
-        return "<TreeNode {0}>".format(self._repr_partial())
+        return f"<TreeNode {self._repr_partial()}>"
 
 
 def clone_treenode(treenode, parent=None, acceptor=lambda x: True):
@@ -188,10 +188,10 @@ def parse_escaped_hierarchical_category_name(category_name):
             next_slash = category_name.find('/', index)
         else:
             if len(category_name) == next_backslash + 1:
-                raise Exception("Unexpected '\\' in '{0}' at last position!".format(category_name))
+                raise Exception(f"Unexpected '\\' in '{category_name}' at last position!")
             esc_ch = category_name[next_backslash + 1]
             if esc_ch not in {'/', '\\'}:
-                raise Exception("Unknown escape sequence '\\{0}' in '{1}'!".format(esc_ch, category_name))
+                raise Exception(f"Unknown escape sequence '\\{esc_ch}' in '{category_name}'!")
             current = (current if current else "") + category_name[index:next_backslash] + esc_ch
             index = next_backslash + 2
             next_backslash = category_name.find('\\', index)

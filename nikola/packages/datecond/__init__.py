@@ -91,6 +91,6 @@ def date_in_range(date_range, date, debug=False, now=None):
             left = date
             right = dateutil.parser.parse(value)
         if debug:  # pragma: no cover
-            print("    <{0} {1} {2}>".format(left, comparison_operator, right))
+            print(f"    <{left} {comparison_operator} {right}>")
         out = out and OPERATORS[comparison_operator](left, right)
     return out

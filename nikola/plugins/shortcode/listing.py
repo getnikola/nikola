@@ -71,7 +71,6 @@ class Plugin(ShortcodePlugin):
             lexer = pygments.lexers.get_lexer_by_name(language)
             formatter = pygments.formatters.get_formatter_by_name(
                 'html', linenos=linenumbers)
-            output = '<a href="{1}">{0}</a>  <a href="{3}">({2})</a>' .format(
-                fname, target, src_label, src_target) + pygments.highlight(data, lexer, formatter)
+            output = f'<a href="{target}">{fname}</a>  <a href="{src_target}">({src_label})</a>'  + pygments.highlight(data, lexer, formatter)
 
         return output, deps

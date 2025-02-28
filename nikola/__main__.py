@@ -139,15 +139,15 @@ def main(args=None):
     except Exception:
         if os.path.exists(conf_filename):
             msg = traceback.format_exc()
-            LOGGER.error('"{0}" cannot be parsed.\n{1}'.format(conf_filename, msg))
+            LOGGER.error(f'"{conf_filename}" cannot be parsed.\n{msg}')
             return 1
         elif needs_config_file and conf_filename_changed:
-            LOGGER.error('Cannot find configuration file "{0}".'.format(conf_filename))
+            LOGGER.error(f'Cannot find configuration file "{conf_filename}".')
             return 1
         config = {}
 
     if conf_filename_changed:
-        LOGGER.info("Using config file '{0}'".format(conf_filename))
+        LOGGER.info(f"Using config file '{conf_filename}'")
 
     if config:
         if os.path.isdir('plugins') and not os.path.exists('plugins/__init__.py'):
@@ -186,7 +186,7 @@ class Help(DoitHelp):
         print("Available commands:")
         for cmd_name in sorted(cmds.keys()):
             cmd = cmds[cmd_name]
-            print("  nikola {:20s} {}".format(cmd_name, cmd.doc_purpose))
+            print(f"  nikola {cmd_name:20s} {cmd.doc_purpose}")
         print("")
         print("  nikola help                 show help / reference")
         print("  nikola help <command>       show command usage")
@@ -359,7 +359,7 @@ class DoitNikola(DoitMain):
             cmd_args = ['version']
             args = ['version']
         if args[0] not in sub_cmds.keys():
-            LOGGER.error("Unknown command {0}".format(args[0]))
+            LOGGER.error(f"Unknown command {args[0]}")
             sugg = defaultdict(list)
             sub_filtered = (i for i in sub_cmds.keys() if i != 'run')
             for c in sub_filtered:
@@ -368,7 +368,7 @@ class DoitNikola(DoitMain):
             if sugg.keys():
                 best_sugg = sugg[min(sugg.keys())]
                 if len(best_sugg) == 1:
-                    LOGGER.info('Did you mean "{}"?'.format(best_sugg[0]))
+                    LOGGER.info(f'Did you mean "{best_sugg[0]}"?')
                 else:
                     LOGGER.info('Did you mean "{}" or "{}"?'.format('", "'.join(best_sugg[:-1]), best_sugg[-1]))
             return 3
@@ -400,7 +400,7 @@ def _command_help(self: Command):
     """Return help text for a command."""
     text = []
 
-    usage = "{} {} {}".format(self.bin_name, self.name, self.doc_usage)
+    usage = f"{self.bin_name} {self.name} {self.doc_usage}"
     text.extend(textwrap.wrap(usage, subsequent_indent='  '))
     text.extend(_wrap(self.doc_purpose, 4))
 
@@ -410,7 +410,7 @@ def _command_help(self: Command):
         options[opt.section].append(opt)
     for section, opts in sorted(options.items()):
         if section:
-            section_name = '\n{}'.format(section)
+            section_name = f'\n{section}'
             text.extend(_wrap(section_name, 2))
         for opt in opts:
             # ignore option that cant be modified on cmd line
@@ -421,15 +421,15 @@ def _command_help(self: Command):
             if '%(default)s' in opt_help:
                 opt_help = opt.help % {'default': opt.default}
             elif opt.default != '' and opt.default is not False and opt.default is not None:
-                opt_help += ' [default: {}]'.format(opt.default)
+                opt_help += f' [default: {opt.default}]'
             opt_choices = opt.help_choices()
-            desc = '{} {}'.format(opt_help, opt_choices)
+            desc = f'{opt_help} {opt_choices}'
             text.extend(_wrap(desc, 8))
 
             # print bool inverse option
             if opt.inverse:
-                text.extend(_wrap('--{}'.format(opt.inverse), 4))
-                text.extend(_wrap('opposite of --{}'.format(opt.long), 8))
+                text.extend(_wrap(f'--{opt.inverse}', 4))
+                text.extend(_wrap(f'opposite of --{opt.long}', 8))
 
     if self.doc_description is not None:
         text.append("\n\nDescription:")

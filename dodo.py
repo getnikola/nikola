@@ -53,5 +53,5 @@ def task_gen_completion():
         yield {
             'name': shell,
             'actions': [cmd.format(shell)],
-            'targets': ['_nikola_{0}'.format(shell)],
+            'targets': [f'_nikola_{shell}'],
         }

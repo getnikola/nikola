@@ -453,7 +453,7 @@ class MetadataExtractor(BasePlugin):
             try:
                 __import__(import_name)
             except ImportError:
-                req_missing([pip_name], "use {0} metadata".format(friendly_name), python=True, optional=False)
+                req_missing([pip_name], f"use {friendly_name} metadata", python=True, optional=False)
 
 
 class SignalHandler(BasePlugin):

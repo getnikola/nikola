@@ -220,7 +220,7 @@ class Sitemap(LateTask):
             """Check if robots can fetch a file."""
             for rule in kw["robots_exclusions"]:
                 robot = robotparser.RobotFileParser()
-                robot.parse(["User-Agent: *", "Disallow: {0}".format(rule)])
+                robot.parse(["User-Agent: *", f"Disallow: {rule}"])
                 if not robot.can_fetch("*", '/' + path):
                     return False  # not robot food
             return True

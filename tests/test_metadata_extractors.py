@@ -39,8 +39,8 @@ def test_builtin_extractors_rest(
 ):
     is_two_files = filecount == 2
 
-    source_filename = "f-rest-{0}-{1}.rst".format(filecount, format_lc)
-    metadata_filename = "f-rest-{0}-{1}.meta".format(filecount, format_lc)
+    source_filename = f"f-rest-{filecount}-{format_lc}.rst"
+    metadata_filename = f"f-rest-{filecount}-{format_lc}.meta"
     source_path = os.path.join(testfiledir, source_filename)
     metadata_path = os.path.join(testfiledir, metadata_filename)
     post = FakePost(source_path, metadata_path, {}, None, metadata_extractors_by)
@@ -54,8 +54,8 @@ def test_builtin_extractors_rest(
     assert meta
     assert extractor is metadata_extractors_by["name"][format_lc]
 
-    assert meta["title"] == "T: reST, {0}, {1}".format(filecount, format_friendly)
-    assert meta["slug"] == "s-rest-{0}-{1}".format(filecount, format_lc)
+    assert meta["title"] == f"T: reST, {filecount}, {format_friendly}"
+    assert meta["slug"] == f"s-rest-{filecount}-{format_lc}"
     assert expected in meta["tags"]
     assert unexpected not in meta["tags"]
     assert "meta" in meta["tags"]
@@ -73,8 +73,8 @@ def test_nikola_meta_markdown(
 ):
     is_two_files = filecount == 2
 
-    source_filename = "f-markdown-{0}-nikola.md".format(filecount)
-    metadata_filename = "f-markdown-{0}-nikola.meta".format(filecount)
+    source_filename = f"f-markdown-{filecount}-nikola.md"
+    metadata_filename = f"f-markdown-{filecount}-nikola.meta"
     source_path = os.path.join(testfiledir, source_filename)
     metadata_path = os.path.join(testfiledir, metadata_filename)
     post = FakePost(source_path, metadata_path, {}, None, metadata_extractors_by)
@@ -86,8 +86,8 @@ def test_nikola_meta_markdown(
     meta, extractor = get_meta(post, None)
     assert extractor is metadata_extractors_by["name"]["nikola"]
 
-    assert meta["title"] == "T: Markdown, {0}, Nikola".format(filecount)
-    assert meta["slug"] == "s-markdown-{0}-nikola".format(filecount)
+    assert meta["title"] == f"T: Markdown, {filecount}, Nikola"
+    assert meta["slug"] == f"s-markdown-{filecount}-nikola"
     assert expected in meta["tags"]
     assert unexpected not in meta["tags"]
     assert "meta" in meta["tags"]
@@ -108,10 +108,10 @@ def test_nikola_meta_markdown(
 def test_compiler_metadata(
     metadata_extractors_by, testfiledir, compiler, fileextension, compiler_lc, name
 ):
-    source_filename = "f-{0}-1-compiler.{1}".format(compiler_lc, fileextension)
-    metadata_filename = "f-{0}-1-compiler.meta".format(compiler_lc)
-    title = "T: {0}, 1, compiler".format(name)
-    slug = "s-{0}-1-compiler".format(compiler_lc)
+    source_filename = f"f-{compiler_lc}-1-compiler.{fileextension}"
+    metadata_filename = f"f-{compiler_lc}-1-compiler.meta"
+    title = f"T: {name}, 1, compiler"
+    slug = f"s-{compiler_lc}-1-compiler"
     source_path = os.path.join(testfiledir, source_filename)
     metadata_path = os.path.join(testfiledir, metadata_filename)
 

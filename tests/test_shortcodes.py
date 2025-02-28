@@ -189,7 +189,7 @@ class FakeSiteWithShortcodeRegistry:
 
 
 def noargs(site, data="", lang=""):
-    return "noargs {0} success!".format(data)
+    return f"noargs {data} success!"
 
 
 def arg(*args, **kwargs):
@@ -197,4 +197,4 @@ def arg(*args, **kwargs):
     kwargs.pop("site")
     data = kwargs.pop("data")
     kwargs.pop("lang")
-    return "arg {0}/{1}/{2}".format(args, sorted(kwargs.items()), data)
+    return f"arg {args}/{sorted(kwargs.items())}/{data}"
