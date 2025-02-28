@@ -1,0 +1,25 @@
+{#  -*- coding: utf-8 -*- #}
+{% extends 'base.tmpl' %}
+{% import 'feeds_translations_helper.tmpl' as feeds_translations with context %}
+
+{% block extra_head %}
+    {{ feeds_translations.head(kind=kind, feeds=False) }}
+{% endblock %}
+
+{% block content %}
+{% if items %}
+    <h2>{{ messages("Authors") }}</h2>
+    <div class="metadata">
+        {{ feeds_translations.translation_link(kind) }}
+    </div>
+{% endif %}
+{% if items %}
+    <ul class="list-inline">
+    {% for text, link in items %}
+        {% if text not in hidden_authors %}
+            <li><a class="reference badge" href="{{ link }}">{{ text|e }}</a></li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}

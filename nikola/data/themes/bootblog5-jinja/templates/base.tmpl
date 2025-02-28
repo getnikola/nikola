@@ -1,0 +1,103 @@
+{#  -*- coding: utf-8 -*- #}
+{% import 'base_helper.tmpl' as base with context %}
+{{ set_locale(lang) }}
+{{ base.html_headstart() }}
+{% block extra_head %}
+{#  Leave this block alone. #}
+{% endblock %}
+{{ template_hooks['extra_head']() }}
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">{{ messages("Skip to main content") }}</a>
+
+<!-- Header and menu bar -->
+<div class="container">
+      <header class="blog-header py-3">
+        <div class="row nbb-header align-items-center">
+          <div class="col-md-3 col-xs-2 col-sm-2" style="width: auto;">
+            <button class="navbar-toggler navbar-light bg-light nbb-navbar-toggler" type="button" data-toggle="collapse" data-target=".bs-nav-collapsible" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse bs-nav-collapsible bootblog4-search-form-holder">
+                {{ search_form }}
+            </div>
+        </div>
+          <div class="col-md-6 col-xs-10 col-sm-10 bootblog4-brand" style="width: auto;">
+            <a class="navbar-brand blog-header-logo text-dark" href="{{ _link("root", None, lang) }}">
+        {% if logo_url %}
+            <img src="{{ logo_url }}" alt="{{ blog_title|e }}" id="logo" class="d-inline-block align-top">
+        {% endif %}
+
+        {% if show_blog_title %}
+            <span id="blog-title">{{ blog_title|e }}</span>
+        {% endif %}
+        </a>
+          </div>
+            <div class="col-md-3 justify-content-end align-items-center bs-nav-collapsible collapse flex-collapse bootblog4-right-nav">
+            <nav class="navbar navbar-light bg-white">
+            <ul class="navbar-nav bootblog4-right-nav">
+                    {{ base.html_navigation_links_entries(navigation_alt_links) }}
+                    {% block belowtitle %}
+                    {% if translations|length > 1 %}
+                        {{ base.html_translations() }}
+                    {% endif %}
+                    {% endblock %}
+                    {% block sourcelink %}{% endblock %}
+                    {{ template_hooks['menu_alt']() }}
+            </ul></nav>
+            </div>
+    </div>
+</header>
+
+<nav class="navbar navbar-expand-md navbar-light bg-white static-top">
+        <div class="collapse navbar-collapse bs-nav-collapsible" id="bs-navbar">
+            <ul class="navbar-nav nav-fill d-flex w-100">
+                {{ base.html_navigation_links_entries(navigation_links) }}
+                {{ template_hooks['menu']() }}
+            </ul>
+        </div><!-- /.navbar-collapse -->
+</nav>
+{% block before_content %}{% endblock %}
+</div>
+
+<div class="container" id="content" role="main">
+    <div class="body-content">
+        {% if theme_config.get('sidebar') %}
+            <div class="row"><div class="col-md-8 blog-main">
+        {% endif %}
+        <!--Body content-->
+        {{ template_hooks['page_header']() }}
+        {% block extra_header %}{% endblock %}
+        {% block content %}{% endblock %}
+        <!--End of body content-->
+        {% if theme_config.get('sidebar') %}
+        </div><aside class="col-md-4 blog-sidebar">{{ theme_config.get('sidebar') }}</aside></div>
+        {% endif %}
+
+        <footer id="footer">
+            {{ content_footer }}
+            {{ template_hooks['page_footer']() }}
+            {% block extra_footer %}{% endblock %}
+        </footer>
+    </div>
+</div>
+
+{{ base.late_load_js() }}
+    {% if date_fanciness != 0 %}
+        <!-- fancy dates -->
+        <script>
+        luxon.Settings.defaultLocale = "{{ luxon_locales[lang] }}";
+        fancydates({{ date_fanciness }}, {{ luxon_date_format }});
+        </script>
+        <!-- end fancy dates -->
+    {% endif %}
+    {% block extra_js %}{% endblock %}
+    <script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
+    </script>
+{{ body_end }}
+{{ template_hooks['body_end']() }}
+</body>
+</html>

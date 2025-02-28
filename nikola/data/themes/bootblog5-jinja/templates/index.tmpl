@@ -1,0 +1,150 @@
+{#  -*- coding: utf-8 -*- #}
+{% import 'index_helper.tmpl' as helper with context %}
+{% import 'math_helper.tmpl' as math with context %}
+{% import 'comments_helper.tmpl' as comments with context %}
+{% import 'pagination_helper.tmpl' as pagination with context %}
+{% import 'feeds_translations_helper.tmpl' as feeds_translations with context %}
+{% extends 'base.tmpl' %}
+
+{% block extra_head %}
+    {{ super() }}
+    {% if posts and (permalink == '/' or permalink == '/' + index_file) %}
+        <link rel="prefetch" href="{{ posts[0].permalink() }}" type="text/html">
+    {% endif %}
+    {{ math.math_styles_ifposts(posts) }}
+{% endblock %}
+
+{% block content %}
+    {% block content_header %}
+        {{ feeds_translations.translation_link(kind) }}
+    {% endblock %}
+    {% if 'main_index' in pagekind %}
+        {{ front_index_header }}
+    {% endif %}
+    {% if page_links %}
+        {{ pagination.page_navigation(current_page, page_links, prevlink, nextlink, prev_next_links_reversed) }}
+    {% endif %}
+    <div class="postindex">
+        {% for post in posts %}
+            <article class="h-entry post-{{ post.meta('type') }}" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <header>
+                <h1 class="p-name entry-title"><a href="{{ post.permalink() }}" class="u-url">{{ post.title()|e }}</a></h1>
+                <div class="metadata">
+                    <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    {% if author_pages_generated and multiple_authors_per_post %}
+                        {% for author in post.authors() %}
+                            <a href="{{ _link('author', author) }}">{{ author|e }}</a>
+                        {% endfor %}
+                    {% elif author_pages_generated %}
+                        <a href="{{ _link('author', post.author()) }}">{{ post.author()|e }}</a>
+                    {% else %}
+                        {{ post.author()|e }}
+                    {% endif %}
+                    </span></p>
+            <p class="dateline">
+            <a href="{{ post.permalink() }}" rel="bookmark">
+            <time class="published dt-published" datetime="{{ post.formatted_date('webiso') }}" itemprop="datePublished" title="{{ post.formatted_date(date_format)|e }}">{{ post.formatted_date(date_format)|e }}</time>
+            {% if post.updated and post.updated != post.date %}
+                <span class="updated"> ({{ messages("updated") }}
+                    <time class="dt-updated" datetime="{{ post.formatted_updated('webiso') }}" itemprop="dateUpdated" title="{{ post.formatted_updated(date_format)|e }}">{{ post.formatted_updated(date_format)|e }}</time>)</span>
+            {% endif %}
+            </a>
+            </p>
+                    {% if not post.meta('nocomments') and site_has_comments %}
+                        <p class="commentline">{{ comments.comment_link(post.permalink(), post._base_path) }}
+                    {% endif %}
+                </div>
+            </header>
+            {% if index_teasers %}
+                <div class="p-summary entry-summary">
+                    {{ post.text(teaser_only=True) }}
+                </div>
+            {% else %}
+                <div class="e-content entry-content">
+                    {{ post.text(teaser_only=False) }}
+                </div>
+            {% endif %}
+            </article>
+        {% endfor %}
+    </div>
+    {{ helper.html_pager() }}
+    {{ comments.comment_link_script() }}
+    {{ math.math_scripts_ifposts(posts) }}
+{% endblock %}
+
+{% block before_content %}
+    {% if 'main_index' in pagekind and is_frontmost_index and featured and (theme_config.get('featured_large') or theme_config.get('featured_small')) %}
+        {% if theme_config.get('featured_on_mobile') %}
+            <div class="d-block">
+        {% else %}
+            <div class="d-none d-md-block">
+        {% endif %}
+        {% if featured and theme_config.get('featured_large') %}
+        <div class="jumbotron p-0 text-white rounded bg-dark">
+            <div class="row bootblog4-featured-jumbotron-row">
+                <div class="col-md-6 p-3 p-md-4 pr-0 h-md-250 bootblog4-featured-text">
+                    <h1 class="display-4 font-italic"><a class="text-white" href="{{ featured[0].permalink() }}">{{ featured[0].title() }}</a></h1>
+                    {% if featured[0].previewimage %}
+                            <div class="lead my-3 mb-0">{{ featured[0].text(teaser_only=True, strip_html=theme_config.get('featured_strip_html', True)) }}</div>
+                        </div>
+                        {% if theme_config.get('featured_large_image_on_mobile') %}
+                        <div class="col-md-6 p-0 h-md-250 text-right">
+                        {% else %}
+                        <div class="col-md-6 p-0 h-md-250 text-right d-none d-md-block">
+                        {% endif %}
+                            <img class="bootblog4-featured-large-image" src="{{ featured[0].previewimage }}" alt="{{ featured.pop(0).title() }}">
+                        </div>
+                    {% else %}
+                        <div class="lead my-3 mb-0">{{ featured.pop(0).text(teaser_only=True, strip_html=theme_config.get('featured_strip_html', True)) }}</div>
+                        </div>
+                    {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if featured and theme_config.get('featured_small') %}
+            <div class="row mb-2">
+            {% if featured|length == 1 %}
+                <div class="col-md-12">
+            {% else %}
+                <div class="col-md-6">
+            {% endif %}
+                    <div class="card flex-md-row mb-4 box-shadow h-md-250">
+                       <div class="card-body d-flex flex-column align-items-start">
+                           <h3 class="mb-0">
+                               <a class="text-dark" href="{{ featured[0].permalink() }}">{{ featured[0].title() }}</a>
+                           </h3>
+                           {% if featured[0].previewimage %}
+                               <div class="card-text mb-auto bootblog4-featured-text">{{ featured[0].text(teaser_only=True, strip_html=theme_config.get('featured_strip_html', True)) }}</div>
+                               </div>
+                               <img class="card-img-right flex-auto d-none d-lg-block" src="{{ featured[0].previewimage }}" alt="{{ featured.pop(0).title() }}">
+                           {% else %}
+                           <div class="card-text mb-auto bootblog4-featured-text">{{ featured.pop(0).text(teaser_only=True, strip_html=theme_config.get('featured_strip_html', True)) }}</div>
+                           </div>
+                            {% endif %}
+                    </div>
+                </div>
+
+            {% if featured %}
+               <div class="col-md-6">
+                    <div class="card flex-md-row mb-4 box-shadow h-md-250">
+                       <div class="card-body d-flex flex-column align-items-start">
+                           <h3 class="mb-0">
+                               <a class="text-dark" href="{{ featured[0].permalink() }}">{{ featured[0].title() }}</a>
+                           </h3>
+                           {% if featured[0].previewimage %}
+                               <div class="card-text mb-auto bootblog4-featured-text">{{ featured[0].text(teaser_only=True, strip_html=theme_config.get('featured_strip_html', True)) }}</div>
+                               </div>
+                               <img class="card-img-right flex-auto d-none d-lg-block" src="{{ featured[0].previewimage }}" alt="{{ featured.pop(0).title() }}">
+                           {% else %}
+                           <div class="card-text mb-auto bootblog4-featured-text">{{ featured.pop(0).text(teaser_only=True, strip_html=theme_config.get('featured_strip_html', True)) }}</div>
+                           </div>
+                            {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+       </div>
+    {% endif %}
+    </div>
+{% endif %}
+{% endblock %}
