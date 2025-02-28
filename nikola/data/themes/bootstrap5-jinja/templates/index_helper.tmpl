@@ -1,0 +1,13 @@
+{#  -*- coding: utf-8 -*- #}
+{% macro html_pager() %}
+    {% if prevlink or nextlink %}
+        <ul class="pager postindexpager clearfix">
+        {% if prevlink %}
+            <li class="previous"><a href="{{ prevlink }}" rel="prev">{{ messages("Newer posts") }}</a></li>
+        {% endif %}
+        {% if nextlink %}
+            <li class="next"><a href="{{ nextlink }}" rel="next">{{ messages("Older posts") }}</a></li>
+        {% endif %}
+        </ul>
+    {% endif %}
+{% endmacro %}

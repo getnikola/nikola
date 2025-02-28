@@ -1,0 +1,104 @@
+{#  -*- coding: utf-8 -*- #}
+{% import 'base_helper.tmpl' as base with context %}
+{{ set_locale(lang) }}
+{{ base.html_headstart() }}
+{% block extra_head %}
+{#  Leave this block alone. #}
+{% endblock %}
+{{ template_hooks['extra_head']() }}
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">{{ messages("Skip to main content") }}</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md static-top mb-4
+{% if theme_config.get('navbar_light') %}
+navbar-light
+{% else %}
+navbar-dark
+{% endif %}
+{% if theme_config.get('navbar_custom_bg') %}
+{{ theme_config['navbar_custom_bg'] }}
+{% elif theme_config.get('navbar_light') %}
+bg-light
+{% else %}
+bg-dark
+{% endif %}
+">
+    <div class="container"><!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="{{ _link("root", None, lang) }}">
+        {% if logo_url %}
+            <img src="{{ logo_url }}" alt="{{ blog_title|e }}" id="logo" class="d-inline-block align-top">
+        {% endif %}
+
+        {% if show_blog_title %}
+            <span id="blog-title">{{ blog_title|e }}</span>
+        {% endif %}
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+                {{ base.html_navigation_links_entries(navigation_links) }}
+                {{ template_hooks['menu']() }}
+            </ul>
+            {% if search_form %}
+                {{ search_form }}
+            {% endif %}
+
+            <ul class="navbar-nav navbar-right">
+                {{ base.html_navigation_links_entries(navigation_alt_links) }}
+                {% block belowtitle %}
+                {% if translations|length > 1 %}
+                    <li>{{ base.html_translations() }}</li>
+                {% endif %}
+                {% endblock %}
+                {% if show_sourcelink %}
+                    {% block sourcelink %}{% endblock %}
+                {% endif %}
+                {{ template_hooks['menu_alt']() }}
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container -->
+</nav>
+
+<!-- End of Menubar -->
+
+<div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        {{ template_hooks['page_header']() }}
+        {% block extra_header %}{% endblock %}
+        {% block content %}{% endblock %}
+        <!--End of body content-->
+
+        <footer id="footer">
+            {{ content_footer }}
+            {{ template_hooks['page_footer']() }}
+            {% block extra_footer %}{% endblock %}
+        </footer>
+    </div>
+</div>
+
+{{ base.late_load_js() }}
+    {% if date_fanciness != 0 %}
+        <!-- fancy dates -->
+        <script>
+        luxon.Settings.defaultLocale = "{{ luxon_locales[lang] }}";
+        fancydates({{ date_fanciness }}, {{ luxon_date_format }});
+        </script>
+        <!-- end fancy dates -->
+    {% endif %}
+    {% block extra_js %}{% endblock %}
+    <script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
+    </script>
+{{ body_end }}
+{{ template_hooks['body_end']() }}
+</body>
+</html>

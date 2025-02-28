@@ -1,0 +1,28 @@
+; css bundles
+assets/css/all-nocdn.css=
+    bootstrap.min.css,
+    rst_base.css,
+    nikola_rst.css,
+    code.css,
+    baguetteBox.min.css,
+    theme.css,
+    bootblog.css,
+    custom.css,
+assets/css/all.css=
+    rst_base.css,
+    nikola_rst.css,
+    code.css,
+    baguetteBox.min.css,
+    theme.css,
+    bootblog.css,
+    custom.css,
+
+; javascript bundles
+assets/js/all-nocdn.js=
+    jquery.min.js,
+    popper.min.js,
+    bootstrap.min.js,
+    baguetteBox.min.js,
+    fancydates.min.js,
+assets/js/all.js=
+    fancydates.min.js,
