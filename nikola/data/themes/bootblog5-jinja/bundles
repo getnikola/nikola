@@ -19,7 +19,6 @@ assets/css/all.css=
 
 ; javascript bundles
 assets/js/all-nocdn.js=
-    jquery.min.js,
     popper.min.js,
     bootstrap.min.js,
     baguetteBox.min.js,
