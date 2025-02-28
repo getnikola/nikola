@@ -8,7 +8,7 @@
 {{ template_hooks['extra_head']() }}
 </head>
 <body>
-<a href="#content" class="sr-only sr-only-focusable">{{ messages("Skip to main content") }}</a>
+<a href="#content" class="visually-hidden-focusable">{{ messages("Skip to main content") }}</a>
 
 <!-- Menubar -->
 
@@ -36,12 +36,12 @@ bg-dark
             <span id="blog-title">{{ blog_title|e }}</span>
         {% endif %}
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="bs-navbar">
-            <ul class="navbar-nav mr-auto">
+            <ul class="navbar-nav me-auto">
                 {{ base.html_navigation_links_entries(navigation_links) }}
                 {{ template_hooks['menu']() }}
             </ul>

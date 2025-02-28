@@ -8,14 +8,14 @@
 {{ template_hooks['extra_head']() }}
 </head>
 <body>
-<a href="#content" class="sr-only sr-only-focusable">{{ messages("Skip to main content") }}</a>
+<a href="#content" class="visually-hidden-focusable">{{ messages("Skip to main content") }}</a>
 
 <!-- Header and menu bar -->
 <div class="container">
       <header class="blog-header py-3">
         <div class="row nbb-header align-items-center">
           <div class="col-md-3 col-xs-2 col-sm-2" style="width: auto;">
-            <button class="navbar-toggler navbar-light bg-light nbb-navbar-toggler" type="button" data-toggle="collapse" data-target=".bs-nav-collapsible" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler navbar-light bg-light nbb-navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".bs-nav-collapsible" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse bs-nav-collapsible bootblog4-search-form-holder">

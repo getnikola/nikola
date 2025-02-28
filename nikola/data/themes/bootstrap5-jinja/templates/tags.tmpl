@@ -11,7 +11,7 @@
         {% for i in range(indent_change_before) %}
             <ul class="list-inline">
         {% endfor %}
-        <li class="list-inline-item"><a class="reference badge badge-secondary" href="{{ link }}">{{ text|e }}</a>
+        <li class="list-inline-item"><a class="reference badge text-bg-secondary" href="{{ link }}">{{ text|e }}</a>
         {% if indent_change_after <= 0 %}
             </li>
         {% endif %}
@@ -30,7 +30,7 @@
     <ul class="list-inline">
     {% for text, link in items %}
         {% if text not in hidden_tags %}
-            <li class="list-inline-item"><a class="reference badge badge-secondary" href="{{ link }}">{{ text|e }}</a></li>
+            <li class="list-inline-item"><a class="reference badge text-bg-secondary" href="{{ link }}">{{ text|e }}</a></li>
         {% endif %}
     {% endfor %}
     </ul>
