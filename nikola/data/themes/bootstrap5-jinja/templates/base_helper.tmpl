@@ -129,11 +129,11 @@ lang="{{ lang }}">
 {% macro html_navigation_links_entries(navigation_links_source) %}
     {% for url, text in navigation_links_source[lang] %}
         {% if isinstance(url, tuple) %}
-            <li class="nav-item dropdown"><a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ text }}</a>
+            <li class="nav-item dropdown"><a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ text }}</a>
             <div class="dropdown-menu">
             {% for suburl, text in url %}
                 {% if rel_link(permalink, suburl) == "#" %}
-                    <a href="{{ permalink }}" class="dropdown-item active">{{ text }} <span class="sr-only">{{ messages("(active)", lang) }}</span></a>
+                    <a href="{{ permalink }}" class="dropdown-item active">{{ text }} <span class="visually-hidden">{{ messages("(active)", lang) }}</span></a>
                 {% else %}
                     <a href="{{ suburl }}" class="dropdown-item">{{ text }}</a>
                 {% endif %}
@@ -141,7 +141,7 @@ lang="{{ lang }}">
             </div>
         {% else %}
             {% if rel_link(permalink, url) == "#" %}
-                <li class="nav-item active"><a href="{{ permalink }}" class="nav-link">{{ text }} <span class="sr-only">{{ messages("(active)", lang) }}</span></a>
+                <li class="nav-item active"><a href="{{ permalink }}" class="nav-link">{{ text }} <span class="visually-hidden">{{ messages("(active)", lang) }}</span></a>
             {% else %}
                 <li class="nav-item"><a href="{{ url }}" class="nav-link">{{ text }}</a>
             {% endif %}
