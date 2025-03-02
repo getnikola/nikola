@@ -26,6 +26,7 @@
 
 """Start test server."""
 import atexit
+import errno
 import os
 import sys
 import re
@@ -144,7 +145,16 @@ class CommandServe(Command):
                 handler_factory = OurHTTPRequestHandler
             else:
                 handler_factory = _create_RequestHandler_removing_basepath(base_path)
-            self.httpd = OurHTTP((options['address'], options['port']), handler_factory)
+
+            try:
+                self.httpd = OurHTTP((options['address'], options['port']), handler_factory)
+            except OSError as e:
+                if e.errno == errno.EADDRINUSE:
+                    print(f"Port address {options['port']} already in use, please use "
+                          f"the `-p <port>` option to select a different one.")
+                    sys.exit(1)
+                else:
+                    raise
 
             sa = self.httpd.socket.getsockname()
             if ipv6:
