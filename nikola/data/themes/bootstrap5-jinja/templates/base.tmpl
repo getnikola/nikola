@@ -27,7 +27,7 @@ bg-dark
 {% endif %}
 ">
     <div class="container"><!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="{{ _link("root", None, lang) }}">
+        <a class="navbar-brand ms-md-5" href="{{ _link("root", None, lang) }}">
         {% if logo_url %}
             <img src="{{ logo_url }}" alt="{{ blog_title|e }}" id="logo" class="d-inline-block align-top">
         {% endif %}
@@ -68,7 +68,7 @@ bg-dark
 <!-- End of Menubar -->
 
 <div class="container" id="content" role="main">
-    <div class="body-content">
+    <div class="body-content ms-md-5">
         <!--Body content-->
         {{ template_hooks['page_header']() }}
         {% block extra_header %}{% endblock %}
