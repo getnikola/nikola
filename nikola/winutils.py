@@ -68,7 +68,7 @@ def fix_all_git_symlinked(topdir: Path):
     """
     # Determine whether or not symlinks need fixing (they don’t if installing
     # from a .tar.gz file)
-    text = (topdir / '/nikola/data/symlink-test-link.txt').read_text(
+    text = (topdir / 'nikola/data/symlink-test-link.txt').read_text(
         encoding='utf-8-sig'
     )
     if text.startswith('NIKOLA_SYMLINKS=OK'):
