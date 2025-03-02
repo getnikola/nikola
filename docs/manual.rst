@@ -9,7 +9,7 @@
 
 :Version: 8.3.1
 
-.. class:: alert alert-primary float-md-right
+.. class:: alert alert-primary float-md-right float-md-end
 
 .. contents::
 
