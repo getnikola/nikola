@@ -8,6 +8,7 @@
 * `André Felipe Dias <https://github.com/andredias>`_
 * `Areski Belaid <https://github.com/areski>`_
 * `Aru Sahni <https://github.com/arusahni>`_
+* `Arun Persaud <https://github.com/arunpersaud>`_
 * `Aurelien Naldi <https://github.com/aurelien-naldi>`_
 * `Ben Mather <https://github.com/bwhmather>`_
 * `Bendik Knapstad <https://github.com/knapstad>`_

@@ -15,13 +15,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        python: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13']
         image:
           - ubuntu-latest
         include:
-          - python: '3.12'
+          - python: '3.13'
             image: macos-latest
-          - python: '3.12'
+          - python: '3.13'
             image: windows-latest
     runs-on: '${{ matrix.image }}'
     steps:
@@ -31,15 +31,9 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '${{ matrix.python }}'
-      - name: Upgrade packaging stack
-        run: |
-          python -m pip install --upgrade-strategy eager -U pip setuptools wheel
-      - name: Install test requirements
-        run: |
-          python -m pip install --upgrade-strategy eager -Ur requirements-tests.txt
       - name: Install Nikola
         run: |
-          python -m pip install .
+          python -m pip install --upgrade-strategy eager -U .[extras,tests]
       - name: Run tests
         run: |
           py.test tests/
@@ -55,7 +49,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ['3.12']
+        python: ['3.13']
         image:
           - ubuntu-latest
     runs-on: '${{ matrix.image }}'
@@ -66,15 +60,12 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '${{ matrix.python }}'
-      - name: Upgrade packaging stack
-        run: |
-          python -m pip install --upgrade-strategy eager -U pip setuptools wheel
       - name: Install extra requirements
         run: |
-          python -m pip install --upgrade-strategy eager -Ur requirements-extras.txt freezegun
+          python -m pip install --upgrade-strategy eager freezegun
       - name: Install Nikola
         run: |
-          python -m pip install .
+          python -m pip install --upgrade-strategy eager -U .[extras]
       - name: Compare to baseline
         run: |
           scripts/baseline.sh check
@@ -84,7 +75,7 @@ jobs:
     strategy:
       matrix:
         python:
-          - '3.12'
+          - '3.13'
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -93,12 +84,9 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '${{ matrix.python }}'
-      - name: Upgrade packaging stack
-        run: |
-          python -m pip install --upgrade-strategy eager -U pip setuptools wheel
       - name: Install requirements
         run: |
-          python -m pip install flake8 pydocstyle
+          python -m pip install --upgrade-strategy eager -U flake8 pydocstyle
       - name: Run flake8
         run: |
           flake8 nikola/ tests/
@@ -113,6 +101,7 @@ jobs:
         python:
           - '3.11'
           - '3.12'
+          - '3.13'
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -121,15 +110,9 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '${{ matrix.python }}'
-      - name: Upgrade packaging stack
-        run: |
-          python -m pip install --upgrade-strategy eager -U pip setuptools wheel
-      - name: Install requirements
-        run: |
-          python -m pip install --upgrade-strategy eager -Ur requirements.txt
       - name: Install Nikola
         run: |
-          python -m pip install .
+          python -m pip install --upgrade-strategy eager -U .
       - name: Run help
         run: |
           nikola help

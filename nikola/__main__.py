@@ -441,7 +441,7 @@ doit.cmd_base.Command.help = _command_help
 
 
 def levenshtein(s1, s2):
-    u"""Calculate the Levenshtein distance of two strings.
+    """Calculate the Levenshtein distance of two strings.
 
     Implementation from Wikibooks:
     https://en.wikibooks.org/w/index.php?title=Algorithm_Implementation/Strings/Levenshtein_distance&oldid=2974448#Python

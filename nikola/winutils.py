@@ -27,21 +27,23 @@
 """windows utilities to workaround problems with symlinks in a git clone."""
 
 import os
+from pathlib import Path
 import shutil
-import io
 # don't add imports to nikola code, will be imported in setup.py
 
 
-def is_file_into_dir(filename, dirname):
+def is_file_in_dir(filename: Path, dirname: Path) -> bool:
     """Check if a file is in directory."""
+    filename = filename.resolve()
+    dirname = dirname.resolve()
     try:
-        res = not os.path.relpath(filename, dirname).startswith('.')
+        res = not str(filename.relative_to(dirname)).startswith('.')
     except ValueError:
         res = False
     return res
 
 
-def fix_all_git_symlinked(topdir):
+def fix_all_git_symlinked(topdir: Path):
     """Convert git symlinks to real content.
 
     Most (all?) of git implementations in windows store a symlink pointing
@@ -66,12 +68,12 @@ def fix_all_git_symlinked(topdir):
     """
     # Determine whether or not symlinks need fixing (they don’t if installing
     # from a .tar.gz file)
-    with io.open(topdir + r'\nikola\data\symlink-test-link.txt', 'r', encoding='utf-8-sig') as f:
-        text = f.read()
-        if text.startswith("NIKOLA_SYMLINKS=OK"):
-            return -1
-    with io.open(topdir + r'\nikola\data\symlinked.txt', 'r', encoding='utf-8-sig') as f:
-        text = f.read()
+    text = (topdir / 'nikola/data/symlink-test-link.txt').read_text(
+        encoding='utf-8-sig'
+    )
+    if text.startswith('NIKOLA_SYMLINKS=OK'):
+        return -1
+    text = (topdir / 'nikola/data/symlinked.txt').read_text(encoding='utf-8-sig')
     # expect each line a relpath from git or zip root,
     # smoke test relpaths are relative to git root
     if text.startswith('.'):
@@ -83,25 +85,24 @@ def fix_all_git_symlinked(topdir):
     failures = 0
     for name in relnames:
         # build dst path and do some basic validation
-        dst = os.path.join(topdir, name)
+        dst = topdir / name
         # don't access files outside topdir
-        if not is_file_into_dir(dst, topdir):
+        if not is_file_in_dir(dst, topdir):
             continue
-        if os.path.isdir(dst):
+        if dst.is_dir():
             # assume the file was de-symlinked
             continue
 
         # build src path and do some basic validation
-        with io.open(os.path.join(topdir, dst), 'r', encoding='utf-8-sig') as f:
-            text = f.read()
-        dst_dir = os.path.dirname(dst)
+        text = dst.read_text(encoding='utf-8-sig')
+        dst_dir = dst.parent
         try:
-            src = os.path.normpath(os.path.join(dst_dir, text))
-            if not os.path.exists(src):
+            src = dst_dir / text
+            if not src.exists():
                 # assume the file was de-symlinked before
                 continue
             # don't access files outside topdir
-            if not is_file_into_dir(src, topdir):
+            if not is_file_in_dir(src, topdir):
                 continue
         except Exception:
             # assume the file was de-symlinked before
@@ -109,15 +110,15 @@ def fix_all_git_symlinked(topdir):
 
         # copy src to dst
         try:
-            if os.path.isdir(src):
+            if src.is_dir():
                 os.unlink(dst)
                 shutil.copytree(src, dst)
             else:
                 shutil.copy2(src, dst)
         except Exception:
             failures += 1
-            print("*** copy failed for")
-            print("\t src:", src)
-            print("\t dst:", dst)
+            print('*** copy failed for')
+            print('\t src:', src)
+            print('\t dst:', dst)
 
     return failures
