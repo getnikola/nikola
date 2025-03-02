@@ -68,7 +68,7 @@ Here are some guidelines about how you can contribute to Nikola:
   often easiest, and a good way to tell whether the feature you are modifying is
   easily testable.
 * **Test your code.** If you can, run the test suite with ``pytest tests/``
-  (you can install all the dependencies via 'pip install .[extras,tests]'). Alternatively,
+  (you can install all the dependencies via ``pip install '.[extras,tests]'``). Alternatively,
   you can push, make a PR and wait for our CI to pick up and test your changes
   (but note that workflows for new  contributors require maintainer approval for
   security reasons). Test results will appear at the bottom of the PR page, and
