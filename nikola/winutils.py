@@ -73,7 +73,7 @@ def fix_all_git_symlinked(topdir: Path):
     )
     if text.startswith('NIKOLA_SYMLINKS=OK'):
         return -1
-    text = (topdir / '/nikola/data/symlinked.txt').read_text(encoding='utf-8-sig')
+    text = (topdir / 'nikola/data/symlinked.txt').read_text(encoding='utf-8-sig')
     # expect each line a relpath from git or zip root,
     # smoke test relpaths are relative to git root
     if text.startswith('.'):
