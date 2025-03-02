@@ -32,7 +32,7 @@ import shutil
 # don't add imports to nikola code, will be imported in setup.py
 
 
-def is_file_into_dir(filename: Path, dirname: Path) -> bool:
+def is_file_in_dir(filename: Path, dirname: Path) -> bool:
     """Check if a file is in directory."""
     filename = filename.resolve()
     dirname = dirname.resolve()
@@ -87,14 +87,14 @@ def fix_all_git_symlinked(topdir: Path):
         # build dst path and do some basic validation
         dst = topdir / name
         # don't access files outside topdir
-        if not is_file_into_dir(dst, topdir):
+        if not is_file_in_dir(dst, topdir):
             continue
         if dst.is_dir():
             # assume the file was de-symlinked
             continue
 
         # build src path and do some basic validation
-        text = (topdir / dst).read_text(encoding='utf-8-sig')
+        text = dst.read_text(encoding='utf-8-sig')
         dst_dir = dst.parent
         try:
             src = dst_dir / text
@@ -102,7 +102,7 @@ def fix_all_git_symlinked(topdir: Path):
                 # assume the file was de-symlinked before
                 continue
             # don't access files outside topdir
-            if not is_file_into_dir(src, topdir):
+            if not is_file_in_dir(src, topdir):
                 continue
         except Exception:
             # assume the file was de-symlinked before
