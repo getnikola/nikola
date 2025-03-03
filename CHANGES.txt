@@ -22,6 +22,11 @@ Bugfixes
 * ``nikola serve`` now works with non-root SITE_URL.
 * Stack traces meaningless for end users now more reliably suppressed (Issue #3838).
 
+Other
+-----
+
+* Changed filter for tidy from  ``tidy5`` to ``tidy``.
+
 New in v8.3.1
 =============
 
