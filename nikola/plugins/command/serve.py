@@ -150,8 +150,8 @@ class CommandServe(Command):
                 self.httpd = OurHTTP((options['address'], options['port']), handler_factory)
             except OSError as e:
                 if e.errno == errno.EADDRINUSE:
-                    print(f"Port address {options['port']} already in use, please use "
-                          f"the `-p <port>` option to select a different one.")
+                    self.logger.error(f"Port address {options['port']} already in use, please use "
+                          "the `-p <port>` option to select a different one.")
                     sys.exit(1)
                 else:
                     raise
