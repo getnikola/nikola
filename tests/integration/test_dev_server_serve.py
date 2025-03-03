@@ -8,6 +8,71 @@ import nikola.plugins.command.serve as serve
 from nikola.utils import base_path_from_siteuri
 from .dev_server_test_helper import MyFakeSite, SERVER_ADDRESS, find_unused_port, LOGGER, OUTPUT_FOLDER
 
+def test_two_serves_with_different_port( site_and_base_path: Tuple[MyFakeSite, str], expected_text: str
+):
+    site, base_path = site_and_base_path
+    command_serveA = serve.CommandServe()
+    command_serveA.set_site(site)
+    command_serveB = serve.CommandServe()
+    command_serveB.set_site(site)
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        options = {
+            "address": SERVER_ADDRESS,
+            "port": find_unused_port(),
+            "browser": False,
+            "detach": False,
+            "ipv6": False,
+        }
+        future_to_run_web_serverA = executor.submit(lambda: command_serveA.execute(options=options))
+        options = {
+            "address": SERVER_ADDRESS,
+            "port": find_unused_port(),
+            "browser": False,
+            "detach": False,
+            "ipv6": False,
+        }
+        future_to_run_web_serverB = executor.submit(lambda: command_serveB.execute(options=options))
+        sleep(0.1)
+        try:
+            command_serveA.shutdown()
+            future_to_run_web_serverA.result()
+        except SystemExit as e:
+            assert  e.code == 0
+        try:
+            command_serveB.shutdown()
+            future_to_run_web_serverB.result()
+        except SystemExit as e:
+            assert  e.code == 0
+
+def test_two_serves_with_same_port( site_and_base_path: Tuple[MyFakeSite, str], expected_text: str
+):
+    site, base_path = site_and_base_path
+    command_serveA = serve.CommandServe()
+    command_serveA.set_site(site)
+    command_serveB = serve.CommandServe()
+    command_serveB.set_site(site)
+    port = find_unused_port()
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        options = {
+            "address": SERVER_ADDRESS,
+            "port": port,
+            "browser": False,
+            "detach": False,
+            "ipv6": False,
+        }
+        future_to_run_web_serverA = executor.submit(lambda: command_serveA.execute(options=options))
+        future_to_run_web_serverB = executor.submit(lambda: command_serveB.execute(options=options))
+        sleep(0.1)
+        try:
+            command_serveA.shutdown()
+            future_to_run_web_serverA.result()
+        except SystemExit as e:
+            assert  e.code == 0
+        try:
+            command_serveB.shutdown()
+            future_to_run_web_serverB.result()
+        except SystemExit as e:
+            assert  e.code == 1
 
 def test_serves_root_dir(
     site_and_base_path: Tuple[MyFakeSite, str], expected_text: str
