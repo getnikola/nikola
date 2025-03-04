@@ -291,7 +291,7 @@ class NikolaTaskLoader(TaskLoader2):
             signal('initialized').send(self.nikola)
         except Exception:
             LOGGER.error('Error loading tasks. An unhandled exception occurred.')
-            if self.nikola.debug or self.nikola.show_tracebacks:
+            if self.nikola.show_tracebacks:
                 raise
             _print_exception()
             sys.exit(3)
@@ -382,7 +382,7 @@ class DoitNikola(DoitMain):
             return super().run(cmd_args)
         except Exception:
             LOGGER.error('An unhandled exception occurred.')
-            if self.nikola.debug or self.nikola.show_tracebacks:
+            if self.nikola.show_tracebacks:
                 raise
             _print_exception()
             return 1
@@ -468,7 +468,7 @@ def levenshtein(s1, s2):
     return previous_row[-1]
 
 
-def _print_exception():
+def _print_exception() -> None:
     """Print an exception in a friendlier, shorter style."""
     etype, evalue, _ = sys.exc_info()
     LOGGER.error(''.join(traceback.format_exception(etype, evalue, None, limit=0, chain=False)).strip())

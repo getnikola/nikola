@@ -127,8 +127,17 @@ class Command(BasePlugin, DoitCommand):
 
         if self.needs_config and not self.site.configured:
             LOGGER.error("This command needs to run inside an existing Nikola site.")
-            return False
-        return self._execute(options, args)
+            return 3
+        try:
+            return self._execute(options, args)
+        except Exception:
+            if self.site.show_tracebacks:
+                raise
+            else:
+                # Do the import only now to evade a circular import problems:
+                from .__main__ import _print_exception
+                _print_exception()
+                return 3
 
     def _execute(self, options, args) -> int:
         """Do whatever this command does.

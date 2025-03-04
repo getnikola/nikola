@@ -401,7 +401,7 @@ class Nikola(object):
         self._MESSAGES = None
         self.filters = {}
         self.debug = DEBUG
-        self.show_tracebacks = SHOW_TRACEBACKS
+        self.show_tracebacks = SHOW_TRACEBACKS or DEBUG
         self.colorful = config.pop('__colorful__', False)
         self.invariant = config.pop('__invariant__', False)
         self.quiet = config.pop('__quiet__', False)
