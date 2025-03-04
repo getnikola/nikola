@@ -151,8 +151,8 @@ class CommandServe(Command):
             except OSError as e:
                 if e.errno == errno.EADDRINUSE:
                     self.logger.error(f"Port address {options['port']} already in use, please use "
-                          "the `-p <port>` option to select a different one.")
-                    sys.exit(1)
+                                      "the `-p <port>` option to select a different one.")
+                    return 3
                 else:
                     raise
 
