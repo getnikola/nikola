@@ -20,6 +20,7 @@ Bugfixes
   (Issue #3764, #3773)
 * Fix compatibility with watchdog 4 (Issue #3766)
 * ``nikola serve`` now works with non-root SITE_URL.
+* Stack traces meaningless for end users now more reliably suppressed (Issue #3838).
 
 New in v8.3.1
 =============
