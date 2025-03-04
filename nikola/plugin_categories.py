@@ -134,7 +134,7 @@ class Command(BasePlugin, DoitCommand):
             if self.site.show_tracebacks:
                 raise
             else:
-                # Do the import only now to doge circular import problems:
+                # Do the import only now to evade a circular import problems:
                 from .__main__ import _print_exception
                 _print_exception()
                 return 3
