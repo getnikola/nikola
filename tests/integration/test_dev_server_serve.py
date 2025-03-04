@@ -1,3 +1,7 @@
+import logging
+import re
+import socket
+from io import StringIO
 from time import sleep
 from typing import Tuple
 import requests
@@ -8,77 +12,53 @@ import nikola.plugins.command.serve as serve
 from nikola.utils import base_path_from_siteuri
 from .dev_server_test_helper import MyFakeSite, SERVER_ADDRESS, find_unused_port, LOGGER, OUTPUT_FOLDER
 
-def test_two_serves_with_different_port( site_and_base_path: Tuple[MyFakeSite, str], expected_text: str
-):
-    site, base_path = site_and_base_path
-    command_serveA = serve.CommandServe()
-    command_serveA.set_site(site)
-    command_serveB = serve.CommandServe()
-    command_serveB.set_site(site)
-    with ThreadPoolExecutor(max_workers=2) as executor:
-        options = {
-            "address": SERVER_ADDRESS,
-            "port": find_unused_port(),
-            "browser": False,
-            "detach": False,
-            "ipv6": False,
-        }
-        future_to_run_web_serverA = executor.submit(lambda: command_serveA.execute(options=options))
-        options = {
-            "address": SERVER_ADDRESS,
-            "port": find_unused_port(),
-            "browser": False,
-            "detach": False,
-            "ipv6": False,
-        }
-        future_to_run_web_serverB = executor.submit(lambda: command_serveB.execute(options=options))
-        sleep(0.1)
-        try:
-            command_serveA.shutdown()
-            future_to_run_web_serverA.result()
-        except SystemExit as e:
-            assert  e.code == 0
-        try:
-            command_serveB.shutdown()
-            future_to_run_web_serverB.result()
-        except SystemExit as e:
-            assert  e.code == 0
 
-def test_two_serves_with_same_port( site_and_base_path: Tuple[MyFakeSite, str], expected_text: str
-):
+def test_server_on_used_port(site_and_base_path: Tuple[MyFakeSite, str]):
     site, base_path = site_and_base_path
-    command_serveA = serve.CommandServe()
-    command_serveA.set_site(site)
-    command_serveB = serve.CommandServe()
-    command_serveB.set_site(site)
-    port = find_unused_port()
-    with ThreadPoolExecutor(max_workers=2) as executor:
-        options = {
-            "address": SERVER_ADDRESS,
-            "port": port,
-            "browser": False,
-            "detach": False,
-            "ipv6": False,
-        }
-        future_to_run_web_serverA = executor.submit(lambda: command_serveA.execute(options=options))
-        future_to_run_web_serverB = executor.submit(lambda: command_serveB.execute(options=options))
-        sleep(0.1)
+    command_serve = serve.CommandServe()
+    command_serve.set_site(site)
+    command_serve.serve_pidfile = "there is no file with this name we hope"
+    command_serve.logger = logging.getLogger("dev_server_test")
+    catch_log = StringIO()
+    catch_log_handler = logging.StreamHandler(catch_log)
+    logging.getLogger().addHandler(catch_log_handler)
+    try:
+        s = socket.socket()
         try:
-            command_serveA.shutdown()
-            future_to_run_web_serverA.result()
-        except SystemExit as e:
-            assert  e.code == 0
-        try:
-            command_serveB.shutdown()
-            future_to_run_web_serverB.result()
-        except SystemExit as e:
-            assert  e.code == 1
+            ANY_PORT = 0
+            s.bind((SERVER_ADDRESS, ANY_PORT))
+            address, port = s.getsockname()
+            with ThreadPoolExecutor(max_workers=2) as executor:
+                options = {
+                    "address": SERVER_ADDRESS,
+                    "port": port,
+                    "browser": False,
+                    "detach": False,
+                    "ipv6": False,
+                }
+                future_to_run_web_server = executor.submit(lambda: command_serve.execute(options=options))
+                command_serve.shutdown()
+                result = future_to_run_web_server.result()
+                assert 3 == result
+                assert re.match(
+                    r"Port address \d+ already in use, "
+                    r"please use the `\-p \<port\>` option to select a different one\.",
+                    catch_log.getvalue()
+                )
+                assert "OSError" not in catch_log.getvalue()
+        finally:
+            s.close()
+    finally:
+        logging.getLogger().removeHandler(catch_log_handler)
+
 
 def test_serves_root_dir(
     site_and_base_path: Tuple[MyFakeSite, str], expected_text: str
 ) -> None:
     site, base_path = site_and_base_path
     command_serve = serve.CommandServe()
+    command_serve.serve_pidfile = "there is no file with this name we hope"
+    command_serve.logger = logging.getLogger("dev_server_test")
     command_serve.set_site(site)
     options = {
         "address": SERVER_ADDRESS,
