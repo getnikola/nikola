@@ -2329,7 +2329,7 @@ filters.typogrify_custom
     ``[typo.amp, typo.widont, typo.smartypants, typo.caps, typo.initial_quotes]`` and the
     default value for ``ignore_tags`` is ``["title", ".math"]``. If ``ignore_tags`` is
     specified, the default tags will be appended to the supplied list. See the
-    `documentation <https://github.com/justinmayer/typogrify/blob/master/typogrify/filters.py#L8-L14>`__
+    `documentation <https://github.com/justinmayer/typogrify/blob/master/typogrify/filters.py>`__
     for the ``process_ignores`` function in typogrify.
 
 filters.minify_lines
