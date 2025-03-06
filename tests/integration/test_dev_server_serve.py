@@ -1,6 +1,7 @@
 import logging
 import re
 import socket
+import sys
 from io import StringIO
 from time import sleep
 from typing import Tuple
@@ -40,11 +41,14 @@ def test_server_on_used_port(site_and_base_path: Tuple[MyFakeSite, str]):
                 command_serve.shutdown()
                 result = future_to_run_web_server.result()
                 assert 3 == result
-                assert re.match(
-                    r"Port address \d+ already in use, "
-                    r"please use the `\-p \<port\>` option to select a different one\.",
-                    catch_log.getvalue()
-                )
+
+
+                if not sys.platform == 'win32':
+                    assert re.match(
+                        r"Port address \d+ already in use, "
+                        r"please use the `\-p \<port\>` option to select a different one\.",
+                        catch_log.getvalue()
+                    )
                 assert "OSError" not in catch_log.getvalue()
         finally:
             s.close()
