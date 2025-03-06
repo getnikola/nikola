@@ -657,8 +657,8 @@ GITHUB_COMMIT_SOURCE = True
 
 # Executable for the "html_tidy_withconfig", "html_tidy_nowrap",
 # "html_tidy_wrap", "html_tidy_wrap_attr" and "html_tidy_mini" filters
-# (defaults to 'tidy5').
-# HTML_TIDY_EXECUTABLE = 'tidy5'
+# (defaults to 'tidy').
+# HTML_TIDY_EXECUTABLE = 'tidy'
 
 # List of XPath expressions which should be used for finding headers
 # ({hx} is replaced by headers h1 through h6).
