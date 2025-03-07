@@ -35,6 +35,7 @@
 * `dastagg <https://github.com/dastagg>`_
 * `David Barragán Merino <https://github.com/bameda>`_
 * `David Beath <https://github.com/DBeath>`_
+* `Detlev Zundel <https://github.com/laodzu>`_
 * `Dhruv Baldawa <https://github.com/dhruvbaldawa>`_
 * `Dirk Engling <https://github.com/erdgeist>`_
 * `Dmitry Verkhoturov <https://github.com/paskal>`_

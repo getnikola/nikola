@@ -379,6 +379,7 @@ class Nikola(object):
         # Register our own path handlers
         self.path_handlers = {
             'slug': self.slug_path,
+            'slug_source': self.slug_source,
             'post_path': self.post_path,
             'root': self.root_path,
             'filename': self.filename_path,
@@ -1969,6 +1970,21 @@ class Nikola(object):
             if len(results) > 1:
                 utils.LOGGER.warning('Ambiguous path request for slug: {0}'.format(name))
             return [_f for _f in results[0].permalink(lang).split('/')]
+
+    def slug_source(self, name, lang):
+        """Return a link to source for a post with given slug, if not ambiguous.
+
+        Example:
+
+        link://slug_source/yellow-camaro => /posts/cars/awful/yellow-camaro.rst
+        """
+        results = [p for p in self.timeline if p.meta('slug') == name]
+        if not results:
+            utils.LOGGER.warning("Cannot resolve path request for slug: {0}".format(name))
+        else:
+            if len(results) > 1:
+                utils.LOGGER.warning('Ambiguous path request for slug: {0}'.format(name))
+            return [_f for _f in results[0].translated_source_path(lang).split('/')]
 
     def filename_path(self, name, lang):
         """Link to post or page by source filename.

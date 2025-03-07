@@ -197,6 +197,14 @@ slug
     link://slug/yellow-camaro => /posts/cars/awful/yellow-camaro/index.html
     
 
+slug_source
+    Return a link to source for a post with given slug, if not ambiguous.
+
+    Example:
+
+    link://slug_source/yellow-camaro => /posts/cars/awful/yellow-camaro.rst
+
+
 tag
     A link to a tag's page. Takes page number as optional keyword argument.
     
