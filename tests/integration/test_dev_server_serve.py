@@ -14,8 +14,20 @@ from nikola.utils import base_path_from_siteuri
 from .dev_server_test_helper import MyFakeSite, SERVER_ADDRESS, find_unused_port, LOGGER, OUTPUT_FOLDER
 
 
-def test_server_on_used_port(site_and_base_path: Tuple[MyFakeSite, str]):
+def test_server_on_used_port(site_and_base_path: Tuple[MyFakeSite, str]) -> None:
+    """Check error if port for nikola serve is already being used.
+
+    `nikola serve` uses a default port and if that port is already in use it should print out a nice
+    error message that tells the user what happend and how to fix this.
+
+    To test the case where the port is already in use, we open a socket on the same port that we use
+    for `nikola serve` before starting the server.
+
+    The program should exit with a return code of 3 in this case and print out a message to the user.
+    """
+
     site, base_path = site_and_base_path
+    site.show_tracebacks = False
     command_serve = serve.CommandServe()
     command_serve.set_site(site)
     command_serve.serve_pidfile = "there is no file with this name we hope"
@@ -42,7 +54,8 @@ def test_server_on_used_port(site_and_base_path: Tuple[MyFakeSite, str]):
                 result = future_to_run_web_server.result()
                 assert 3 == result
 
-
+                # TODO: check if this works on windows
+                # for now we skip this assert on windows platforms.
                 if not sys.platform == 'win32':
                     assert re.match(
                         r"Port address \d+ already in use, "
