@@ -10,6 +10,7 @@ Features
   (either ``mako.lookup.TemplateLookup`` or ``jinja2.Environment``)
   via an optional ``conf.py`` method ``TEMPLATE_ENGINE_FACTORY``.
 * Switch to pyproject.toml
+* Add path handler ``slug_source`` linking to source of post.
 
 Bugfixes
 --------
