@@ -15,14 +15,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13', '3.13t']
-        image:
-          - ubuntu-latest
+        python: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13']
+        freethreaded: [false]
+        image: ['ubuntu-latest']
         include:
           - python: '3.13'
             image: macos-latest
           - python: '3.13'
             image: windows-latest
+          - python: '3.13'
+            freethreaded: true
+            image: ubuntu-latest
     runs-on: '${{ matrix.image }}'
     steps:
       - name: Check out code
@@ -31,6 +34,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python }}'
+          freethreaded: ${{ matrix.freethreaded }}
       - name: Install Nikola
         run: |
           python -m pip install --upgrade-strategy eager -U .[extras,tests]
@@ -75,7 +79,7 @@ jobs:
     strategy:
       matrix:
         python:
-          - '3.13t'
+          - '3.13'
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -102,7 +106,6 @@ jobs:
           - '3.11'
           - '3.12'
           - '3.13'
-          - '3.13t'
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
