@@ -28,7 +28,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python }}'
       - name: Install Nikola
@@ -57,7 +57,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python }}'
       - name: Install extra requirements
@@ -81,7 +81,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python }}'
       - name: Install requirements
@@ -108,7 +108,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python }}'
       - name: Install Nikola
