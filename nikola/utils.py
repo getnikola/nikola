@@ -45,6 +45,7 @@ import threading
 from collections import defaultdict, OrderedDict
 from html import unescape as html_unescape
 from importlib import reload as _reload
+from pathlib import Path
 from unicodedata import normalize as unicodenormalize
 from urllib.parse import quote as urlquote
 from urllib.parse import unquote as urlunquote
@@ -710,41 +711,48 @@ def load_messages(themes, translations, default_lang, themes_dirs):
     and "younger" themes have priority.
     """
     messages = Functionary(dict, default_lang)
-    oldpath = list(sys.path)
-    found = {lang: False for lang in translations.keys()}
+    found = {lang: False for lang in translations}
+    completion_status = found.copy()
     last_exception = None
-    completion_status = {lang: False for lang in translations.keys()}
+
+    def load_msgs(lang, folder):
+        globals = {}
+        msg_file = folder / f'messages_{lang}.py'
+        try:
+            pysrc = msg_file.read_bytes()
+            exec(pysrc, globals)
+        except Exception as ex:
+            last_exception = ex   # noqa: F841
+        return globals.get('MESSAGES', {})
+
+    # load default translations provided by "base" theme
+    default_folder = Path(get_theme_path_real('base', themes_dirs)) / 'messages'
+    english = load_msgs('en', default_folder)
+    for lang in translations:
+        messages[lang].update(english)
+        messages[lang].update(load_msgs(lang, default_folder))
+
+    # load translations for each theme
     for theme_name in themes[::-1]:
-        msg_folder = os.path.join(get_theme_path(theme_name), 'messages')
-        default_folder = os.path.join(get_theme_path_real('base', themes_dirs), 'messages')
-        sys.path.insert(0, default_folder)
-        sys.path.insert(0, msg_folder)
-
-        english = __import__('messages_en')
-        # If we don't do the reload, the module is cached
-        _reload(english)
-        for lang in translations.keys():
-            try:
-                translation = __import__('messages_' + lang)
-                # If we don't do the reload, the module is cached
-                _reload(translation)
-                found[lang] = True
-                if sorted(translation.MESSAGES.keys()) != sorted(english.MESSAGES.keys()):
-                    completion_status[lang] = completion_status[lang] or False
-                else:
-                    completion_status[lang] = True
-
-                messages[lang].update(english.MESSAGES)
-                for k, v in translation.MESSAGES.items():
-                    if v:
-                        messages[lang][k] = v
-                del translation
-            except ImportError as orig:
-                last_exception = orig
-        del english
-        sys.path = oldpath
+        msg_folder = Path(get_theme_path(theme_name)) / 'messages'
+        # load English default from this theme
+        english = load_msgs('en', msg_folder)
+        messages[lang].update(english)  # FIXME: This will overwrite translated strings
+        for lang in translations:
+            translation = load_msgs(lang, msg_folder)
+            if not translation:
+                continue
+            found[lang] = True
+            for k, v in translation.items():
+                if v:
+                    messages[lang][k] = v
+            if set(translation) != set(english):
+                completion_status[lang] = completion_status[lang] or False
+            else:
+                completion_status[lang] = True
 
     if not all(found.values()):
+        print(lang, last_exception)
         raise LanguageNotFoundError(lang, last_exception)
     for lang, status in completion_status.items():
         if not status and lang not in INCOMPLETE_LANGUAGES_WARNED:
