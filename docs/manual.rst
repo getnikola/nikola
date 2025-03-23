@@ -22,6 +22,8 @@ After you have Nikola `installed <https://getnikola.com/getting-started.html>`_:
 Create an empty site (with a setup wizard):
     ``nikola init mysite``
 
+    .. _demo site:
+
     You can create a site with demo files in it with ``nikola init --demo mysite``
 
     The rest of these commands have to be executed inside the new ``mysite`` folder.
@@ -1596,6 +1598,10 @@ CSS tweaking
 .. _Sass: https://sass-lang.com/
 
 Template tweaking and creating themes
+    For tweaking an existing template or adding new ones,
+    you can put the respective file under ``templates/``.
+    The `demo site`_ provides an example.
+
     If you really want to change the pages radically, you will want to do a
     :doc:`custom theme <theming>`.
 
