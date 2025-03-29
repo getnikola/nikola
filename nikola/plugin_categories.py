@@ -27,7 +27,6 @@
 """Nikola plugin categories."""
 
 import logging
-import os
 from pathlib import Path
 
 from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
@@ -60,7 +59,7 @@ class BasePlugin:
     """Base plugin class."""
 
     logger = None
-    site: Optional['nikola.nikola.Nikola'] = None # NOQA  # Circular import not easy to fix.
+    site: Optional['nikola.nikola.Nikola'] = None  # NOQA  # Circular import not easy to fix.
 
     def set_site(self, site):
         """Set site, which is a Nikola instance."""
@@ -100,10 +99,10 @@ class PostScanner(BasePlugin):
 class Command(BasePlugin, DoitCommand):
     """Doit command implementation."""
 
-    name = "dummy_command"
+    name = 'dummy_command'
 
-    doc_purpose = "A short explanation."
-    doc_usage = ""
+    doc_purpose = 'A short explanation.'
+    doc_usage = ''
     doc_description = None  # None value will completely omit line from doc
     # see https://pydoit.org/cmd_run.html#parameters
     cmd_options = ()
@@ -126,7 +125,7 @@ class Command(BasePlugin, DoitCommand):
         args = args or []
 
         if self.needs_config and not self.site.configured:
-            LOGGER.error("This command needs to run inside an existing Nikola site.")
+            LOGGER.error('This command needs to run inside an existing Nikola site.')
             return 3
         try:
             return self._execute(options, args)
@@ -136,6 +135,7 @@ class Command(BasePlugin, DoitCommand):
             else:
                 # Do the import only now to evade a circular import problems:
                 from .__main__ import _print_exception
+
                 _print_exception()
                 return 3
 
@@ -151,19 +151,19 @@ class Command(BasePlugin, DoitCommand):
 def help(self):
     """Return help text for a command."""
     text = []
-    text.append("Purpose: %s" % self.doc_purpose)
-    text.append("Usage:   nikola %s %s" % (self.name, self.doc_usage))
+    text.append('Purpose: %s' % self.doc_purpose)
+    text.append('Usage:   nikola %s %s' % (self.name, self.doc_usage))
     text.append('')
 
-    text.append("Options:")
+    text.append('Options:')
     for opt in self.cmdparser.options:
         text.extend(opt.help_doc())
 
     if self.doc_description is not None:
-        text.append("")
-        text.append("Description:")
+        text.append('')
+        text.append('Description:')
         text.append(self.doc_description)
-    return "\n".join(text)
+    return '\n'.join(text)
 
 
 # we need to patch DoitCommand.help with doit <0.31.0
@@ -174,7 +174,7 @@ if doit.__version__ < (0, 31, 0):
 class BaseTask(BasePlugin):
     """Base for task generators."""
 
-    name = "dummy_task"
+    name = 'dummy_task'
 
     # default tasks are executed by default.
     # the others have to be specifie in the command line.
@@ -196,19 +196,19 @@ class BaseTask(BasePlugin):
 class Task(BaseTask):
     """Task generator."""
 
-    name = "dummy_task"
+    name = 'dummy_task'
 
 
 class LateTask(BaseTask):
     """Late task generator (plugin executed after all Task plugins)."""
 
-    name = "dummy_latetask"
+    name = 'dummy_latetask'
 
 
 class TemplateSystem(BasePlugin):
     """Provide support for templating systems."""
 
-    name = "dummy_templates"
+    name = 'dummy_templates'
 
     def set_directories(self, directories: List[str], cache_folder: str) -> None:
         """Set the list of folders where templates are located and cache."""
@@ -230,7 +230,9 @@ class TemplateSystem(BasePlugin):
         """Find dependencies for a template string."""
         raise NotImplementedError()
 
-    def render_template(self, template_name: str, output_name: str, context: Dict[str, str]) -> str:
+    def render_template(
+        self, template_name: str, output_name: str, context: Dict[str, str]
+    ) -> str:
         """Render template to a file using context.
 
         This must save the data to output_name *and* return it
@@ -254,7 +256,7 @@ class TemplateSystem(BasePlugin):
 class TaskMultiplier(BasePlugin):
     """Take a task and return *more* tasks."""
 
-    name = "dummy multiplier"
+    name = 'dummy multiplier'
 
     def process(self, task) -> list:
         """Examine task and create more tasks. Returns extra tasks only."""
@@ -264,7 +266,7 @@ class TaskMultiplier(BasePlugin):
 class PageCompiler(BasePlugin):
     """Compile text files into HTML."""
 
-    name = "dummy_compiler"
+    name = 'dummy_compiler'
     friendly_name = ''
     demote_headers = False
     supports_onefile = True
@@ -299,6 +301,7 @@ class PageCompiler(BasePlugin):
 
     def register_extra_dependencies(self, post: Post):
         """Add dependency to post object to check .dep file."""
+
         def create_lambda(lang: str) -> Callable:
             # We create a lambda like this so we can pass `lang` to it, because if we didn’t
             # add that function, `lang` would always be the last language in TRANSLATIONS.
@@ -319,7 +322,9 @@ class PageCompiler(BasePlugin):
         """Compile the source file into HTML and save as dest."""
         raise NotImplementedError()
 
-    def compile_string(self, data: str, source_path=None, is_two_file=True, post=None, lang=None) -> str:
+    def compile_string(
+        self, data: str, source_path=None, is_two_file=True, post=None, lang=None
+    ) -> str:
         """Compile the source file into HTML strings (with shortcode support).
 
         Returns a tuple of at least two elements: HTML string [0] and shortcode dependencies [last].
@@ -333,7 +338,7 @@ class PageCompiler(BasePlugin):
 
     def extension(self) -> str:
         """Return the preferred extension for the output of this compiler."""
-        return ".html"
+        return '.html'
 
     def read_metadata(self, post: Post, lang=None) -> Dict[str, str]:
         """Read the metadata from a post, and return a metadata dict."""
@@ -345,6 +350,7 @@ class PageCompiler(BasePlugin):
             extractor = post.used_extractor[lang]
         else:
             import nikola.metadata_extractors
+
             extractor = nikola.metadata_extractors.DEFAULT_EXTRACTOR
 
         if isinstance(extractor, MetadataExtractor):
@@ -356,7 +362,10 @@ class PageCompiler(BasePlugin):
         """Activate all the compiler extension plugins for a given compiler and return them."""
         plugins = []
         for plugin_info in self.site.compiler_extensions:
-            if plugin_info.compiler == self.name or plugin_info.plugin_object.compiler_name == self.name:
+            if (
+                plugin_info.compiler == self.name
+                or plugin_info.plugin_object.compiler_name == self.name
+            ):
                 plugins.append(plugin_info)
         return plugins
 
@@ -372,29 +381,29 @@ class CompilerExtension(BasePlugin):
     this category, getting the compiler name with `plugin_info.compiler`.
     """
 
-    name = "dummy_compiler_extension"
-    compiler_name = "dummy_compiler"
+    name = 'dummy_compiler_extension'
+    compiler_name = 'dummy_compiler'
 
 
 class RestExtension(CompilerExtension):
     """Extensions for reStructuredText."""
 
-    name = "dummy_rest_extension"
-    compiler_name = "rest"
+    name = 'dummy_rest_extension'
+    compiler_name = 'rest'
 
 
 class MarkdownExtension(CompilerExtension):
     """Extensions for Markdown."""
 
-    name = "dummy_markdown_extension"
-    compiler_name = "markdown"
+    name = 'dummy_markdown_extension'
+    compiler_name = 'markdown'
 
 
 class MetadataExtractor(BasePlugin):
     """Plugins that can extract meta information from post files."""
 
     # Name of the extractor. (required)
-    name = "unknown"
+    name = 'unknown'
     # Where to get metadata from. (MetaSource; required)
     source = None
     # Priority of extractor. (MetaPriority; required)
@@ -417,9 +426,11 @@ class MetadataExtractor(BasePlugin):
     def split_metadata_from_text(self, source_text: str) -> Tuple[str, str]:
         """Split text into metadata and content (both strings)."""
         if self.split_metadata_re is None:
-            return "", source_text
+            return '', source_text
         else:
-            split_result = self.split_metadata_re.split(source_text.lstrip(), maxsplit=1)
+            split_result = self.split_metadata_re.split(
+                source_text.lstrip(), maxsplit=1
+            )
             if len(split_result) == 1:
                 return split_result[0], split_result[0]
             else:
@@ -454,31 +465,36 @@ class MetadataExtractor(BasePlugin):
             try:
                 __import__(import_name)
             except ImportError:
-                req_missing([pip_name], "use {0} metadata".format(friendly_name), python=True, optional=False)
+                req_missing(
+                    [pip_name],
+                    'use {0} metadata'.format(friendly_name),
+                    python=True,
+                    optional=False,
+                )
 
 
 class SignalHandler(BasePlugin):
     """Signal handlers."""
 
-    name = "dummy_signal_handler"
+    name = 'dummy_signal_handler'
 
 
 class ConfigPlugin(BasePlugin):
     """A plugin that can edit config (or modify the site) on-the-fly."""
 
-    name = "dummy_config_plugin"
+    name = 'dummy_config_plugin'
 
 
 class CommentSystem(BasePlugin):
     """A plugn that offers a new comment system."""
 
-    name = "dummy_comment_system"
+    name = 'dummy_comment_system'
 
 
 class ShortcodePlugin(BasePlugin):
     """A plugin that adds a shortcode."""
 
-    name = "dummy_shortcode_plugin"
+    name = 'dummy_shortcode_plugin'
 
     def set_site(self, site):
         """Set Nikola site."""
@@ -512,7 +528,7 @@ class Importer(Command):
     write_urlmap
     """
 
-    name = "dummy_importer"
+    name = 'dummy_importer'
 
     def _execute(self, options={}, args=[]):
         """Import the data into Nikola."""
@@ -689,22 +705,22 @@ class Taxonomy(BasePlugin):
         handler will not be created.
     """
 
-    name = "dummy_taxonomy"
+    name = 'dummy_taxonomy'
 
     # Adjust the following values in your plugin!
-    classification_name = "taxonomy"
-    overview_page_variable_name = "taxonomy"
-    overview_page_items_variable_name = "items"
-    overview_page_hierarchy_variable_name = "taxonomy_hierarchy"
+    classification_name = 'taxonomy'
+    overview_page_variable_name = 'taxonomy'
+    overview_page_items_variable_name = 'items'
+    overview_page_hierarchy_variable_name = 'taxonomy_hierarchy'
     more_than_one_classifications_per_post = False
     has_hierarchy = False
     include_posts_from_subhierarchies = False
     include_posts_into_hierarchy_root = False
     show_list_as_subcategories_list = False
     show_list_as_index = False
-    subcategories_list_template = "taxonomy_list.tmpl"
-    template_for_single_list = "tagindex.tmpl"
-    template_for_classification_overview = "list.tmpl"
+    subcategories_list_template = 'taxonomy_list.tmpl'
+    template_for_single_list = 'tagindex.tmpl'
+    template_for_classification_overview = 'list.tmpl'
     always_disable_atom = False
     always_disable_rss = False
     apply_to_posts = True
@@ -762,7 +778,9 @@ class Taxonomy(BasePlugin):
         """
         pass
 
-    def get_classification_friendly_name(self, classification: str, lang: str, only_last_component=False) -> str:
+    def get_classification_friendly_name(
+        self, classification: str, lang: str, only_last_component=False
+    ) -> str:
         """Extract a friendly name from the classification.
 
         The result of this function is usually displayed to the user, instead
@@ -848,7 +866,9 @@ class Taxonomy(BasePlugin):
         """
         raise NotImplementedError()
 
-    def provide_context_and_uptodate(self, classification: str, lang: str, node=None) -> Tuple[Dict, Dict]:
+    def provide_context_and_uptodate(
+        self, classification: str, lang: str, node=None
+    ) -> Tuple[Dict, Dict]:
         """Provide data for the context and the uptodate list for the list of the given classification.
 
         Must return a tuple of two dicts. The first is merged into the page's context,
@@ -861,19 +881,30 @@ class Taxonomy(BasePlugin):
         """
         raise NotImplementedError()
 
-    def should_generate_classification_page(self, classification: str, post_list: List[Post], lang: str) -> bool:
+    def should_generate_classification_page(
+        self, classification: str, post_list: List[Post], lang: str
+    ) -> bool:
         """Only generates list of posts for classification if this function returns True."""
         return True
 
-    def should_generate_atom_for_classification_page(self, classification: str, post_list: List[Post], lang: str) -> bool:
+    def should_generate_atom_for_classification_page(
+        self, classification: str, post_list: List[Post], lang: str
+    ) -> bool:
         """Only generates Atom feed for list of posts for classification if this function returns True."""
         return self.should_generate_classification_page(classification, post_list, lang)
 
-    def should_generate_rss_for_classification_page(self, classification: str, post_list: List[Post], lang: str) -> bool:
+    def should_generate_rss_for_classification_page(
+        self, classification: str, post_list: List[Post], lang: str
+    ) -> bool:
         """Only generates RSS feed for list of posts for classification if this function returns True."""
         return self.should_generate_classification_page(classification, post_list, lang)
 
-    def postprocess_posts_per_classification(self, posts_per_classification_per_language: List[Post], flat_hierarchy_per_lang=None, hierarchy_lookup_per_lang=None) -> None:
+    def postprocess_posts_per_classification(
+        self,
+        posts_per_classification_per_language: List[Post],
+        flat_hierarchy_per_lang=None,
+        hierarchy_lookup_per_lang=None,
+    ) -> None:
         """Rearrange, modify or otherwise use the list of posts per classification and per language.
 
         For compatibility reasons, the list could be stored somewhere else as well.
@@ -885,7 +916,9 @@ class Taxonomy(BasePlugin):
         """
         pass
 
-    def get_other_language_variants(self, classification: str, lang: str, classifications_per_language: List[str]) -> List[str]:
+    def get_other_language_variants(
+        self, classification: str, lang: str, classifications_per_language: List[str]
+    ) -> List[str]:
         """Return a list of variants of the same classification in other languages.
 
         Given a `classification` in a language `lang`, return a list of pairs
@@ -901,20 +934,20 @@ class Taxonomy(BasePlugin):
 
 
 CATEGORIES = {
-    "Command": Command,
-    "Task": Task,
-    "LateTask": LateTask,
-    "TemplateSystem": TemplateSystem,
-    "PageCompiler": PageCompiler,
-    "TaskMultiplier": TaskMultiplier,
-    "CompilerExtension": CompilerExtension,
-    "MarkdownExtension": MarkdownExtension,
-    "RestExtension": RestExtension,
-    "MetadataExtractor": MetadataExtractor,
-    "ShortcodePlugin": ShortcodePlugin,
-    "SignalHandler": SignalHandler,
-    "ConfigPlugin": ConfigPlugin,
-    "CommentSystem": CommentSystem,
-    "PostScanner": PostScanner,
-    "Taxonomy": Taxonomy,
+    'Command': Command,
+    'Task': Task,
+    'LateTask': LateTask,
+    'TemplateSystem': TemplateSystem,
+    'PageCompiler': PageCompiler,
+    'TaskMultiplier': TaskMultiplier,
+    'CompilerExtension': CompilerExtension,
+    'MarkdownExtension': MarkdownExtension,
+    'RestExtension': RestExtension,
+    'MetadataExtractor': MetadataExtractor,
+    'ShortcodePlugin': ShortcodePlugin,
+    'SignalHandler': SignalHandler,
+    'ConfigPlugin': ConfigPlugin,
+    'CommentSystem': CommentSystem,
+    'PostScanner': PostScanner,
+    'Taxonomy': Taxonomy,
 }
