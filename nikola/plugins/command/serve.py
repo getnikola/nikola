@@ -124,7 +124,7 @@ class CommandServe(Command):
         """Start test server."""
         out_dir = self.site.config['OUTPUT_FOLDER']
         if not os.path.isdir(out_dir):
-            self.logger.error("Missing '{0}' folder?".format(out_dir))
+            self.logger.error(f"Missing '{out_dir}' folder?")
         else:
             self.serve_pidfile = os.path.abspath('nikolaserve.pid')
             os.chdir(out_dir)
@@ -151,13 +151,13 @@ class CommandServe(Command):
                 server_url = "http://[{0}]:{1}/".format(*sa) + base_path
             else:
                 server_url = "http://{0}:{1}/".format(*sa) + base_path
-            self.logger.info("Serving on {0} ...".format(server_url))
+            self.logger.info(f"Serving on {server_url} ...")
 
             if options['browser']:
                 # Some browsers fail to load 0.0.0.0 (Issue #2755)
                 if sa[0] == '0.0.0.0':
                     server_url = "http://127.0.0.1:{1}/".format(*sa) + base_path
-                self.logger.info("Opening {0} in the default web browser...".format(server_url))
+                self.logger.info(f"Opening {server_url} in the default web browser...")
                 webbrowser.open(server_url)
             if options['detach']:
                 OurHTTPRequestHandler.quiet = True
@@ -168,8 +168,8 @@ class CommandServe(Command):
                         self.httpd.serve_forever()
                     else:
                         with open(self.serve_pidfile, 'w') as fh:
-                            fh.write('{0}\n'.format(pid))
-                        self.logger.info("Detached with PID {0}. Run `kill {0}` or `kill $(cat nikolaserve.pid)` to stop the server.".format(pid))
+                            fh.write(f'{pid}\n')
+                        self.logger.info(f"Detached with PID {pid}. Run `kill {pid}` or `kill $(cat nikolaserve.pid)` to stop the server.")
                 except AttributeError:
                     if os.name == 'nt':
                         self.logger.warning("Detaching is not available on Windows, server is running in the foreground.")
@@ -270,7 +270,7 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
             # transmitted *less* than the content-length!
             f = open(path, 'rb')
         except IOError:
-            self.send_error(404, "File not found: {}".format(path))
+            self.send_error(404, f"File not found: {path}")
             return None
 
         filtered_bytes = None
@@ -287,7 +287,7 @@ class OurHTTPRequestHandler(SimpleHTTPRequestHandler):
 
         self.send_response(200)
         if ctype.startswith('text/') or ctype.endswith('+xml'):
-            self.send_header("Content-Type", "{0}; charset=UTF-8".format(ctype))
+            self.send_header("Content-Type", f"{ctype}; charset=UTF-8")
         else:
             self.send_header("Content-Type", ctype)
         if os.path.splitext(path)[1] == '.svgz':

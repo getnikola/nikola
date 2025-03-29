@@ -83,7 +83,7 @@ class ImportMixin(object):
             src = (urlparse(k).path + 'index.html')[1:]
             dst = (urlparse(v).path)
             if src == index:
-                utils.LOGGER.warning("Can't do a redirect for: {0!r}".format(k))
+                utils.LOGGER.warning(f"Can't do a redirect for: {k!r}")
             else:
                 redirections.append((src, dst))
         return redirections
@@ -94,8 +94,8 @@ class ImportMixin(object):
             os.system('nikola init -q ' + self.output_folder)
         else:
             self.import_into_existing_site = True
-            utils.LOGGER.warning('The folder {0} already exists - assuming that this is a '
-                                 'already existing Nikola site.'.format(self.output_folder))
+            utils.LOGGER.warning(f'The folder {self.output_folder} already exists - assuming that this is a '
+                                 'already existing Nikola site.')
 
         filename = utils.pkg_resources_path('nikola', 'conf.py.in')
         # The 'strict_undefined=True' will give the missing symbol name if any,
@@ -181,7 +181,7 @@ class ImportMixin(object):
                 time=datetime.datetime.now().strftime('%Y%m%d_%H%M%S'),
                 name=self.name)
         config_output_path = os.path.join(self.output_folder, filename)
-        utils.LOGGER.info('Configuration will be written to: {0}'.format(config_output_path))
+        utils.LOGGER.info(f'Configuration will be written to: {config_output_path}')
 
         return config_output_path
 

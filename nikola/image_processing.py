@@ -106,7 +106,7 @@ class ImageProcessor(object):
         if max_sizes is None:
             max_sizes = [max_size]
         if len(max_sizes) != len(dst_paths):
-            raise ValueError('resize_image called with incompatible arguments: {} / {}'.format(dst_paths, max_sizes))
+            raise ValueError(f'resize_image called with incompatible arguments: {dst_paths} / {max_sizes}')
         extension = os.path.splitext(src)[1].lower()
         if extension in {'.svg', '.svgz'}:
             self.resize_svg(src, dst_paths, max_sizes, bigger_panoramas)
@@ -169,8 +169,8 @@ class ImageProcessor(object):
 
                 im.save(dst, **save_args)
             except Exception as e:
-                self.logger.warning("Can't process {0}, using original "
-                                    "image! ({1})".format(src, e))
+                self.logger.warning(f"Can't process {src}, using original "
+                                    f"image! ({e})")
                 utils.copy_file(src, dst)
 
     def resize_svg(self, src, dst_paths, max_sizes, bigger_panoramas):
@@ -217,8 +217,8 @@ class ImageProcessor(object):
                 self.logger.warning("No width/height in %s. Original exception: %s" % (src, e))
                 utils.copy_file(src, dst)
             except Exception as e:
-                self.logger.warning("Can't process {0}, using original "
-                                    "image! ({1})".format(src, e))
+                self.logger.warning(f"Can't process {src}, using original "
+                                    f"image! ({e})")
                 utils.copy_file(src, dst)
 
     def image_date(self, src):

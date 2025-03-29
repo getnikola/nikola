@@ -27,6 +27,7 @@ Other
 -----
 
 * Changed filter for tidy from  ``tidy5`` to ``tidy``.
+* Converted from .format() to f-strings
 
 New in v8.3.1
 =============

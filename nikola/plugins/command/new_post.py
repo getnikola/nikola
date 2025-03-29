@@ -103,10 +103,10 @@ def get_date(schedule=False, rule=None, last_date=None, tz=None, iso8601=False):
     offset_hrs = offset_sec // 3600
     offset_min = offset_sec % 3600
     if iso8601:
-        tz_str = '{0:+03d}:{1:02d}'.format(offset_hrs, offset_min // 60)
+        tz_str = f'{offset_hrs:+03d}:{offset_min // 60:02d}'
     else:
         if offset:
-            tz_str = ' UTC{0:+03d}:{1:02d}'.format(offset_hrs, offset_min // 60)
+            tz_str = f' UTC{offset_hrs:+03d}:{offset_min // 60:02d}'
         else:
             tz_str = ' UTC'
 
@@ -271,7 +271,7 @@ class CommandNewPost(Command):
                 if extension in extensions:
                     content_format = compiler
             if not content_format:
-                LOGGER.error("Unknown {0} extension {1}, maybe you need to install a plugin or enable an existing one?".format(content_type, extension))
+                LOGGER.error(f"Unknown {content_type} extension {extension}, maybe you need to install a plugin or enable an existing one?")
                 return
 
         elif not content_format and import_file:
@@ -282,7 +282,7 @@ class CommandNewPost(Command):
                 if extension in extensions:
                     content_format = compiler
             if not content_format:
-                LOGGER.error("Unknown {0} extension {1}, maybe you need to install a plugin or enable an existing one?".format(content_type, extension))
+                LOGGER.error(f"Unknown {content_type} extension {extension}, maybe you need to install a plugin or enable an existing one?")
                 return
 
         elif not content_format:  # Issue #400
@@ -292,7 +292,7 @@ class CommandNewPost(Command):
                 self.site.config['post_pages'])
 
         elif content_format not in compiler_names:
-            LOGGER.error("Unknown {0} format {1}, maybe you need to install a plugin or enable an existing one?".format(content_type, content_format))
+            LOGGER.error(f"Unknown {content_type} format {content_format}, maybe you need to install a plugin or enable an existing one?")
             self.print_compilers()
             return
 
@@ -306,10 +306,10 @@ class CommandNewPost(Command):
             return 1
 
         if import_file:
-            print("Importing Existing {xx}".format(xx=content_type.title()))
+            print(f"Importing Existing {content_type.title()}")
             print("-----------------------\n")
         else:
-            print("Creating New {xx}".format(xx=content_type.title()))
+            print(f"Creating New {content_type.title()}")
             print("-----------------\n")
         if title is not None:
             print("Title:", title)
@@ -390,9 +390,9 @@ class CommandNewPost(Command):
             signal('existing_' + content_type).send(self, **event)
 
             LOGGER.error("The title already exists!")
-            LOGGER.info("Existing {0}'s text is at: {1}".format(content_type, txt_path))
+            LOGGER.info(f"Existing {content_type}'s text is at: {txt_path}")
             if not onefile:
-                LOGGER.info("Existing {0}'s metadata is at: {1}".format(content_type, meta_path))
+                LOGGER.info(f"Existing {content_type}'s metadata is at: {meta_path}")
             return 8
 
         d_name = os.path.dirname(txt_path)
@@ -435,9 +435,9 @@ class CommandNewPost(Command):
         if not onefile:  # write metadata file
             with io.open(meta_path, "w+", encoding="utf8") as fd:
                 fd.write(utils.write_metadata(data, comment_wrap=False, site=self.site))
-            LOGGER.info("Your {0}'s metadata is at: {1}".format(content_type, meta_path))
+            LOGGER.info(f"Your {content_type}'s metadata is at: {meta_path}")
             event['meta_path'] = meta_path
-        LOGGER.info("Your {0}'s text is at: {1}".format(content_type, txt_path))
+        LOGGER.info(f"Your {content_type}'s text is at: {txt_path}")
 
         signal('new_' + content_type).send(self, **event)
 
@@ -470,10 +470,10 @@ class CommandNewPost(Command):
         extensions = compilers.get(compiler)
         if extensions is None:
             if compiler in compiler_objs:
-                LOGGER.error("There is a {0} compiler available, but it's not set in your COMPILERS option.".format(compiler))
-                LOGGER.info("Read more: {0}".format(COMPILERS_DOC_LINK))
+                LOGGER.error(f"There is a {compiler} compiler available, but it's not set in your COMPILERS option.")
+                LOGGER.info(f"Read more: {COMPILERS_DOC_LINK}")
             else:
-                LOGGER.error('Unknown format {0}'.format(compiler))
+                LOGGER.error(f'Unknown format {compiler}')
                 self.print_compilers()
             return False
 
@@ -484,10 +484,9 @@ class CommandNewPost(Command):
         if not filtered:
             type_name = "post" if is_post else "page"
             LOGGER.error("Can't find a way, using your configuration, to create "
-                         "a {0} in format {1}. You may want to tweak "
-                         "COMPILERS or {2}S in conf.py".format(
-                             type_name, compiler, type_name.upper()))
-            LOGGER.info("Read more: {0}".format(COMPILERS_DOC_LINK))
+                         f"a {type_name} in format {compiler}. You may want to tweak "
+                         f"COMPILERS or {type_name.upper()}S in conf.py")
+            LOGGER.info(f"Read more: {COMPILERS_DOC_LINK}")
 
             return False
         return filtered[0]
@@ -558,10 +557,10 @@ class CommandNewPost(Command):
 
             print(('{flag}{name:<' + str(name_width) + '}  {fname:<' + str(fname_width) + '}  {extensions}').format(flag=flag, name=name, fname=fname, extensions=extensions))
 
-        print("""
+        print(f"""
     More compilers are available in the Plugins Index.
 
     Compilers marked with ! and ~ require additional configuration:
         ! not in the POSTS/PAGES tuples and any post scanners (unused)
         ~ not in the COMPILERS dict (disabled)
-    Read more: {0}""".format(COMPILERS_DOC_LINK))
+    Read more: {COMPILERS_DOC_LINK}""")

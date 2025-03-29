@@ -47,11 +47,11 @@ class GitHubGist(Directive):
 
     def get_raw_gist(self, gistID):
         """Get raw gist text."""
-        url = "https://gist.github.com/raw/{0}".format(gistID)
+        url = f"https://gist.github.com/raw/{gistID}"
         try:
             return requests.get(url).text
         except requests.exceptions.RequestException:
-            raise self.error('Cannot get gist for url={0}'.format(url))
+            raise self.error(f'Cannot get gist for url={url}')
 
     def run(self):
         """Run the gist directive."""
@@ -65,12 +65,12 @@ class GitHubGist(Directive):
         if 'file' in self.options:
             filename = self.options['file']
             rawGist = (self.get_raw_gist_with_filename(gistID, filename))
-            embedHTML = ('<script src="https://gist.github.com/{0}.js'
-                         '?file={1}"></script>').format(gistID, filename)
+            embedHTML = (f'<script src="https://gist.github.com/{gistID}.js'
+                         f'?file={filename}"></script>')
         else:
             rawGist = (self.get_raw_gist(gistID))
-            embedHTML = ('<script src="https://gist.github.com/{0}.js">'
-                         '</script>').format(gistID)
+            embedHTML = (f'<script src="https://gist.github.com/{gistID}.js">'
+                         '</script>')
 
         reqnode = nodes.literal_block('', rawGist)
 

@@ -46,7 +46,7 @@ class CompilePhp(PageCompiler):
         with io.open(dest, "w+", encoding="utf8") as out_file:
             with open(source, "rb") as in_file:
                 hash = md5(in_file.read()).hexdigest()
-                out_file.write('<!-- __NIKOLA_PHP_TEMPLATE_INJECTION source:{0} checksum:{1}__ -->'.format(source, hash))
+                out_file.write(f'<!-- __NIKOLA_PHP_TEMPLATE_INJECTION source:{source} checksum:{hash}__ -->')
         return True
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):

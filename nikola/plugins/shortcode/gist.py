@@ -20,11 +20,11 @@ class Plugin(ShortcodePlugin):
 
     def get_raw_gist(self, gistID):
         """Get raw gist text."""
-        url = "https://gist.github.com/raw/{0}".format(gistID)
+        url = f"https://gist.github.com/raw/{gistID}"
         try:
             return requests.get(url).text
         except requests.exceptions.RequestException:
-            raise self.error('Cannot get gist for url={0}'.format(url))
+            raise self.error(f'Cannot get gist for url={url}')
 
     def handler(self, gistID, filename=None, site=None, data=None, lang=None, post=None):
         """Create HTML for gist."""
@@ -37,14 +37,14 @@ class Plugin(ShortcodePlugin):
 
         if filename is not None:
             rawGist = (self.get_raw_gist_with_filename(gistID, filename))
-            embedHTML = ('<script src="https://gist.github.com/{0}.js'
-                         '?file={1}"></script>').format(gistID, filename)
+            embedHTML = (f'<script src="https://gist.github.com/{gistID}.js'
+                         f'?file={filename}"></script>')
         else:
             rawGist = (self.get_raw_gist(gistID))
-            embedHTML = ('<script src="https://gist.github.com/{0}.js">'
-                         '</script>').format(gistID)
+            embedHTML = (f'<script src="https://gist.github.com/{gistID}.js">'
+                         '</script>')
 
-        output = '''{}
-        <noscript><pre>{}</pre></noscript>'''.format(embedHTML, rawGist)
+        output = f'''{embedHTML}
+        <noscript><pre>{rawGist}</pre></noscript>'''
 
         return output, []
