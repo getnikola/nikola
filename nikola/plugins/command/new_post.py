@@ -26,10 +26,10 @@
 
 """Create a new post."""
 
-import io
 import datetime
 import operator
 import os
+from pathlib import Path
 import shutil
 import subprocess
 import sys
@@ -414,8 +414,7 @@ class CommandNewPost(Command):
             LOGGER.warning('This compiler does not support one-file posts.')
 
         if onefile and import_file:
-            with io.open(import_file, 'r', encoding='utf-8-sig') as fh:
-                content = fh.read()
+            content = Path(import_file).read_text(encoding='utf-8-sig')
         elif not import_file:
             if is_page:
                 content = self.site.MESSAGES[self.site.default_lang]["Write your page here."]
@@ -433,8 +432,8 @@ class CommandNewPost(Command):
         event = dict(path=txt_path)
 
         if not onefile:  # write metadata file
-            with io.open(meta_path, "w+", encoding="utf8") as fd:
-                fd.write(utils.write_metadata(data, comment_wrap=False, site=self.site))
+            output = utils.write_metadata(data, comment_wrap=False, site=self.site)
+            Path(meta_path).write_text(output, encoding="utf8")
             LOGGER.info("Your {0}'s metadata is at: {1}".format(content_type, meta_path))
             event['meta_path'] = meta_path
         LOGGER.info("Your {0}'s text is at: {1}".format(content_type, txt_path))

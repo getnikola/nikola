@@ -26,10 +26,10 @@
 
 """Mixin for importer plugins."""
 
-import io
 import csv
 import datetime
 import os
+from pathlib import Path
 from urllib.parse import urlparse
 
 from lxml import etree, html
@@ -157,17 +157,17 @@ class ImportMixin(object):
             description = ""
 
         utils.makedirs(os.path.dirname(filename))
-        with io.open(filename, "w+", encoding="utf8") as fd:
-            data = {'title': title, 'slug': slug, 'date': post_date, 'tags': ','.join(tags), 'description': description}
-            data.update(kwargs)
-            fd.write(utils.write_metadata(data, site=self.site, comment_wrap=False))
+        data = {'title': title, 'slug': slug, 'date': post_date, 'tags': ','.join(tags), 'description': description}
+        data.update(kwargs)
+        metadata = utils.write_metadata(data, site=self.site, comment_wrap=False)
+        Path(filename).write_text(metadata, encoding="utf8")
 
     @staticmethod
     def write_urlmap_csv(output_file, url_map):
         """Write urlmap to csv file."""
         utils.makedirs(os.path.dirname(output_file))
-        fmode = 'w+'
-        with io.open(output_file, fmode) as fd:
+
+        with Path(output_file_.open('w+') as fd:
             csv_writer = csv.writer(fd)
             for item in url_map.items():
                 csv_writer.writerow(item)
@@ -189,8 +189,7 @@ class ImportMixin(object):
     def write_configuration(filename, rendered_template):
         """Write the configuration file."""
         utils.makedirs(os.path.dirname(filename))
-        with io.open(filename, 'w+', encoding='utf8') as fd:
-            fd.write(rendered_template)
+        Path(filename).write_text(rendered_template, encoding='utf8')
 
 
 def replacer(dst):

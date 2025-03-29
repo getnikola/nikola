@@ -280,9 +280,9 @@ class CommandInit(Command):
         """Create configuration file."""
         template_path = pkg_resources_path('nikola', 'conf.py.in')
         conf_template = Template(filename=template_path)
-        conf_path = os.path.join(target, 'conf.py')
-        with io.open(conf_path, 'w+', encoding='utf8') as fd:
-            fd.write(conf_template.render(**prepare_config(SAMPLE_CONF)))
+        conf_path = Path(target) / 'conf.py'
+        output = conf_template.render(**prepare_config(SAMPLE_CONF))
+        conf_path.write_text(output, encoding='utf8')
 
     @staticmethod
     def create_configuration_to_string():

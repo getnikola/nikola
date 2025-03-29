@@ -30,6 +30,7 @@ import configparser
 import io
 import json.decoder
 import os
+from pathlib import Path
 import shutil
 import sys
 import time
@@ -235,11 +236,11 @@ class CommandTheme(Command):
         if os.path.exists(confpypath):
             LOGGER.warning('This theme has a sample config file.  Integrate it with yours in order to make this theme work!')
             print('Contents of the conf.py.sample file:\n')
-            with io.open(confpypath, 'r', encoding='utf-8-sig') as fh:
-                if self.site.colorful:
-                    print(pygments.highlight(fh.read(), PythonLexer(), TerminalFormatter()))
-                else:
-                    print(fh.read())
+            text = Path(confpypath).read_text(encoding='utf-8-sig')
+            if self.site.colorful:
+                print(pygments.highlight(text, PythonLexer(), TerminalFormatter()))
+            else:
+                print(text)
         return True
 
     def do_uninstall(self, name):
@@ -355,17 +356,15 @@ class CommandTheme(Command):
         }
 
         theme_meta_path = os.path.join(themedir, name + '.theme')
-        with io.open(theme_meta_path, 'w', encoding='utf-8') as fh:
+        with Path(theme_meta_path).open('w', encoding='utf-8') as fh:
             cp.write(fh)
             LOGGER.info("Created file {0}".format(theme_meta_path))
 
         if create_legacy_meta:
-            with io.open(os.path.join(themedir, 'parent'), 'w', encoding='utf-8') as fh:
-                fh.write(parent + '\n')
-                LOGGER.info("Created file {0}".format(os.path.join(themedir, 'parent')))
-            with io.open(os.path.join(themedir, 'engine'), 'w', encoding='utf-8') as fh:
-                fh.write(engine + '\n')
-                LOGGER.info("Created file {0}".format(os.path.join(themedir, 'engine')))
+            (Path(themedir) / 'parent').write_text(parent + '\n', encoding='utf-8')
+            LOGGER.info("Created file {0}".format(os.path.join(themedir, 'parent')))
+            (Path(themedir) / 'engine').write_text(engine + '\n', encoding='utf-8')
+            LOGGER.info("Created file {0}".format(os.path.join(themedir, 'engine')))
 
         LOGGER.info("Theme {0} created successfully.".format(themedir))
         LOGGER.info('Remember to set THEME="{0}" in conf.py to use this theme.'.format(name))

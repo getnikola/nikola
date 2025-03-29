@@ -26,9 +26,9 @@
 
 """Nikola plugin categories."""
 
-import io
 import logging
 import os
+from pathlib import Path
 
 from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
 
@@ -289,11 +289,12 @@ class PageCompiler(BasePlugin):
 
     def _read_extra_deps(self, post: Post, lang: str) -> List[str]:
         """Read contents of .dep file and return them as a list."""
-        dep_path = self.get_dep_filename(post, lang)
-        if os.path.isfile(dep_path):
-            with io.open(dep_path, 'r+', encoding='utf-8-sig') as depf:
-                deps = [l.strip() for l in depf.readlines()]
-                return deps
+        dep_path = Path(self.get_dep_filename(post, lang))
+
+        if dep_path.is_file():
+            deps = dep_path.read_text(encoding='utf-8-sig')
+            deps = [line.strip() for line in depf.splitlines()]
+            return deps
         return []
 
     def register_extra_dependencies(self, post: Post):
