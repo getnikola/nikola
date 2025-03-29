@@ -11,6 +11,7 @@ Features
   via an optional ``conf.py`` method ``TEMPLATE_ENGINE_FACTORY``.
 * Switch to pyproject.toml
 * Add path handler ``slug_source`` linking to source of post.
+* Better error message in ``nikola serve`` when port is already in use
 
 Bugfixes
 --------
