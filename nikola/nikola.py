@@ -27,10 +27,10 @@
 """The main Nikola site object."""
 
 import datetime
-import io
 import json
 import functools
 import logging
+from pathlib import Path
 import operator
 import os
 import pathlib
@@ -2571,11 +2571,10 @@ class Nikola(object):
 
         dst_dir = os.path.dirname(output_path)
         utils.makedirs(dst_dir)
-        with io.open(output_path, "w+", encoding="utf-8") as atom_file:
-            data = lxml.etree.tostring(feed_root.getroottree(), encoding="UTF-8", pretty_print=True, xml_declaration=True)
-            if isinstance(data, bytes):
-                data = data.decode('utf-8')
-            atom_file.write(data)
+        data = lxml.etree.tostring(feed_root.getroottree(), encoding="UTF-8", pretty_print=True, xml_declaration=True)
+        if isinstance(data, bytes):
+            data = data.decode('utf-8')
+        Path(output_path).write_text(data, encoding="utf-8")
 
     def generic_index_renderer(self, lang, posts, indexes_title, template_name, context_source, kw, basename, page_link, page_path, additional_dependencies=None):
         """Create an index page.
