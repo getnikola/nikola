@@ -94,7 +94,13 @@ class CommandSubTheme(Command):
             version = '3'
         elif _check_for_theme('bootstrap4', themes) or _check_for_theme('bootstrap4-jinja', themes):
             version = '4'
-        elif not _check_for_theme('bootstrap4', themes) and not _check_for_theme('bootstrap4-jinja', themes):
+        elif _check_for_theme('bootstrap5', themes) or _check_for_theme('bootstrap5-jinja', themes) or \
+            _check_for_theme('bootblog5', themes) or _check_for_theme('bootblog5-jinja', themes):
+            version = '5'
+        elif not any(_check_for_theme(t, themes) for t in
+                     ['bootstrap', 'bootstrap-jinja', 'bootstrap3', 'bootstrap3-jinja',
+                      'bootstrap4', 'bootstrap4-jinja', 'bootstrap5', 'bootstrap5-jinja',
+                      'bootblog5', 'bootblog5-jinja']):
             LOGGER.warning(
                 '"subtheme" only makes sense for themes that use bootstrap')
         elif _check_for_theme('bootstrap3-gradients', themes) or _check_for_theme('bootstrap3-gradients-jinja', themes):
@@ -106,21 +112,23 @@ class CommandSubTheme(Command):
         utils.makedirs(os.path.join('themes', name, 'assets', 'css'))
         for fname in ('bootstrap.min.css', 'bootstrap.css'):
             if swatch in [
-                    'bubblegum', 'business-tycoon', 'charming', 'daydream',
-                    'executive-suite', 'good-news', 'growth', 'harbor', 'hello-world',
-                    'neon-glow', 'pleasant', 'retro', 'vibrant-sea', 'wizardry']:  # Hackerthemes
+                'bubblegum', 'business-tycoon', 'charming', 'daydream',
+                'executive-suite', 'good-news', 'growth', 'harbor', 'hello-world',
+                'neon-glow', 'pleasant', 'retro', 'vibrant-sea', 'wizardry']:  # Hackerthemes
                 LOGGER.info(
                     'Hackertheme-based subthemes often require you use a custom font for full effect.')
-                if version != '4':
+                if version not in ['4', '5']:
                     LOGGER.error(
-                        'The hackertheme subthemes are only available for Bootstrap 4.')
+                        'The hackertheme subthemes are only available for Bootstrap 4 and 5.')
                     return 1
+
+                # Adjust URL based on Bootstrap version
+                bootstrap_version = 'bootstrap4' if version == '4' else 'bootstrap5'
+
                 if fname == 'bootstrap.css':
-                    url = 'https://raw.githubusercontent.com/HackerThemes/theme-machine/master/dist/{swatch}/css/bootstrap4-{swatch}.css'.format(
-                        swatch=swatch)
+                    url = f'https://raw.githubusercontent.com/HackerThemes/theme-machine/master/dist/{swatch}/css/{bootstrap_version}-{swatch}.css'
                 else:
-                    url = 'https://raw.githubusercontent.com/HackerThemes/theme-machine/master/dist/{swatch}/css/bootstrap4-{swatch}.min.css'.format(
-                        swatch=swatch)
+                    url = f'https://raw.githubusercontent.com/HackerThemes/theme-machine/master/dist/{swatch}/css/{bootstrap_version}-{swatch}.min.css'
             else:  # Bootswatch
                 url = 'https://bootswatch.com'
                 if version:
