@@ -167,7 +167,7 @@ class ImportMixin(object):
         """Write urlmap to csv file."""
         utils.makedirs(os.path.dirname(output_file))
 
-        with Path(output_file_.open('w+') as fd:
+        with Path(output_file).open('w+') as fd:
             csv_writer = csv.writer(fd)
             for item in url_map.items():
                 csv_writer.writerow(item)

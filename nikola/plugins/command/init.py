@@ -27,9 +27,9 @@
 """Create a new site."""
 
 import datetime
-import io
 import json
 import os
+from pathlib import Path
 import shutil
 import textwrap
 import unidecode

@@ -293,7 +293,7 @@ class PageCompiler(BasePlugin):
 
         if dep_path.is_file():
             deps = dep_path.read_text(encoding='utf-8-sig')
-            deps = [line.strip() for line in depf.splitlines()]
+            deps = [line.strip() for line in deps.splitlines()]
             return deps
         return []
 
