@@ -95,7 +95,7 @@ class CommandSubTheme(Command):
         elif _check_for_theme('bootstrap4', themes) or _check_for_theme('bootstrap4-jinja', themes):
             version = '4'
         elif _check_for_theme('bootstrap5', themes) or _check_for_theme('bootstrap5-jinja', themes) or \
-            _check_for_theme('bootblog5', themes) or _check_for_theme('bootblog5-jinja', themes):
+                _check_for_theme('bootblog5', themes) or _check_for_theme('bootblog5-jinja', themes):
             version = '5'
         elif not any(_check_for_theme(t, themes) for t in
                      ['bootstrap', 'bootstrap-jinja', 'bootstrap3', 'bootstrap3-jinja',
@@ -112,9 +112,9 @@ class CommandSubTheme(Command):
         utils.makedirs(os.path.join('themes', name, 'assets', 'css'))
         for fname in ('bootstrap.min.css', 'bootstrap.css'):
             if swatch in [
-                'bubblegum', 'business-tycoon', 'charming', 'daydream',
-                'executive-suite', 'good-news', 'growth', 'harbor', 'hello-world',
-                'neon-glow', 'pleasant', 'retro', 'vibrant-sea', 'wizardry']:  # Hackerthemes
+                    'bubblegum', 'business-tycoon', 'charming', 'daydream',
+                    'executive-suite', 'good-news', 'growth', 'harbor', 'hello-world',
+                    'neon-glow', 'pleasant', 'retro', 'vibrant-sea', 'wizardry']:  # Hackerthemes
                 LOGGER.info(
                     'Hackertheme-based subthemes often require you use a custom font for full effect.')
                 if version not in ['4', '5']:
