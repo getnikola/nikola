@@ -7,11 +7,14 @@
     "dependencies": {
         "baguettebox.js": "^1.11.0",
         "bootstrap": "^4.6.1",
+        "bootstrap5": "npm:bootstrap@^5.3.3",
         "html5shiv": "^3.7.3",
         "jquery": "^3.6.0",
         "justified-layout": "^3.0.0",
         "livereload-js": "^2.4.0",
         "luxon": "^3.2.1",
-        "popper.js": "^1.16.1"
+        "luxon36": "npm:luxon@^3.6.0",
+        "popper.js": "^1.16.1",
+        "@popperjs/core": "^2.11.8"
     }
 }
