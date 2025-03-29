@@ -11,6 +11,7 @@ Features
   via an optional ``conf.py`` method ``TEMPLATE_ENGINE_FACTORY``.
 * Switch to pyproject.toml
 * Add path handler ``slug_source`` linking to source of post.
+* Add bootstrap5 and bootblog5 themes
 
 Bugfixes
 --------
