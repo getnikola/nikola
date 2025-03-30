@@ -1,8 +1,8 @@
 """Test a site with future posts."""
 
-import io
 import os
 from datetime import timedelta
+from pathlib import Path
 
 import pytest
 
@@ -43,11 +43,11 @@ def test_future_post_deployment(build, output_dir, target_dir):
 @pytest.mark.parametrize("filename", ["index.html", "sitemap.xml"])
 def test_future_post_not_in_indexes(build, output_dir, filename):
     """ Ensure that the future post is not present in the index and sitemap."""
-    filepath = os.path.join(output_dir, filename)
-    assert os.path.isfile(filepath)
+    filepath = Path(output_dir) / filename
+    assert filepath.is_file()
 
-    with io.open(filepath, "r", encoding="utf8") as inf:
-        content = inf.read()
+    content = filepath.read_text(encoding="utf8")
+
     assert "foo/" in content
     assert "bar/" not in content
     assert "baz" not in content
@@ -67,43 +67,29 @@ def build(target_dir):
         return datetime.strftime("%Y-%m-%d %H:%M:%S")
 
     past_datetime = format_datetime(current_time() + timedelta(days=-1))
-    with io.open(
-        os.path.join(target_dir, "posts", "empty1.txt"), "w+", encoding="utf8"
-    ) as past_post:
-        past_post.write(
-            """\
+    (Path(target_dir) / "posts" / "empty1.txt").write_text(
+            f"""\
 .. title: foo
 .. slug: foo
-.. date: %s
-"""
-            % past_datetime
-        )
+.. date: {past_datetime}
+""", encoding="utf8")
 
     future_datetime = format_datetime(current_time() + timedelta(days=1))
-    with io.open(
-        os.path.join(target_dir, "posts", "empty2.txt"), "w+", encoding="utf8"
-    ) as future_post:
-        future_post.write(
-            """\
+
+    (Path(target_dir) / "posts" / "empty2.txt").write_text(
+            f"""\
 .. title: bar
 .. slug: bar
-.. date: %s
-"""
-            % future_datetime
-        )
+.. date: {future_datetime}
+""", encoding="utf8")
 
-    with io.open(
-        os.path.join(target_dir, "posts", "empty3.txt"), "w+", encoding="utf8"
-    ) as future_post:
-        future_post.write(
-            """\
+    (Path(target_dir) / "posts" / "empty3.txt").write_text(
+            f"""\
 .. title: baz
 .. slug: baz
-.. date: %s
+.. date: {future_datetime}
 .. pretty_url: false
-"""
-            % future_datetime
-        )
+""", encoding="utf8")
 
     with cd(target_dir):
         __main__.main(["build"])
