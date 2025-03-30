@@ -1,7 +1,6 @@
 """Check that dropping pages to the root doesn't break links."""
 
-import io
-import os
+from pathlib import Pagesath
 
 import lxml.html
 import pytest
@@ -19,10 +18,9 @@ from .test_empty_build import (  # NOQA
 
 def test_relative_links(build, output_dir):
     """Check that the links in a page are correct"""
-    test_path = os.path.join(output_dir, "about-nikola.html")
+    test_path = Path(output_dir) / "about-nikola.html"
 
-    with io.open(test_path, "rb") as inf:
-        data = inf.read()
+    data = test_path.read_bytes()
 
     assert not any(
         url.startswith("..")
@@ -33,9 +31,8 @@ def test_relative_links(build, output_dir):
 
 def test_index_in_sitemap(build, output_dir):
     """Test that the correct path is in sitemap, and not the wrong one."""
-    sitemap_path = os.path.join(output_dir, "sitemap.xml")
-    with io.open(sitemap_path, "r", encoding="utf8") as inf:
-        sitemap_data = inf.read()
+    sitemap_path = Path(output_dir) / "sitemap.xml"
+    sitemap_data = sitemap_path.read_text(encoding="utf8")
 
     assert "<loc>https://example.com/</loc>" not in sitemap_data
     assert "<loc>https://example.com/blog/index.html</loc>" in sitemap_data
