@@ -1,7 +1,7 @@
 """Test if PAGE_INDEX works, with different PRETTY_URLS=False settings."""
 
-import io
 import os
+from pathlib import Path
 
 import pytest
 
@@ -77,10 +77,9 @@ def output_path_func():
 
 def test_page_index_content_in_pages(build, output_dir):
     """Do the indexes only contain the pages the should?"""
-    pages = os.path.join(output_dir, "pages")
+    pages = Path(output_dir) / "pages"
 
-    with io.open(os.path.join(pages, "index.html"), "r", encoding="utf-8") as fh:
-        pages_index = fh.read()
+    pages_index = (pages / "index.html").read_text(encoding="utf-8")
 
     assert "Page 0" in pages_index
     assert "Page 1" not in pages_index
@@ -92,10 +91,9 @@ def test_page_index_content_in_pages(build, output_dir):
 
 def test_page_index_content_in_subdir1(build, output_dir):
     """Do the indexes only contain the pages the should?"""
-    subdir1 = os.path.join(output_dir, "pages", "subdir1")
+    subdir1 = Path(output_dir) / "pages" / "subdir1"
 
-    with io.open(os.path.join(subdir1, "index.html"), "r", encoding="utf-8") as fh:
-        subdir1_index = fh.read()
+    subdir1_index = (subdir1 / "index.html").read_text(encoding="utf-8")
 
     assert "Page 0" not in subdir1_index
     assert "Page 1" in subdir1_index
@@ -107,10 +105,9 @@ def test_page_index_content_in_subdir1(build, output_dir):
 
 def test_page_index_content_in_subdir2(build, output_dir):
     """Do the indexes only contain the pages the should?"""
-    subdir2 = os.path.join(output_dir, "pages", "subdir2")
+    subdir2 = Path(output_dir) / "pages" / "subdir2"
 
-    with io.open(os.path.join(subdir2, "index.html"), "r", encoding="utf-8") as fh:
-        subdir2_index = fh.read()
+    subdir2_index = (subdir2 / "index.html").read_text(encoding="utf-8")
 
     assert "Page 0" not in subdir2_index
     assert "Page 1" not in subdir2_index
@@ -122,10 +119,9 @@ def test_page_index_content_in_subdir2(build, output_dir):
 
 def test_page_index_content_in_subdir3(build, output_dir):
     """Do the indexes only contain the pages the should?"""
-    subdir3 = os.path.join(output_dir, "pages", "subdir3")
+    subdir3 = Path(output_dir) / "pages" / "subdir3"
 
-    with io.open(os.path.join(subdir3, "index.php"), "r", encoding="utf-8") as fh:
-        subdir3_index = fh.read()
+    subdir3_index = (subdir3 / "index.php").read_text(encoding="utf-8")
 
     assert "Page 0" not in subdir3_index
     assert "Page 1" not in subdir3_index
@@ -167,72 +163,58 @@ def create_pages(target_dir):
     makedirs(subdir2)
     makedirs(subdir3)
 
-    with io.open(os.path.join(pages, "page0.txt"), "w+", encoding="utf8") as outf:
-        outf.write(
+    (Path(pages) / "page0.txt").write_text(
             """\
 .. title: Page 0
 .. slug: page0
 
 This is page 0.
-"""
-        )
+""", encoding="utf8")
 
-    with io.open(os.path.join(subdir1, "page1.txt"), "w+", encoding="utf8") as outf:
-        outf.write(
+    (Path(subdir1) / "page1.txt").write_text(
             """\
 .. title: Page 1
 .. slug: page1
 
 This is page 1.
-"""
-        )
+""", encoding="utf8")
 
-    with io.open(os.path.join(subdir1, "page2.txt"), "w+", encoding="utf8") as outf:
-        outf.write(
+    (Path(subdir1) / "page2.txt").write_text(
             """\
 .. title: Page 2
 .. slug: page2
 
 This is page 2.
-"""
-        )
+""", encoding="utf8")
 
-    with io.open(os.path.join(subdir2, "page3.txt"), "w+", encoding="utf8") as outf:
-        outf.write(
+    (Path(subdir2) / "page3.txt").write_text(
             """\
 .. title: Page 3
 .. slug: page3
 
 This is page 3.
-"""
-        )
+""", encoding="utf8")
 
-    with io.open(os.path.join(subdir2, "foo.txt"), "w+", encoding="utf8") as outf:
-        outf.write(
+    (Path(subdir2) / "foo.txt").write_text(
             """\
 .. title: Not the page index
 .. slug: index
 
 This is not the page index.
-"""
-        )
+""", encoding="utf8")
 
-    with io.open(os.path.join(subdir3, "page4.txt"), "w+", encoding="utf8") as outf:
-        outf.write(
+    (Path(subdir3) / "page4.txt").write_text(
             """\
 .. title: Page 4
 .. slug: page4
 
 This is page 4.
-"""
-        )
+""", encoding="utf8")
 
-    with io.open(os.path.join(subdir3, "bar.php"), "w+", encoding="utf8") as outf:
-        outf.write(
+    (Path(subdir3) / "bar.php").write_text(
             """\
 .. title: Still not the page index
 .. slug: index
 
 This is not the page index either.
-"""
-        )
+""", encoding="utf8")

@@ -5,8 +5,7 @@ Validate links in a site which is:
 * deployable to a subfolder (BASE_URL="https://example.com/foo/")
 """
 
-import io
-import os
+from pathlib import Path
 
 import pytest
 
@@ -28,9 +27,8 @@ def test_index_in_sitemap(build, output_dir):
 
     The correct path ends in /foo/ because this is where we deploy to.
     """
-    sitemap_path = os.path.join(output_dir, "sitemap.xml")
-    with io.open(sitemap_path, "r", encoding="utf8") as inf:
-        sitemap_data = inf.read()
+    sitemap_path = Path(output_dir) / "sitemap.xml"
+    sitemap_data = sitemap_path.read_text(encoding="utf8")
 
     assert "<loc>https://example.com/foo/</loc>" in sitemap_data
 

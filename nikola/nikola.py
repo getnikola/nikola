@@ -30,10 +30,10 @@ import datetime
 import json
 import functools
 import logging
-from pathlib import Path
 import operator
 import os
 import pathlib
+from pathlib import Path
 import sys
 import typing
 from typing import Any, Callable, Dict, Iterable, List, Optional, Set
@@ -1003,7 +1003,7 @@ class Nikola(object):
         def plugin_position_in_places(plugin: PluginInfo):
             # plugin here is a tuple:
             # (path to the .plugin file, path to plugin module w/o .py, plugin metadata)
-            place: pathlib.Path
+            place: Path
             for i, place in enumerate(self._plugin_places):
                 try:
                     # Path.is_relative_to backport
@@ -1036,7 +1036,7 @@ class Nikola(object):
             os.path.expanduser(os.path.join('~', '.nikola', 'plugins')),
             os.path.join(os.getcwd(), 'plugins'),
         ] + [path for path in extra_plugins_dirs if path]
-        self._plugin_places = [pathlib.Path(p) for p in self._plugin_places]
+        self._plugin_places = [Path(p) for p in self._plugin_places]
 
         self.plugin_manager = PluginManager(plugin_places=self._plugin_places)
 

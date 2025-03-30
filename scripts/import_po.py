@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 """Download translations from transifex and regenerate files."""
 
-import io
 from glob import glob
 import os
+from pathlib import Path
 import sys
 import polib
 
@@ -31,5 +31,4 @@ MESSAGES = {""".splitlines()
     lines.extend(sorted(lines2))
     lines.append("}\n")
     print("Generating:", outf)
-    with io.open(outf, "w+", encoding="utf8") as outfile:
-        outfile.write('\n'.join(lines))
+    Path(outf).write_text('\n'.join(lines), encoding="utf8")

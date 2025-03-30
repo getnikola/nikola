@@ -26,9 +26,9 @@
 
 """Page compiler plugin for PHP."""
 
-import io
 import os
 from hashlib import md5
+from pathlib import Path
 
 from nikola.plugin_categories import PageCompiler
 from nikola.utils import makedirs, write_metadata
@@ -43,10 +43,10 @@ class CompilePhp(PageCompiler):
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
-        with io.open(dest, "w+", encoding="utf8") as out_file:
-            with open(source, "rb") as in_file:
-                hash = md5(in_file.read()).hexdigest()
-                out_file.write('<!-- __NIKOLA_PHP_TEMPLATE_INJECTION source:{0} checksum:{1}__ -->'.format(source, hash))
+        text = Path(source).read_bytes()
+        hash = md5(text).hexdigest()
+        out = f'<!-- __NIKOLA_PHP_TEMPLATE_INJECTION source:{source} checksum:{hash}__ -->'
+        Path(dest).write_text(out,  encoding="utf8")
         return True
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):
@@ -76,10 +76,9 @@ class CompilePhp(PageCompiler):
         makedirs(os.path.dirname(path))
         if not content.endswith('\n'):
             content += '\n'
-        with io.open(path, "w+", encoding="utf8") as fd:
-            if onefile:
-                fd.write(write_metadata(metadata, comment_wrap=True, site=self.site, compiler=self))
-            fd.write(content)
+        if onefile:
+            content = write_metadata(metadata, comment_wrap=True, site=self.site, compiler=self) + content
+        Path(path).write_text(content, encoding="utf8")
 
     def extension(self):
         """Return extension used for PHP files."""

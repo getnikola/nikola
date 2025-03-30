@@ -26,9 +26,9 @@
 
 """Mako template handler."""
 
-import io
 import os
 import re
+from pathlib import Path
 import shutil
 from typing import Callable
 
@@ -131,8 +131,7 @@ class MakoTemplates(TemplateSystem):
         data = template.render_unicode(**context)
         if output_name is not None:
             makedirs(os.path.dirname(output_name))
-            with io.open(output_name, 'w', encoding='utf-8') as output:
-                output.write(data)
+            Path(output_name).write_text(data, encoding='utf-8')
         return data
 
     def render_template_to_string(self, template, context):
