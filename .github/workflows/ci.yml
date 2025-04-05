@@ -33,6 +33,7 @@ jobs:
           python-version: '${{ matrix.python }}'
       - name: Install Nikola
         run: |
+          sudo apt-get install libxml2-dev libxslt-dev
           python -m pip install --upgrade-strategy eager -U .[extras,tests]
       - name: Run tests
         run: |
