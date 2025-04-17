@@ -22,6 +22,8 @@ Bugfixes
 * Fix compatibility with watchdog 4 (Issue #3766)
 * ``nikola serve`` now works with non-root SITE_URL.
 * Stack traces meaningless for end users now more reliably suppressed (Issue #3838).
+* Fix #3731: duplicate‑title check no longer logs a phantom “.meta created” path when the text or metadata file already exists in `nikola new_post`.
+
 
 Other
 -----
