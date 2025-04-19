@@ -15,6 +15,7 @@ Features
 Bugfixes
 --------
 
+* Ignore “`sizes` ⇒ false” in WordPress attachment metadata to prevent a crash in ``import_wordpress`` (Issue #3810)
 * Ignore errors in parsing SVG files for shrinking them, copy original file to output instead
   (Issue #3785)
 * Restore ``annotation_helper.tmpl`` with dummy content - fix themes still mentioning it
@@ -22,7 +23,7 @@ Bugfixes
 * Fix compatibility with watchdog 4 (Issue #3766)
 * ``nikola serve`` now works with non-root SITE_URL.
 * Stack traces meaningless for end users now more reliably suppressed (Issue #3838).
-* Ignore “`sizes` ⇒ false” in WordPress attachment metadata to prevent a crash in ``import_wordpress`` (Issue #3810)
+
 
 Other
 -----
