@@ -665,8 +665,8 @@ to
                         if width_key in size_info and height_key in size_info:
                             meta["width"] = int(size_info[width_key])
                             meta["height"] = int(size_info[height_key])
-                    # ------------------------------------------------------------------    
-
+                    # ------------------------------------------------------------------
+                    
                         path = urlparse(url).path
                         dst_path = os.path.join(*([self.output_folder, 'files'] + list(path.split('/'))))
                         if self.no_downloads:
