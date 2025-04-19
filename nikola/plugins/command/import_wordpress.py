@@ -626,20 +626,46 @@ to
                         if len(dst_meta) > 0:
                             files_meta[0]['meta'] = dst_meta
 
+                    # ------------------------------------------------------------------
+                    # Previous implementation kept only for reference:
                     # Find other sizes of image
-                    if size_key not in metadata:
-                        continue
+                    # if size_key not in metadata:
+                    #     continue
 
-                    for size in metadata[size_key]:
-                        filename = metadata[size_key][size][file_key]
-                        url = '/'.join([source_path, filename.decode('utf-8')])
+                    # for size in metadata[size_key]:
+                    #     filename = metadata[size_key][size][file_key]
+                    #     url = '/'.join([source_path, filename.decode('utf-8')])
+
+                    #     # Construct metadata
+                    #     meta = {}
+                    #     meta['size'] = size.decode('utf-8')
+                    #     if width_key in metadata[size_key][size] and height_key in metadata[size_key][size]:
+                    #         meta['width'] = int(metadata[size_key][size][width_key])
+                    #         meta['height'] = int(metadata[size_key][size][height_key])
+                    # ------------------------------------------------------------------
+
+                    # Find other sizes of image — *robust to `"sizes" => false`*
+                    sizes_dict = metadata.get(size_key)
+
+                    # WP ≥ 6 writes `"sizes" => false` when no thumbnails exist.
+                    # That becomes Python `False`, which is not iterable/subscriptable
+                    # and caused  TypeError: 'bool' object is not subscriptable  (#3810).
+                    if not isinstance(sizes_dict, dict):
+                        continue              # nothing more to import for this element
+
+                    for size, size_info in sizes_dict.items():
+                        if not isinstance(size_info, dict) or file_key not in size_info:
+                            continue          # skip malformed entries
+
+                        filename = size_info[file_key]
+                        url = "/".join([source_path, filename.decode("utf-8")])
 
                         # Construct metadata
-                        meta = {}
-                        meta['size'] = size.decode('utf-8')
-                        if width_key in metadata[size_key][size] and height_key in metadata[size_key][size]:
-                            meta['width'] = int(metadata[size_key][size][width_key])
-                            meta['height'] = int(metadata[size_key][size][height_key])
+                        meta = {"size": size.decode("utf-8")}
+                        if width_key in size_info and height_key in size_info:
+                            meta["width"] = int(size_info[width_key])
+                            meta["height"] = int(size_info[height_key])
+                    # ------------------------------------------------------------------    
 
                         path = urlparse(url).path
                         dst_path = os.path.join(*([self.output_folder, 'files'] + list(path.split('/'))))
