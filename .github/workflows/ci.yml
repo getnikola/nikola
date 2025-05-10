@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13']
+        python: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13', '3.13t']
         image:
           - ubuntu-latest
         include:
@@ -28,11 +28,12 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python }}'
       - name: Install Nikola
         run: |
+          sudo apt-get install libxml2-dev libxslt-dev
           python -m pip install --upgrade-strategy eager -U .[extras,tests]
       - name: Run tests
         run: |
@@ -57,7 +58,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python }}'
       - name: Install extra requirements
@@ -75,13 +76,13 @@ jobs:
     strategy:
       matrix:
         python:
-          - '3.13'
+          - '3.13t'
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python }}'
       - name: Install requirements
@@ -102,12 +103,13 @@ jobs:
           - '3.11'
           - '3.12'
           - '3.13'
+          - '3.13t'
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python }}'
       - name: Install Nikola
