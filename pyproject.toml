@@ -7,7 +7,7 @@ name = "Nikola"
 version = "8.3.2"
 description = "A modular, fast, simple, static website and blog generator"
 readme = "README.rst"
-license = "MIT"
+license = {file = "LICENSE.txt"}
 # for authors also see AUTHORS.txt file
 authors = [
     { name = "Roberto Alsina and others", email = "info@getnikola.com" },
@@ -23,6 +23,7 @@ classifiers = [
     "Environment :: Plugins",
     "Environment :: Web Environment",
     "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
     "Operating System :: MacOS",
     "Operating System :: MacOS :: MacOS X",
     "Operating System :: Microsoft :: Windows",
