@@ -363,8 +363,8 @@ class PageCompiler(BasePlugin):
         plugins = []
         for plugin_info in self.site.compiler_extensions:
             if (
-                plugin_info.compiler == self.name
-                or plugin_info.plugin_object.compiler_name == self.name
+                plugin_info.compiler == self.name or
+                plugin_info.plugin_object.compiler_name == self.name
             ):
                 plugins.append(plugin_info)
         return plugins

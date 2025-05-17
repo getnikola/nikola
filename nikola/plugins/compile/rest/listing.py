@@ -215,10 +215,10 @@ class Listing(Include):
         src_target = urlunsplit(("link", 'listing_source', fpath.replace('\\', '/'), '', ''))
         src_label = self.site.MESSAGES('Source')
         with Path(fpath).open('r+', encoding='utf-8-sig') as fileobject:
-           generated_nodes = (
-               [core.publish_doctree('`{0} <{1}>`_  `({2}) <{3}>`_' .format(
-                   _fname, target, src_label, src_target))[0]])
-           generated_nodes += self.get_code_from_file(fileobject)
+            generated_nodes = (
+                [core.publish_doctree('`{0} <{1}>`_  `({2}) <{3}>`_' .format(
+                    _fname, target, src_label, src_target))[0]])
+            generated_nodes += self.get_code_from_file(fileobject)
         return generated_nodes
 
     def get_code_from_file(self, data):

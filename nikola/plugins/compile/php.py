@@ -46,7 +46,7 @@ class CompilePhp(PageCompiler):
         text = Path(source).read_bytes()
         hash = md5(text).hexdigest()
         out = f'<!-- __NIKOLA_PHP_TEMPLATE_INJECTION source:{source} checksum:{hash}__ -->'
-        Path(dest).write_text(out,  encoding="utf8")
+        Path(dest).write_text(out, encoding="utf8")
         return True
 
     def compile_string(self, data, source_path=None, is_two_file=True, post=None, lang=None):

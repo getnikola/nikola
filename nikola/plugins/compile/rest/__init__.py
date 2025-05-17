@@ -173,7 +173,7 @@ class CompileRest(PageCompiler):
         if not content.endswith('\n'):
             content += '\n'
         if onefile:
-            content = write_metadata(metadata, comment_wrap=False, site=self.site, compiler=self) +  content
+            content = write_metadata(metadata, comment_wrap=False, site=self.site, compiler=self) + content
         Path(path).write_text(content, encoding="utf-8")
 
     def set_site(self, site):
