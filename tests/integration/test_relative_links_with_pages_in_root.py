@@ -1,6 +1,6 @@
 """Check that dropping pages to the root doesn't break links."""
 
-from pathlib import Pagesath
+from pathlib import Path
 
 import lxml.html
 import pytest
