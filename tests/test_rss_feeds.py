@@ -120,7 +120,7 @@ def rss_feed_content(blog_url, config, default_locale):
             filename = "testfeed.rss"
             opener_mock = mock.mock_open()
 
-            with mock.patch("nikola.nikola.pathlib.Path.write_text", opener_mock, create=True):
+            with mock.patch("nikola.nikola.utils.io.open", opener_mock, create=True):
                 Nikola().generic_rss_renderer(
                     default_locale,
                     "blog_title",
@@ -132,7 +132,7 @@ def rss_feed_content(blog_url, config, default_locale):
                     False,
                 )
 
-            opener_mock.assert_called_once_with(encoding="utf-8")
+            opener_mock.assert_called_once_with(filename, "w+", encoding="utf-8")
 
             # Python 3 / unicode strings workaround
             # lxml will complain if the encoding is specified in the
