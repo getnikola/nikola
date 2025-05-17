@@ -2,6 +2,7 @@
 
 import os
 from pathlib import Path
+from textwrap import dedent
 
 import pytest
 
@@ -142,11 +143,11 @@ def build(target_dir):
 
     append_config(
         target_dir,
-        """
-PAGE_INDEX = True
-PRETTY_URLS = False
-PAGES = PAGES + (('pages/*.php', 'pages', 'page.tmpl'),)
-""",
+        dedent("""\
+            PAGE_INDEX = True
+            PRETTY_URLS = False
+            PAGES = PAGES + (('pages/*.php', 'pages', 'page.tmpl'),)
+            """),
     )
 
     with cd(target_dir):
@@ -164,57 +165,64 @@ def create_pages(target_dir):
     makedirs(subdir3)
 
     (Path(pages) / "page0.txt").write_text(
-            """\
-.. title: Page 0
-.. slug: page0
+        dedent("""\
+            .. title: Page 0
+            .. slug: page0
 
-This is page 0.
-""", encoding="utf8")
+            This is page 0.
+            """),
+        encoding="utf8")
 
     (Path(subdir1) / "page1.txt").write_text(
-            """\
-.. title: Page 1
-.. slug: page1
+        dedent("""\
+            .. title: Page 1
+            .. slug: page1
 
-This is page 1.
-""", encoding="utf8")
+            This is page 1.
+            """),
+        encoding="utf8")
 
     (Path(subdir1) / "page2.txt").write_text(
-            """\
-.. title: Page 2
-.. slug: page2
+        dedent("""\
+            .. title: Page 2
+            .. slug: page2
 
-This is page 2.
-""", encoding="utf8")
+            This is page 2.
+            """),
+        encoding="utf8")
 
     (Path(subdir2) / "page3.txt").write_text(
-            """\
-.. title: Page 3
-.. slug: page3
+        dedent("""\
+            .. title: Page 3
+            .. slug: page3
 
-This is page 3.
-""", encoding="utf8")
+            This is page 3.
+            """),
+        encoding="utf8")
 
     (Path(subdir2) / "foo.txt").write_text(
-            """\
-.. title: Not the page index
-.. slug: index
+        dedent("""\
+            .. title: Not the page index
+            .. slug: index
 
-This is not the page index.
-""", encoding="utf8")
+            This is not the page index.
+            """),
+        encoding="utf8")
 
     (Path(subdir3) / "page4.txt").write_text(
-            """\
-.. title: Page 4
-.. slug: page4
+        dedent("""\
+            .. title: Page 4
+            .. slug: page4
 
-This is page 4.
-""", encoding="utf8")
+            This is page 4.
+            """),
+        encoding="utf8")
 
     (Path(subdir3) / "bar.php").write_text(
-            """\
-.. title: Still not the page index
-.. slug: index
+        dedent("""\
+            .. title: Still not the page index
+            .. slug: index
 
-This is not the page index either.
-""", encoding="utf8")
+            This is not the page index either.
+            """),
+        encoding="utf8")

@@ -3,6 +3,7 @@
 import os
 from datetime import timedelta
 from pathlib import Path
+from textwrap import dedent
 
 import pytest
 
@@ -68,28 +69,31 @@ def build(target_dir):
 
     past_datetime = format_datetime(current_time() + timedelta(days=-1))
     (Path(target_dir) / "posts" / "empty1.txt").write_text(
-            f"""\
-.. title: foo
-.. slug: foo
-.. date: {past_datetime}
-""", encoding="utf8")
+        dedent(f"""\
+            .. title: foo
+            .. slug: foo
+            .. date: {past_datetime}
+            """),
+        encoding="utf8")
 
     future_datetime = format_datetime(current_time() + timedelta(days=1))
 
     (Path(target_dir) / "posts" / "empty2.txt").write_text(
-            f"""\
-.. title: bar
-.. slug: bar
-.. date: {future_datetime}
-""", encoding="utf8")
+        dedent(f"""\
+            .. title: bar
+            .. slug: bar
+            .. date: {future_datetime}
+            """),
+        encoding="utf8")
 
     (Path(target_dir) / "posts" / "empty3.txt").write_text(
-            f"""\
-.. title: baz
-.. slug: baz
-.. date: {future_datetime}
-.. pretty_url: false
-""", encoding="utf8")
+        dedent(f"""\
+            .. title: baz
+            .. slug: baz
+            .. date: {future_datetime}
+            .. pretty_url: false
+            """),
+        encoding="utf8")
 
     with cd(target_dir):
         __main__.main(["build"])
