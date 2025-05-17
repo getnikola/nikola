@@ -29,7 +29,7 @@
 import os
 
 # The current Nikola version:
-__version__ = '8.3.2'
+__version__ = '8.3.3'
 
 # A flag whether logging should emit debug information:
 DEBUG = bool(os.getenv('NIKOLA_DEBUG'))

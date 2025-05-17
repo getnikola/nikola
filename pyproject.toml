@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "Nikola"
-version = "8.3.2"
+version = "8.3.3"
 description = "A modular, fast, simple, static website and blog generator"
 readme = "README.rst"
 license = {file = "LICENSE.txt"}

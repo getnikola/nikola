@@ -1,3 +1,11 @@
+New in v8.3.3
+=============
+
+We’ve had to release Nikola v8.3.3 immediately after releasing
+Nikola v8.3.2, as it is broken on Python 3.8. We would like to thank
+the Python packaging ecosystem for being an incomprehensible and
+incompatible trainwreck.
+
 New in v8.3.2
 =============
 
