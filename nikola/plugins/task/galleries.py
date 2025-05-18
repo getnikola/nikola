@@ -97,7 +97,7 @@ class Galleries(Task, ImageProcessor):
         for source, dest in self.kw['gallery_folders'].items():
             if source in appearing_paths or dest in appearing_paths:
                 problem = source if source in appearing_paths else dest
-                utils.LOGGER.error("The gallery input or output folder '{0}' appears in more than one entry in GALLERY_FOLDERS, ignoring.".format(problem))
+                utils.LOGGER.error(f"The gallery input or output folder '{problem}' appears in more than one entry in GALLERY_FOLDERS, ignoring.")
                 continue
             appearing_paths.add(source)
             appearing_paths.add(dest)
@@ -116,12 +116,12 @@ class Galleries(Task, ImageProcessor):
             candidates = self.improper_gallery_links[name]
             if len(candidates) == 1:
                 return candidates[0]
-            self.logger.error("Gallery name '{0}' is not unique! Possible output paths: {1}".format(name, candidates))
-            raise RuntimeError("Gallery name '{0}' is not unique! Possible output paths: {1}".format(name, candidates))
+            self.logger.error(f"Gallery name '{name}' is not unique! Possible output paths: {candidates}")
+            raise RuntimeError(f"Gallery name '{name}' is not unique! Possible output paths: {candidates}")
         else:
-            self.logger.error("Unknown gallery '{0}'!".format(name))
+            self.logger.error(f"Unknown gallery '{name}'!")
             self.logger.info("Known galleries: " + str(list(self.proper_gallery_links.keys())))
-            raise RuntimeError("Unknown gallery '{0}'!".format(name))
+            raise RuntimeError(f"Unknown gallery '{name}'!")
 
     def gallery_path(self, name, lang):
         """Link to an image gallery's path.
@@ -174,7 +174,7 @@ class Galleries(Task, ImageProcessor):
         self.image_ext_list.extend(self.site.config.get('EXTRA_IMAGE_EXTENSIONS', []))
 
         for k, v in self.site.GLOBAL_CONTEXT['template_hooks'].items():
-            self.kw['||template_hooks|{0}||'.format(k)] = v.calculate_deps()
+            self.kw[f'||template_hooks|{k}||'] = v.calculate_deps()
 
         self.site.scan_posts()
         yield self.group_task()
@@ -210,7 +210,7 @@ class Galleries(Task, ImageProcessor):
 
             for lang in self.kw['translations']:
                 # save navigation links as dependencies
-                self.kw['navigation_links|{0}'.format(lang)] = self.kw['global_context']['navigation_links'](lang)
+                self.kw[f'navigation_links|{lang}'] = self.kw['global_context']['navigation_links'](lang)
 
             # Create index.html for each language
             for lang in self.kw['translations']:
@@ -475,8 +475,7 @@ class Galleries(Task, ImageProcessor):
         else:
             return "", [], {}, {}
 
-        self.logger.debug("Using {0} for gallery {1}".format(
-            used_path, gallery))
+        self.logger.debug(f"Using {used_path} for gallery {gallery}")
         with open(used_path, "r", encoding='utf-8-sig') as meta_file:
             if YAML is None:
                 utils.req_missing(['ruamel.yaml'], 'use metadata.yml files for galleries')
@@ -498,8 +497,7 @@ class Galleries(Task, ImageProcessor):
                         order.append(img_name)
                     custom_metadata[img_name] = img
                 else:
-                    self.logger.error("no 'name:' for ({0}) in {1}".format(
-                        img, used_path))
+                    self.logger.error(f"no 'name:' for ({img}) in {used_path}")
         return used_path, order, captions, custom_metadata
 
     def parse_index(self, gallery, input_folder, output_folder):

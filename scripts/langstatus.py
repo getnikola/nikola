@@ -15,8 +15,8 @@ for file in glob.glob(os.path.join('nikola', 'data', 'themes', 'base',
     lang = file.split('_', 1)[1][:-3]
     exist.append(lang)
     if lang in used:
-        print('{0}: found'.format(lang))
+        print(f'{lang}: found')
     elif os.path.islink(file):
-        print('\x1b[1;1m\x1b[1;30m{0}: symlink\x1b[0m'.format(lang))
+        print(f'\x1b[1;1m\x1b[1;30m{lang}: symlink\x1b[0m')
     else:
-        print('\x1b[1;1m\x1b[1;31m{0}: NOT found\x1b[0m'.format(lang))
+        print(f'\x1b[1;1m\x1b[1;31m{lang}: NOT found\x1b[0m')

@@ -67,6 +67,6 @@ class Media(Directive):
 def _gen_media_embed(url, *q, **kw):
     if micawber is None:
         msg = req_missing(['micawber'], 'use the media directive', optional=True)
-        return '<div class="text-error">{0}</div>'.format(msg)
+        return f'<div class="text-error">{msg}</div>'
     providers = micawber.bootstrap_basic()
     return micawber.parse_text(url, providers)

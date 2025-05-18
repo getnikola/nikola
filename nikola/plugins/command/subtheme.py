@@ -101,8 +101,7 @@ class CommandSubTheme(Command):
             LOGGER.warning(
                 '"subtheme" doesn\'t work well with the bootstrap3-gradients family')
 
-        LOGGER.info("Creating '{0}' theme from '{1}' and '{2}'".format(
-            name, swatch, parent))
+        LOGGER.info(f"Creating '{name}' theme from '{swatch}' and '{parent}'")
         utils.makedirs(os.path.join('themes', name, 'assets', 'css'))
         for fname in ('bootstrap.min.css', 'bootstrap.css'):
             if swatch in [
@@ -116,11 +115,9 @@ class CommandSubTheme(Command):
                         'The hackertheme subthemes are only available for Bootstrap 4.')
                     return 1
                 if fname == 'bootstrap.css':
-                    url = 'https://raw.githubusercontent.com/HackerThemes/theme-machine/master/dist/{swatch}/css/bootstrap4-{swatch}.css'.format(
-                        swatch=swatch)
+                    url = f'https://raw.githubusercontent.com/HackerThemes/theme-machine/master/dist/{swatch}/css/bootstrap4-{swatch}.css'
                 else:
-                    url = 'https://raw.githubusercontent.com/HackerThemes/theme-machine/master/dist/{swatch}/css/bootstrap4-{swatch}.min.css'.format(
-                        swatch=swatch)
+                    url = f'https://raw.githubusercontent.com/HackerThemes/theme-machine/master/dist/{swatch}/css/bootstrap4-{swatch}.min.css'
             else:  # Bootswatch
                 url = 'https://bootswatch.com'
                 if version:
@@ -147,4 +144,4 @@ class CommandSubTheme(Command):
             cp.write(output)
 
         LOGGER.info(
-            'Theme created.  Change the THEME setting to "{0}" to use it.'.format(name))
+            f'Theme created.  Change the THEME setting to "{name}" to use it.')
