@@ -30,7 +30,6 @@ You will need, of course, to install pandoc
 """
 
 
-import io
 import os
 import subprocess
 from typing import List
@@ -105,7 +104,6 @@ class CompilePandoc(PageCompiler):
         makedirs(os.path.dirname(path))
         if not content.endswith('\n'):
             content += '\n'
-        with io.open(path, "w+", encoding="utf8") as fd:
-            if onefile:
-                fd.write(write_metadata(metadata, comment_wrap=True, site=self.site, compiler=self))
-            fd.write(content)
+        if onefile:
+            content = write_metadata(metadata, comment_wrap=True, site=self.site, compiler=self) + content
+        Path(path).write_text(content, encoding="utf8")

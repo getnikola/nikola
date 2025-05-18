@@ -5,8 +5,8 @@ This tests the red path (failures) for the `check` command.
 Green path tests (working as expected) can be found in `test_demo_build`.
 """
 
-import io
 import os
+from pathlib import Path
 
 import pytest
 
@@ -21,7 +21,7 @@ from .test_empty_build import (  # NOQA
 
 
 def test_check_links_fail(build, output_dir, target_dir):
-    os.unlink(os.path.join(output_dir, "archive.html"))
+    os.unlink(Path(output_dir) / "archive.html")
 
     with cd(target_dir):
         result = __main__.main(["check", "-l"])
@@ -29,9 +29,8 @@ def test_check_links_fail(build, output_dir, target_dir):
 
 
 def test_check_files_fail(build, output_dir, target_dir):
-    manually_added_file = os.path.join(output_dir, "foobar")
-    with io.open(manually_added_file, "w+", encoding="utf8") as outf:
-        outf.write("foo")
+    manually_added_file = Path(output_dir) / "foobar"
+    manually_added_file.write_text("foo", encoding="utf8")
 
     with cd(target_dir):
         result = __main__.main(["check", "-f"])

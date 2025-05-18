@@ -120,7 +120,7 @@ def rss_feed_content(blog_url, config, default_locale):
             filename = "testfeed.rss"
             opener_mock = mock.mock_open()
 
-            with mock.patch("nikola.nikola.io.open", opener_mock, create=True):
+            with mock.patch("nikola.nikola.utils.io.open", opener_mock, create=True):
                 Nikola().generic_rss_renderer(
                     default_locale,
                     "blog_title",

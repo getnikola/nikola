@@ -26,9 +26,9 @@
 
 """Jinja template handler."""
 
-import io
 import json
 import os
+from pathlib import Path
 from typing import Callable, Optional
 
 from nikola.plugin_categories import TemplateSystem
@@ -114,8 +114,7 @@ class JinjaTemplates(TemplateSystem):
         data = template.render(**context)
         if output_name is not None:
             makedirs(os.path.dirname(output_name))
-            with io.open(output_name, 'w', encoding='utf-8') as output:
-                output.write(data)
+            Path(output_name).write_text(data, encoding='utf-8')
         return data
 
     def render_template_to_string(self, template, context):
@@ -142,8 +141,7 @@ class JinjaTemplates(TemplateSystem):
 
     def get_deps(self, filename, context=None):
         """Return paths to dependencies for the template loaded from filename."""
-        with io.open(filename, 'r', encoding='utf-8-sig') as fd:
-            text = fd.read()
+        text = Path(filename).read_text(encoding='utf-8-sig')
         return self.get_string_deps(text, context)
 
     def template_deps(self, template_name, context=None):

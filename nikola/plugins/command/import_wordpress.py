@@ -27,10 +27,10 @@
 """Import a WordPress dump."""
 
 import datetime
-import io
 import json
 import os
 import re
+from pathlib import Path
 import sys
 from collections import defaultdict
 from urllib.parse import urlparse, unquote
@@ -1120,8 +1120,7 @@ to
 
     def write_attachments_info(self, path, attachments):
         """Write attachments info file."""
-        with io.open(path, "wb") as file:
-            file.write(json.dumps(attachments).encode('utf-8'))
+        Path(path).write_text(json.dumps(attachments), encoding='utf-8')
 
     def process_item_if_post_or_page(self, item):
         """Process posts and pages."""

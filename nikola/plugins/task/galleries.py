@@ -28,11 +28,11 @@
 
 import datetime
 import glob
-import io
 import json
 import mimetypes
 import os
 import pathlib
+from pathlib import Path
 from collections import OrderedDict
 from urllib.parse import urljoin
 
@@ -774,8 +774,7 @@ class Galleries(Task, ImageProcessor):
         rss_obj.rss_attrs["xmlns:atom"] = "http://www.w3.org/2005/Atom"
         dst_dir = os.path.dirname(output_path)
         utils.makedirs(dst_dir)
-        with io.open(output_path, "w+", encoding="utf-8") as rss_file:
-            data = rss_obj.to_xml(encoding='utf-8')
-            if isinstance(data, bytes):
-                data = data.decode('utf-8')
-            rss_file.write(data)
+        data = rss_obj.to_xml(encoding='utf-8')
+        if isinstance(data, bytes):
+            data = data.decode('utf-8')
+        Path(output_path).write_text(data, encoding="utf-8")
