@@ -5,7 +5,7 @@ cd npm_assets
 npm update
 cd ..
 
-# Link bootstrap assets to bootstrap
+# Link bootstrap assets to bootstrap4
 pushd nikola/data/themes/bootstrap4/assets/js
 ln -sf ../../../../../../npm_assets/node_modules/bootstrap/dist/js/bootstrap.min.js .
 git add .
@@ -13,6 +13,32 @@ popd
 
 pushd nikola/data/themes/bootstrap4/assets/css
 ln -sf ../../../../../../npm_assets/node_modules/bootstrap/dist/css/bootstrap.min.css .
+git add .
+popd
+
+# Link bootstrap5 assets to bootstrap5 theme
+pushd nikola/data/themes/bootstrap5/assets/js
+mkdir -p .
+ln -sf ../../../../../../npm_assets/node_modules/bootstrap5/dist/js/bootstrap.min.js .
+git add .
+popd
+
+pushd nikola/data/themes/bootstrap5/assets/css
+mkdir -p .
+ln -sf ../../../../../../npm_assets/node_modules/bootstrap5/dist/css/bootstrap.min.css .
+git add .
+popd
+
+# Link bootstrap5 assets to bootblog5 theme
+pushd nikola/data/themes/bootblog5/assets/js
+mkdir -p .
+ln -sf ../../../../../../npm_assets/node_modules/bootstrap5/dist/js/bootstrap.min.js .
+git add .
+popd
+
+pushd nikola/data/themes/bootblog5/assets/css
+mkdir -p .
+ln -sf ../../../../../../npm_assets/node_modules/bootstrap5/dist/css/bootstrap.min.css .
 git add .
 popd
 
@@ -34,17 +60,41 @@ ln -sf ../../../../../../npm_assets/node_modules/html5shiv/dist/html5shiv-prints
 git add luxon.min.js html5.js html5shiv-printshiv.min.js
 popd
 
-# Link jQuery to bootstrap theme
+# Link newer luxon to bootstrap5 and bootblog5 themes
+pushd nikola/data/themes/bootstrap5/assets/js
+mkdir -p .
+ln -sf ../../../../../../npm_assets/node_modules/luxon36/build/global/luxon.min.js .
+git add .
+popd
+
+pushd nikola/data/themes/bootblog5/assets/js
+mkdir -p .
+ln -sf ../../../../../../npm_assets/node_modules/luxon36/build/global/luxon.min.js .
+git add .
+popd
+
+# Link jQuery to bootstrap themes
 pushd nikola/data/themes/bootstrap4/assets/js
 ln -sf ../../../../../../npm_assets/node_modules/jquery/dist/jquery.min.js .
 git add .
 popd
 
-# Link Popper.js to bootstrap theme
+# Link Popper.js to bootstrap themes
 pushd nikola/data/themes/bootstrap4/assets/js
 ln -sf ../../../../../../npm_assets/node_modules/popper.js/dist/umd/popper.min.js .
 git add .
 popd
+
+# Link Popper.js Core to bootstrap5 themes
+pushd nikola/data/themes/bootstrap5/assets/js
+ln -sf ../../../../../../npm_assets/node_modules/@popperjs/core/dist/umd/popper.min.js .
+git add .
+popd
+#
+# pushd nikola/data/themes/bootblog5/assets/js
+ln -sf ../../../../../../npm_assets/node_modules/@popperjs/core/dist/umd/popper.min.js .
+git add .
+
 
 
 pushd nikola/plugins/command/auto

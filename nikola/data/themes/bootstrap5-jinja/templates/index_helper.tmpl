@@ -1,0 +1,15 @@
+{#  -*- coding: utf-8 -*- #}
+{% macro html_pager() %}
+    {% if prevlink or nextlink %}
+        <nav aria-label="Blog pager">
+            <ul class="pagination justify-content-between">
+            {% if prevlink %}
+                <li class="page-item"><a class="page-link" href="{{ prevlink }}" rel="prev">{{ messages("Newer posts") }}</a></li>
+            {% endif %}
+            {% if nextlink %}
+                <li class="page-item"><a class="page-link" href="{{ nextlink }}" rel="next">{{ messages("Older posts") }}</a></li>
+            {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+{% endmacro %}
