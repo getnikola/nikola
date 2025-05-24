@@ -10,6 +10,7 @@ Bugfixes
 * Fix jinja2 plugin failing to load when jinja2 is not installed
   (Discussion #3848)
 * Close ``<a>`` tag instead of opening another one in ``tag.tmpl``
+* Setuptools is not required anymore at runtime (PR #3850)
 
 New in v8.3.3
 =============
