@@ -333,7 +333,7 @@ def test_get_configuration_output_path(import_command):
     assert import_command.name in config_path_with_timestamp
 
 
-def test_write_content_does_not_detroy_text(import_command):
+def test_write_content_does_not_destroy_text(import_command):
     content = b"""FOO"""
     open_mock = mock.mock_open()
     with mock.patch("nikola.plugins.basic_import.open", open_mock, create=True):
