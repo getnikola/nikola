@@ -102,6 +102,7 @@ docs = [
 nikola = "nikola.__main__:main"
 
 [tool.setuptools.packages.find]
+namespaces = false
 exclude = ["tests", "tests.*"]
 
 [tool.setuptools.data-files]

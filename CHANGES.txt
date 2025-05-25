@@ -7,6 +7,8 @@ Features
 Bugfixes
 --------
 
+* Fix ``docs``, ``logo``, ``npm_assets``, ``scripts``, ``translations``
+ being installed into ``site-packages`` (Issue #3852)
 * Fix jinja2 plugin failing to load when jinja2 is not installed
   (Discussion #3848)
 * Close ``<a>`` tag instead of opening another one in ``tag.tmpl``
