@@ -83,7 +83,7 @@ cleanup
 
 status 'Replacing versions in files...'
 
-sed "s/version=.*/version='$version',/g" setup.py -i
+sed "s/version = .*/version = \"$version\"/g" pyproject.toml -i
 sed "s/version = .*/version = '$version'/g" docs/sphinx/conf.py -i
 sed "s/release = .*/release = '$version'/g" docs/sphinx/conf.py -i
 sed "s/:Version: .*/:Version: $version/g" docs/*.rst -i
@@ -97,7 +97,7 @@ setopt errexit # Exit on errors
 underline=$(python -c "import sys; sys.stdout.write((len('v$version')) * '=')")
 perl -0777 -i -pe "s/master\n======/v$version\n$underline/" CHANGES.txt
 # Man pages
-rst2man.py docs/man/nikola.rst > docs/man/nikola.1
+rst2man docs/man/nikola.rst > docs/man/nikola.1
 gzip -f docs/man/nikola.1
 
 status 'Updating path handler documentation...'
@@ -137,10 +137,10 @@ cleanup
 
 ./setup.py sdist bdist_wheel || exit $?
 
-gpg --detach-sign -a dist/Nikola-$version.tar.gz
-gpg --detach-sign -a dist/Nikola-$version*.whl
+gpg --detach-sign -a dist/nikola-$version.tar.gz
+gpg --detach-sign -a dist/nikola-$version*.whl
 
-twine upload dist/Nikola-$version.tar.gz dist/Nikola-$version*.whl || exit $?
+twine upload dist/nikola-$version.tar.gz dist/nikola-$version*.whl || exit $?
 
 cleanup
 
