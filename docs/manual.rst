@@ -1175,6 +1175,7 @@ config option:
 
 Nikola comes with some Markdown Extensions built-in and enabled by default,
 namely a gist directive, a podcast directive, and ``~~strikethrough~~`` support.
+You can find documentation for all extensions [in python-markdown's docs](https://python-markdown.github.io/extensions/).
 
 Jupyter Notebook
 ````````````````
