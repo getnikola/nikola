@@ -1,6 +1,6 @@
-import io
 import sys
 from os import path
+from pathlib import Path
 
 import pytest
 
@@ -72,10 +72,8 @@ def output_path(tmpdir):
 
 
 def markdown_compile(compiler, input_path, output_path, text):
-    with io.open(input_path, "w+", encoding="utf8") as input_file:
-        input_file.write(text)
+    Path(input_path).write_text(text, encoding="utf8")
 
     compiler.compile(input_path, output_path, lang="en")
 
-    with io.open(output_path, "r", encoding="utf8") as output_path:
-        return output_path.read()
+    return Path(output_path).read_text(encoding="utf8")

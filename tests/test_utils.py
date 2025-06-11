@@ -41,8 +41,7 @@ def test_getting_metadata_from_content(post):
 
 Post content
 """
-    opener_mock = mock.mock_open(read_data=file_content)
-    with mock.patch("nikola.post.io.open", opener_mock, create=True):
+    with mock.patch("nikola.post.Path.read_text", return_value=file_content, create=True):
         meta = get_meta(post, None)[0]
 
     assert "Nikola needs more tests!" == meta["title"]
@@ -64,8 +63,7 @@ def test_get_title_from_fname(post):
 .. link:
 .. description:
 """
-    opener_mock = mock.mock_open(read_data=file_content)
-    with mock.patch("nikola.post.io.open", opener_mock, create=True):
+    with mock.patch("nikola.post.Path.read_text", return_value=file_content, create=True):
         meta = get_meta(post, None)[0]
 
     assert "file_with_metadata" == meta["title"]
@@ -89,8 +87,7 @@ def test_use_filename_as_slug_fallback(post):
 
 Post content
 """
-    opener_mock = mock.mock_open(read_data=file_content)
-    with mock.patch("nikola.post.io.open", opener_mock, create=True):
+    with mock.patch("nikola.post.Path.read_text", return_value=file_content, create=True):
         meta = get_meta(post, None)[0]
 
     assert "Nikola needs more tests!" == meta["title"]
@@ -113,8 +110,7 @@ def test_extracting_metadata_from_filename(post, unslugify, expected_title):
     ] = r"(?P<date>\d{4}-\d{2}-\d{2})-(?P<slug>.*)-(?P<title>.*)\.md"
     post.config["FILE_METADATA_UNSLUGIFY_TITLES"] = unslugify
 
-    no_metadata_opener = mock.mock_open(read_data="No metadata in the file!")
-    with mock.patch("nikola.post.io.open", no_metadata_opener, create=True):
+    with mock.patch("nikola.post.Path.read_text", return_value="No metadata in the file!", create=True):
         meta = get_meta(post, None)[0]
 
     assert expected_title == meta["title"]
@@ -126,8 +122,7 @@ def test_get_meta_slug_only_from_filename(post):
     post.source_path = "some/path/the_slug.md"
     post.metadata_path = "some/path/the_slug.meta"
 
-    no_metadata_opener = mock.mock_open(read_data="No metadata in the file!")
-    with mock.patch("nikola.post.io.open", no_metadata_opener, create=True):
+    with mock.patch("nikola.post.Path.read_text", return_value="No metadata in the file!", create=True):
         meta = get_meta(post, None)[0]
 
     assert "the_slug" == meta["slug"]
