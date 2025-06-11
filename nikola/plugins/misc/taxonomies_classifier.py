@@ -69,7 +69,7 @@ class TaxonomiesClassifier(SignalHandler):
                         # Extract classifications for this language
                         classifications[lang] = taxonomy.classify(post, lang)
                         if not taxonomy.more_than_one_classifications_per_post and len(classifications[lang]) > 1:
-                            raise ValueError("Too many {0} classifications for post {1}".format(taxonomy.classification_name, post.source_path))
+                            raise ValueError(f"Too many {taxonomy.classification_name} classifications for post {post.source_path}")
                         # Add post to sets
                         for classification in classifications[lang]:
                             while True:
@@ -181,8 +181,7 @@ class TaxonomiesClassifier(SignalHandler):
                         if other_classification_name == taxonomy.classification_name and other_classification == classification:
                             taxonomy_outputs[lang][path][2].extend(filtered_posts)
                         else:
-                            utils.LOGGER.error('You have classifications that are too similar: {0} "{1}" and {2} "{3}" both result in output path {4} for language {5}.'.format(
-                                taxonomy.classification_name, classification, other_classification_name, other_classification, path, lang))
+                            utils.LOGGER.error(f'You have classifications that are too similar: {taxonomy.classification_name} "{classification}" and {other_classification_name} "{other_classification}" both result in output path {path} for language {lang}.')
                             utils.LOGGER.error('{0} "{1}" is used in: {2}'.format(
                                 taxonomy.classification_name.title(), classification, ', '.join(sorted([p.source_path for p in filtered_posts]))))
                             utils.LOGGER.error('{0} "{1}" is used in: {2}'.format(

@@ -63,6 +63,6 @@ class CommandVersion(Command):
             if pypi_version == __version__:
                 print("Nikola is up-to-date")
             else:
-                print("The latest version of Nikola is v{0}. Please upgrade "
-                      "using `pip install --upgrade Nikola=={0}` or your "
-                      "system package manager.".format(pypi_version))
+                print(f"The latest version of Nikola is v{pypi_version}. Please upgrade "
+                      f"using `pip install --upgrade Nikola=={pypi_version}` or your "
+                      "system package manager.")

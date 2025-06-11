@@ -154,13 +154,11 @@ def req_missing(names, purpose, python=True, optional=False):
     else:
         whatarethey_s = whatarethey_p = 'software'
     if len(names) == 1:
-        msg = 'In order to {0}, you must install the "{1}" {2}.'.format(
-            purpose, names[0], whatarethey_s)
+        msg = f'In order to {purpose}, you must install the "{names[0]}" {whatarethey_s}.'
     else:
         most = '", "'.join(names[:-1])
         pnames = most + '" and "' + names[-1]
-        msg = 'In order to {0}, you must install the "{1}" {2}.'.format(
-            purpose, pnames, whatarethey_p)
+        msg = f'In order to {purpose}, you must install the "{pnames}" {whatarethey_p}.'
 
     if optional:
         LOGGER.warning(msg)
@@ -195,7 +193,7 @@ def makedirs(path):
         return
     if os.path.exists(path):
         if not os.path.isdir(path):
-            raise OSError('Path {0} already exists and is not a folder.'.format(path))
+            raise OSError(f'Path {path} already exists and is not a folder.')
         else:
             return
     try:
@@ -317,7 +315,7 @@ class TranslatableSetting(object):
 
     def __repr__(self):
         """Provide a representation for programmers."""
-        return '<TranslatableSetting: {0!r} = {1!r}>'.format(self.name, self._inp)
+        return f'<TranslatableSetting: {self.name!r} = {self._inp!r}>'
 
     def format(self, *args, **kwargs):
         """Format ALL the values in the setting the same way."""
@@ -481,11 +479,11 @@ class TemplateHookRegistry(object):
 
     def __str__(self):
         """Stringify a registry."""
-        return '<TemplateHookRegistry: {0}>'.format(self._items)
+        return f'<TemplateHookRegistry: {self._items}>'
 
     def __repr__(self):
         """Provide the representation of a registry."""
-        return '<TemplateHookRegistry: {0}>'.format(self.name)
+        return f'<TemplateHookRegistry: {self.name}>'
 
 
 class CustomEncoder(json.JSONEncoder):
@@ -601,7 +599,7 @@ def get_theme_path_real(theme, themes_dirs) -> str:
     dir_name = pkg_resources_path('nikola', os.path.join('data', 'themes', theme))
     if os.path.isdir(dir_name):
         return dir_name
-    raise Exception("Can't find theme '{0}'".format(theme))
+    raise Exception(f"Can't find theme '{theme}'")
 
 
 def get_theme_path(theme):
@@ -700,7 +698,7 @@ class LanguageNotFoundError(Exception):
 
     def __str__(self):
         """Stringify the exception."""
-        return 'cannot find language {0}'.format(self.lang)
+        return f'cannot find language {self.lang}'
 
 
 def load_messages(themes, translations, default_lang, themes_dirs):
@@ -748,7 +746,7 @@ def load_messages(themes, translations, default_lang, themes_dirs):
         raise LanguageNotFoundError(lang, last_exception)
     for lang, status in completion_status.items():
         if not status and lang not in INCOMPLETE_LANGUAGES_WARNED:
-            LOGGER.warning("Incomplete translation for language '{0}'.".format(lang))
+            LOGGER.warning(f"Incomplete translation for language '{lang}'.")
             INCOMPLETE_LANGUAGES_WARNED.add(lang)
 
     return messages
@@ -844,7 +842,7 @@ def slugify(value, lang=None, force=False):
     foo-bar
     """
     if not isinstance(value, str):
-        raise ValueError("Not a unicode object: {0}".format(value))
+        raise ValueError(f"Not a unicode object: {value}")
     if USE_SLUGIFY or force:
         # This is the standard state of slugify, which actually does some work.
         # It is the preferred style, especially for Western languages.
@@ -897,9 +895,9 @@ def full_path_from_urlparse(parsed) -> str:
     """Given urlparse output, return the full path (with query and fragment)."""
     dst = parsed.path
     if parsed.query:
-        dst = "{0}?{1}".format(dst, parsed.query)
+        dst = f"{dst}?{parsed.query}"
     if parsed.fragment:
-        dst = "{0}#{1}".format(dst, parsed.fragment)
+        dst = f"{dst}#{parsed.fragment}"
     return dst
 
 # A very slightly safer version of zip.extractall that works on
@@ -950,7 +948,7 @@ def to_datetime(value, tzinfo=None):
             value = value.replace(tzinfo=tzinfo)
         return value
     except Exception:
-        raise ValueError('Unrecognized date/time: {0!r}'.format(value))
+        raise ValueError(f'Unrecognized date/time: {value!r}')
 
 
 def get_tzname(dt):
@@ -996,7 +994,7 @@ def apply_filters(task, filters, skip_ext=None):
                 if ext == key:
                     return value
             else:
-                raise ValueError("Cannot find filter match for {0}".format(key))
+                raise ValueError(f"Cannot find filter match for {key}")
 
     for target in task.get('targets', []):
         ext = os.path.splitext(target)[-1].lower()
@@ -1203,7 +1201,7 @@ class LocaleBorg(object):
         locales: dict with custom locale name overrides.
         """
         if not initial_lang:
-            raise ValueError("Unknown initial language {0}".format(initial_lang))
+            raise ValueError(f"Unknown initial language {initial_lang}")
         cls.reset()
         cls.locales = locales
         cls.__initial_lang = initial_lang
@@ -1311,7 +1309,7 @@ class ExtendedRSS2(rss.RSS2):
     def publish(self, handler):
         """Publish a feed."""
         if self.xsl_stylesheet_href:
-            handler.processingInstruction("xml-stylesheet", 'type="text/xsl" href="{0}" media="all"'.format(self.xsl_stylesheet_href))
+            handler.processingInstruction("xml-stylesheet", f'type="text/xsl" href="{self.xsl_stylesheet_href}" media="all"')
         super().publish(handler)
 
     def publish_extensions(self, handler):
@@ -1390,8 +1388,8 @@ def demote_headers(doc, level=1):
         if before == after:
             continue
 
-        elements = doc.xpath('//h{}'.format(before))
-        new_tag = 'h{}'.format(after)
+        elements = doc.xpath(f'//h{before}')
+        new_tag = f'h{after}'
         for element in elements:
             element.tag = new_tag
 
@@ -1462,7 +1460,7 @@ def get_translation_candidate(config, path, lang):
         if l == lang:  # Nothing to do
             return path
         elif lang == config['DEFAULT_LANG']:  # Return untranslated path
-            return '{0}.{1}'.format(p, e)
+            return f'{p}.{e}'
         else:  # Change lang and return
             return config['TRANSLATIONS_PATTERN'].format(path=p, ext=e, lang=lang)
     else:
@@ -1509,9 +1507,9 @@ def write_metadata(data, metadata_format=None, comment_wrap=False, site=None, co
         extractor.check_requirements()
         return extractor.write_metadata(data, comment_wrap)
     elif extractor and metadata_format not in default_meta:
-        LOGGER.warning('Writing METADATA_FORMAT {} is not supported, using "nikola" format'.format(metadata_format))
+        LOGGER.warning(f'Writing METADATA_FORMAT {metadata_format} is not supported, using "nikola" format')
     elif metadata_format not in default_meta:
-        LOGGER.warning('Unknown METADATA_FORMAT {}, using "nikola" format'.format(metadata_format))
+        LOGGER.warning(f'Unknown METADATA_FORMAT {metadata_format}, using "nikola" format')
 
     if metadata_format == 'rest_docinfo':
         title = data['title']
@@ -1520,10 +1518,10 @@ def write_metadata(data, metadata_format=None, comment_wrap=False, site=None, co
             title,
             '=' * len(title),
             ''
-        ] + [':{0}: {1}'.format(k, v) for k, v in data.items() if v and k != 'title'] + ['']
+        ] + [f':{k}: {v}' for k, v in data.items() if v and k != 'title'] + ['']
         return '\n'.join(results)
     elif metadata_format == 'markdown_meta':
-        results = ['{0}: {1}'.format(k, v) for k, v in data.items() if v] + ['', '']
+        results = [f'{k}: {v}' for k, v in data.items() if v] + ['', '']
         return '\n'.join(results)
     else:  # Nikola, default
         from nikola.metadata_extractors import DEFAULT_EXTRACTOR
@@ -1551,10 +1549,10 @@ def bool_from_meta(meta, key, fallback=False, blank=None):
 def ask(query, default=None):
     """Ask a question."""
     if default:
-        default_q = ' [{0}]'.format(default)
+        default_q = f' [{default}]'
     else:
         default_q = ''
-    inp = input("{query}{default_q}: ".format(query=query, default_q=default_q)).strip()
+    inp = input(f"{query}{default_q}: ").strip()
     if inp or default is None:
         return inp
     else:
@@ -1569,7 +1567,7 @@ def ask_yesno(query, default=None):
         default_q = ' [Y/n]'
     elif default is False:
         default_q = ' [y/N]'
-    inp = input("{query}{default_q} ".format(query=query, default_q=default_q)).strip()
+    inp = input(f"{query}{default_q} ").strip()
     if inp:
         return inp.lower().startswith('y')
     elif default is not None:
@@ -1676,7 +1674,7 @@ def options2docstring(name, options):
     """Translate options to a docstring."""
     result = ['Function wrapper for command %s' % name, 'arguments:']
     for opt in options:
-        result.append('{0} type {1} default {2}'.format(opt.name, opt.type.__name__, opt.default))
+        result.append(f'{opt.name} type {opt.type.__name__} default {opt.default}')
     return '\n'.join(result)
 
 
@@ -1712,7 +1710,7 @@ class NikolaPygmentsHTML(BetterHtmlFormatter):
         style = '; '.join(style)
         classes = ' '.join(self.nclasses)
 
-        yield 0, ('<pre class="{0}"'.format(classes) + (style and ' style="{0}"'.format(style)) + '>')
+        yield 0, (f'<pre class="{classes}"' + (style and f' style="{style}"') + '>')
         for tup in source:
             yield tup
         yield 0, '</pre>'
@@ -1768,7 +1766,7 @@ def adjust_name_for_index_path_list(path_list, i, displayed_i, lang, site, force
             for entry in path_schema:
                 path_list.append(entry.format(number=displayed_i, old_number=i, index_file=index_file))
         else:
-            path_list[-1] = '{0}-{1}{2}'.format(os.path.splitext(path_list[-1])[0], i, extension)
+            path_list[-1] = f'{os.path.splitext(path_list[-1])[0]}-{i}{extension}'
     return path_list
 
 
@@ -1808,8 +1806,8 @@ def create_redirect(src, dst):
         fd.write('<!DOCTYPE html>\n<head>\n<meta charset="utf-8">\n'
                  '<title>Redirecting...</title>\n<meta name="robots" '
                  'content="noindex">\n<meta http-equiv="refresh" content="0; '
-                 'url={0}">\n</head>\n<body>\n<p>Page moved '
-                 '<a href="{0}">here</a>.</p>\n</body>'.format(dst))
+                 f'url={dst}">\n</head>\n<body>\n<p>Page moved '
+                 f'<a href="{dst}">here</a>.</p>\n</body>')
 
 
 def colorize_str_from_base_color(string, base_color):
@@ -1870,7 +1868,7 @@ def dns_sd(port, inet6):
         import avahi
         import dbus
         inet = avahi.PROTO_INET6 if inet6 else avahi.PROTO_INET
-        name = "{0}'s Nikola Server on {1}".format(os.getlogin(), socket.gethostname())
+        name = f"{os.getlogin()}'s Nikola Server on {socket.gethostname()}"
         bus = dbus.SystemBus()
         bus_server = dbus.Interface(bus.get_object(avahi.DBUS_NAME,
                                                    avahi.DBUS_PATH_SERVER),
@@ -2158,16 +2156,16 @@ class ClassificationTranslationManager(object):
         ``posts_per_classification_per_language``.
         """
         # Add translations
-        for record in site.config.get('{}_TRANSLATIONS'.format(basename), []):
+        for record in site.config.get(f'{basename}_TRANSLATIONS', []):
             self.add_translation(record)
         # Add default translations
-        if site.config.get('{}_TRANSLATIONS_ADD_DEFAULTS'.format(basename), add_defaults_default):
+        if site.config.get(f'{basename}_TRANSLATIONS_ADD_DEFAULTS', add_defaults_default):
             self.add_defaults(posts_per_classification_per_language)
         # Use blinker to inform interested parties (plugins) that they can add
         # translations themselves
         args = {'translation_manager': self, 'site': site,
                 'posts_per_classification_per_language': posts_per_classification_per_language}
-        signal('{}_translations_config'.format(basename.lower())).send(args)
+        signal(f'{basename.lower()}_translations_config').send(args)
 
 
 def base_path_from_siteuri(siteuri: str) -> str:

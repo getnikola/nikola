@@ -64,7 +64,7 @@ LOGGER = utils.get_logger('import_wordpress')
 
 def install_plugin(site, plugin_name, output_dir=None, show_install_notes=False):
     """Install a Nikola plugin."""
-    LOGGER.info("Installing plugin '{0}'".format(plugin_name))
+    LOGGER.info(f"Installing plugin '{plugin_name}'")
     # Get hold of the 'plugin' plugin
     plugin_installer_info = site.plugin_manager.get_plugin_by_name('plugin', 'Command')
     if plugin_installer_info is None:
@@ -273,9 +273,9 @@ to
             options['output_folder'] = args.pop(0)
 
         if args:
-            LOGGER.warning('You specified additional arguments ({0}). Please consider '
+            LOGGER.warning(f'You specified additional arguments ({args}). Please consider '
                            'putting these arguments before the filename if you '
-                           'are running into problems.'.format(args))
+                           'are running into problems.')
 
         self.onefile = options.get('one_file', False)
 
@@ -349,11 +349,11 @@ to
         if self.export_categories_as_categories:
             wordpress_namespace = channel.nsmap['wp']
             cat_map = dict()
-            for cat in channel.findall('{{{0}}}category'.format(wordpress_namespace)):
+            for cat in channel.findall(f'{{{wordpress_namespace}}}category'):
                 # cat_id = get_text_tag(cat, '{{{0}}}term_id'.format(wordpress_namespace), None)
-                cat_slug = get_text_tag(cat, '{{{0}}}category_nicename'.format(wordpress_namespace), None)
-                cat_parent_slug = get_text_tag(cat, '{{{0}}}category_parent'.format(wordpress_namespace), None)
-                cat_name = utils.html_unescape(get_text_tag(cat, '{{{0}}}cat_name'.format(wordpress_namespace), None))
+                cat_slug = get_text_tag(cat, f'{{{wordpress_namespace}}}category_nicename', None)
+                cat_parent_slug = get_text_tag(cat, f'{{{wordpress_namespace}}}category_parent', None)
+                cat_name = utils.html_unescape(get_text_tag(cat, f'{{{wordpress_namespace}}}cat_name', None))
                 cat_path = [cat_name]
                 if cat_parent_slug in cat_map:
                     cat_path = cat_map[cat_parent_slug] + cat_path
@@ -377,11 +377,9 @@ to
         if not self.no_downloads:
             def show_info_about_mising_module(modulename):
                 LOGGER.error(
-                    'To use the "{commandname}" command, you have to install '
-                    'the "{package}" package or supply the "--no-downloads" '
-                    'option.'.format(
-                        commandname=self.name,
-                        package=modulename)
+                    f'To use the "{self.name}" command, you have to install '
+                    f'the "{modulename}" package or supply the "--no-downloads" '
+                    'option.'
                 )
 
             if phpserialize is None:
@@ -431,7 +429,7 @@ to
             else:
                 LOGGER.warning("Make sure to install the WordPress page compiler via")
                 LOGGER.warning("    nikola plugin -i wordpress_compiler")
-                LOGGER.warning("in your imported blog's folder ({0}), if you haven't installed it system-wide or user-wide. Otherwise, your newly imported blog won't compile.".format(self.output_folder))
+                LOGGER.warning(f"in your imported blog's folder ({self.output_folder}), if you haven't installed it system-wide or user-wide. Otherwise, your newly imported blog won't compile.")
 
     @classmethod
     def read_xml_file(cls, filename):
@@ -477,7 +475,7 @@ to
             channel, 'description', 'PUT DESCRIPTION HERE')
         context['BASE_URL'] = get_text_tag(channel, 'link', '#')
         if not context['BASE_URL']:
-            base_site_url = channel.find('{{{0}}}author'.format(wordpress_namespace))
+            base_site_url = channel.find(f'{{{wordpress_namespace}}}author')
             context['BASE_URL'] = get_text_tag(base_site_url,
                                                None,
                                                "http://foo.com/")
@@ -485,14 +483,14 @@ to
             context['BASE_URL'] += '/'
         context['SITE_URL'] = context['BASE_URL']
 
-        author = channel.find('{{{0}}}author'.format(wordpress_namespace))
+        author = channel.find(f'{{{wordpress_namespace}}}author')
         context['BLOG_EMAIL'] = get_text_tag(
             author,
-            '{{{0}}}author_email'.format(wordpress_namespace),
+            f'{{{wordpress_namespace}}}author_email',
             "joe@example.com")
         context['BLOG_AUTHOR'] = get_text_tag(
             author,
-            '{{{0}}}author_display_name'.format(wordpress_namespace),
+            f'{{{wordpress_namespace}}}author_display_name',
             "Joe Example")
         extensions = ['rst', 'txt', 'md', 'html']
         if self.use_wordpress_compiler:
@@ -500,8 +498,8 @@ to
         POSTS = '(\n'
         PAGES = '(\n'
         for extension in extensions:
-            POSTS += '    ("posts/*.{0}", "posts", "post.tmpl"),\n'.format(extension)
-            PAGES += '    ("pages/*.{0}", "pages", "page.tmpl"),\n'.format(extension)
+            POSTS += f'    ("posts/*.{extension}", "posts", "post.tmpl"),\n'
+            PAGES += f'    ("pages/*.{extension}", "pages", "page.tmpl"),\n'
         POSTS += ')\n'
         PAGES += ')\n'
         context['POSTS'] = POSTS
@@ -522,28 +520,28 @@ to
         try:
             request = requests.get(url, auth=self.auth)
             if request.status_code >= 400:
-                LOGGER.warning("Downloading {0} to {1} failed with HTTP status code {2}".format(url, dst_path, request.status_code))
+                LOGGER.warning(f"Downloading {url} to {dst_path} failed with HTTP status code {request.status_code}")
                 return
             with open(dst_path, 'wb+') as fd:
                 fd.write(request.content)
         except requests.exceptions.ConnectionError as err:
-            LOGGER.warning("Downloading {0} to {1} failed: {2}".format(url, dst_path, err))
+            LOGGER.warning(f"Downloading {url} to {dst_path} failed: {err}")
 
     def import_attachment(self, item, wordpress_namespace):
         """Import an attachment to the site."""
         # Download main image
         url = get_text_tag(
-            item, '{{{0}}}attachment_url'.format(wordpress_namespace), 'foo')
-        link = get_text_tag(item, '{{{0}}}link'.format(wordpress_namespace),
+            item, f'{{{wordpress_namespace}}}attachment_url', 'foo')
+        link = get_text_tag(item, f'{{{wordpress_namespace}}}link',
                             'foo')
         path = urlparse(url).path
         dst_path = os.path.join(*([self.output_folder, 'files'] + list(path.split('/'))))
         if self.no_downloads:
-            LOGGER.info("Skipping downloading {0} => {1}".format(url, dst_path))
+            LOGGER.info(f"Skipping downloading {url} => {dst_path}")
         else:
             dst_dir = os.path.dirname(dst_path)
             utils.makedirs(dst_dir)
-            LOGGER.info("Downloading {0} => {1}".format(url, dst_path))
+            LOGGER.info(f"Downloading {url} => {dst_path}")
             self.download_url_content_to_file(url, dst_path)
         dst_url = '/'.join(dst_path.split(os.sep)[2:])
         links[link] = '/' + dst_url
@@ -552,13 +550,13 @@ to
         files = [path]
         files_meta = [{}]
 
-        additional_metadata = item.findall('{{{0}}}postmeta'.format(wordpress_namespace))
+        additional_metadata = item.findall(f'{{{wordpress_namespace}}}postmeta')
         if phpserialize and additional_metadata:
             source_path = os.path.dirname(url)
             for element in additional_metadata:
-                meta_key = element.find('{{{0}}}meta_key'.format(wordpress_namespace))
+                meta_key = element.find(f'{{{wordpress_namespace}}}meta_key')
                 if meta_key is not None and meta_key.text == '_wp_attachment_metadata':
-                    meta_value = element.find('{{{0}}}meta_value'.format(wordpress_namespace))
+                    meta_value = element.find(f'{{{wordpress_namespace}}}meta_value')
 
                     if meta_value is None:
                         continue
@@ -644,11 +642,11 @@ to
                         path = urlparse(url).path
                         dst_path = os.path.join(*([self.output_folder, 'files'] + list(path.split('/'))))
                         if self.no_downloads:
-                            LOGGER.info("Skipping downloading {0} => {1}".format(url, dst_path))
+                            LOGGER.info(f"Skipping downloading {url} => {dst_path}")
                         else:
                             dst_dir = os.path.dirname(dst_path)
                             utils.makedirs(dst_dir)
-                            LOGGER.info("Downloading {0} => {1}".format(url, dst_path))
+                            LOGGER.info(f"Downloading {url} => {dst_path}")
                             self.download_url_content_to_file(url, dst_path)
                         dst_url = '/'.join(dst_path.split(os.sep)[2:])
                         links[url] = '/' + dst_url
@@ -668,7 +666,7 @@ to
 
         def add(result_key, key, namespace=None, filter=None, store_empty=False):
             if namespace is not None:
-                value = get_text_tag(item, '{{{0}}}{1}'.format(namespace, key), None)
+                value = get_text_tag(item, f'{{{namespace}}}{key}', None)
             else:
                 value = get_text_tag(item, key, None)
             if value is not None:
@@ -708,7 +706,7 @@ to
             code = code.replace('&gt;', '>')
             code = code.replace('&lt;', '<')
             code = code.replace('&quot;', '"')
-            return '```{language}\n{code}\n```'.format(language=language, code=code)
+            return f'```{language}\n{code}\n```'
 
         content = self.code_re1.sub(replacement, content)
         content = self.code_re2.sub(replacement, content)
@@ -779,15 +777,15 @@ to
 
     def _extract_comment(self, comment, wordpress_namespace):
         """Extract comment from dump."""
-        id = int(get_text_tag(comment, "{{{0}}}comment_id".format(wordpress_namespace), None))
-        author = get_text_tag(comment, "{{{0}}}comment_author".format(wordpress_namespace), None)
-        author_email = get_text_tag(comment, "{{{0}}}comment_author_email".format(wordpress_namespace), None)
-        author_url = get_text_tag(comment, "{{{0}}}comment_author_url".format(wordpress_namespace), None)
-        author_IP = get_text_tag(comment, "{{{0}}}comment_author_IP".format(wordpress_namespace), None)
+        id = int(get_text_tag(comment, f"{{{wordpress_namespace}}}comment_id", None))
+        author = get_text_tag(comment, f"{{{wordpress_namespace}}}comment_author", None)
+        author_email = get_text_tag(comment, f"{{{wordpress_namespace}}}comment_author_email", None)
+        author_url = get_text_tag(comment, f"{{{wordpress_namespace}}}comment_author_url", None)
+        author_IP = get_text_tag(comment, f"{{{wordpress_namespace}}}comment_author_IP", None)
         # date = get_text_tag(comment, "{{{0}}}comment_date".format(wordpress_namespace), None)
-        date_gmt = get_text_tag(comment, "{{{0}}}comment_date_gmt".format(wordpress_namespace), None)
-        content = get_text_tag(comment, "{{{0}}}comment_content".format(wordpress_namespace), None)
-        approved = get_text_tag(comment, "{{{0}}}comment_approved".format(wordpress_namespace), '0')
+        date_gmt = get_text_tag(comment, f"{{{wordpress_namespace}}}comment_date_gmt", None)
+        content = get_text_tag(comment, f"{{{wordpress_namespace}}}comment_content", None)
+        approved = get_text_tag(comment, f"{{{wordpress_namespace}}}comment_approved", '0')
         if approved == '0':
             approved = 'hold'
         elif approved == '1':
@@ -795,11 +793,11 @@ to
         elif approved == 'spam' or approved == 'trash':
             pass
         else:
-            LOGGER.warning("Unknown comment approved status: {0}".format(approved))
-        parent = int(get_text_tag(comment, "{{{0}}}comment_parent".format(wordpress_namespace), 0))
+            LOGGER.warning(f"Unknown comment approved status: {approved}")
+        parent = int(get_text_tag(comment, f"{{{wordpress_namespace}}}comment_parent", 0))
         if parent == 0:
             parent = None
-        user_id = int(get_text_tag(comment, "{{{0}}}comment_user_id".format(wordpress_namespace), 0))
+        user_id = int(get_text_tag(comment, f"{{{wordpress_namespace}}}comment_user_id", 0))
         if user_id == 0:
             user_id = None
 
@@ -880,7 +878,7 @@ to
                 LOGGER.warning("Changing spelling of {0} name '{1}' to {2}.".format('category' if is_category else 'tag', tag, previous[0]))
             return previous[0]
         else:
-            LOGGER.error("Unknown tag sanitizing strategy '{0}'!".format(self.tag_saniziting_strategy))
+            LOGGER.error(f"Unknown tag sanitizing strategy '{self.tag_saniziting_strategy}'!")
             sys.exit(1)
         return tag
 
@@ -918,10 +916,10 @@ to
         if parsed.query:  # if there are no nice URLs and query strings are used
             out_folder = os.path.join(*([out_folder] + pathlist))
             slug = get_text_tag(
-                item, '{{{0}}}post_name'.format(wordpress_namespace), None)
+                item, f'{{{wordpress_namespace}}}post_name', None)
             if not slug:  # it *may* happen
                 slug = get_text_tag(
-                    item, '{{{0}}}post_id'.format(wordpress_namespace), None)
+                    item, f'{{{wordpress_namespace}}}post_id', None)
             if not slug:  # should never happen
                 LOGGER.error("Error converting post:", title)
                 return False
@@ -932,18 +930,18 @@ to
 
         description = get_text_tag(item, 'description', '')
         post_date = get_text_tag(
-            item, '{{{0}}}post_date'.format(wordpress_namespace), None)
+            item, f'{{{wordpress_namespace}}}post_date', None)
         try:
             dt = utils.to_datetime(post_date)
         except ValueError:
             dt = datetime.datetime(1970, 1, 1, 0, 0, 0)
-            LOGGER.error('Malformed date "{0}" in "{1}" [{2}], assuming 1970-01-01 00:00:00 instead.'.format(post_date, title, slug))
+            LOGGER.error(f'Malformed date "{post_date}" in "{title}" [{slug}], assuming 1970-01-01 00:00:00 instead.')
             post_date = dt.strftime('%Y-%m-%d %H:%M:%S')
 
         if dt.tzinfo and self.timezone is None:
             self.timezone = utils.get_tzname(dt)
         status = get_text_tag(
-            item, '{{{0}}}status'.format(wordpress_namespace), 'publish')
+            item, f'{{{wordpress_namespace}}}status', 'publish')
         content = get_text_tag(
             item, '{http://purl.org/rss/1.0/modules/content/}encoded', '')
         excerpt = get_text_tag(
@@ -958,7 +956,7 @@ to
         post_status = 'published'
         has_math = "no"
         if status == 'trash':
-            LOGGER.warning('Trashed post "{0}" will not be imported.'.format(title))
+            LOGGER.warning(f'Trashed post "{title}" will not be imported.')
             return False
         elif status == 'private':
             is_draft = False
@@ -1006,10 +1004,10 @@ to
                 post_format = 'wp'
 
         if is_draft and self.exclude_drafts:
-            LOGGER.warning('Draft "{0}" will not be imported.'.format(title))
+            LOGGER.warning(f'Draft "{title}" will not be imported.')
             return False
         elif is_private and self.exclude_privates:
-            LOGGER.warning('Private post "{0}" will not be imported.'.format(title))
+            LOGGER.warning(f'Private post "{title}" will not be imported.')
             return False
         elif content.strip() or self.import_empty_items:
             # If no content is found, no files are written.
@@ -1078,7 +1076,7 @@ to
 
             if self.export_comments:
                 comments = []
-                for tag in item.findall('{{{0}}}comment'.format(wordpress_namespace)):
+                for tag in item.findall(f'{{{wordpress_namespace}}}comment'):
                     comment = self._extract_comment(tag, wordpress_namespace)
                     if comment is not None:
                         comments.append(comment)
@@ -1089,8 +1087,8 @@ to
 
             return (out_folder, slug)
         else:
-            LOGGER.warning(('Not going to import "{0}" because it seems to contain'
-                            ' no content.').format(title))
+            LOGGER.warning((f'Not going to import "{title}" because it seems to contain'
+                            ' no content.'))
             return False
 
     def _extract_item_info(self, item):
@@ -1099,11 +1097,11 @@ to
         # http://wordpress.org/export/1.2/
         wordpress_namespace = item.nsmap['wp']
         post_type = get_text_tag(
-            item, '{{{0}}}post_type'.format(wordpress_namespace), 'post')
+            item, f'{{{wordpress_namespace}}}post_type', 'post')
         post_id = int(get_text_tag(
-            item, '{{{0}}}post_id'.format(wordpress_namespace), "0"))
+            item, f'{{{wordpress_namespace}}}post_id', "0"))
         parent_id = get_text_tag(
-            item, '{{{0}}}post_parent'.format(wordpress_namespace), None)
+            item, f'{{{wordpress_namespace}}}post_parent', None)
         return wordpress_namespace, post_type, post_id, parent_id
 
     def process_item_if_attachment(self, item):

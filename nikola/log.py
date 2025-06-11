@@ -178,7 +178,7 @@ def showwarning(message, category, filename, lineno, file=None, line=None):
         n = category.__name__
     except AttributeError:
         n = str(category)
-    get_logger(n).warning("{0}:{1}: {2}".format(filename, lineno, message))
+    get_logger(n).warning(f"{filename}:{lineno}: {message}")
 
 
 warnings.showwarning = showwarning

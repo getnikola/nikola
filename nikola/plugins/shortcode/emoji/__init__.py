@@ -38,9 +38,9 @@ class Plugin(ShortcodePlugin):
         if not TABLE:
             _populate()
         try:
-            output = u'''<span class="emoji">{}</span>'''.format(TABLE[name])
+            output = f'''<span class="emoji">{TABLE[name]}</span>'''
         except KeyError:
-            LOGGER.warning('Unknown emoji {}'.format(name))
-            output = u'''<span class="emoji error">{}</span>'''.format(name)
+            LOGGER.warning(f'Unknown emoji {name}')
+            output = f'''<span class="emoji error">{name}</span>'''
 
         return output, []

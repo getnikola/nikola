@@ -51,7 +51,7 @@ class GzipFiles(TaskMultiplier):
             'file_dep': [],
             'targets': [],
             'actions': [],
-            'basename': '{0}_gzip'.format(prefix),
+            'basename': f'{prefix}_gzip',
             'name': task.get('name').split(":", 1)[-1] + '.gz',
             'clean': True,
         }

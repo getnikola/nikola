@@ -57,7 +57,7 @@ def _format_position(data, pos):
         else:
             col += 1
             llb = ''
-    return "line {0}, column {1}".format(line + 1, col + 1)
+    return f"line {line + 1}, column {col + 1}"
 
 
 def _skip_whitespace(data, pos, must_be_nontrivial=False):
@@ -68,7 +68,7 @@ def _skip_whitespace(data, pos, must_be_nontrivial=False):
     """
     if must_be_nontrivial:
         if pos == len(data) or not data[pos].isspace():
-            raise ParsingError("Expecting whitespace at {0}!".format(_format_position(data, pos)))
+            raise ParsingError(f"Expecting whitespace at {_format_position(data, pos)}!")
     while pos < len(data):
         if not data[pos].isspace():
             break
@@ -99,13 +99,13 @@ def _parse_quoted_string(data, start):
                 value += data[pos + 1]
                 pos += 2
             else:
-                raise ParsingError("Unexpected end of data while escaping ({0})".format(_format_position(data, pos)))
+                raise ParsingError(f"Unexpected end of data while escaping ({_format_position(data, pos)})")
         elif (char == "'" or char == '"') and char == qc:
             return pos + 1, value
         else:
             value += char
             pos += 1
-    raise ParsingError("Unexpected end of unquoted string (started at {0})!".format(_format_position(data, start)))
+    raise ParsingError(f"Unexpected end of unquoted string (started at {_format_position(data, start)})!")
 
 
 def _parse_unquoted_string(data, start, stop_at_equals):
@@ -124,13 +124,13 @@ def _parse_unquoted_string(data, start, stop_at_equals):
                 value += data[pos + 1]
                 pos += 2
             else:
-                raise ParsingError("Unexpected end of data while escaping ({0})".format(_format_position(data, pos)))
+                raise ParsingError(f"Unexpected end of data while escaping ({_format_position(data, pos)})")
         elif char.isspace():
             break
         elif char == '=' and stop_at_equals:
             break
         elif char == "'" or char == '"':
-            raise ParsingError("Unexpected quotation mark in unquoted string ({0})".format(_format_position(data, pos)))
+            raise ParsingError(f"Unexpected quotation mark in unquoted string ({_format_position(data, pos)})")
         else:
             value += char
             pos += 1
@@ -156,7 +156,7 @@ def _parse_string(data, start, stop_at_equals=False, must_have_content=False):
         end, value = _parse_unquoted_string(data, start, stop_at_equals)
         has_content = len(value) > 0
     if must_have_content and not has_content:
-        raise ParsingError("String starting at {0} must be non-empty!".format(_format_position(data, start)))
+        raise ParsingError(f"String starting at {_format_position(data, start)} must be non-empty!")
 
     next_is_equals = False
     if stop_at_equals and end + 1 < len(data):
@@ -181,9 +181,9 @@ def _parse_shortcode_args(data, start, shortcode_name, start_pos):
             pos = _skip_whitespace(data, pos, must_be_nontrivial=True)
         except ParsingError:
             if not args and not kwargs:
-                raise ParsingError("Shortcode '{0}' starting at {1} is not terminated correctly with '%}}}}'!".format(shortcode_name, _format_position(data, start_pos)))
+                raise ParsingError(f"Shortcode '{shortcode_name}' starting at {_format_position(data, start_pos)} is not terminated correctly with '%}}}}'!")
             else:
-                raise ParsingError("Syntax error in shortcode '{0}' at {1}: expecting whitespace!".format(shortcode_name, _format_position(data, pos)))
+                raise ParsingError(f"Syntax error in shortcode '{shortcode_name}' at {_format_position(data, pos)}: expecting whitespace!")
         if pos == len(data):
             break
         # Check for end of shortcode
@@ -200,7 +200,7 @@ def _parse_shortcode_args(data, start, shortcode_name, start_pos):
             # Store positional argument
             args.append(name)
 
-    raise ParsingError("Shortcode '{0}' starting at {1} is not terminated correctly with '%}}}}'!".format(shortcode_name, _format_position(data, start_pos)))
+    raise ParsingError(f"Shortcode '{shortcode_name}' starting at {_format_position(data, start_pos)} is not terminated correctly with '%}}}}'!")
 
 
 def _new_sc_id():
@@ -246,7 +246,7 @@ def extract_shortcodes(data):
                 text.append(token[1])
                 return ''.join(text), data[1:]
             elif token[0] == 'SHORTCODE_END':  # This is malformed
-                raise Exception('Closing unopened shortcode {}'.format(token[3]))
+                raise Exception(f'Closing unopened shortcode {token[3]}')
 
     text = []
     tail = splitted
@@ -285,7 +285,7 @@ def _split_shortcodes(data):
         name_end = _skip_nonwhitespace(data, name_start)
         name = data[name_start:name_end]
         if not name:
-            raise ParsingError("Syntax error: '{{{{%' must be followed by shortcode name ({0})!".format(_format_position(data, start)))
+            raise ParsingError(f"Syntax error: '{{{{%' must be followed by shortcode name ({_format_position(data, start)})!")
         # Finish shortcode
         if name[0] == '/':
             # This is a closing shortcode
@@ -294,10 +294,10 @@ def _split_shortcodes(data):
             pos = end_start + 3
             # Must be followed by '%}}'
             if pos > len(data) or data[end_start:pos] != '%}}':
-                raise ParsingError("Syntax error: '{{{{% /{0}' must be followed by ' %}}}}' ({1})!".format(name, _format_position(data, end_start)))
+                raise ParsingError(f"Syntax error: '{{{{% /{name}' must be followed by ' %}}}}' ({_format_position(data, end_start)})!")
             result.append(("SHORTCODE_END", data[start:pos], start, name))
         elif name == '%}}':
-            raise ParsingError("Syntax error: '{{{{%' must be followed by shortcode name ({0})!".format(_format_position(data, start)))
+            raise ParsingError(f"Syntax error: '{{{{%' must be followed by shortcode name ({_format_position(data, start)})!")
         else:
             # This is an opening shortcode
             pos, args = _parse_shortcode_args(data, name_end, shortcode_name=name, start_pos=start)
@@ -338,7 +338,7 @@ def apply_shortcodes(data, registry, site=None, filename=None, raise_exceptions=
                 result.append(current[1])
                 pos += 1
             elif current[0] == "SHORTCODE_END":
-                raise ParsingError("Found shortcode ending '{{{{% /{0} %}}}}' which isn't closing a started shortcode ({1})!".format(current[3], _format_position(data, current[2])))
+                raise ParsingError(f"Found shortcode ending '{{{{% /{current[3]} %}}}}' which isn't closing a started shortcode ({_format_position(data, current[2])})!")
             elif current[0] == "SHORTCODE_START":
                 name = current[3]
                 # Check if we can find corresponding ending
@@ -381,7 +381,7 @@ def apply_shortcodes(data, registry, site=None, filename=None, raise_exceptions=
             # Throw up
             raise
         if filename:
-            LOGGER.error("Shortcode error in file {0}: {1}".format(filename, e))
+            LOGGER.error(f"Shortcode error in file {filename}: {e}")
         else:
-            LOGGER.error("Shortcode error: {0}".format(e))
+            LOGGER.error(f"Shortcode error: {e}")
         sys.exit(1)

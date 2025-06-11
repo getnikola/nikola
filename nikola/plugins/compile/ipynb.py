@@ -142,7 +142,7 @@ class CompileIPynb(PageCompiler):
 
             if kernel is None:
                 kernel = self.default_kernel
-                self.logger.warning('No kernel specified, assuming "{0}".'.format(kernel))
+                self.logger.warning(f'No kernel specified, assuming "{kernel}".')
 
             IPYNB_KERNELS = {}
             ksm = kernelspec.KernelSpecManager()
@@ -152,9 +152,9 @@ class CompileIPynb(PageCompiler):
                 del IPYNB_KERNELS[k]['argv']
 
             if kernel not in IPYNB_KERNELS:
-                self.logger.error('Unknown kernel "{0}". Maybe you mispelled it?'.format(kernel))
+                self.logger.error(f'Unknown kernel "{kernel}". Maybe you mispelled it?')
                 self.logger.info("Available kernels: {0}".format(", ".join(sorted(IPYNB_KERNELS))))
-                raise Exception('Unknown kernel "{0}"'.format(kernel))
+                raise Exception(f'Unknown kernel "{kernel}"')
 
             nb["metadata"]["kernelspec"] = IPYNB_KERNELS[kernel]
 

@@ -48,7 +48,7 @@ class ChartShortcode(ShortcodePlugin):
         if pygal is None:
             msg = req_missing(
                 ['pygal'], 'use the Chart directive', optional=True)
-            return '<div class="text-error">{0}</div>'.format(msg)
+            return f'<div class="text-error">{msg}</div>'
         options = {}
         chart_data = []
         _options.pop('post', None)
@@ -58,7 +58,7 @@ class ChartShortcode(ShortcodePlugin):
         for line in data.splitlines():
             line = line.strip()
             if line:
-                chart_data.append(literal_eval('({0})'.format(line)))
+                chart_data.append(literal_eval(f'({line})'))
         if 'data_file' in _options:
             options = load_data(_options['data_file'])
             _options.pop('data_file')

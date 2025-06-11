@@ -358,7 +358,7 @@ def _enclosure(post, lang):
         except KeyError:
             length = 0
         except ValueError:
-            utils.LOGGER.warning("Invalid enclosure length for post {0}".format(post.source_path))
+            utils.LOGGER.warning(f"Invalid enclosure length for post {post.source_path}")
             length = 0
         url = enclosure
         mime = mimetypes.guess_type(url)[0]
@@ -883,7 +883,7 @@ class Nikola(object):
                 if missing_plugins:
                     utils.LOGGER.warning('The "{}" plugin was replaced by several taxonomy plugins (see PR #2535): {}'.format(old_plugin_name, ', '.join(new_plugin_names)))
                     utils.LOGGER.warning('You are currently disabling "{}", but not the following new taxonomy plugins: {}'.format(old_plugin_name, ', '.join(missing_plugins)))
-                    utils.LOGGER.warning('Please also disable these new plugins or remove "{}" from the DISABLED_PLUGINS list.'.format(old_plugin_name))
+                    utils.LOGGER.warning(f'Please also disable these new plugins or remove "{old_plugin_name}" from the DISABLED_PLUGINS list.')
                     self.config['DISABLED_PLUGINS'].extend(missing_plugins)
 
         # Special-case logic for "render_indexes" to fix #2591
@@ -941,8 +941,7 @@ class Nikola(object):
         # Load built-in metadata extractors
         metadata_extractors.load_defaults(self, self.metadata_extractors_by)
         if metadata_extractors.DEFAULT_EXTRACTOR is None:
-            utils.LOGGER.error("Could not find default meta extractor ({})".format(
-                metadata_extractors.DEFAULT_EXTRACTOR_NAME))
+            utils.LOGGER.error(f"Could not find default meta extractor ({metadata_extractors.DEFAULT_EXTRACTOR_NAME})")
             sys.exit(1)
 
         # The Pelican metadata format requires a markdown extension
@@ -1011,7 +1010,7 @@ class Nikola(object):
                     return i
                 except ValueError:
                     pass
-            utils.LOGGER.warning("Duplicate plugin found in unexpected location: {}".format(plugin.source_dir))
+            utils.LOGGER.warning(f"Duplicate plugin found in unexpected location: {plugin.source_dir}")
             return len(self._plugin_places)
 
         plugin_dict = defaultdict(list)
@@ -1022,8 +1021,7 @@ class Nikola(object):
             if len(plugins) > 1:
                 # Sort by locality
                 plugins.sort(key=plugin_position_in_places)
-                utils.LOGGER.debug("Plugin {} exists in multiple places, using {}".format(
-                    name, plugins[-1].source_dir))
+                utils.LOGGER.debug(f"Plugin {name} exists in multiple places, using {plugins[-1].source_dir}")
             result.append(plugins[-1])
         return result
 
@@ -1096,7 +1094,7 @@ class Nikola(object):
                     file_extensions.update(exts)
                 else:
                     # Stop scanning for more: once we get None, we have to load all compilers anyway
-                    utils.LOGGER.debug("Post scanner {0!r} does not implement `supported_extensions`, loading all compilers".format(post_scanner))
+                    utils.LOGGER.debug(f"Post scanner {post_scanner!r} does not implement `supported_extensions`, loading all compilers")
                     file_extensions = None
                     break
             to_add = []
@@ -1133,7 +1131,7 @@ class Nikola(object):
             if not taxonomy.is_enabled():
                 continue
             if taxonomy.classification_name in self.taxonomy_plugins:
-                utils.LOGGER.error("Found more than one taxonomy with classification name '{}'!".format(taxonomy.classification_name))
+                utils.LOGGER.error(f"Found more than one taxonomy with classification name '{taxonomy.classification_name}'!")
                 sys.exit(1)
             self.taxonomy_plugins[taxonomy.classification_name] = taxonomy
 
@@ -1364,7 +1362,7 @@ class Nikola(object):
                                                      themes_dirs=self.themes_dirs)
             return self._MESSAGES
         except utils.LanguageNotFoundError as e:
-            utils.LOGGER.error('''Cannot load language "{0}".  Please make sure it is supported by Nikola itself, or that you have the appropriate messages files in your themes.'''.format(e.lang))
+            utils.LOGGER.error(f'''Cannot load language "{e.lang}".  Please make sure it is supported by Nikola itself, or that you have the appropriate messages files in your themes.''')
             sys.exit(1)
 
     MESSAGES = property(_get_messages)
@@ -1395,8 +1393,8 @@ class Nikola(object):
             template_sys_name = utils.get_template_engine(self.THEMES)
             pi = self.plugin_manager.get_plugin_by_name(template_sys_name, "TemplateSystem")
             if pi is None:
-                sys.stderr.write("Error loading {0} template system "
-                                 "plugin\n".format(template_sys_name))
+                sys.stderr.write(f"Error loading {template_sys_name} template system "
+                                 "plugin\n")
                 sys.exit(1)
             self._template_system = typing.cast(TemplateSystem, pi.plugin_object)
 
@@ -1438,15 +1436,15 @@ class Nikola(object):
                     langs = langs[:1]
                 else:
                     sys.exit("COMPILERS in conf.py does not tell me how to "
-                             "handle '{0}' extensions.".format(ext))
+                             f"handle '{ext}' extensions.")
 
             lang = langs[0]
             try:
                 compiler = self.compilers[lang]
             except KeyError:
-                sys.exit("Cannot find '{0}' compiler; "
+                sys.exit(f"Cannot find '{lang}' compiler; "
                          "it might require an extra plugin -- "
-                         "do you have it installed?".format(lang))
+                         "do you have it installed?")
             self.inverse_compilers[ext] = compiler
 
         return compiler
@@ -1660,7 +1658,7 @@ class Nikola(object):
             result += "#" + parsed_dst.fragment
 
         if not result:
-            raise ValueError("Failed to parse link: {0}".format((src, dst, i, src_elems, dst_elems)))
+            raise ValueError(f"Failed to parse link: {(src, dst, i, src_elems, dst_elems)}")
 
         return result
 
@@ -1906,7 +1904,7 @@ class Nikola(object):
         try:
             path = self.path_handlers[kind](name, lang, **kwargs)
         except KeyError:
-            utils.LOGGER.warning("Unknown path request of kind: {0}".format(kind))
+            utils.LOGGER.warning(f"Unknown path request of kind: {kind}")
             return ""
 
         # If path handler returns a string we consider it to be an absolute URL not requiring any
@@ -1965,10 +1963,10 @@ class Nikola(object):
         """
         results = [p for p in self.timeline if p.meta('slug') == name]
         if not results:
-            utils.LOGGER.warning("Cannot resolve path request for slug: {0}".format(name))
+            utils.LOGGER.warning(f"Cannot resolve path request for slug: {name}")
         else:
             if len(results) > 1:
-                utils.LOGGER.warning('Ambiguous path request for slug: {0}'.format(name))
+                utils.LOGGER.warning(f'Ambiguous path request for slug: {name}')
             return [_f for _f in results[0].permalink(lang).split('/')]
 
     def slug_source(self, name, lang):
@@ -1995,16 +1993,16 @@ class Nikola(object):
         """
         results = [p for p in self.timeline if p.source_path == name]
         if not results:
-            utils.LOGGER.warning("Cannot resolve path request for filename: {0}".format(name))
+            utils.LOGGER.warning(f"Cannot resolve path request for filename: {name}")
         else:
             if len(results) > 1:
-                utils.LOGGER.error("Ambiguous path request for filename: {0}".format(name))
+                utils.LOGGER.error(f"Ambiguous path request for filename: {name}")
             return [_f for _f in results[0].permalink(lang).split('/') if _f]
 
     def register_path_handler(self, kind, f):
         """Register a path handler."""
         if kind in self.path_handlers:
-            utils.LOGGER.warning('Conflicting path handlers for kind: {0}'.format(kind))
+            utils.LOGGER.warning(f'Conflicting path handlers for kind: {kind}')
         else:
             self.path_handlers[kind] = f
 
@@ -2062,7 +2060,7 @@ class Nikola(object):
         one argument (the filename).
         """
         if filter_name in self.filters:
-            utils.LOGGER.warning('''The filter "{0}" is defined more than once.'''.format(filter_name))
+            utils.LOGGER.warning(f'''The filter "{filter_name}" is defined more than once.''')
         self.filters[filter_name] = filter_definition
 
     def file_exists(self, path, not_empty=False):
@@ -2094,7 +2092,7 @@ class Nikola(object):
         for pluginInfo in self.plugin_manager.get_plugins_of_category(plugin_category):
             for task in flatten(pluginInfo.plugin_object.gen_tasks()):
                 if 'basename' not in task:
-                    raise ValueError("Task {0} does not have a basename".format(task))
+                    raise ValueError(f"Task {task} does not have a basename")
                 task = self.clean_task_paths(task)
                 if 'task_dep' not in task:
                     task['task_dep'] = []
@@ -2106,7 +2104,7 @@ class Nikola(object):
                         flag = True
                         yield self.clean_task_paths(task)
                     if flag:
-                        task_dep.append('{0}_{1}'.format(name, multi.plugin_object.name))
+                        task_dep.append(f'{name}_{multi.plugin_object.name}')
             if pluginInfo.plugin_object.is_default:
                 task_dep.append(pluginInfo.plugin_object.name)
         yield {
@@ -2226,7 +2224,7 @@ class Nikola(object):
                 self.posts.append(post)
                 self.posts_per_year[str(post.date.year)].append(post)
                 self.posts_per_month[
-                    '{0}/{1:02d}'.format(post.date.year, post.date.month)].append(post)
+                    f'{post.date.year}/{post.date.month:02d}'].append(post)
                 for lang in self.config['TRANSLATIONS'].keys():
                     for tag in post.tags_for_language(lang):
                         _tag_slugified = utils.slugify(tag, lang)
@@ -2247,16 +2245,10 @@ class Nikola(object):
                 src_dest = post.destination_path(lang=lang, extension=post.source_ext())
                 src_file = post.translated_source_path(lang=lang)
                 if dest in self.post_per_file:
-                    utils.LOGGER.error('Two posts are trying to generate {0}: {1} and {2}'.format(
-                        dest,
-                        self.post_per_file[dest].source_path,
-                        post.source_path))
+                    utils.LOGGER.error(f'Two posts are trying to generate {dest}: {self.post_per_file[dest].source_path} and {post.source_path}')
                     quit = True
                 if (src_dest in self.post_per_file) and self.config['COPY_SOURCES']:
-                    utils.LOGGER.error('Two posts are trying to generate {0}: {1} and {2}'.format(
-                        src_dest,
-                        self.post_per_file[dest].source_path,
-                        post.source_path))
+                    utils.LOGGER.error(f'Two posts are trying to generate {src_dest}: {self.post_per_file[dest].source_path} and {post.source_path}')
                     quit = True
                 self.post_per_file[dest] = post
                 self.post_per_file[src_dest] = post
@@ -2322,7 +2314,7 @@ class Nikola(object):
             deps_dict.update(post_deps_dict)
 
         for k, v in self.GLOBAL_CONTEXT['template_hooks'].items():
-            deps_dict['||template_hooks|{0}||'.format(k)] = v.calculate_deps()
+            deps_dict[f'||template_hooks|{k}||'] = v.calculate_deps()
 
         for k in self._GLOBAL_CONTEXT_TRANSLATABLE:
             deps_dict[k] = deps_dict['global'][k](lang)
