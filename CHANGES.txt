@@ -4,6 +4,30 @@ New in master
 Features
 --------
 
+Bugfixes
+--------
+
+* Fix ``docs``, ``logo``, ``npm_assets``, ``scripts``, ``translations``
+ being installed into ``site-packages`` (Issue #3852)
+* Fix jinja2 plugin failing to load when jinja2 is not installed
+  (Discussion #3848)
+* Close ``<a>`` tag instead of opening another one in ``tag.tmpl``
+* Setuptools is not required anymore at runtime (PR #3850)
+
+New in v8.3.3
+=============
+
+We’ve had to release Nikola v8.3.3 immediately after releasing
+Nikola v8.3.2, as it is broken on Python 3.8. We would like to thank
+the Python packaging ecosystem for being an incomprehensible and
+incompatible trainwreck.
+
+New in v8.3.2
+=============
+
+Features
+--------
+
 * Trace template usage when an environment variable ``NIKOLA_TEMPLATES_TRACE``
   is set to any non-empty value.
 * Give user control over the raw underlying template engine
