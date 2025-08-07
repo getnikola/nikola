@@ -31,6 +31,7 @@ class FakeSite:
         self.template_system = self
         self.invariant = False
         self.debug = True
+        self.show_tracebacks = True
         self.config = {
             "DISABLED_PLUGINS": [],
             "EXTRA_PLUGINS": [],
