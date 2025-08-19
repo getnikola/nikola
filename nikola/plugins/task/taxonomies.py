@@ -49,7 +49,7 @@ class RenderTaxonomies(Task):
         context, kw = taxonomy.provide_overview_context_and_uptodate(lang)
 
         context = copy(context)
-        context["kind"] = "{}_index".format(taxonomy.classification_name)
+        context["kind"] = f"{taxonomy.classification_name}_index"
         sorted_links = []
         for other_lang in sorted(self.site.config['TRANSLATIONS'].keys()):
             if other_lang != lang:
@@ -125,10 +125,10 @@ class RenderTaxonomies(Task):
 
     def _render_classification_overview(self, classification_name, template, lang, context, kw):
         # Prepare rendering
-        context["permalink"] = self.site.link("{}_index".format(classification_name), None, lang)
+        context["permalink"] = self.site.link(f"{classification_name}_index", None, lang)
         if "pagekind" not in context:
             context["pagekind"] = ["list", "tags_page"]
-        output_name = os.path.join(self.site.config['OUTPUT_FOLDER'], self.site.path('{}_index'.format(classification_name), None, lang))
+        output_name = os.path.join(self.site.config['OUTPUT_FOLDER'], self.site.path(f'{classification_name}_index', None, lang))
         blinker.signal('generate_classification_overview').send({
             'site': self.site,
             'classification_name': classification_name,
@@ -207,7 +207,7 @@ class RenderTaxonomies(Task):
             'file_dep': deps,
             'targets': [output_name],
             'actions': [(utils.generic_rss_renderer,
-                        (lang, "{0} ({1})".format(blog_title, title) if blog_title != title else blog_title,
+                        (lang, f"{blog_title} ({title})" if blog_title != title else blog_title,
                          kw["site_url"], description, filtered_posts,
                          output_name, kw["feed_teasers"], kw["feed_plain"], kw['feed_length'],
                          feed_url, _enclosure, kw["feed_links_append_query"]))],

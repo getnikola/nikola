@@ -206,19 +206,19 @@ class Post(object):
                     self.post_status = status
                     self.is_draft = True
                 else:
-                    LOGGER.warning(('The post "{0}" has the unknown status "{1}". '
-                                    'Valid values are "published", "featured", "private" and "draft".').format(self.source_path, status))
+                    LOGGER.warning((f'The post "{self.source_path}" has the unknown status "{status}". '
+                                    'Valid values are "published", "featured", "private" and "draft".'))
 
             if self.config['WARN_ABOUT_TAG_METADATA']:
                 show_warning = False
                 if 'draft' in [_.lower() for _ in self._tags[lang]]:
-                    LOGGER.warning('The post "{0}" uses the "draft" tag.'.format(self.source_path))
+                    LOGGER.warning(f'The post "{self.source_path}" uses the "draft" tag.')
                     show_warning = True
                 if 'private' in self._tags[lang]:
-                    LOGGER.warning('The post "{0}" uses the "private" tag.'.format(self.source_path))
+                    LOGGER.warning(f'The post "{self.source_path}" uses the "private" tag.')
                     show_warning = True
                 if 'mathjax' in self._tags[lang]:
-                    LOGGER.warning('The post "{0}" uses the "mathjax" tag.'.format(self.source_path))
+                    LOGGER.warning(f'The post "{self.source_path}" uses the "mathjax" tag.')
                     show_warning = True
                 if show_warning:
                     LOGGER.warning('It is suggested that you convert special tags to metadata and set '
@@ -229,14 +229,14 @@ class Post(object):
             if self.config['USE_TAG_METADATA']:
                 if 'draft' in [_.lower() for _ in self._tags[lang]]:
                     self.is_draft = True
-                    LOGGER.debug('The post "{0}" is a draft.'.format(self.source_path))
+                    LOGGER.debug(f'The post "{self.source_path}" is a draft.')
                     self._tags[lang].remove('draft')
                     self.post_status = 'draft'
                     self.has_oldstyle_metadata_tags = True
 
                 if 'private' in self._tags[lang]:
                     self.is_private = True
-                    LOGGER.debug('The post "{0}" is private.'.format(self.source_path))
+                    LOGGER.debug(f'The post "{self.source_path}" is private.')
                     self._tags[lang].remove('private')
                     self.post_status = 'private'
                     self.has_oldstyle_metadata_tags = True
@@ -269,11 +269,11 @@ class Post(object):
 
         # If we don't have anything in translated_to, the file does not exist
         if not self.translated_to and os.path.isfile(self.source_path):
-            raise Exception(("Could not find translations for {}, check your "
-                            "TRANSLATIONS_PATTERN").format(self.source_path))
+            raise Exception((f"Could not find translations for {self.source_path}, check your "
+                            "TRANSLATIONS_PATTERN"))
         elif not self.translated_to:
-            raise Exception(("Cannot use {} (not a file, perhaps a broken "
-                            "symbolic link?)").format(self.source_path))
+            raise Exception((f"Cannot use {self.source_path} (not a file, perhaps a broken "
+                            "symbolic link?)"))
 
     def _set_folders(self, destination, destination_base):
         """Compose destination paths."""
@@ -299,10 +299,10 @@ class Post(object):
             # TODO: remove in v9
             if 'section' in meta:
                 if 'category' in meta:
-                    LOGGER.warning("Post {0} has both 'category' and 'section' metadata. Section will be ignored.".format(self.source_path))
+                    LOGGER.warning(f"Post {self.source_path} has both 'category' and 'section' metadata. Section will be ignored.")
                 else:
                     meta['category'] = meta['section']
-                    LOGGER.info("Post {0} uses 'section' metadata, setting its value to 'category'".format(self.source_path))
+                    LOGGER.info(f"Post {self.source_path} uses 'section' metadata, setting its value to 'category'")
 
             # Handle CATEGORY_DESTPATH_AS_DEFAULT
             if 'category' not in meta and self.config['CATEGORY_DESTPATH_AS_DEFAULT']:
@@ -358,7 +358,7 @@ class Post(object):
             self.date = to_datetime(self.meta[self.default_lang]['date'], self.config['__tzinfo__'])
         except ValueError:
             if not self.meta[self.default_lang]['date']:
-                msg = 'Missing date in file {}'.format(self.source_path)
+                msg = f'Missing date in file {self.source_path}'
             else:
                 msg = "Invalid date '{0}' in file {1}".format(self.meta[self.default_lang]['date'], self.source_path)
             LOGGER.error(msg)
@@ -400,7 +400,7 @@ class Post(object):
             # Changing the value, this means you are transforming a 2-file
             # into a 1-file or viceversa.
             if value and not self.compiler.supports_metadata:
-                raise ValueError("Can't save metadata as 1-file using this compiler {}".format(self.compiler))
+                raise ValueError(f"Can't save metadata as 1-file using this compiler {self.compiler}")
             for lang in self.translated_to:
                 source = self.source(lang)
                 meta = self.meta(lang)
@@ -425,7 +425,7 @@ class Post(object):
                 if vv:
                     sub_meta[kk] = vv
         m.update(str(json.dumps(clean_meta, cls=utils.CustomEncoder, sort_keys=True)).encode('utf-8'))
-        return '<Post: {0!r} {1}>'.format(self.source_path, m.hexdigest())
+        return f'<Post: {self.source_path!r} {m.hexdigest()}>'
 
     def has_pretty_url(self, lang):
         """Check if this page has a pretty URL."""
@@ -613,7 +613,7 @@ class Post(object):
         If ``lang`` is not specified, this dependency is added for all languages.
         """
         if add not in {'fragment', 'page', 'both'}:
-            raise Exception("Add parameter is '{0}', but must be either 'fragment', 'page', or 'both'.".format(add))
+            raise Exception(f"Add parameter is '{add}', but must be either 'fragment', 'page', or 'both'.")
         if add == 'fragment' or add == 'both':
             self._dependency_file_fragment[lang].append((not isinstance(dependency, str), dependency))
         if add == 'page' or add == 'both':
@@ -742,8 +742,7 @@ class Post(object):
         })
 
         if self.publish_later:
-            LOGGER.info('{0} is scheduled to be published in the future ({1})'.format(
-                self.source_path, self.date))
+            LOGGER.info(f'{self.source_path} is scheduled to be published in the future ({self.date})')
 
     def fragment_deps(self, lang):
         """Return a list of dependencies to build this post's fragment."""
@@ -824,7 +823,7 @@ class Post(object):
         if lang is None:
             lang = nikola.utils.LocaleBorg().current_lang
         if lang not in self.translated_to:
-            raise ValueError("Can't save post metadata to language [{}] it's not translated to.".format(lang))
+            raise ValueError(f"Can't save post metadata to language [{lang}] it's not translated to.")
 
         source = self.source(lang)
         source_path = self.translated_source_path(lang)
@@ -1124,7 +1123,7 @@ def get_metadata_from_file(source_path, post, config, lang, metadata_extractors_
         with io.open(source_path, "r", encoding="utf-8-sig") as meta_file:
             source_text = meta_file.read()
     except (UnicodeDecodeError, UnicodeEncodeError):
-        msg = 'Error reading {0}: Nikola only supports UTF-8 files'.format(source_path)
+        msg = f'Error reading {source_path}: Nikola only supports UTF-8 files'
         LOGGER.error(msg)
         raise ValueError(msg)
     except Exception:  # The file may not exist, for multilingual sites
@@ -1247,7 +1246,7 @@ def hyphenate(dom, _lang):
         try:
             hyphenator = pyphen.Pyphen(lang=lang)
         except KeyError:
-            LOGGER.error("Cannot find hyphenation dictoniaries for {0} (from {1}).".format(lang, _lang))
+            LOGGER.error(f"Cannot find hyphenation dictoniaries for {lang} (from {_lang}).")
             LOGGER.error("Pyphen cannot be installed to ~/.local (pip install --user).")
     if hyphenator is not None:
         for tag in ('p', 'li', 'span'):

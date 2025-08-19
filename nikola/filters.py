@@ -168,36 +168,33 @@ def yui_compressor(infile, executable=None):
             raise Exception('yui-compressor is not installed.')
             return False
 
-    return runinplace('{} --nomunge %1 -o %2'.format(yuicompressor), infile)
+    return runinplace(f'{yuicompressor} --nomunge %1 -o %2', infile)
 
 
 @_ConfigurableFilter(executable='CLOSURE_COMPILER_EXECUTABLE')
 def closure_compiler(infile, executable='closure-compiler'):
     """Run closure-compiler on a file."""
     return runinplace(
-        '{} --warning_level QUIET --js %1 --js_output_file %2'.format(executable),
-        infile,
+        f'{executable} --warning_level QUIET --js %1 --js_output_file %2', infile
     )
 
 
 @_ConfigurableFilter(executable='OPTIPNG_EXECUTABLE')
 def optipng(infile, executable='optipng'):
     """Run optipng on a file."""
-    return runinplace('{} -preserve -o2 -quiet %1'.format(executable), infile)
+    return runinplace(f'{executable} -preserve -o2 -quiet %1', infile)
 
 
 @_ConfigurableFilter(executable='JPEGOPTIM_EXECUTABLE')
 def jpegoptim(infile, executable='jpegoptim'):
     """Run jpegoptim on a file."""
-    return runinplace('{} -p --strip-all -q %1'.format(executable), infile)
+    return runinplace(f'{executable} -p --strip-all -q %1', infile)
 
 
 @_ConfigurableFilter(executable='JPEGOPTIM_EXECUTABLE')
 def jpegoptim_progressive(infile, executable='jpegoptim'):
     """Run jpegoptim on a file and convert to progressive."""
-    return runinplace(
-        '{} -p --strip-all --all-progressive -q %1'.format(executable), infile
-    )
+    return runinplace(f'{executable} -p --strip-all --all-progressive -q %1', infile)
 
 
 @_ConfigurableFilter(executable='HTML_TIDY_EXECUTABLE')
@@ -532,9 +529,7 @@ def add_header_permalinks(fname, xpath_list=None, file_blacklist=None):
                 hid = node.attrib['id']
 
             new_node = lxml.html.fragment_fromstring(
-                '<a href="#{0}" class="headerlink" title="Permalink to this heading">¶</a>'.format(
-                    hid
-                )
+                f'<a href="#{hid}" class="headerlink" title="Permalink to this heading">¶</a>'
             )
             node.append(new_node)
 
@@ -563,7 +558,7 @@ def deduplicate_ids(data, top_classes=None):
         # Well, that sucks.
         for i in duplicated_ids:
             # Results are ordered the same way they are ordered in document
-            offending_elements = doc.xpath('//*[@id="{}"]'.format(i))
+            offending_elements = doc.xpath(f'//*[@id="{i}"]')
             counter = 2
             # If this is a story or a post, do it from top to bottom, because
             # updates to those are more likely to appear at the bottom of pages.
@@ -578,7 +573,7 @@ def deduplicate_ids(data, top_classes=None):
             for e in off:
                 new_id = i
                 while new_id in seen_ids:
-                    new_id = '{0}-{1}'.format(i, counter)
+                    new_id = f'{i}-{counter}'
                     counter += 1
                 e.attrib['id'] = new_id
                 seen_ids.add(new_id)

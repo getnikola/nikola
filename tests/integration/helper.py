@@ -19,11 +19,11 @@ def create_simple_post(directory, filename, title_slug, text='', date='2013-03-0
     text_processed = '\n' + text if text else ''
     with io.open(path, "w+", encoding="utf8") as outf:
         outf.write(
-            """
-.. title: {0}
-.. slug: {0}
-.. date: {1}
-{2}""".format(title_slug, date, text_processed)
+            f"""
+.. title: {title_slug}
+.. slug: {title_slug}
+.. date: {date}
+{text_processed}"""
         )
 
 

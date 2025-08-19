@@ -76,7 +76,7 @@ def jinjify(in_theme, out_theme):
         try:
             lookup.parse(source)
         except Exception as e:
-            error("Syntax error in {0}:{1}".format(out_template, e.lineno))
+            error(f"Syntax error in {out_template}:{e.lineno}")
 
     parent = os.path.basename(in_theme.rstrip('/'))
     child = os.path.basename(out_theme.rstrip('/'))
@@ -106,7 +106,7 @@ def jinjify(in_theme, out_theme):
 
 
 def error(msg):
-    print("\033[1;31mERROR: {0}\033[0m".format(msg))
+    print(f"\033[1;31mERROR: {msg}\033[0m")
 
 
 def mako2jinja(input_file):
@@ -239,9 +239,9 @@ def jinjify_shortcodes(in_dir, out_dir):
 
 
 def usage():
-    print("Usage: python {} [in-dir] [out-dir]".format(sys.argv[0]))
+    print(f"Usage: python {sys.argv[0]} [in-dir] [out-dir]")
     print("OR")
-    print("Usage: python {} [in-file] [out-file]".format(sys.argv[0]))
+    print(f"Usage: python {sys.argv[0]} [in-file] [out-file]")
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
@@ -251,7 +251,7 @@ if __name__ == "__main__":
             ('nikola/data/themes/bootstrap4', 'nikola/data/themes/bootstrap4-jinja'),
             ('nikola/data/themes/bootblog4', 'nikola/data/themes/bootblog4-jinja'),
         ):
-            print('    {0} -> {1}'.format(m, j))
+            print(f'    {m} -> {j}')
             jinjify(m, j)
         jinjify_shortcodes('nikola/data/shortcodes/mako', 'nikola/data/shortcodes/jinja')
     elif len(sys.argv) != 3:

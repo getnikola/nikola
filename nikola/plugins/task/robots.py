@@ -59,11 +59,11 @@ class RobotsFile(LateTask):
                 utils.LOGGER.info('Add "robots" to DISABLED_PLUGINS to disable this warning and robots.txt generation.')
 
             with io.open(robots_path, 'w+', encoding='utf8') as outf:
-                outf.write("Sitemap: {0}\n\n".format(sitemapindex_url))
+                outf.write(f"Sitemap: {sitemapindex_url}\n\n")
                 outf.write("User-Agent: *\n")
                 if kw["robots_exclusions"]:
                     for loc in kw["robots_exclusions"]:
-                        outf.write("Disallow: {0}\n".format(loc))
+                        outf.write(f"Disallow: {loc}\n")
                 outf.write("Host: {0}\n".format(urlparse(kw["base_url"]).netloc))
 
         yield self.group_task()

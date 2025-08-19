@@ -98,14 +98,14 @@ def doc_role(name, rawtext, text, lineno, inliner, options={}, content=[]):
     if success:
         if twin_slugs:
             inliner.reporter.warning(
-                'More than one post with the same slug. Using "{0}"'.format(permalink))
+                f'More than one post with the same slug. Using "{permalink}"')
             LOGGER.warning(
-                'More than one post with the same slug. Using "{0}" for doc role'.format(permalink))
+                f'More than one post with the same slug. Using "{permalink}" for doc role')
         node = make_link_node(rawtext, title, permalink, options)
         return [node], []
     else:
         msg = inliner.reporter.error(
-            '"{0}" slug doesn\'t exist.'.format(slug),
+            f'"{slug}" slug doesn\'t exist.',
             line=lineno)
         prb = inliner.problematic(rawtext, rawtext, msg)
         return [prb], [msg]
@@ -118,12 +118,12 @@ def doc_shortcode(*args, **kwargs):
     if success:
         if twin_slugs:
             LOGGER.warning(
-                'More than one post with the same slug. Using "{0}" for doc shortcode'.format(permalink))
-        return '<a href="{0}">{1}</a>'.format(permalink, title)
+                f'More than one post with the same slug. Using "{permalink}" for doc shortcode')
+        return f'<a href="{permalink}">{title}</a>'
     else:
         LOGGER.error(
-            '"{0}" slug doesn\'t exist.'.format(slug))
-        return '<span class="error text-error" style="color: red;">Invalid link: {0}</span>'.format(text)
+            f'"{slug}" slug doesn\'t exist.')
+        return f'<span class="error text-error" style="color: red;">Invalid link: {text}</span>'
 
 
 def make_link_node(rawtext, text, url, options):

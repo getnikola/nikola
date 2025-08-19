@@ -195,7 +195,7 @@ class CommandPlugin(Command):
         LOGGER.info('Will upgrade {0} plugins: {1}'.format(len(plugins), ', '.join(n for n, _ in plugins)))
         for name, path in plugins:
             path: pathlib.Path
-            LOGGER.info('Upgrading {0}'.format(name))
+            LOGGER.info(f'Upgrading {name}')
             p = path
             while True:
                 tail, head = path.parent, path.name
@@ -203,7 +203,7 @@ class CommandPlugin(Command):
                     self.output_dir = path
                     break
                 elif path == tail:
-                    LOGGER.error("Can't find the plugins folder for path: {0}".format(p))
+                    LOGGER.error(f"Can't find the plugins folder for path: {p}")
                     return 1
                 else:
                     path = tail
@@ -216,12 +216,12 @@ class CommandPlugin(Command):
         if name in data:
             utils.makedirs(self.output_dir)
             url = data[name]
-            LOGGER.info("Downloading '{0}'".format(url))
+            LOGGER.info(f"Downloading '{url}'")
             zip_data = requests.get(url).content
 
             zip_file = io.BytesIO()
             zip_file.write(zip_data)
-            LOGGER.info('Extracting: {0} into {1}/'.format(name, self.output_dir))
+            LOGGER.info(f'Extracting: {name} into {self.output_dir}/')
             utils.extract_all(zip_file, self.output_dir)
             dest_path = self.output_dir / name
         else:
@@ -288,15 +288,15 @@ class CommandPlugin(Command):
         for found_name, path in self.get_plugins():
             if name == found_name:  # Uninstall this one
                 to_delete = path.parent  # Delete parent of .py file or parent of package
-                LOGGER.warning('About to uninstall plugin: {0}'.format(name))
-                LOGGER.warning('This will delete {0}'.format(to_delete))
+                LOGGER.warning(f'About to uninstall plugin: {name}')
+                LOGGER.warning(f'This will delete {to_delete}')
                 sure = utils.ask_yesno('Are you sure?')
                 if sure:
-                    LOGGER.warning('Removing {0}'.format(to_delete))
+                    LOGGER.warning(f'Removing {to_delete}')
                     shutil.rmtree(to_delete)
                     return 0
                 return 1
-        LOGGER.error('Unknown plugin: {0}'.format(name))
+        LOGGER.error(f'Unknown plugin: {name}')
         return 1
 
     def get_json(self, url):

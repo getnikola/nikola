@@ -69,7 +69,7 @@ class CommandDeploy(Command):
         # Remove drafts and future posts if requested
         undeployed_posts = clean_before_deployment(self.site)
         if undeployed_posts:
-            self.logger.warning("Deleted {0} posts due to DEPLOY_* settings".format(len(undeployed_posts)))
+            self.logger.warning(f"Deleted {len(undeployed_posts)} posts due to DEPLOY_* settings")
 
         if args:
             presets = args
@@ -81,18 +81,18 @@ class CommandDeploy(Command):
             try:
                 self.site.config['DEPLOY_COMMANDS'][preset]
             except KeyError:
-                self.logger.error('No such preset: {0}'.format(preset))
+                self.logger.error(f'No such preset: {preset}')
                 return 255
 
         for preset in presets:
-            self.logger.info("=> preset '{0}'".format(preset))
+            self.logger.info(f"=> preset '{preset}'")
             for command in self.site.config['DEPLOY_COMMANDS'][preset]:
-                self.logger.info("==> {0}".format(command))
+                self.logger.info(f"==> {command}")
                 try:
                     subprocess.check_call(command, shell=True)
                 except subprocess.CalledProcessError as e:
-                    self.logger.error('Failed deployment -- command {0} '
-                                      'returned {1}'.format(e.cmd, e.returncode))
+                    self.logger.error(f'Failed deployment -- command {e.cmd} '
+                                      f'returned {e.returncode}')
                     return e.returncode
 
         self.logger.info("Successful deployment")

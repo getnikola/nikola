@@ -69,7 +69,7 @@ class Listings(Task):
         for source, dest in self.kw['listings_folders'].items():
             if source in appearing_paths or dest in appearing_paths:
                 problem = source if source in appearing_paths else dest
-                utils.LOGGER.error("The listings input or output folder '{0}' appears in more than one entry in LISTINGS_FOLDERS, exiting.".format(problem))
+                utils.LOGGER.error(f"The listings input or output folder '{problem}' appears in more than one entry in LISTINGS_FOLDERS, exiting.")
                 continue
             appearing_paths.add(source)
             appearing_paths.add(dest)
@@ -191,7 +191,7 @@ class Listings(Task):
                 uptodate = {'c': self.site.GLOBAL_CONTEXT}
 
                 for k, v in self.site.GLOBAL_CONTEXT['template_hooks'].items():
-                    uptodate['||template_hooks|{0}||'.format(k)] = v.calculate_deps()
+                    uptodate[f'||template_hooks|{k}||'] = v.calculate_deps()
 
                 for k in self.site._GLOBAL_CONTEXT_TRANSLATABLE:
                     uptodate[k] = self.site.GLOBAL_CONTEXT[k](self.kw['default_lang'])
@@ -303,14 +303,14 @@ class Listings(Task):
                 # If the name shows up in this dict, we have to check for
                 # ambiguities.
                 if len(self.improper_input_file_mapping[name]) > 1:
-                    utils.LOGGER.error("Using non-unique listing name '{0}', which maps to more than one listing name ({1})!".format(name, str(self.improper_input_file_mapping[name])))
+                    utils.LOGGER.error(f"Using non-unique listing name '{name}', which maps to more than one listing name ({str(self.improper_input_file_mapping[name])})!")
                     return ["ERROR"]
                 if len(self.site.config['LISTINGS_FOLDERS']) > 1:
                     utils.LOGGER.warning("Using listings names in site.link() without input directory prefix while configuration's LISTINGS_FOLDERS has more than one entry.")
                 name = list(self.improper_input_file_mapping[name])[0]
                 break
         else:
-            utils.LOGGER.error("Unknown listing name {0}!".format(namep))
+            utils.LOGGER.error(f"Unknown listing name {namep}!")
             return ["ERROR"]
         if not name.endswith(os.sep + self.site.config["INDEX_FILE"]):
             name += '.html'

@@ -86,7 +86,7 @@ class CodeBlock(Directive):
         try:
             lexer = get_lexer_by_name(language)
         except pygments.util.ClassNotFound:
-            raise self.error('Cannot find pygments lexer for language "{0}"'.format(language))
+            raise self.error(f'Cannot find pygments lexer for language "{language}"')
 
         if 'number-lines' in self.options:
             linenos = 'table'
@@ -216,8 +216,7 @@ class Listing(Include):
         src_target = urlunsplit(("link", 'listing_source', fpath.replace('\\', '/'), '', ''))
         src_label = self.site.MESSAGES('Source')
         generated_nodes = (
-            [core.publish_doctree('`{0} <{1}>`_  `({2}) <{3}>`_' .format(
-                _fname, target, src_label, src_target))[0]])
+            [core.publish_doctree(f'`{_fname} <{target}>`_  `({src_label}) <{src_target}>`_')[0]])
         generated_nodes += self.get_code_from_file(fileobject)
         return generated_nodes
 

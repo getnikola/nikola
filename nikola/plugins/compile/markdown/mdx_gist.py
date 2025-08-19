@@ -108,8 +108,7 @@ class GistFetchException(Exception):
     def __init__(self, url, status_code):
         """Initialize the exception."""
         Exception.__init__(self)
-        self.message = 'Received a {0} response from Gist URL: {1}'.format(
-            status_code, url)
+        self.message = f'Received a {status_code} response from Gist URL: {url}'
 
 
 class GistPattern(InlineProcessor):
@@ -168,7 +167,7 @@ class GistPattern(InlineProcessor):
 
         except GistFetchException as e:
             LOGGER.warning(e.message)
-            warning_comment = etree.Comment(' WARNING: {0} '.format(e.message))
+            warning_comment = etree.Comment(f' WARNING: {e.message} ')
             noscript_elem.append(warning_comment)
 
         return (gist_elem, m.start(0), m.end(0))

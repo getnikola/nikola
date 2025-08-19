@@ -168,7 +168,7 @@ def format_default_translations_config(additional_languages):
         return SAMPLE_CONF["TRANSLATIONS"]
     lang_paths = ['    DEFAULT_LANG: "",']
     for lang in sorted(additional_languages):
-        lang_paths.append('    "{0}": "./{0}",'.format(lang))
+        lang_paths.append(f'    "{lang}": "./{lang}",')
     return "{{\n{0}\n}}".format("\n".join(lang_paths))
 
 
@@ -234,7 +234,7 @@ def test_destination(destination, demo=False):
     """Check if the destination already exists, which can break demo site creation."""
     # Issue #2214
     if demo and os.path.exists(destination):
-        LOGGER.warning("The directory {0} already exists, and a new demo site cannot be initialized in an existing directory.".format(destination))
+        LOGGER.warning(f"The directory {destination} already exists, and a new demo site cannot be initialized in an existing directory.")
         LOGGER.warning("Please remove the directory and try again, or use another directory.")
         LOGGER.info("Hint: If you want to initialize a git repository in this directory, run `git init` in the directory after creating a Nikola site.")
         return False
@@ -352,7 +352,7 @@ class CommandInit(Command):
             for partial, full in LEGAL_VALUES['_TRANSLATIONS_WITH_COUNTRY_SPECIFIERS'].items():
                 if partial in langs:
                     langs[langs.index(partial)] = full
-                    print("NOTICE: Assuming '{0}' instead of '{1}'.".format(full, partial))
+                    print(f"NOTICE: Assuming '{full}' instead of '{partial}'.")
 
             default = langs.pop(0)
             SAMPLE_CONF['DEFAULT_LANG'] = default
@@ -370,7 +370,7 @@ class CommandInit(Command):
                 messages = load_messages(['base'], tr, default, themes_dirs=['themes'])
                 SAMPLE_CONF['NAVIGATION_LINKS'] = format_navigation_links(langs, default, messages, SAMPLE_CONF['STRIP_INDEXES'])
             except nikola.utils.LanguageNotFoundError as e:
-                print("    ERROR: the language '{0}' is not supported.".format(e.lang))
+                print(f"    ERROR: the language '{e.lang}' is not supported.")
                 print("    Are you sure you spelled the name correctly?  Names are case-sensitive and need to be reproduced as-is (complete with the country specifier, if any).")
                 print("\nType '?' (a question mark, sans quotes) to list available languages.")
                 lhandler(default, toconf, show_header=False)
@@ -396,7 +396,7 @@ class CommandInit(Command):
                     if len(matching_zones) == 1:
                         tz = dateutil.tz.gettz(matching_zones[0])
                         answer = matching_zones[0]
-                        print("    Picking '{0}'.".format(answer))
+                        print(f"    Picking '{answer}'.")
                     elif len(matching_zones) > 1:
                         print("    The following time zones match your query:")
                         print('        ' + '\n        '.join(matching_zones))
@@ -404,7 +404,7 @@ class CommandInit(Command):
 
                 if tz is not None:
                     time = datetime.datetime.now(tz).strftime('%H:%M:%S')
-                    print("    Current time in {0}: {1}".format(answer, time))
+                    print(f"    Current time in {answer}: {time}")
                     answered = ask_yesno("Use this time zone?", True)
                 else:
                     print("    ERROR: No matches found.  Please try again.")
@@ -457,7 +457,7 @@ class CommandInit(Command):
 
         print("Creating Nikola Site")
         print("====================\n")
-        print("This is Nikola v{0}.  We will now ask you a few easy questions about your new site.".format(nikola.__version__))
+        print(f"This is Nikola v{nikola.__version__}.  We will now ask you a few easy questions about your new site.")
         print("If you do not want to answer and want to go with the defaults instead, simply restart with the `-q` parameter.")
 
         for query, default, toconf, destination in questions:
@@ -466,7 +466,7 @@ class CommandInit(Command):
                 pass
             else:
                 if default is toconf is destination is None:
-                    print('--- {0} ---'.format(query))
+                    print(f'--- {query} ---')
                 elif destination is True:
                     query(default, toconf)
                 else:
@@ -512,13 +512,13 @@ Options:
             return 1
         if not options.get('demo'):
             self.create_empty_site(target)
-            LOGGER.info('Created empty site at {0}.'.format(target))
+            LOGGER.info(f'Created empty site at {target}.')
         else:
             if not test_destination(target, True):
                 return 2
             self.copy_sample_site(target)
             LOGGER.info("A new site with example data has been created at "
-                        "{0}.".format(target))
+                        f"{target}.")
             LOGGER.info("See README.txt in that folder for more information.")
 
         self.create_configuration(target)

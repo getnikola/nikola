@@ -210,7 +210,7 @@ def assert_html_contains(html, element, attributes=None, text=None):
     try:
         tag = next(html_doc.iter(element))
     except StopIteration:
-        raise Exception("<{0}> not in {1}".format(element, html))
+        raise Exception(f"<{element}> not in {html}")
 
     if attributes:
         arg_attrs = set(attributes.items())

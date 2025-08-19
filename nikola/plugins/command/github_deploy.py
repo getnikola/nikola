@@ -102,14 +102,14 @@ class CommandGitHubDeploy(Command):
         # Remove drafts and future posts if requested (Issue #2406)
         undeployed_posts = clean_before_deployment(self.site)
         if undeployed_posts:
-            self.logger.warning("Deleted {0} posts due to DEPLOY_* settings".format(len(undeployed_posts)))
+            self.logger.warning(f"Deleted {len(undeployed_posts)} posts due to DEPLOY_* settings")
 
         # Commit and push
         return self._commit_and_push(options['commit_message'])
 
     def _run_command(self, command, xfail=False):
         """Run a command that may or may not fail."""
-        self.logger.info("==> {0}".format(command))
+        self.logger.info(f"==> {command}")
         try:
             subprocess.check_call(command)
             return 0
@@ -117,8 +117,8 @@ class CommandGitHubDeploy(Command):
             if xfail:
                 return e.returncode
             self.logger.error(
-                'Failed GitHub deployment -- command {0} '
-                'returned {1}'.format(e.cmd, e.returncode)
+                f'Failed GitHub deployment -- command {e.cmd} '
+                f'returned {e.returncode}'
             )
             raise DeployFailedException(e.returncode)
 
@@ -131,8 +131,8 @@ class CommandGitHubDeploy(Command):
         try:
             if autocommit:
                 commit_message = (
-                    '{0}\n\n'
-                    'Nikola version: {1}'.format(commit_first_line, __version__)
+                    f'{commit_first_line}\n\n'
+                    f'Nikola version: {__version__}'
                 )
                 e = self._run_command(['git', 'checkout', source], True)
                 if e != 0:
@@ -154,9 +154,9 @@ class CommandGitHubDeploy(Command):
                     source_commit = '?'
 
             commit_message = (
-                '{0}\n\n'
-                'Source commit: {1}'
-                'Nikola version: {2}'.format(commit_first_line, source_commit, __version__)
+                f'{commit_first_line}\n\n'
+                f'Source commit: {source_commit}'
+                f'Nikola version: {__version__}'
             )
             output_folder = self.site.config['OUTPUT_FOLDER']
 

@@ -200,14 +200,14 @@ class CommandTheme(Command):
                 self.do_install(parent_name, data)
                 name = parent_name
         if installstatus:
-            LOGGER.info('Remember to set THEME="{0}" in conf.py to use this theme.'.format(origname))
+            LOGGER.info(f'Remember to set THEME="{origname}" in conf.py to use this theme.')
 
     def do_install(self, name, data):
         """Download and install a theme."""
         if name in data:
             utils.makedirs(self.output_dir)
             url = data[name]
-            LOGGER.info("Downloading '{0}'".format(url))
+            LOGGER.info(f"Downloading '{url}'")
             try:
                 zip_data = requests.get(url).content
             except requests.exceptions.SSLError:
@@ -218,16 +218,16 @@ class CommandTheme(Command):
 
             zip_file = io.BytesIO()
             zip_file.write(zip_data)
-            LOGGER.info("Extracting '{0}' into themes/".format(name))
+            LOGGER.info(f"Extracting '{name}' into themes/")
             utils.extract_all(zip_file)
             dest_path = os.path.join(self.output_dir, name)
         else:
             dest_path = os.path.join(self.output_dir, name)
             try:
                 theme_path = utils.get_theme_path_real(name, self.site.themes_dirs)
-                LOGGER.error("Theme '{0}' is already installed in {1}".format(name, theme_path))
+                LOGGER.error(f"Theme '{name}' is already installed in {theme_path}")
             except Exception:
-                LOGGER.error("Can't find theme {0}".format(name))
+                LOGGER.error(f"Can't find theme {name}")
 
             return False
 
@@ -247,18 +247,18 @@ class CommandTheme(Command):
         try:
             path = utils.get_theme_path_real(name, self.site.themes_dirs)
         except Exception:
-            LOGGER.error('Unknown theme: {0}'.format(name))
+            LOGGER.error(f'Unknown theme: {name}')
             return 1
         # Don't uninstall builtin themes (Issue #2510)
         blocked = os.path.dirname(utils.__file__)
         if path.startswith(blocked):
-            LOGGER.error("Can't delete builtin theme: {0}".format(name))
+            LOGGER.error(f"Can't delete builtin theme: {name}")
             return 1
-        LOGGER.warning('About to uninstall theme: {0}'.format(name))
-        LOGGER.warning('This will delete {0}'.format(path))
+        LOGGER.warning(f'About to uninstall theme: {name}')
+        LOGGER.warning(f'This will delete {path}')
         sure = utils.ask_yesno('Are you sure?')
         if sure:
-            LOGGER.warning('Removing {0}'.format(path))
+            LOGGER.warning(f'Removing {path}')
             shutil.rmtree(path)
             return 0
         return 1
@@ -293,14 +293,14 @@ class CommandTheme(Command):
 
         for tname, tpath in sorted(set(themes)):
             if os.path.isdir(tpath):
-                print("{0} at {1}".format(tname, tpath))
+                print(f"{tname} at {tpath}")
 
     def copy_template(self, template):
         """Copy the named template file from the parent to a local theme or to templates/."""
         # Find template
         t = self.site.template_system.get_template_path(template)
         if t is None:
-            LOGGER.error("Cannot find template {0} in the lookup.".format(template))
+            LOGGER.error(f"Cannot find template {template} in the lookup.")
             return 2
 
         # Figure out where to put it.
@@ -315,35 +315,35 @@ class CommandTheme(Command):
 
         if not os.path.exists(base):
             os.mkdir(base)
-            LOGGER.info("Created directory {0}".format(base))
+            LOGGER.info(f"Created directory {base}")
 
         try:
             out = shutil.copy(t, base)
-            LOGGER.info("Copied template from {0} to {1}".format(t, out))
+            LOGGER.info(f"Copied template from {t} to {out}")
         except shutil.SameFileError:
-            LOGGER.error("This file already exists in your templates directory ({0}).".format(base))
+            LOGGER.error(f"This file already exists in your templates directory ({base}).")
             return 3
 
     def new_theme(self, name, engine, parent, create_legacy_meta=False):
         """Create a new theme."""
         base = 'themes'
         themedir = os.path.join(base, name)
-        LOGGER.info("Creating theme {0} with parent {1} and engine {2} in {3}".format(name, parent, engine, themedir))
+        LOGGER.info(f"Creating theme {name} with parent {parent} and engine {engine} in {themedir}")
         if not os.path.exists(base):
             os.mkdir(base)
-            LOGGER.info("Created directory {0}".format(base))
+            LOGGER.info(f"Created directory {base}")
 
         # Check if engine and parent match
         parent_engine = utils.get_template_engine(utils.get_theme_chain(parent, self.site.themes_dirs))
 
         if parent_engine != engine:
-            LOGGER.error("Cannot use engine {0} because parent theme '{1}' uses {2}".format(engine, parent, parent_engine))
+            LOGGER.error(f"Cannot use engine {engine} because parent theme '{parent}' uses {parent_engine}")
             return 2
 
         # Create theme
         if not os.path.exists(themedir):
             os.mkdir(themedir)
-            LOGGER.info("Created directory {0}".format(themedir))
+            LOGGER.info(f"Created directory {themedir}")
         else:
             LOGGER.error("Theme already exists")
             return 2
@@ -357,7 +357,7 @@ class CommandTheme(Command):
         theme_meta_path = os.path.join(themedir, name + '.theme')
         with io.open(theme_meta_path, 'w', encoding='utf-8') as fh:
             cp.write(fh)
-            LOGGER.info("Created file {0}".format(theme_meta_path))
+            LOGGER.info(f"Created file {theme_meta_path}")
 
         if create_legacy_meta:
             with io.open(os.path.join(themedir, 'parent'), 'w', encoding='utf-8') as fh:
@@ -367,8 +367,8 @@ class CommandTheme(Command):
                 fh.write(engine + '\n')
                 LOGGER.info("Created file {0}".format(os.path.join(themedir, 'engine')))
 
-        LOGGER.info("Theme {0} created successfully.".format(themedir))
-        LOGGER.info('Remember to set THEME="{0}" in conf.py to use this theme.'.format(name))
+        LOGGER.info(f"Theme {themedir} created successfully.")
+        LOGGER.info(f'Remember to set THEME="{name}" in conf.py to use this theme.')
 
     def get_json(self, url):
         """Download the JSON file with all plugins."""
