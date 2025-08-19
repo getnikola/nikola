@@ -27,9 +27,11 @@
 """Manage themes."""
 
 import configparser
+import difflib
 import io
 import json.decoder
 import os
+from pathlib import Path
 import shutil
 import sys
 import time
@@ -49,9 +51,9 @@ class CommandTheme(Command):
     """Manage themes."""
 
     json = None
-    name = "theme"
-    doc_usage = "[-u url] [-i theme_name] [-r theme_name] [-l] [--list-installed] [-g] [-n theme_name] [-c template_name]"
-    doc_purpose = "manage themes"
+    name = 'theme'
+    doc_usage = '[-u url] [-i theme_name] [-r theme_name] [-l] [--list-installed] [-g] [-n theme_name] [-c template_name] [-d]'
+    doc_purpose = 'manage themes'
     output_dir = 'themes'
     cmd_options = [
         {
@@ -138,6 +140,14 @@ class CommandTheme(Command):
             'default': False,
             'help': 'Create legacy meta files for new theme',
         },
+        {
+            'name': 'diff',
+            'short': 'd',
+            'long': 'diff',
+            'type': bool,
+            'default': False,
+            'help': 'Show diffs of custom templates compared to base file',
+        },
     ]
 
     def _execute(self, options, args):
@@ -155,14 +165,20 @@ class CommandTheme(Command):
         new_engine = options.get('new_engine')
         new_parent = options.get('new_parent')
         new_legacy_meta = options.get('new_legacy_meta')
-        command_count = [bool(x) for x in (
-            install,
-            uninstall,
-            list_available,
-            list_installed,
-            get_path,
-            copy_template,
-            new)].count(True)
+        diff = options.get('diff')
+        command_count = [
+            bool(x)
+            for x in (
+                install,
+                uninstall,
+                list_available,
+                list_installed,
+                get_path,
+                copy_template,
+                new,
+                diff,
+            )
+        ].count(True)
         if command_count > 1 or command_count == 0:
             print(self.help())
             return 2
@@ -181,6 +197,8 @@ class CommandTheme(Command):
             return self.copy_template(copy_template)
         elif new:
             return self.new_theme(new, new_engine, new_parent, new_legacy_meta)
+        elif diff:
+            return self.diff_custom_templates()
 
     def do_install_deps(self, url, name):
         """Install themes and their dependencies."""
@@ -323,6 +341,39 @@ class CommandTheme(Command):
         except shutil.SameFileError:
             LOGGER.error("This file already exists in your templates directory ({0}).".format(base))
             return 3
+
+    def diff_custom_templates(self) -> None:
+        """Print the diff between a custom template and the original file."""
+        # list of all theme and all its parents
+        theme_paths = self.site.THEMES
+        theme_path = utils.get_theme_path(theme_paths[0])
+        if theme_path.startswith('themes' + os.sep):
+            # this is a custom theme
+            base = theme_path
+            theme_paths = theme_paths[1:]
+        else:
+            # not a full custom theme, just modified single templates
+            base = '.'
+
+        local = Path(base)
+        for f in local.rglob('templates/*tmpl'):
+            orig = Path(utils.get_asset_path(f.relative_to(base), theme_paths))
+
+            lines = f.read_text().splitlines()
+            original_lines = orig.read_text().splitlines()
+
+            # Create a unified diff
+            diff = difflib.unified_diff(
+                original_lines,
+                lines,
+                fromfile=str(orig),
+                tofile=str(f),
+                lineterm='',
+            )
+
+            for line in diff:
+                print(line.rstrip())
+            print()
 
     def new_theme(self, name, engine, parent, create_legacy_meta=False):
         """Create a new theme."""
