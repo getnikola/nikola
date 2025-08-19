@@ -380,20 +380,41 @@ class CommandNewPost(Command):
             txt_path = os.path.join(self.site.original_cwd, path)
             meta_path = os.path.splitext(txt_path)[0] + ".meta"
 
-        if (not onefile and os.path.isfile(meta_path)) or \
-                os.path.isfile(txt_path):
+        # ------------------------------------------------------------------
+        # Previous implementation kept only for reference:
+        # if (not onefile and os.path.isfile(meta_path)) or os.path.isfile(txt_path):
+        #     # Emit an event when a post exists
+        #     # event = {"path": txt_path}
+        #     # if not onefile:        # write metadata file
+        #     #     event["meta_path"] = meta_path
+        #     # signal("existing_" + content_type).send(self, **event)
+        #     #
+        #     # LOGGER.error("The title already exists!")
+        #     # LOGGER.info("Existing {0}'s text is at: {1}".format(content_type, txt_path))
+        #     # if not onefile:
+        #     #     LOGGER.info("Existing {0}'s metadata is at: {1}".format(content_type, meta_path))
+        #     # return 8
+        # ------------------------------------------------------------------
 
-            # Emit an event when a post exists
-            event = dict(path=txt_path)
-            if not onefile:  # write metadata file
-                event['meta_path'] = meta_path
-            signal('existing_' + content_type).send(self, **event)
+        # Duplicate‑title check (reworked).  Test the text and .meta files
+        # separately and only log paths that actually exist.
+        exists_txt = os.path.isfile(txt_path)
+        exists_meta = (not onefile) and os.path.isfile(meta_path)
+
+        if exists_txt or exists_meta:
+            # Emit an “existing_post/page” signal with real paths
+            event = {"path": txt_path}
+            if exists_meta:
+                event["meta_path"] = meta_path
+            signal("existing_" + content_type).send(self, **event)
 
             LOGGER.error("The title already exists!")
-            LOGGER.info("Existing {0}'s text is at: {1}".format(content_type, txt_path))
-            if not onefile:
-                LOGGER.info("Existing {0}'s metadata is at: {1}".format(content_type, meta_path))
+            if exists_txt:
+                LOGGER.info("Existing %s's text is at: %s", content_type, txt_path)
+            if exists_meta:
+                LOGGER.info("Existing %s's metadata is at: %s", content_type, meta_path)
             return 8
+        # ------------------------------------------------------------------
 
         d_name = os.path.dirname(txt_path)
         utils.makedirs(d_name)
