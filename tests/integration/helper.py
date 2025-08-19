@@ -1,5 +1,5 @@
-import io
 import os
+from pathlib import Path
 import shutil
 
 from ..helper import cd
@@ -17,14 +17,11 @@ def create_simple_post(directory, filename, title_slug, text='', date='2013-03-0
     """Create a simple post in a given directory."""
     path = os.path.join(directory, filename)
     text_processed = '\n' + text if text else ''
-    with io.open(path, "w+", encoding="utf8") as outf:
-        outf.write(
-            """
+    Path(path).write_text("""
 .. title: {0}
 .. slug: {0}
 .. date: {1}
-{2}""".format(title_slug, date, text_processed)
-        )
+{2}""".format(title_slug, date, text_processed), encoding="utf8")
 
 
 def copy_example_post(destination_dir):
@@ -38,19 +35,18 @@ def copy_example_post(destination_dir):
 def append_config(config_dir, appendix):
     """Append text to the config file."""
     config_path = os.path.join(config_dir, "conf.py")
-    with io.open(config_path, "a", encoding="utf8") as outf:
+    with Path(config_path).open("a", encoding="utf8") as outf:
         outf.write(appendix)
 
 
 def patch_config(config_dir, *replacements):
     """Patch the config file with new values (find and replace)."""
     config_path = os.path.join(config_dir, "conf.py")
-    with io.open(config_path, "r", encoding="utf-8") as inf:
-        data = inf.read()
+    data = Path(config_path).read_text(encoding="utf-8")
 
     for old, new in replacements:
         data = data.replace(old, new)
 
-    with io.open(config_path, "w+", encoding="utf8") as outf:
+    with Path(config_path).open("w+", encoding="utf8") as outf:
         outf.write(data)
         outf.flush()

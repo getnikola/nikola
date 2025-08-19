@@ -27,8 +27,8 @@
 """Page compiler plugin for HTML source files."""
 
 
-import io
 import os
+from pathlib import Path
 
 import lxml.html
 
@@ -54,11 +54,9 @@ class CompileHtml(PageCompiler):
     def compile(self, source, dest, is_two_file=True, post=None, lang=None):
         """Compile the source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
-        with io.open(dest, "w+", encoding="utf-8") as out_file:
-            with io.open(source, "r", encoding="utf-8-sig") as in_file:
-                data = in_file.read()
-            data, shortcode_deps = self.compile_string(data, source, is_two_file, post, lang)
-            out_file.write(data)
+        data = Path(source).read_text(encoding="utf-8-sig")
+        data, shortcode_deps = self.compile_string(data, source, is_two_file, post, lang)
+        Path(dest).write_text(data, encoding="utf-8")
         if post is None:
             if shortcode_deps:
                 self.logger.error(
@@ -80,10 +78,9 @@ class CompileHtml(PageCompiler):
         makedirs(os.path.dirname(path))
         if not content.endswith('\n'):
             content += '\n'
-        with io.open(path, "w+", encoding="utf-8") as fd:
-            if onefile:
-                fd.write(write_metadata(metadata, comment_wrap=True, site=self.site, compiler=self))
-            fd.write(content)
+        if onefile:
+            content = write_metadata(metadata, comment_wrap=True, site=self.site, compiler=self) + content
+        Path(path).write_text(content, encoding="utf-8")
 
     def read_metadata(self, post, file_metadata_regexp=None, unslugify_titles=False, lang=None):
         """Read the metadata from a post's meta tags, and return a metadata dict."""
@@ -91,8 +88,7 @@ class CompileHtml(PageCompiler):
             lang = LocaleBorg().current_lang
         source_path = post.translated_source_path(lang)
 
-        with io.open(source_path, 'r', encoding='utf-8-sig') as inf:
-            data = inf.read()
+        data = Path(source_path).read_text(encoding='utf-8-sig')
 
         metadata = {}
         try:
