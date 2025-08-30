@@ -83,7 +83,6 @@ filename
     Example:
     
     link://filename/manual.txt => /docs/handbook.html
-    
 
 gallery
     Link to an image gallery's path.
@@ -94,7 +93,6 @@ gallery
     link://gallery/london => /galleries/trips/london/index.html
     
     link://gallery/trips/london => /galleries/trips/london/index.html
-    
 
 gallery_global
     Link to the global gallery path, which contains all the images in galleries.
@@ -106,7 +104,6 @@ gallery_global
     link://gallery_global/trips/london => /galleries/trips/london/index.html
     
     (a ``gallery`` link could lead to eg. /en/galleries/trips/london/index.html)
-    
 
 gallery_rss
     Link to an image gallery's RSS feed.
@@ -117,7 +114,6 @@ gallery_rss
     link://gallery_rss/london => /galleries/trips/london/rss.xml
     
     link://gallery_rss/trips/london => /galleries/trips/london/rss.xml
-    
 
 index
     Link to a numbered index.
@@ -150,7 +146,6 @@ listing
     link://listing/hello.py => /listings/tutorial/hello.py.html
     
     link://listing/tutorial/hello.py => /listings/tutorial/hello.py.html
-    
 
 listing_source
     Return a link to the source code for a listing.
@@ -162,7 +157,6 @@ listing_source
     link://listing_source/hello.py => /listings/tutorial/hello.py
     
     link://listing_source/tutorial/hello.py => /listings/tutorial/hello.py
-    
 
 post_path
     Link to the destination of an element in the POSTS/PAGES settings.
@@ -170,7 +164,6 @@ post_path
     Example:
     
     link://post_path/posts => /blog
-    
 
 root
     Link to the current language's root.
@@ -180,7 +173,6 @@ root
     link://root_path => /
     
     link://root_path => /translations/spanish/
-    
 
 rss
     A link to the RSS feed path.
@@ -195,15 +187,13 @@ slug
     Example:
     
     link://slug/yellow-camaro => /posts/cars/awful/yellow-camaro/index.html
-    
 
 slug_source
     Return a link to source for a post with given slug, if not ambiguous.
-
+    
     Example:
-
+    
     link://slug_source/yellow-camaro => /posts/cars/awful/yellow-camaro.rst
-
 
 tag
     A link to a tag's page. Takes page number as optional keyword argument.
