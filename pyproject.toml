@@ -81,7 +81,8 @@ extras = [
     "aiohttp>=3.8.6",
     "watchdog>=2.3.0",
     "ruamel.yaml>=0.15.98",
-    "toml>=0.9.2",
+    "tomli;python_version<'3.11'",
+    "tomli-w",
     "html5lib>=1.0.1"
 ]
 tests = [
