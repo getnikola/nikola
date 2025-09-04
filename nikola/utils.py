@@ -2001,7 +2001,7 @@ def load_data(path):
         loader = json
     elif ext in {'.toml', '.tml'}:
         if tomllib is None:
-            req_missing(['toml'], 'use TOML data files')
+            req_missing(['tomli'], 'use TOML data files')
             return {}
         loader = tomllib
     if loader is None:
