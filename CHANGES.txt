@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Adds support for metadata-only posts (Issue #3862)
+
 Bugfixes
 --------
 

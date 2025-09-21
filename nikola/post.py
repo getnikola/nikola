@@ -490,16 +490,20 @@ class Post(object):
         lang = nikola.utils.LocaleBorg().current_lang
         return self.tags_for_language(lang)
 
+    def is_usable_as_relative(self, lang):
+        """Whether this post is eligible to be a prev_post or next_post."""
+        if self.skip_untranslated and not self.is_translation_available(lang):
+            return False
+        if self.meta('external_url', lang):
+            return False
+        return True
+
     @property
     def prev_post(self):
         """Return previous post."""
         lang = nikola.utils.LocaleBorg().current_lang
         rv = self._prev_post
-        while self.skip_untranslated:
-            if rv is None:
-                break
-            if rv.is_translation_available(lang):
-                break
+        while rv and not rv.is_usable_as_relative(lang):
             rv = rv._prev_post
         return rv
 
@@ -513,11 +517,7 @@ class Post(object):
         """Return next post."""
         lang = nikola.utils.LocaleBorg().current_lang
         rv = self._next_post
-        while self.skip_untranslated:
-            if rv is None:
-                break
-            if rv.is_translation_available(lang):
-                break
+        while rv and not rv.is_usable_as_relative(lang):
             rv = rv._next_post
         return rv
 
@@ -1051,6 +1051,12 @@ class Post(object):
         """Return permalink for a post."""
         if lang is None:
             lang = nikola.utils.LocaleBorg().current_lang
+
+        # Some posts are metadata-only, and refer to things off-site; we
+        # know when we come across one of these because it has an
+        # "external_url".  Skip generating any kind of permalink for that.
+        if self.meta[lang]['external_url']:
+            return self.meta[lang]['external_url']
 
         # Let compilers override extension (e.g. the php compiler)
         if self.compiler.extension() != '.html':

@@ -359,6 +359,15 @@ data
     See `The Global Context and Data files`_ for more details.  This is
     especially useful used in combination with `shortcodes`_.
 
+external_url
+    If this page represents something that **only** lives elsewhere on the
+    Internet, you can set the ``external_url`` to point to where it lives.
+    Setting an ``external_url`` will cause any permalinks in indices to
+    point to that URL, and will cause Nikola to not generate an output file.
+
+    Useful for indexing other things that you have written as
+    "metadata-only" posts or pages.
+
 filters
     See the `Post Processing Filters`_ section.
 
