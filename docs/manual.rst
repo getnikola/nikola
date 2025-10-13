@@ -2088,10 +2088,14 @@ The ``conf.py`` options affecting images and gallery pages are these:
     IMAGE_THUMBNAIL_SIZE = 400
     IMAGE_THUMBNAIL_FORMAT = '{name}.thumbnail{ext}'
 
-If you add a reST file in ``galleries/gallery_name/index.txt`` its contents will be
-converted to HTML and inserted above the images in the gallery page. The
-format is the same as for posts. You can use the ``title``, ``previewimage``, and
-``status`` metadata fields to change how the gallery is shown.
+If you add a reST file ``galleries/gallery_name/index.txt``, its contents will be
+converted to HTML and inserted above the images on the gallery page. The format is the
+same as for posts. You can use the ``title``, ``previewimage``, and ``status`` metadata
+fields to control how the gallery is displayed.
+
+Additionally, you can add a reST file ``galleries/index.txt`` for the same purpose.
+Its contents will also be converted to HTML and inserted above the gallery overview.
+The format and available metadata fields are the same as for posts and gallery indexes.
 
 If the ``status`` is ``private``, ``draft``, or ``publish_later``, the
 gallery will not appear in the index, the RSS feeds, nor in the sitemap.
