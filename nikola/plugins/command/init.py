@@ -56,6 +56,7 @@ SAMPLE_CONF = {
     'BLOG_DESCRIPTION': "This is a demo site for Nikola.",
     'PRETTY_URLS': True,
     'STRIP_INDEXES': True,
+    'STRIP_EXTENSIONS': False,
     'DEFAULT_LANG': "en",
     'TRANSLATIONS': """{
     DEFAULT_LANG: "",

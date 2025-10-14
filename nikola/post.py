@@ -172,6 +172,7 @@ class Post(object):
             self.current_time = current_time(self.config['__tzinfo__'])
         self.base_url = self.config['BASE_URL']
         self.strip_indexes = self.config['STRIP_INDEXES']
+        self.strip_extensions = self.config['STRIP_EXTENSIONS']
         self.index_file = self.config['INDEX_FILE']
         self.pretty_urls = self.config['PRETTY_URLS']
         self.default_lang = self.config['DEFAULT_LANG']
@@ -1069,6 +1070,8 @@ class Post(object):
         index_len = len(self.index_file)
         if self.strip_indexes and link[-(1 + index_len):] == '/' + self.index_file:
             link = link[:-index_len]
+        if self.strip_extensions and link[-len(extension):] == extension:
+            link = link[:-len(extension)]
         if query:
             link = link + "?" + query
         link = utils.encodelink(link)
