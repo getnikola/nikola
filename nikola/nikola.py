@@ -587,6 +587,7 @@ class Nikola(object):
             'SITE_URL': 'https://example.com/',
             'PAGE_INDEX': False,
             'SECTION_PATH': '',
+            'STRIP_EXTENSIONS': False,
             'STRIP_INDEXES': True,
             'TAG_PATH': 'categories',
             'TAG_PAGES_ARE_INDEXES': False,
@@ -1924,6 +1925,9 @@ class Nikola(object):
             if self.config['STRIP_INDEXES'] and \
                     link[-(1 + index_len):] == '/' + self.config['INDEX_FILE']:
                 return link[:-index_len]
+            elif self.config['STRIP_EXTENSIONS'] and \
+                    link[-5:] == '.html':
+                return link[:-5]
             else:
                 return link
         else:

@@ -965,6 +965,13 @@ COMMENT_SYSTEM_ID = ${COMMENT_SYSTEM_ID}
 # it will instead /foo/default.html => /foo)
 STRIP_INDEXES = ${STRIP_INDEXES}
 
+# If a link ends in .html, drop the .html part only.  (Works with Apache
+# when configured with `Options MultiViews`, or nginx when configured with
+# `try_files`.)
+#
+# http://mysite/foo/bar.html => http://mysite/foo/bar
+STRIP_EXTENSIONS = ${STRIP_EXTENSIONS}
+
 # List of files relative to the server root (!) that will be asked to be excluded
 # from indexing and other robotic spidering. * is supported. Will only be effective
 # if SITE_URL points to server root. The list is used to exclude resources from
