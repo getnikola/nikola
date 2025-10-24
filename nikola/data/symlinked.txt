@@ -25,6 +25,11 @@ nikola/data/themes/base/assets/js/luxon.min.js
 nikola/data/themes/base/messages/messages_cz.py
 nikola/data/themes/bootblog4-jinja/assets/css/bootblog.css
 nikola/data/themes/bootblog4-jinja/bundles
+nikola/data/themes/bootblog5-jinja/assets/css/bootstrap.min.css
+nikola/data/themes/bootblog5-jinja/bundles
+nikola/data/themes/bootblog5/assets/css/bootstrap.min.css
+nikola/data/themes/bootblog5/assets/js/bootstrap.min.js
+nikola/data/themes/bootblog5/assets/js/luxon.min.js
 nikola/data/themes/bootstrap4-jinja/assets/css/bootstrap.min.css
 nikola/data/themes/bootstrap4-jinja/assets/js/bootstrap.min.js
 nikola/data/themes/bootstrap4-jinja/assets/js/jquery.min.js
@@ -34,4 +39,13 @@ nikola/data/themes/bootstrap4/assets/css/bootstrap.min.css
 nikola/data/themes/bootstrap4/assets/js/bootstrap.min.js
 nikola/data/themes/bootstrap4/assets/js/jquery.min.js
 nikola/data/themes/bootstrap4/assets/js/popper.min.js
+nikola/data/themes/bootstrap5-jinja/assets/css/bootstrap.min.css
+nikola/data/themes/bootstrap5-jinja/assets/js/bootstrap.min.js
+nikola/data/themes/bootstrap5-jinja/assets/js/luxon.min.js
+nikola/data/themes/bootstrap5-jinja/assets/js/popper.min.js
+nikola/data/themes/bootstrap5-jinja/bundles
+nikola/data/themes/bootstrap5/assets/css/bootstrap.min.css
+nikola/data/themes/bootstrap5/assets/js/bootstrap.min.js
+nikola/data/themes/bootstrap5/assets/js/luxon.min.js
+nikola/data/themes/bootstrap5/assets/js/popper.min.js
 nikola/plugins/command/auto/livereload.js
