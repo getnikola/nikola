@@ -41,3 +41,4 @@ class MyFakeSite(FakeSite):
         self.registered_auto_watched_folders = set()
         self.config = config
         self.configuration_filename = configuration_filename
+        self.show_tracebacks = True
