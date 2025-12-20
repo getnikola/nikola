@@ -240,7 +240,7 @@ class CommandAuto(Command):
 
         # Prepare asyncio event loop
         # Required for subprocessing to work
-        loop = asyncio.get_event_loop()
+        loop = asyncio.new_event_loop()
 
         # Set debug setting
         loop.set_debug(self.site.debug)
@@ -305,8 +305,8 @@ class CommandAuto(Command):
         # Run the event loop forever and handle shutdowns.
         try:
             # Run rebuild queue
-            rebuild_queue_fut = asyncio.ensure_future(self.run_rebuild_queue())
-            reload_queue_fut = asyncio.ensure_future(self.run_reload_queue())
+            rebuild_queue_fut = asyncio.ensure_future(self.run_rebuild_queue(), loop=loop)
+            reload_queue_fut = asyncio.ensure_future(self.run_reload_queue(), loop=loop)
 
             self.dns_sd = dns_sd(port, (options['ipv6'] or '::' in host))
             loop.run_forever()
