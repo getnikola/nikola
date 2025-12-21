@@ -45,7 +45,7 @@ Start the test server and open a browser:
 That should get you going. If you want to know more, this manual will always be here
 for you.
 
-DON'T READ THIS MANUAL. IF YOU NEED TO READ IT I FAILED, JUST USE THE THING.
+DON’T READ THIS MANUAL. IF YOU NEED TO READ IT I FAILED, JUST USE THE THING.
 
 On the other hand, if anything about Nikola is not as obvious as it should be, by all
 means tell me about it :-)
@@ -70,17 +70,17 @@ Nikola can do:
 * A software project's site (`example <https://getnikola.com>`__)
 * A book's site
 
-Since Nikola-based sites don't run any code on the server, there is no way to process
+Since Nikola-based sites don’t run any code on the server, there is no way to process
 user input in forms.
 
-Nikola can't do:
+Nikola can’t do:
 
 * Twitter
 * Facebook
 * An Issue tracker
 * Anything with forms, really (except for `comments`_!)
 
-Keep in mind that "static" doesn't mean **boring**. You can have animations
+Keep in mind that "static" doesn’t mean **boring**. You can have animations
 or whatever fancy CSS3/HTML5 thingie you like. It only means all that HTML is
 generated already before being uploaded. On the other hand, Nikola sites will
 tend to be content-heavy. What Nikola is good at is at putting what you write
@@ -126,14 +126,14 @@ Obsolescence
     If you create a site using (for example) WordPress, what happens when WordPress
     releases a new version? You have to update your WordPress. That is not optional,
     because of security and support issues. If I release a new version of Nikola, and
-    you don't update, *nothing* happens. You can continue to use the version you
+    you don’t update, *nothing* happens. You can continue to use the version you
     have now forever, no problems.
 
     Also, in the longer term, the very foundations of dynamic sites shift. Can you
     still deploy a blog software based on Django 0.96? What happens when your
     host stops supporting the PHP version you rely on? And so on.
 
-    You may say those are long term issues, or that they won't matter for years. Well,
+    You may say those are long term issues, or that they won’t matter for years. Well,
     I believe things should work forever, or as close to it as we can make them.
     Nikola's static output and its input files will work as long as you can install
     Python 3.8 or newer under Linux, Windows, or macOS and can find a server
@@ -152,8 +152,8 @@ Cost and Performance
     static sites.
 
 Lock-in
-    On server-side blog platforms, sometimes you can't export your own data, or
-    it's in strange formats you can't use in other services. I have switched
+    On server-side blog platforms, sometimes you can’t export your own data, or
+    it's in strange formats you can’t use in other services. I have switched
     blogging platforms from Advogato to PyCs to two homebrew systems, to Nikola,
     and have never lost a file, a URL, or a comment. That's because I have *always*
     had my own data in a format of my choice.
@@ -193,7 +193,7 @@ Nikola provides the following features:
 * gzip compression (for sending via your web server)
 * Open Graph, Twitter Cards
 * Hyphenation
-* Custom `post processing filters`_ (eg. for minifying files or better typography)
+* Custom `post processing filters`_ (e.g. for minifying files or better typography)
 
 Getting Started
 ---------------
@@ -213,8 +213,8 @@ Creating a Blog Post
    a full list of the included ones is `here <link://slug/path-handlers>`__ (BTW, I linked
    to that using ``link://slug/path-handlers``).
 
-   Note that magic links with spaces won’t work with some input formats (eg.
-   reST), so you should use slugs there (eg. ``link://tag/some-tag`` instead of
+   Note that magic links with spaces won’t work with some input formats (e.g.
+   reST), so you should use slugs there (e.g. ``link://tag/some-tag`` instead of
    ``link://tag/Some Tag``)
 
 
@@ -240,7 +240,7 @@ to convert your input files to that encoding to avoid issues.  It will prevent
 bugs, and Nikola will write UTF-8 output anyway.
 
 You can control what markup compiler is used for each file extension with the ``COMPILERS``
-option. The default configuration expects them to be placed in ``posts`` but that can be
+option. The default configuration expects them to be placed in ``posts``, but that can be
 changed (see below, the ``POSTS`` and ``PAGES`` options)
 
 This is how it works:
@@ -404,14 +404,14 @@ template
        .. template: foobar.tmpl
 
 updated
-    The last time this post was updated, defaults to the post’s ``date``
+    The last time this post was updated, it defaults to the post’s ``date``
     metadata value. It is not displayed by default in most themes, including
     the defaults — you can use ``post.formatted_updated(date_format)`` (and
     perhaps check ``if post.updated != post.date``) in your post template to
     show it.
 
 To add these metadata fields to all new posts by default, you can set the
-variable ``ADDITIONAL_METADATA`` in your configuration.  For example, you can
+variable ``ADDITIONAL_METADATA`` in your configuration. For example, you can
 add the author metadata to all new posts by default, by adding the following
 to your configuration:
 
@@ -422,7 +422,7 @@ to your configuration:
     }
 
 url_type
-    Change the URL_TYPE setting for the given page only. Useful for eg. error
+    Change the URL_TYPE setting for the given page only. Useful for e.g. error
     pages which cannot use relative URLs.
 
     .. code:: restructuredtext
@@ -433,7 +433,7 @@ Metadata formats
 ~~~~~~~~~~~~~~~~
 
 Metadata can be in different formats.
-Current Nikola versions experimentally supports other metadata formats that make it more compatible with
+Current Nikola versions experimentally support other metadata formats that make it more compatible with
 other static site generators. The currently supported metadata formats are:
 
 * reST-style comments (``.. name: value`` — default format)
@@ -536,7 +536,7 @@ Nikola can extract metadata from reStructuredText docinfo fields and the documen
     :slug: how-to-make-money
     :date: 2012-09-15 19:52:05 UTC
 
-To do this, you need  ``USE_REST_DOCINFO_METADATA = True`` in your ``conf.py``,
+To do this, you need ``USE_REST_DOCINFO_METADATA = True`` in your ``conf.py``,
 and Nikola will hide the docinfo fields in the output if you set
 ``HIDE_REST_DOCINFO = True``.
 
@@ -598,8 +598,8 @@ For Pelican, use:
 
     METADATA_MAPPING = {
         "rest_docinfo": {"summary": "description", "modified": "updated"},
-        "markdown_metadata": {"summary": "description", "modified": "updated"}
-        "html_metadata": {"summary": "description", "modified": "updated"}
+        "markdown_metadata": {"summary": "description", "modified": "updated"},
+        "html_metadata": {"summary": "description", "modified": "updated"},
     }
 
 For Hugo, use:
@@ -649,7 +649,7 @@ default set to:
 
 .. admonition:: Considered languages
 
-    Nikola will only look for translation of input files for languages
+    Nikola will only look for translations of input files for languages
     specified in the TRANSLATIONS variable.
 
 In case you translate your posts, you might also want to adjust various
@@ -674,7 +674,7 @@ options. The exact mechanism is explained above the config options in the
 
 .. code:: python
 
-    # POSTS and PAGES contains (wildcard, destination, template) tuples.
+    # POSTS and PAGES contain (wildcard, destination, template) tuples.
     #
     # The wildcard is used to generate a list of post source files
     # (whatever/thing.rst, for example).
@@ -720,7 +720,7 @@ options. The exact mechanism is explained above the config options in the
 
 .. admonition:: POSTS and PAGES are not flat!
 
-   Even if the syntax may suggest you can't, you can create any directory structure you want
+   Even if the syntax may suggest you can’t, you can create any directory structure you want
    inside ``posts/`` or ``pages/`` and it will be reflected in the output. For example,
    ``posts/foo/bar.txt`` would produce  ``output/posts/foo/bar.html``, assuming the slug is also ``bar``.
 
@@ -729,7 +729,7 @@ options. The exact mechanism is explained above the config options in the
 
 .. warning::
 
-    Removing the ``.rst`` entries is not recommended. Some features (eg.
+    Removing the ``.rst`` entries is not recommended. Some features (e.g.
     shortcodes) may not work properly if you do that.
 
 The ``new_post`` command
@@ -760,13 +760,13 @@ The ``new_post`` command supports some options:
       -F, --available-formats   List all available input formats
       -s                        Schedule the post based on recurrence rule
       -i ARG, --import=ARG      Import an existing file instead of creating a placeholder
-      -d, --date-path           Create post with date path (eg. year/month/day, see NEW_POST_DATE_PATH_FORMAT in config)
+      -d, --date-path           Create post with date path (e.g. year/month/day, see NEW_POST_DATE_PATH_FORMAT in config)
 
 
 The optional ``path`` parameter tells Nikola exactly where to put it instead of guessing from your config.
 So, if you do ``nikola new_post posts/random/foo.txt`` you will have a post in that path, with
 "foo" as its slug. You can also provide a directory name, in which case Nikola
-will append the file name for you (generated from title).
+will append the file name for you (generated from the title).
 
 The ``-d, --date-path`` option automates creation of ``year/month/day`` or
 similar directory structures. It can be enabled on a per-post basis, or you can
@@ -788,7 +788,7 @@ Teasers
 You may not want to show the complete content of your posts either on your
 index page or in RSS feeds, but to display instead only the beginning of them.
 
-If it's the case, you only need to add a "magical comment" ``TEASER_END`` or
+If that’s the case, you only need to add a "magical comment" ``TEASER_END`` or
 ``END_TEASER`` in your post.
 
 In reStructuredText:
@@ -806,7 +806,7 @@ In Markdown (or basically, the resulting HTML of any format):
 By default all your RSS feeds will be shortened (they'll contain only teasers)
 whereas your index page will still show complete posts. You can change
 this behavior with your ``conf.py``: ``INDEX_TEASERS`` defines whether index
-page should display the whole contents or only teasers. ``FEED_TEASERS``
+pages should display the whole contents or only teasers. ``FEED_TEASERS``
 works the same way for your Atom and RSS feeds.
 
 By default, teasers will include a "read more" link at the end. If you want to
@@ -890,20 +890,20 @@ your configuration, and set it up properly:
             'featured_large_image_on_mobile': False,
             # Strip HTML from featured post text.
             'featured_strip_html': True,
-            # Contents of the sidebar, If empty, the sidebar is not displayed.
+            # Contents of the sidebar. If empty, the sidebar is not displayed.
             'sidebar': ''
         }
     }
 
-You can pick betweeen (up to) 1, 2, or 3 featured posts. You can mix
+You can pick between (up to) 1, 2, or 3 featured posts. You can mix
 ``featured_large`` and ``featured_small``, rest assured that Nikola will always
-display the latest posts no matter what setup you choose. If only one posts
+display the latest posts no matter what setup you choose. If only one post
 qualifies for the small cards, one card taking up all the width will appear.
 
-Both featured box formats display an image to the right. You can set it by changing the ``previewimage`` meta value to the full path to the image (eg. ``.. previewimage: /images/featured1.png``). This works best with images in portrait orientation.
+Both featured box formats display an image to the right. You can set it by changing the ``previewimage`` meta value to the full path to the image (e.g. ``.. previewimage: /images/featured1.png``). This works best with images in portrait orientation.
 
 Note that, due to space constraints, only the large box may show the image on
-mobile, below the text (this behavior can be disbled). Small boxes never
+mobile, below the text (this behavior can be disabled). Small boxes never
 display images on mobile. In particular: ``xs`` and ``sm`` display only the
 large image, and only if configured; ``md`` displays only the large image,
 ``lg`` displays all three images.
@@ -922,7 +922,7 @@ Queuing Posts
 ~~~~~~~~~~~~~
 
 Some blogs tend to have new posts based on a schedule (for example,
-every Mon, Wed, Fri) but the blog authors don't like to manually
+every Mon, Wed, Fri) but the blog authors don’t like to manually
 schedule their posts.  You can schedule your blog posts based on a
 rule, by specifying a rule in the ``SCHEDULE_RULE`` in your
 configuration.  You can either post specific blog posts according to
@@ -941,7 +941,7 @@ Monday, Wednesday and Friday at 7am, add the following
 
 For more details on how to specify a recurrence rule, look at the
 `iCal specification <https://www.kanzaki.com/docs/ical/rrule.html>`_.
-Or if you are scared of this format, many calendaring applications (eg. Google
+Or if you are scared of this format, many calendaring applications (e.g. Google
 Calendar) offer iCal exports, so you can copy-paste the repeat rule from a
 generated iCal (``.ics``) file (which is a human-readable text file).
 
@@ -1015,7 +1015,7 @@ Static indexes
 ``````````````
 
 Nikola uses *static indexes* by default.  This means that ``index-1.html`` has
-the oldest posts, and the newest posts past the first 10 are in
+the oldest posts, and the newest posts after the first 10 are in
 ``index-N.html``, where ``N`` is the highest number.  Only the page with the
 highest number and the main page (``index-N.html`` and ``index.html``) are
 rebuilt (the others remain unchanged).  The page that appears when you click
@@ -1023,7 +1023,7 @@ rebuilt (the others remain unchanged).  The page that appears when you click
 posts** if there are not enough posts to fill up all pages.
 
 This can be disabled by setting ``INDEXES_STATIC`` to ``False``.  In that mode,
-``index-1.html`` contains all the newest posts past the first 10 and will
+``index-1.html`` contains all the newest posts after the first 10 and will
 always contain 10 posts (unless you have less than 20).  The last page,
 ``index-N.html``, contains the oldest posts, and might contain less than 10
 posts.  This is how many blog engines and CMSes behave.  Note that this will
@@ -1054,7 +1054,7 @@ You can also generate a tag cloud with the `tx3_tag_cloud <https://plugins.getni
 Categories
 ``````````
 
-The next unit for organizing your content are categories. A post can have only one category, specified with the ``category`` meta tag. They are displayed alongside tags. You can have categories and tags with the same name (categories’ RSS and HTML files are prefixed with ``cat_`` by default).
+The next unit for organizing your content is categories. A post can have only one category, specified with the ``category`` meta tag. They are displayed alongside tags. You can have categories and tags with the same name (categories’ RSS and HTML files are prefixed with ``cat_`` by default).
 
 Categories are handy to organize different parts of your blog, parts that are about different topics. Unlike tags, which you should have tens (hundreds?) of, the list of categories should be shorter.
 
@@ -1071,7 +1071,7 @@ There are multiple configuration variables dedicated to each of the two taxonomi
 * ``TAG_DESCRIPTIONS``, ``CATEGORY_DESCRIPTIONS`` to set descriptions for each of the items
 * ``CATEGORY_ALLOW_HIERARCHIES`` and ``CATEGORY_OUTPUT_FLAT_HIERARCHIES`` to allow hierarchical categories
 * ``TAG_PAGES_ARE_INDEXES`` and ``CATEGORY_PAGES_ARE_INDEXES`` to display full-size indexes instead of simple post lists
-* ``HIDDEN_TAGS``. ``HIDDEN_CATEGORIES`` to make some tags/categories invisible in lists
+* ``HIDDEN_TAGS``, ``HIDDEN_CATEGORIES`` to make some tags/categories invisible in lists
 * ``CATEGORY_DESTPATH_AS_DEFAULT`` to use the destination path as the category if none is specified in the post
 * ``CATEGORY_DESTPATH_TRIM_PREFIX`` to trim the prefix that comes from ``POSTS`` for the destination path
 * ``CATEGORY_DESTPATH_FIRST_DIRECTORY`` to only use the first directory name for the defaulted category
@@ -1092,7 +1092,7 @@ Creating a Page
 Pages are the same as posts, except that:
 
 * They are not added to the front page
-* They don't appear on the RSS feed
+* They don’t appear on the RSS feed
 * They use the ``page.tmpl`` template instead of ``post.tmpl`` by default
 
 The default configuration expects the page's metadata and text files to be on the
@@ -1137,7 +1137,7 @@ Plus, we have specialized compilers in the Plugins Index for:
 * `WordPress posts <https://plugins.getnikola.com/#wordpress_compiler>`_
 
 To write posts in a different format, you need to configure the compiler and
-paths. To create a post, use ``nikola new_post -f COMPILER_NAME``, eg. ``nikola
+paths. To create a post, use ``nikola new_post -f COMPILER_NAME``, e.g. ``nikola
 new_post -f markdown``. The default compiler used is the first entry in POSTS
 or PAGES.
 
@@ -1246,7 +1246,7 @@ The first word is always the name of the shortcode. Parameters follow the name. 
 
 Some shortcodes use or require closing shortcodes. Like HTML, the opening and closing shortcodes match (name only), the closing being prepended with a slash.
 
-Example of a paired shortcode (note that we don't have a highlight shortcode yet ;-):
+Example of a paired shortcode (note that we don’t have a highlight shortcode yet ;-):
 
 .. code:: text
 
@@ -1362,7 +1362,7 @@ post-list
 
 raw
     Passes the content along, mostly used so I can write this damn section and you can see the shortcodes instead
-    of them being munged into shortcode **output**. I can't show an example because Inception.
+    of them being munged into shortcode **output**. I can’t show an example because Inception.
 
 thumbnail
     Display image thumbnails, with optional captions. Examples:
@@ -1482,16 +1482,16 @@ it will be replaced by "baz".
 
 Individual posts can also have a data file. Those are specified using the
 ``data`` meta field (path relative to ``conf.py``, can be different in
-different post languages). Those are accessible as eg.
+different post languages). Those are accessible as e.g.
 ``${post.data['bar']}`` in templates. `Template-based shortcodes`_ are a
 good idea in this case.
 
-Data files can be useful for eg. auto-generated sites, where users provide
+Data files can be useful for e.g. auto-generated sites, where users provide
 JSON/YAML/TOML files and Nikola generates a large page with data from all data
 files. (This is especially useful with some automatic rebuild feature, like
 those documented in `Deployment`_)
 
-Data files are also available as ``global_data``, to avoid name conflicts in
+Data files are also available as ``global_data`` to avoid name conflicts in
 shortcodes. (``global_data`` works everywhere.)
 
 Redirections
@@ -1505,21 +1505,21 @@ in your ``conf.py``:
     # A list of redirection tuples, [("foo/from.html", "/bar/to.html")].
     #
     # A HTML file will be created in output/foo/from.html that redirects
-    # to the "/bar/to.html" URL. notice that the "from" side MUST be a
+    # to the "/bar/to.html" URL. Notice that the "from" side MUST be a
     # relative URL.
     #
-    # If you don't need any of these, just set to []
+    # If you don’t need any of these, just set it to []
 
     REDIRECTIONS = [("index.html", "/weblog/index.html")]
 
 It's better if you can do these using your web server's configuration, but if
-you can't, this will work.
+you can’t, this will work.
 
 Configuration
 -------------
 
 The configuration file can be used to customize a lot of what Nikola does. Its
-syntax is python, but if you don't know the language, it still should not be
+syntax is Python, but if you don’t know the language, it still should not be
 terribly hard to grasp.
 
 By default, the ``conf.py`` file in the root of the Nikola website will be used.
@@ -1540,13 +1540,13 @@ You surely want to edit these options:
     BLOG_DESCRIPTION = "This is a demo site for Nikola."  # (translatable)
 
 Some options are marked with a (translatable) comment above or right next to
-them.  For those options, two types of values can be provided:
+them. For those options, two types of values can be provided:
 
 * a string, which will be used for all languages
 * a dict of language-value pairs, to have different values in each language
 
 .. note::
-    As of version 8.0.3 it is possible to create configuration files which inherit values from other Python files.
+    As of version 8.0.3 it is possible to create configuration files that inherit values from other Python files.
     This might be useful if you're working with similar environments.
 
     Example:
@@ -1555,7 +1555,7 @@ them.  For those options, two types of values can be provided:
 
                 BLOG_AUTHOR = "Your Name"
                 BLOG_TITLE = "Demo Site"
-                SITE_URL = "https://yourname.github.io/demo-site
+                SITE_URL = "https://yourname.github.io/demo-site"
                 BLOG_EMAIL = "joe@demo.site"
                 BLOG_DESCRIPTION = "This is a demo site for Nikola."
 
@@ -1636,7 +1636,7 @@ Navigation Links
           submenus is supported.
 
        2. Some themes, including the default Bootstrap theme, may
-          present issues if the menu is too large.  (in Bootstrap, the navbar
+          present issues if the menu is too large.  (In Bootstrap, the navbar
           can grow too large and cover contents.)
 
        3. If you link to directories, make sure to follow ``STRIP_INDEXES``.  If
@@ -1651,20 +1651,20 @@ Navigation Links
     something else.
 
 Footer
-    ``CONTENT_FOOTER`` is displayed, small at the bottom of all pages, I use it for
+    ``CONTENT_FOOTER`` is displayed, small at the bottom of all pages; I use it for
     the copyright notice. The default shows a text formed using ``BLOG_AUTHOR``,
     ``BLOG_EMAIL``, the date and ``LICENSE``.  Note you need to use
     ``CONTENT_FOOTER_FORMATS`` instead of regular str.format or %-formatting,
     for compatibility with the translatable settings feature.
 
 BODY_END
-    This option lets you define a HTML snippet that will be added at the bottom of body.
-    The main usage is a Google analytics snippet or something similar, but you can really
+    This option lets you define an HTML snippet that will be added at the bottom of the body.
+    The main usage is a Google Analytics snippet or something similar, but you can really
     put anything there. Good place for JavaScript.
 
 SOCIAL_BUTTONS_CODE
-    The ``SOCIAL_BUTTONS_CODE`` option lets you define a HTML snippet that will be added
-    at the bottom of body. It defaults to a snippet for AddThis, but you can
+    The ``SOCIAL_BUTTONS_CODE`` option lets you define an HTML snippet that will be added
+    at the bottom of the body. It defaults to a snippet for AddThis, but you can
     really put anything there. See `social_buttons.html` for more details.
 
 Fancy Dates
@@ -1676,7 +1676,7 @@ DATE_FORMAT
     The date format to use if there is no JS or fancy dates are off.  `Compatible with CLDR syntax. <http://cldr.unicode.org/translation/date-time-1/date-time>`_
 
 LUXON_DATE_FORMAT
-    The date format to use with Luxon. A dictionary of dictionaries: the top level is languages, and the subdictionaries are of the format ``{'preset': False, 'format': 'yyyy-MM-dd HH:mm'}``. `Used by Luxon <https://moment.github.io/luxon/docs/manual/formatting>`_ (format can be the preset name, eg. ``'DATE_LONG'``).
+    The date format to use with Luxon. A dictionary of dictionaries: the top level is languages, and the subdictionaries are of the format ``{'preset': False, 'format': 'yyyy-MM-dd HH:mm'}``. `Used by Luxon <https://moment.github.io/luxon/docs/manual/formatting>`_ (format can be the preset name, e.g. ``'DATE_LONG'``).
 
 MOMENTJS_DATE_FORMAT (formerly JS_DATE_FORMAT)
     The date format to use if fancy dates are on, and the theme is using Moment.js.
@@ -1685,10 +1685,10 @@ DATE_FANCINESS = 0
     Fancy dates are off, and DATE_FORMAT is used.
 
 DATE_FANCINESS = 1
-    Dates are recalculated in user’s timezone.  Requires JavaScript.
+    Dates are recalculated in the user’s timezone. Requires JavaScript.
 
 DATE_FANCINESS = 2
-    Dates are recalculated as relative time (eg. 2 days ago).  Requires JavaScript.
+    Dates are recalculated as relative time (e.g. 2 days ago). Requires JavaScript.
 
 In order to use fancy dates, your theme must support them.  The built-in Bootstrap family supports it, but other themes might not by default.
 
@@ -1733,13 +1733,13 @@ Adding Files
 
 Any files you want to be in ``output/`` but are not generated by Nikola (for
 example, ``favicon.ico``) should be placed in ``files/``.  Remember that you
-can't have files that collide with files Nikola generates (it will give an
+can’t have files that collide with files Nikola generates (it will give an
 error).
 
 .. admonition:: Important
 
-   Don't put any files manually in ``output/``. Ever. Really.
-   Maybe someday Nikola will just wipe ``output/`` (when you run ``nikola check -f --clean-files``) and then you will be sorry. So, please don't do that.
+   Don’t put any files manually in ``output/``. Ever. Really.
+   Maybe someday Nikola will just wipe ``output/`` (when you run ``nikola check -f --clean-files``) and then you will be sorry. So, please don’t do that.
 
 If you want to copy more than one folder of static files into ``output`` you can
 change the FILES_FOLDERS option:
@@ -1816,11 +1816,11 @@ Deployment
 ----------
 
 If you can specify your deployment procedure as a series of commands, you can
-put them in the ``DEPLOY_COMMANDS`` option, and run them with ``nikola deploy``.
+put them in the ``DEPLOY_COMMANDS`` option and run them with ``nikola deploy``.
 
 You can have multiple deployment presets.  If you run ``nikola deploy``, the
 ``default`` preset is executed.  You can also specify the names of presets
-you want to run (eg. ``nikola deploy default``, multiple presets are allowed).
+you want to run (e.g. ``nikola deploy default``); multiple presets are allowed.
 
 One caveat is that if any command has a % in it, you should double them.
 
@@ -1858,7 +1858,7 @@ sure you have ``nikola`` and ``git`` installed on your PATH.
       git init .
       git remote add origin git@github.com:user/repository.git
 
-3. Setup branches and remotes in ``conf.py``:
+3. Set up branches and remotes in ``conf.py``:
 
    * ``GITHUB_DEPLOY_BRANCH`` is the branch where Nikola-generated HTML files
      will be deployed. It should be ``gh-pages`` for project pages and
@@ -1868,7 +1868,7 @@ sure you have ``nikola`` and ``git`` installed on your PATH.
    * ``GITHUB_REMOTE_NAME`` is the remote to which changes are pushed.
    * ``GITHUB_COMMIT_SOURCE`` controls whether or not the source branch is
      automatically committed to and pushed. We recommend setting it to
-     ``True``, unless you are automating builds with CI (eg. GitHub Actions/GitLab CI).
+     ``True``, unless you are automating builds with CI (e.g. GitHub Actions/GitLab CI).
 
 4. Create a ``.gitignore`` file. We recommend adding at least the following entries:
 
@@ -1880,7 +1880,7 @@ sure you have ``nikola`` and ``git`` installed on your PATH.
       output
 
 5. If you set ``GITHUB_COMMIT_SOURCE`` to False, you must switch to your source
-   branch and commit to it.  Otherwise, this is done for you.
+   branch and commit to it. Otherwise, this is done for you.
 6. Run ``nikola github_deploy``.  This will build the site, commit the output
    folder to your deploy branch, and push to GitHub.  Your website should be up
    and running within a few minutes.
@@ -1943,14 +1943,14 @@ It is also possible to use a comment system added by a plugin, see the
      issue tracker is used for comments. Additional Utterances configuration
      values can be stored in the ``GLOBAL_CONTEXT``, e.g.,
      ``GLOBAL_CONTEXT['utterances_config'] = {"issue-term": "title",
-     "label": "Comments", "theme": "github-light", "crossorigin": "anonymous")``.
+     "label": "Comments", "theme": "github-light", "crossorigin": "anonymous"}``.
 
 To use comments in a visible site, you should register with the service and
 then set the ``COMMENT_SYSTEM_ID`` option.
 
-I recommend 3rd party comments, and specially DISQUS because:
+I recommend third-party comments, especially DISQUS because:
 
-1) It doesn't require any server-side software on your site
+1) It doesn’t require any server-side software on your site
 2) They offer you a way to export your comments, so you can take
    them with you if you need to.
 3) It's free.
@@ -1964,13 +1964,13 @@ You can disable comments for a post by adding a "nocomments" metadata field to i
 
 .. admonition:: DISQUS Support
 
-   In some cases, when you run the test site, you won't see the comments.
-   That can be fixed by adding the disqus_developer flag to the templates
+   In some cases, when you run the test site, you won’t see the comments.
+   That can be fixed by adding the ``disqus_developer`` flag to the templates
    but it's probably more trouble than it's worth.
 
 .. admonition:: Moot Support
 
-   Moot doesn't support comment counts on index pages, and it requires adding
+   Moot doesn’t support comment counts on index pages, and it requires adding
    this to your ``conf.py``:
 
    .. code-block:: python
@@ -1994,7 +1994,7 @@ You can disable comments for a post by adding a "nocomments" metadata field to i
    You can copy the configuration options from the `Utterances setup page
    <https://utteranc.es>`_ into ``GLOBAL_CONTEXT['utterances_config']``,
    except for ``repo``, which should be set as ``COMMENT_SYSTEM_ID``. Note
-   that the either ``issue-term`` or ``issue-number`` must be provided. All
+   that either ``issue-term`` or ``issue-number`` must be provided. All
    other Utterances configuration options are optional.
 
 Images and Galleries
@@ -2044,7 +2044,7 @@ Images to be used in normal posts can be placed in the ``images`` folder. These
 images will be processed and have thumbnails created just as for galleries, but will
 then be copied directly to the corresponding path in the ``output`` directory, so you
 can reference it from whatever page you like, most easily using the ``thumbnail``
-reST extension. If you don't want thumbnails, just use the ``files`` folder instead.
+reST extension. If you don’t want thumbnails, just use the ``files`` folder instead.
 
 The ``conf.py`` options affecting images and gallery pages are these:
 
@@ -2066,7 +2066,7 @@ The ``conf.py`` options affecting images and gallery pages are these:
     # list of galleries for each gallery
     GALLERIES_USE_THUMBNAIL = False
 
-    # Image to use as thumbnail for those galleries that don't have one
+    # Image to use as thumbnail for those galleries that don’t have one
     # None: show a grey square
     # '/url/to/file': show the image in that url
     GALLERIES_DEFAULT_THUMBNAIL = None
@@ -2133,7 +2133,7 @@ Handling EXIF Data
 ------------------
 
 Your images contain a certain amount of extra data besides the image itself,
-called the `EXIF metadata. <https://en.wikipedia.org/wiki/Exchangeable_image_file_format>`__
+called the `EXIF metadata <https://en.wikipedia.org/wiki/Exchangeable_image_file_format>`__.
 It contains information about the camera you used to take the picture, when it was taken,
 and maybe even the location where it was taken.
 
@@ -2159,7 +2159,7 @@ Do this if you want to be absolutely sure that no sensitive information should e
 Preserve all EXIF data
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Do this if you really don't mind people knowing where pictures were taken, or camera settings:
+Do this if you really don’t mind people knowing where pictures were taken, or camera settings:
 
 .. code:: python
 
@@ -2216,7 +2216,8 @@ There is a huge number of EXIF tags, described in `the standard <http://www.cipa
 Handling ICC Profiles
 ---------------------
 
-Your images may contain `ICC profiles. <https://en.wikipedia.org/wiki/ICC_profile>`__  These describe the color space in which the images were created or captured.
+Your images may contain `ICC profiles <https://en.wikipedia.org/wiki/Exchangeable_image_file_format>__`.
+These describe the color space in which the images were created or captured.
 
 Most desktop web browsers can use embedded ICC profiles to display images accurately.  As of early 2018 few mobile browsers consider ICC profiles when displaying images.  A notable exception is Safari on iOS.
 
@@ -2259,7 +2260,7 @@ The currently available filters are:
    You can use any program name that works in place as a filter, like ``sed -i``
    and you can use arbitrary Python functions as filters, too.
 
-   If your program doesn't run in-place, then you can use Nikola's ``runinplace`` function (from the ``filters`` module).
+   If your program doesn’t run in-place, then you can use Nikola’s ``runinplace`` function (from the ``filters`` module).
    For example, this is how the yui_compressor filter is implemented:
 
    .. code-block:: python
@@ -2428,7 +2429,7 @@ filters.deduplicate_ids
 
 
    You can also use a file blacklist (``HEADER_PERMALINKS_FILE_BLACKLIST``),
-   useful for some index pages. Paths include the output directory (eg.
+   useful for some index pages. Paths include the output directory (e.g.
    ``output/index.html``)
 
 
@@ -2449,7 +2450,7 @@ tips we have found when setting up Nikola with Apache. If you have more, or
 different ones, or about other web servers, please share!
 
 1. Use a speed testing tool. I used Yahoo's YSlow but you can use any of them, and
-   it's probably a good idea to use more than one.
+   it’s probably a good idea to use more than one.
 
 2. Enable compression in Apache:
 
@@ -2594,7 +2595,7 @@ Includes
 
 Nikola supports the standard reStructuredText ``include`` directive, but with a
 catch: filenames are relative to **Nikola site root** (directory with ``conf.py``)
-instead of the post location (eg. ``posts/`` directory)!
+instead of the post location (e.g. ``posts/`` directory)!
 
 Media
 ~~~~~
@@ -2685,7 +2686,7 @@ Code
 ~~~~
 
 The ``code`` directive has been included in docutils since version 0.9 and now
-replaces Nikola's ``code-block`` directive. To ease the transition, two aliases
+replaces Nikola’s ``code-block`` directive. To ease the transition, two aliases
 for ``code`` directive are provided: ``code-block`` and ``sourcecode``:
 
 .. code:: restructuredtext
@@ -2763,7 +2764,7 @@ Producing this:
 
 .. gist:: 2395294
 
-This degrades gracefully if the browser doesn't support JavaScript.
+This degrades gracefully if the browser doesn’t support JavaScript.
 
 Thumbnails
 ~~~~~~~~~~
@@ -2966,9 +2967,9 @@ The following options are recognized:
       Defaults to a random name composed by ``'post_list_' + uuid.uuid4().hex``.
 
 The post list directive uses the ``post_list_directive.tmpl`` template file (or
-another one, if you use the ``template`` option) to generate the list's HTML. By
+another one, if you use the ``template`` option) to generate the list’s HTML. By
 default, this is an unordered list with dates and clickable post titles. See
-the template file in Nikola's base theme for an example of how this works.
+the template file in Nikola’s base theme for an example of how this works.
 
 The list may fail to update in some cases, please run ``nikola build -a`` with
 the appropriate path if this happens.
@@ -2977,7 +2978,7 @@ We recommend using pages with dates in the past (1970-01-01) to avoid
 dependency issues.
 
 If you are using this as a shortcode, flags (``reverse``, ``all``) are meant to be used
-with a ``True`` argument, eg. ``all=True``.
+with a ``True`` argument, e.g. ``all=True``.
 
 .. sidebar:: Docutils Configuration
 
@@ -3198,7 +3199,7 @@ Shell Tab Completion
 ~~~~~~~~~~~~~~~~~~~~
 
 Since Nikola is a command line tool, and this is the 21st century, it's handy to have smart tab-completion
-so that you don't have to type the full commands.
+so that you don’t have to type the full commands.
 
 To enable this, you can use the ``nikola tabcompletion`` command like this,
 depending on your shell:
