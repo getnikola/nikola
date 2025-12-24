@@ -50,6 +50,7 @@ CODE = """\
 <iframe width="{width}" height="{height}"
 src="https://www.youtube-nocookie.com/embed/{yid}?rel=0&wmode=transparent{start_at}"
 frameborder="0" allow="encrypted-media" allowfullscreen
+referrerpolicy="strict-origin-when-cross-origin"
 ></iframe>
 </div>"""
 
