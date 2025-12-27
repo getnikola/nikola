@@ -15,13 +15,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13']
+        python: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13', '3.14']
         image:
           - ubuntu-latest
         include:
-          - python: '3.13'
+          - python: '3.14'
             image: macos-latest
-          - python: '3.13'
+          - python: '3.14'
             image: windows-latest
     runs-on: '${{ matrix.image }}'
     steps:
@@ -49,7 +49,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ['3.13']
+        python: ['3.14']
         image:
           - ubuntu-latest
     runs-on: '${{ matrix.image }}'
@@ -75,7 +75,7 @@ jobs:
     strategy:
       matrix:
         python:
-          - '3.13'
+          - '3.14'
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -98,10 +98,7 @@ jobs:
     name: Build demo site with base requirements
     strategy:
       matrix:
-        python:
-          - '3.11'
-          - '3.12'
-          - '3.13'
+        python: ['3.11', '3.12', '3.13', '3.14']
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
