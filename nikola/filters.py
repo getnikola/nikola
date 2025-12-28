@@ -29,10 +29,10 @@
 All filters defined in this module are registered in Nikola.__init__.
 """
 
-import io
 import json
 import os
 import re
+from pathlib import Path
 import shutil
 import shlex
 import subprocess
@@ -92,11 +92,10 @@ def apply_to_text_file(f):
 
     @wraps(f)
     def f_in_file(fname, *args, **kwargs):
-        with io.open(fname, 'r', encoding='utf-8-sig') as inf:
-            data = inf.read()
+        fpath = Path(fname)
+        data = fpath.read_text(encoding='utf-8-sig')
         data = f(data, *args, **kwargs)
-        with io.open(fname, 'w+', encoding='utf-8') as outf:
-            outf.write(data)
+        fpath.write_text(data, encoding='utf-8')
 
     return f_in_file
 
@@ -407,9 +406,8 @@ def php_template_injection(data):
         r'<\!-- __NIKOLA_PHP_TEMPLATE_INJECTION source\:(.*) checksum\:(.*)__ -->', data
     )
     if template:
-        source = template.group(1)
-        with io.open(source, 'r', encoding='utf-8-sig') as in_file:
-            phpdata = in_file.read()
+        source = Path(template.group(1))
+        phpdata = source.read_text(encoding='utf-8-sig')
         _META_SEPARATOR = (
             '(' + os.linesep * 2 + '|' + ('\n' * 2) + '|' + ('\r\n' * 2) + ')'
         )
@@ -498,8 +496,7 @@ def add_header_permalinks(fname, xpath_list=None, file_blacklist=None):
     file_blacklist = file_blacklist or []
     if fname in file_blacklist:
         return
-    with io.open(fname, 'r', encoding='utf-8-sig') as inf:
-        data = inf.read()
+    data = Path(fname).read_text(encoding='utf-8-sig')
     doc = lxml.html.document_fromstring(data)
     # Get language for slugify
     try:
@@ -538,8 +535,10 @@ def add_header_permalinks(fname, xpath_list=None, file_blacklist=None):
             )
             node.append(new_node)
 
-    with io.open(fname, 'w', encoding='utf-8') as outf:
-        outf.write('<!DOCTYPE html>\n' + lxml.html.tostring(doc, encoding='unicode'))
+    Path(fname).write_text(
+        '<!DOCTYPE html>\n' + lxml.html.tostring(doc, encoding='unicode'),
+        encoding='utf-8',
+    )
 
 
 @_ConfigurableFilter(top_classes='DEDUPLICATE_IDS_TOP_CLASSES')

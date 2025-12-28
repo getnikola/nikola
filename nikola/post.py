@@ -26,12 +26,12 @@
 
 """The Post class."""
 
-import io
 import datetime
 import hashlib
 import json
 import os
 import re
+from pathlib import Path
 from collections import defaultdict
 from math import ceil  # for reading time feature
 from urllib.parse import urljoin
@@ -664,8 +664,7 @@ class Post(object):
             deps_path = post.compiler.get_dep_filename(post, lang)
         if deps_list or (post.compiler.use_dep_file if post else False):
             deps_list = [p for p in deps_list if p != dest]  # Don't depend on yourself (#1671)
-            with io.open(deps_path, "w+", encoding="utf-8") as deps_file:
-                deps_file.write('\n'.join(deps_list))
+            Path(deps_path).write_text('\n'.join(deps_list), encoding="utf-8")
         else:
             if os.path.isfile(deps_path):
                 os.unlink(deps_path)
@@ -892,8 +891,7 @@ class Post(object):
         if not os.path.isfile(file_name):
             self.compile(lang)
 
-        with io.open(file_name, "r", encoding="utf-8-sig") as post_file:
-            data = post_file.read().strip()
+        data = Path(file_name).read_text(encoding="utf-8-sig").strip()
 
         if self.compiler.extension() == '.php':
             return data
@@ -987,8 +985,7 @@ class Post(object):
             # duplicated with Post.text()
             lang = nikola.utils.LocaleBorg().current_lang
             file_name, _ = self._translated_file_path(lang)
-            with io.open(file_name, "r", encoding="utf-8-sig") as post_file:
-                data = post_file.read().strip()
+            data = Path(file_name).read_text(encoding="utf-8-sig").strip()
             try:
                 document = lxml.html.fragment_fromstring(data, "body")
             except lxml.etree.ParserError as e:
@@ -1121,8 +1118,7 @@ def get_metadata_from_file(source_path, post, config, lang, metadata_extractors_
             source_path = get_translation_candidate(config, source_path, lang)
         elif lang:
             source_path += '.' + lang
-        with io.open(source_path, "r", encoding="utf-8-sig") as meta_file:
-            source_text = meta_file.read()
+        source_text = Path(source_path).read_text(encoding="utf-8-sig")
     except (UnicodeDecodeError, UnicodeEncodeError):
         msg = 'Error reading {0}: Nikola only supports UTF-8 files'.format(source_path)
         LOGGER.error(msg)

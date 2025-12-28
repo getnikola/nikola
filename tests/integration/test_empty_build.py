@@ -1,7 +1,6 @@
 """Performaning the build of an empty site."""
 
-import io
-import os
+from pathlib import Path
 
 import pytest
 
@@ -22,25 +21,23 @@ def test_check_files(build, target_dir):
 
 
 def test_index_in_sitemap(build, output_dir):
-    sitemap_path = os.path.join(output_dir, "sitemap.xml")
-    with io.open(sitemap_path, "r", encoding="utf8") as inf:
-        sitemap_data = inf.read()
+    sitemap_path = Path(output_dir) / "sitemap.xml"
+    sitemap_data = sitemap_path.read_text(encoding="utf8")
 
     assert "<loc>https://example.com/</loc>" in sitemap_data
 
 
 def test_avoid_double_slash_in_rss(build, output_dir):
-    rss_path = os.path.join(output_dir, "rss.xml")
-    with io.open(rss_path, "r", encoding="utf8") as inf:
-        rss_data = inf.read()
+    rss_path = Path(output_dir) / "rss.xml"
+    rss_data = rss_path.read_text(encoding="utf8")
 
     assert "https://example.com//" not in rss_data
 
 
 def test_archive_exists(build, output_dir):
     """Ensure the build did something."""
-    index_path = os.path.join(output_dir, "archive.html")
-    assert os.path.isfile(index_path)
+    index_path = Path(output_dir) / "archive.html"
+    assert index_path.is_file()
 
 
 @pytest.fixture(scope="module")

@@ -27,13 +27,13 @@
 """The main Nikola site object."""
 
 import datetime
-import io
 import json
 import functools
 import logging
 import operator
 import os
 import pathlib
+from pathlib import Path
 import sys
 import typing
 from typing import Any, Callable, Dict, Iterable, List, Optional, Set
@@ -1003,7 +1003,7 @@ class Nikola(object):
         def plugin_position_in_places(plugin: PluginInfo):
             # plugin here is a tuple:
             # (path to the .plugin file, path to plugin module w/o .py, plugin metadata)
-            place: pathlib.Path
+            place: Path
             for i, place in enumerate(self._plugin_places):
                 try:
                     # Path.is_relative_to backport
@@ -1036,7 +1036,7 @@ class Nikola(object):
             os.path.expanduser(os.path.join('~', '.nikola', 'plugins')),
             os.path.join(os.getcwd(), 'plugins'),
         ] + [path for path in extra_plugins_dirs if path]
-        self._plugin_places = [pathlib.Path(p) for p in self._plugin_places]
+        self._plugin_places = [Path(p) for p in self._plugin_places]
 
         self.plugin_manager = PluginManager(plugin_places=self._plugin_places)
 
@@ -2571,11 +2571,10 @@ class Nikola(object):
 
         dst_dir = os.path.dirname(output_path)
         utils.makedirs(dst_dir)
-        with io.open(output_path, "w+", encoding="utf-8") as atom_file:
-            data = lxml.etree.tostring(feed_root.getroottree(), encoding="UTF-8", pretty_print=True, xml_declaration=True)
-            if isinstance(data, bytes):
-                data = data.decode('utf-8')
-            atom_file.write(data)
+        data = lxml.etree.tostring(feed_root.getroottree(), encoding="UTF-8", pretty_print=True, xml_declaration=True)
+        if isinstance(data, bytes):
+            data = data.decode('utf-8')
+        Path(output_path).write_text(data, encoding="utf-8")
 
     def generic_index_renderer(self, lang, posts, indexes_title, template_name, context_source, kw, basename, page_link, page_path, additional_dependencies=None):
         """Create an index page.

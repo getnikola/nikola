@@ -28,8 +28,8 @@
 """Define and register a listing directive using the existing CodeBlock."""
 
 
-import io
 import os
+from pathlib import Path
 import uuid
 from urllib.parse import urlunsplit
 
@@ -209,16 +209,16 @@ class Listing(Include):
         self.arguments.insert(0, fpath)
         if 'linenos' in self.options:
             self.options['number-lines'] = self.options['linenos']
-        with io.open(fpath, 'r+', encoding='utf-8-sig') as fileobject:
-            self.content = fileobject.read().splitlines()
+        self.content = Path(fpath).read_text(encoding='utf-8-sig').splitlines()
         self.state.document.settings.record_dependencies.add(fpath)
         target = urlunsplit(("link", 'listing', fpath.replace('\\', '/'), '', ''))
         src_target = urlunsplit(("link", 'listing_source', fpath.replace('\\', '/'), '', ''))
         src_label = self.site.MESSAGES('Source')
-        generated_nodes = (
-            [core.publish_doctree('`{0} <{1}>`_  `({2}) <{3}>`_' .format(
-                _fname, target, src_label, src_target))[0]])
-        generated_nodes += self.get_code_from_file(fileobject)
+        with Path(fpath).open('r+', encoding='utf-8-sig') as fileobject:
+            generated_nodes = (
+                [core.publish_doctree('`{0} <{1}>`_  `({2}) <{3}>`_' .format(
+                    _fname, target, src_label, src_target))[0]])
+            generated_nodes += self.get_code_from_file(fileobject)
         return generated_nodes
 
     def get_code_from_file(self, data):
