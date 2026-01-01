@@ -1576,6 +1576,10 @@ class Nikola(object):
                 else:
                     link_kwargs = {}
 
+                if 'lang' in link_kwargs:
+                    lang = link_kwargs['lang']
+                    del link_kwargs['lang']
+
                 # unquote from issue #2934
                 dst = self.link(dst_url.netloc, unquote(dst_url.path.lstrip('/')), lang, **link_kwargs)
                 if dst_url.fragment:
