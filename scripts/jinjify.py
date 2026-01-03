@@ -43,6 +43,7 @@ dumber_replacements = [
 
 def jinjify(in_theme, out_theme):
     """Convert in_theme into a jinja version and put it in out_theme"""
+    import configparser  # Ensure configparser is available in this function
 
     in_templates_path = os.path.join(in_theme, "templates")
     out_templates_path = os.path.join(out_theme, "templates")
@@ -83,13 +84,15 @@ def jinjify(in_theme, out_theme):
     mappings = {
         'base-jinja': 'base',
         'bootstrap4-jinja': 'base-jinja',
+        'bootstrap5-jinja': 'base-jinja',
+        'bootblog5-jinja': 'bootstrap5-jinja',
     }
 
     if child in mappings:
         parent = mappings[child]
 
-    # Copy assets in bootstrap/bootstrap4
-    if child == 'bootstrap4-jinja':
+    # Copy assets in bootstrap/bootstrap4/bootstrap5
+    if child in ['bootstrap4-jinja', 'bootstrap5-jinja', 'bootblog5-jinja']:
         assets_dir = os.path.join(out_theme, "assets")
         if os.path.exists(assets_dir):
             shutil.rmtree(assets_dir)
@@ -97,8 +100,122 @@ def jinjify(in_theme, out_theme):
             os.path.join(in_theme, "assets"), os.path.join(out_theme, "assets"),
             symlinks=True)
 
-    # Copy bundles
-    # shutil.copy(os.path.join(in_theme, "bundles"), os.path.join(out_theme, "bundles"))
+    # Create/update .theme files for jinja themes
+    if child in ['bootstrap4-jinja', 'bootblog4-jinja', 'bootstrap5-jinja', 'bootblog5-jinja']:
+        # Define source and destination paths
+        in_theme_name = os.path.basename(in_theme)
+        out_theme_name = os.path.basename(out_theme)
+        theme_src = os.path.join(in_theme, f"{in_theme_name}.theme")
+        theme_dst = os.path.join(out_theme, f"{out_theme_name}.theme")
+
+        # Handle specific parent relationships
+        if in_theme_name == 'bootstrap4' and out_theme_name == 'bootstrap4-jinja':
+            parent_mapping = {'base': 'base-jinja'}
+            mako_version = 'bootstrap4'
+        elif in_theme_name == 'bootstrap5' and out_theme_name == 'bootstrap5-jinja':
+            parent_mapping = {'base': 'base-jinja'}
+            mako_version = 'bootstrap5'
+        elif in_theme_name == 'bootblog4' and out_theme_name == 'bootblog4-jinja':
+            parent_mapping = {'bootstrap4': 'bootstrap4-jinja'}
+            mako_version = 'bootblog4'
+        elif in_theme_name == 'bootblog5' and out_theme_name == 'bootblog5-jinja':
+            parent_mapping = {'bootstrap5': 'bootstrap5-jinja'}
+            mako_version = 'bootblog5'
+        else:
+            parent_mapping = {'base': 'base-jinja', 'bootstrap4': 'bootstrap4-jinja', 'bootstrap5': 'bootstrap5-jinja'}
+            mako_version = in_theme_name
+
+        # Create config parser and load the source theme file
+        cp = configparser.ConfigParser()
+        if os.path.isfile(theme_src):
+            try:
+                cp.read(theme_src)
+
+                # Update the config for Jinja version
+                if 'Theme' in cp:
+                    cp['Theme']['engine'] = 'jinja'
+
+                    # Update parent theme based on mapping
+                    parent_theme = cp['Theme'].get('parent', 'base')
+                    if parent_theme in parent_mapping:
+                        cp['Theme']['parent'] = parent_mapping[parent_theme]
+
+                # Update family information
+                if 'Family' in cp:
+                    # Remove jinja_version if exists, add mako-version
+                    if 'jinja_version' in cp['Family']:
+                        del cp['Family']['jinja_version']
+                    cp['Family']['mako-version'] = mako_version
+
+                # Write the updated config
+                with open(theme_dst, 'w') as f:
+                    cp.write(f)
+
+            except configparser.MissingSectionHeaderError:
+                # Handle malformed theme files
+                error(f"Error: Malformed theme file {theme_src}")
+
+                # Create an appropriate theme file based on the theme type
+                with open(theme_dst, 'w') as f:
+                    f.write("[Theme]\n")
+                    f.write("engine = jinja\n")
+
+                    if out_theme_name == 'bootstrap4-jinja':
+                        f.write("parent = base-jinja\n")
+                        family = "bootstrap4"
+                        mako_ver = "bootstrap4"
+                    elif out_theme_name == 'bootstrap5-jinja':
+                        f.write("parent = base-jinja\n")
+                        family = "bootstrap5"
+                        mako_ver = "bootstrap5"
+                    elif out_theme_name == 'bootblog4-jinja':
+                        f.write("parent = bootstrap4-jinja\n")
+                        family = "bootblog4"
+                        mako_ver = "bootblog4"
+                    elif out_theme_name == 'bootblog5-jinja':
+                        f.write("parent = bootstrap5-jinja\n")
+                        family = "bootblog5"
+                        mako_ver = "bootblog5"
+
+                    f.write("author = The Nikola Contributors\n")
+                    f.write("author_url = https://getnikola.com/\n")
+                    f.write("license = MIT\n")
+
+                    bootstrap_version = '4'
+                    if '5' in out_theme_name:
+                        bootstrap_version = '5'
+
+                    if 'bootblog' in out_theme_name:
+                        f.write(
+                            f"based_on = Bootstrap {bootstrap_version} <http://getbootstrap.com/>, Bootstrap {bootstrap_version} blog example <http://getbootstrap.com/docs/{bootstrap_version}.0/examples/blog/>\n")
+                    else:
+                        f.write(f"based_on = Bootstrap {bootstrap_version} <http://getbootstrap.com/>\n")
+
+                    f.write("tags = bootstrap\n\n")
+                    f.write("[Family]\n")
+                    f.write(f"family = {family}\n")
+                    f.write(f"mako-version = {mako_ver}\n")
+
+    # Handle bundles file for all bootstrap themes
+    if child in ['bootstrap4-jinja', 'bootblog4-jinja', 'bootstrap5-jinja', 'bootblog5-jinja']:
+        bundles_src = os.path.join(in_theme, "bundles")
+        bundles_dst = os.path.join(out_theme, "bundles")
+
+        if os.path.exists(bundles_src):
+            # Remove destination if it exists
+            if os.path.exists(bundles_dst):
+                if os.path.islink(bundles_dst):
+                    os.unlink(bundles_dst)  # Remove the symlink safely
+                elif os.path.isdir(bundles_dst):
+                    shutil.rmtree(bundles_dst)  # Remove directory if somehow it's a directory
+                else:
+                    os.remove(bundles_dst)  # Remove file
+
+            # Create a relative path for the symlink
+            rel_path = os.path.join('..', os.path.basename(in_theme), 'bundles')
+
+            # Create a symlink to the original bundles file
+            os.symlink(rel_path, bundles_dst)
 
     # Copy README
     if os.path.isfile(os.path.join(in_theme, "README.md")):
@@ -110,7 +227,6 @@ def error(msg):
 
 
 def mako2jinja(input_file):
-
     output = ''
 
     # TODO: OMG, this code is so horrible. Look at it; just look at it:
@@ -243,6 +359,7 @@ def usage():
     print("OR")
     print("Usage: python {} [in-file] [out-file]".format(sys.argv[0]))
 
+
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         print('Performing standard conversions:')
@@ -250,6 +367,8 @@ if __name__ == "__main__":
             ('nikola/data/themes/base', 'nikola/data/themes/base-jinja'),
             ('nikola/data/themes/bootstrap4', 'nikola/data/themes/bootstrap4-jinja'),
             ('nikola/data/themes/bootblog4', 'nikola/data/themes/bootblog4-jinja'),
+            ('nikola/data/themes/bootstrap5', 'nikola/data/themes/bootstrap5-jinja'),
+            ('nikola/data/themes/bootblog5', 'nikola/data/themes/bootblog5-jinja'),
         ):
             print('    {0} -> {1}'.format(m, j))
             jinjify(m, j)
