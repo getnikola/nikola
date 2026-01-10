@@ -28,6 +28,7 @@ popd
 
 # Link luxon to base theme
 pushd nikola/data/themes/base/assets/js
+ln -sf ../../../../../../npm_assets/node_modules/luxon/build/global/luxon.min.js .
 git add luxon.min.js
 popd
 
