@@ -18,8 +18,6 @@ nikola/data/samplesite/pages/theming.rst
 nikola/data/symlink-test-link.txt
 nikola/data/themes/base/assets/css/baguetteBox.min.css
 nikola/data/themes/base/assets/js/baguetteBox.min.js
-nikola/data/themes/base/assets/js/html5.js
-nikola/data/themes/base/assets/js/html5shiv-printshiv.min.js
 nikola/data/themes/base/assets/js/justified-layout.min.js
 nikola/data/themes/base/assets/js/luxon.min.js
 nikola/data/themes/base/messages/messages_cz.py

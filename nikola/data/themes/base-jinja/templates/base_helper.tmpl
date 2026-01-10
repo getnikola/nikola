@@ -53,12 +53,6 @@ lang="{{ lang }}">
         <link rel="next" href="{{ nextlink }}" type="text/html">
     {% endif %}
 
-    {% if use_cdn %}
-        <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script><![endif]-->
-    {% else %}
-        <!--[if lt IE 9]><script src="{{ url_replacer(permalink, '/assets/js/html5shiv-printshiv.min.js', lang, url_type) }}"></script><![endif]-->
-    {% endif %}
-
     {{ extra_head_data }}
 {% endmacro %}
 

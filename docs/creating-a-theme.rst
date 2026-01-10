@@ -180,7 +180,7 @@ see something fairly similar:
 
     <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
     <link rel="canonical" href="https://example.com/index.html">
-    <!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/welcome-to-nikola.html" type="text/html">
+    <link rel="prefetch" href="posts/welcome-to-nikola.html" type="text/html">
     </head>
 
 
