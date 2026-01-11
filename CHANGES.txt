@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Adds ``STRIP_EXTENSIONS`` config option (Issue #3865)
+
 Bugfixes
 --------
 
