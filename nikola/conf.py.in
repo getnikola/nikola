@@ -1164,9 +1164,8 @@ MARKDOWN_EXTENSIONS = ['markdown.extensions.fenced_code', 'markdown.extensions.c
 # <!-- End of custom search -->
 # """ % SITE_URL
 
-# Use content distribution networks for jQuery, twitter-bootstrap css and js,
-# and html5shiv (for older versions of Internet Explorer)
-# If this is True, jQuery and html5shiv are served from the Google CDN and
+# Use content distribution networks for jQuery, twitter-bootstrap css and js
+# If this is True, jQuery is served from the Google CDN and
 # Bootstrap is served from BootstrapCDN (provided by MaxCDN)
 # Set this to False if you want to host your site without requiring access to
 # external resources.
