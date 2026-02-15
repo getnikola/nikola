@@ -1913,11 +1913,14 @@ class Nikola(object):
         # further processing, i.e 'https://getnikola.com/'. See Issue #2876.
         if isinstance(path, str):
             return path
-
-        if path is None:
+        elif path is None:
             path = "#"
         else:
-            path = [os.path.normpath(p) for p in path if p != '.']  # Fix Issue #1028
+            # Split on / before normalizing to avoid Windows path separator issues
+            # (e.g., "blog/tags" should become ["blog", "tags"], not "blog\tags")
+            path = [os.path.normpath(subpart) for part in path if part != '.'
+                    for subpart in part.split('/') if subpart]  # Fix Issue #1028
+
         if is_link:
             link = '/' + ('/'.join(path))
             index_len = len(self.config['INDEX_FILE'])
