@@ -57,6 +57,7 @@ except ImportError:
 try:
     from watchdog.observers import Observer
     from watchdog.observers.polling import PollingObserver
+    from watchdog.events import FileClosedNoWriteEvent
 except ImportError:
     Observer = None
     PollingObserver = None
@@ -351,7 +352,10 @@ class CommandAuto(Command):
         """Rebuild the site."""
         # Move events have a dest_path, some editors like gedit use a
         # move on larger save operations for write protection
-        event_path = event.dest_path if hasattr(event, 'dest_path') else event.src_path
+        if hasattr(event, 'dest_path') and event.dest_path != '':
+            event_path = event.dest_path
+        else:
+            event_path = event.src_path
         if sys.platform == 'win32':
             # Windows hidden files support
             is_hidden = os.stat(event_path).st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN
@@ -361,6 +365,7 @@ class CommandAuto(Command):
         if (is_hidden or has_hidden_component or
                 '__pycache__' in event_path or
                 event_path.endswith(('.pyc', '.pyo', '.pyd', '_bak', '~')) or
+                isinstance(event, FileClosedNoWriteEvent) or  # Skip when no update is reported
                 event.is_directory):  # Skip on folders, these are usually duplicates
             return
 
