@@ -15,6 +15,11 @@ Bugfixes
 * Setuptools is not required anymore at runtime (PR #3850)
 * Fix backslashes appearing in URLs on Windows if ``TAG_PATH`` contains ``/``
 
+Other
+-----
+
+* Nikola now requires Python 3.10 or newer.
+
 New in v8.3.3
 =============
 

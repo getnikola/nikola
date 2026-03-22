@@ -34,7 +34,7 @@ It has many features, but here are some of the nicer ones:
 * Syntax highlighting for almost any programming language or markup
 * Multilingual sites, `translated to 50 languages.`__
 * Doesn't reinvent wheels, leverages existing tools.
-* Python 3.8+ compatible.
+* Python 3.10+ compatible.
 
 .. _Nikola Handbook: https://getnikola.com/handbook.html#why-static
 __ https://users.getnikola.com/

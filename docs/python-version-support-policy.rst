@@ -62,23 +62,26 @@ Support Matrix
 Criteria
 --------
 
-Data as of January 2024.
+Data as of March 2026.
 
-* Python Core Team: Python 3.7 supported until 2023-06, Python 3.8 supported until 2024-10, Python 3.9 supported until 2025-10, Python 3.10 supported until 2026-10
-* Ubuntu LTS: Python 3.8 supported by Ubuntu 20.04 until 2025-05, Python 3.10 supported by Ubuntu 22.04 until 2027-05, Python 3.12 supported by Ubuntu 24.04 until 2029-05
-* Debian stable: Python 3.11 in bookworm
-* Debian oldstable: Python 3.9 in bullseye, became oldstable in 2023-06
+* Python Core Team: Python 3.10 supported until 2026-10, Python 3.11 supported until 2027-10, Python 3.12 supported until 2028-10, Python 3.13 supported until 2029-10, Python 3.14 supported until 2030-10
+* Ubuntu LTS: Python 3.10 supported by Ubuntu 22.04 until 2027-05, Python 3.12 supported by Ubuntu 24.04 until 2029-05, Python 3.14 supported by Ubuntu 26.04 until 2031-05
+* Debian stable: Python 3.13 in trixie
+* Debian oldstable: Python 3.11 in bookworm, became oldstable in 2025-08
 * PyPy: latest supported version is 3.10
 
 Applied to Python versions
 --------------------------
 
 * Python 3.7: no criteria apply since 2023-09, support dropped in 2024-01
-* Python 3.8: expected to be supported until at least 2025-08 via Ubuntu 20.04 LTS
-* Python 3.9: expected to be supported until at least 2026-01 via Python Core Team (+ possibly Debian oldstable)
-* Python 3.10: expected to be supported until at least 2027-08 via Ubuntu 20.04 (+ possibly PyPy)
-* Python 3.11: until at least 2028-01, might be extended by Debian stable (bookworm)
-* Python 3.12: current release; supported until at least 2029-08 via Ubuntu 24.04 (noble)
+* Python 3.8: no criteria apply since 2025-08, support dropped in 2026-03
+* Python 3.9: no criteria apply since 2026-01, support dropped in 2026-03
+* Python 3.10: supported until at least 2027-08 via Ubuntu 20.04 (+ possibly PyPy)
+* Python 3.11: supported until at least 2028-01, might be extended by Debian oldstable (bookworm)
+* Python 3.12: supported until at least 2029-08 via Ubuntu 24.04 (noble)
+* Python 3.13: supported until at least 2030-01 via Python Core Team
+* Python 3.14: supported until at least 2013-08 via Ubuntu 26.04 (resolute)
+
 
 __ https://devguide.python.org/versions/
 __ https://packages.ubuntu.com/search?suite=all&exact=1&searchon=names&keywords=python3
