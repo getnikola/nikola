@@ -80,7 +80,7 @@ Applied to Python versions
 * Python 3.11: supported until at least 2028-01, might be extended by Debian oldstable (bookworm)
 * Python 3.12: supported until at least 2029-08 via Ubuntu 24.04 (noble)
 * Python 3.13: supported until at least 2030-01 via Python Core Team
-* Python 3.14: supported until at least 2013-08 via Ubuntu 26.04 (resolute)
+* Python 3.14: supported until at least 2031-08 via Ubuntu 26.04 (resolute)
 
 
 __ https://devguide.python.org/versions/
