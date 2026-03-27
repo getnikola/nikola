@@ -80,6 +80,13 @@ class RenderPosts(Task):
             for post in kw['timeline']:
                 if not post.is_translation_available(lang) and not self.site.config['SHOW_UNTRANSLATED_POSTS']:
                     continue
+
+                if post.meta('external_url', lang):
+                    # posts that have an external_url, definitionally, do
+                    # not have a permalink internally that we need to
+                    # generate content for
+                    continue
+
                 # Extra config dependencies picked from config
                 for p in post.fragment_deps(lang):
                     if p.startswith('####MAGIC####CONFIG:'):

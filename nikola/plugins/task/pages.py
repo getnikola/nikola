@@ -63,6 +63,11 @@ class RenderPages(Task):
                     context = {'pagekind': ['post_page']}
                 else:
                     context = {'pagekind': ['story_page', 'page_page']}
+                if post.meta('external_url', lang):
+                    # pages that have an external_url, definitionally, do
+                    # not have a permalink internally that we need to
+                    # generate content for
+                    continue
                 for task in self.site.generic_page_renderer(lang, post, kw["filters"], context):
                     if task['name'] == index_paths[lang]:
                         # Issue 3022
