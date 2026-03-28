@@ -64,6 +64,7 @@
 * `Jonathon Anderson <https://github.com/anderbubble>`_
   `Jonathan Hartley <https://github.com/tartley>`_
 * `Joshua Barratt <https://github.com/jbarratt>`_
+* `Joshua Wise <https://github.com/jwise>`_
 * `Juan Pedro Fisanotti <https://github.com/fisadev>`_
 * `Juanjo Conti <https://github.com/jjconti>`_
 * `James C. McPherson <https://github.com/jmcp>`_
