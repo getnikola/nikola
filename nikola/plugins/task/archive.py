@@ -170,7 +170,7 @@ class Archive(Taxonomy):
                 datetime.date(int(hierarchy[0]), int(hierarchy[1]), int(hierarchy[2])),
                 lang)
         else:
-            raise Exception("Cannot interpret classification {}!".format(repr(classification)))
+            raise Exception(f"Cannot interpret classification {repr(classification)}!")
 
         context = {
             "title": title,
@@ -195,7 +195,7 @@ class Archive(Taxonomy):
             flat_samelevel = self.archive_navigation[lang][nodelevel]
             idx = flat_samelevel.index(classification)
             if idx == -1:
-                raise Exception("Cannot find classification {0} in flat hierarchy!".format(classification))
+                raise Exception(f"Cannot find classification {classification} in flat hierarchy!")
             previdx, nextidx = idx - 1, idx + 1
             # If the previous index is -1, or the next index is 1, the previous/next archive does not exist.
             context["previous_archive"] = self.site.link('archive', flat_samelevel[previdx], lang) if previdx != -1 else None

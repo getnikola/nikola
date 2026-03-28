@@ -109,12 +109,12 @@ class CommandStatus(Command):
                         fmod_since_deployment.append(fpath)
 
             if len(fmod_since_deployment) > 0:
-                print("{0} output files modified since last deployment {1} ago.".format(str(len(fmod_since_deployment)), self.human_time(last_deploy_offset)))
+                print(f"{str(len(fmod_since_deployment))} output files modified since last deployment {self.human_time(last_deploy_offset)} ago.")
                 if options['list_modified']:
                     for fpath in fmod_since_deployment:
-                        print("Modified: '{0}'".format(fpath))
+                        print(f"Modified: '{fpath}'")
             else:
-                print("Last deployment {0} ago.".format(self.human_time(last_deploy_offset)))
+                print(f"Last deployment {self.human_time(last_deploy_offset)} ago.")
 
         now = datetime.utcnow().replace(tzinfo=gettz("UTC"))
 
@@ -155,7 +155,7 @@ class CommandStatus(Command):
         if options['list_published']:
             for post in posts_published:
                 print("Published: '{0}' ({1}; source: {2})".format(post.meta('title'), post.permalink(), post.source_path))
-        print("{0} posts in total, {1} scheduled, {2} drafts, {3} private and {4} published.".format(posts_count, len(posts_scheduled), len(posts_drafts), len(posts_private), len(posts_published)))
+        print(f"{posts_count} posts in total, {len(posts_scheduled)} scheduled, {len(posts_drafts)} drafts, {len(posts_private)} private and {len(posts_published)} published.")
 
     def human_time(self, dt):
         """Translate time into a human-friendly representation."""
@@ -163,9 +163,9 @@ class CommandStatus(Command):
         hours = dt.seconds / 60 // 60
         minutes = dt.seconds / 60 - (hours * 60)
         if days > 0:
-            return "{0:.0f} days and {1:.0f} hours".format(days, hours)
+            return f"{days:.0f} days and {hours:.0f} hours"
         elif hours > 0:
-            return "{0:.0f} hours and {1:.0f} minutes".format(hours, minutes)
+            return f"{hours:.0f} hours and {minutes:.0f} minutes"
         elif minutes:
-            return "{0:.0f} minutes".format(minutes)
+            return f"{minutes:.0f} minutes"
         return False

@@ -197,11 +197,11 @@ class CommandAuto(Command):
                                 '--backend={}'.format(options['backend'])]
 
         port = options and options.get('port')
-        self.snippet = '''<script>document.write('<script src="http://'
+        self.snippet = f'''<script>document.write('<script src="http://'
             + (location.host || 'localhost').split(':')[0]
-            + ':{0}/livereload.js?snipver=1"></'
+            + ':{port}/livereload.js?snipver=1"></'
             + 'script>')</script>
-        </head>'''.format(port)
+        </head>'''
 
         # Deduplicate entries by using a set -- otherwise, multiple rebuilds are triggered
         watched = set([
@@ -288,10 +288,10 @@ class CommandAuto(Command):
             return
 
         if options['ipv6'] or '::' in host:
-            server_url = "http://[{0}]:{1}/".format(host, port)
+            server_url = f"http://[{host}]:{port}/"
         else:
-            server_url = "http://{0}:{1}/".format(host, port)
-        self.logger.info("Serving on {0} ...".format(server_url))
+            server_url = f"http://{host}:{port}/"
+        self.logger.info(f"Serving on {server_url} ...")
 
         if browser:
             # Some browsers fail to load 0.0.0.0 (Issue #2755)
@@ -300,7 +300,7 @@ class CommandAuto(Command):
             else:
                 # server_url always ends with a "/":
                 browser_url = "{0}{1}".format(server_url, base_path.lstrip("/"))
-            self.logger.info("Opening {0} in the default web browser...".format(browser_url))
+            self.logger.info(f"Opening {browser_url} in the default web browser...")
             webbrowser.open(browser_url)
 
         # Run the event loop forever and handle shutdowns.
@@ -369,7 +369,7 @@ class CommandAuto(Command):
                 event.is_directory):  # Skip on folders, these are usually duplicates
             return
 
-        self.logger.debug('Queuing rebuild from {0}'.format(event_path))
+        self.logger.debug(f'Queuing rebuild from {event_path}')
         await self.rebuild_queue.put((datetime.datetime.now(), event_path))
 
     async def run_rebuild_queue(self) -> None:
@@ -377,7 +377,7 @@ class CommandAuto(Command):
         while True:
             date, event_path = await self.rebuild_queue.get()
             if date < (self.last_rebuild + self.delta_last_rebuild):
-                self.logger.debug("Skipping rebuild from {0} (within delta)".format(event_path))
+                self.logger.debug(f"Skipping rebuild from {event_path} (within delta)")
                 continue
             await self._rebuild_site(event_path)
 
@@ -386,7 +386,7 @@ class CommandAuto(Command):
         self.is_rebuilding = True
         self.last_rebuild = datetime.datetime.now()
         if event_path:
-            self.logger.info('REBUILDING SITE (from {0})'.format(event_path))
+            self.logger.info(f'REBUILDING SITE (from {event_path})')
         else:
             self.logger.info('REBUILDING SITE')
 
@@ -406,7 +406,7 @@ class CommandAuto(Command):
         """Send reloads from a queue to limit CPU usage."""
         while True:
             p = await self.reload_queue.get()
-            self.logger.info('REFRESHING: {0}'.format(p))
+            self.logger.info(f'REFRESHING: {p}')
             await self._send_reload_command(p)
             if self.is_rebuilding:
                 await asyncio.sleep(REBUILDING_REFRESH_DELAY)
@@ -445,7 +445,7 @@ class CommandAuto(Command):
         while True:
             msg = await ws.receive()
 
-            self.logger.debug("Received message: {0}".format(msg))
+            self.logger.debug(f"Received message: {msg}")
             if msg.type == aiohttp.WSMsgType.TEXT:
                 message = msg.json()
                 if message['command'] == 'hello':
@@ -458,7 +458,7 @@ class CommandAuto(Command):
                     }
                     await ws.send_json(response)
                 elif message['command'] != 'info':
-                    self.logger.warning("Unknown command in message: {0}".format(message))
+                    self.logger.warning(f"Unknown command in message: {message}")
             elif msg.type in (aiohttp.WSMsgType.CLOSED, aiohttp.WSMsgType.CLOSING):
                 break
             elif msg.type == aiohttp.WSMsgType.CLOSE:
@@ -466,13 +466,13 @@ class CommandAuto(Command):
                 await ws.close()
                 break
             elif msg.type == aiohttp.WSMsgType.ERROR:
-                self.logger.error('WebSocket connection closed with exception {0}'.format(ws.exception()))
+                self.logger.error(f'WebSocket connection closed with exception {ws.exception()}')
                 break
             else:
-                self.logger.warning("Received unknown message: {0}".format(msg))
+                self.logger.warning(f"Received unknown message: {msg}")
 
         self.sockets.remove(ws)
-        self.logger.debug("WebSocket connection closed: {0}".format(ws))
+        self.logger.debug(f"WebSocket connection closed: {ws}")
 
         return ws
 
@@ -497,7 +497,7 @@ class CommandAuto(Command):
                     to_delete.append(ws)
             except RuntimeError as e:
                 if 'closed' in e.args[0]:
-                    self.logger.warning("WebSocket {0} closed uncleanly".format(ws))
+                    self.logger.warning(f"WebSocket {ws} closed uncleanly")
                     to_delete.append(ws)
                 else:
                     raise

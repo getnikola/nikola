@@ -102,7 +102,7 @@ class ScanPosts(PostScanner):
                             seen.add(post.translated_source_path(lang))
                         timeline.append(post)
                     except Exception:
-                        LOGGER.error('Error reading post {}'.format(base_path))
+                        LOGGER.error(f'Error reading post {base_path}')
                         raise
 
         return timeline
