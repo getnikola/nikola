@@ -26,8 +26,7 @@
 
 """Compile reStructuredText to HTML, using Nikola architecture."""
 
-
-import io
+from pathlib import Path
 import lxml.html
 from mako.template import Template
 from nikola.plugin_categories import Command
@@ -49,13 +48,11 @@ class CommandRst2Html(Command):
             print("This command takes only one argument (input file name).")
             return 2
         source = args[0]
-        with io.open(source, "r", encoding="utf-8-sig") as in_file:
-            data = in_file.read()
-            output, error_level, deps, shortcode_deps = compiler.compile_string(data, source, True)
+        data = Path(source).read_text(encoding="utf-8-sig")
+        output, error_level, deps, shortcode_deps = compiler.compile_string(data, source, True)
 
         rstcss_path = pkg_resources_path('nikola', 'data/themes/base/assets/css/rst_base.css')
-        with io.open(rstcss_path, "r", encoding="utf-8-sig") as fh:
-            rstcss = fh.read()
+        rstcss = Path(rstcss_path).read_text(encoding="utf-8-sig")
 
         template_path = pkg_resources_path('nikola', 'plugins/command/rst2html/rst2html.tmpl')
         template = Template(filename=template_path)

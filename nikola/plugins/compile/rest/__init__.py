@@ -26,9 +26,9 @@
 
 """reStructuredText compiler for Nikola."""
 
-import io
 import logging
 import os
+from pathlib import Path
 
 import docutils.core
 import docutils.nodes
@@ -71,9 +71,8 @@ class CompileRest(PageCompiler):
         # environment. Real issues will be reported while compiling.
         null_logger = logging.getLogger('NULL')
         null_logger.setLevel(1000)
-        with io.open(source_path, 'r', encoding='utf-8-sig') as inf:
-            data = inf.read()
-            _, _, _, document = rst2html(data, logger=null_logger, source_path=source_path, transforms=self.site.rst_transforms)
+        data = Path(source_path).read_text(encoding='utf-8-sig')
+        _, _, _, document = rst2html(data, logger=null_logger, source_path=source_path, transforms=self.site.rst_transforms)
         meta = {}
         if 'title' in document:
             meta['title'] = document['title']
@@ -145,19 +144,17 @@ class CompileRest(PageCompiler):
         """Compile the source file into HTML and save as dest."""
         makedirs(os.path.dirname(dest))
         error_level = 100
-        with io.open(dest, "w+", encoding="utf-8") as out_file:
-            with io.open(source, "r", encoding="utf-8-sig") as in_file:
-                data = in_file.read()
-                output, error_level, deps, shortcode_deps = self.compile_string(data, source, is_two_file, post, lang)
-                out_file.write(output)
-            if post is None:
-                if deps.list:
-                    self.logger.error(
-                        "Cannot save dependencies for post {0} (post unknown)",
-                        source)
-            else:
-                post._depfile[dest] += deps.list
-                post._depfile[dest] += shortcode_deps
+        data = Path(source).read_text(encoding="utf-8-sig")
+        output, error_level, deps, shortcode_deps = self.compile_string(data, source, is_two_file, post, lang)
+        Path(dest).write_text(output, encoding="utf-8")
+        if post is None:
+            if deps.list:
+                self.logger.error(
+                    "Cannot save dependencies for post {0} (post unknown)",
+                    source)
+        else:
+            post._depfile[dest] += deps.list
+            post._depfile[dest] += shortcode_deps
         if error_level < 3:
             return True
         else:
@@ -175,10 +172,9 @@ class CompileRest(PageCompiler):
         makedirs(os.path.dirname(path))
         if not content.endswith('\n'):
             content += '\n'
-        with io.open(path, "w+", encoding="utf-8") as fd:
-            if onefile:
-                fd.write(write_metadata(metadata, comment_wrap=False, site=self.site, compiler=self))
-            fd.write(content)
+        if onefile:
+            content = write_metadata(metadata, comment_wrap=False, site=self.site, compiler=self) + content
+        Path(path).write_text(content, encoding="utf-8")
 
     def set_site(self, site):
         """Set Nikola site."""

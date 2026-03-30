@@ -26,9 +26,9 @@
 
 """Page compiler plugin for Markdown."""
 
-import io
 import json
 import os
+from pathlib import Path
 import threading
 
 from nikola import shortcodes as sc
@@ -123,11 +123,9 @@ class CompileMarkdown(PageCompiler):
         if Markdown is None:
             req_missing(['markdown'], 'build this site (compile Markdown)')
         makedirs(os.path.dirname(dest))
-        with io.open(dest, "w+", encoding="utf-8") as out_file:
-            with io.open(source, "r", encoding="utf-8-sig") as in_file:
-                data = in_file.read()
-            output, shortcode_deps = self.compile_string(data, source, is_two_file, post, lang)
-            out_file.write(output)
+        data = Path(source).read_text(encoding="utf-8-sig")
+        output, shortcode_deps = self.compile_string(data, source, is_two_file, post, lang)
+        Path(dest).write_text(output, encoding="utf-8")
         if post is None:
             if shortcode_deps:
                 self.logger.error(
@@ -149,10 +147,9 @@ class CompileMarkdown(PageCompiler):
         makedirs(os.path.dirname(path))
         if not content.endswith('\n'):
             content += '\n'
-        with io.open(path, "w+", encoding="utf-8") as fd:
-            if onefile:
-                fd.write(write_metadata(metadata, comment_wrap=True, site=self.site, compiler=self))
-            fd.write(content)
+        if onefile:
+            content = write_metadata(metadata, comment_wrap=True, site=self.site, compiler=self) + content
+        Path(path).write_text(content, encoding="utf-8")
 
     def read_metadata(self, post, lang=None):
         """Read the metadata from a post, and return a metadata dict."""
@@ -164,15 +161,14 @@ class CompileMarkdown(PageCompiler):
         if lang is None:
             lang = LocaleBorg().current_lang
         source = post.translated_source_path(lang)
-        with io.open(source, 'r', encoding='utf-8-sig') as inf:
-            # Note: markdown meta returns lowercase keys
-            data = inf.read()
-            # If the metadata starts with "---" it's actually YAML and
-            # we should not let markdown parse it, because it will do
-            # bad things like setting empty tags to "''"
-            if data.startswith('---\n'):
-                return {}
-            _, meta = self.converters[lang].convert(data)
+        data = Path(source).read_text(encoding='utf-8-sig')
+        # Note: markdown meta returns lowercase keys
+        # If the metadata starts with "---" it's actually YAML and
+        # we should not let markdown parse it, because it will do
+        # bad things like setting empty tags to "''"
+        if data.startswith('---\n'):
+            return {}
+        _, meta = self.converters[lang].convert(data)
         # Map metadata from other platforms to names Nikola expects (Issue #2817)
         map_metadata(meta, 'markdown_metadata', self.site.config)
         return meta
