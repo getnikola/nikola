@@ -148,18 +148,18 @@ for k, v in LEGAL_VALUES['TRANSLATIONS'].items():
         _sllength = len(main)
 
 _sllength = str(_sllength)
-suplang = (u'# {0:<' + _sllength + u'}  {1}\n').format('en', 'English')
+suplang = ('# {0:<' + _sllength + '}  {1}\n').format('en', 'English')
 del _suplang['en']
 for k, v in sorted(_suplang.items()):
-    suplang += (u'# {0:<' + _sllength + u'}  {1}\n').format(k, v)
+    suplang += ('# {0:<' + _sllength + '}  {1}\n').format(k, v)
 
 SAMPLE_CONF['_SUPPORTED_LANGUAGES'] = suplang.strip()
 
 # Generate a list of supported comment systems here.
 
 SAMPLE_CONF['_SUPPORTED_COMMENT_SYSTEMS'] = '\n'.join(textwrap.wrap(
-    u', '.join(LEGAL_VALUES['COMMENT_SYSTEM']),
-    initial_indent=u'#   ', subsequent_indent=u'#   ', width=79))
+    ', '.join(LEGAL_VALUES['COMMENT_SYSTEM']),
+    initial_indent='#   ', subsequent_indent='#   ', width=79))
 
 
 def format_default_translations_config(additional_languages):
@@ -182,7 +182,7 @@ def get_default_translations_dict(default_lang, additional_languages):
 
 def format_navigation_links(additional_languages, default_lang, messages, strip_indexes=False):
     """Return the string to configure NAVIGATION_LINKS."""
-    f = u"""\
+    f = """\
     {0}: (
         ("{1}/archive.html", "{2[Archive]}"),
         ("{1}/categories/{3}", "{2[Tags]}"),
@@ -194,7 +194,7 @@ def format_navigation_links(additional_languages, default_lang, messages, strip_
     def get_msg(lang):
         """Generate a smaller messages dict with fallback."""
         fmsg = {}
-        for i in (u'Archive', u'Tags', u'RSS feed'):
+        for i in ('Archive', 'Tags', 'RSS feed'):
             if messages[lang][i]:
                 fmsg[i] = messages[lang][i]
             else:
@@ -212,7 +212,7 @@ def format_navigation_links(additional_languages, default_lang, messages, strip_
     for l in additional_languages:
         pairs.append(f.format(json.dumps(l, ensure_ascii=False), '/' + l, get_msg(l), index_html))
 
-    return u'{{\n{0}\n}}'.format('\n\n'.join(pairs))
+    return '{{\n{0}\n}}'.format('\n\n'.join(pairs))
 
 
 # In order to ensure proper escaping, all variables but the pre-formatted ones
@@ -306,7 +306,7 @@ class CommandInit(Command):
                 answer = answer.decode('utf-8')
             except (AttributeError, UnicodeDecodeError):
                 pass
-            if not answer.startswith(u'http'):
+            if not answer.startswith('http'):
                 print("    ERROR: You must specify a protocol (http or https).")
                 urlhandler(default, toconf)
                 return

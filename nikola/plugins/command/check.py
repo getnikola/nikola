@@ -390,7 +390,7 @@ class CommandCheck(Command):
                             self.logger.warning("\n".join(deps[filename]))
                             self.logger.warning("===============================\n")
         except Exception as exc:
-            self.logger.error(u"Error with: {0} {1}".format(filename, exc))
+            self.logger.error("Error with: {0} {1}".format(filename, exc))
         return rv
 
     def scan_links(self, find_sources=False, check_remote=False, ignore_query_strings=False):

@@ -830,7 +830,7 @@ _slugify_hyphenate_re = re.compile(r'[-\s]+', re.UNICODE)
 
 
 def slugify(value, lang=None, force=False):
-    u"""Normalize string, convert to lowercase, remove non-alpha characters, convert spaces to hyphens.
+    """Normalize string, convert to lowercase, remove non-alpha characters, convert spaces to hyphens.
 
     From Django's "django/template/defaultfilters.py".
 
