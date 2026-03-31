@@ -1,6 +1,6 @@
 import pathlib
 import socket
-from typing import Dict, Any
+from typing import Any
 
 from ..helper import FakeSite
 from nikola.utils import get_logger

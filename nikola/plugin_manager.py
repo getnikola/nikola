@@ -36,7 +36,7 @@ import time
 from collections import deque
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Type, Set
+from typing import Iterable, Optional
 
 from .plugin_categories import BasePlugin, CATEGORIES
 from .utils import get_logger

@@ -1,5 +1,4 @@
 from time import sleep
-from typing import Tuple
 import requests
 import pytest
 from concurrent.futures import ThreadPoolExecutor

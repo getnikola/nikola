@@ -1,6 +1,6 @@
 import sphinx.parsers
 from docutils.statemachine import StringList
-from typing import TYPE_CHECKING, Any, Dict, List, Type, Union
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from sphinx.application import Sphinx

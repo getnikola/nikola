@@ -61,7 +61,7 @@ from blinker import signal
 from doit import tools
 from doit.cmdparse import CmdParse
 from nikola.packages.pygments_better_html import BetterHtmlFormatter
-from typing import Any, Callable, Dict, Iterable, List, Match, Optional, Union
+from typing import Any, Callable, Iterable, Match, Optional, Union
 from unidecode import unidecode
 
 # Renames

@@ -1,5 +1,5 @@
 import asyncio
-from typing import Optional, Tuple
+from typing import Optional
 
 import pytest
 import requests

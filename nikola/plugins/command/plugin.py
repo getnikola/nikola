@@ -32,7 +32,6 @@ import pathlib
 import sys
 import shutil
 import subprocess
-import typing
 
 import requests
 

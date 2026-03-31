@@ -30,7 +30,7 @@ import io
 import logging
 import os
 
-from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
+from typing import Any, Callable, Iterable, Optional
 
 import doit
 from doit.cmd_base import Command as DoitCommand

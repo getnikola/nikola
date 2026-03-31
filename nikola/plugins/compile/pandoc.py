@@ -33,7 +33,6 @@ You will need, of course, to install pandoc
 import io
 import os
 import subprocess
-from typing import List
 from pathlib import Path
 
 from nikola.plugin_categories import PageCompiler

@@ -31,7 +31,6 @@ import gzip
 import logging
 import os
 import re
-import typing
 
 import lxml.etree
 import piexif
