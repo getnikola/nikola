@@ -35,7 +35,7 @@ import threading
 from . import utils
 
 
-class Persistor():
+class Persistor:
     """Persist stuff in a place.
 
     This is an intentionally dumb implementation. It is *not* meant to be
