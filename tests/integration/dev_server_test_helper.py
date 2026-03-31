@@ -33,7 +33,7 @@ def find_unused_port() -> int:
 
 class MyFakeSite(FakeSite):
     def __init__(self, config: Dict[str, Any], configuration_filename="conf.py"):
-        super(MyFakeSite, self).__init__()
+        super().__init__()
         self.configured = True
         self.debug = True
         self.THEMES = []

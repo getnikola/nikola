@@ -241,7 +241,7 @@ class Clean(DoitClean):
             cache_folder = config.get('CACHE_FOLDER', 'cache')
             if os.path.exists(cache_folder):
                 shutil.rmtree(cache_folder)
-        return super(Clean, self).clean_tasks(tasks, dryrun, *a)
+        return super().clean_tasks(tasks, dryrun, *a)
 
 
 # Nikola has its own "auto" commands that uses livereload.
