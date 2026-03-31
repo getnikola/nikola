@@ -657,7 +657,7 @@ def get_parent_theme_name(theme_name, themes_dirs=None) -> Optional[str]:
         return None
 
 
-def get_theme_chain(theme, themes_dirs) -> List[str]:
+def get_theme_chain(theme, themes_dirs) -> list[str]:
     """Create the full theme inheritance chain including paths."""
     themes = [get_theme_path_real(theme, themes_dirs)]
 
@@ -1197,7 +1197,7 @@ class LocaleBorg:
     in_string_formatter = None
 
     @classmethod
-    def initialize(cls, locales: Dict[str, str], initial_lang: str):
+    def initialize(cls, locales: dict[str, str], initial_lang: str):
         """Initialize LocaleBorg.
 
         locales: dict with custom locale name overrides.
@@ -2032,7 +2032,7 @@ def map_metadata(meta, key, config):
             meta[meta_key] = hook(meta[meta_key])
 
 
-def parselinenos(spec: str, total: int) -> List[int]:
+def parselinenos(spec: str, total: int) -> list[int]:
     """Parse a line number spec.
 
     Example: "1,2,4-6" -> [0, 1, 3, 4, 5]

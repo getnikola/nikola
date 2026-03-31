@@ -32,7 +32,7 @@ def find_unused_port() -> int:
 
 
 class MyFakeSite(FakeSite):
-    def __init__(self, config: Dict[str, Any], configuration_filename="conf.py"):
+    def __init__(self, config: dict[str, Any], configuration_filename="conf.py"):
         super().__init__()
         self.configured = True
         self.debug = True

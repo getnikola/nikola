@@ -10,7 +10,7 @@ from .dev_server_test_helper import MyFakeSite, SERVER_ADDRESS, find_unused_port
 
 
 def test_serves_root_dir(
-    site_and_base_path: Tuple[MyFakeSite, str], expected_text: str
+    site_and_base_path: tuple[MyFakeSite, str], expected_text: str
 ) -> None:
     site, base_path = site_and_base_path
     command_serve = serve.CommandServe()
@@ -67,7 +67,7 @@ def test_serves_root_dir(
                         "https://example.org:3456/blog/",
                         "http://example.org/deep/down/a/rabbit/hole"
                         ])
-def site_and_base_path(request) -> Tuple[MyFakeSite, str]:
+def site_and_base_path(request) -> tuple[MyFakeSite, str]:
     """Return a fake site and the base_path (root) the dev server should be serving."""
     assert OUTPUT_FOLDER.is_dir(), \
         f"Could not find dev server test fixture {OUTPUT_FOLDER.as_posix()}"

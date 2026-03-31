@@ -314,7 +314,7 @@ class CommandPlugin(Command):
 
         return self.json
 
-    def get_plugins(self) -> typing.List[typing.Tuple[str, pathlib.Path]]:
+    def get_plugins(self) -> list[tuple[str, pathlib.Path]]:
         """Get currently installed plugins in site."""
         plugins = []
         for plugin in self.site.plugin_manager.plugins:

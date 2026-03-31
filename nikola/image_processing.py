@@ -46,7 +46,7 @@ class ImageProcessor:
     """Apply image operations."""
 
     logger: logging.Logger
-    dates: typing.Dict[str, datetime.datetime]
+    dates: dict[str, datetime.datetime]
 
     image_ext_list_builtin = ['.jpg', '.png', '.jpeg', '.gif', '.svg', '.svgz', '.bmp', '.tiff', '.webp']
 

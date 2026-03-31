@@ -42,14 +42,14 @@ from .plugin_categories import BasePlugin, CATEGORIES
 from .utils import get_logger
 
 
-LEGACY_PLUGIN_NAMES: Dict[str, str] = {
+LEGACY_PLUGIN_NAMES: dict[str, str] = {
     "Compiler": "PageCompiler",
     "Shortcode": "ShortcodePlugin",
     "Template": "TemplateSystem",
 }
 
-CATEGORY_NAMES: Set[str] = set(CATEGORIES.keys())
-CATEGORY_TYPES: Set[Type[BasePlugin]] = set(CATEGORIES.values())
+CATEGORY_NAMES: set[str] = set(CATEGORIES.keys())
+CATEGORY_TYPES: set[type[BasePlugin]] = set(CATEGORIES.values())
 
 
 @dataclass(frozen=True)
@@ -86,15 +86,15 @@ class PluginInfo:
 class PluginManager:
     """The Nikola plugin manager."""
 
-    categories_filter: Dict[str, Type[BasePlugin]]
-    plugin_places: List[Path]
+    categories_filter: dict[str, type[BasePlugin]]
+    plugin_places: list[Path]
     logger: "logging.Logger"
-    candidates: List[PluginCandidate]
-    plugins: List[PluginInfo]
-    _plugins_by_category: Dict[str, List[PluginInfo]]
+    candidates: list[PluginCandidate]
+    plugins: list[PluginInfo]
+    _plugins_by_category: dict[str, list[PluginInfo]]
     has_warnings: bool = False
 
-    def __init__(self, plugin_places: List[Path]):
+    def __init__(self, plugin_places: list[Path]):
         """Initialize the plugin manager."""
         self.plugin_places = plugin_places
         self.candidates = []
@@ -102,12 +102,12 @@ class PluginManager:
         self._plugins_by_category = {}
         self.logger = get_logger("PluginManager")
 
-    def locate_plugins(self) -> List[PluginCandidate]:
+    def locate_plugins(self) -> list[PluginCandidate]:
         """Locate plugins in plugin_places."""
         self.candidates = []
 
         plugin_folders: deque = deque([place for place in self.plugin_places if place.exists() and place.is_dir()])
-        plugin_files: List[Path] = []
+        plugin_files: list[Path] = []
         while plugin_folders:
             base_folder = plugin_folders.popleft()
             items = list(base_folder.iterdir())
@@ -157,7 +157,7 @@ class PluginManager:
             )
         return self.candidates
 
-    def load_plugins(self, candidates: Iterable[PluginCandidate]) -> List[PluginInfo]:
+    def load_plugins(self, candidates: Iterable[PluginCandidate]) -> list[PluginInfo]:
         """Load selected candidate plugins."""
         plugins_root = Path(__file__).parent.parent
         new_plugins = []
@@ -256,7 +256,7 @@ class PluginManager:
 
         return new_plugins
 
-    def get_plugins_of_category(self, category: str) -> List[PluginInfo]:
+    def get_plugins_of_category(self, category: str) -> list[PluginInfo]:
         """Get loaded plugins of a given category."""
         return self._plugins_by_category.get(category, [])
 
@@ -268,7 +268,7 @@ class PluginManager:
 
     # Aliases for Yapsy compatibility
     # TODO: remove in v9
-    def getPluginsOfCategory(self, category: str) -> List[PluginInfo]:
+    def getPluginsOfCategory(self, category: str) -> list[PluginInfo]:
         """Get loaded plugins of a given category."""
         self.logger.warning("Legacy getPluginsOfCategory method was used, it may be removed in the future. Please change it to get_plugins_of_category.")
         return self._plugins_by_category.get(category, [])
