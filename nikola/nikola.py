@@ -365,7 +365,7 @@ def _enclosure(post, lang):
         return url, length, mime
 
 
-class Nikola(object):
+class Nikola:
     """Class that handles site generation.
 
     Takes a site config as argument on creation.

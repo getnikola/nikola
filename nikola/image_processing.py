@@ -42,7 +42,7 @@ from nikola import utils
 EXIF_TAG_NAMES = {}
 
 
-class ImageProcessor(object):
+class ImageProcessor:
     """Apply image operations."""
 
     logger: logging.Logger

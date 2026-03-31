@@ -50,7 +50,7 @@ except ImportError:
     typo = None
 
 
-class _ConfigurableFilter(object):
+class _ConfigurableFilter:
     """Allow Nikola to configure filter with site's config."""
 
     def __init__(self, **configuration_variables):

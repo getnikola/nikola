@@ -222,7 +222,7 @@ class Functionary(defaultdict):
         return self[lang][key]
 
 
-class TranslatableSetting(object):
+class TranslatableSetting:
     """A setting that can be translated.
 
     You can access it via: SETTING(lang).  You can omit lang, in which
@@ -410,7 +410,7 @@ class TranslatableSetting(object):
             return self(self.default_lang) != other
 
 
-class TemplateHookRegistry(object):
+class TemplateHookRegistry:
     r"""A registry for template hooks.
 
     Usage:
@@ -1164,7 +1164,7 @@ def format_skeleton(skeleton, datetime=None, fo=None, fuzzy=True,
     return format_datetime(datetime, format, locale)
 
 
-class LocaleBorg(object):
+class LocaleBorg:
     """Provide locale related services and autoritative current_lang.
 
     This class stores information about the locales used and interfaces
@@ -1579,7 +1579,7 @@ def ask_yesno(query, default=None):
         return ask_yesno(query, default)
 
 
-class CommandWrapper(object):
+class CommandWrapper:
     """Converts commands into functions."""
 
     def __init__(self, cmd, commands_object):
@@ -1594,7 +1594,7 @@ class CommandWrapper(object):
             self.commands_object._run_with_kw(self.cmd, *args, **kwargs)
 
 
-class Commands(object):
+class Commands:
     """Nikola Commands.
 
     Sample usage:
@@ -2059,7 +2059,7 @@ def parselinenos(spec: str, total: int) -> List[int]:
     return items
 
 
-class ClassificationTranslationManager(object):
+class ClassificationTranslationManager:
     """Keeps track of which classifications could be translated as which others.
 
     The internal structure is as follows:

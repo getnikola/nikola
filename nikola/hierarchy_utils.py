@@ -33,7 +33,7 @@ __all__ = ('TreeNode', 'clone_treenode', 'flatten_tree_structure',
            'parse_escaped_hierarchical_category_name',)
 
 
-class TreeNode(object):
+class TreeNode:
     """A tree node."""
 
     indent_levels = None  # use for formatting comments as tree
