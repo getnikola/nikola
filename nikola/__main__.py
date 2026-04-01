@@ -187,7 +187,7 @@ class Help(DoitHelp):
         for cmd_name in sorted(cmds.keys()):
             cmd = cmds[cmd_name]
             print("  nikola {:20s} {}".format(cmd_name, cmd.doc_purpose))
-        print("")
+        print()
         print("  nikola help                 show help / reference")
         print("  nikola help <command>       show command usage")
         print("  nikola help <task-name>     show task usage")

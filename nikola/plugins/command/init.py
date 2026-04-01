@@ -379,7 +379,7 @@ class CommandInit(Command):
             print("\nPlease choose the correct time zone for your blog. Nikola uses the tz database.")
             print("You can find your time zone here:")
             print("https://en.wikipedia.org/wiki/List_of_tz_database_time_zones")
-            print("")
+            print()
             answered = False
             while not answered:
                 try:
@@ -417,7 +417,7 @@ class CommandInit(Command):
             while answer.strip() == '?':
                 print('\n# Available comment systems:')
                 print(SAMPLE_CONF['_SUPPORTED_COMMENT_SYSTEMS'])
-                print('')
+                print()
                 answer = ask('Comment system', '')
 
             while answer and answer not in LEGAL_VALUES['COMMENT_SYSTEM']:
@@ -425,7 +425,7 @@ class CommandInit(Command):
                     print('    ERROR: Nikola does not know this comment system.')
                 print('\n# Available comment systems:')
                 print(SAMPLE_CONF['_SUPPORTED_COMMENT_SYSTEMS'])
-                print('')
+                print()
                 answer = ask('Comment system', '')
 
             SAMPLE_CONF['COMMENT_SYSTEM'] = answer

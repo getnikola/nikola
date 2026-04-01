@@ -231,8 +231,7 @@ class Sitemap(LateTask):
             # task dep scanning and task execution
             with io.open(sitemap_path, 'w+', encoding='utf8') as outf:
                 outf.write(urlset_header)
-                for k in sorted(urlset.keys()):
-                    outf.write(urlset[k])
+                outf.writelines(urlset[k] for k in sorted(urlset.keys()))
                 outf.write(urlset_footer)
             sitemap_url = urljoin(base_url, base_path + "sitemap.xml")
             sitemapindex[sitemap_url] = sitemap_format.format(sitemap_url, self.get_lastmod(sitemap_path))
@@ -241,8 +240,7 @@ class Sitemap(LateTask):
             """Write sitemap index."""
             with io.open(sitemapindex_path, 'w+', encoding='utf8') as outf:
                 outf.write(sitemapindex_header)
-                for k in sorted(sitemapindex.keys()):
-                    outf.write(sitemapindex[k])
+                outf.writelines(sitemapindex[k] for k in sorted(sitemapindex.keys()))
                 outf.write(sitemapindex_footer)
 
         def scan_locs_task():

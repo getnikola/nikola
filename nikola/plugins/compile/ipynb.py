@@ -97,7 +97,7 @@ class CompileIPynb(PageCompiler):
         if post is None:
             if shortcode_deps:
                 self.logger.error(
-                    "Cannot save dependencies for post {0} (post unknown)",
+                    "Cannot save dependencies for post %s (post unknown)",
                     source)
         else:
             post._depfile[dest] += shortcode_deps

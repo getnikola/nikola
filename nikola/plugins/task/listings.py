@@ -277,8 +277,7 @@ class Listings(Task):
         link://listing_source/tutorial/hello.py => /listings/tutorial/hello.py
         """
         result = self.listing_path(name, lang)
-        if result[-1].endswith('.html'):
-            result[-1] = result[-1][:-5]
+        result[-1] = result[-1].removesuffix('.html')
         return result
 
     def listing_path(self, namep, lang):

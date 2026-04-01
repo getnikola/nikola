@@ -62,8 +62,7 @@ class RobotsFile(LateTask):
                 outf.write("Sitemap: {0}\n\n".format(sitemapindex_url))
                 outf.write("User-Agent: *\n")
                 if kw["robots_exclusions"]:
-                    for loc in kw["robots_exclusions"]:
-                        outf.write("Disallow: {0}\n".format(loc))
+                    outf.writelines("Disallow: {0}\n".format(loc) for loc in kw["robots_exclusions"])
                 outf.write("Host: {0}\n".format(urlparse(kw["base_url"]).netloc))
 
         yield self.group_task()

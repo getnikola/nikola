@@ -64,8 +64,7 @@ class PageIndex(Taxonomy):
         destpath = post.destination_path(lang, sep='/')
         if post.has_pretty_url(lang):
             idx = '/index.html'
-            if destpath.endswith(idx):
-                destpath = destpath[:-len(idx)]
+            destpath = destpath.removesuffix(idx)
         i = destpath.rfind('/')
         return [destpath[:i] if i >= 0 else '']
 
