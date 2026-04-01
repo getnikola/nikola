@@ -70,10 +70,7 @@ from .log import LOGGER, TEMPLATES_LOGGER, get_logger  # NOQA
 from .hierarchy_utils import TreeNode, clone_treenode, flatten_tree_structure, sort_classifications
 from .hierarchy_utils import join_hierarchical_category_path, parse_escaped_hierarchical_category_name
 
-if sys.version_info.minor <= 8:
-    from pkg_resources import resource_filename
-else:
-    from importlib import resources
+from importlib import resources
 
 try:
     import toml
@@ -583,10 +580,7 @@ class config_changed(tools.config_changed):
 
 def pkg_resources_path(package, resource):
     """Return path to a resource from the package with the given name."""
-    if sys.version_info.minor <= 8:
-        return resource_filename(package, resource)
-    else:
-        return str(resources.files(package).joinpath(resource))
+    return str(resources.files(package).joinpath(resource))
 
 
 def get_theme_path_real(theme, themes_dirs) -> str:
