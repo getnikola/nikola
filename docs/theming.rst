@@ -53,6 +53,15 @@ messages
     Nikola tries to be multilingual. This is where you put the strings for your theme
     so that it can be translated into other languages.
 
+    For each language your theme supports, create a file
+    ``messages/messages_XX.py`` (with ``XX`` being the language code)
+    defining the messages in a dictionary like this::
+
+      MESSAGES = {
+        "Skip to footer": "Springe zur Fußzeile",
+        "Skip to navigation": "Springe zur Navigation",
+      }
+
 less, sass
     Files to be compiled into CSS using LESS and Sass (both require plugins)
 
