@@ -13,7 +13,7 @@ from nikola.utils import base_path_from_siteuri
 from .dev_server_test_helper import MyFakeSite, SERVER_ADDRESS, find_unused_port, LOGGER, OUTPUT_FOLDER
 
 
-def test_server_on_used_port(site_and_base_path: Tuple[MyFakeSite, str]) -> None:
+def test_server_on_used_port(site_and_base_path: tuple[MyFakeSite, str]) -> None:
     """Check error if port for nikola serve is already being used.
 
     `nikola serve` uses a default port and if that port is already in use it should print out a nice
