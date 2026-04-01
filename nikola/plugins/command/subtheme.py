@@ -129,7 +129,7 @@ class CommandSubTheme(Command):
             LOGGER.info("Downloading: " + url)
             r = requests.get(url)
             if r.status_code > 299:
-                LOGGER.error('Error {} getting {}', r.status_code, url)
+                LOGGER.error('Error %s getting %s', r.status_code, url)
                 return 1
             data = r.text
 

@@ -80,7 +80,7 @@ class MakoTemplates(TemplateSystem):
             if dep:
                 deps[i] = dep
             else:
-                LOGGER.error("Cannot find template {0} referenced in {1}",
+                LOGGER.error("Cannot find template %s referenced in %s",
                              d, filename)
         return deps
 

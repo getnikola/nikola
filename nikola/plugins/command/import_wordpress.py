@@ -923,7 +923,7 @@ to
                 slug = get_text_tag(
                     item, '{{{0}}}post_id'.format(wordpress_namespace), None)
             if not slug:  # should never happen
-                LOGGER.error("Error converting post:", title)
+                LOGGER.error("Error converting post: %s", title)
                 return False
         else:
             if len(pathlist) > 1:

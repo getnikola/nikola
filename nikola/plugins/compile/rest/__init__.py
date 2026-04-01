@@ -153,7 +153,7 @@ class CompileRest(PageCompiler):
             if post is None:
                 if deps.list:
                     self.logger.error(
-                        "Cannot save dependencies for post {0} (post unknown)",
+                        "Cannot save dependencies for post %s (post unknown)",
                         source)
             else:
                 post._depfile[dest] += deps.list
