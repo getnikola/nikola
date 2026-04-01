@@ -4,6 +4,8 @@ New in master
 Features
 --------
 
+* Provide a command to show diffs between custom templates and the original files
+
 Bugfixes
 --------
 
