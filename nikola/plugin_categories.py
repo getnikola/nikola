@@ -292,7 +292,7 @@ class PageCompiler(BasePlugin):
         dep_path = self.get_dep_filename(post, lang)
         if os.path.isfile(dep_path):
             with io.open(dep_path, 'r+', encoding='utf-8-sig') as depf:
-                deps = [l.strip() for l in depf.readlines()]
+                deps = [l.strip() for l in depf]
                 return deps
         return []
 

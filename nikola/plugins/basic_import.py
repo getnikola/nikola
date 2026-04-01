@@ -72,8 +72,7 @@ class ImportMixin:
     def configure_redirections(url_map, base_dir=''):
         """Configure redirections from an url_map."""
         index = base_dir + 'index.html'
-        if index.startswith('/'):
-            index = index[1:]
+        index = index.removeprefix('/')
         redirections = []
         for k, v in url_map.items():
             if not k[-1] == '/':

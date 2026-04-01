@@ -1043,8 +1043,7 @@ class Post:
                                 folder, self.meta[lang]['slug'] + extension)
         if sep != os.sep:
             path = path.replace(os.sep, sep)
-        if path.startswith('./'):
-            path = path[2:]
+        path = path.removeprefix('./')
         return path
 
     def permalink(self, lang=None, absolute=False, extension='.html', query=None):

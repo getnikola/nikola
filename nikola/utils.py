@@ -2170,6 +2170,5 @@ def base_path_from_siteuri(siteuri: str) -> str:
     The path returned doesn't end with a "/". (If only "/" is intended, it is empty.)
     """
     path = urllib.parse.urlsplit(siteuri).path
-    if path.endswith("/"):
-        path = path[:-1]
+    path = path.removesuffix("/")
     return path
