@@ -33,7 +33,6 @@ You will need, of course, to install pandoc
 import io
 import os
 import subprocess
-from typing import List
 from pathlib import Path
 
 from nikola.plugin_categories import PageCompiler
@@ -51,7 +50,7 @@ class CompilePandoc(PageCompiler):
         self.config_dependencies = [str(site.config['PANDOC_OPTIONS'])]
         super().set_site(site)
 
-    def _get_pandoc_options(self, source: str) -> List[str]:
+    def _get_pandoc_options(self, source: str) -> list[str]:
         """Obtain pandoc args from config depending on type and file extensions."""
         # Union[List[str], Dict[str, List[str]]]
         config_options = self.site.config['PANDOC_OPTIONS']

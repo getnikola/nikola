@@ -48,11 +48,11 @@ def test_slugify(title, language, expected_slug):
     "title, expected_slug",
     [
         pytest.param(
-            u"Zażółć gęślą jaźń!-123.456", u"Zażółć gęślą jaźń!-123.456", id="polish"
+            "Zażółć gęślą jaźń!-123.456", "Zażółć gęślą jaźń!-123.456", id="polish"
         ),
         pytest.param(
-            u'Zażółć gęślą jaźń!-123.456 "Hello World"?#H<e>l/l\\o:W\'o\rr*l\td|!\n',
-            u"Zażółć gęślą jaźń!-123.456 -Hello World---H-e-l-l-o-W-o-r-l-d-!-",
+            'Zażółć gęślą jaźń!-123.456 "Hello World"?#H<e>l/l\\o:W\'o\rr*l\td|!\n',
+            "Zażółć gęślą jaźń!-123.456 -Hello World---H-e-l-l-o-W-o-r-l-d-!-",
             id="polish with banned characters",
         ),
     ],

@@ -1,6 +1,6 @@
 import sphinx.parsers
 from docutils.statemachine import StringList
-from typing import TYPE_CHECKING, Any, Dict, List, Type, Union
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from sphinx.application import Sphinx
@@ -22,7 +22,7 @@ class NikolaTitlesRSTParser(sphinx.parsers.RSTParser):
                 content.insert(0, fence, "<generated>", 0)
 
 
-def setup(app: "Sphinx") -> Dict[str, Any]:
+def setup(app: "Sphinx") -> dict[str, Any]:
     app.add_source_parser(NikolaTitlesRSTParser, override=True)
 
     return {

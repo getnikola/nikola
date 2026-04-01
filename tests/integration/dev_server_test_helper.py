@@ -1,6 +1,6 @@
 import pathlib
 import socket
-from typing import Dict, Any
+from typing import Any
 
 from ..helper import FakeSite
 from nikola.utils import get_logger
@@ -32,8 +32,8 @@ def find_unused_port() -> int:
 
 
 class MyFakeSite(FakeSite):
-    def __init__(self, config: Dict[str, Any], configuration_filename="conf.py"):
-        super(MyFakeSite, self).__init__()
+    def __init__(self, config: dict[str, Any], configuration_filename="conf.py"):
+        super().__init__()
         self.configured = True
         self.debug = True
         self.THEMES = []

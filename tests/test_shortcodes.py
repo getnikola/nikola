@@ -126,35 +126,35 @@ def test_errors(site, template, expected_error_pattern):
 @pytest.mark.parametrize(
     "input, expected",
     [
-        ("{{% foo %}}", (u"SC1", {u"SC1": u"{{% foo %}}"})),
+        ("{{% foo %}}", ("SC1", {"SC1": "{{% foo %}}"})),
         (
             "{{% foo %}} bar {{% /foo %}}",
-            (u"SC1", {u"SC1": u"{{% foo %}} bar {{% /foo %}}"}),
+            ("SC1", {"SC1": "{{% foo %}} bar {{% /foo %}}"}),
         ),
         (
             "AAA{{% foo %}} bar {{% /foo %}}BBB",
-            (u"AAASC1BBB", {u"SC1": u"{{% foo %}} bar {{% /foo %}}"}),
+            ("AAASC1BBB", {"SC1": "{{% foo %}} bar {{% /foo %}}"}),
         ),
         (
             "AAA{{% foo %}} {{% bar %}} {{% /foo %}}BBB",
-            (u"AAASC1BBB", {u"SC1": u"{{% foo %}} {{% bar %}} {{% /foo %}}"}),
+            ("AAASC1BBB", {"SC1": "{{% foo %}} {{% bar %}} {{% /foo %}}"}),
         ),
         (
             "AAA{{% foo %}} {{% /bar %}} {{% /foo %}}BBB",
-            (u"AAASC1BBB", {u"SC1": u"{{% foo %}} {{% /bar %}} {{% /foo %}}"}),
+            ("AAASC1BBB", {"SC1": "{{% foo %}} {{% /bar %}} {{% /foo %}}"}),
         ),
         (
             "AAA{{% foo %}} {{% bar %}} quux {{% /bar %}} {{% /foo %}}BBB",
             (
-                u"AAASC1BBB",
-                {u"SC1": u"{{% foo %}} {{% bar %}} quux {{% /bar %}} {{% /foo %}}"},
+                "AAASC1BBB",
+                {"SC1": "{{% foo %}} {{% bar %}} quux {{% /bar %}} {{% /foo %}}"},
             ),
         ),
         (
             "AAA{{% foo %}} BBB {{% bar %}} quux {{% /bar %}} CCC",
             (
-                u"AAASC1 BBB SC2 CCC",
-                {u"SC1": u"{{% foo %}}", u"SC2": u"{{% bar %}} quux {{% /bar %}}"},
+                "AAASC1 BBB SC2 CCC",
+                {"SC1": "{{% foo %}}", "SC2": "{{% bar %}} quux {{% /bar %}}"},
             ),
         ),
     ],

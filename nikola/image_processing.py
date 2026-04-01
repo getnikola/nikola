@@ -31,7 +31,6 @@ import gzip
 import logging
 import os
 import re
-import typing
 
 import lxml.etree
 import piexif
@@ -42,11 +41,11 @@ from nikola import utils
 EXIF_TAG_NAMES = {}
 
 
-class ImageProcessor(object):
+class ImageProcessor:
     """Apply image operations."""
 
     logger: logging.Logger
-    dates: typing.Dict[str, datetime.datetime]
+    dates: dict[str, datetime.datetime]
 
     image_ext_list_builtin = ['.jpg', '.png', '.jpeg', '.gif', '.svg', '.svgz', '.bmp', '.tiff', '.webp']
 

@@ -36,7 +36,7 @@ import os
 import pathlib
 import sys
 import typing
-from typing import Any, Callable, Dict, Iterable, List, Optional, Set
+from typing import Any, Callable, Iterable, Optional
 import mimetypes
 from collections import defaultdict
 from copy import copy
@@ -365,7 +365,7 @@ def _enclosure(post, lang):
         return url, length, mime
 
 
-class Nikola(object):
+class Nikola:
     """Class that handles site generation.
 
     Takes a site config as argument on creation.
@@ -1088,7 +1088,7 @@ class Nikola(object):
         # Search for compiler plugins which we disabled but shouldn't have
         self._activate_plugins_of_category("PostScanner")
         if not load_all:
-            file_extensions: Set[str] = set()
+            file_extensions: set[str] = set()
             post_scanner: PostScanner
             for post_scanner in [p.plugin_object for p in self.plugin_manager.get_plugins_of_category('PostScanner')]:
                 exts = post_scanner.supported_extensions()
@@ -1324,7 +1324,7 @@ class Nikola(object):
             if candidate.exists() and candidate.is_dir():
                 self.template_system.inject_directory(str(candidate))
 
-    def _activate_plugins_of_category(self, category) -> List[PluginInfo]:
+    def _activate_plugins_of_category(self, category) -> list[PluginInfo]:
         """Activate all the plugins of a given category and return them."""
         # this code duplicated in tests/base.py
         plugins = []
@@ -1470,7 +1470,7 @@ class Nikola(object):
             utils.TEMPLATES_LOGGER.debug("For %s, template %s builds %s", context["post"].source_path, template_name, output_name)
         else:
             utils.TEMPLATES_LOGGER.debug("Template %s builds %s", template_name, output_name)
-        local_context: Dict[str, Any] = {}
+        local_context: dict[str, Any] = {}
         local_context["template_name"] = template_name
         local_context.update(self.GLOBAL_CONTEXT)
         local_context.update(context)

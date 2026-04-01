@@ -40,7 +40,7 @@ from nikola import utils
 links = {}
 
 
-class ImportMixin(object):
+class ImportMixin:
     """Mixin with common used methods."""
 
     name = "import_mixin"

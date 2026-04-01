@@ -341,7 +341,7 @@ def test_write_content_does_not_destroy_text(import_command):
 
     actual_calls = open_mock.mock_calls
     expected_base_calls = [
-        mock.call(u"some_file", u"wb+"),
+        mock.call("some_file", "wb+"),
         mock.call().__enter__(),
         # write call should happen here, but we can't check it as easily
         mock.call().__exit__(None, None, None),

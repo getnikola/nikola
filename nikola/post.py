@@ -69,7 +69,7 @@ __all__ = ('Post',)
 TEASER_REGEXP = re.compile(r'<!--\s*(TEASER_END|END_TEASER)(:(.+))?\s*-->', re.IGNORECASE)
 
 
-class Post(object):
+class Post:
     """Represent a blog post or site page."""
 
     _prev_post = None

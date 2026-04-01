@@ -61,7 +61,7 @@ from blinker import signal
 from doit import tools
 from doit.cmdparse import CmdParse
 from nikola.packages.pygments_better_html import BetterHtmlFormatter
-from typing import Any, Callable, Dict, Iterable, List, Match, Optional, Union
+from typing import Any, Callable, Iterable, Match, Optional, Union
 from unidecode import unidecode
 
 # Renames
@@ -222,7 +222,7 @@ class Functionary(defaultdict):
         return self[lang][key]
 
 
-class TranslatableSetting(object):
+class TranslatableSetting:
     """A setting that can be translated.
 
     You can access it via: SETTING(lang).  You can omit lang, in which
@@ -410,7 +410,7 @@ class TranslatableSetting(object):
             return self(self.default_lang) != other
 
 
-class TemplateHookRegistry(object):
+class TemplateHookRegistry:
     r"""A registry for template hooks.
 
     Usage:
@@ -657,7 +657,7 @@ def get_parent_theme_name(theme_name, themes_dirs=None) -> Optional[str]:
         return None
 
 
-def get_theme_chain(theme, themes_dirs) -> List[str]:
+def get_theme_chain(theme, themes_dirs) -> list[str]:
     """Create the full theme inheritance chain including paths."""
     themes = [get_theme_path_real(theme, themes_dirs)]
 
@@ -830,7 +830,7 @@ _slugify_hyphenate_re = re.compile(r'[-\s]+', re.UNICODE)
 
 
 def slugify(value, lang=None, force=False):
-    u"""Normalize string, convert to lowercase, remove non-alpha characters, convert spaces to hyphens.
+    """Normalize string, convert to lowercase, remove non-alpha characters, convert spaces to hyphens.
 
     From Django's "django/template/defaultfilters.py".
 
@@ -1164,7 +1164,7 @@ def format_skeleton(skeleton, datetime=None, fo=None, fuzzy=True,
     return format_datetime(datetime, format, locale)
 
 
-class LocaleBorg(object):
+class LocaleBorg:
     """Provide locale related services and autoritative current_lang.
 
     This class stores information about the locales used and interfaces
@@ -1197,7 +1197,7 @@ class LocaleBorg(object):
     in_string_formatter = None
 
     @classmethod
-    def initialize(cls, locales: Dict[str, str], initial_lang: str):
+    def initialize(cls, locales: dict[str, str], initial_lang: str):
         """Initialize LocaleBorg.
 
         locales: dict with custom locale name overrides.
@@ -1579,7 +1579,7 @@ def ask_yesno(query, default=None):
         return ask_yesno(query, default)
 
 
-class CommandWrapper(object):
+class CommandWrapper:
     """Converts commands into functions."""
 
     def __init__(self, cmd, commands_object):
@@ -1594,7 +1594,7 @@ class CommandWrapper(object):
             self.commands_object._run_with_kw(self.cmd, *args, **kwargs)
 
 
-class Commands(object):
+class Commands:
     """Nikola Commands.
 
     Sample usage:
@@ -2032,7 +2032,7 @@ def map_metadata(meta, key, config):
             meta[meta_key] = hook(meta[meta_key])
 
 
-def parselinenos(spec: str, total: int) -> List[int]:
+def parselinenos(spec: str, total: int) -> list[int]:
     """Parse a line number spec.
 
     Example: "1,2,4-6" -> [0, 1, 3, 4, 5]
@@ -2059,7 +2059,7 @@ def parselinenos(spec: str, total: int) -> List[int]:
     return items
 
 
-class ClassificationTranslationManager(object):
+class ClassificationTranslationManager:
     """Keeps track of which classifications could be translated as which others.
 
     The internal structure is as follows:
