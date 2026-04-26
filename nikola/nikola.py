@@ -1203,7 +1203,7 @@ class Nikola:
         # Signal that we are configured
         signal('configured').send(self)
 
-    def _set_global_context_from_config(self):
+    def _set_global_context_from_config(self) -> None:
         """Create global context from configuration.
 
         These are options that are used by templates, so they always need to be
@@ -1289,7 +1289,7 @@ class Nikola:
 
         self._GLOBAL_CONTEXT.update(self.config.get('GLOBAL_CONTEXT', {}))
 
-    def _set_global_context_from_data(self):
+    def _set_global_context_from_data(self) -> None:
         """Load files from data/ and put them in the global context."""
         self._GLOBAL_CONTEXT['data'] = {}
         for root, dirs, files in os.walk('data', followlinks=True):
@@ -1301,7 +1301,7 @@ class Nikola:
         # Offer global_data as an alias for data (Issue #2488)
         self._GLOBAL_CONTEXT['global_data'] = self._GLOBAL_CONTEXT['data']
 
-    def _set_all_page_deps_from_config(self):
+    def _set_all_page_deps_from_config(self) -> None:
         """Save dependencies for all pages from configuration.
 
         Changes of values in this dict will force a rebuild of all pages.
@@ -1342,7 +1342,7 @@ class Nikola:
             plugins.append(plugin_info)
         return plugins
 
-    def _get_themes(self):
+    def _get_themes(self) -> list[str]:
         if self._THEMES is None:
             try:
                 self._THEMES = utils.get_theme_chain(self.config['THEME'], self.themes_dirs)
@@ -1398,7 +1398,7 @@ class Nikola:
 
     GLOBAL_CONTEXT = property(_get_global_context)
 
-    def _get_template_system(self):
+    def _get_template_system(self) -> TemplateSystem:
         if self._template_system is None:
             # Load template plugin
             template_sys_name = utils.get_template_engine(self.THEMES)
@@ -1704,7 +1704,7 @@ class Nikola:
             return output, dependencies
         return render_shortcode
 
-    def _register_templated_shortcodes(self):
+    def _register_templated_shortcodes(self) -> None:
         """Register shortcodes based on templates.
 
         This will register a shortcode for any template found in shortcodes/
@@ -1742,7 +1742,7 @@ class Nikola:
         dependencies = self.template_system.get_string_deps(t_data, context)
         return output, dependencies
 
-    def register_shortcode(self, name, f):
+    def register_shortcode(self, name, f) -> None:
         """Register function f to handle shortcode "name"."""
         if name in self.shortcode_registry:
             utils.LOGGER.warning('Shortcode name conflict: {}', name)
@@ -1942,7 +1942,7 @@ class Nikola:
             # URLs should always use forward slash separators, even on Windows
             return str(pathlib.PurePosixPath(*path))
 
-    def post_path(self, name, lang):
+    def post_path(self, name, lang) -> list[str]:
         """Link to the destination of an element in the POSTS/PAGES settings.
 
         Example:
@@ -1953,7 +1953,7 @@ class Nikola:
                               os.path.dirname(name),
                               self.config['INDEX_FILE']] if _f]
 
-    def root_path(self, name, lang):
+    def root_path(self, name, lang) -> list[str]:
         """Link to the current language's root.
 
         Example:
@@ -1968,7 +1968,7 @@ class Nikola:
         else:
             return []
 
-    def slug_path(self, name, lang):
+    def slug_path(self, name, lang) -> list[str] | None:
         """Return a link to a post with given slug, if not ambiguous.
 
         Example:
@@ -1983,7 +1983,7 @@ class Nikola:
                 utils.LOGGER.warning('Ambiguous path request for slug: {0}'.format(name))
             return [_f for _f in results[0].permalink(lang).split('/')]
 
-    def slug_source(self, name, lang):
+    def slug_source(self, name, lang) -> list[str] | None:
         """Return a link to source for a post with given slug, if not ambiguous.
 
         Example:
@@ -2013,7 +2013,7 @@ class Nikola:
                 utils.LOGGER.error("Ambiguous path request for filename: {0}".format(name))
             return [_f for _f in results[0].permalink(lang).split('/') if _f]
 
-    def register_path_handler(self, kind, f):
+    def register_path_handler(self, kind, f) -> None:
         """Register a path handler."""
         if kind in self.path_handlers:
             utils.LOGGER.warning('Conflicting path handlers for kind: {0}'.format(kind))
