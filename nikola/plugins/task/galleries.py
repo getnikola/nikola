@@ -27,6 +27,7 @@
 """Render image galleries."""
 
 import datetime
+from datetime import timezone
 import glob
 import io
 import json
@@ -763,7 +764,7 @@ class Galleries(Task, ImageProcessor):
             title=title,
             link=make_url(permalink),
             description='',
-            lastBuildDate=datetime.datetime.utcnow(),
+            lastBuildDate=datetime.datetime.now(timezone.utc).replace(tzinfo=None),
             items=items,
             generator='https://getnikola.com/',
             language=lang
