@@ -26,6 +26,14 @@
 
 """Render image galleries."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from nikola.nikola import Nikola
+
+
 import datetime
 import glob
 import io
@@ -59,7 +67,7 @@ class Galleries(Task, ImageProcessor):
     name = 'render_galleries'
     dates = {}
 
-    def set_site(self, site):
+    def set_site(self, site: Nikola):
         """Set Nikola site."""
         super().set_site(site)
         site.register_path_handler('gallery', self.gallery_path)

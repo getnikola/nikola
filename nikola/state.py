@@ -26,11 +26,17 @@
 
 """Persistent state implementation."""
 
+from __future__ import annotations
+
 import json
 import os
 import shutil
 import tempfile
 import threading
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from nikola.nikola import Nikola
 
 from . import utils
 
@@ -51,7 +57,7 @@ class Persistor:
         self._local = threading.local()
         self._local.data = {}
 
-    def _set_site(self, site):
+    def _set_site(self, site: Nikola):
         """Set site and create path directory."""
         self._site = site
         utils.makedirs(os.path.dirname(self._path))

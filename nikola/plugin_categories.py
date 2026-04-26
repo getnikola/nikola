@@ -26,14 +26,19 @@
 
 """Nikola plugin categories."""
 
+from __future__ import annotations
+
 import io
 import logging
 import os
 
-from typing import Any, Callable, Iterable, Optional
+from typing import Any, Callable, Iterable, Optional, TYPE_CHECKING
 
 import doit
 from doit.cmd_base import Command as DoitCommand
+
+if TYPE_CHECKING:
+    from nikola.nikola import Nikola
 
 from .utils import LOGGER, first_line, get_logger, req_missing
 
@@ -60,9 +65,9 @@ class BasePlugin:
     """Base plugin class."""
 
     logger = None
-    site: Optional['nikola.nikola.Nikola'] = None # NOQA  # Circular import not easy to fix.
+    site: Nikola
 
-    def set_site(self, site):
+    def set_site(self, site: Nikola):
         """Set site, which is a Nikola instance."""
         self.site = site
         self.logger = get_logger(self.name)
