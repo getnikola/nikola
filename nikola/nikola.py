@@ -373,6 +373,9 @@ class Nikola:
 
     plugin_manager: PluginManager
     _template_system: TemplateSystem | None
+    tzinfo: dateutil.tz.tzfile | None
+    themes_dirs: list[str]
+    state: Persistor
 
     def __init__(self, **config) -> None:
         """Initialize proper environment for running tasks."""
