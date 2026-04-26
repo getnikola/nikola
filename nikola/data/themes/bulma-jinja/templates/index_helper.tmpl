@@ -1,0 +1,17 @@
+{#  -*- coding: utf-8 -*- #}
+{% macro html_pager() %}
+    {% if prevlink or nextlink %}
+        <nav class="level">
+            {% if prevlink %}
+                <div class="level-left">
+                    <a class="button" href="{{ prevlink }}" rel="prev">{{ messages("Newer posts") }}</a>
+                </div>
+            {% endif %}
+            {% if nextlink %}
+                <div class="level-right">
+                    <a class="button" href="{{ nextlink }}" rel="next">{{ messages("Older posts") }}</a>
+                </div>
+            {% endif %}
+        </nav>
+    {% endif %}
+{% endmacro %}

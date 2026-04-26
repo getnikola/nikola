@@ -1,0 +1,25 @@
+## -*- coding: utf-8 -*-
+<%inherit file="base.tmpl"/>
+<%namespace name="feeds_translations" file="feeds_translations_helper.tmpl" import="*"/>
+
+<%block name="extra_head">
+    ${feeds_translations.head(kind=kind, feeds=False)}
+</%block>
+
+<%block name="content">
+%if items:
+    <h2 class="title">${messages("Authors")}</h2>
+    <div class="metadata">
+        ${feeds_translations.translation_link(kind)}
+    </div>
+%endif
+%if items:
+    <div class="tags">
+    %for text, link in items:
+        % if text not in hidden_authors:
+            <a class="tag is-info" href="${link}">${text|h}</a>
+        % endif
+    %endfor
+    </div>
+%endif
+</%block>

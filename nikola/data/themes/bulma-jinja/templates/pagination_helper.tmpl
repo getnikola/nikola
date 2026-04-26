@@ -1,0 +1,37 @@
+{#  -*- coding: utf-8 -*- #}
+{% macro page_navigation(current_page, page_links, prevlink, nextlink, prev_next_links_reversed, surrounding=5) %}
+<nav class="pagination" role="navigation" aria-label="pagination">
+  {% if prev_next_links_reversed %}
+    {% if nextlink %}
+      <a href="{{ nextlink }}" class="pagination-previous" aria-label="{{ messages("Older posts") }}">{{ messages("Older posts") }}</a>
+    {% else %}
+      <a class="pagination-previous" disabled>{{ messages("Older posts") }}</a>
+    {% endif %}
+    {% if prevlink %}
+      <a href="{{ prevlink }}" class="pagination-next" aria-label="{{ messages("Newer posts") }}">{{ messages("Newer posts") }}</a>
+    {% else %}
+      <a class="pagination-next" disabled>{{ messages("Newer posts") }}</a>
+    {% endif %}
+  {% else %}
+    {% if prevlink %}
+      <a href="{{ prevlink }}" class="pagination-previous" aria-label="{{ messages("Newer posts") }}">{{ messages("Newer posts") }}</a>
+    {% else %}
+      <a class="pagination-previous" disabled>{{ messages("Newer posts") }}</a>
+    {% endif %}
+    {% if nextlink %}
+      <a href="{{ nextlink }}" class="pagination-next" aria-label="{{ messages("Older posts") }}">{{ messages("Older posts") }}</a>
+    {% else %}
+      <a class="pagination-next" disabled>{{ messages("Older posts") }}</a>
+    {% endif %}
+  {% endif %}
+  <ul class="pagination-list">
+  {% for i, link in enumerate(page_links) %}
+    {% if (i - current_page)|abs <= surrounding or i == 0 or i == page_links|length - 1 %}
+      <li><a href="{{ link }}" class="pagination-link {{ 'is-current' if i == current_page else '' }}" aria-label="Page {{ i + 1 }}" {{ 'aria-current="page"' if i == current_page else '' }}>{{ i + 1 }}</a></li>
+    {% elif i == current_page - surrounding - 1 or i == current_page + surrounding + 1 %}
+      <li><span class="pagination-ellipsis">&hellip;</span></li>
+    {% endif %}
+  {% endfor %}
+  </ul>
+</nav>
+{% endmacro %}

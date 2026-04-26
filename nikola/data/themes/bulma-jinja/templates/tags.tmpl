@@ -1,0 +1,34 @@
+{#  -*- coding: utf-8 -*- #}
+{% extends 'base.tmpl' %}
+
+{% block content %}
+<h1 class="title">{{ title|e }}</h1>
+{% if cat_items %}
+    {% if items %}
+        <h2 class="subtitle">{{ messages("Categories") }}</h2>
+    {% endif %}
+    {% for text, full_name, path, link, indent_levels, indent_change_before, indent_change_after in cat_hierarchy %}
+        {% for i in range(indent_change_before) %}
+            <div class="tags">
+        {% endfor %}
+        <a class="tag is-info" href="{{ link }}">{{ text|e }}</a>
+        {% if indent_change_after <= 0 %}
+        {% endif %}
+        {% for i in range(-indent_change_after) %}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% if items %}
+        <h2 class="subtitle">{{ messages("Tags") }}</h2>
+    {% endif %}
+{% endif %}
+{% if items %}
+    <div class="tags">
+    {% for text, link in items %}
+        {% if text not in hidden_tags %}
+            <a class="tag is-info" href="{{ link }}">{{ text|e }}</a>
+        {% endif %}
+    {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}

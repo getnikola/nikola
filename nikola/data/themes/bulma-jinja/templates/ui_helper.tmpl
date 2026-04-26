@@ -1,0 +1,22 @@
+{#  -*- coding: utf-8 -*- #}
+{% macro breadcrumbs(crumbs) %}
+{% if crumbs %}
+<nav class="breadcrumb" aria-label="breadcrumbs">
+<ul>
+    {% for link, text in crumbs %}
+        {% if text != index_file %}
+            {% if link == '#' %}
+                <li class="is-active"><a href="#" aria-current="page">{{ text.rsplit('.html', 1)[0] }}</a></li>
+            {% else %}
+                <li><a href="{{ link }}">{{ text }}</a></li>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+</ul>
+</nav>
+{% endif %}
+{% endmacro %}
+
+{% macro show_sourcelink(sourcelink_href) %}
+    <a href="{{ sourcelink_href }}" id="sourcelink" class="navbar-item">{{ messages("Source") }}</a>
+{% endmacro %}

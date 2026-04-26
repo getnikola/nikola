@@ -1,0 +1,11 @@
+[Theme]
+engine = jinja
+parent = base-jinja
+author = The Nikola Contributors
+author_url = https://getnikola.com/
+license = MIT
+based_on = Bulma <https://bulma.io/>
+tags = bulma
+
+[Family]
+family = bulma

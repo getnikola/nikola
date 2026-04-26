@@ -1,0 +1,4 @@
+assets/css/all-nocdn.css=rst.css,code.css,theme.css,bulma.min.css,baguetteBox.min.css,custom.css
+assets/css/all.css=rst.css,code.css,theme.css,custom.css
+assets/js/all-nocdn.js=baguetteBox.min.js,fancydates.min.js
+assets/js/all.js=fancydates.min.js

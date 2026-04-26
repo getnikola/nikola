@@ -1,0 +1,34 @@
+## -*- coding: utf-8 -*-
+<%inherit file="base.tmpl"/>
+<%namespace name="ui" file="ui_helper.tmpl"/>
+<%block name="content">
+${ui.breadcrumbs(crumbs)}
+%if folders or files:
+<div class="content">
+<ul>
+%for name in folders:
+    <li><a href="${name|h}">&#x1f4c2;&nbsp;${name|h}</a></li>
+%endfor
+%for name in files:
+    <li><a href="${name|h}.html">&#x1f4c4;&nbsp;${name|h}</a></li>
+%endfor
+</ul>
+</div>
+%endif
+%if code:
+<h1 class="title">${title}
+    %if source_link:
+        <small><a href="${source_link}">(${messages("Source")})</a></small>
+    %endif
+    </h1>
+    <div class="content">
+    ${code}
+    </div>
+%endif
+</%block>
+
+<%block name="sourcelink">
+%if source_link and show_sourcelink:
+    ${ui.show_sourcelink(source_link)}
+%endif
+</%block>

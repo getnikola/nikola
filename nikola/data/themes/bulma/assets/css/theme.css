@@ -1,0 +1,130 @@
+/* Bulma theme customizations */
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.titlebox {
+    text-align: right;
+}
+
+td.label {
+    background-color: inherit;
+}
+
+.footnote-reference {
+    vertical-align: super;
+    font-size: xx-small;
+}
+
+.caption {
+    text-align: center;
+    padding-top: 1rem;
+}
+
+div.figure > img,
+div.figure > a > img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+blockquote {
+    font-size: 1.25rem;
+    font-weight: 300;
+    line-height: 1.25;
+    padding: 1.25rem;
+    border-left: 5px solid hsl(0, 0%, 86%);
+    background-color: hsl(0, 0%, 96%);
+}
+
+ul.bricks > li {
+    display: inline;
+    background-color: hsl(204, 86%, 93%);
+    padding: 0.5rem;
+    border-radius: 4px;
+    line-height: 3;
+    white-space: nowrap;
+    margin: 0.25rem;
+}
+
+pre, pre code {
+    white-space: pre;
+    word-wrap: normal;
+    overflow: auto;
+}
+
+/* Navbar customizations */
+#blog-title {
+    font-weight: bold;
+    margin-left: 0.5rem;
+}
+
+/* Screen reader only utility (Bulma's .is-sr-only) */
+.is-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Footer styling */
+.footer {
+    background-color: hsl(0, 0%, 96%);
+    padding: 3rem 1.5rem;
+    margin-top: 3rem;
+}
+
+/* Responsive images in content */
+.content img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Code block styling */
+.content pre {
+    background-color: hsl(0, 0%, 96%);
+    padding: 1.25rem 1.5rem;
+    overflow-x: auto;
+}
+
+/* Table styling */
+.content table {
+    width: 100%;
+}
+
+/* Post metadata */
+.metadata {
+    color: hsl(0, 0%, 48%);
+    font-size: 0.875rem;
+}
+
+.metadata p {
+    margin-bottom: 0.5rem;
+}
+
+/* Tags */
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tag {
+    background-color: hsl(0, 0%, 96%);
+    border-radius: 4px;
+    color: hsl(0, 0%, 29%);
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+}
+
+.tag:hover {
+    background-color: hsl(0, 0%, 86%);
+    text-decoration: none;
+}

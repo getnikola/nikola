@@ -1,0 +1,125 @@
+{#  -*- coding: utf-8 -*- #}
+{% import 'base_helper.tmpl' as base with context %}
+{{ set_locale(lang) }}
+{{ base.html_headstart() }}
+{% block extra_head %}
+{#  Leave this block alone. #}
+{% endblock %}
+{{ template_hooks['extra_head']() }}
+</head>
+<body>
+<a href="#content" class="is-sr-only">{{ messages("Skip to main content") }}</a>
+
+<!-- Menubar -->
+
+<nav class="navbar
+{% if theme_config.get('navbar_light') %}
+is-light
+{% else %}
+is-dark
+{% endif %}
+{% if theme_config.get('navbar_custom_bg') %}
+{{ theme_config['navbar_custom_bg'] }}
+{% endif %}
+" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="{{ _link("root", None, lang) }}">
+            {% if logo_url %}
+                <img src="{{ logo_url }}" alt="{{ blog_title|e }}" id="logo">
+            {% endif %}
+            {% if show_blog_title %}
+                <span id="blog-title">{{ blog_title|e }}</span>
+            {% endif %}
+            </a>
+
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="bulma-navbar">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div id="bulma-navbar" class="navbar-menu">
+            <div class="navbar-start">
+                {{ base.html_navigation_links_entries(navigation_links) }}
+                {{ template_hooks['menu']() }}
+            </div>
+
+            <div class="navbar-end">
+                {% if search_form %}
+                    <div class="navbar-item">
+                        {{ search_form }}
+                    </div>
+                {% endif %}
+                {{ base.html_navigation_links_entries(navigation_alt_links) }}
+                {% block belowtitle %}
+                {% if translations|length > 1 %}
+                    <div class="navbar-item">{{ base.html_translations() }}</div>
+                {% endif %}
+                {% endblock %}
+                {% if show_sourcelink %}
+                    {% block sourcelink %}{% endblock %}
+                {% endif %}
+                {{ template_hooks['menu_alt']() }}
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- End of Menubar -->
+
+<section class="section">
+    <div class="container" id="content" role="main">
+        <!--Body content-->
+        {{ template_hooks['page_header']() }}
+        {% block extra_header %}{% endblock %}
+        {% block content %}{% endblock %}
+        <!--End of body content-->
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="container">
+        <div class="content">
+            {{ content_footer }}
+            {{ template_hooks['page_footer']() }}
+            {% block extra_footer %}{% endblock %}
+        </div>
+    </div>
+</footer>
+
+{{ base.late_load_js() }}
+    {% if date_fanciness != 0 %}
+        <!-- fancy dates -->
+        <script>
+        luxon.Settings.defaultLocale = "{{ luxon_locales[lang] }}";
+        fancydates({{ date_fanciness }}, {{ luxon_date_format }});
+        </script>
+        <!-- end fancy dates -->
+    {% endif %}
+    {% block extra_js %}{% endblock %}
+    <script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
+    </script>
+    <script>
+    // Bulma navbar burger toggle
+    document.addEventListener('DOMContentLoaded', () => {
+        const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+        $navbarBurgers.forEach( el => {
+            el.addEventListener('click', () => {
+                const target = el.dataset.target;
+                const $target = document.getElementById(target);
+                el.classList.toggle('is-active');
+                $target.classList.toggle('is-active');
+            });
+        });
+    });
+    </script>
+{{ body_end }}
+{{ template_hooks['body_end']() }}
+</body>
+</html>
