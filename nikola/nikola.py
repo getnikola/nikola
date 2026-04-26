@@ -27,6 +27,7 @@
 """The main Nikola site object."""
 
 import datetime
+from datetime import timezone, tzinfo
 import io
 import json
 import functools
@@ -373,9 +374,14 @@ class Nikola:
 
     plugin_manager: PluginManager
     _template_system: TemplateSystem | None
-    tzinfo: dateutil.tz.tzfile | None
+    tzinfo: datetime.tzinfo | None
     themes_dirs: list[str]
     state: Persistor
+    posts_per_classification: dict[str, dict[str, list[Post]]]
+    hierarchy_per_classification: dict[str, dict[str, list]]
+    flat_hierarchy_per_classification: dict[str, dict[str, list]]
+    hierarchy_lookup_per_classification: dict[str, dict[str, dict]]
+    page_count_per_classification: dict[str, dict[str, dict]]
 
     def __init__(self, **config) -> None:
         """Initialize proper environment for running tasks."""
