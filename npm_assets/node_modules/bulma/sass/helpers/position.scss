@@ -1,0 +1,19 @@
+@use "../utilities/extends";
+@use "../utilities/initial-variables" as iv;
+
+.#{iv.$class-prefix}#{iv.$helpers-prefix}overlay,
+.#{iv.$class-prefix}#{iv.$helpers-prefix}overlay {
+  @extend %overlay;
+}
+
+.#{iv.$class-prefix}#{iv.$helpers-prefix}relative {
+  position: relative !important;
+}
+
+$positions: absolute fixed relative static sticky;
+
+@each $position in $positions {
+  .#{iv.$class-prefix}#{iv.$helpers-prefix}position-#{$position} {
+    position: $position !important;
+  }
+}

@@ -1,0 +1,12 @@
+@use "sass:list";
+
+@use "../utilities/initial-variables" as iv;
+
+@each $pair in iv.$aspect-ratios {
+  $w: list.nth($pair, 1);
+  $h: list.nth($pair, 2);
+
+  .#{iv.$class-prefix}#{iv.$helpers-prefix}aspect-ratio-#{$w}by#{$h} {
+    aspect-ratio: #{$w} / #{$h};
+  }
+}

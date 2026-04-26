@@ -28,9 +28,9 @@
 </%block>
 
 <%block name="content">
-<article class="post-${post.meta('type')} h-entry hentry postpage content" itemscope="itemscope" itemtype="http://schema.org/Article">
+<article class="post-${post.meta('type')} h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article">
     ${pheader.html_post_header()}
-    <div class="e-content entry-content" itemprop="articleBody text">
+    <div class="e-content entry-content content" itemprop="articleBody text">
     ${post.text()}
     </div>
     <aside class="postpromonav">

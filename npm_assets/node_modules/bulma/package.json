@@ -1,0 +1,62 @@
+{
+  "name": "bulma",
+  "version": "1.0.4",
+  "homepage": "https://bulma.io",
+  "author": {
+    "name": "Jeremy Thomas",
+    "email": "bbxdesign@gmail.com",
+    "url": "https://jgthms.com"
+  },
+  "description": "Modern CSS framework based on Flexbox",
+  "main": "bulma.scss",
+  "unpkg": "css/bulma.css",
+  "style": "css/bulma.min.css",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jgthms/bulma.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "css",
+    "sass",
+    "scss",
+    "flexbox",
+    "grid",
+    "responsive",
+    "framework"
+  ],
+  "bugs": {
+    "url": "https://github.com/jgthms/bulma/issues"
+  },
+  "devDependencies": {
+    "cssnano": "^7.0.6",
+    "postcss-cli": "^11.0.1",
+    "prettier": "^3.5.3",
+    "rimraf": "^6.0.1",
+    "sass": "^1.86.3"
+  },
+  "scripts": {
+    "build-bulma": "sass --style=expanded --source-map bulma.scss css/bulma.css",
+    "minify-bulma": "postcss css/bulma.css --no-map --use cssnano --output css/bulma.min.css",
+    "version-no-dark-mode": "sass --style=expanded --source-map versions/bulma-no-dark-mode.scss css/versions/bulma-no-dark-mode.css",
+    "version-no-helpers": "sass --style=expanded --source-map versions/bulma-no-helpers.scss css/versions/bulma-no-helpers.css",
+    "version-no-helpers-prefixed": "sass --style=expanded --source-map versions/bulma-no-helpers-prefixed.scss css/versions/bulma-no-helpers-prefixed.css",
+    "version-prefixed": "sass --style=expanded --source-map versions/bulma-prefixed.scss css/versions/bulma-prefixed.css",
+    "build-versions": "npm run version-no-dark-mode && npm run version-no-helpers && npm run version-no-helpers-prefixed && npm run version-prefixed",
+    "minify-versions": "postcss css/versions/*.css --dir css/versions --ext min.css --no-map --use cssnano",
+    "build-all": "npm run build-bulma && npm run build-versions",
+    "minify-all": "npm run minify-bulma && npm run minify-versions",
+    "clean": "rimraf css",
+    "deploy": "npm run clean && npm run build-all && npm run minify-all",
+    "test": "sass --style=expanded --source-map --watch test.scss test.css",
+    "start": "npm run build-bulma -- --watch"
+  },
+  "files": [
+    "css",
+    "sass",
+    "versions",
+    "bulma.scss",
+    "LICENSE",
+    "README.md"
+  ]
+}
