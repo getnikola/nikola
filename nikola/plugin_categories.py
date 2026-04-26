@@ -64,7 +64,7 @@ __all__ = (
 class BasePlugin:
     """Base plugin class."""
 
-    logger = None
+    logger: logging.Logger
     site: Nikola
 
     def set_site(self, site: Nikola):
