@@ -372,7 +372,7 @@ class Nikola:
     """
 
     plugin_manager: PluginManager
-    _template_system: TemplateSystem
+    _template_system: TemplateSystem | None
 
     def __init__(self, **config) -> None:
         """Initialize proper environment for running tasks."""
