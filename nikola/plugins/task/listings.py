@@ -26,6 +26,14 @@
 
 """Render code listings."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from nikola.nikola import Nikola
+
+
 import os
 from collections import defaultdict
 
@@ -48,7 +56,7 @@ class Listings(Task):
         self.proper_input_file_mapping[os.path.join(input_folder, rel_name)] = rel_output_name
         self.proper_input_file_mapping[rel_output_name] = rel_output_name
 
-    def set_site(self, site):
+    def set_site(self, site: Nikola):
         """Set Nikola site."""
         site.register_path_handler('listing', self.listing_path)
         site.register_path_handler('listing_source', self.listing_source_path)

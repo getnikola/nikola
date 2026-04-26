@@ -26,10 +26,16 @@
 
 """Jinja template handler."""
 
+from __future__ import annotations
+
+
 import io
 import json
 import os
-from typing import Callable, Optional
+from typing import Callable, Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from nikola.nikola import Nikola
 
 from nikola.plugin_categories import TemplateSystem
 from nikola.utils import makedirs, req_missing, slugify, sort_posts, _smartjoin_filter
@@ -101,7 +107,7 @@ class JinjaTemplates(TemplateSystem):
         self.lookup.loader = jinja2.FileSystemLoader(self.directories,
                                                      encoding='utf-8')
 
-    def set_site(self, site):
+    def set_site(self, site: Nikola):
         """Set the Nikola site."""
         self.site = site
         self.lookup.filters.update(self.site.config['TEMPLATE_FILTERS'])
