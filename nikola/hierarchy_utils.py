@@ -26,8 +26,6 @@
 
 """Hierarchy utility functions."""
 
-from __future__ import annotations
-
 import natsort
 
 __all__ = ('TreeNode', 'clone_treenode', 'flatten_tree_structure',
@@ -41,8 +39,6 @@ class TreeNode:
     indent_levels = None  # use for formatting comments as tree
     indent_change_before = 0  # use for formatting comments as tree
     indent_change_after = 0  # use for formatting comments as tree
-    classification_path: list[str]
-    classification_name: str
 
     # The indent levels and changes allow to render a tree structure
     # without keeping track of all that information during rendering.

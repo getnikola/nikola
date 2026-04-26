@@ -377,11 +377,6 @@ class Nikola:
     tzinfo: datetime.tzinfo | None
     themes_dirs: list[str]
     state: Persistor
-    posts_per_classification: dict[str, dict[str, list[Post]]]
-    hierarchy_per_classification: dict[str, dict[str, list]]
-    flat_hierarchy_per_classification: dict[str, dict[str, list]]
-    hierarchy_lookup_per_classification: dict[str, dict[str, dict]]
-    page_count_per_classification: dict[str, dict[str, dict]]
 
     def __init__(self, **config) -> None:
         """Initialize proper environment for running tasks."""
@@ -406,7 +401,7 @@ class Nikola:
         self.timeline = []
         self.pages = []
         self._scanned = False
-        self._template_system: Optional[TemplateSystem] = None
+        self._template_system = None
         self._THEMES = None
         self._MESSAGES = None
         self.filters = {}
