@@ -371,10 +371,12 @@ def rst2html(source, source_path=None, source_class=docutils.io.StringInput,
                                   'add_ln': l_add_ln
                               })
 
-    pub = docutils.core.Publisher(reader, parser, writer, settings=settings,
+    pub = docutils.core.Publisher(reader,
+                                  parser=parser or parser_name,
+                                  writer=writer or writer_name,
+                                  settings=settings,
                                   source_class=source_class,
                                   destination_class=docutils.io.StringOutput)
-    pub.set_components(None, parser_name, writer_name)
     pub.process_programmatic_settings(
         settings_spec, settings_overrides, config_section)
     pub.set_source(source, None)

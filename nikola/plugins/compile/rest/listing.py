@@ -40,7 +40,7 @@ import pygments.util
 from docutils import core
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
-from docutils.parsers.rst.roles import set_classes
+from docutils.parsers.rst.roles import normalize_options
 from docutils.parsers.rst.directives.misc import Include
 from pygments.lexers import get_lexer_by_name
 
@@ -74,7 +74,7 @@ class CodeBlock(Directive):
             language = self.arguments[0]
         else:
             language = 'text'
-        set_classes(self.options)
+        normalize_options(self.options)
         classes = ['code']
         if language:
             classes.append(language)
