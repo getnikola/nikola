@@ -242,6 +242,7 @@ class CommandAuto(Command):
         # Prepare asyncio event loop
         # Required for subprocessing to work
         loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
 
         # Set debug setting
         loop.set_debug(self.site.debug)
