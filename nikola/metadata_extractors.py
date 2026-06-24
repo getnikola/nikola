@@ -26,11 +26,17 @@
 
 """Default metadata extractors and helper functions."""
 
+from __future__ import annotations
+
 import re
 from enum import Enum
 from io import StringIO
+from typing import TYPE_CHECKING
 
 import natsort
+
+if TYPE_CHECKING:
+    from nikola.nikola import Nikola
 
 from nikola.plugin_categories import MetadataExtractor
 from nikola.utils import unslugify
@@ -99,7 +105,7 @@ def classify_extractor(extractor: MetadataExtractor, metadata_extractors_by: dic
     metadata_extractors_by['all'].append(extractor)
 
 
-def load_defaults(site, metadata_extractors_by: dict):
+def load_defaults(site: Nikola, metadata_extractors_by: dict):
     """Load default metadata extractors."""
     for extractor in _default_extractors:
         extractor.site = site

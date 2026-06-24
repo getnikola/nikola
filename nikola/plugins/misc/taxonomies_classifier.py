@@ -26,6 +26,14 @@
 
 """Render the taxonomy overviews, classification pages and feeds."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from nikola.nikola import Nikola
+
+
 import functools
 import os
 import sys
@@ -325,7 +333,7 @@ class TaxonomiesClassifier(SignalHandler):
                 p.__doc__ = doc
                 self.site.register_path_handler(name, p)
 
-    def set_site(self, site):
+    def set_site(self, site: Nikola):
         """Set site, which is a Nikola instance."""
         super().set_site(site)
         # Add hook for after post scanning

@@ -26,6 +26,14 @@
 
 """Page compiler plugin for Markdown."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from nikola.nikola import Nikola
+
+
 import io
 import json
 import os
@@ -80,7 +88,7 @@ class CompileMarkdown(PageCompiler):
     site = None
     supports_metadata = False
 
-    def set_site(self, site):
+    def set_site(self, site: Nikola):
         """Set Nikola site."""
         super().set_site(site)
         self.config_dependencies = []

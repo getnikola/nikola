@@ -27,6 +27,14 @@
 """Post list shortcode."""
 
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from nikola.nikola import Nikola
+
+
 import operator
 import os
 import uuid
@@ -120,7 +128,7 @@ class PostListShortcode(ShortcodePlugin):
 
     name = "post_list"
 
-    def set_site(self, site):
+    def set_site(self, site: Nikola):
         """Set the site."""
         super().set_site(site)
         site.register_shortcode('post-list', self.handler)

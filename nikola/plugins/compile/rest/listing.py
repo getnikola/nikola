@@ -28,6 +28,14 @@
 """Define and register a listing directive using the existing CodeBlock."""
 
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from nikola.nikola import Nikola
+
+
 import io
 import os
 import uuid
@@ -152,7 +160,7 @@ class Plugin(RestExtension):
 
     name = "rest_listing"
 
-    def set_site(self, site):
+    def set_site(self, site: Nikola):
         """Set Nikola site."""
         self.site = site
         # Even though listings don't use CodeBlock anymore, I am

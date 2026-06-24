@@ -30,6 +30,14 @@ You will need, of course, to install pandoc
 """
 
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from nikola.nikola import Nikola
+
+
 import io
 import os
 import subprocess
@@ -45,7 +53,7 @@ class CompilePandoc(PageCompiler):
     name = "pandoc"
     friendly_name = "pandoc"
 
-    def set_site(self, site):
+    def set_site(self, site: Nikola):
         """Set Nikola site."""
         self.config_dependencies = [str(site.config['PANDOC_OPTIONS'])]
         super().set_site(site)

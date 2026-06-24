@@ -26,6 +26,14 @@
 
 """Listing shortcode (equivalent to reST’s listing directive)."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from nikola.nikola import Nikola
+
+
 import os
 from urllib.parse import urlunsplit
 
@@ -39,7 +47,7 @@ class Plugin(ShortcodePlugin):
 
     name = "listing"
 
-    def set_site(self, site):
+    def set_site(self, site: Nikola):
         """Set Nikola site."""
         self.site = site
         Plugin.folders = site.config['LISTINGS_FOLDERS']

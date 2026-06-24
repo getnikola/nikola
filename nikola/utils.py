@@ -26,6 +26,8 @@
 
 """Utility functions."""
 
+from __future__ import annotations
+
 import configparser
 import datetime
 import hashlib
@@ -61,8 +63,11 @@ from blinker import signal
 from doit import tools
 from doit.cmdparse import CmdParse
 from nikola.packages.pygments_better_html import BetterHtmlFormatter
-from typing import Any, Callable, Iterable, Match, Optional, Union
+from typing import Any, Callable, Iterable, Match, Optional, Union, TYPE_CHECKING
 from unidecode import unidecode
+
+if TYPE_CHECKING:
+    from nikola.nikola import Nikola
 
 # Renames
 from nikola import DEBUG  # NOQA
@@ -1728,7 +1733,7 @@ def nikola_find_formatter_class(alias):
 pygments.formatters.find_formatter_class = nikola_find_formatter_class
 
 
-def get_displayed_page_number(i, num_pages, site):
+def get_displayed_page_number(i, num_pages, site: Nikola):
     """Get page number to be displayed for entry `i`."""
     if not i:
         i = 0
@@ -1738,7 +1743,7 @@ def get_displayed_page_number(i, num_pages, site):
         return i + 1 if site.config["INDEXES_PAGES_MAIN"] else i
 
 
-def adjust_name_for_index_path_list(path_list, i, displayed_i, lang, site, force_addition=False, extension=None):
+def adjust_name_for_index_path_list(path_list, i, displayed_i, lang, site: Nikola, force_addition=False, extension=None):
     """Retrurn a path list for a given index page."""
     index_file = site.config["INDEX_FILE"]
     if i or force_addition:
@@ -1781,12 +1786,12 @@ def os_path_split(path):
     return result
 
 
-def adjust_name_for_index_path(name, i, displayed_i, lang, site, force_addition=False, extension=None):
+def adjust_name_for_index_path(name, i, displayed_i, lang, site: Nikola, force_addition=False, extension=None):
     """Return file name for a given index file."""
     return os.path.join(*adjust_name_for_index_path_list(os_path_split(name), i, displayed_i, lang, site, force_addition, extension))
 
 
-def adjust_name_for_index_link(name, i, displayed_i, lang, site, force_addition=False, extension=None):
+def adjust_name_for_index_link(name, i, displayed_i, lang, site: Nikola, force_addition=False, extension=None):
     """Return link for a given index file."""
     link = adjust_name_for_index_path_list(name.split('/'), i, displayed_i, lang, site, force_addition, extension)
     if not extension == ".atom":
@@ -1881,7 +1886,7 @@ def dns_sd(port, inet6):
         return None
 
 
-def clean_before_deployment(site):
+def clean_before_deployment(site: Nikola):
     """Clean drafts and future posts before deployment."""
     undeployed_posts = []
     deploy_drafts = site.config.get('DEPLOY_DRAFTS', True)
