@@ -37,12 +37,18 @@ import docutils.parsers.rst.directives.body
 import docutils.parsers.rst.directives.misc
 import pygments
 import pygments.util
+import docutils
 from docutils import core
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
-from docutils.parsers.rst.roles import set_classes
 from docutils.parsers.rst.directives.misc import Include
 from pygments.lexers import get_lexer_by_name
+
+# Compatibility layer for docutils versions
+if docutils.__version_info__[:2] >= (0, 22):
+    from docutils.parsers.rst.roles import normalize_options
+else:
+    from docutils.parsers.rst.roles import set_classes as normalize_options
 
 from nikola import utils
 from nikola.plugin_categories import RestExtension
@@ -74,7 +80,7 @@ class CodeBlock(Directive):
             language = self.arguments[0]
         else:
             language = 'text'
-        set_classes(self.options)
+        normalize_options(self.options)
         classes = ['code']
         if language:
             classes.append(language)
