@@ -1,6 +1,7 @@
 * `Aaron Meurer <https://github.com/asmeurer>`_
 * `Agustin Henze <https://github.com/agustinhenze>`_
 * `Alberto Berti <https://github.com/azazel75>`_
+* `Alpesh Kumar <https://github.com/alpeshkumar9>`_
 * `Alex Popescu <https://github.com/al3xandru>`_
 * `Alex Walters <https://github.com/tritium21>`_
 * `Andreas Krüger <https://github.com/aknrdureegaesr>`_

@@ -9,6 +9,8 @@ Features
 Bugfixes
 --------
 
+* Fix ``post_list`` treating draft, private, and future posts as pages
+  (Issue #3868)
 * Fix ``docs``, ``logo``, ``npm_assets``, ``scripts``, ``translations``
  being installed into ``site-packages`` (Issue #3852)
 * Fix jinja2 plugin failing to load when jinja2 is not installed
