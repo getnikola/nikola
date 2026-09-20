@@ -529,6 +529,11 @@ to
         except requests.exceptions.ConnectionError as err:
             LOGGER.warning("Downloading {0} to {1} failed: {2}".format(url, dst_path, err))
 
+    def path_in_files_dir(self, path):
+        """Check whether a path built from an attachment URL stays inside the files directory."""
+        files_dir = os.path.realpath(os.path.join(self.output_folder, 'files'))
+        return os.path.commonpath([files_dir, os.path.realpath(path)]) == files_dir
+
     def import_attachment(self, item, wordpress_namespace):
         """Import an attachment to the site."""
         # Download main image
@@ -538,7 +543,9 @@ to
                             'foo')
         path = urlparse(url).path
         dst_path = os.path.join(*([self.output_folder, 'files'] + list(path.split('/'))))
-        if self.no_downloads:
+        if not self.path_in_files_dir(dst_path):
+            LOGGER.warning("Skipping attachment outside files dir: {0}".format(url))
+        elif self.no_downloads:
             LOGGER.info("Skipping downloading {0} => {1}".format(url, dst_path))
         else:
             dst_dir = os.path.dirname(dst_path)
@@ -643,7 +650,9 @@ to
 
                         path = urlparse(url).path
                         dst_path = os.path.join(*([self.output_folder, 'files'] + list(path.split('/'))))
-                        if self.no_downloads:
+                        if not self.path_in_files_dir(dst_path):
+                            LOGGER.warning("Skipping attachment outside files dir: {0}".format(url))
+                        elif self.no_downloads:
                             LOGGER.info("Skipping downloading {0} => {1}".format(url, dst_path))
                         else:
                             dst_dir = os.path.dirname(dst_path)
