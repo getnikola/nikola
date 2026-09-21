@@ -544,7 +544,7 @@ to
         path = urlparse(url).path
         dst_path = os.path.join(*([self.output_folder, 'files'] + list(path.split('/'))))
         if not self.path_in_files_dir(dst_path):
-            LOGGER.warning("Skipping attachment outside files dir: {0}".format(url))
+            LOGGER.warning(f"Skipping attachment outside files dir: {url} would end up in {dst_path}")
         elif self.no_downloads:
             LOGGER.info("Skipping downloading {0} => {1}".format(url, dst_path))
         else:
@@ -651,7 +651,7 @@ to
                         path = urlparse(url).path
                         dst_path = os.path.join(*([self.output_folder, 'files'] + list(path.split('/'))))
                         if not self.path_in_files_dir(dst_path):
-                            LOGGER.warning("Skipping attachment outside files dir: {0}".format(url))
+                            LOGGER.warning(f"Skipping attachment outside files dir: {url} would end up in {dst_path}")
                         elif self.no_downloads:
                             LOGGER.info("Skipping downloading {0} => {1}".format(url, dst_path))
                         else:
