@@ -9,6 +9,7 @@ Features
 Bugfixes
 --------
 
+* Avoid live-reload loops from read-only Watchdog close events (Issue #3898)
 * Fix ``docs``, ``logo``, ``npm_assets``, ``scripts``, ``translations``
  being installed into ``site-packages`` (Issue #3852)
 * Fix jinja2 plugin failing to load when jinja2 is not installed
