@@ -2,6 +2,7 @@ import os
 from unittest import mock
 
 import pytest
+from lxml import etree
 
 import nikola.plugins.command.import_wordpress
 
@@ -414,6 +415,71 @@ def test_ignoring_drafts_during_import(
 
     patched_import_command.execute(**arguments)
     assert patched_import_command.exclude_drafts is True
+
+
+def test_path_in_files_dir(import_command, tmp_path):
+    """A path built from an attachment URL must stay inside the files directory."""
+    import_command.output_folder = str(tmp_path)
+    files_dir = tmp_path / "files"
+    files_dir.mkdir()
+
+    inside = files_dir / "wp-content" / "uploads" / "image.png"
+    assert import_command.path_in_files_dir(str(inside))
+
+    outside = tmp_path / "secret.txt"
+    assert not import_command.path_in_files_dir(str(outside))
+
+
+def test_importing_attachments_with_traversal_urls(module, import_command, tmp_path):
+    """Attachments whose URL escapes the files directory are skipped (issue #3904)."""
+    import_command.base_dir = str(tmp_path)
+    import_command.output_folder = str(tmp_path)
+    import_command.no_downloads = False
+    import_command.export_categories_as_categories = False
+    import_command.export_comments = False
+    import_command.html2text = False
+    import_command.transform_to_markdown = False
+    import_command.transform_to_html = False
+    import_command.use_wordpress_compiler = False
+    import_command.tag_saniziting_strategy = "first"
+    import_command.separate_qtranslate_content = False
+    import_command.translations_pattern = "{path}.{lang}.{ext}"
+    import_command.context = {"TRANSLATIONS": {"en": ""}}
+
+    namespaces = {
+        "wp": "http://wordpress.org/export/1.2/",
+        "dc": "http://purl.org/dc/elements/1.1/",
+        "content": "http://purl.org/rss/1.0/modules/content/",
+        "excerpt": "http://purl.org/rss/1.0/modules/excerpt/",
+    }
+    wordpress_namespace = namespaces["wp"]
+    channel = etree.Element("channel", nsmap=namespaces)
+    item = etree.SubElement(channel, "item")
+    etree.SubElement(
+        item, "{{{0}}}attachment_url".format(wordpress_namespace)
+    ).text = "http://some.blog/../../secrets.txt"
+    etree.SubElement(
+        item, "{{{0}}}link".format(wordpress_namespace)
+    ).text = "http://some.blog/../../secrets.txt"
+
+    download_mock = mock.MagicMock()
+
+    with mock.patch(
+        "nikola.plugins.command.import_wordpress.CommandImportWordpress.download_url_content_to_file",
+        download_mock,
+    ), mock.patch(
+        "nikola.plugins.command.import_wordpress.CommandImportWordpress.write_content"
+    ), mock.patch(
+        "nikola.plugins.command.import_wordpress.CommandImportWordpress.write_metadata"
+    ), mock.patch(
+        "nikola.plugins.command.import_wordpress.CommandImportWordpress.write_attachments_info"
+    ), mock.patch(
+        "nikola.plugins.command.import_wordpress.CommandImportWordpress.write_urlmap_csv"
+    ):
+        import_command.import_attachment(item, wordpress_namespace)
+
+    download_mock.assert_not_called()
+    assert not (tmp_path / "secrets.txt").exists()
 
 
 @pytest.fixture
