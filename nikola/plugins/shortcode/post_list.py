@@ -172,6 +172,10 @@ class PostListShortcode(ShortcodePlugin):
         else:  # post
             timeline = [p for p in site.timeline if p.use_in_feeds]
 
+        # Skip posts not translated into the listing language (same rule as
+        # the pages task: SHOW_UNTRANSLATED_POSTS=False must hide them here too)
+        timeline = [p for p in timeline if site.config['SHOW_UNTRANSLATED_POSTS'] or p.is_translation_available(lang)]
+
         # self_post should be removed from timeline because this is redundant
         timeline = [p for p in timeline if p.source_path != filename]
 
