@@ -27,6 +27,14 @@
 """Render the author pages and feeds."""
 
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from nikola.nikola import Nikola
+
+
 from nikola.plugin_categories import Taxonomy
 from nikola import utils
 
@@ -69,7 +77,7 @@ Example:
 link://author_rss/joe => /authors/joe.xml""",
     }
 
-    def set_site(self, site):
+    def set_site(self, site: Nikola):
         """Set Nikola site."""
         super().set_site(site)
         self.show_list_as_index = site.config['AUTHOR_PAGES_ARE_INDEXES']

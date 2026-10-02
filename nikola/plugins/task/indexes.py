@@ -27,6 +27,14 @@
 """Render the blog's main index."""
 
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from nikola.nikola import Nikola
+
+
 from nikola.plugin_categories import Taxonomy
 
 
@@ -64,7 +72,7 @@ Example:
 link://rss => /blog/rss.xml""",
     }
 
-    def set_site(self, site):
+    def set_site(self, site: Nikola):
         """Set Nikola site."""
         # Redirect automatically generated 'index_rss' path handler to 'rss' for compatibility with old rss plugin
         site.register_path_handler('rss', lambda name, lang: site.path_handlers['index_rss'](name, lang))

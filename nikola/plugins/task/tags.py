@@ -27,6 +27,14 @@
 """Render the tag pages and feeds."""
 
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from nikola.nikola import Nikola
+
+
 from nikola.plugin_categories import Taxonomy
 from nikola import utils
 
@@ -72,7 +80,7 @@ Example:
 link://tag_rss/cats => /tags/cats.xml""",
     }
 
-    def set_site(self, site):
+    def set_site(self, site: Nikola):
         """Set site, which is a Nikola instance."""
         super().set_site(site)
         self.show_list_as_index = self.site.config['TAG_PAGES_ARE_INDEXES']
