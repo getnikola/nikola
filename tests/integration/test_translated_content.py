@@ -36,11 +36,11 @@ def test_translated_titles(build, output_dir, other_locale):
     # And now let's check the titles
     with io.open(normal_file, "r", encoding="utf8") as inf:
         doc = lxml.html.parse(inf)
-        assert doc.find("//title").text == "Foo | Demo Site"
+        assert doc.find(".//title").text == "Foo | Demo Site"
 
     with io.open(translated_file, "r", encoding="utf8") as inf:
         doc = lxml.html.parse(inf)
-        assert doc.find("//title").text == "Bar | Demo Site"
+        assert doc.find(".//title").text == "Bar | Demo Site"
 
 
 @pytest.fixture(scope="module")
