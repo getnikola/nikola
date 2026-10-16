@@ -96,3 +96,37 @@ Here are some guidelines about how you can contribute to Nikola:
 .. [1] Very inspired by `fabric’s <https://github.com/fabric/fabric/blob/master/CONTRIBUTING.rst>`_ — thanks!
 
 .. [2] For example, logging, or always making sure directories are created using ``utils.makedirs()``.
+
+Previewing documentation changes
+--------------------------------
+
+The user documentation in ``docs/`` is published on `getnikola.com
+<https://getnikola.com/documentation.html>`_ using the separate
+`nikola-site repository <https://github.com/getnikola/nikola-site>`_.
+To preview it with the website's templates, use sibling checkouts of both
+repositories. For example, in a POSIX shell::
+
+    git clone https://github.com/getnikola/nikola.git
+    git clone https://github.com/getnikola/nikola-site.git
+    python3 -m venv .venv
+    . .venv/bin/activate
+    python -m pip install -e './nikola[extras]'
+    cd nikola-site
+    cp ../nikola/docs/*.rst ../nikola/AUTHORS.txt ../nikola/CHANGES.txt stories/
+    nikola build
+    nikola serve --address 127.0.0.1 --browser
+
+If you already have a Nikola checkout, use that checkout instead of cloning
+it again. Visit http://127.0.0.1:8000/documentation.html to find the documentation,
+or http://127.0.0.1:8000/handbook.html for ``docs/manual.rst``.
+Stop the preview server with Ctrl-C.
+
+Make your edits in the **Nikola repository's** ``docs/`` directory, then repeat
+the copy and ``nikola build`` commands from ``nikola-site`` and refresh the
+browser. The files in ``nikola-site/stories/`` are copies; editing them does not
+update the sources for your pull request. Submit documentation changes to the
+Nikola repository. The website's release-update steps are not needed for this
+preview, and its bundled configuration listing may describe a released version.
+
+This previews the user documentation, not the Sphinx API reference under
+``docs/sphinx/``.
