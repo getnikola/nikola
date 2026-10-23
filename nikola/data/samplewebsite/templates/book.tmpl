@@ -1,0 +1,117 @@
+## -*- coding: utf-8 -*-
+<%namespace name="helper" file="post_helper.tmpl"/>
+<%namespace name="pheader" file="post_header.tmpl"/>
+<%namespace name="comments" file="comments_helper.tmpl"/>
+<%inherit file="post.tmpl"/>
+
+<%block name="extra_head">
+    ${parent.extra_head()}
+    <link href='https://fonts.googleapis.com/css?family=Gentium+Book+Basic' rel='stylesheet' type='text/css'>
+    <style>
+        .smallcaps {
+            font-variant: small-caps;
+        }
+        .chapter {
+            width: 100%;
+            padding: 10px;
+            -webkit-column-gap: 40px;
+               -moz-column-gap: 40px;
+                    column-gap: 40px;
+            -webkit-column-width: 400px;
+               -moz-column-width: 400px;
+                    column-width: 400px;
+            -webkit-column-count: 2;
+               -moz-column-count: 2;
+                    column-count: 2;
+            -webkit-column-rule: 1px solid #ddd;
+               -moz-column-rule: 1px solid #ddd;
+                    column-rule: 1px solid #ddd;
+            height: 90vh;
+            font-family: 'Gentium Book Basic', serif;
+            color: #2d2e2e;
+            font-weight: 500;
+        }
+        div.frame {
+            overflow: hidden;
+            padding: 0;
+            margin: 0;
+        }
+        div.scrolling-cont {
+            overflow-x: scroll;
+            padding: 0;
+            margin: 0;
+        }
+        h1, h2, h3, h4 {
+            text-align: center;
+            width: 100%;
+            font-family: 'Gentium Book Basic', serif;
+            font-size: 120%;
+            font-weight: 900;
+        }
+        h1 {
+            font-size: 150%;
+        }
+        .subtitle {
+            text-align: center;
+            width: 100%;
+        }
+        .bookfig {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+        }
+        div.figure {
+            height: 88vh;
+            margin: 0;
+        }
+        div.topic {
+            margin: 0;
+        }
+        div.section > p {
+            text-indent: 1em;
+            margin-bottom: 0;
+            text-align: justify;
+        }
+    </style>
+</%block>
+
+<%block name="content">
+<article class="storypage" itemscope="itemscope" itemtype="http://schema.org/Article">
+    <div class="frame">
+    <div class="scrolling-cont" id="scrolling-cont" name="scrolling-cont">
+    <div class="e-content entry-content chapter" itemprop="articleBody text">
+    <h1>${post.title()}</h1>
+    ${post.text()}
+    </div>
+    </div>
+    </div>
+</article>
+</%block>
+
+<%block name="extra_js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Flowtype.js/1.1.0/flowtype.min.js"></script>
+    <script>
+        $('#scrolling-cont').flowtype({
+            minimum: 500,
+            maximum: 1200,
+            minFont: 20,
+            maxFont: 40,
+            fontRatio: 50
+        });
+        $(document).ready(function() {
+            var elem = $('#scrolling-cont');
+            elem.click(function(event) {
+                var x1 = elem.position().left;
+                var pw = elem.width() + 20;
+                var x2 = event.pageX;
+                if (x2 - x1 < pw / 2) {
+                    pw = -pw;
+                }
+                elem.animate({
+                    scrollLeft: '+=' + pw
+                }, 500)
+            });
+        });
+    </script>
+</%block>
