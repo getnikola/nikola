@@ -87,7 +87,7 @@ def test_format_date_timezone(base_config):
         2006, 7, 10, 12, 34, 56, tzinfo=dateutil.tz.gettz("America/New_York")
     )
     formatted_date = LocaleBorg().formatted_date("long", tesla_150_birthday_dtz)
-    assert formatted_date == "July 10, 2006, 12:34:56\u202fPM -0400"
+    assert formatted_date == "July 10, 2006, 12:34:56\u202fPM EDT"
 
     nodst = datetime.datetime(
         2006, 1, 10, 12, 34, 56, tzinfo=dateutil.tz.gettz("America/New_York")
