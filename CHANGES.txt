@@ -5,10 +5,13 @@ Features
 --------
 
 * Provide a command to show diffs between custom templates and the original files
+* Support using ``link://kind/name?lang=some_lang`` to link to pages in specific languages
+  (Issue #3811)
 
 Bugfixes
 --------
 
+* Fix ``link://filename/`` magic links to handle multilingual pages (Issue #3811)
 * Fix ``docs``, ``logo``, ``npm_assets``, ``scripts``, ``translations``
  being installed into ``site-packages`` (Issue #3852)
 * Fix jinja2 plugin failing to load when jinja2 is not installed
