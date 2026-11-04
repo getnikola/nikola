@@ -1300,12 +1300,12 @@ class LocaleBorg:
 class ExtendedRSS2(rss.RSS2):
     """Extended RSS class."""
 
-    xsl_stylesheet_href = None
+    css_stylesheet_href = None
 
     def publish(self, handler):
         """Publish a feed."""
-        if self.xsl_stylesheet_href:
-            handler.processingInstruction("xml-stylesheet", 'type="text/xsl" href="{0}" media="all"'.format(self.xsl_stylesheet_href))
+        if self.css_stylesheet_href:
+            handler.processingInstruction("xml-stylesheet", 'type="text/css" href="{0}"'.format(self.css_stylesheet_href))
         super().publish(handler)
 
     def publish_extensions(self, handler):

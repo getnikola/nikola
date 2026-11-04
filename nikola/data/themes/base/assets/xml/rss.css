@@ -1,0 +1,50 @@
+rss {
+    color: hsl(180, 1%, 31%);
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.4;
+    margin: 5%;
+    max-width: 35rem;
+    padding: 0;
+}
+
+channel > *, item > * {
+    display: none;
+    margin: 1em 0;
+}
+
+channel > title {
+    display: block;
+    font-size: 2em;
+    font-weight: bold;
+}
+channel > title::after {
+    content: " (RSS)";
+}
+channel > link[rel="self"] {
+    display: block;
+}
+channel > link[rel="self"]::after {
+    content: "This is an RSS (Really Simple Syndication) feed. To subscribe to it, copy its address and paste it when your feed reader asks for it. It will be updated periodically in your reader. New to feeds? Search on the web to learn more.";
+}
+
+lastBuildDate {
+    display: block;
+    text-align: right;
+}
+lastBuildDate::before {
+    display: block;
+    text-align: left;
+    content: "Preview of the feed’s current headlines:";
+}
+channel > item {
+    display: block;
+}
+
+item > title {
+    display: block;
+    font-size: 1.3em;
+}
+item > title::before {
+    content: "• ";
+}

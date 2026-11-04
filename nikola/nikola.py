@@ -1790,7 +1790,7 @@ class Nikola:
 
         if feed_url:
             absurl = '/' + feed_url[len(self.config['BASE_URL']):]
-            rss_obj.xsl_stylesheet_href = self.url_replacer(absurl, "/assets/xml/rss.xsl")
+            rss_obj.css_stylesheet_href = self.url_replacer(absurl, "/assets/xml/rss.css")
 
         items = []
 
@@ -2473,11 +2473,11 @@ class Nikola:
         for k in self._ALL_PAGE_DEPS_TRANSLATABLE:
             deps_context[k] = deps_context['all_page_deps'][k](lang)
 
-        feed_xsl_link = self.abs_link("/assets/xml/atom.xsl")
+        feed_css_link = self.abs_link("/assets/xml/atom.css")
         feed_root = lxml.etree.Element("feed")
         feed_root.addprevious(lxml.etree.ProcessingInstruction(
             "xml-stylesheet",
-            'href="' + utils.encodelink(feed_xsl_link) + '" type="text/xsl media="all"'))
+            'href="' + utils.encodelink(feed_css_link) + '" type="text/css"'))
         feed_root.set("{http://www.w3.org/XML/1998/namespace}lang", lang)
         feed_root.set("xmlns", "http://www.w3.org/2005/Atom")
         feed_title = lxml.etree.SubElement(feed_root, "title")
