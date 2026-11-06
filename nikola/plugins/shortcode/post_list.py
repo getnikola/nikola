@@ -166,11 +166,11 @@ class PostListShortcode(ShortcodePlugin):
             post_type = type
 
         if post_type == 'page' or post_type == 'pages':
-            timeline = [p for p in site.timeline if not p.use_in_feeds]
+            timeline = [p for p in site.timeline if not p.is_post]
         elif post_type == 'all':
             timeline = [p for p in site.timeline]
         else:  # post
-            timeline = [p for p in site.timeline if p.use_in_feeds]
+            timeline = [p for p in site.timeline if p.is_post]
 
         # self_post should be removed from timeline because this is redundant
         timeline = [p for p in timeline if p.source_path != filename]
