@@ -1,3 +1,4 @@
+import logging
 import os
 from tempfile import NamedTemporaryFile
 
@@ -5,6 +6,7 @@ import pytest
 from PIL import Image, ImageDraw
 
 from nikola.plugins.task import scale_images
+from nikola.image_processing import ImageProcessor
 
 # These tests don't require valid profiles. They need only to verify
 # that profile data is/isn't saved with images.
@@ -13,6 +15,26 @@ from nikola.plugins.task import scale_images
 # ICC file data format specification:
 # http://www.color.org/icc32.pdf
 PROFILE = b"invalid profile data"
+
+
+def test_resize_16_bit_grayscale(tmp_path, caplog):
+    source = tmp_path / "grayscale.png"
+    image = Image.new("I", (80, 40))
+    image.putdata([0 if x < 40 else 65535 for y in range(40) for x in range(80)])
+    image.convert("I;16").save(source)
+    destinations = [tmp_path / "small.png", tmp_path / "large.png", tmp_path / "original.png"]
+    processor = ImageProcessor()
+    processor.logger = logging.getLogger(__name__)
+    processor.resize_image(str(source), dst_paths=[str(path) for path in destinations],
+                           max_sizes=[20, 40, 100])
+
+    for destination, size in zip(destinations, [(20, 10), (40, 20), (80, 40)]):
+        with Image.open(destination) as result:
+            assert result.size == size
+            assert result.mode in ("I", "I;16")
+            assert result.getpixel((0, 0)) == 0
+            assert result.getpixel((size[0] - 1, 0)) == 65535
+    assert "Can't process" not in caplog.text
 
 
 def test_handling_icc_profiles(test_images, destination_dir):
