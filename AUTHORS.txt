@@ -3,6 +3,7 @@
 * `Alberto Berti <https://github.com/azazel75>`_
 * `Alex Popescu <https://github.com/al3xandru>`_
 * `Alex Walters <https://github.com/tritium21>`_
+* `Alexandre Bertho <https://github.com/alexbertho>`_
 * `Andreas Krüger <https://github.com/aknrdureegaesr>`_
 * `Andreas Linz <https://github.com/KLINGTdotNET>`_
 * `André Felipe Dias <https://github.com/andredias>`_

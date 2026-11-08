@@ -149,7 +149,14 @@ class ImageProcessor:
                 if bigger_panoramas and w > 3 * h:
                     size = min(w, max_size * 4), min(w, max_size * 4)
             try:
+                # Pillow cannot apply Lanczos directly to 16-bit grayscale images.
+                # Resample in integer mode, then restore the original bit depth.
+                original_mode = im.mode
+                if original_mode.startswith('I;16'):
+                    im = im.convert('I')
                 im.thumbnail(size, Image.Resampling.LANCZOS)
+                if original_mode.startswith('I;16'):
+                    im = im.convert(original_mode)
                 save_args = {}
                 if icc_profile:
                     save_args['icc_profile'] = icc_profile
