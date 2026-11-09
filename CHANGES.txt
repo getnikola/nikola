@@ -17,6 +17,7 @@ Bugfixes
 * Close ``<a>`` tag instead of opening another one in ``tag.tmpl``
 * Setuptools is not required anymore at runtime (PR #3850)
 * Fix backslashes appearing in URLs on Windows if ``TAG_PATH`` contains ``/``
+* Replace deprecated XSLT with CSS for feed stylesheets (Issue #3910)
 
 Other
 -----

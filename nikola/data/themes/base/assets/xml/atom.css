@@ -1,0 +1,52 @@
+feed {
+    color: hsl(180, 1%, 31%);
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.4;
+    margin: 5%;
+    max-width: 35rem;
+    padding: 0;
+}
+
+feed > *, entry > * {
+    display: none;
+    margin: 1em 0;
+}
+
+feed > title {
+    display: block;
+    font-size: 2em;
+    font-weight: bold;
+}
+feed > title::after {
+    content: " (Atom)";
+}
+feed > link[rel="self"] {
+    display: block;
+}
+feed > link[rel="self"]::after {
+    content: "This is an Atom feed. To subscribe to it, copy its address and paste it when your feed reader asks for it. It will be updated periodically in your reader. New to feeds? Search on the web to learn more.";
+}
+
+feed > updated {
+    display: block;
+    text-align: right;
+}
+feed > updated::before {
+    content: "Last update: ";
+}
+
+feed > entry:first-of-type::before {
+    content: "Preview of the feed’s current headlines:";
+}
+feed > entry {
+    display: block;
+}
+
+entry > title {
+    display: block;
+    font-size: 1.3em;
+}
+entry > title::before {
+    content: "• ";
+}
