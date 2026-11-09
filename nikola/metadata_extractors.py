@@ -27,6 +27,7 @@
 """Default metadata extractors and helper functions."""
 
 import re
+import sys
 from enum import Enum
 from io import StringIO
 
@@ -222,7 +223,10 @@ class TOMLMetadata(MetadataExtractor):
     name = 'toml'
     source = MetaSource.text
     conditions = ((MetaCondition.first_line, '+++'),)
-    requirements = [('toml', 'toml', 'TOML')]
+    if sys.version_info < (3, 11):
+        requirements = [("tomli", "tomli", "TOML"), ("tomli_w", "tomli-w", "TOML")]
+    else:
+        requirements = [('tomli_w', 'tomli-w', 'TOML')]
     supports_write = True
     split_metadata_re = re.compile('\n\\+\\+\\+\n')
     map_from = 'toml'
@@ -230,13 +234,16 @@ class TOMLMetadata(MetadataExtractor):
 
     def _extract_metadata_from_text(self, source_text: str) -> dict:
         """Extract metadata from text."""
-        import toml
-        return toml.loads(source_text[4:])
+        if sys.version_info < (3, 11):
+            import tomli as tomllib
+        else:
+            import tomllib
+        return tomllib.loads(source_text[4:])
 
     def write_metadata(self, metadata: dict, comment_wrap=False) -> str:
         """Write metadata in this extractor’s format."""
-        import toml
-        return '\n'.join(('+++', toml.dumps(metadata).strip(), '+++', ''))
+        import tomli_w
+        return '\n'.join(('+++', tomli_w.dumps(metadata).strip(), '+++', ''))
 
 
 @_register_default

@@ -73,9 +73,12 @@ from .hierarchy_utils import join_hierarchical_category_path, parse_escaped_hier
 from importlib import resources
 
 try:
-    import toml
+    if sys.version_info < (3, 11):
+        import tomli as tomllib
+    else:
+        import tomllib
 except ImportError:
-    toml = None
+    tomllib = None
 
 try:
     from ruamel.yaml import YAML
@@ -1991,10 +1994,10 @@ def load_data(path):
     elif ext in {'.json', '.js'}:
         loader = json
     elif ext in {'.toml', '.tml'}:
-        if toml is None:
-            req_missing(['toml'], 'use TOML data files')
+        if tomllib is None:
+            req_missing(['tomli'], 'use TOML data files')
             return {}
-        loader = toml
+        loader = tomllib
     if loader is None:
         return
     with io.open(path, 'r', encoding='utf-8-sig') as inf:
