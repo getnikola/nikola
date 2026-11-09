@@ -33,8 +33,10 @@ lastBuildDate {
     text-align: right;
 }
 lastBuildDate::before {
-    display: block;
-    text-align: left;
+    content: "Last update: ";
+}
+
+channel > item:first-of-type::before {
     content: "Preview of the feed’s current headlines:";
 }
 channel > item {

@@ -28,10 +28,15 @@ feed > link[rel="self"]::after {
     content: "This is an Atom feed. To subscribe to it, copy its address and paste it when your feed reader asks for it. It will be updated periodically in your reader. New to feeds? Search on the web to learn more.";
 }
 
-feed > link[rel="alternate"] {
+feed > updated {
     display: block;
+    text-align: right;
 }
-feed > link[rel="alternate"]::before {
+feed > updated::before {
+    content: "Last update: ";
+}
+
+feed > entry:first-of-type::before {
     content: "Preview of the feed’s current headlines:";
 }
 feed > entry {
