@@ -26,11 +26,17 @@
 
 """Mako template handler."""
 
+from __future__ import annotations
+
+
 import io
 import os
 import re
 import shutil
-from typing import Callable
+from typing import Callable, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from nikola.nikola import Nikola
 
 from mako import exceptions, util, lexer, parsetree
 from mako.lookup import TemplateLookup
@@ -112,7 +118,7 @@ class MakoTemplates(TemplateSystem):
             input_encoding='utf-8',
             output_encoding='utf-8')
 
-    def set_site(self, site):
+    def set_site(self, site: Nikola):
         """Set the Nikola site."""
         self.site = site
         self.filters.update(self.site.config['TEMPLATE_FILTERS'])

@@ -26,6 +26,14 @@
 
 """reStructuredText compiler for Nikola."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from nikola.nikola import Nikola
+
+
 import io
 import logging
 import os
@@ -180,7 +188,7 @@ class CompileRest(PageCompiler):
                 fd.write(write_metadata(metadata, comment_wrap=False, site=self.site, compiler=self))
             fd.write(content)
 
-    def set_site(self, site):
+    def set_site(self, site: Nikola):
         """Set Nikola site."""
         super().set_site(site)
         self.config_dependencies = []
@@ -272,7 +280,7 @@ def add_node(node, visit_function=None, depart_function=None):
 
             name = "rest_math"
 
-            def set_site(self, site):
+            def set_site(self, site: Nikola):
                 self.site = site
                 directives.register_directive('math', MathDirective)
                 add_node(MathBlock, visit_Math, depart_Math)

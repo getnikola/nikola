@@ -26,6 +26,14 @@
 
 """Vimeo directive for reStructuredText."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from nikola.nikola import Nikola
+
+
 import json
 
 import requests
@@ -41,7 +49,7 @@ class Plugin(RestExtension):
 
     name = "rest_vimeo"
 
-    def set_site(self, site):
+    def set_site(self, site: Nikola):
         """Set Nikola site."""
         self.site = site
         directives.register_directive('vimeo', Vimeo)

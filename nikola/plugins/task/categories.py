@@ -26,6 +26,14 @@
 
 """Render the category pages and feeds."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from nikola.nikola import Nikola
+
+
 import os
 
 from nikola.plugin_categories import Taxonomy
@@ -77,7 +85,7 @@ Example:
 link://category_rss/dogs => /categories/dogs.xml""",
     }
 
-    def set_site(self, site):
+    def set_site(self, site: Nikola):
         """Set site, which is a Nikola instance."""
         super().set_site(site)
         self.show_list_as_index = self.site.config['CATEGORY_PAGES_ARE_INDEXES']

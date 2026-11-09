@@ -3,6 +3,14 @@
 
 """Gist directive for reStructuredText."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from nikola.nikola import Nikola
+
+
 import requests
 from docutils.parsers.rst import Directive, directives
 from docutils import nodes
@@ -15,7 +23,7 @@ class Plugin(RestExtension):
 
     name = "rest_gist"
 
-    def set_site(self, site):
+    def set_site(self, site: Nikola):
         """Set Nikola site."""
         self.site = site
         directives.register_directive('gist', GitHubGist)

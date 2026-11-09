@@ -26,6 +26,14 @@
 
 """Classify the posts in archives."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from nikola.nikola import Nikola
+
+
 import datetime
 from collections import defaultdict
 
@@ -66,7 +74,7 @@ class Archive(Taxonomy):
         'archive_rss': False,
     }
 
-    def set_site(self, site):
+    def set_site(self, site: Nikola):
         """Set Nikola site."""
         # Sanity checks
         if (site.config['CREATE_MONTHLY_ARCHIVE'] and site.config['CREATE_SINGLE_ARCHIVE']) and not site.config['CREATE_FULL_ARCHIVES']:

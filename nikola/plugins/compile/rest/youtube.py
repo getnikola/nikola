@@ -26,6 +26,14 @@
 
 """YouTube directive for reStructuredText."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from nikola.nikola import Nikola
+
+
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 
@@ -38,7 +46,7 @@ class Plugin(RestExtension):
 
     name = "rest_youtube"
 
-    def set_site(self, site):
+    def set_site(self, site: Nikola):
         """Set Nikola site."""
         self.site = site
         directives.register_directive('youtube', Youtube)
