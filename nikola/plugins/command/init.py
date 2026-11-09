@@ -266,13 +266,40 @@ class CommandInit(Command):
             'default': False,
             'type': bool,
             'help': "Create a site filled with example data.",
+        },
+        {
+            'name': 'blog',
+            'long': 'blog',
+            'short': 'b',
+            'default': False,
+            'type': bool,
+            'help': "Create a blog with two demo posts.",
+        },
+        {
+            'name': 'website',
+            'long': 'website',
+            'short': 'w',
+            'default': False,
+            'type': bool,
+            'help': "Create a website filled with sample data.",
         }
     ]
 
+    # @classmethod
+    # def copy_sample_site(cls, target):
+    #     """Copy sample site data to target directory."""
+    #     src = pkg_resources_path('nikola', os.path.join('data', 'samplesite'))
+    #     shutil.copytree(src, target)
+
     @classmethod
-    def copy_sample_site(cls, target):
+    def copy_sample_site(cls, options, target):
         """Copy sample site data to target directory."""
-        src = pkg_resources_path('nikola', os.path.join('data', 'samplesite'))
+        if options.get("demo"):
+            src = pkg_resources_path('nikola', os.path.join('data', 'samplesite'))
+        elif options.get("blog"):
+            src = pkg_resources_path('nikola', os.path.join('data', 'sampleblog'))
+        elif options.get("website"):
+            src = pkg_resources_path('nikola', os.path.join('data', 'samplewebsite'))
         shutil.copytree(src, target)
 
     @staticmethod
@@ -495,8 +522,16 @@ class CommandInit(Command):
             target = args[0]
         except IndexError:
             target = None
+        # check if more than 1 option selected
+        filtered_options = {key: value for key, value in options.items() if value}
+        if len(filtered_options) != 1:
+            print("Usage: nikola init [--demo] [--blog] [--website] [--quiet] folder")
+            print("Select one option among [--demo] [--blog] [--website]. By default [--demo] will be selected.")
+            print("===================")
+            options = {key: (key == 'demo') for key in options}
+        demo = True if options.get('demo') or options.get('blog') or options.get('website') else False
         if not options.get('quiet'):
-            st = self.ask_questions(target=target, demo=options.get('demo'))
+            st = self.ask_questions(target=target, demo=demo)
             try:
                 if not target:
                     target = st['target']
@@ -504,19 +539,21 @@ class CommandInit(Command):
                 pass
 
         if not target:
-            print("Usage: nikola init [--demo] [--quiet] folder")
+            print("Usage: nikola init [--demo] [--blog] [--website] [--quiet] folder")
             print("""
 Options:
   -q, --quiet               Do not ask questions about config.
-  -d, --demo                Create a site filled with example data.""")
+  -d, --demo                Create a site filled with example data.
+  -b, --blog                Create a blog with two demo posts.
+  -w, --website             Create a website filled with sample data.""")
             return 1
-        if not options.get('demo'):
+        if not demo:
             self.create_empty_site(target)
             LOGGER.info('Created empty site at {0}.'.format(target))
         else:
             if not test_destination(target, True):
                 return 2
-            self.copy_sample_site(target)
+            self.copy_sample_site(options,target)
             LOGGER.info("A new site with example data has been created at "
                         "{0}.".format(target))
             LOGGER.info("See README.txt in that folder for more information.")
