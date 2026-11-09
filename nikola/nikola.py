@@ -27,6 +27,7 @@
 """The main Nikola site object."""
 
 import datetime
+from datetime import timezone
 import io
 import json
 import functools
@@ -1777,7 +1778,7 @@ class Nikola:
             title=title,
             link=utils.encodelink(link),
             description=description,
-            lastBuildDate=datetime.datetime.utcnow(),
+            lastBuildDate=datetime.datetime.now(timezone.utc).replace(tzinfo=None),
             generator='Nikola (getnikola.com)',
             language=lang
         )

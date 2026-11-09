@@ -28,7 +28,7 @@
 
 import subprocess
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 
 import dateutil
 from blinker import signal
@@ -97,7 +97,7 @@ class CommandDeploy(Command):
 
         self.logger.info("Successful deployment")
 
-        new_deploy = datetime.utcnow()
+        new_deploy = datetime.now(timezone.utc).replace(tzinfo=None)
         if last_deploy is None:
             last_deploy = new_deploy
         self._emit_deploy_event(last_deploy, new_deploy, clean, undeployed_posts)
