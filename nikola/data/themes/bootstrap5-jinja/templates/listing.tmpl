@@ -1,0 +1,30 @@
+{#  -*- coding: utf-8 -*- #}
+{% extends 'base.tmpl' %}
+{% import 'ui_helper.tmpl' as ui with context %}
+{% block content %}
+{{ ui.breadcrumbs(crumbs) }}
+{% if folders or files %}
+<ul>
+{% for name in folders %}
+    <li><a href="{{ name|e }}">&#x1f4c2;&nbsp;{{ name|e }}</a>
+{% endfor %}
+{% for name in files %}
+    <li><a href="{{ name|e }}.html">&#x1f4c4;&nbsp;{{ name|e }}</a>
+{% endfor %}
+</ul>
+{% endif %}
+{% if code %}
+<h1>{{ title }}
+    {% if source_link %}
+        <small><a href="{{ source_link }}">({{ messages("Source") }})</a></small>
+    {% endif %}
+    </h1>
+    {{ code }}
+{% endif %}
+{% endblock %}
+
+{% block sourcelink %}
+{% if source_link and show_sourcelink %}
+    {{ ui.show_sourcelink(source_link) }}
+{% endif %}
+{% endblock %}
