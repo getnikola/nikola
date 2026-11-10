@@ -596,7 +596,7 @@ class NikolaEventHandler:
 
     def dispatch(self, event):
         """Dispatch events to handler."""
-        if event.event_type in {"opened", "closed"}:
+        if event.event_type in {"opened", "closed", "closed_no_write"}:
             return
         self.loop.call_soon_threadsafe(asyncio.ensure_future, self.function(event))
 
