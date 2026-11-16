@@ -500,6 +500,39 @@ at https://www.transifex.com/projects/p/nikola/
 If you want to create a theme that has new strings, and you want those strings to be translatable,
 then your theme will need a custom ``messages`` folder.
 
+For example, if your site uses ``THEME = "mytheme"``, create
+``themes/mytheme/messages/messages_en.py`` with the English text for your
+new messages:
+
+.. code:: python
+
+    MESSAGES = {
+        "View source code": "View source code",
+    }
+
+Add a file for each language enabled in ``TRANSLATIONS``, using the language
+code in the filename. For example, put the German translation in
+``themes/mytheme/messages/messages_de.py``:
+
+.. code:: python
+
+    MESSAGES = {
+        "View source code": "Quellcode ansehen",
+    }
+
+Use the same English keys in every file; only the values are translated.
+Keep ``messages_en.py`` even if English is not one of your site's languages:
+Nikola loads it as the fallback for untranslated messages. You only need to
+include your new or overridden messages, since messages from parent themes
+are loaded first. To override an existing message, use its exact key from
+``nikola/data/themes/base/messages/messages_en.py``.
+
+In a Mako template, look up the message with
+``${messages("View source code")}``; in a Jinja2 template, use
+``{{ messages("View source code") }}``. Nikola selects the translation for the
+language of the page being rendered. Run ``nikola build`` to rebuild the site
+and check the text on each translated page.
+
 Configuration of the raw template engine
 ----------------------------------------
 
