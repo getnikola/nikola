@@ -2596,6 +2596,9 @@ Nikola supports the standard reStructuredText ``include`` directive, but with a
 catch: filenames are relative to **Nikola site root** (directory with ``conf.py``)
 instead of the post location (eg. ``posts/`` directory)!
 
+Shortcodes in included files are rendered like shortcodes in the document that
+includes them.
+
 Media
 ~~~~~
 

@@ -159,6 +159,25 @@ def test_doc_titled():
     )
 
 
+def test_include_processes_shortcodes(tmp_path):
+    """Test that shortcodes in included files are processed (Issue #3648)."""
+    include_path = tmp_path / "included.rst"
+    include_path.write_text(
+        ".. |logo| replace::\n   {{% test_shortcode %}}included{{% /test_shortcode %}}\n",
+        encoding="utf-8",
+    )
+    site = FakeSite()
+    site.config["REST_FILE_INSERTION_ENABLED"] = True
+    site.register_shortcode(
+        "test_shortcode", lambda *args, **kwargs: ("<em>{0}</em>".format(kwargs["data"]), [])
+    )
+    sample = ".. include:: {0}\n\nSubstitution: |logo|\n".format(include_path.as_posix())
+
+    html = get_html_from_rst(sample, site)
+
+    assert_html_contains(html, "em", text="included")
+
+
 @pytest.fixture(autouse=True, scope="module")
 def localeborg_base():
     """A base config of LocaleBorg."""
@@ -174,11 +193,11 @@ def localeborg_base():
         assert not LocaleBorg.initialized
 
 
-def get_html_from_rst(rst):
+def get_html_from_rst(rst, site=None):
     """Create html output from rst string"""
 
     compiler = nikola.plugins.compile.rest.CompileRest()
-    compiler.set_site(FakeSite())
+    compiler.set_site(site if site is not None else FakeSite())
     return compiler.compile_string(rst)[0]
 
 

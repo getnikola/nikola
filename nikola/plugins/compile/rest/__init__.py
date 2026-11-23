@@ -38,6 +38,8 @@ import docutils.io
 import docutils.readers.standalone
 import docutils.writers.html5_polyglot
 import docutils.parsers.rst.directives
+import docutils.parsers.rst.directives.misc
+import docutils.statemachine
 from docutils.parsers.rst import roles
 
 from nikola.nikola import LEGAL_VALUES
@@ -129,6 +131,9 @@ class CompileRest(PageCompiler):
 
         from nikola import shortcodes as sc
         new_data, shortcodes = sc.extract_shortcodes(data)
+        # The shortcodes dict is filled by the ``include`` directive with the
+        # shortcodes found in included files (Issue #3648).
+        settings_overrides['nikola_shortcodes'] = shortcodes
         if self.site.config.get('HIDE_REST_DOCINFO', False):
             self.site.rst_transforms.append(RemoveDocinfo)
         output, error_level, deps, _ = rst2html(
@@ -258,6 +263,48 @@ def shortcode_role(name, rawtext, text, lineno, inliner,
 roles.register_canonical_role('raw-html', shortcode_role)
 roles.register_canonical_role('html', shortcode_role)
 roles.register_canonical_role('sc', shortcode_role)
+
+
+class Include(docutils.parsers.rst.directives.misc.Include):
+    """``include`` directive that also extracts shortcodes from included files.
+
+    Shortcodes in included files are replaced by placeholders like the ones
+    used for the main document, and added to the shortcodes dict of the
+    compiler (passed via the ``nikola_shortcodes`` setting), so that they are
+    rendered after compilation, just like shortcodes in the main document.
+    """
+
+    def run(self):
+        """Run the directive, extracting shortcodes from the included file."""
+        shortcodes = getattr(
+            self.state.document.settings, 'nikola_shortcodes', None)
+        unsupported_options = {'literal', 'code', 'parser'}
+        if shortcodes is None or unsupported_options & set(self.options):
+            return super().run()
+
+        from nikola import shortcodes as sc
+        tab_width = self.options.get(
+            'tab-width', self.state.document.settings.tab_width)
+        state_machine = self.state_machine
+        insert_input = state_machine.insert_input
+
+        def insert_input_with_shortcodes(input_lines, source):
+            text, extracted = sc.extract_shortcodes('\n'.join(input_lines))
+            if not extracted:
+                return insert_input(input_lines, source)
+            shortcodes.update(extracted)
+            lines = docutils.statemachine.string2lines(
+                text, tab_width, convert_whitespace=True)
+            return insert_input(lines, source)
+
+        state_machine.insert_input = insert_input_with_shortcodes
+        try:
+            return super().run()
+        finally:
+            state_machine.insert_input = insert_input
+
+
+docutils.parsers.rst.directives.register_directive('include', Include)
 
 
 def add_node(node, visit_function=None, depart_function=None):
