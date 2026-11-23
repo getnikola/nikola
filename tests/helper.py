@@ -86,7 +86,13 @@ class FakeSite:
 
     def apply_shortcodes_uuid(self, data, shortcodes, *a, **kw):
         """Apply shortcodes from the registry on data."""
-        return nikola.shortcodes.apply_shortcodes(data, self.shortcode_registry, **kw)
+        deps = []
+        for key, value in shortcodes.items():
+            replacement, shortcode_deps = nikola.shortcodes.apply_shortcodes(
+                value, self.shortcode_registry, self, **kw)
+            data = data.replace(key, replacement)
+            deps.extend(shortcode_deps)
+        return data, deps
 
 
 class FakePost:

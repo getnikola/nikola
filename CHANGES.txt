@@ -18,6 +18,8 @@ Bugfixes
 * Setuptools is not required anymore at runtime (PR #3850)
 * Fix backslashes appearing in URLs on Windows if ``TAG_PATH`` contains ``/``
 * Replace deprecated XSLT with CSS for feed stylesheets (Issue #3910)
+* Process shortcodes in files included with the ``include`` directive
+  (Issue #3648)
 
 Other
 -----
